@@ -300,29 +300,6 @@ Este é o gabarito contra o qual se mede o que é "de fábrica" e o que é inven
 
 Duas ausências que importam: **não existe componente de tabela** — tabela é Markdown puro, com alinhamento por dois-pontos na linha separadora ([mintlify.com/docs/list-table.md](https://mintlify.com/docs/list-table.md)). E `CardGroup` está **deprecado em favor de `Columns`**, mantido só por compatibilidade; a migração é trocar o nome da tag, porque a prop `cols` é idêntica ([mintlify.com/docs/components/columns](https://www.mintlify.com/docs/components/columns)).
 
-## O vocabulário padrão do Fern (o catálogo paralelo)
-
-Só o Vapi usa, mas é a única visão que a pesquisa tem de "como outra equipe resolveu o mesmo problema". Fern declara **27 componentes embutidos** ([buildwithfern.com — components overview](https://buildwithfern.com/learn/docs/writing-content/components/overview)):
-
-`Accordion` · `Anchor` · `Aside` · `Badge` · `Button` · `Callout` · `Card` · `Code block` · `Copy` · `Download` · `Endpoint request snippet` · `Endpoint response snippet` · `Endpoint schema snippet` · `Files` · `Frame` · `Icon` · `If` · `Indent` · `Parameter field` · `Prompt` · `Runnable endpoint` · `Schema` · `Step` · `Table` · `Tab` · `Tooltip` · `Versions`
-
-Onde os dois catálogos divergem, e o que a divergência ensina:
-
-| Questão | Mintlify | Fern | O que a diferença revela |
-| --- | --- | --- | --- |
-| Variantes de callout | 6 tipadas + 1 custom | **8** intents: `info`, `warning`, `success`, `error`, `note`, `launch`, `tip`, `check` | Fern separa `success` de `check` e inventa `launch` (lançamento de feature) |
-| Callout aceita título? | **Não** — os tipados só aceitam `children` | **Sim** — `title` opcional, mais `icon` e `className` | Decisão de produto oposta sobre o mesmo componente |
-| Grade de cards | `Columns` (`CardGroup` deprecado) | `CardGroup` (`cols`, default 2) — vigente | — |
-| Título do Step | **obrigatório** | **opcional**; e `##`/`###` dentro de `<Steps>` viram passos automaticamente | Fern deixa o passo ser Markdown; Mintlify exige JSX |
-| Steps no TOC | não documentado | `toc` (bool, default `false`) e `tocDepth` (1–3) | Fern trata o passo como cabeçalho de primeira classe |
-| Tabela | Markdown puro | componente `Table` com cabeçalho fixo | única divergência frontal |
-| Conteúdo condicional | `View` (dropdown) + `Visibility` (humano/IA) | `If` (por instância, produto, versão ou **papel do usuário**) + `Versions` | Fern condiciona por permissão; Mintlify não |
-| Painel lateral | `Panel` (substitui o TOC) | `Aside` (container fixo à direita) | mesmo problema, nomes diferentes |
-| Árvore de arquivos | `Tree` | `Files` (pastas expansíveis) | Fern torna a árvore interativa |
-| Integração com a API reference | `ParamField`/`ResponseField` escritos à mão | `Schema`, `Endpoint request/response/schema snippet`, `Runnable endpoint` — **puxam da API Reference** | Fern gera do contrato; Mintlify pede que o autor redigite |
-
-Props do `Card` do Fern, mais ricas em layout que as do Mintlify ([buildwithfern.com — cards](https://buildwithfern.com/learn/docs/writing-content/components/cards)): `title`, `icon`, `href`, `iconPosition` (`top`|`left`, default `top`), `iconSize` (número, default 8, renderizado como `size * 4` px), `color`, `darkModeColor`, `lightModeColor`, `src`, `imagePosition` (`top`|`left`|`right`|`bottom`), `imageWidth`, `imageHeight`. Repare no par `darkModeColor`/`lightModeColor`: o Fern deixa o **autor** resolver a cor por tema no ponto de uso — o oposto de resolver por token no tema. Para o axioma 3, é o antipadrão a evitar.
-
 ## Anatomia medida do canon Mintlify
 
 O que segue não é leitura de documentação: é o DOM e as classes servidas em produção em `mintlify.com/docs` (o próprio site é Mintlify), extraídos em 2026-08-04. Atende o axioma 5. O Mintlify marca cada parte interna com `data-component-part`, o que entrega a anatomia sem ambiguidade — é o mapa de slots que o shinydoc precisa reproduzir.
@@ -824,7 +801,7 @@ Vale registrar a ressalva: a Perplexity conseguiu isso à base de `!important` e
 
 ## Padrão da plataforma vs. construído por conta
 
-A leitura transversal que o ticket pede. Verdadeira surpresa: **quase nada é construído por conta**, e o pouco que é foi construído da forma mais barata possível.
+A leitura transversal que o ticket pede. A resposta se divide em duas famílias, e a divisão parece acompanhar quem versiona a doc junto do código: **nos repos abertos quase nada é construído por conta; nos dois alvos estéticos, bastante — e sempre inline no próprio arquivo MDX.** Em nenhum dos quatro existe componente React compilado à parte.
 
 ### FastMCP e Trigger.dev: Mintlify de prateleira
 
@@ -1050,6 +1027,18 @@ Na Perplexity há **920 usos de `className=` com classes Tailwind escritas à m�
 
 O Docusaurus vanilla não tem esse escape. O que lá é `className="flex gap-4"` aqui precisa ser um componente ou uma classe de CSS Module. Isso significa que **o catálogo do shinydoc precisa cobrir mais que o do Mintlify**, não menos — porque a válvula de escape que torna o catálogo do Mintlify suficiente não existe do lado de cá. É o risco de escopo mais subestimado desta pesquisa.
 
+### Cinco padrões de fora do Mintlify que merecem entrar no escopo
+
+Detalhados na seção do delta, listados aqui porque competem por prioridade com os componentes da tabela acima:
+
+1. **Variante de página inteira por framework** (Clerk). O único mecanismo que faz URL, sidebar e links de entrada acompanharem a escolha do leitor. `Tabs` não resolve isso, e doc de produto sempre acaba precisando.
+2. **Seleção que mora na URL** (Fern, `<Versions paramName>`). Diferença conceitual mínima em relação a `Tabs`, e muda o que se pode compartilhar por link.
+3. **Componentes gerados de contrato, com build que quebra** (Neon). Não exige plataforma — exige um `schema.json` no repo. E o mesmo renderizador alimentando HTML e espelho Markdown garante que os dois não divirjam.
+4. **Duas colunas pareadas por passo** (Neon, `<TwoColumnLayout>`). Resolve em CSS grid o mesmo problema que no Mintlify custa atravessar a fronteira conteúdo/chrome.
+5. **Prettier formatando as cercas no CI** (Clerk). Não é componente, é higiene — e é a melhor relação custo/benefício de tudo que foi levantado.
+
+E um contraponto que economiza trabalho: com cerca de 30 frameworks suportados, o Neon **não construiu seletor nenhum** — fez uma página por framework mais um índice.
+
 ### O que o `VersionBadge` do FastMCP ensina
 
 O componente mais usado do site inteiro do FastMCP — 110 de 147 arquivos da doc corrente — não é do Mintlify. É sete linhas de JSX dentro de um `.mdx` de snippet, envolvendo um `<Badge>` padrão, com um arquivo CSS de marca própria. Aparece inclusive aninhado dentro de `ParamField`, para marcar em que versão um argumento surgiu.
@@ -1058,13 +1047,140 @@ A lição não é "faça um VersionBadge". É que **o componente mais valioso de
 
 Vale registrar o contraste entre as duas famílias observadas. Nos repos abertos (FastMCP, Trigger.dev) a invenção da casa é mínima: um único componente com estado em React em 790 arquivos, nenhum `<style>` autoral, e o reuso feito por snippets MDX puros. Nos dois alvos estéticos (Devin, Perplexity) a invenção é bem maior e mora inline no MDX. A diferença provável é acesso ao repositório — quem versiona a doc junto do código usa snippets; quem edita pela web escreve tudo no arquivo.
 
-### O que o `VersionBadge` do FastMCP ensina
+## Vapi, Neon e Clerk: só o que o Mintlify não tem
 
-O componente mais usado do site inteiro do FastMCP — 110 de 147 arquivos da doc corrente — não é do Mintlify. É sete linhas de JSX dentro de um `.mdx` de snippet, envolvendo um `<Badge>` padrão, com um arquivo CSS de marca própria. Aparece inclusive aninhado dentro de `ParamField`, para marcar em que versão um argumento surgiu.
+As três referências fora do conjunto Mintlify entram aqui restritas ao **delta** — o que oferecem ao autor que o Mintlify não oferece, e que valha considerar. Não é inventário delas.
 
-A lição não é "faça um VersionBadge". É que **o componente mais valioso de uma documentação pode ser trivial e específico do produto**, e que a plataforma precisa deixar isso ser barato. No shinydoc, o equivalente é o registro em `@theme/MDXComponents`: quem autora ganha uma tag nova sem import e sem build separado.
+### Fern (Vapi) — o catálogo paralelo
 
-Vale o contraste: em 790 arquivos MDX somados dos dois repos abertos, existe **um único componente com estado em React**, e **nenhum `<style>` inline autoral**. A superfície de invenção da casa é minúscula. O que uma equipe de documentação realmente constrói por conta é conteúdo composto — o Trigger.dev tem 52 snippets, todos MDX puro, zero JSX.
+Fern declara **27 componentes embutidos** ([buildwithfern.com — components overview](https://buildwithfern.com/learn/docs/writing-content/components/overview)). O grosso é equivalente ao Mintlify com outro nome.
+
+**Ressalva que enquadra a seção**: o Vapi **não usa quase nada do que o Fern tem de mais interessante**. Grep no clone de `VapiAI/docs` (440 arquivos `.mdx`) devolve zero ocorrências de `If`, `Versions`, `Aside`, `RunnableEndpoint`, `Schema`, `Indent`, `Copy` e `Anchor`. O que o Vapi de fato usa do delta é `Button` (31), `Download` (30), `Files` (7) e `EndpointRequestSnippet` (6). Então o que segue é **potencial da plataforma**, não prática observada.
+
+O que é genuinamente diferente:
+
+| Componente Fern | O que faz | Vale considerar? |
+| --- | --- | --- |
+| **`If`** | Mostra ou esconde conteúdo por instância, produto, versão ou **papel do usuário** | O único condicional por permissão que a pesquisa encontrou. Fora do escopo de doc pública, mas é a resposta certa para doc corporativa com conteúdo restrito |
+| **`Schema`, `Endpoint request/response/schema snippet`, `Runnable endpoint`** | **Puxam do contrato da API Reference** em vez de o autor redigitar | A diferença conceitual mais forte entre as duas plataformas. Mintlify pede `ParamField` escrito à mão; Fern gera do contrato. Só importa se houver API reference no escopo |
+| **`Versions`** | Conteúdo por versão selecionada | Docusaurus tem versionamento de docs nativo, em outra camada — não é o mesmo problema |
+| **`Table`** | Tabela com cabeçalho fixo | Única divergência frontal com o Mintlify sobre um mesmo elemento |
+| **`Indent`** | Hierarquia visual com linha-guia para conteúdo aninhado | Barato e sem equivalente |
+| **`Copy`** | Torna qualquer texto copiável com um clique | Barato; resolve o caso "copie este comando" fora de bloco de código |
+| **`Anchor`** | Âncora linkável em parágrafo ou tabela | O Mintlify só ancora cabeçalho, `Step`, `Accordion` e campo de API |
+
+Duas diferenças de API que valem como precedente, mesmo sem adotar o Fern:
+
+- **O callout do Fern aceita `title`** — e tem 8 intents, separando `success` de `check` e inventando `launch`. É a evidência externa de que o `title` opcional (decisão 1) não é invenção.
+- **O `Step` do Fern não exige `title`, e `##`/`###` dentro de `<Steps>` viram passos automaticamente**, com `toc` e `tocDepth` para alimentar o sumário. Deixar o passo ser Markdown em vez de exigir JSX é uma ergonomia melhor que a do Mintlify.
+
+E um antipadrão a evitar: o `Card` do Fern tem `darkModeColor` e `lightModeColor` ([buildwithfern.com — cards](https://buildwithfern.com/learn/docs/writing-content/components/cards)), deixando o **autor** resolver cor por tema no ponto de uso. É o oposto de resolver por token no tema, e briga com o axioma 3.
+
+Um item que **parecia** delta e não é: o `<Markdown src>` do Fern com `{{param}}` — partial parametrizado. O Mintlify tem o mesmo por snippet com props (`<MySnippet word="bananas" />`). Não conte como lacuna.
+
+### Clerk — o guia de autoria mais completo dos três
+
+Fonte primária: [`clerk/clerk-docs`, `contributing/CONTRIBUTING.md`](https://github.com/clerk/clerk-docs/blob/main/contributing/CONTRIBUTING.md), 1.725 linhas, sobre 1.082 arquivos `.mdx`.
+
+**A variante de página inteira por SDK é o achado mais forte do levantamento** — e é exatamente o que `Tabs` não resolve. Duas peças complementares:
+
+```diff
+  ---
+  title: '<ClerkProvider>'
++ sdk: nextjs, react
+  ---
+```
+
+O frontmatter `sdk:` (em **380 das 1.082 páginas**) gera **uma URL por SDK** — `/docs/nextjs/clerk-provider` e `/docs/react/clerk-provider` —, faz a página aparecer na sidenav só quando o SDK ativo está na lista, e torna **os links de entrada inteligentes**: um link para essa página resolve para a variante certa conforme o SDK ativo. A URL base mostra uma grade das variantes disponíveis.
+
+Quando o condicional come a página inteira, a escada de escape é **convenção de nome de arquivo**: `quickstart.mdx` é a base e `quickstart.react.mdx` é a variante, na mesma rota (51 arquivos). O guia é explícito sobre o porquê — *"Instead of using a bunch of `<Tabs />` or `<If />` components, which would bloat the doc and make it harder to maintain, you can create a doc variant."*
+
+O condicional inline é `<If>`, com **1.711 usos — o componente mais usado do repositório**:
+
+```mdx
+<If sdk={['nextjs', 'react']}>
+  Conteúdo para Next.js ou React.
+  <If sdk="nextjs">Só para Next.js.</If>
+</If>
+<If notSdk="nextjs">Tudo menos Next.js.</If>
+```
+
+O detalhe de engenharia que vale mais que o componente: **o build valida que os SDKs citados no `<If>` estão no escopo declarado no frontmatter da página**. Um `<If sdk="vue">` numa página `sdk: nextjs, react` **quebra o build**; `ignoreSdkWarning` é o escape explícito. Condicional sem checagem de escopo apodrece em silêncio.
+
+Outros deltas do Clerk que valem, em ordem de retorno sobre custo:
+
+| Item | O que é | Por que vale |
+| --- | --- | --- |
+| **Prettier nas cercas, no CI** | O código dentro dos blocos é formatado e validado no CI; sintaxe inválida quebra o PR. Escape: `{{ prettier: false }}` | Melhor relação custo/benefício do levantamento inteiro. Pega erro que revisão humana não pega |
+| **Callouts de ciclo de vida com corpo obrigatório** | `> [!DEPRECATED]` e `> [!REMOVED]` **falham o build sem corpo**, e o corpo tem que nomear o substituto. `EXPERIMENTAL`/`BETA`/`LEGACY` com corpo vazio renderizam mensagem canônica | Regra editorial codificada no compilador, com default centralizado e override por exceção |
+| **Tooltip por sintaxe de link** | `[Active Organization](!active-organization)` resolve de `_tooltips/` | Glossário sem poluir o MDX com JSX. Resolve o caso que fez o `Tooltip` do Mintlify ter uso zero |
+| **Status em dois eixos ortogonais** | `tag` (`experimental`→`beta`→`new`→`legacy`→`deprecated`→`removed`) e `maintainer` (`community` ou ausente). Compõem em vez de multiplicar rótulos. Mais tags inline por seção: `<BetaTag />`, `<RemovedTag />`… | O guia define **três portões** para admitir um valor novo no eixo — é doutrina no formato de axioma |
+| **`fold` e `mark` por string no bloco de código** | `{{ mark: [2, [5,7]] }}`, `{{ fold: [[2,4,'setup']] }}`, `{{ collapsible: true }}`; `mark` também aceita **texto** em vez de número de linha | Realçar por conteúdo em vez de por número sobrevive à edição do exemplo |
+| **Atributos em heading e imagem** | `## Título {{ toc: 'Curto' }}` / `{{ toc: false }}` / `{{ id: 'slug' }}`; `![alt](/img.png){{ dark: '/img-dark.png' }}` | O `dark:` em imagem é **obrigatório** dado o axioma 4 |
+| **` ```npm ` auto-expandindo** | Uma cerca `npm` vira abas `npm`/`pnpm`/`yarn`/`bun` | Elimina a classe inteira de "esqueci de atualizar a aba do yarn" |
+| **`<CompareYes/No/Partial/NotApplicable>`** | 85 usos, dentro de célula de tabela | Tabela de comparação é conteúdo obrigatório, e emoji não é acessível |
+| **`<TutorialHero>`** | 91 usos. `beforeYouStart` (`{title, link, icon}[]`) e `exampleRepo` | Pré-requisitos e repo de exemplo como **contrato de dados**, não prosa solta |
+| **`<Typedoc src>`** | 443 usos. Injeta MDX gerado do JSDoc de `clerk/javascript` | Fronteira editorial explícita: 443 blocos que ninguém edita à mão |
+| **`search:` no frontmatter** | `exclude`, `rank`, `keywords[]` — palavras invisíveis ao leitor, com peso menor que título e corpo | Controle de indexação por página |
+
+Duas notas de forma: o `<Include src>` do Clerk (951 usos, 201 partials) **não aceita parâmetros** — a parametrização vem do `<If sdk>` dentro do próprio partial. E tanto `<Cards>` quanto `<Properties>` (320 usos) são escritos como **lista Markdown separada por `---`**, não JSX aninhado — diff legível, sem prop escapando.
+
+### Neon — geração a partir de contrato, e duas colunas por passo
+
+Fonte primária: [`neondatabase/website`, `content/docs/README.md`](https://github.com/neondatabase/website/blob/main/content/docs/README.md), 878 linhas, sobre 627 arquivos `.md`.
+
+**`<TwoColumnLayout>` é a melhor versão do layout prosa-mais-código dos três sites.** 10 blocos raiz, 410 tags da família:
+
+```mdx
+<TwoColumnLayout>
+  <TwoColumnLayout.Step title="Install dependencies">
+    <TwoColumnLayout.Block>
+      Instale os pacotes necessários.
+    </TwoColumnLayout.Block>
+    <TwoColumnLayout.Block label="Terminal">
+      ```bash
+      npm install @neondatabase/neon-js
+      ```
+    </TwoColumnLayout.Block>
+  </TwoColumnLayout.Step>
+
+  <TwoColumnLayout.Footer>
+    <Admonition type="note">Vale para as duas colunas.</Admonition>
+  </TwoColumnLayout.Footer>
+</TwoColumnLayout>
+```
+
+`.Step` é passo numerado; `.Item` é item não numerado com `title`, `method` e `id` (para referência de API); `.Block` é uma coluna, com `label` opcional que vira o cabeçalho do painel de código; `.Footer` ocupa a largura toda. Exige `layout: wide` no frontmatter.
+
+Por que é melhor que o `Aside` do Fern e que o `Panel` do Mintlify: **o pareamento é por passo**, não um rail solto grudado na página. Cada passo tem seu par prosa|código, e o `.Footer` resolve o "isto vale para as duas colunas". Composição por namespace (`Componente.Sub`) mantém o MDX legível. É CSS grid — cabe no vanilla-first.
+
+**`<CliUsage>` / `<CliOptions>` / `<CliSubcommands>` (113 / 111 / 33 usos) é o padrão de acoplamento a contrato mais bem resolvido da pesquisa.** O autor escreve `<CliOptions command="branches list" />` e o conteúdo sai de um `schema.json` versionado no repo. Duas propriedades que nem Fern nem Clerk expõem, lidas em [`src/components/pages/doc/cli-reference/renderers.js`](https://github.com/neondatabase/website/blob/main/src/components/pages/doc/cli-reference/renderers.js):
+
+1. **Comando inexistente quebra o build** — *"Throws at build time so a typo in a doc page fails the build loudly instead of rendering an empty section."*
+2. **O mesmo renderer alimenta o HTML e o espelho Markdown para agentes** — *"so the HTML page and the agent-facing markdown can never disagree."*
+
+Não exige plataforma. Exige um `schema.json` no repo. Para qualquer superfície com contrato legível por máquina — CLI, schema de config, JSON Schema —, este é o padrão a copiar.
+
+Demais deltas do Neon:
+
+| Item | Usos | Por que vale |
+| --- | ---: | --- |
+| **`redirectFrom` no frontmatter** | 154 páginas | Redirect declarado **na página que o herda**, não num arquivo central. Reorganizar sem link quebrado, e o redirect morre junto com a página |
+| **`<CheckList>` / `<CheckItem>`** | 9 | Único componente com **estado de progresso do leitor**: localStorage, e checklists de mesmo `title` **compartilham estado entre páginas** — vira trilha multi-página. Sem dependência |
+| **`<InfoBlock>` + `<DocsList>`** | 49 / 101 | "O que você vai aprender / leitura relacionada / docs externos" como estrutura em vez de prosa |
+| **Componentes compartilhados com props** | `<NeedHelp/>` sozinho tem 321 usos | Partial registrado como **componente nomeado**, não endereçado por caminho. `<NeedHelp/>` é superfície de autoria menor que `<Include src="…"/>` |
+| **`<DefinitionList>`** | 5 | Preenche o degrau entre bullet e heading. `<dl>/<dt>/<dd>` semântico, WCAG H40, custo zero. Nenhum dos outros seis sites tem |
+| **`<StickyTable>`** | 3 | O design é o certo: a tabela **continua Markdown**, o componente só adiciona cabeçalho flutuante. Wrapper de comportamento, não substituto de sintaxe |
+| **Imagem sem borda por título de Markdown** | — | `![alt](/img.png 'no-border')` usa o atributo *title* como flag, mantendo a imagem renderizável no preview do GitHub |
+
+**A ausência mais instrutiva do Neon**: com cerca de 30 frameworks e ORMs suportados, ele **não tem seletor de framework**. A escolha foi **uma página por framework** (`/docs/guides/nextjs`, `/docs/guides/django`, …) mais um bom índice. É o oposto exato da estratégia do Clerk, e vale como contraponto — a solução mais barata para "N frameworks" pode ser N páginas.
+
+### Três coisas que nenhuma das sete referências tem
+
+- **Condicional por plano ou por licença.** As três plataformas param em SDK, produto e versão; só o Fern chega a papel de usuário (`<If roles>`, exigindo RBAC e autenticação no site). O padrão observado para plano é **texto**: o Clerk manda declarar o add-on necessário no corpo de um callout.
+- **Componente de changelog fora do Mintlify.** O Fern trata changelog como tipo de navegação; o Neon escreve `changelog.md` à mão. O `Update` do Mintlify é, dos três catálogos, o único componente de changelog — e tem 797 usos no Devin.
+- **Qualquer forma de tabela que não seja Markdown na origem.** Sete sites, três plataformas, e todos mantêm a sintaxe de tabela do Markdown, envolvendo-a em componente quando precisam de comportamento. É consenso raro o bastante para tratar como restrição.
+
 
 
 ## O que esta pesquisa não fecha
@@ -1072,8 +1188,11 @@ Vale o contraste: em 790 arquivos MDX somados dos dois repos abertos, existe **u
 Registrado como lacuna, não preenchido por inferência:
 
 - **Motion e estado.** Este inventário mede estrutura, slots e cor. Transição de abertura do accordion, hover do card, foco de teclado e o comportamento em `prefers-reduced-motion` não foram medidos — são superfície de outro ticket.
-- **Responsivo abaixo do breakpoint.** Sabe-se que `Columns` colapsa para uma coluna por container query e que o `CardGroup` do Fern tem `cols`, mas os pontos de quebra concretos não foram extraídos.
-- **Densidade tipográfica.** Tamanhos foram lidos como classes utilitárias (`text-sm`, `text-base`), não como valores computados em pixel. Para a spec, isso precisa virar medição no navegador.
+- **Responsivo abaixo do breakpoint.** Sabe-se que `Columns` colapsa para uma coluna por container query, mas os pontos de quebra concretos não foram extraídos.
+- **Densidade tipográfica.** Tamanhos foram lidos como classes utilitárias (`text-sm`, `text-base`) e traduzidos para o valor padrão do Tailwind. Para a spec, isso precisa virar medição de valor computado no navegador.
+- **Os ícones de cada variante de callout.** Sabe-se que são SVG inline, um por variante, e que o `Callout` genérico e o caret do accordion usam `mask-image` de CDN. Os desenhos concretos dos seis ícones tipados não foram identificados.
 - **Se o swizzle basta.** A afirmação de que os recursos ausentes do bloco de código cabem em swizzle do `classic` é hipótese, não achado.
-- **A escolha do orçamento de ícones.** A pesquisa expõe as quatro saídas e o custo de cada uma; não decide entre elas. Isso é decisão de mapa.
+- **A escolha do orçamento de ícones.** A pesquisa expõe as saídas e o custo de cada uma; não decide entre elas. Isso é decisão de mapa.
+- **A implementação do seletor de SDK do Clerk.** `SDKSelector.tsx` e `SDK.tsx` moram em `clerk/clerk`, que não é público. O comportamento descrito vem do `CONTRIBUTING.md`, não do código.
+- **`<If roles>` do Fern.** Documentado, sem uso observado em produção em nenhum repositório inspecionado.
 
