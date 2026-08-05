@@ -49,9 +49,70 @@ O mesmo mecanismo, aliás, é o que torna o Mintlify barato de auditar: **qualqu
 
 
 
-## Uso real: a frequência separa o central do decorativo
+## Uso real: o que os três alvos estéticos realmente escrevem
 
-Catálogo disponível e catálogo usado são coisas diferentes. Para as referências com docs open-source deu para contar. Números tirados do MDX fonte, com blocos de código removidos da contagem.
+Catálogo disponível e catálogo usado são coisas diferentes, e a diferença aqui é brutal — **metade do catálogo do Mintlify tem uso zero**. Como o alvo do projeto são as páginas que agradaram, e não o catálogo teórico, esta seção pesa mais que a lista de componentes.
+
+Método: todo site Mintlify publica `llms.txt` com o índice de páginas, e toda URL devolve o **MDX fonte** quando se acrescenta `.md`. Devin e Perplexity foram varridos **integralmente** — 100% do índice publicado. FastMCP e Trigger.dev foram lidos do repositório. Em todas as contagens, cercas de código e código inline foram removidos antes de contar, então nada aqui vem de exemplo dentro de bloco.
+
+| Site | Páginas no índice | Amostradas | Geradas de OpenAPI | MDX autorais |
+| --- | ---: | ---: | ---: | ---: |
+| Devin | 553 | 552 | 269 | 284 |
+| Perplexity | 187 | 187 | 21 | 166 |
+| FastMCP (repo) | 419 | 419 | 51 | 147 na v4 corrente |
+| Trigger.dev (repo) | 371 | 371 | — | 371 |
+
+### Devin — 553 páginas
+
+| Componente | Arquivos | Usos |
+| --- | ---: | ---: |
+| `Frame` | 92 | 419 |
+| `Note` | 182 | 356 |
+| `Card` | 56 | 281 |
+| `Accordion` | 45 | 473 |
+| `Update` | 12 | 797 |
+| `Step` | 18 | 147 |
+| `Warning` | 73 | 112 |
+| `Tip` | 71 | 110 |
+| `Tab` | 32 | 110 |
+| `CardGroup` | 40 | 73 |
+| `ParamField` | 10 | 65 |
+| `AccordionGroup` | 39 | 61 |
+| `Info` | 37 | 56 |
+| `ResponseField` | 7 | 51 |
+| `Steps` | 18 | 37 |
+| `Tabs` | 32 | 37 |
+| `Icon` | 7 | 25 |
+| `Expandable` | 4 | 11 |
+| `Check` | 2 | 8 |
+| `CodeGroup` | 1 | 5 |
+
+Os números de `Update` e `Accordion` são inflados por changelogs gerados: 77% dos usos de `Update` estão em 4 arquivos, 52% dos de `Accordion` em 2. Descontando-os, a ordem real por volume é `Frame` 419 · `Note` 355 · `Card` 280 · `Accordion` 225 · `Update` 185 · `Step` 147.
+
+### Perplexity — 187 páginas
+
+| Componente | Arquivos | Usos |
+| --- | ---: | ---: |
+| `Card` | 98 | 432 |
+| `CodeGroup` | 76 | 303 |
+| `Accordion` | 55 | 235 |
+| `Step` | 34 | 177 |
+| `Tab` | 28 | 143 |
+| `Info` | 86 | 133 |
+| `CardGroup` | 93 | 108 |
+| `Warning` | 67 | 96 |
+| `Tip` | 65 | 91 |
+| `Note` | 40 | 63 |
+| `Tabs` | 28 | 58 |
+| `Steps` | 34 | 51 |
+| `Update` | 1 | 41 |
+| `AccordionGroup` | 20 | 36 |
+| `Frame` | 5 | 17 |
+| `Icon` | 1 | 14 |
+| `Check` | 7 | 10 |
+| `Columns` | 2 | 7 |
+
+Ao contrário do Devin, aqui o uso é uniformemente distribuído — nenhuma página domina a contagem.
 
 ### FastMCP — `PrefectHQ/fastmcp`, `docs/`, 419 arquivos `.mdx`
 
@@ -104,13 +165,71 @@ A pasta contém arquivo morto versionado (81 mdx em `v2/`, 140 em `v3/`, 51 auto
 
 ### O que a frequência ensina
 
-**O núcleo é pequeno e é o mesmo nos dois.** Callout tipado, Card, Steps, CodeGroup, ParamField. Fora isso, cauda longa.
+**O núcleo cabe em 17 componentes.** A interseção dos quatro sites é: `Note`, `Tip`, `Warning`, `Info`, `Check`, `Card`, `CardGroup`, `Steps`, `Step`, `Tabs`, `Tab`, `CodeGroup`, `Accordion`, `AccordionGroup`, `Frame`, `Update`, `Icon`. A união com a cauda longa chega a 21. **Isso é o escopo de trabalho.**
 
-**Callout é o componente mais usado da documentação técnica, disparado.** Somando `Note`+`Tip`+`Warning`+`Info` no Trigger.dev, dá 201 arquivos de 371 — mais da metade das páginas tem pelo menos um. E dos seis tipos, três dominam (`Note`, `Tip`, `Warning`); `Check` e `Danger` quase não aparecem (`Check`: 1 arquivo no FastMCP, 3 no Trigger.dev; `Danger`: nenhum dos dois).
+**Metade do catálogo do Mintlify tem uso zero.** Em 1.740 páginas somadas dos quatro sites, nenhuma ocorrência de: `Tooltip`, `Badge`, `Callout` (o genérico), `Danger`, `Tile`, `Panel`, `Tree`, `View`, `Visibility`, `Prompt`, `Banner`, `Color`, `RequestExample`, `ResponseExample`, `Mermaid` como componente. O `Tooltip` é o caso mais eloquente: está no catálogo, está no guia de autoria interno do FastMCP, **e nenhum autor o usou**. Nem inventaram substituto. Para o shinydoc, isso é escopo cortado com evidência, não com palpite.
 
-**A densidade importa mais que o alcance.** `ParamField` aparece em poucos arquivos e é usado centenas de vezes — é um componente de página de referência, não de guia. `Update` idem: 2 arquivos, 149 usos. Um componente assim tem exigência de performance e de consistência tipográfica que um `Frame` não tem.
+**Callout ganha em alcance; Card e Frame ganham em volume.** `Note` aparece em 182 dos 553 arquivos do Devin — nenhum outro componente chega perto de tanta *dispersão*. Mas o maior número de *usos* é `Frame` (419) no Devin e `Card` (432) na Perplexity. São dois papéis distintos: o callout é o tempero que aparece em toda página, o card é o bloco que constrói páginas inteiras de hub.
 
-**Componentes que existem no catálogo e ninguém usa.** Zero ocorrências nos dois repos, apesar de estarem no Mintlify: `Tooltip`, `Panel`, `Banner`, `View`, `Visibility`, `Color`, `Tree`, `ResponseExample`. O `Tooltip` é o caso mais eloquente — está no catálogo, está no guia de autoria interno do FastMCP, e **nenhum autor o usou em 790 arquivos MDX somados**. Nem inventaram substituto. Para o shinydoc: tooltip é candidato a corte, não a prioridade.
+**Dos seis tipos de callout, cinco existem e um não.** `Note`, `Tip`, `Warning`, `Info` e `Check` cobrem tudo; **`Danger` tem uso zero nos quatro sites**. E `Check` é marginal (2 arquivos no Devin, 7 na Perplexity). Cinco variantes bastam, e uma delas quase não é usada.
+
+**A densidade importa mais que o alcance.** `ParamField` aparece em poucos arquivos e é usado dezenas ou centenas de vezes; `Update` idem — 12 arquivos e 797 usos no Devin. São componentes de página de referência, não de guia. A exigência deles é consistência tipográfica sob repetição, não versatilidade.
+
+**Duas casas, duas soluções para o mesmo problema.** Perplexity usa `CodeGroup` em 76 páginas / 303 vezes; Devin usa em **1 página / 5 vezes**, e resolve multi-linguagem com `Tabs`+`Tab`. Ou seja, `CodeGroup` e `Tabs` competem pelo mesmo caso de uso — vale saber disso antes de construir os dois.
+
+### As props que realmente são usadas
+
+Isto define a superfície mínima da API. Percentuais sobre o total de usos de cada componente.
+
+| Componente | Devin | Perplexity |
+| --- | --- | --- |
+| `Card` | `title` 100%, `icon` 95%, `href` 65%, `horizontal` 13% | `title` 100%, `icon` 96%, `href` 92%, `cta` 7%, `iconType` 7%, `horizontal` 6%, `arrow` 6% |
+| `CardGroup` | `cols` **100%** | `cols` **100%** |
+| `Accordion` | `title` 100%, `icon` 10%, `description` 3%, `defaultOpen` 1% | `title` 100%, `description` 6%, `icon` 2% |
+| `Step` | `title` **100% e nada mais** | `title` **100% e nada mais** |
+| `Tab` | `title` **100% e nada mais** | `title` **100% e nada mais** |
+| `Update` | `label` 100%, `description` 81% | `label` 100%, `tags` 100% |
+| `Frame` | majoritariamente **sem props**; `caption` 6% | `caption` 18% |
+| `ParamField` | `body`+`type` 100%, `required` 37% | — (API vem de OpenAPI) |
+| `Steps`, `Tabs`, `CodeGroup`, `AccordionGroup` | **sempre sem props** | **sempre sem props** |
+| `Note`/`Tip`/`Warning`/`Info`/`Check` | **sempre sem props** (1 exceção) | **sempre sem props** |
+
+Cinco leituras que economizam trabalho:
+
+1. **Os wrappers não têm props.** `Steps`, `Tabs`, `CodeGroup` e `AccordionGroup` nunca recebem nada. `titleSize` em `Steps` — a prop que a documentação do Mintlify destaca — tem **zero ocorrências nos dois sites**.
+2. **`Step` e `Tab` só precisam de `title`.** Nada mais foi usado, nunca.
+3. **`CardGroup` sempre declara `cols`.** Nenhum autor confiou no default.
+4. **Os callouts são só filhos.** Um componente de admonition com cinco variantes e nenhuma prop resolve 100% do uso real — o que torna o `title` opcional (discutido adiante) uma adição deliberada, não uma paridade.
+5. **`ParamField` do Devin usa `body=`, nunca `query`/`path`/`header`.** A posição do parâmetro, que o Mintlify trata como eixo central da API, na prática colapsa num só valor.
+
+### Como os componentes se aninham de verdade
+
+Composições observadas, com contagem — define o que precisa funcionar dentro do quê:
+
+- **Devin**: `CardGroup > Card` 238 · `AccordionGroup > Accordion` 215 · `Steps > Step` 147 · `Tabs > Tab` 105 · `Tab > Frame` 52 · `Step > Frame` 47 · `Expandable > ParamField` 21 · `Expandable > ResponseField` 20 · **`ResponseField > ResponseField` 16 (recursivo)** · `Card > Check` 7 · `Card > Warning` 5.
+- **Perplexity**: `CardGroup > Card` 371 · `Steps > Step` 177 · `Tabs > Tab` 143 · `AccordionGroup > Accordion` 118 · `Step > CodeGroup` 18 · `Columns > CodeGroup` 14 · `Tab > CodeGroup` 11 · `Step > Tabs` 11 · `Accordion > Steps` 4.
+
+Profundidade máxima observada: **4 níveis** — `Steps > Step > Tabs > Tab > cerca de código`, e `ParamField > Expandable > ParamField > Expandable`.
+
+Duas consequências de projeto. **O `Card` não é só um link — é um container de conteúdo**: o Devin embute `Check` e `Warning` dentro dele. E **`ResponseField` precisa ser recursivo**, porque um objeto de resposta contém objetos de resposta.
+
+### O bloco de código: quase nenhum recurso é usado
+
+Contagem de opções de metastring nas cercas, sobre 1.036 cercas no Devin e 1.517 na Perplexity:
+
+| Opção | Devin | Perplexity |
+| --- | ---: | ---: |
+| título nu (` ```python Python `) | 300 cercas / 279 arq. | 766 / 99 |
+| `wrap` | **0** | 18 / 7 arq. |
+| `expandable` | **0** | 5 / 4 arq. |
+| `title="…"` | **0** | 1 |
+| `lines` · `highlight=` · `focus=` · `icon=` · diff | **0** | **0** |
+
+O que o autor escreve é **linguagem + um título nu**. Nada mais, praticamente. Numeração de linha, realce, foco e diff — os recursos que mais dão trabalho de implementar — têm **uso zero nos dois alvos estéticos**. Isso reordena a prioridade do bloco de código de forma drástica.
+
+Linguagens mais frequentes — Devin: `yaml` 320, `bash` 221, `json` 211. Perplexity: `bash` 456, `python` 439, `typescript` 294, `json` 206.
+
+**Armadilha a não copiar**: o sufixo `theme={null}` aparece em 606 de 606 cercas do Devin e 1.461 de 1.517 da Perplexity. **É artefato do exportador `.md` do Mintlify, não algo que o autor digitou.** Quem ler o MDX exportado sem saber disso replicará ruído.
 
 **O guia de autoria não prevê o uso real.** O FastMCP mantém um guia (`docs/.cursor/rules/mintlify.mdc`, 364 linhas) que prescreve `Accordion`, `Tabs`, `RequestExample`/`ResponseExample` e `Tooltip` — usados 0, 4, 0 e 0 vezes na doc corrente. O Trigger.dev mantém um `docs/CLAUDE.md` que autoriza **8 componentes** (`Note`, `Warning`, `Info`, `Tip`, `CodeGroup`, `Expandable`, `Steps`/`Step`, `Card`/`CardGroup`) — e a lista bate quase perfeitamente com a realidade, com duas exceções em uso não previsto (`Accordion` em 13 arquivos, `ParamField`/`ResponseField` em 27). Lista curta e imposta funciona; lista longa e aspiracional não.
 
@@ -237,9 +356,39 @@ Correlação verificada por casamento entre o texto renderizado de cada exemplo 
 ### Card e grade de cards
 
 **Partes**: `card-icon`, `card-title`, `card-content`, `card-image`, `card-cta`, `card-content-container`.
-**Geometria medida** (raiz): `rounded-2xl bg-white dark:bg-background-dark border border-gray-950/10 dark:border-white/10 overflow-hidden my-2 ring-2 ring-transparent`.
-**Sinalização de "isto é clicável"**: quando há `href`, a raiz ganha `cursor-pointer hover:border-primary! dark:hover:border-primary-light!` — **o hover é a borda virando cor de marca**, não sombra nem elevação. O `ring-2 ring-transparent` reservado de fábrica é o espaço do foco.
-**Tipografia medida**: título `font-semibold text-base text-gray-800 dark:text-white` (com `mt-4` quando há ícone acima); corpo `text-base leading-6 text-gray-600 dark:text-gray-400`; ícone `size-6` (24px) na cor do título.
+
+**DOM medido:**
+
+```html
+<div class="card block font-normal group relative my-2 ring-2 ring-transparent rounded-2xl
+            bg-white dark:bg-background-dark border border-gray-950/10 dark:border-white/10
+            overflow-hidden w-full cursor-pointer
+            hover:border-primary! dark:hover:border-primary-light!"
+     role="link" tabindex="0" aria-labelledby="…">
+  <div data-component-part="card-content-container" class="px-6 py-5 relative">
+    <!-- seta de link: escondida por padrão, acende na cor de marca no hover do card -->
+    <div class="absolute top-5 right-5 hidden text-gray-400 dark:text-gray-500
+                group-hover:text-primary dark:group-hover:text-primary-light">
+      <svg class="m-0.5 size-3 shrink-0"><!-- seta diagonal --></svg></div>
+    <div data-component-part="card-icon" aria-hidden="true"
+         class="size-6 fill-gray-800 dark:fill-gray-100 text-gray-800 dark:text-gray-100 [&>svg]:size-6">
+      <svg class="size-6 m-0! shrink-0 bg-primary dark:bg-primary-light"
+           style="mask-image:url('…/lucide/v1.16.0/text-align-start.svg');mask-size:100%"></svg></div>
+    <div class="w-full">
+      <h2 data-component-part="card-title"
+          class="not-prose font-semibold text-base text-gray-800 dark:text-white mt-4">…</h2>
+      <div data-component-part="card-content"
+           class="prose mt-1 font-normal text-base leading-6 text-gray-600 dark:text-gray-400">…</div>
+```
+
+**Como sinaliza semântica**, medido:
+
+- **O ícone é da cor de marca**, não cinza: o `<svg>` interno é `bg-primary dark:bg-primary-light` com `mask-image`. As classes cinza no wrapper (`fill-gray-800 dark:fill-gray-100`) são o fallback para quando o autor passa SVG cru. Esse é o detalhe que mais define a aparência do card nas referências.
+- **O hover é a borda virando cor de marca** (`hover:border-primary!`), não sombra e não elevação. Nada se move.
+- **A seta de link existe sempre e nasce `hidden`** — a prop `arrow` só a revela. Fica em `top-5 right-5` (20px), mede 12px, é cinza em repouso e acende na cor de marca no hover do card (`group-hover:`).
+- `ring-2 ring-transparent` reservado na raiz é o espaço do anel de foco, pré-alocado para não deslocar layout quando o foco chega.
+- Padding do conteúdo: **24px lateral, 20px vertical** (`px-6 py-5`). Título `font-semibold text-base`, corpo `text-base leading-6 text-gray-600 dark:text-gray-400`, com `mt-1` entre eles e `mt-4` entre ícone e título.
+- Acessibilidade: a raiz é um `<div role="link" tabindex="0" aria-labelledby>`, **não um `<a>`**. É uma escolha discutível do Mintlify — um `<a>` real daria navegação e menu de contexto de graça. Ao reimplementar, vale divergir aqui.
 **Variante tipada**: `type="info|warning|note|tip|check|danger"` faz o card **emprestar a paleta do callout** — mesmas classes de borda e fundo, e ainda re-tinge título e conteúdo (`[&_[data-component-part=card-title]]:text-blue-900`). É o mesmo sistema de cor servindo dois componentes.
 **Props** ([mintlify.com/docs/components/cards](https://www.mintlify.com/docs/components/cards)): `title`, `icon`, `href`, `type`, `horizontal` (bool), `img`, `cta`, `arrow` (bool), `color`, `iconType`. Nenhuma é obrigatória.
 
@@ -531,14 +680,62 @@ Isso é o achado mais caro de transplantar: no Docusaurus, a coluna direita é o
 
 ### Frame
 
-**Parte**: `frame-caption`.
-**Geometria medida**: legenda `rounded-2xl text-center mt-3 pt-0 px-8 pb-2 text-sm text-gray-700 dark:text-gray-400`; links dentro da legenda ganham `border-b border-primary` e engrossam para `border-b-2` no hover — sublinhado por borda na cor de marca, não `text-decoration`.
+**Parte**: `frame-caption`. Raiz semântica: `<figure>` / `<figcaption>`.
 **Props** ([mintlify.com/docs/components/frames](https://mintlify.com/docs/components/frames)): `caption` (aceita Markdown, centralizada abaixo) e `hint` (texto antes da moldura). Ambas opcionais; o conteúdo vai como `children`.
+
+**DOM medido — são quatro camadas empilhadas, não uma:**
+
+```html
+<figure>
+  <!-- 1. fundo de papel quadriculado, esmaecido por máscara em gradiente -->
+  <div class="absolute inset-0 bg-grid-neutral-200/20 dark:bg-grid-white/5
+              [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))]
+              dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"
+       style="background-position:10px 10px"></div>
+  <!-- 2. o conteúdo, recortado a 12px -->
+  <div class="relative rounded-xl overflow-hidden flex justify-center">
+    <span data-rmiz aria-owns="rmiz-modal-"><img src="…" alt="…"></span>
+  </div>
+  <!-- 3. anel de borda por cima, sem captura de ponteiro, recortado a 16px -->
+  <div class="absolute inset-0 pointer-events-none border border-black/5
+              dark:border-white/5 rounded-2xl"></div>
+  <!-- 4. legenda -->
+  <figcaption data-component-part="frame-caption"
+      class="relative rounded-2xl text-center mt-3 pt-0 px-8 pb-2 text-sm
+             text-gray-700 dark:text-gray-400 [&_p]:m-0
+             [&_a]:font-semibold [&_a]:no-underline [&_a]:border-b [&_a]:border-primary
+             [&_a:hover]:border-b-2 dark:[&_a]:text-white dark:[&_a]:border-primary-light"></figcaption>
+</figure>
+```
+
+O que a medição revela e a documentação não conta:
+
+- **O fundo quadriculado** (`bg-grid-*`, deslocado 10px) é o que dá ao Frame a aparência de "prancheta". É apagado por uma **máscara em gradiente vertical** cujas rampas diferem por tema — no claro vai de opaco a 60%, no escuro de 10% a 50%. É exatamente o tipo de decisão que o axioma 4 chama de custo real: no escuro o padrão precisa quase sumir para não sujar.
+- **A borda é uma camada separada, `pointer-events-none`**, com raio de 16px, enquanto o conteúdo é recortado a 12px. Desenhar a borda por cima em vez de no contêiner evita o serrilhado que aparece quando uma imagem encosta num `border-radius`.
+- **A imagem amplia ao clique** (`data-rmiz` — a biblioteca `react-medium-image-zoom`). É comportamento de biblioteca, não do Mintlify; o axioma 2 fecha essa porta, mas o comportamento em si é barato de refazer.
+- **Links na legenda são sublinhados por borda na cor de marca** (`border-b border-primary`, engrossando para 2px no hover), nunca por `text-decoration`. No escuro o texto do link vira branco e a borda vira `--primary-light`.
+
 **Comportamento de vídeo**: se o `<video>` filho tem `autoPlay`, o Frame injeta `playsInline`, `loop` e `muted` automaticamente.
 
 ### Tabela
 
-No Mintlify não existe componente. É Markdown estendido puro, com alinhamento por dois-pontos (`:---`, `:---:`, `---:`) na linha separadora ([mintlify.com/docs/list-table.md](https://mintlify.com/docs/list-table.md)). O Fern discorda: tem um componente `Table` com cabeçalho fixo opcional ([buildwithfern.com — components overview](https://buildwithfern.com/learn/docs/writing-content/components/overview)). É a única divergência frontal entre os dois catálogos sobre um mesmo elemento.
+Não existe componente. É Markdown estendido puro, com alinhamento por dois-pontos (`:---`, `:---:`, `---:`) na linha separadora ([mintlify.com/docs/list-table.md](https://mintlify.com/docs/list-table.md)). Mas **o que envolve a tabela é componente**, e isso é o que vale copiar. DOM medido:
+
+```html
+<div data-component-part="scroll-area-viewport" aria-label="Scrollable table"
+     class="size-full rounded-[inherit] [--scroll-area-fade-size:32px] overflow-y-hidden!"
+     style="overflow:scroll">
+  <div data-component-part="scroll-area-content" class="flex" style="min-width:fit-content">
+    <div class="px-(--page-padding) grow max-w-none table">
+      <table class="m-0 min-w-full w-full max-w-none table
+                    [&_td]:min-w-[150px] [&_th]:text-left [&_td[data-numeric]]:tabular-nums">
+```
+
+Quatro decisões embutidas: a tabela rola **sozinha, dentro do seu próprio contêiner**, com esmaecimento de 32px nas bordas e `aria-label="Scrollable table"` para quem navega por leitor de tela; toda célula tem `min-width: 150px`, o que impede coluna esmagada; cabeçalho alinhado à esquerda; e células marcadas `data-numeric` recebem **`tabular-nums`** — o renderizador detecta coluna numérica e aplica algarismos de largura fixa, para os números alinharem na vertical.
+
+O visual da tabela em si vem do Tailwind Typography, não de CSS próprio: `thead` com borda inferior de 1px (`--tw-prose-th-borders`) e cada `tbody tr` com borda inferior de 1px (`--tw-prose-td-borders`). **Só separadores horizontais** — sem régua vertical, sem zebra, sem borda externa.
+
+O Fern discorda do Mintlify e tem um componente `Table` com cabeçalho fixo opcional ([buildwithfern.com — components overview](https://buildwithfern.com/learn/docs/writing-content/components/overview)); é a única divergência frontal entre os dois catálogos sobre um mesmo elemento.
 
 ### Reuso: snippets
 
@@ -581,6 +778,49 @@ Cada token do código carrega `style="color:#1F2328;--shiki-dark:#4EC9B0"` — a
 Isto é a régua de borda do sistema: **1px, cinza a 70% de alfa no claro, branco a ~10% no escuro**. Card, accordion e bloco de código usam a mesma. Para o axioma 3, o padrão a copiar é exatamente esse: marca global em variável, geometria em variável nomeada, e a cor de superfície derivada por alfa em vez de hex cravado por tema.
 
 
+
+## A Perplexity é a prova de que a skin é trocável
+
+Este é o achado mais consequente da pesquisa para o shinydoc, e ele caiu no colo: **a Perplexity — um dos três layouts que agradaram — não usa a paleta do Mintlify. Ela repinta o sistema inteiro por CSS.**
+
+O Mintlify injeta CSS do projeto como `<style data-custom-css-path="styles.css">`. O da Perplexity tem **52.835 bytes e 269 seletores**, contra 308 bytes de um segundo arquivo. E ele reescreve os componentes de conteúdo enganchando exatamente nos dois atributos que a anatomia acima documentou: `data-callout-type` na raiz do callout e `data-component-part` nas partes internas.
+
+Isto vale por si: **os mesmos componentes, o mesmo CSS base byte a byte que FastMCP e Devin servem, e mesmo assim um resultado que lê como outro produto.** É o axioma 3 demonstrado em produção, não em teoria.
+
+### A paleta de callout da Perplexity, medida
+
+Valores extraídos do CSS servido. É uma paleta de referência aprovada por gosto humano — matéria-prima direta para a spec:
+
+| Tipo | Claro: fundo / borda | Claro: texto e ícone | Escuro: fundo / borda | Escuro: texto e ícone |
+| --- | --- | --- | --- | --- |
+| `note` | `rgba(66,145,210,.10)` / `.14` | `#135B8C` | `rgba(66,145,210,.18)` / `.18` | `#63AEF2` |
+| `info` | `rgba(18,21,22,.06)` / `.10` | `#545658` | `rgba(247,247,248,.10)` / `.14` | `#ABB0B3` |
+| `tip` | `rgba(75,158,79,.10)` / `.14` | `#136A22` | `rgba(75,158,79,.18)` / `.22` | `#88BB8C` |
+| `warning` | `rgba(203,134,6,.10)` / `.14` | `#7B571E` | `rgba(203,134,6,.16)` / `.20` | `#BCA482` |
+| `check` | `rgba(75,158,79,.10)` / `.14` | `#136A22` | `rgba(75,158,79,.18)` / `.22` | `#88BB8C` |
+
+A fórmula por trás é regular e reproduzível, e é ela que interessa mais que os hexadecimais:
+
+1. **Uma cor-base por variante.** Fundo é a base a ~10% de alfa no claro e ~18% no escuro; borda é a mesma base a ~14% no claro e ~18–22% no escuro. Fundo e borda nunca são cores diferentes — são a mesma cor em alfas diferentes.
+2. **Texto e ícone compartilham uma cor sólida**, e essa cor **inverte de luminosidade entre os temas**: escura sobre véu claro (`#135B8C`), clara sobre véu escuro (`#63AEF2`). A base do véu não muda de matiz; só o texto atravessa.
+3. **`tip` e `check` são idênticos** aqui também — a Perplexity manteve a colisão do Mintlify em vez de resolvê-la.
+4. **`info` é neutro cinza**, confirmando a inversão de convenção do Mintlify: quem carrega o azul é `note`.
+5. Links dentro do callout: `color: inherit` e `text-decoration: underline` — o link **não** quebra a cor da variante.
+
+### O resto do repinte
+
+- **Card**: `#F7F7F8` no claro, `#121516` no escuro — no claro, o card tem exatamente a cor de fundo da página, então quem separa o card do texto é só a borda.
+- **Bloco de código, dois níveis de cor**: a moldura (`.code-block`, `.code-group`) é `#F7F7F8` / `#121516`, e a **área de código** (`.code-block-background`, `pre.shiki`) é `#FFFFFF` / `#0b0c0d`. Aquele `p-0.5` de 2px medido na anatomia é o que revela essa moldura — é o que faz o bloco parecer uma pastilha dentro de um berço, e não um retângulo chapado.
+- **Tabela**: `tbody tr:last-child td { border-bottom: none }` — remove o traço órfão do fim da tabela. Detalhe pequeno, e é justamente o tipo de coisa que separa uma tabela cuidada de uma tabela padrão.
+- **Tipografia própria**: GT Standard e GT Standard Mono, auto-hospedadas em `.woff2` por `@font-face`, com 33 referências no arquivo. A camada de token declara `--color-primary`, `--color-foreground`, `--color-muted-foreground`, `--color-card`, `--color-border`, mais um conjunto `--cb-*` de cores de chip para uma galeria de cookbook própria.
+
+### O que isso decide para o shinydoc
+
+**A superfície de re-skin precisa ser projetada, não descoberta.** A Perplexity só conseguiu repintar porque o Mintlify emite `data-callout-type` e `data-component-part` em cada parte interna. Sem esses ganchos, o repinte exigiria sobrescrever classes utilitárias — frágil e dependente do build.
+
+Então o shinydoc deve emitir os seus próprios atributos estáveis nas partes internas de cada componente, e tratá-los como **contrato público** da skin. É a diferença entre uma skin trocável e uma skin teoricamente trocável. E o nome do atributo importa menos que a estabilidade: quem consome é CSS, não JavaScript.
+
+Vale registrar a ressalva: a Perplexity conseguiu isso à base de `!important` em quase todo seletor, porque está lutando contra utilitárias Tailwind de especificidade equivalente. No shinydoc, com CSS Modules e variáveis, a mesma troca sai sem essa arma.
 
 ## Padrão da plataforma vs. construído por conta
 
@@ -641,11 +881,46 @@ Comparação relevante: o FastMCP declara `styling.codeblocks.theme: {dark: "dar
 
 **HTML cru no MDX.** Ambos usam, com parcimônia: `<iframe>` de YouTube colado direto (Trigger.dev, 5 arquivos, sem `<Frame>`), `<video controls>` cru. O FastMCP faz a troca de mídia por tema com duas tags sobrepostas — `className="rounded-2xl block dark:hidden"` e `className="rounded-2xl hidden dark:block"` — que é o mesmo truque que o Mintlify recomenda para `Tile`. **Nenhum `<style>` inline autoral em nenhum dos dois**, e apenas um `<div style={{…}}>` em 790 arquivos.
 
+### Devin e Perplexity: a escapada é `export const` no próprio arquivo
+
+Aqui o padrão inverte. **Nenhum dos dois usa `/snippets`. Zero imports.** Quando o Mintlify não cobre, os autores escrevem React **inline dentro do `.mdx`**, com `export const` — 24 declarações no Devin, 37 na Perplexity.
+
+| Site | Componente próprio | Usos / arquivos | O que é |
+| --- | --- | ---: | --- |
+| Devin | `Release` | 496 / 4 | changelog gerado (`desktop/changelog`, `desktop/releases`) |
+| Devin | `Image` | 123 / 4 | auxiliar dentro do JSX de changelog |
+| Devin | `PromptBlock` | 19 / 7 | `({children, type, agent, intent, playbookId})` — botão "abrir no Devin" ao redor de uma cerca |
+| Devin | `HeroCard` | 6 / 1 | `({imageSrc, title, description, href})` na landing de casos de uso |
+| Devin | `ModelCosts` / `ModelsTable` | 6 / 2 | tabela de preços a partir de `export const modelCostData = [...]`, com mais de 4.300 linhas de dados dentro do MDX |
+| Perplexity | `SonarDeprecationNotice` | 21 / 21 | aviso de depreciação nas páginas de referência |
+| Perplexity | `PricingCalculator`, `CookbookGallery`, `UseCaseTabs`, `ApiStatus`, `ModelOverviewCards`, `MigrationBenchmarkChart` | 1–2 cada | componentes de produto |
+
+E o uso de HTML/JSX cru é muito maior que nos dois repos abertos:
+
+| | Devin | Perplexity |
+| --- | ---: | ---: |
+| `className=` | 544 usos / 49 arq. | **920 / 34** |
+| `<div>` | 120 / 26 | **512 / 15** |
+| `<img>` | **476 / 100** | 79 / 16 |
+| `<video>` | **75 / 38** | 1 / 1 |
+| `style=` | 198 / 42 | 196 / 13 |
+| `<iframe>` | 22 / 11 | 18 / 18 |
+
+Três achados que mudam decisões:
+
+**Imagem nunca é Markdown.** Em nenhum dos dois sites aparece `![]()`. É sempre `<img>` cru com `src` no CDN, `width` e `height` explícitos e um atributo `data-path`. No Devin, 367 dos 476 `<img>` (77%) estão dentro de `<Frame>`; na Perplexity, só 18 de 79 (23%) — ela usa `Frame` quase nada e deixa a imagem solta. Dimensões explícitas em toda imagem é o que impede layout shift, e é um requisito de autoria, não de componente.
+
+**O vídeo é do Devin.** 60 ocorrências com o mesmo conjunto exato de flags: `<video className="…" src="https://mintcdn.com/…" autoPlay muted loop playsInline controls />`. Se o shinydoc quiser vídeo, esse é o contrato observado.
+
+**A classe utilitária vaza para o conteúdo.** As 920 ocorrências de `className=` na Perplexity são classes Tailwind escritas à mão dentro do MDX. Isso funciona porque o Mintlify serve Tailwind. **No Docusaurus vanilla não existe esse escape** — o que lá é `className="flex gap-4"` aqui precisa ser um componente. É a diferença de plataforma com maior consequência prática para a autoria, e vale mais que qualquer componente individual do catálogo.
+
 
 
 ## O bloco de código nos três sistemas
 
 Merece uma comparação própria: é o componente mais usado da documentação técnica, e é o único onde o Docusaurus chega perto do estado da arte de fábrica.
+
+> **Leia esta tabela junto com a medição de uso.** Ela mostra o que cada plataforma *oferece*. O que os alvos estéticos *usam* é muito menos: só linguagem e título nu, com `wrap` e `expandable` raros e **zero** ocorrências de numeração, realce, foco, diff ou ícone. A tabela serve para saber o que existe, não para dimensionar trabalho.
 
 | Recurso | Mintlify | Fern | Docusaurus classic |
 | --- | --- | --- | --- |
@@ -743,30 +1018,45 @@ Consequência: alinhar o shinydoc ao visual das referências não é trocar core
 
 Cruzando três coisas — o que o Mintlify oferece, o que as referências que agradaram **efetivamente usam**, e o que o Docusaurus `classic` já entrega — sai a lista de trabalho. A coluna "Docusaurus" diz de onde se parte, não quanto custa.
 
-| Componente | Uso nas referências | Docusaurus classic | Trabalho |
-| --- | --- | --- | --- |
-| **Callout** (`Note`/`Tip`/`Warning`/`Info`) | O mais usado, disparado — mais da metade das páginas | Admonition existe, mas **eixo vertical e faixa de título maiúscula** | Reorientar para horizontal, suprimir a faixa, repaginar cor por variante |
-| **Bloco de código** (título, realce, numeração, cópia) | Onipresente | Quase tudo existe: título, realce, numeração, cópia, quebra | Faltam `focus`, `expandable`, diff, ícone. Realce precisa virar cor de marca a 20% |
-| **Card + grade** | Segundo mais usado | `DocCard` existe mas é **dirigido por metadado de sidebar** | Nascer do zero: `Card` de props livres + grade por `--cols` |
-| **Steps** | Terceiro | **Ausente** | Nascer do zero |
-| **CodeGroup** | Alto | `Tabs` + blocos aproxima | Componente próprio, com rótulo vindo do título do bloco |
-| **ParamField / ResponseField** | Poucos arquivos, **centenas de usos** | **Ausente** | Nascer do zero. Densidade exige rigor tipográfico |
-| **Accordion / Expandable** | Médio | `Details` existe e é **a mesma primitiva** (`<details>`) | O único que parte do mesmo lugar. Falta grupo, ícone, descrição, âncora |
-| **Tabs** | Médio | Existe, com sincronização por `groupId` | Repaginar; a sincronização do Docusaurus é melhor que a do Mintlify (id explícito vs. casamento por título) |
-| **Frame** | Baixo | **Ausente** | Moldura + legenda; barato |
-| **Badge** | Baixo no catálogo, **altíssimo via wrapper próprio** | **Ausente** | Nascer do zero — ver o `VersionBadge` adiante |
-| **Tabela** | Presente em toda parte | Markdown puro | Só estilo |
-| **Tooltip** | **Zero usos em 790 arquivos MDX** | Ausente | **Cortar.** Ver adiante |
+| # | Componente | Uso medido nos alvos | Docusaurus classic | Trabalho |
+| ---: | --- | --- | --- | --- |
+| 1 | **Callout** — `Note` `Tip` `Warning` `Info` `Check` | Maior alcance: `Note` em 182/553 arquivos do Devin. **Sempre sem props** | Admonition existe, mas **eixo vertical e faixa de título maiúscula** | Reorientar para horizontal, suprimir a faixa, repaginar cor por variante. 5 variantes, não 6 |
+| 2 | **Card + `CardGroup`** | Maior volume: 432 usos na Perplexity, 281 no Devin. `cols` sempre explícito | `DocCard` existe mas é **dirigido por metadado de sidebar** | Nascer do zero. `title`+`icon`+`href`, ícone na cor de marca, hover na borda. Precisa aceitar conteúdo dentro |
+| 3 | **`Steps` / `Step`** | 177 usos na Perplexity, 147 no Devin. `Step` só usa `title` | **Ausente** | Nascer do zero. Marcador de 28px sobre linha de 1px |
+| 4 | **`Accordion` / `AccordionGroup`** | 473 usos no Devin, 235 na Perplexity | `Details` existe e é **a mesma primitiva** (`<details>`) | O único que parte do mesmo lugar. Falta grupo, ícone, descrição, âncora de URL |
+| 5 | **Bloco de código** | Onipresente — mas **só linguagem + título nu** | Quase tudo existe: título, realce, numeração, cópia, quebra | Muito menos do que parecia. Ver decisão 3 |
+| 6 | **`Tabs` / `Tab`** | 143 usos na Perplexity, 110 no Devin. `Tab` só usa `title` | Existe, sincroniza por `groupId` | Repaginar. A sincronização do Docusaurus é **melhor** que a do Mintlify (id explícito vs. casamento por título) |
+| 7 | **`CodeGroup`** | Assimétrico: 303 usos na Perplexity, **5 no Devin** | `Tabs` + blocos aproxima | Avaliar se não é `Tabs` com outra pele |
+| 8 | **`Frame`** | 419 usos no Devin (o mais usado lá), 17 na Perplexity | **Ausente** | Quatro camadas: fundo quadriculado, conteúdo, anel de borda, legenda |
+| 9 | **`ParamField` / `ResponseField` / `Expandable`** | Poucos arquivos, dezenas de usos. **`ResponseField` é recursivo** | **Ausente** | Nascer do zero. Densidade exige rigor tipográfico |
+| 10 | **`Update`** | 797 usos no Devin, 41 na Perplexity — changelog | **Ausente** | Nascer do zero se houver changelog no escopo |
+| 11 | **Tabela** | Presente em toda parte (2.148 linhas no Devin) | Markdown puro | Só estilo, mais o invólucro de rolagem e `tabular-nums` |
+| 12 | **`Icon` inline** | 25 usos no Devin, 14 na Perplexity — inclusive **dentro de célula de tabela** | **Ausente** | Depende da decisão 2 |
+| — | **`Tooltip` `Badge` `Danger` `Tile` `Panel` `Tree` `View` `Visibility` `Prompt` `Banner` `Color` `RequestExample` `ResponseExample`** | **Zero usos em 1.740 páginas** | Ausente | **Fora de escopo** |
 
 ### Quatro decisões que a medição força
 
-**1. O callout precisa de `title` opcional.** Duas equipes independentes tentaram dar título a um callout tipado — o Trigger.dev com `<Note title="…">` (prop ignorada, e o autor repetiu a palavra no corpo para compensar) e com `<Callout type="warning">` (renderiza cinza neutro sem ícone, quando queriam amarelo). O Fern permite `title`; o Mintlify não. Copiar a limitação do Mintlify é copiar um bug conhecido. É a decisão de menor arrependimento do conjunto.
+**1. O callout precisa de `title` opcional — e de cinco variantes, não seis.** `Danger` tem uso zero nos quatro sites. Já o `title`: duas equipes independentes tentaram dar título a um callout tipado — o Trigger.dev com `<Note title="…">` (prop ignorada, e o autor repetiu a palavra no corpo para compensar) e com `<Callout type="warning">` (renderiza cinza neutro sem ícone, quando queriam amarelo). O Fern permite `title`; o Mintlify não. Copiar a limitação do Mintlify é copiar um bug conhecido.
 
-**2. Tooltip é candidato a corte, não a prioridade.** Está no catálogo do Mintlify, está no guia de autoria interno do FastMCP, e **nenhum autor o usou em 790 arquivos**. Nem inventaram substituto. Mesmo destino para `Panel`, `Banner`, `View`, `Visibility`, `Color` e `Tree`: catálogo sem demanda.
+**2. O orçamento de ícones é a decisão que trava as outras.** `Card` usa `icon` em 95–96% dos usos nos dois alvos. Não é opcional na prática — é o que define a aparência do componente mais visível do sistema. E todo `icon` das referências é um nome de string resolvido contra Font Awesome ou Lucide, que o axioma 2 proíbe instalar. A saída mais alinhada é a que o próprio Mintlify usa no caret do accordion, no ícone da aba e no ícone do card: **SVG monocromático como `mask-image` colorido por `background-color`**, porque o ícone herda o token de cor em vez de carregar `fill` próprio, e serve os dois temas sem duplicar asset. Isso precisa ser decidido antes do primeiro componente, não durante.
 
-**3. O orçamento de ícones tem que ser decidido antes, não durante.** Todo componente do conjunto aceita `icon` resolvido contra Font Awesome, Lucide ou Tabler. O axioma 2 fecha essa porta. A saída mais alinhada com o resto do sistema é a que o próprio Mintlify usa no caret do accordion e no ícone da aba: **SVG monocromático como `mask-image` colorido por `background-color`**, porque o ícone passa a herdar o token de cor em vez de carregar `fill` próprio — e é a única opção que serve os dois temas sem duplicar asset.
+**3. O bloco de código é muito menos trabalho do que a documentação do Mintlify sugere.** Numeração de linha, realce, foco, diff e ícone somam **zero usos** nos dois alvos estéticos. O que os autores escrevem é linguagem e um título nu; `wrap` e `expandable` aparecem em punhados. O Docusaurus já entrega título, cópia e quebra de linha. **A lacuna real é quase nula** — e o esforço economizado aqui paga o `Card` e o `Steps`.
 
 **4. A borda é uma régua única, não uma escolha por componente.** `1px`, cinza a 70% de alfa no claro, branco a ~10% no escuro. Card, accordion e bloco de código compartilham. Definir isso como token antes de escrever o primeiro componente evita a deriva que aparece quando cada um escolhe sua borda.
+
+### A diferença de plataforma que nenhum componente resolve
+
+Na Perplexity há **920 usos de `className=` com classes Tailwind escritas à mão dentro do MDX**; no Devin, 544. É assim que as duas casas resolvem tudo que o catálogo não cobre — mais `export const` inline no próprio arquivo para componentes de produto (24 declarações no Devin, 37 na Perplexity), e **zero imports de `/snippets`**.
+
+O Docusaurus vanilla não tem esse escape. O que lá é `className="flex gap-4"` aqui precisa ser um componente ou uma classe de CSS Module. Isso significa que **o catálogo do shinydoc precisa cobrir mais que o do Mintlify**, não menos — porque a válvula de escape que torna o catálogo do Mintlify suficiente não existe do lado de cá. É o risco de escopo mais subestimado desta pesquisa.
+
+### O que o `VersionBadge` do FastMCP ensina
+
+O componente mais usado do site inteiro do FastMCP — 110 de 147 arquivos da doc corrente — não é do Mintlify. É sete linhas de JSX dentro de um `.mdx` de snippet, envolvendo um `<Badge>` padrão, com um arquivo CSS de marca própria. Aparece inclusive aninhado dentro de `ParamField`, para marcar em que versão um argumento surgiu.
+
+A lição não é "faça um VersionBadge". É que **o componente mais valioso de uma documentação pode ser trivial e específico do produto**, e que a plataforma precisa deixar isso ser barato. No shinydoc, o equivalente é o registro em `@theme/MDXComponents`: quem autora ganha uma tag nova sem import e sem build separado.
+
+Vale registrar o contraste entre as duas famílias observadas. Nos repos abertos (FastMCP, Trigger.dev) a invenção da casa é mínima: um único componente com estado em React em 790 arquivos, nenhum `<style>` autoral, e o reuso feito por snippets MDX puros. Nos dois alvos estéticos (Devin, Perplexity) a invenção é bem maior e mora inline no MDX. A diferença provável é acesso ao repositório — quem versiona a doc junto do código usa snippets; quem edita pela web escreve tudo no arquivo.
 
 ### O que o `VersionBadge` do FastMCP ensina
 
