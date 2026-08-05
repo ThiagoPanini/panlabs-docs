@@ -9,6 +9,7 @@ Este repo é **single-context**. Os documentos de domínio moram em `docs/`.
 | `docs/agents/` | Como um agente trabalha **neste** repo. |
 | `docs/adr/` | Decisões de arquitetura deste repo. |
 | `docs/design/` | A spec de design — o entregável do mapa de wayfinding. |
+| `docs/research/` | **Só o índice.** O material das pesquisas mora em branches `research/*`, nunca na `main`. |
 
 ## O que é o shinydoc
 

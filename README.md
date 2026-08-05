@@ -8,7 +8,7 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 
 ## Estado
 
-Em **cartografia**. O repo está na fase de decisão: as escolhas de arquitetura visual e de conteúdo estão sendo resolvidas uma a uma no [mapa de wayfinding](https://github.com/panlabs-tech/shinydoc-docusaurus/issues). Ainda não há site.
+Em **decisão**. O [mapa de wayfinding](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/1) está cartografado e a fase de medição terminou: as **sete pesquisas fecharam**, e a base de evidências está indexada em [`docs/research/`](docs/research/). Restam os tickets de decisão, resolvidos um por sessão. Ainda não há site — a construção começa depois que a spec fechar.
 
 ## Onde está o quê
 
@@ -17,6 +17,7 @@ Em **cartografia**. O repo está na fase de decisão: as escolhas de arquitetura
 | [`docs/agents/`](docs/agents/) | Como um agente trabalha neste repo — tracker, domínio, labels, fluxo. |
 | [`docs/adr/`](docs/adr/) | Decisões de arquitetura. |
 | `docs/design/` | A spec de design. Nasce conforme o mapa fecha. |
+| [`docs/research/`](docs/research/) | Índice das sete pesquisas. O material mora em branches `research/*`. |
 
 ## Restrições travadas
 
