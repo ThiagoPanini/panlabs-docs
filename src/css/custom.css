@@ -1,0 +1,113 @@
+/* =============================================================================
+   shinydoc — regras de base
+
+   Este arquivo NÃO tem valor literal. Cor, comprimento, tempo e curva vivem em
+   `tokens.css` e chegam aqui por nome; o portão 1 reprova qualquer literal que
+   entre por esta porta.
+
+   E ele nunca lê `--ifm-*`. O adaptador de mão única escreve nessas variáveis;
+   nada do projeto as consome. Ver ADR 1.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Fontes auto-hospedadas
+
+   Geist e Geist Mono, variáveis, OFL, servidas do próprio domínio. Zero CDN: o
+   ambiente corporativo alvo tem CSP, e uma requisição externa esbarra nela.
+   Auto-hospedar custa o mesmo que a CDN (zero dependência npm), então não há
+   troca a fazer.
+
+   O caminho começa em `/` e mesmo assim sobrevive ao `baseUrl` em subcaminho:
+   o webpack do Docusaurus registra os diretórios de `staticDirectories` em
+   `resolve.roots`, resolve o arquivo em build e reemite a URL já prefixada.
+   Não é link absoluto escrito à mão — é resolução de módulo.
+   ----------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* -----------------------------------------------------------------------------
+   Rolagem
+
+   Declarado, não herdado: a medição não cobriu este ponto no Infima, e herdar
+   em silêncio é o modo de falhar. Âncora de TOC numa página longa com rolagem
+   suave é a viagem mais desorientadora do site.
+   ----------------------------------------------------------------------------- */
+
+html {
+  scroll-behavior: auto;
+}
+
+/* -----------------------------------------------------------------------------
+   Prosa
+
+   `hyphens: none` porque a hifenização de português é inconsistente entre
+   motores, e na medida de prosa deste projeto o alinhamento à esquerda não
+   precisa dela.
+   `text-wrap: pretty` no corpo e `balance` em título matam órfã sem custar nada.
+
+   Nada de `transition` em `background-color` ou `color` aqui nem em `:root`: a
+   troca de tema é instantânea. Uma transição global de cor faria a ilha de
+   espetáculo — que é inerte na troca — parecer congelada enquanto o site inteiro
+   esmaece em volta, além de repintar o documento no único momento em que a
+   animação toca cada pixel da página. Verificado: nem o Infima nem o
+   theme-classic declaram transição de cor em `html`, `body` ou `:root`, então a
+   regra é não introduzir uma.
+   ----------------------------------------------------------------------------- */
+
+body {
+  hyphens: none;
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+  letter-spacing: var(--sd-tracking-tight);
+}
+
+h1 { line-height: var(--sd-leading-h1); }
+h2 { line-height: var(--sd-leading-h2); }
+h3 { line-height: var(--sd-leading-h3); }
+h4,
+h5,
+h6 { line-height: var(--sd-leading-h4); }
+
+/* Código herda a própria entrelinha; o corpo do texto herda a da prosa. */
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--sd-font-mono);
+}
+
+/* -----------------------------------------------------------------------------
+   Foco
+
+   O contrato completo é de `docs/design/foco.md` e do ADR 4, que nascem no
+   slice 2. Aqui fica o piso: o Infima tem ZERO `:focus-visible` em todo o
+   framework e nenhuma variável de anel, então sem esta regra o site publicado
+   não teria foco visível nenhum.
+   ----------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: calc(var(--sd-space-1) / 2) solid var(--sd-focus-ring);
+  outline-offset: calc(var(--sd-space-1) / 2);
+}
