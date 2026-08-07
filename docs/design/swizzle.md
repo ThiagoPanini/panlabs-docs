@@ -44,7 +44,14 @@ Hoje `src/theme/` tem os três, e **nenhum é swizzle**:
 src/theme/ApiDocItem/            componente de tema próprio  (degrau 2)
 src/theme/NavbarItem/Marca.js    componente de tema próprio  (consumido pelo registro)
 src/theme/NavbarItem/ComponentTypes.js   registro            (degrau 3)
+src/theme/MDXComponents/index.js         registro            (degrau 3)
+src/theme/Admonition/Types.js            registro            (degrau 3)
 ```
+
+Os componentes do catálogo de conteúdo **não moram em `src/theme/`** — moram em
+`src/components/`, e o que os alcança são os dois registros acima. É a diferença
+que a tabela nomeia: um registro é um objeto, e um objeto pode apontar para
+qualquer componente, inclusive um que o Docusaurus nunca viu.
 
 ---
 
@@ -91,8 +98,16 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
 | `NavbarItem/ComponentTypes` | acrescenta o tipo `custom-marca` | a marca precisa de `currentColor`, e `navbar.logo` renderiza `<img>`. `Logo` e `Navbar/Logo` **não estão no `getSwizzleConfig`** — caem no default `unsafe`, que o ADR 2 proíbe |
+| `MDXComponents` | registra os dezesseis componentes de conteúdo com tag própria, mais `Tabs`/`TabItem`, mais a chave `table` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
+| `Admonition/Types` | substitui a anatomia vertical do Infima pela horizontal medida, nas quatro variantes de callout | não há variável nem classe que reoriente o eixo da admonition. O degrau 5 (`Admonition/Layout`) alcançaria, mas o 3 alcança **antes**: o arquivo é um objeto, e nada obriga as entradas dele a apontarem para o layout do upstream |
 
-**Pré-autorizados e ainda não exercidos:** `MDXComponents` e `Admonition/Types`, no slice do catálogo. `prism-include-languages`, se a Referência da API precisar.
+**Os dois do catálogo copiam zero linha de upstream**, e é isso que os mantém no
+degrau 3: um espalha o objeto original e acrescenta chaves; o outro é escrito do
+zero apontando para componentes nossos. O `Admonition` raiz — `unsafe` — continua
+**intocado**.
+
+**Pré-autorizados e ainda não exercidos:** `prism-include-languages`, se a
+Referência da API precisar de linguagem fora do que `additionalLanguages` cobre.
 
 ### Degrau 4 — `--wrap`
 
@@ -102,11 +117,19 @@ Reservado, não gasto: a faixa de tabs de largura total abaixo do navbar sairia 
 
 ### Degrau 5 — `--eject`
 
-**Vazio neste slice.** Pré-autorizados: os ícones de chrome que são `safe` nas duas ações (`Icon/Arrow`, `Icon/DarkMode`, `Icon/LightMode`, `Icon/Edit`, `Icon/Menu`) e os cinco de admonition, no slice do catálogo; `SearchBar`, no slice da busca.
+**Continua vazio depois do slice do catálogo, e o motivo vale registrado.**
+
+Pré-autorizados: os ícones de chrome que são `safe` nas duas ações (`Icon/Arrow`, `Icon/DarkMode`, `Icon/LightMode`, `Icon/Edit`, `Icon/Menu`); `SearchBar`, no slice da busca.
+
+**Os cinco `Admonition/Icon/*` saem da lista de pré-autorizados sem serem gastos.** [`icones.md`](icones.md) §4.2 mandava a troca dos ícones alcançáveis para o slice do catálogo, contando com `--eject` nos de admonition. Não foi preciso: o callout tem DOM próprio desde que `Admonition/Types` passou a apontar para ele, e ele desenha os glifos do manifesto direto. **Um degrau 5 pré-autorizado que se resolve no degrau 3 é o resultado que a escada existe para produzir.**
+
+**Os cinco de chrome continuam pré-autorizados e não exercidos.** Eles são chrome, não catálogo, e o slice do catálogo fechou a superfície de swizzle dele em duas linhas de degrau 3. Trocá-los é `--eject` de cinco arquivos por estética de glifo, e a conta é de quem abrir o slice que os quiser.
 
 ### `unsafe`
 
 **Zero, e é verificável por varredura:** nenhum arquivo em `src/theme/` corresponde a um componente `unsafe` do `getSwizzleConfig`.
+
+O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não gastou. Os dois `unsafe` que ele encostou continuam de pé: o `Admonition` raiz, que despacha por tipo para o registro sem saber que o destino é nosso, e o `Tabs`, que é consumido como está e repaginado só por CSS.
 
 ---
 
@@ -176,3 +199,7 @@ Um item **sai** quando a customização é removida. Sair do ledger sem sair do 
 | A disciplina de registro | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5), consolidado em [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §6 |
 | A marca no degrau 3 | **origem própria (implementação)** | `Logo` e `Navbar/Logo` fora do `getSwizzleConfig`; o schema de logo exige arquivo de imagem |
 | Degrau 4 vazio | origem própria | resultado da política, não meta |
+| `MDXComponents` no degrau 3 | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §3 pré-autorizou; exercido pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §4 |
+| `Admonition/Types` no degrau 3, sem tocar em `Layout` | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), reconciliando a resolução original com a escada da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) — o degrau 3 alcança, então o 5 não se compra |
+| `code-block` fora da coluna de swizzle | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) — a aparência que falta é CSS sobre classe estável mais opção pública |
+| Os cinco `Admonition/Icon/*` saem sem serem gastos | **origem própria (implementação)** | o callout desenha os glifos do manifesto no DOM próprio; o degrau 5 pré-autorizado se resolveu no 3 |

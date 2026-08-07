@@ -129,10 +129,13 @@ Este slice escreve **oito páginas de visão geral** — as seis de `Documentaç
 | escrito | `Receitas`, plana, com a intro | 2 |
 | escrito | `Referência da API › Introdução`, clicável, com ícone | 2 |
 | escrito | `Operação › Changelog` | 2 — ver abaixo |
+| escrito | `Guias › Catálogo de componentes` | 3 — ver abaixo |
 | **falta** | as cinco categorias de recurso da Referência da API, e as páginas `O objeto X` | 5 |
 | **falta** | as folhas de `Documentação` e as nove receitas | 4 |
 
 **`Operação › Changelog` é escrita neste slice e não é visão geral.** O footer a linka em **todas** as rotas do site, e link de footer para rota inexistente reprova no verificador de links do build. A página existe com a URL definitiva e o corpo mínimo; o gabarito de changelog é do slice 4.
+
+**`Guias › Catálogo de componentes` é escrita no slice do catálogo, e é a fixture dele.** Ela exercita os dezoito componentes de conteúdo com todas as variantes, e o critério de pronto daquele slice exige que ela **viva no site publicado** — a alternativa seria conferir a aparência de dezoito componentes espalhada por dezenas de páginas que ainda não existem. Ela é folha de `Guias`, o que promove a segunda categoria de `Documentação` à forma com filho, e é a única folha que aquele slice entrega. O gabarito de página de tipo `catálogo` continua sendo do slice 4.
 
 **As cinco categorias de recurso da Referência da API não são escritas à mão.** Elas apontam para páginas geradas do contrato OpenAPI, e o gerador passa a emitir também o arquivo de sidebar da instância. Escrevê-las agora criaria exatamente a segunda fonte de verdade que o gerador existe para impedir — e uma categoria clicável cujo destino não existe reprova no build. **A árvore está portanto em 6 · 0 · 1 no artefato deste slice, e 6 · 0 · 6 é o alvo**; a diferença é a instância `api`, e ela fecha no slice 5.
 
@@ -243,5 +246,6 @@ A forma do `llms-full.txt`, o ponteiro de volta em cada `.md` e o aviso de `Cont
 | A aritmética do locale | **origem própria (correção)** | as listas da [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §6 fecham em 44 e 29 |
 | A sidebar da API vem do gerador | origem própria | consequência de a Referência ser gerada ([#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18)) |
 | `Changelog` escrita no slice 2 | **origem própria (implementação)** | o link de footer está em todas as rotas, e o verificador de links reprova rota ausente |
+| `Catálogo de componentes` como folha de `Guias` | **origem própria (implementação)** | o slice do catálogo ([#36](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36)) exige a fixture no site publicado |
 | A divergência da fixture de página curta | **origem própria (implementação)** | a página do slice 1 antecede a fixture |
 | Este documento é dono dos artefatos AI-era | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16), fechando a lacuna de dono |

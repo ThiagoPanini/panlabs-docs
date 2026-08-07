@@ -1,0 +1,18 @@
+{
+  "shinydoc.untranslated.aviso": {
+    "message": "This page has not been translated yet. The content below is in Portuguese.",
+    "description": "Aviso no topo de uma página que ainda não foi traduzida"
+  },
+  "shinydoc.tabela.regiao": {
+    "message": "Table",
+    "description": "Nome acessível da região rolável que envolve toda tabela"
+  },
+  "shinydoc.campo.obrigatorio": {
+    "message": "required",
+    "description": "Chip que marca um parâmetro obrigatório"
+  },
+  "shinydoc.campo.padrao": {
+    "message": "default",
+    "description": "Rótulo do valor default de um campo de API"
+  }
+}

@@ -1,0 +1,683 @@
+/* =============================================================================
+   shinydoc — o catálogo de conteúdo
+
+   Um módulo para os treze arquivos de componente. Módulo e não folha global por
+   uma razão de arquitetura, não de organização:
+
+     nosso CSS estiliza por CLASSE DE MÓDULO      (0,1,0)
+     a skin corporativa repinta por ATRIBUTO      (0,2,0)
+
+   e ela vence sem um único `!important`. Isso só se sustenta enquanto **nenhuma
+   regra deste arquivo lê `data-sd-*`** — se lesse, as duas camadas empatariam e
+   a ordem de carga passaria a decidir. Variante e parte entram no DOM duas
+   vezes: classe para nós, atributo para eles.
+
+   Atributo de ESTADO é outra coisa e aparece aqui à vontade — `[open]`,
+   `[aria-selected]`. A skin sempre soma `data-sd-component` ao mesmo estado, o
+   que a deixa um degrau acima por construção.
+
+   Onde um contexto precisa sobrescrever um componente, o seletor usa `:where()`,
+   que não soma especificidade — o teto de (0,1,0) fica de pé.
+
+   Este arquivo NÃO tem valor literal: cor, comprimento, tempo e curva vivem em
+   `tokens.css` e chegam por nome. Ele nunca lê `--ifm-*`. E não tem uma linha de
+   `outline`: o contrato de estado de entrada é universal e mora em `foco.css`.
+
+   Zero `@media (prefers-reduced-motion)`: os seis movimentos já encurtam na
+   camada de token. Ver ADR 3.
+
+   Procedência: docs/design/componentes/.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   icon
+
+   Três tamanhos, que são três paradas da escala de espaço. A espessura de traço
+   NÃO está aqui: ela é prop do componente, porque a compensação óptica precisa
+   restilizar o interior do desenho — o que máscara não faz e SVGR faz.
+   ----------------------------------------------------------------------------- */
+
+.icon {
+  flex: none;
+  vertical-align: text-bottom;
+}
+
+.iconSm {
+  inline-size: var(--sd-space-4);
+  block-size: var(--sd-space-4);
+}
+
+.iconMd {
+  inline-size: var(--sd-space-5);
+  block-size: var(--sd-space-5);
+}
+
+.iconLg {
+  inline-size: var(--sd-space-6);
+  block-size: var(--sd-space-6);
+}
+
+/* -----------------------------------------------------------------------------
+   callout
+
+   Anatomia HORIZONTAL: ícone numa coluna à esquerda, conteúdo à direita. Sem
+   barra lateral, sem faixa de título, sem MAIÚSCULA — nada disso existe porque
+   nada disso é escrito.
+
+   Três tokens de camada 3, declarados no escopo do componente e nunca em
+   `:root`. É a variante que os move, e é só isso que a variante faz: o
+   componente **não sabe em que modo está**, porque quem bifurca é a camada 2.
+   ----------------------------------------------------------------------------- */
+
+.callout {
+  /* O default é a variante NEUTRA — `info`. Ela não tem classe própria porque
+     não tem o que sobrescrever. */
+  --sd-callout-fill: var(--sd-border-subtle);
+  --sd-callout-edge: var(--sd-border-default);
+  --sd-callout-ink: var(--sd-text-muted);
+
+  display: flex;
+  gap: var(--sd-space-3);
+  margin-block: var(--sd-space-6);
+  padding: var(--sd-space-4);
+  border: var(--sd-border-width) solid var(--sd-callout-edge);
+  border-radius: var(--sd-radius-md);
+  background-color: var(--sd-callout-fill);
+  color: var(--sd-text-body);
+}
+
+/* Filho DIRETO: um ícone que o autor escreva dentro do corpo não é alcançado.
+   O deslocamento centra o glifo na primeira linha de texto sem inventar número —
+   `1lh` é a altura da linha do próprio elemento. */
+.callout > svg {
+  margin-block-start: calc((1lh - var(--sd-space-4)) / 2);
+  color: var(--sd-callout-ink);
+}
+
+.calloutContent {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.calloutContent > :first-child {
+  margin-block-start: 0;
+}
+
+.calloutContent > :last-child {
+  margin-block-end: 0;
+}
+
+.calloutTitle {
+  margin-block-end: var(--sd-space-2);
+  color: var(--sd-text-strong);
+  font-weight: var(--sd-weight-ui);
+  line-height: var(--sd-leading-ui);
+}
+
+.calloutNote {
+  --sd-callout-fill: var(--sd-state-info-fill);
+  --sd-callout-edge: var(--sd-state-info-edge);
+  --sd-callout-ink: var(--sd-state-info);
+}
+
+.calloutTip {
+  --sd-callout-fill: var(--sd-state-success-fill);
+  --sd-callout-edge: var(--sd-state-success-edge);
+  --sd-callout-ink: var(--sd-state-success);
+}
+
+.calloutWarning {
+  --sd-callout-fill: var(--sd-state-warn-fill);
+  --sd-callout-edge: var(--sd-state-warn-edge);
+  --sd-callout-ink: var(--sd-state-warn);
+}
+
+/* -----------------------------------------------------------------------------
+   card e card-group
+
+   A grade é UMA declaração, e ela serve a landing e o MDX. Zero prop de
+   colunas, zero media query, zero container query: `auto-fit` nunca cria mais
+   faixas do que há itens, então a contagem de cartões faz o trabalho sozinha.
+
+   `min(…, 100%)` não é enfeite — sem ele um contêiner menor que o piso estoura
+   horizontalmente. É uma chamada de função contra um estouro silencioso.
+
+   A fila incompleta FICA incompleta. Esticar o último cartão é a regra decorável
+   que o resto da spec recusou, e ela ainda alargaria um cartão pequeno na faixa
+   em que ele já está espremido.
+   ----------------------------------------------------------------------------- */
+
+.cardGroup {
+  display: grid;
+  gap: var(--sd-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--sd-card-min), 100%), 1fr));
+  margin-block: var(--sd-space-6);
+}
+
+/* Borda e não superfície, e é decisão de sistema: o cartão de documentação já é
+   a única superfície elevada da tela, e um cartão de conteúdo pintado sobre ele
+   seria o terceiro nível que a regra de dois preenchimentos fecha. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-space-2);
+  padding: var(--sd-space-5);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius);
+  color: var(--sd-text-body);
+  transition:
+    border-color var(--sd-move-state),
+    background-color var(--sd-move-state);
+}
+
+/* O ícone do cartão é o detalhe que mais define a aparência dele, e é o único
+   do catálogo pintado com a cor de marca. */
+.card > svg {
+  color: var(--sd-accent);
+}
+
+.cardTitle {
+  color: var(--sd-text-strong);
+  font-weight: var(--sd-weight-ui);
+  line-height: var(--sd-leading-ui);
+}
+
+.card > p {
+  margin-block: 0;
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+  line-height: var(--sd-leading-ui);
+}
+
+/* Hover inteiro sob `(hover: hover)`. Sem isso o estado fica grudado depois do
+   tap, porque no toque não existe ponteiro para tirar de cima. */
+@media (hover: hover) {
+  a.card:hover {
+    border-color: var(--sd-accent);
+    background-color: var(--sd-border-subtle);
+    text-decoration: none;
+  }
+}
+
+/* Press: os MESMOS tokens do hover, e literalmente os mesmos. Um press com
+   tinta própria seria um terceiro estado se apresentando como confirmação do
+   segundo. O `transition: none` que o torna instantâneo é universal e mora em
+   `foco.css`. */
+a.card:active {
+  border-color: var(--sd-accent);
+  background-color: var(--sd-border-subtle);
+}
+
+/* -----------------------------------------------------------------------------
+   steps
+
+   `<ol>` e `<li>`. O contador é declarado em vez de herdado do `list-item`
+   porque o passo é `display: grid` — e um `<li>` que deixa de ser `list-item`
+   deixa de incrementar o contador implícito. Falha silenciosa fechada.
+   ----------------------------------------------------------------------------- */
+
+.steps {
+  --sd-step-marker: var(--sd-space-6);
+
+  counter-reset: passo;
+  list-style: none;
+  margin-block: var(--sd-space-6);
+  padding-inline-start: 0;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--sd-step-marker) 1fr;
+  gap: var(--sd-space-4);
+  counter-increment: passo;
+  padding-block-end: var(--sd-space-6);
+}
+
+/* O fio que liga um marcador ao próximo. Ele nasce embaixo do marcador e não
+   existe no último passo — sequência que termina não aponta para lugar nenhum. */
+.step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--sd-step-marker) 0;
+  inset-inline-start: calc(var(--sd-step-marker) / 2);
+  border-inline-start: var(--sd-border-width) solid var(--sd-border-default);
+}
+
+.step:last-child {
+  padding-block-end: 0;
+}
+
+.stepMarker {
+  display: grid;
+  place-items: center;
+  inline-size: var(--sd-step-marker);
+  block-size: var(--sd-step-marker);
+  border-radius: var(--sd-radius-full);
+  background-color: var(--sd-border-subtle);
+  color: var(--sd-text-strong);
+  font-size: var(--sd-type-xs);
+  font-weight: var(--sd-weight-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+.stepMarker::before {
+  content: counter(passo);
+}
+
+/* Ícone SUBSTITUI o número, não o acompanha. A troca é por `:has()` e não por
+   variante porque a decisão é de cada passo, não da lista. */
+.stepMarker:has(svg)::before {
+  content: none;
+}
+
+.stepTitle {
+  margin-block: 0 var(--sd-space-2);
+  color: var(--sd-text-strong);
+  font-weight: var(--sd-weight-ui);
+  line-height: var(--sd-leading-ui);
+}
+
+.stepBody > :last-child {
+  margin-block-end: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   accordion, accordion-group e expandable
+
+   `<details>` nativo nos três. O que anima é `::details-content` com
+   `interpolate-size: allow-keywords`, que mora em `:root` junto do vocabulário —
+   e é ele que tornou obsoleto o motivo histórico de reimplementar disclosure em
+   React.
+
+   Onde o navegador ainda não tem `::details-content`, a abertura é instantânea.
+   Degradação para o lado certo: o conteúdo sempre aparece.
+   ----------------------------------------------------------------------------- */
+
+.accordionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-space-2);
+  margin-block: var(--sd-space-6);
+}
+
+/* `:where()` não soma especificidade — o teto de (0,1,0) do arquivo fica de pé
+   mesmo num seletor de contexto. */
+.accordionGroup :where(.accordion) {
+  margin-block: 0;
+}
+
+.accordion {
+  margin-block: var(--sd-space-4);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-md);
+}
+
+.accordionSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-space-2);
+  padding: var(--sd-space-3) var(--sd-space-4);
+  color: var(--sd-text-strong);
+  cursor: pointer;
+  font-weight: var(--sd-weight-ui);
+  line-height: var(--sd-leading-ui);
+  /* Mata o triângulo nativo. As duas formas são necessárias: a keyword no
+     Firefox, o pseudo-elemento no WebKit. */
+  list-style: none;
+}
+
+.accordionSummary::-webkit-details-marker {
+  display: none;
+}
+
+/* O caret é máscara e não um segundo `<svg>`. Com dois SVG irmãos dentro do
+   mesmo `<summary>`, o seletor por tipo deixaria de alcançar o ícone do autor e
+   o contrato de partes teria que crescer para pagar uma escolha de
+   implementação. */
+.accordionSummary::after {
+  content: '';
+  flex: none;
+  margin-inline-start: auto;
+  inline-size: var(--sd-space-4);
+  block-size: var(--sd-space-4);
+  background-color: var(--sd-text-muted);
+  mask: url('/icons/chevron-right.svg') center / contain no-repeat;
+  transition: rotate var(--sd-move-expand);
+}
+
+.accordion[open] > .accordionSummary::after {
+  rotate: 90deg;
+}
+
+.accordionTitle {
+  min-inline-size: 0;
+}
+
+.accordionDescription {
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-body);
+}
+
+.accordionBody {
+  padding: 0 var(--sd-space-4) var(--sd-space-4);
+}
+
+.accordionBody > :first-child {
+  margin-block-start: 0;
+}
+
+.accordionBody > :last-child {
+  margin-block-end: 0;
+}
+
+.expandable {
+  margin-block: var(--sd-space-3);
+  border-inline-start: var(--sd-border-width) solid var(--sd-border-default);
+  padding-inline-start: var(--sd-space-4);
+}
+
+.expandableSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-space-2);
+  color: var(--sd-accent);
+  cursor: pointer;
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-ui);
+  line-height: var(--sd-leading-ui);
+  list-style: none;
+}
+
+.expandableSummary::-webkit-details-marker {
+  display: none;
+}
+
+/* Caret ANTES do rótulo, ao contrário do accordion: aqui ele não fecha uma
+   moldura, abre uma linha. */
+.expandableSummary::before {
+  content: '';
+  flex: none;
+  inline-size: var(--sd-space-3);
+  block-size: var(--sd-space-3);
+  background-color: currentColor;
+  mask: url('/icons/chevron-right.svg') center / contain no-repeat;
+  transition: rotate var(--sd-move-expand);
+}
+
+.expandable[open] > .expandableSummary::before {
+  rotate: 90deg;
+}
+
+.expandableBody > :last-child {
+  margin-block-end: 0;
+}
+
+.accordion::details-content,
+.expandable::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size var(--sd-move-expand),
+    content-visibility var(--sd-move-expand);
+  transition-behavior: allow-discrete;
+}
+
+.accordion[open]::details-content,
+.expandable[open]::details-content {
+  block-size: auto;
+}
+
+/* -----------------------------------------------------------------------------
+   param-field e response-field
+
+   Uma anatomia, duas espécies. Só `required` se marca: todo parâmetro é uma de
+   duas coisas, e marcar as duas dobra os chips e divide por dois a saliência do
+   que importa.
+
+   O chip de obrigatório NÃO usa cor de estado, e é decisão: âmbar já é `PUT` e
+   vermelho já é `DELETE` na mesma página de referência. Sendo o único chip do
+   campo, a saliência vem de ser o único.
+   ----------------------------------------------------------------------------- */
+
+.field {
+  border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
+  padding-block: var(--sd-space-4);
+}
+
+.fieldHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sd-space-2);
+  margin-block: 0;
+}
+
+.fieldHead > code {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--sd-text-strong);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-ui);
+}
+
+.fieldMeta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sd-space-2);
+  color: var(--sd-text-muted);
+  font-family: var(--sd-font-mono);
+  font-size: var(--sd-type-xs);
+}
+
+.fieldMeta code {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--sd-text-body);
+  font-size: inherit;
+}
+
+.fieldMeta strong {
+  border-radius: var(--sd-radius-xs);
+  padding-inline: var(--sd-space-1);
+  background-color: var(--sd-border-subtle);
+  color: var(--sd-text-strong);
+  font-weight: var(--sd-weight-ui);
+}
+
+.fieldBody {
+  color: var(--sd-text-body);
+  font-size: var(--sd-type-sm);
+}
+
+.fieldBody > :first-child {
+  margin-block-start: var(--sd-space-2);
+}
+
+.fieldBody > :last-child {
+  margin-block-end: 0;
+}
+
+/* `deprecated` é tachado mais texto apagado, e SEM abrir cor nova — senão ele
+   dividiria o âmbar com `PUT` na mesma página. */
+.fieldDeprecated > .fieldHead > code {
+  color: var(--sd-text-muted);
+  text-decoration: line-through;
+}
+
+/* -----------------------------------------------------------------------------
+   verb-badge
+
+   Preenchimento e texto pela fórmula do sistema — a mesma dos quatro estados —
+   e não pelo alfa único que a medição achou na âncora. Uma segunda fórmula de
+   alfa faria o componente saber em que modo está.
+   ----------------------------------------------------------------------------- */
+
+.verbBadge {
+  display: inline-block;
+  border-radius: var(--sd-radius-xs);
+  padding-inline: var(--sd-space-2);
+  background-color: var(--sd-verb-fill);
+  color: var(--sd-verb-ink);
+  font-family: var(--sd-font-mono);
+  font-size: var(--sd-type-xs);
+  font-weight: var(--sd-weight-heading);
+  line-height: var(--sd-leading-ui);
+}
+
+.verbGet {
+  --sd-verb-fill: var(--sd-state-info-fill);
+  --sd-verb-ink: var(--sd-state-info);
+}
+
+.verbPost {
+  --sd-verb-fill: var(--sd-state-success-fill);
+  --sd-verb-ink: var(--sd-state-success);
+}
+
+.verbPut,
+.verbPatch {
+  --sd-verb-fill: var(--sd-state-warn-fill);
+  --sd-verb-ink: var(--sd-state-warn);
+}
+
+.verbDelete {
+  --sd-verb-fill: var(--sd-state-danger-fill);
+  --sd-verb-ink: var(--sd-state-danger);
+}
+
+/* -----------------------------------------------------------------------------
+   update
+
+   Uma coluna em qualquer largura. A forma de duas colunas — data à esquerda,
+   corpo à direita — exigiria uma largura de coluna que a cadeia de proporções
+   não tem, e inventá-la seria abrir um valor fora do arquivo de tokens para
+   ganhar um arranjo.
+   ----------------------------------------------------------------------------- */
+
+.update {
+  border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
+  padding-block: var(--sd-space-6);
+}
+
+.updateHead {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-space-2);
+  margin-block-end: var(--sd-space-3);
+  color: var(--sd-text-muted);
+  font-family: var(--sd-font-mono);
+  font-size: var(--sd-type-sm);
+}
+
+.updateTag {
+  border-radius: var(--sd-radius-xs);
+  padding-inline: var(--sd-space-2);
+  background-color: var(--sd-surface-wash);
+  color: var(--sd-text-strong);
+  font-size: var(--sd-type-xs);
+}
+
+.updateBody > :first-child {
+  margin-block-start: 0;
+}
+
+.updateBody > :last-child {
+  margin-block-end: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   frame
+
+   Uma das DUAS exceções do catálogo à regra de que nenhum componente conhece
+   modo de cor — e a exceção é o palco declarar `color`, para o diagrama herdar
+   por `currentColor`. Um arquivo serve os dois modos; nunca um por modo.
+
+   Sem fundo quadriculado: ele existe na âncora para enquadrar imagem com
+   transparência, e enquadrando diagrama perde a razão de ser.
+   ----------------------------------------------------------------------------- */
+
+.frame {
+  margin-block: var(--sd-space-6);
+}
+
+.frameStage {
+  display: flex;
+  justify-content: center;
+  padding: var(--sd-space-6);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-md);
+  background-color: var(--sd-surface-page);
+  color: var(--sd-text-body);
+}
+
+.frameStage :is(img, svg) {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+.frame > figcaption {
+  margin-block-start: var(--sd-space-2);
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------------------
+   table
+
+   O invólucro rola; a tabela volta a ser tabela. O Infima declara
+   `table { display: block; overflow: auto }`, o que resolve o transbordo e
+   cobra dois preços calados: `display: block` tira a semântica de tabela da
+   árvore de acessibilidade, e o contêiner que rola não é focável.
+   ----------------------------------------------------------------------------- */
+
+.table {
+  overflow-x: auto;
+  margin-block: var(--sd-space-6);
+}
+
+.table > table {
+  display: table;
+  inline-size: 100%;
+  margin-block-end: 0;
+  overflow: visible;
+  font-size: var(--sd-type-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--sd-leading-ui);
+}
+
+/* -----------------------------------------------------------------------------
+   code-group e untranslated
+   ----------------------------------------------------------------------------- */
+
+.codeGroup {
+  margin-block: var(--sd-space-6);
+}
+
+/* Deliberadamente a mesma anatomia do callout neutro: o marcador é um aviso de
+   sistema, e um aviso que inventa forma própria é mais um vocabulário para o
+   leitor aprender. */
+.untranslated {
+  display: flex;
+  gap: var(--sd-space-3);
+  margin-block-end: var(--sd-space-6);
+  padding: var(--sd-space-4);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-md);
+  background-color: var(--sd-border-subtle);
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+}
+
+.untranslated > svg {
+  margin-block-start: calc((1lh - var(--sd-space-4)) / 2);
+}
+
+.untranslated p {
+  margin-block: 0;
+}

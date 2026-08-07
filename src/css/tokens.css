@@ -259,6 +259,25 @@
      mesmo limiar em que a sidebar aparece. O par 32/64 é herdado da âncora; o
      ponto onde ele troca, não. */
   --sd-gutter: var(--sd-space-8);
+
+  /* ---------------------------------------------------------------------------
+     Grade de cartões — camada 1, e UMA declaração serve a landing e o MDX.
+
+     O piso de faixa da grade de `card-group`, derivado do limiar da âncora A
+     TRÊS COLUNAS: o `Columns` dela colapsa em 42rem, com gap de 16. Descontados
+     os dois gaps e dividido por três, sai o menor cartão que a âncora admite
+     numa fila de três.
+
+     42rem é 672, que é `--sd-prose-width`. Não é coincidência aproveitada: as
+     duas medidas são o MESMO `max-w-2xl` do framework de utilitários da âncora,
+     aparecendo duas vezes. Citar o token é honesto; repetir o número seria a
+     segunda cópia que este arquivo existe para não ter.
+
+     Com este piso e `repeat(auto-fit, minmax(min(…, 100%), 1fr))`, a contagem de
+     cartões faz o trabalho sozinha — zero media query, zero container query,
+     zero prop de colunas.
+     --------------------------------------------------------------------------- */
+  --sd-card-min: calc((var(--sd-prose-width) - 2 * var(--sd-space-4)) / 3);
 }
 
 /* O gutter dobra no limiar único do projeto, que é o literal compilado do
@@ -337,6 +356,21 @@
   --sd-state-warn-fill:    rgb(from var(--sd-state-warn)    r g b / 18%);
   --sd-state-danger-fill:  rgb(from var(--sd-state-danger)  r g b / 18%);
 
+  /* A aresta do preenchimento — o par do `-fill`, com o alfa mais alto que a
+     medição do callout registrou. Ela mora aqui e não na camada 3 porque o alfa
+     BIFURCA por modo, e a camada 2 é o único lugar do sistema onde modo diverge:
+     escrito no escopo do componente, o callout passaria a saber em que modo
+     está, que é exatamente o que o catálogo fechou.
+
+     A família é declarada inteira, como a de `-fill`. `danger` não tem consumidor
+     no catálogo — a pílula de verbo usa preenchimento e texto, não aresta —, e
+     uma família de quatro com um buraco no meio é pior de ler do que a quarta
+     linha. */
+  --sd-state-info-edge:    rgb(from var(--sd-state-info)    r g b / 30%);
+  --sd-state-success-edge: rgb(from var(--sd-state-success) r g b / 30%);
+  --sd-state-warn-edge:    rgb(from var(--sd-state-warn)    r g b / 30%);
+  --sd-state-danger-edge:  rgb(from var(--sd-state-danger)  r g b / 30%);
+
   /* code — o oitavo papel. Existe na camada 2 porque a paleta de sintaxe
      bifurca por modo, e a camada 2 é o único lugar onde modo diverge.
      Cinco dos sete caem no hex medido da semente sem uma correção. */
@@ -397,6 +431,11 @@
   --sd-state-success-fill: rgb(from var(--sd-state-success) r g b / 10%);
   --sd-state-warn-fill:    rgb(from var(--sd-state-warn)    r g b / 10%);
   --sd-state-danger-fill:  rgb(from var(--sd-state-danger)  r g b / 10%);
+
+  --sd-state-info-edge:    rgb(from var(--sd-state-info)    r g b / 25%);
+  --sd-state-success-edge: rgb(from var(--sd-state-success) r g b / 25%);
+  --sd-state-warn-edge:    rgb(from var(--sd-state-warn)    r g b / 25%);
+  --sd-state-danger-edge:  rgb(from var(--sd-state-danger)  r g b / 25%);
 
   /* code */
   --sd-code-fg:        var(--sd-text-body);
@@ -548,12 +587,18 @@
   --ifm-color-primary-contrast-background: var(--sd-surface-wash);
   --ifm-color-primary-contrast-foreground: var(--sd-text-strong);
 
-  /* `secondary` é o que a admonition `note` consome — ela é `.alert--secondary`,
-     e `note` é a variante neutra: sem cor de estado, usa borda e texto.
-     Por isso as shades apontam para o papel `border` e não para o papel `text`:
-     `--ifm-color-secondary-dark` é lido por `--ifm-alert-border-color`, e a
-     tinta do corpo ali desenharia um anel de contraste máximo em volta de toda
-     nota. */
+  /* As shades de `secondary` apontam para o papel `border` e não para o papel
+     `text`: `--ifm-color-secondary-dark` é lido por `--ifm-alert-border-color`
+     dentro de `.alert--secondary`, e a tinta do corpo ali desenharia um anel de
+     contraste máximo em volta da caixa.
+
+     Correção de premissa, do slice do catálogo: a redação original dizia que
+     `secondary` é *"o que a admonition `note` consome"*. Deixou de ser. O
+     callout tem DOM próprio desde que `Admonition/Types` passou a apontar para
+     ele, e `note` é a variante AZUL — quem é neutro é `info`. As shades ficam
+     porque o Infima as lê em `.alert--secondary`, `.badge--secondary` e
+     `.button--secondary`, e a regra do adaptador é sobre o que o framework
+     consome, não sobre o que a nossa página hoje renderiza. */
   --ifm-color-secondary:                     var(--sd-border-strong);
   --ifm-color-secondary-dark:                var(--sd-border-strong);
   --ifm-color-secondary-darker:              var(--sd-border-strong);
