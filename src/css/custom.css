@@ -99,15 +99,21 @@ samp {
 }
 
 /* -----------------------------------------------------------------------------
-   Foco
+   Foco — mudou de arquivo, e o portão 3 é quem garante que não volte
 
-   O contrato completo é de `docs/design/foco.md` e do ADR 4, que nascem no
-   slice 2. Aqui fica o piso: o Infima tem ZERO `:focus-visible` em todo o
-   framework e nenhuma variável de anel, então sem esta regra o site publicado
-   não teria foco visível nenhum.
+   O slice 1 escreveu aqui um piso de anel, porque o Infima tem ZERO
+   `:focus-visible` em todo o framework e sem alguma regra o site publicado não
+   teria foco visível nenhum. O contrato inteiro agora mora em
+   `src/css/foco.css`, junto com press e piso de alvo de toque — as duas metades
+   do mesmo mecanismo no mesmo lugar. Ver ADR 4.
+
+   Duas correções vieram junto com a mudança, e valem registro:
+
+   · a espessura era `calc(var(--sd-space-1) / 2)`. Dava 2px e passava em
+     qualquer varredura, mas era **derivação falsa** — espessura de anel não tem
+     relação com escala de espaço. Virou literal declarado em `tokens.css`, com
+     a procedência honesta escrita ao lado;
+   · a regra era universal e não tinha as três exceções que o `programmaticFocus`
+     do `theme-common` obriga. Sem elas, o site desenhava uma linha de acento
+     atravessando o topo da página a cada clique de sidebar.
    ----------------------------------------------------------------------------- */
-
-:focus-visible {
-  outline: calc(var(--sd-space-1) / 2) solid var(--sd-focus-ring);
-  outline-offset: calc(var(--sd-space-1) / 2);
-}

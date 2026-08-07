@@ -14,7 +14,9 @@
     "portao:1": "./scripts/portao-1-literais.sh",
     "portao:2": "./scripts/portao-2-motion.sh",
     "portao:6": "./scripts/portao-6-rotas.sh",
-    "portoes": "npm run portao:1 && npm run portao:2"
+    "portoes": "npm run portao:1 && npm run portao:2 && npm run portao:3",
+    "portao:3": "./scripts/portao-3-outline.sh",
+    "icones": "node scripts/vendorizar-icones.mjs --conferir"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
