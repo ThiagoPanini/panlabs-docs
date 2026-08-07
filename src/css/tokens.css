@@ -1,0 +1,778 @@
+/* =============================================================================
+   shinydoc — tokens
+
+   Este é o ÚNICO arquivo do repositório com valor literal. Cor, comprimento,
+   tempo e curva nascem aqui e em nenhum outro lugar; o portão 1 reprova qualquer
+   um dos quatro fora daqui (`npm run portao:1`).
+
+   Três camadas, e o nome diz de que camada é:
+
+     1 — raiz         --sd-<coisa> · --sd-<escala>-<degrau>
+                      o único lugar com literal. Duas regiões: o bloco de troca
+                      delimitado por SKIN … /SKIN (o que o corporativo edita) e a
+                      base (escalas e a forma da rampa).
+     2 — semântica    --sd-<papel>-<qualificador>, papel de LISTA FECHADA de oito:
+                      surface · text · border · accent · shadow · focus · state · code
+                      Só cor. É o ÚNICO ponto do sistema onde os modos divergem.
+     3 — componente   --sd-<componente>-<parte>, declarada no escopo do componente
+                      e nunca em :root.
+
+   Cor sempre desce pela camada 2. Dimensão vem direto da camada 1.
+
+   O Infima fica do outro lado de um adaptador de MÃO ÚNICA (fim do arquivo):
+   o adaptador escreve --ifm-*, e nenhuma regra do projeto lê --ifm-*.
+
+   Procedência das decisões: docs/design/tokens.md.
+   Doutrina de CSS (por que :root[data-theme='light'] e por que @layer está fora):
+   docs/adr/0001-doutrina-de-css.md.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   @property — as três raízes registráveis do bloco de troca
+
+   Propriedade registrada com valor inválido cai para o initial-value, não para
+   `unset`. Colagem errada degrada para o valor entregue de fábrica em vez de
+   apagar fundos em silêncio.
+
+   Registra-se exatamente as linhas do bloco de troca cuja entrega é literal E
+   computacionalmente independente — é o que `initial-value` sabe expressar.
+   As outras sete entregam referência (`var()`, `oklch(from …)`) ou pilha de
+   fonte, e `initial-value` não aceita nenhuma das duas.
+   ----------------------------------------------------------------------------- */
+
+@property --sd-brand      { syntax: '<color>';  inherits: true; initial-value: #CF38C9; }
+@property --sd-brand-tint { syntax: '<number>'; inherits: true; initial-value: 0.05; }
+@property --sd-radius     { syntax: '<length>'; inherits: true; initial-value: 16px; }
+
+/* =============================================================================
+   CAMADA 1 — raiz
+   ============================================================================= */
+
+:root {
+  /* SKIN — o que o corporativo edita para re-marcar. Nada além disto.
+     Tipadas com @property: --sd-brand, --sd-brand-tint, --sd-radius.
+     São as três linhas cuja entrega é literal — colagem inválida nelas cai no valor
+     de fábrica. As outras sete entregam referência ou pilha de fonte, que
+     initial-value não sabe expressar: colagem inválida ali apaga o que a linha
+     alimenta, à vista. */
+  --sd-brand:          #CF38C9;
+  --sd-brand-on-dark:  oklch(from var(--sd-brand) max(l, 0.72) c h);
+  --sd-brand-on-light: oklch(from var(--sd-brand) min(l, 0.50) c h);
+  --sd-brand-tint:     0.05;
+  --sd-surface-dark:   var(--sd-gray-800);
+  --sd-surface-light:  var(--sd-gray-50);
+  --sd-font-body:      'Geist', ui-sans-serif, system-ui, sans-serif;
+  --sd-font-heading:   var(--sd-font-body);
+  --sd-font-mono:      'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+  --sd-radius:         16px;
+  /* /SKIN */
+
+  /* ---------------------------------------------------------------------------
+     A rampa de onze cinzas — tingida pelo matiz da marca
+
+     Uma cor entra, um sistema inteiro de superfícies sai. As onze paradas de
+     luminosidade são a média das quatro rampas Mintlify medidas: a FORMA da
+     rampa é geometria herdada, o MATIZ é da marca.
+
+     Marca acromática produz rampa neutra sem regra especial: cromaticidade zero
+     entra em `c`, cinza puro sai.
+     --------------------------------------------------------------------------- */
+  --sd-gray-50:  oklch(from var(--sd-brand) 97%   calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-100: oklch(from var(--sd-brand) 95.5% calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-200: oklch(from var(--sd-brand) 91%   calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-300: oklch(from var(--sd-brand) 86%   calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-400: oklch(from var(--sd-brand) 71%   calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-500: oklch(from var(--sd-brand) 55%   calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-600: oklch(from var(--sd-brand) 44%   calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-700: oklch(from var(--sd-brand) 37.5% calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-800: oklch(from var(--sd-brand) 27.5% calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-900: oklch(from var(--sd-brand) 21.5% calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-950: oklch(from var(--sd-brand) 15.5% calc(c * var(--sd-brand-tint)) h);
+
+  /* ---------------------------------------------------------------------------
+     Matizes de estado — camada 1, fora do bloco de troca.
+
+     Livre — skin corporativa (redesenho): move-se o ÂNGULO, dentro da família.
+     Azul continua azul, verde continua verde. Não se movem L, C, nem as fórmulas
+     de alfa — são elas que garantem AA sobre as duas superfícies em qualquer
+     ângulo. Editar aqui é redesenhar, não re-marcar.
+
+     São literais porque não há raiz no sistema de onde derivar um verde a partir
+     de uma marca fúcsia, e porque a medição das sete referências declarou lacuna
+     em cor semântica de callout.
+     --------------------------------------------------------------------------- */
+  --sd-hue-info:    245;
+  --sd-hue-success: 150;
+  --sd-hue-warn:     80;
+  --sd-hue-danger:   27;
+
+  /* ---------------------------------------------------------------------------
+     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-4xl)
+     para a procedência ficar legível no próprio token.
+     --------------------------------------------------------------------------- */
+  --sd-type-xs:    12px;
+  --sd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
+  --sd-type-base:  16px;    /* prosa */
+  --sd-type-lg:    18px;
+  --sd-type-xl:    20px;
+  --sd-type-2xl:   24px;
+  --sd-type-3xl:   30px;    /* título de página, até 996px */
+  --sd-type-4xl:   36px;    /* título de página, de 997px */
+
+  /* Peso — três, nomeados por intenção. Nome de intenção não colide com o
+     `semibold: 500` do Infima, que é a mesma palavra sobre outro número. */
+  --sd-weight-body:    400;
+  --sd-weight-ui:      500;
+  --sd-weight-heading: 600;
+
+  /* Entrelinha. h4 repete o valor de ui e mantém nome próprio: mesmo número
+     hoje, intenções diferentes. */
+  --sd-leading-prose: 1.75;
+  --sd-leading-ui:    1.5;
+  --sd-leading-code:  1.7143;
+  --sd-leading-h1:    1.111;
+  --sd-leading-h2:    1.333;
+  --sd-leading-h3:    1.4;
+  --sd-leading-h4:    1.5;
+
+  /* Letter-spacing — um só. O corpo usa o `normal` do navegador, que é keyword
+     e não valor, então não precisa de token. */
+  --sd-tracking-tight: -0.025em;
+
+  /* ---------------------------------------------------------------------------
+     Espaço — base 4px, escada por calc(). Um literal só.
+     Toda dimensão que o projeto travou é múltiplo de 8; a base fica em 4 para o
+     meio-passo que a densidade de 14px exige em chip, badge e ícone.
+     --------------------------------------------------------------------------- */
+  --sd-space-1:  4px;   /* único literal da escala */
+  --sd-space-2:  calc(var(--sd-space-1) *  2);
+  --sd-space-3:  calc(var(--sd-space-1) *  3);
+  --sd-space-4:  calc(var(--sd-space-1) *  4);
+  --sd-space-5:  calc(var(--sd-space-1) *  5);
+  --sd-space-6:  calc(var(--sd-space-1) *  6);
+  --sd-space-8:  calc(var(--sd-space-1) *  8);
+  --sd-space-10: calc(var(--sd-space-1) * 10);
+  --sd-space-12: calc(var(--sd-space-1) * 12);
+  --sd-space-16: calc(var(--sd-space-1) * 16);
+
+  /* ---------------------------------------------------------------------------
+     Forma — base 16px (a linha dez do bloco de troca), escada por múltiplo.
+     Um número entra, a escada sai: trocar --sd-radius re-forma o site inteiro
+     sem incoerência possível.
+     --------------------------------------------------------------------------- */
+  --sd-radius-md:   calc(var(--sd-radius) * 0.75);  /* bloco de código, callout, imagem, frame */
+  --sd-radius-sm:   calc(var(--sd-radius) * 0.5);   /* botão, campo, aba, chip */
+  --sd-radius-xs:   calc(var(--sd-radius) * 0.25);  /* código inline, badge, pílula de verbo */
+  --sd-radius-full: 999px;                          /* marcador de Step, avatar, pílula */
+
+  /* ---------------------------------------------------------------------------
+     Motion — escala de duração e vocabulário de easing. Camada 1, fora do bloco
+     de troca.
+
+     Livre — skin corporativa (redesenho): nenhum manual de marca especifica
+     duração. Quem edita aqui está redesenhando, não re-marcando.
+
+     Os números são medidos, não escolhidos: 200ms é o valor mais aplicado de
+     toda a amostra; 300ms é a banda de mudança grande; 500ms é a banda de
+     entrada grande; 5s é o único loop ambiente medido em qualquer uma das sete.
+     --------------------------------------------------------------------------- */
+  --sd-dur-1: 200ms;
+  --sd-dur-2: 300ms;
+  --sd-dur-3: 500ms;
+  --sd-dur-ambient: 5s;     /* período do loop; não é parada da escala — ver reduced-motion */
+
+  /* Duas curvas, nomeadas por intenção. Não há `ease-in`: nada neste site sai da
+     tela, e variável sem consumidor é o defeito do Infima que não se copia. */
+  --sd-ease-settle: cubic-bezier(0, 0, 0.2, 1);   /* responde ao leitor e assenta */
+  --sd-ease-inout:  cubic-bezier(0.4, 0, 0.2, 1); /* tem início e fim na tela */
+
+  /* Os seis movimentos. Cada um é um token COMPLETO — <duração> <easing> — que
+     compõe da escala em vez de cravar número. É isso que faz reduced-motion
+     alcançar o Infima que não escrevemos: o adaptador escreve
+     --ifm-transition-fast a partir de --sd-dur-1, e a redefinição atravessa.
+
+     Os quatro primeiros terminam sozinhos e ENCURTAM sob reduced-motion.
+     Os dois últimos não terminam sozinhos — `reveal` é dirigido por rolagem,
+     `ambient` é infinito — e são REMOVIDOS, não encurtados; quem os consome
+     acrescenta timeline / `infinite`, e o bloco `reduce` os desliga. */
+  --sd-move-state:    var(--sd-dur-1) var(--sd-ease-settle);
+  --sd-move-enter:    var(--sd-dur-1) var(--sd-ease-settle);
+  --sd-move-expand:   var(--sd-dur-2) var(--sd-ease-inout);
+  --sd-move-showcase: var(--sd-dur-3) var(--sd-ease-settle);
+  --sd-move-reveal:   var(--sd-dur-3) var(--sd-ease-settle);
+  --sd-move-ambient:  var(--sd-dur-ambient) var(--sd-ease-inout);
+
+  /* Habilita <details> a transicionar para height: auto. Mora aqui, junto do
+     vocabulário, e não dentro do componente que a consome. */
+  interpolate-size: allow-keywords;
+
+  /* ---------------------------------------------------------------------------
+     Dimensões do chrome — camada 1.
+     A anatomia completa é de docs/design/chrome.md; aqui ficam só os valores
+     que o adaptador precisa escrever, porque ele não pode escrever de lugar
+     nenhum.
+     --------------------------------------------------------------------------- */
+  --sd-container-width: 1152px;  /* as DUAS variáveis de container do Infima recebem este */
+  --sd-sidebar-width:    264px;
+  --sd-navbar-height:     56px;
+  --sd-toc-width:        288px;
+  --sd-prose-width:      672px;
+}
+
+/* =============================================================================
+   CAMADA 2 — semântica. Só cor, e o único ponto do sistema onde o modo diverge.
+
+   Escuro mora em :root porque o modo canônico é o FALLBACK; claro é override.
+   Consequência: nunca escrevemos um seletor de modo escuro, então a armadilha
+   de especificidade do `[data-theme='dark']` (0,1,0) contra o
+   `html[data-theme='dark']` (0,1,1) do Infima fica fora de alcance por
+   construção, não por disciplina. Ver ADR 1.
+
+   Os dois blocos declaram a MESMA lista de tokens, na mesma ordem: token que
+   aparece num e não no outro é um buraco visível.
+   ============================================================================= */
+
+/* ESCURO — canônico. O segundo seletor é a ilha de espetáculo: ela carrega o
+   próprio substrato porque glow é emissão, e emissão só é legível contra
+   escuridão. É um seletor a mais no bloco que já existe, não um bloco novo —
+   e é isso que faz a ilha ser inerte na troca de tema. */
+:root,
+[data-sd-showcase] {
+  color-scheme: dark;
+
+  /* surface */
+  --sd-surface-page:  var(--sd-gray-950);
+  --sd-surface-card:  var(--sd-surface-dark);
+  --sd-surface-code:  var(--sd-gray-950);
+  --sd-surface-wash:  rgb(from var(--sd-accent) r g b / 12%);
+
+  /* text — `faint` é a parada 500, o meio matemático da rampa. É a única
+     reprovação deliberada de AA do sistema (3,04:1 aqui) e é PROIBIDA para
+     texto de leitura: serve separador, placeholder e controle desabilitado.
+     Texto secundário legítimo usa `muted`. */
+  --sd-text-strong:  var(--sd-gray-50);
+  --sd-text-body:    var(--sd-gray-300);
+  --sd-text-muted:   var(--sd-gray-400);
+  --sd-text-faint:   var(--sd-gray-500);
+  --sd-text-inverse: oklch(from var(--sd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
+
+  /* border — a tinta a 7%. Uma fórmula, dois modos, e ela reproduz os DOIS
+     valores medidos no alvo, que lá saem de dois mecanismos diferentes. */
+  --sd-border-subtle:  rgb(from var(--sd-text-strong) r g b / 7%);
+  --sd-border-default: rgb(from var(--sd-text-strong) r g b / 12%);
+  --sd-border-strong:  rgb(from var(--sd-text-strong) r g b / 20%);
+
+  /* accent */
+  --sd-accent:          var(--sd-brand-on-dark);
+  --sd-accent-hover:    oklch(from var(--sd-accent) calc(l + 0.06) c h);
+  --sd-accent-contrast: var(--sd-text-inverse);
+
+  /* shadow — `lip` não mora aqui: realce é sempre luz, e luz não bifurca.
+     Ver o bloco de valor único mais abaixo. */
+  --sd-shadow-ring: var(--sd-border-subtle);
+  --sd-shadow-cast: rgb(from var(--sd-gray-950) r g b / 60%);
+
+  /* focus */
+  --sd-focus-ring: var(--sd-accent);
+
+  /* state */
+  --sd-state-info:    oklch(80% 0.14 var(--sd-hue-info));
+  --sd-state-success: oklch(80% 0.14 var(--sd-hue-success));
+  --sd-state-warn:    oklch(80% 0.14 var(--sd-hue-warn));
+  --sd-state-danger:  oklch(80% 0.14 var(--sd-hue-danger));
+
+  --sd-state-info-fill:    rgb(from var(--sd-state-info)    r g b / 18%);
+  --sd-state-success-fill: rgb(from var(--sd-state-success) r g b / 18%);
+  --sd-state-warn-fill:    rgb(from var(--sd-state-warn)    r g b / 18%);
+  --sd-state-danger-fill:  rgb(from var(--sd-state-danger)  r g b / 18%);
+
+  /* code — o oitavo papel. Existe na camada 2 porque a paleta de sintaxe
+     bifurca por modo, e a camada 2 é o único lugar onde modo diverge.
+     Cinco dos sete caem no hex medido da semente sem uma correção. */
+  --sd-code-fg:        var(--sd-text-body);
+  --sd-code-keyword:   #34D59A;
+  --sd-code-string:    #FFED9C;
+  --sd-code-function:  #F7B983;
+  --sd-code-constant:  #94B5F7;
+  --sd-code-parameter: #FF990A;
+  --sd-code-operator:  #C99A6C;
+  --sd-code-comment:   #A0A5AE;
+}
+
+/* CLARO — legítimo. */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  /* surface — a página desce para a parada 100 e o cartão sobe para a 50: se a
+     página ficasse na 50, o cartão teria que ser branco puro para subir, e aí o
+     tint da marca sumiria da maior superfície do modo claro. A pastilha de
+     código toma o extremo do modo, que aqui é branco. */
+  --sd-surface-page:  var(--sd-gray-100);
+  --sd-surface-card:  var(--sd-surface-light);
+  --sd-surface-code:  oklch(from var(--sd-gray-50) 100% 0 h);
+  --sd-surface-wash:  rgb(from var(--sd-accent) r g b / 12%);
+
+  /* text */
+  --sd-text-strong:  var(--sd-gray-950);
+  --sd-text-body:    var(--sd-gray-700);
+  --sd-text-muted:   var(--sd-gray-600);
+  --sd-text-faint:   var(--sd-gray-500);
+  --sd-text-inverse: oklch(from var(--sd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
+
+  /* border */
+  --sd-border-subtle:  rgb(from var(--sd-text-strong) r g b / 7%);
+  --sd-border-default: rgb(from var(--sd-text-strong) r g b / 12%);
+  --sd-border-strong:  rgb(from var(--sd-text-strong) r g b / 20%);
+
+  /* accent */
+  --sd-accent:          var(--sd-brand-on-light);
+  --sd-accent-hover:    oklch(from var(--sd-accent) calc(l - 0.06) c h);
+  --sd-accent-contrast: var(--sd-text-inverse);
+
+  /* shadow */
+  --sd-shadow-ring: var(--sd-border-subtle);
+  --sd-shadow-cast: rgb(from var(--sd-gray-950) r g b / 8%);
+
+  /* focus */
+  --sd-focus-ring: var(--sd-accent);
+
+  /* state */
+  --sd-state-info:    oklch(45% 0.13 var(--sd-hue-info));
+  --sd-state-success: oklch(45% 0.13 var(--sd-hue-success));
+  --sd-state-warn:    oklch(45% 0.13 var(--sd-hue-warn));
+  --sd-state-danger:  oklch(45% 0.13 var(--sd-hue-danger));
+
+  --sd-state-info-fill:    rgb(from var(--sd-state-info)    r g b / 10%);
+  --sd-state-success-fill: rgb(from var(--sd-state-success) r g b / 10%);
+  --sd-state-warn-fill:    rgb(from var(--sd-state-warn)    r g b / 10%);
+  --sd-state-danger-fill:  rgb(from var(--sd-state-danger)  r g b / 10%);
+
+  /* code */
+  --sd-code-fg:        var(--sd-text-body);
+  --sd-code-keyword:   #007651;
+  --sd-code-string:    #746302;
+  --sd-code-function:  #8B541C;
+  --sd-code-constant:  #45619D;
+  --sd-code-parameter: #8F5300;
+  --sd-code-operator:  #84592B;
+  --sd-code-comment:   #5F636C;
+}
+
+/* -----------------------------------------------------------------------------
+   Camada 2 que NÃO bifurca por modo — fora dos dois blocos, de propósito.
+
+   A regra que decide: token que referencia camada 2 bifurca e mora nos dois
+   blocos; token que referencia só camada 1 não bifurca e mora aqui.
+
+   --sd-shadow-lip é o único papel nessa situação. Realce é luz, e luz é o topo
+   da rampa — não "a tinta do modo". Ancorado no topo da rampa, ele some sozinho
+   no claro por IDENTIDADE MATEMÁTICA (o cartão claro É --sd-gray-50, e gray-50 a
+   6% sobre gray-50 é gray-50), e volta a ser visível dentro da ilha escura sem
+   redeclarar nada.
+
+   A escada de elevação também mora aqui: a composição é a mesma nos dois modos,
+   e o modo entra por `ring` e `cast`, que são pares declarados. Os comprimentos
+   inline são a única exceção declarada à regra de que a camada 2 é só cor —
+   box-shadow é valor atômico, e separar geometria de cor exigiria doze tokens de
+   comprimento para compor quatro sombras.
+   ----------------------------------------------------------------------------- */
+
+:root {
+  --sd-shadow-lip: rgb(from var(--sd-gray-50) r g b / 6%);
+
+  --sd-shadow-1: 0 0 0 1px var(--sd-shadow-ring),
+                 inset 0 1px 0 0 var(--sd-shadow-lip),
+                 0 1px 2px -1px var(--sd-shadow-cast);
+  --sd-shadow-2: 0 0 0 1px var(--sd-shadow-ring),
+                 inset 0 1px 0 0 var(--sd-shadow-lip),
+                 0 6px 16px -4px var(--sd-shadow-cast);
+  --sd-shadow-3: 0 0 0 1px var(--sd-shadow-ring),
+                 inset 0 1px 0 0 var(--sd-shadow-lip),
+                 0 20px 48px -12px var(--sd-shadow-cast);
+  --sd-shadow-sunken: 0 0 0 1px var(--sd-shadow-ring),
+                 inset 0 1px 3px 0 var(--sd-shadow-cast);
+}
+
+/* =============================================================================
+   CAMADA 3 — escopo da ilha, e SÓ dela.
+
+   Regra SEPARADA de propósito: entrar no bloco `:root, [data-sd-showcase]`
+   acima poria --sd-glow em :root, e o glow vazaria para o site inteiro.
+
+   Consequência: numa página de documentação `var(--sd-glow)` não resolve para
+   nada. A confinação deixa de ser regra que alguém precisa lembrar e vira fato
+   de escopo.
+   ============================================================================= */
+
+[data-sd-showcase] {
+  --sd-glow: radial-gradient(circle, rgb(from var(--sd-accent) r g b / 12%), transparent 70%);
+}
+
+/* =============================================================================
+   Reduced-motion — propriedade da CAMADA DE TOKEN, não dos componentes.
+
+   Nenhum componente escreve `@media (prefers-reduced-motion)` próprio, para
+   sempre. Ver ADR 3.
+
+   1ms e não 0s: transição de duração zero é onde o `useCollapsible` do
+   theme-common, que anima altura em JS, trava — `transitionend` precisa
+   continuar disparando.
+
+   Como o adaptador escreve --ifm-transition-fast a partir de --sd-dur-1, o
+   Infima e o theme-classic ficam parados junto, sem martelo
+   `* { animation: none !important }` e sem um único !important.
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sd-dur-1: 1ms;
+    --sd-dur-2: 1ms;
+    --sd-dur-3: 1ms;
+  }
+}
+
+/* =============================================================================
+   O ADAPTADOR — mão única
+
+   O sistema nunca lê --ifm-*. Só escreve.
+
+   Seletor `:root, :root[data-theme]`: (0,2,0) quando o atributo existe, o que
+   vence o `html[data-theme='dark']` (0,1,1) do Infima. O script inline do
+   Docusaurus escreve data-theme antes da primeira pintura, então o seletor com
+   atributo é o que vale sempre; o `:root` solto fecha o buraco de JavaScript
+   desligado, onde o site degrada para o Infima cru — feio, mas legível.
+
+   O adaptador NÃO bifurca por modo. Ele lê camada 2, que já bifurcou.
+
+   Este é o maior bloco do arquivo e é encanamento inerte: uma atribuição por
+   variável do Infima que o chrome de fato renderiza. Aceito porque é o único
+   bloco puramente mecânico do sistema, e é exatamente o bloco que se pula na
+   leitura.
+
+   Cada linha aqui foi conferida contra a lista de --ifm-* efetivamente
+   consumidas por `var()` no Infima e no theme-classic. Variável declarada e
+   nunca consumida NÃO entra: o adaptador não pode conter linha morta que
+   sugira funcionar.
+   ============================================================================= */
+
+:root,
+:root[data-theme] {
+  /* --- terceiro namespace: nem --ifm-*, nem --sd-*. O adaptador escreve nele
+         como escreve nos --ifm-*. DocRoot/Layout/Main soma
+         --ifm-container-width + --doc-sidebar-width, então os dois se propagam
+         juntos de graça. -------------------------------------------------- */
+  --doc-sidebar-width: var(--sd-sidebar-width);
+
+  /* --- container: AS DUAS. O Infima troca para -xl acima de 1440px, e fixar só
+         a primeira faz o cartão alargar sozinho em tela larga. ------------- */
+  --ifm-container-width:    var(--sd-container-width);
+  --ifm-container-width-xl: var(--sd-container-width);
+
+  /* --- preenchimento e tinta ---------------------------------------------- */
+  --ifm-background-color:         var(--sd-surface-page);
+  --ifm-background-surface-color: var(--sd-surface-card);
+  --ifm-hover-overlay:            var(--sd-border-subtle);
+  --ifm-color-content:            var(--sd-text-body);
+  --ifm-color-content-secondary:  var(--sd-text-muted);
+  --ifm-color-content-inverse:    var(--sd-text-inverse);
+  --ifm-font-color-base:          var(--sd-text-body);
+  --ifm-font-color-base-inverse:  var(--sd-text-inverse);
+  --ifm-font-color-secondary:     var(--sd-text-muted);
+  --ifm-heading-color:            var(--sd-text-strong);
+  --ifm-color-black:              var(--sd-gray-950);
+  --ifm-color-white:              var(--sd-gray-50);
+
+  /* --- marca e estados.
+         Exceção 5 do adaptador: das seis shades por cor semântica, só as VIVAS
+         são atribuídas — base, -dark, -darker, -contrast-background e
+         -contrast-foreground. As quatro restantes (-light, -lighter, -lightest,
+         -darkest) foram resolvidas em build time pelo color-mod() e não têm
+         consumidor: atribuí-las seria linha morta sugerindo funcionar.
+         Nosso acento tem um degrau de hover, não uma família de shades, então
+         -dark e -darker recebem o mesmo token — e isso é o desenho, não
+         descuido. -------------------------------------------------------- */
+  --ifm-color-primary:                     var(--sd-accent);
+  --ifm-color-primary-dark:                var(--sd-accent-hover);
+  --ifm-color-primary-darker:              var(--sd-accent-hover);
+  --ifm-color-primary-contrast-background: var(--sd-surface-wash);
+  --ifm-color-primary-contrast-foreground: var(--sd-text-strong);
+
+  /* `secondary` é o que a admonition `note` consome — ela é `.alert--secondary`,
+     e `note` é a variante neutra: sem cor de estado, usa borda e texto.
+     Por isso as shades apontam para o papel `border` e não para o papel `text`:
+     `--ifm-color-secondary-dark` é lido por `--ifm-alert-border-color`, e a
+     tinta do corpo ali desenharia um anel de contraste máximo em volta de toda
+     nota. */
+  --ifm-color-secondary:                     var(--sd-border-strong);
+  --ifm-color-secondary-dark:                var(--sd-border-strong);
+  --ifm-color-secondary-darker:              var(--sd-border-strong);
+  --ifm-color-secondary-contrast-background: var(--sd-surface-card);
+  --ifm-color-secondary-contrast-foreground: var(--sd-text-body);
+
+  --ifm-color-success:                     var(--sd-state-success);
+  --ifm-color-success-dark:                var(--sd-state-success);
+  --ifm-color-success-darker:              var(--sd-state-success);
+  --ifm-color-success-contrast-background: var(--sd-state-success-fill);
+  --ifm-color-success-contrast-foreground: var(--sd-text-body);
+
+  --ifm-color-info:                     var(--sd-state-info);
+  --ifm-color-info-dark:                var(--sd-state-info);
+  --ifm-color-info-darker:              var(--sd-state-info);
+  --ifm-color-info-contrast-background: var(--sd-state-info-fill);
+  --ifm-color-info-contrast-foreground: var(--sd-text-body);
+
+  --ifm-color-warning:                     var(--sd-state-warn);
+  --ifm-color-warning-dark:                var(--sd-state-warn);
+  --ifm-color-warning-darker:              var(--sd-state-warn);
+  --ifm-color-warning-contrast-background: var(--sd-state-warn-fill);
+  --ifm-color-warning-contrast-foreground: var(--sd-text-body);
+
+  --ifm-color-danger:                     var(--sd-state-danger);
+  --ifm-color-danger-dark:                var(--sd-state-danger);
+  --ifm-color-danger-darker:              var(--sd-state-danger);
+  --ifm-color-danger-contrast-background: var(--sd-state-danger-fill);
+  --ifm-color-danger-contrast-foreground: var(--sd-text-body);
+
+  /* --- escala de ênfase. O Infima a inverte no bloco dark; nós não podemos,
+         porque o adaptador é cego ao modo. A rota correta é apontar cada degrau
+         para um papel da camada 2, que já bifurcou. A escala tem dez degraus
+         consumidos e o nosso texto tem quatro paradas, então alguns degraus
+         repetem — repetir é honesto, inventar parada não seria.
+         (o degrau 600 não é consumido por ninguém e por isso não é atribuído) */
+  --ifm-color-emphasis-0:    var(--sd-surface-page);
+  --ifm-color-emphasis-100:  var(--sd-surface-card);
+  --ifm-color-emphasis-200:  var(--sd-border-subtle);
+  --ifm-color-emphasis-300:  var(--sd-border-default);
+  --ifm-color-emphasis-400:  var(--sd-border-strong);
+  --ifm-color-emphasis-500:  var(--sd-text-faint);
+  --ifm-color-emphasis-700:  var(--sd-text-muted);
+  --ifm-color-emphasis-800:  var(--sd-text-body);
+  --ifm-color-emphasis-900:  var(--sd-text-body);
+  --ifm-color-emphasis-1000: var(--sd-text-strong);
+
+  /* --- tipografia --------------------------------------------------------- */
+  --ifm-font-family-base:      var(--sd-font-body);
+  --ifm-font-family-monospace: var(--sd-font-mono);
+  --ifm-heading-font-family:   var(--sd-font-heading);
+  --ifm-font-size-base:        var(--sd-type-base);
+  --ifm-line-height-base:      var(--sd-leading-prose);
+  --ifm-heading-line-height:   var(--sd-leading-h2);
+  --ifm-heading-font-weight:   var(--sd-weight-heading);
+  --ifm-font-weight-light:     var(--sd-weight-body);
+  --ifm-font-weight-normal:    var(--sd-weight-body);
+  --ifm-font-weight-semibold:  var(--sd-weight-ui);
+  --ifm-font-weight-bold:      var(--sd-weight-heading);
+
+  --ifm-h1-font-size: var(--sd-type-3xl);
+  --ifm-h2-font-size: var(--sd-type-2xl);
+  --ifm-h3-font-size: var(--sd-type-xl);
+  --ifm-h4-font-size: var(--sd-type-lg);
+  --ifm-h5-font-size: var(--sd-type-base);
+  --ifm-h6-font-size: var(--sd-type-sm);
+
+  /* --- espaço ------------------------------------------------------------- */
+  --ifm-global-spacing:          var(--sd-space-4);
+  --ifm-spacing-horizontal:      var(--sd-space-4);
+  --ifm-spacing-vertical:        var(--sd-space-4);
+  --ifm-paragraph-margin-bottom: var(--sd-space-4);
+  --ifm-leading:                 var(--sd-space-6);
+  --ifm-leading-desktop:         var(--sd-space-6);
+  --ifm-list-margin:             var(--sd-space-4);
+  --ifm-list-item-margin:        var(--sd-space-1);
+  --ifm-list-left-padding:       var(--sd-space-6);
+  --ifm-list-paragraph-margin:   var(--sd-space-2);
+  --ifm-hr-margin-vertical:      var(--sd-space-6);
+
+  /* --- forma -------------------------------------------------------------- */
+  --ifm-global-radius:            var(--sd-radius-sm);
+  --ifm-button-border-radius:     var(--sd-radius-sm);
+  --ifm-badge-border-radius:      var(--sd-radius-xs);
+  --ifm-code-border-radius:       var(--sd-radius-xs);
+  --ifm-pre-border-radius:        var(--sd-radius-md);
+  --ifm-alert-border-radius:      var(--sd-radius-md);
+  --ifm-card-border-radius:       var(--sd-radius);
+  --ifm-breadcrumb-border-radius: var(--sd-radius-xs);
+  --ifm-pagination-border-radius: var(--sd-radius-sm);
+  --ifm-pagination-nav-border-radius: var(--sd-radius-md);
+
+  /* --- elevação. Preenche a lacuna que o Infima tem por desenho: ele não
+         redefine sombra no escuro, e as dele somem sobre fundo escuro. ------ */
+  --ifm-global-shadow-lw: var(--sd-shadow-1);
+  --ifm-global-shadow-md: var(--sd-shadow-2);
+  --ifm-global-shadow-tl: var(--sd-shadow-3);
+  --ifm-alert-shadow:      var(--sd-shadow-1);
+  --ifm-blockquote-shadow: none;
+  --ifm-navbar-shadow:     none;
+
+  /* --- link --------------------------------------------------------------- */
+  --ifm-link-color:            var(--sd-accent);
+  --ifm-link-hover-color:      var(--sd-accent-hover);
+  --ifm-link-decoration:       none;
+  --ifm-link-hover-decoration: underline;
+
+  /* --- código. --ifm-pre-background é sobrescrita dentro do bloco de código
+         por --prism-background-color; ver a exceção 4 no fim do arquivo. ---- */
+  --ifm-code-background:  var(--sd-surface-code);
+  --ifm-pre-background:   var(--sd-surface-code);
+  --ifm-pre-color:        var(--sd-code-fg);
+  --ifm-pre-line-height:  var(--sd-leading-code);
+  --ifm-pre-padding:      var(--sd-space-4);
+  --ifm-code-padding-horizontal: var(--sd-space-1);
+  --ifm-code-padding-vertical:   var(--sd-space-1);
+
+  /* --- régua, citação e tabela ------------------------------------------- */
+  --ifm-hr-background-color:      var(--sd-border-default);
+  --ifm-blockquote-color:         var(--sd-text-muted);
+  --ifm-blockquote-border-color:  var(--sd-border-strong);
+  --ifm-blockquote-font-size:     var(--sd-type-base);
+  --ifm-table-border-color:       var(--sd-border-subtle);
+  --ifm-table-background:         transparent;
+  --ifm-table-head-background:    transparent;
+  --ifm-table-stripe-background:  var(--sd-border-subtle);
+  --ifm-table-cell-color:         var(--sd-text-body);
+  --ifm-table-head-color:         var(--sd-text-strong);
+  --ifm-table-head-font-weight:   var(--sd-weight-ui);
+  --ifm-table-cell-padding:       var(--sd-space-3);
+
+  /* --- navbar ------------------------------------------------------------- */
+  --ifm-navbar-height:                 var(--sd-navbar-height);
+  --ifm-navbar-background-color:       var(--sd-surface-page);
+  --ifm-navbar-link-color:             var(--sd-text-muted);
+  --ifm-navbar-link-hover-color:       var(--sd-text-strong);
+  --ifm-navbar-padding-horizontal:     var(--sd-space-6);
+  --ifm-navbar-padding-vertical:       var(--sd-space-2);
+  --ifm-navbar-item-padding-horizontal: var(--sd-space-3);
+  --ifm-navbar-item-padding-vertical:   var(--sd-space-2);
+  --ifm-navbar-search-input-background-color:  var(--sd-surface-card);
+  --ifm-navbar-search-input-color:             var(--sd-text-body);
+  --ifm-navbar-search-input-placeholder-color: var(--sd-text-faint);
+
+  /* --- sidebar ------------------------------------------------------------ */
+  --ifm-menu-color:                   var(--sd-text-muted);
+  --ifm-menu-color-active:            var(--sd-accent);
+  --ifm-menu-color-background-active: var(--sd-surface-wash);
+  --ifm-menu-color-background-hover:  var(--sd-border-subtle);
+  --ifm-menu-link-padding-horizontal: var(--sd-space-3);
+  --ifm-menu-link-padding-vertical:   var(--sd-space-2);
+
+  /* --- TOC ---------------------------------------------------------------- */
+  --ifm-toc-border-color:      var(--sd-border-subtle);
+  --ifm-toc-link-color:        var(--sd-text-muted);
+  --ifm-toc-padding-horizontal: var(--sd-space-3);
+  --ifm-toc-padding-vertical:   var(--sd-space-2);
+
+  /* --- breadcrumb e paginação -------------------------------------------- */
+  --ifm-breadcrumb-color-active:           var(--sd-accent);
+  --ifm-breadcrumb-item-background-active: var(--sd-surface-wash);
+  --ifm-breadcrumb-padding-horizontal:     var(--sd-space-2);
+  --ifm-breadcrumb-padding-vertical:       var(--sd-space-1);
+  --ifm-breadcrumb-spacing:                var(--sd-space-1);
+  --ifm-pagination-color-active:           var(--sd-accent);
+  --ifm-pagination-item-active-background: var(--sd-surface-wash);
+  --ifm-pagination-nav-color-hover:        var(--sd-accent);
+
+  /* --- cartão, dropdown, abas, badge -------------------------------------- */
+  --ifm-card-background-color:        var(--sd-surface-card);
+  --ifm-card-horizontal-spacing:      var(--sd-space-6);
+  --ifm-card-vertical-spacing:        var(--sd-space-6);
+  --ifm-dropdown-background-color:    var(--sd-surface-card);
+  --ifm-dropdown-link-color:          var(--sd-text-body);
+  --ifm-dropdown-hover-background-color: var(--sd-border-subtle);
+  --ifm-dropdown-font-weight:         var(--sd-weight-body);
+  --ifm-tabs-color:                   var(--sd-text-muted);
+  --ifm-tabs-color-active:            var(--sd-accent);
+  --ifm-tabs-color-active-border:     var(--sd-accent);
+  --ifm-badge-background-color:       var(--sd-surface-wash);
+  --ifm-badge-border-color:           var(--sd-border-default);
+  --ifm-badge-color:                  var(--sd-text-strong);
+
+  /* --- footer ------------------------------------------------------------- */
+  --ifm-footer-background-color: var(--sd-surface-page);
+  --ifm-footer-color:            var(--sd-text-muted);
+  --ifm-footer-link-color:       var(--sd-text-muted);
+  --ifm-footer-link-hover-color: var(--sd-accent);
+  --ifm-footer-title-color:      var(--sd-text-strong);
+  --ifm-footer-padding-horizontal: var(--sd-space-6);
+  --ifm-footer-padding-vertical:   var(--sd-space-8);
+
+  /* --- barra de rolagem --------------------------------------------------- */
+  --ifm-scrollbar-track-background-color:      var(--sd-surface-page);
+  --ifm-scrollbar-thumb-background-color:      var(--sd-border-strong);
+  --ifm-scrollbar-thumb-hover-background-color: var(--sd-text-faint);
+
+  /* --- motion. É por aqui que reduced-motion alcança o framework que não
+         escrevemos. --ifm-transition-slow NÃO entra: o Infima a declara e
+         ninguém a consome — atribuí-la seria linha morta. ------------------- */
+  --ifm-transition-fast:            var(--sd-dur-1);
+  --ifm-transition-timing-default:  var(--sd-ease-settle);
+  --ifm-button-transition-duration: var(--sd-dur-1);
+}
+
+/* O título de página cresce no mesmo instante em que a sidebar aparece — um
+   evento visual em vez de dois. 997px é o literal compilado do Infima; o projeto
+   inteiro tem um limiar só. O par 30/36 é herdado; o ponto onde ele troca, não.
+   Perda nomeada: entre 640 e 996px o título fica em 30px onde o alvo dá 36. */
+@media (min-width: 997px) {
+  :root,
+  :root[data-theme] {
+    --ifm-h1-font-size: var(--sd-type-4xl);
+  }
+}
+
+/* =============================================================================
+   ADAPTADOR — as exceções com escopo
+
+   Cinco pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA.
+   ============================================================================= */
+
+/* --- Exceção 1 — --ifm-alert-background-color-highlight -----------------------
+   No Infima ela é rgba() LITERAL por variante, dentro de `.alert--*`, e não
+   derivada da primária. É o ponto exato onde a re-marcação por variável do
+   Infima vaza: trocar --ifm-color-primary não move nenhuma delas. Só o seletor
+   de cada variante alcança. */
+.alert--primary   { --ifm-alert-background-color-highlight: var(--sd-surface-wash); }
+.alert--secondary { --ifm-alert-background-color-highlight: var(--sd-surface-card); }
+.alert--success   { --ifm-alert-background-color-highlight: var(--sd-state-success-fill); }
+.alert--info      { --ifm-alert-background-color-highlight: var(--sd-state-info-fill); }
+.alert--warning   { --ifm-alert-background-color-highlight: var(--sd-state-warn-fill); }
+.alert--danger    { --ifm-alert-background-color-highlight: var(--sd-state-danger-fill); }
+
+/* --- Exceção 2 — os três --docusaurus-details-* ------------------------------
+   Declaradas dentro de classe de CSS Module (`.details` em theme-common e em
+   theme-classic), nunca em :root. Um seletor de elemento (0,0,1) perderia para
+   a classe hasheada (0,1,0); `details[class]` é (0,1,1) e vence sem depender do
+   hash, que muda a cada build.
+
+   A curva `ease` do upstream fica fora do alcance de qualquer variável — o
+   valor dele é `transform var(--ifm-transition-fast) ease`. Aqui trocamos o
+   valor inteiro pelo movimento nomeado, então a curva também passa a ser nossa. */
+details[class] {
+  --docusaurus-details-decoration-color: var(--sd-border-strong);
+  --docusaurus-details-summary-arrow-size: var(--sd-space-2);
+  --docusaurus-details-transition: transform var(--sd-move-expand);
+}
+
+/* --- Exceção 3 — --docusaurus-tag-list-border --------------------------------
+   Mesma mecânica: declarada em `.tag` dentro de CSS Module. O elemento é um
+   <a> (o Tag renderiza um <Link>), então `a[class*='tag_']` é (0,1,1) e vence a
+   classe hasheada. O prefixo `tag_` é estável: o padrão de nome é
+   `[local]_[contenthash:base64:4]`, e `local` é o nome escrito no módulo. */
+a[class*='tag_'] {
+  --docusaurus-tag-list-border: var(--sd-border-default);
+}
+
+/* --- Exceção 4 — --prism-background-color ------------------------------------
+   Ela não vem de CSS nenhum: `CodeBlock/Container` a injeta no atributo `style`
+   INLINE, a partir de `themeConfig.prism.theme.plain`, via
+   `getPrismCssVariables`. Nenhum seletor de folha de estilo vence estilo inline.
+
+   Correção registrada: a arquitetura previa alcançá-la "por seletor na classe
+   do bloco de código". Não é alcançável assim — medido no fonte da 3.10.2. O
+   ponto de escrita é o shim de `themeConfig.prism.theme` em
+   `docusaurus.config.js`, que só referencia token e não carrega um único hex.
+   Escrever aqui uma regra `.theme-code-block { --prism-background-color: … }`
+   seria exatamente a linha morta que sugere funcionar. */
+
+/* --- Exceção 5 — as shades de cor semântica ---------------------------------
+   Não é seletor, é regra de conteúdo do adaptador: só as shades VIVAS são
+   atribuídas. Escrita no bloco do adaptador, acima. */
