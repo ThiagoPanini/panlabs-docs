@@ -70,6 +70,15 @@ O que muda são três coisas:
    contra 1.000 em produção. O cabeçalho `X-Trilho-Limite-Restante` diz quantas
    sobram na janela atual, nos dois.
 
+:::note[Idempotência vale nos dois]
+
+O cabeçalho `Idempotency-Key` funciona igual no sandbox e em produção, e a janela
+de deduplicação é a mesma: 24 horas. É de propósito — se o comportamento
+divergisse, o sandbox deixaria de servir para testar justamente o caso em que
+idempotência importa, que é a repetição depois de um timeout.
+
+:::
+
 > Um relato que aparece com frequência no suporte: o time testa uma integração
 > inteira no sandbox, sobe para produção, e a primeira cobrança falha com
 > `429`. É quase sempre um laço de *retry* sem espera, que o limite folgado do

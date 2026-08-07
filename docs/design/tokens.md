@@ -564,10 +564,15 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-color-primary-contrast-background: var(--sd-surface-wash);
   --ifm-color-primary-contrast-foreground: var(--sd-text-strong);
 
-  /* `secondary` é o que a admonition `note` consome: neutro, sem cor de estado. */
-  --ifm-color-secondary:                     var(--sd-text-muted);
-  --ifm-color-secondary-dark:                var(--sd-text-body);
-  --ifm-color-secondary-darker:              var(--sd-text-body);
+  /* `secondary` é o que a admonition `note` consome — ela é `.alert--secondary`,
+     e `note` é a variante neutra: sem cor de estado, usa borda e texto.
+     Por isso as shades apontam para o papel `border` e não para o papel `text`:
+     `--ifm-color-secondary-dark` é lido por `--ifm-alert-border-color`, e a
+     tinta do corpo ali desenharia um anel de contraste máximo em volta de toda
+     nota. */
+  --ifm-color-secondary:                     var(--sd-border-strong);
+  --ifm-color-secondary-dark:                var(--sd-border-strong);
+  --ifm-color-secondary-darker:              var(--sd-border-strong);
   --ifm-color-secondary-contrast-background: var(--sd-surface-card);
   --ifm-color-secondary-contrast-foreground: var(--sd-text-body);
 

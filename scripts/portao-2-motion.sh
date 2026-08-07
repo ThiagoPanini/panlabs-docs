@@ -15,6 +15,13 @@
 # `transition:` ou `animation:`. "Fora do bloco de vocabulário" e "em toda
 # parte" coincidem por construção, e um `transition: color 200ms` escrito dentro
 # do próprio arquivo de tokens reprova como qualquer outro.
+#
+# Limite conhecido, escrito em voz alta: `grep` é orientado a linha, então uma
+# declaração `transition:` cujo valor quebre em várias linhas escapa. Fora do
+# arquivo de tokens isso não importa — o portão 1 pega o literal de tempo em
+# qualquer posição. Dentro dele, este é o único guarda, e hoje não há nenhuma
+# declaração de transição multilinha lá. O dia em que houver é o dia de trocar a
+# varredura por uma que normalize espaço em branco — não de ignorar o achado.
 
 set -uo pipefail
 
