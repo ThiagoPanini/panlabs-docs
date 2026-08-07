@@ -1,0 +1,51 @@
+name: CI
+
+# Os portões de cadência de COMMIT, mais o build.
+#
+# Nenhuma dependência npm nova entra por esta porta: tudo aqui é `actions/*` e
+# `npm ci` sobre o `package-lock.json` versionado.
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portoes-e-build:
+    name: Portões e build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Portão 1 — literal de cor, comprimento, tempo ou curva fora do arquivo
+      # de tokens.
+      - name: Portão 1 — literais
+        run: npm run portao:1
+
+      # Portão 2 — duração ou curva cravada numa transição ou animação.
+      - name: Portão 2 — motion
+        run: npm run portao:2
+
+      # O bloco css de docs/design/tokens.md é espelho de src/css/tokens.css.
+      # Não é um portão — é a verificação que torna a palavra "espelho"
+      # conferível.
+      - name: Espelho de tokens
+        run: node scripts/espelho-tokens.mjs --verificar
+
+      # `onBrokenLinks: throw` faz a verificação de link acontecer aqui. Ela
+      # nunca acontece em `docusaurus start`, que devolve 200 com o shell da SPA
+      # para qualquer rota.
+      - name: Build (pt-BR e en)
+        run: npm run build

@@ -1,0 +1,83 @@
+name: Deploy
+
+# Constrói e publica em GitHub Pages, e roda o portão de cadência de
+# IMPLANTAÇÃO contra a URL pública que acabou de subir.
+#
+# Nenhuma dependência npm nova entra por esta porta: `actions/*` e `npm ci`.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma implantação por vez; a fila não cancela a que está no ar.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Portão 1 — literais
+        run: npm run portao:1
+
+      - name: Portão 2 — motion
+        run: npm run portao:2
+
+      - name: Espelho de tokens
+        run: node scripts/espelho-tokens.mjs --verificar
+
+      - name: Build (pt-BR e en)
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Publicar
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  portao-6:
+    name: Portão 6 — rotas contra o host
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # O GitHub Pages leva alguns segundos para servir o que acabou de aceitar.
+      - name: Esperar a propagação
+        run: sleep 20
+
+      # `docusaurus serve` NÃO substitui isto: ele valida a config, não o host.
+      # Reprovar a rota 1 aciona a alavanca de emissão dupla do ADR 7.
+      - name: Portão 6 — rotas 1 e 3
+        run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}"
