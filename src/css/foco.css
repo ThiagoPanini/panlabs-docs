@@ -175,19 +175,32 @@ a[href='#__docusaurus_skipToContent_fallback'] {
   transition: none;
 }
 
-/* Os mesmos tokens do hover. O hover já é a prévia do que o clique faz; o press
-   é a confirmação de que o dedo chegou — inventar um terceiro valor seria dizer
-   a mesma coisa com outra tinta. */
+/* **Os mesmos tokens do hover, superfície por superfície** — e "os mesmos" é
+   literal, não aproximado. O hover de cada uma dessas superfícies é escrito pelo
+   Infima sobre uma variável diferente, e o adaptador já decidiu para onde cada
+   uma aponta; o press repete o destino, nunca um valor novo. Um press com tinta
+   própria seria um terceiro estado se apresentando como confirmação do segundo.
+   Foi conferido no fonte do Infima, uma superfície de cada vez. */
 .menu__link:active,
-.navbar__link:active,
+.menu__caret:active {
+  background: var(--sd-border-subtle);
+}
+
+.navbar__link:active {
+  color: var(--sd-text-strong);
+}
+
 .table-of-contents__link:active,
-.breadcrumbs__link:active,
 .footer__link-item:active {
-  color: var(--sd-accent-hover);
+  color: var(--sd-accent);
+}
+
+.breadcrumbs__link:active {
+  background: var(--sd-surface-wash);
 }
 
 .pagination-nav__link:active {
-  box-shadow: var(--sd-shadow-2);
+  border-color: var(--sd-accent);
 }
 
 /* -----------------------------------------------------------------------------

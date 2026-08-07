@@ -168,7 +168,7 @@ O que o toque precisa é confirmação de que o dedo chegou.
 
 Três propriedades da regra:
 
-- **mesmos valores do hover.** Zero token novo, zero valor novo. O hover já é a prévia do que o clique faz; o press é a confirmação de que o dedo chegou;
+- **mesmos valores do hover, superfície por superfície.** Zero token novo, zero valor novo — e *"os mesmos"* é literal, não aproximado: o Infima escreve o hover de cada superfície contra uma variável diferente, e o press repete o destino que o adaptador já deu a ela. Um press com tinta própria seria um terceiro estado se apresentando como confirmação do segundo;
 - **instantâneo na entrada, suave na saída**, por uma declaração. A transição de entrada usa o `transition` do estado de destino, a de saída usa o da regra base. Escreve-se `none`, e não uma duração curta: duração é vocabulário de motion e não se crava, e aqui não há movimento a nomear;
 - **não fica sob `(pointer: coarse)`.** Press com mouse também merece confirmação, e o highlight nativo foi apagado nos dois.
 
@@ -205,7 +205,11 @@ A regra do projeto é que hover inteiro vive sob `@media (hover: hover)`. Ela go
 
 **Correção medida nesta implementação:** o Infima tem **zero** ocorrências de `(hover: hover)` em todo o framework, e o `theme-classic` tem uma. A decisão de motion supunha que a feature já estava em uso nos dois. Não está — e a consequência é que o hover do framework **gruda depois do tap**: fundo de item de sidebar e cor de link de navbar ficam marcados até o dedo tocar noutro lugar.
 
-A correção usa o mesmo mecanismo do reduced-motion: em vez de brigar seletor a seletor com código de terceiro — que seria a lista de alvos recusada no §2 —, **o adaptador neutraliza os tokens de hover do framework** sob `(hover: none)`. Duas declarações, nenhum `!important`, e o fundo do item **ativo** não é tocado porque vem de outra variável.
+A correção usa o mesmo mecanismo do reduced-motion: em vez de brigar seletor a seletor com código de terceiro — que seria a lista de alvos recusada no §2 —, **o adaptador neutraliza os tokens de hover do framework** sob `(hover: none)`. Nenhum `!important`, e o fundo do item **ativo** não é tocado porque vem de outra variável.
+
+**O mecanismo tem limite, e ele vai nomeado.** Só alcança hover que o Infima escreve contra uma variável **própria de hover**. Quatro alcançam: fundo de item de sidebar, cor de link de navbar, cor de link de rodapé e borda de paginação. **Dois não alcançam:** o link do TOC e o breadcrumb são escritos contra o acento e contra o realce do item ativo, e neutralizá-los apagaria o estado ativo junto. Nos dois, o hover continua grudando depois do tap, e quem dá retorno é o `:active` do §7.
+
+Reabre no dia em que o Infima abrir variável de hover para eles — e é o tipo de item que sobe de degrau sozinho no upgrade.
 
 ---
 
@@ -267,7 +271,7 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 
 **A posição do botão de voltar ao topo na ordem de tabulação** (§10).
 
-**O hover do framework fora de `(hover: hover)`** — neutralizado por token no adaptador (§8.3), não por reescrita. O que o adaptador não alcança fica como está.
+**O hover do framework fora de `(hover: hover)`** — neutralizado por token no adaptador (§8.3), não por reescrita. **O link do TOC e o breadcrumb ficam de fora**, porque o Infima os escreve contra o acento e contra o realce do item ativo, e neutralizá-los apagaria o estado ativo junto. Nos dois, o hover gruda depois do tap e quem dá retorno é o `:active`.
 
 ---
 

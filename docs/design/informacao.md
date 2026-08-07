@@ -50,11 +50,24 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 *Dissenso registrado:* três instâncias são três árvores de i18n. O gerador de traduções cria; quem preenche é humano. Aceito porque a alternativa não elimina o trabalho — só o esconde numa árvore só.
 
-### 2.1 Não existe classe de instância no `<html>`
+### 2.1 A classe de instância existe — correção de um "fato verificado" que era falso
 
-**Verificado na fonte de 3.10.2:** não há classe `plugin-id-<id>` em lugar nenhum do core, do plugin de docs ou do tema. O que existe é a classe **por versão**, aplicada pelo `DocVersionRoot`.
+O mapa registrou, com essas palavras, que *"não existe classe `plugin-id-<id>` no `<html>`, verificado em 3.10.2"*, e concluiu que CSS não podia escopar por tab.
 
-Consequência dura: **CSS que precise escopar por tab não pode ancorar em classe de instância.** Ancore em `ThemeClassNames` de página, ou em `versions.<nome>.className`, que é opção pública validada no schema. Nada em `src/css/` escopa por instância hoje, e a regra existe para que ninguém tente.
+**É falso, e foi medido no artefato deste slice.** O `<html>` de uma página de doc sai assim:
+
+```
+class="docs-wrapper plugin-docs plugin-id-default docs-version-current
+       docs-doc-page docs-doc-id-comece-aqui/visao-geral"
+```
+
+Ou seja: há classe por **plugin** (`plugin-docs`), por **instância** (`plugin-id-default`, `plugin-id-api`, `plugin-id-receitas`), por **versão**, por **tipo de página** e por **documento**. A varredura que produziu o fato original procurou no fonte pelo nome errado — a classe é montada em runtime, não escrita como literal.
+
+**A consequência prática, porém, não muda: nada em `src/css/` escopa por instância, e nada deveria.** O motivo agora é outro, e é melhor — não é impossibilidade, é decisão:
+
+> **Escopar por instância é escopar por *onde a página está*, quando o que importa é *o que a página é*.** As três tabs compartilham o mesmo layout de página; o que rompe layout é a Referência da API, e ela rompe por `docItemComponent`, que é opção pública. Uma regra `plugin-id-api` seria a segunda fonte de verdade para uma decisão que o componente de rota já toma.
+
+A porta fica **aberta e não usada**, o que é diferente de fechada. Quem precisar dela um dia tem `plugin-id-<id>` e `docs-doc-id-<id>` à disposição; quem estiver escrevendo CSS de layout hoje deve ancorar em `ThemeClassNames` de página.
 
 ---
 
@@ -121,9 +134,18 @@ Este slice escreve **oito páginas de visão geral** — as seis de `Documentaç
 
 **`Operação › Changelog` é escrita neste slice e não é visão geral.** O footer a linka em **todas** as rotas do site, e link de footer para rota inexistente reprova no verificador de links do build. A página existe com a URL definitiva e o corpo mínimo; o gabarito de changelog é do slice 4.
 
-**As cinco categorias de recurso da Referência da API não são escritas à mão.** Elas apontam para páginas geradas do contrato OpenAPI, e o gerador passa a emitir também o arquivo de sidebar da instância. Escrevê-las agora criaria exatamente a segunda fonte de verdade que o gerador existe para impedir — e uma categoria clicável cujo destino não existe reprova no build.
+**As cinco categorias de recurso da Referência da API não são escritas à mão.** Elas apontam para páginas geradas do contrato OpenAPI, e o gerador passa a emitir também o arquivo de sidebar da instância. Escrevê-las agora criaria exatamente a segunda fonte de verdade que o gerador existe para impedir — e uma categoria clicável cujo destino não existe reprova no build. **A árvore está portanto em 6 · 0 · 1 no artefato deste slice, e 6 · 0 · 6 é o alvo**; a diferença é a instância `api`, e ela fecha no slice 5.
 
-**Os doze pares seção→ícone estão inteiros no manifesto e no CSS desde já**, inclusive os cinco que ainda não têm categoria. Eles não custam nada e não erram nada; o dia em que a categoria nascer, o ícone já está lá.
+**Os doze pares seção→ícone estão inteiros no manifesto e no CSS desde já**, inclusive os cinco que ainda não têm categoria. Eles não custam nada e não erram nada, e o vendorizador confere que os três lugares onde os pares vivem — manifesto, `className` de sidebar e regra de máscara — concordam.
+
+### 3.4 Categoria sem filhos vira link, e o CSS precisa saber disso
+
+**Medido no artefato deste slice.** Uma categoria declarada com lista de itens vazia é **normalizada para link** pelo Docusaurus: o `<li>` conserva o `className`, mas o rótulo deixa de ser envolvido pelo bloco colapsável e passa a ser um link filho direto. O caret some — e ele some com razão, porque não há o que colapsar.
+
+Isso tem duas consequências, e as duas foram tratadas:
+
+- **o CSS de sidebar cobre as duas formas.** Com um seletor só, uma seção perderia o ícone no dia em que a última folha dela saísse, e a falha seria muda. O marcador é o `className` do manifesto, não o nível — `.sidebar-icone` **é** a definição de *seção de topo* neste sistema;
+- **o estado atual é honesto e visível:** as duas seções que já têm folha (`Comece aqui` e `Operação`) provam a forma de categoria — ícone, caret, aberta por padrão. As demais provam a forma de link, com o mesmo ícone e a mesma tipografia. Nenhuma perde a assinatura visual, e o slice 4 as promove a categoria ao entregar as folhas.
 
 ---
 
@@ -213,7 +235,8 @@ A forma do `llms-full.txt`, o ponteiro de volta em cada `.md` e o aviso de `Cont
 | Categoria clicável | origem própria (reversão) | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §3.1 — três fatos verificados na fonte |
 | `collapsed: false` | herdado | a âncora mostra a árvore aberta |
 | `Receitas` plana | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §3 |
-| Não existe classe de instância no `<html>` | **origem própria (verificação)** | varredura em core, plugin de docs e tema, 3.10.2 |
+| A classe de instância existe, e não se usa mesmo assim | **origem própria (correção)** | medido no artefato: `plugin-id-<id>` está no `<html>`, contra o "fato verificado" da [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) |
+| Categoria sem filhos é normalizada para link | **origem própria (medição)** | medido no artefato; obriga o CSS de sidebar a cobrir as duas formas |
 | Zero versionamento | origem própria (reversão) | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §7, contra a leitura da [#7](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/7) |
 | Regra de heading | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §5 |
 | As três configurações de coluna | **origem própria (correção)** | medido em `DocItem/Layout@3.10.2` |

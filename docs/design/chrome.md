@@ -6,7 +6,7 @@ O shell da página de documentação: proporções, navbar, sidebar, TOC, breadc
 
 Chrome não se autora: se **entorta**. Tudo neste documento é degrau 0 (variável do Infima) ou degrau 1 (classe estável) da escada do [ADR 2](../adr/0002-politica-de-swizzle.md), **com uma exceção de degrau 3** — a marca, que está em [`icones.md`](icones.md) e no ledger de [`swizzle.md`](swizzle.md). O orçamento `unsafe` continua em zero.
 
-Tudo aqui é obrigatório, salvo bloco marcado `Livre`.
+Tudo aqui é obrigatório. Não há bloco `Livre` — o chrome inteiro é geometria herdada ou consequência de restrição, e não sobra latitude para nomear dono.
 
 > **Leia antes:** [ADR 1 — Doutrina de CSS](../adr/0001-doutrina-de-css.md) e [ADR 2 — Política de swizzle](../adr/0002-politica-de-swizzle.md).
 
@@ -42,7 +42,7 @@ Isto não estava previsto em nenhuma resolução do mapa. Saiu de medir o grid d
 
 **(a) O gutter mora no `<main>`, não no `.container`.** A margem negativa da `.row` é calibrada contra o preenchimento do container, e o `.col` de 75% mede a row. Trocar o preenchimento do container quebra os três de uma vez. O container fica com o que o Infima dá; o `<main>` completa o que falta para o gutter.
 
-**(b) O `.col` perde o preenchimento horizontal.** Sem isso o cartão nasce com a coluna **menos** duas vezes o preenchimento de coluna — ele seria estreito e a conta não fecharia por 32px. Os dois lados são cobrados por dentro dos 75%.
+**(b) O `.col` perde o preenchimento horizontal.** Sem isso o cartão nasce com a coluna **menos** duas vezes o preenchimento de coluna do Infima — ele seria mais estreito que `--sd-doc-width`, e a conta não fecharia. Os dois lados são cobrados por dentro dos 75%.
 
 **(c) A coluna do TOC recebe a separação de um lado só.** Com preenchimento nos dois, a borda direita do TOC não fecha com a borda direita do container e sobra uma faixa vazia. Com a separação só à esquerda, o TOC alinha com o container e a folga entre cartão e TOC é a que se quer.
 
@@ -113,7 +113,7 @@ Altura `--sd-navbar-height`, fixa no topo, sem faixa de tabs de largura total.
 
 **As tabs trocam a sidebar inteira.** Cada uma aponta para uma instância de `plugin-content-docs`, e é isso que faz a URL ler o eixo. Ver [`informacao.md`](informacao.md).
 
-**`localeDropdown` com rótulo curto.** O default do Docusaurus vem de `Intl.DisplayNames` e produz o nome do locale por extenso, que é o item mais largo que a navbar carregaria. O rótulo curto é uma linha de config em `localeConfigs`, e a diferença é o que separa caber de não caber na faixa entre 997 e 1200px — a única faixa apertada, porque abaixo de 996 o Infima manda tudo para dentro do hambúrguer.
+**`localeDropdown` com rótulo curto.** O default do Docusaurus vem de `Intl.DisplayNames` e produz o nome do locale por extenso, que é o item mais largo que a navbar carregaria. O rótulo curto é uma linha de config em `localeConfigs`, e a diferença é o que separa caber de não caber na **única faixa apertada do navbar** — a que começa no limiar e vai até a tela larga, porque abaixo dele o Infima manda tudo para dentro do hambúrguer.
 
 **GitHub entra como palavra, não como glifo.** Não há marca de terceiro no manifesto de ícones, e gastar o único slot livre num logotipo de plataforma seria decidir por acidente o que o orçamento deixou reservado sem nome.
 
@@ -131,7 +131,7 @@ Um transplante corporativo que remova a busca não deixa buraco no navbar.
 
 Largura `--sd-sidebar-width`, e **nada aqui custa swizzle**.
 
-**O número é medido, não default.** Os 300px do Docusaurus não são medidos nem derivados; a largura adotada aparece em dois dos três layouts preferidos. *Dissenso registrado:* ela aperta aninhamento profundo, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. O teto de profundidade 2 é o que a segura — se a árvore ganhar um terceiro nível, este número reabre.
+**O número é medido, não default.** O valor que o Docusaurus entrega de fábrica não é medido nem derivado; a largura adotada aparece em dois dos três layouts preferidos. *Dissenso registrado:* ela aperta aninhamento profundo, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. O teto de profundidade 2 é o que a segura — se a árvore ganhar um terceiro nível, este número reabre.
 
 ### 3.1 Ícone por categoria de topo
 
@@ -143,6 +143,12 @@ Duas propriedades caem de graça e valem escrita:
 - **não existe segundo desenho para o modo escuro.** O axioma 4 é satisfeito sem custo.
 
 O `::before` mora no **link**, não no `<li>`, para herdar a cor dele. Isso importa porque a categoria é clicável: o rótulo é um `<a class="menu__link">` com um `<button class="menu__caret">` irmão, e o alvo do seletor é o link.
+
+**A regra cobre duas formas, e a segunda foi medida no artefato.** O Docusaurus **normaliza categoria sem filhos para link**: o `<li>` conserva o `className`, mas o rótulo deixa de ser envolvido pelo bloco colapsável. Com um seletor só, uma seção perderia o ícone e a tipografia de topo no dia em que a última folha dela saísse — e a falha seria **muda**, que é o modo de falhar que este projeto recusa em toda parte.
+
+Por isso o marcador do rótulo de seção é o **`className` do manifesto**, e não o número de nível: `.sidebar-icone` é a definição de *seção de topo* neste sistema, e ele sobrevive às duas formas. Os níveis continuam desenhando a hierarquia da folha, que é o que eles sabem fazer.
+
+Isso obriga uma segunda regra, e ela é o par da primeira: a folha se estiliza por `theme-doc-sidebar-item-link-level-2` **e** por nível 1 sem o marcador de seção — que é a sidebar plana de `Receitas`, onde toda folha é de topo.
 
 O alinhamento não é coincidência: o preenchimento horizontal do item de menu foi escolhido para que, somado ao preenchimento que o `DocSidebar` põe na lista, o ícone caia **na mesma vertical do preenchimento do navbar** — a marca e o primeiro ícone de seção ficam alinhados.
 
@@ -249,7 +255,7 @@ O cartão **não dissolve**, e o motivo é estrutural: ele é nível de superfí
 
 Duas notas de implementação que a decisão original não previa:
 
-- o Infima **zera** o preenchimento horizontal do footer no estreito, e a declaração dele mora no próprio `.footer` — mais perto do elemento que o `:root` do adaptador, logo ela vence. Uma linha restaura o gutter;
+- o Infima **zera** o preenchimento horizontal do footer no estreito, e a declaração dele mora no próprio `.footer` — mais perto do elemento que o `:root` do adaptador, logo ela vence. A restauração declara a **propriedade**, não a variável: reescrever a variável do Infima fora do adaptador abriria uma sexta exceção com escopo contra a lista fechada do [ADR 1](../adr/0001-doutrina-de-css.md), e a regra de mão única vale nos dois sentidos;
 - o link do rodapé vira `inline-flex` em vez de `inline`, porque **elemento `inline` ignora altura mínima em silêncio** e o piso de alvo de toque do [ADR 4](../adr/0004-contrato-de-estado-de-entrada.md) não alcançaria justamente a superfície mais estreita do site.
 
 ---
@@ -295,6 +301,8 @@ Consequência direta do orçamento `unsafe` zero. Cada linha é perda escrita, n
 | O slot de busca vazio custa zero | **origem própria (verificação)** | `Navbar/Search` tem `:empty { display: none }` no próprio módulo |
 | Ícone de sidebar por `className` mais máscara | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14), [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) — única rota zero-swizzle |
 | Alinhamento do ícone com o preenchimento do navbar | **origem própria (implementação)** | escolhido ao somar o preenchimento que o `DocSidebar` põe na lista |
+| O rótulo de seção é marcado por `className`, não por nível | **origem própria (medição)** | categoria sem filhos é normalizada para link; com seletor de nível a falha seria muda |
+| O `.container` do footer perde o preenchimento próprio | **origem própria (implementação)** | sem isso a compensação erra pela largura do preenchimento, e reescrever a variável do Infima abriria uma sexta exceção com escopo contra o ADR 1 |
 | Falso-negrito por `text-shadow` | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) — medido nas referências |
 | Footer em uma linha, fio superior, muito ar | herdado | [#27](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/27) §11 — a única medição que existe do rodapé da âncora |
 | Ar de baixo menor que o medido | **delta deliberado** | a âncora rola dentro da coluna; aqui é banda de site com a viewport logo abaixo |

@@ -21,19 +21,19 @@
 /* -----------------------------------------------------------------------------
    1. A cadeia de proporções
 
-   container 1152 → coluna 864 (75%) → cartão 864 → interior 768 → prosa 672.
-   Sidebar 264, navbar 56, shell 1416, gutter 32 → 64.
+   `--sd-container-width` → `--sd-doc-width` (75%) → cartão → interior → prosa.
+   Os valores moram em `tokens.css`; aqui e no documento eles se citam por nome,
+   para que a cadeia não tenha uma segunda versão que envelhece sozinha.
 
    Ela fecha em três declarações, e as três existem por um motivo mecânico:
 
    (a) O gutter mora no `<main>` e não no `.container`. Trocar o preenchimento
        do container quebraria a cadeia inteira — a margem negativa do `.row` é
-       calibrada contra ele, e o `.col` de 75% mede o row. O container fica com
-       os 16 do Infima; o `<main>` completa o que falta para o gutter.
-   (b) O `.col` perde o preenchimento horizontal. Sem isso o cartão nasce com
-       832 e não com 864, porque os 16 de cada lado do `.col` são cobrados por
-       dentro dos 75%.
-   (c) A coluna do TOC recebe os 32 de separação de um lado só, para que a borda
+       calibrada contra ele, e o `.col` de 75% mede a row. O container fica com
+       o que o Infima dá; o `<main>` completa o que falta para o gutter.
+   (b) O `.col` perde o preenchimento horizontal. Sem isso o cartão nasce menor
+       que a coluna, porque os dois lados são cobrados por dentro dos 75%.
+   (c) A coluna do TOC recebe a separação de um lado só, para que a borda
        direita dela feche com a borda direita do container.
    ----------------------------------------------------------------------------- */
 
@@ -62,10 +62,13 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    borda. Ele lê como borda sem ser borda, e é o que compra elevação sem
    abandonar a leitura limpa da âncora.
 
-   `max-width` e não `width`, e é isso que trava a decisão central: quando a
-   página não tem heading, o Docusaurus não aplica a classe de 75% e a coluna vai
-   a 100% da linha. O cartão continua em 864, **no mesmo pixel**, e o que muda é
-   só o vazio à direita.
+   `max-width` e não `width`, e é isso que trava a decisão central. Medido em
+   3.10.2: o `DocItem/Layout` aplica a classe de 75% sempre que
+   `hide_table_of_contents` NÃO está no front matter — inclusive em página sem
+   heading, ao contrário do que o mapa supunha. É a terceira configuração, a de
+   `hide_table_of_contents: true`, que manda a coluna a 100% da linha; e é o
+   `max-width` que segura o cartão **no mesmo pixel** nas três, deixando mudar só
+   o vazio à direita.
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page .theme-doc-markdown {
@@ -90,10 +93,10 @@ html.docs-doc-page .theme-doc-markdown > :last-child {
 /* -----------------------------------------------------------------------------
    A medida da prosa — constante, com breakout de código e tabela
 
-   672 sempre, tenha a página TOC ou não. A âncora oscila de 768 para 576 quando
-   o TOC existe, e essa oscilação não é desenho: é efeito colateral de a largura
-   do texto depender de a página ter subtítulos. Páginas vizinhas da mesma seção
-   leem com larguras diferentes, sem motivo visível ao leitor.
+   `--sd-prose-width` sempre, tenha a página TOC ou não. A âncora encolhe a
+   coluna de texto quando o TOC existe, e essa oscilação não é desenho: é efeito
+   colateral de a largura do texto depender de a página ter subtítulos. Páginas
+   vizinhas da mesma seção leem com larguras diferentes, sem motivo visível.
 
    O breakout não precisa de regra: quem NÃO está nesta lista fica com o interior
    inteiro do cartão. Código e tabela respiram; o texto não.
@@ -157,7 +160,7 @@ html.docs-doc-page .theme-doc-markdown
 /* -----------------------------------------------------------------------------
    3. Sidebar
 
-   264 de largura, ícone por categoria de topo, hierarquia por nível e
+   `--sd-sidebar-width`, ícone por categoria de topo, hierarquia por nível e
    falso-negrito no item ativo. **Nada disto custa swizzle**: o `className` é
    contrato público do schema de item de sidebar, e o resto sai de
    `ThemeClassNames`.
@@ -173,7 +176,16 @@ html.docs-doc-page .theme-doc-markdown
    visão geral. O `::before` mora no link, não no `<li>`, para herdar a cor dele.
    ----------------------------------------------------------------------------- */
 
-.sidebar-icone > .menu__list-item-collapsible > .menu__link::before {
+/* **Os dois seletores são obrigatórios, e isso é medido.** O Docusaurus
+   normaliza categoria sem filhos para LINK: o `<li>` mantém o `className`, mas
+   o rótulo deixa de ser envolvido por `.menu__list-item-collapsible` e passa a
+   ser `.menu__link` filho direto. Com um seletor só, a seção perderia o ícone
+   no dia em que a última folha dela saísse — e a falha seria muda.
+
+   O marcador é o `className` do manifesto, não o nível: `.sidebar-icone` é a
+   definição de *seção de topo* neste sistema, e ele sobrevive às duas formas. */
+.sidebar-icone > .menu__list-item-collapsible > .menu__link::before,
+.sidebar-icone > .menu__link::before {
   content: '';
   flex: none;
   width: var(--sd-space-4);
@@ -199,15 +211,22 @@ html.docs-doc-page .theme-doc-markdown
 .sidebar-icone--reembolsos         { --sd-sidebar-icone: url('/icons/undo-2.svg'); }
 .sidebar-icone--webhooks           { --sd-sidebar-icone: url('/icons/webhook.svg'); }
 
-/* Hierarquia por nível. O teto de profundidade é 2, então existem exatamente
-   dois degraus a desenhar — e é por isso que a regra de ícone (obrigatório no
-   topo, ausente na folha) tem leitura em todos os nós que existem. */
-.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+/* Hierarquia. O teto de profundidade é 2, então existem exatamente dois degraus
+   a desenhar — e é por isso que a regra de ícone (obrigatório no topo, ausente
+   na folha) tem leitura em todos os nós que existem.
+
+   O rótulo de seção usa o mesmo par de seletores do ícone, pelo mesmo motivo. */
+.sidebar-icone > .menu__list-item-collapsible > .menu__link,
+.sidebar-icone > .menu__link {
   color: var(--sd-text-strong);
   font-size: var(--sd-type-sm);
   font-weight: var(--sd-weight-ui);
 }
 
+/* Folha, nos dois níveis onde ela existe: nível 2 dentro de categoria, e nível
+   1 na sidebar plana de `Receitas`. `:not(.sidebar-icone)` é o que separa folha
+   de topo quando o Docusaurus normaliza a categoria vazia para link. */
+.theme-doc-sidebar-item-link-level-1:not(.sidebar-icone) > .menu__link,
 .theme-doc-sidebar-item-link-level-2 > .menu__link {
   color: var(--sd-text-muted);
   font-size: var(--sd-type-sm);
@@ -275,6 +294,14 @@ html.docs-doc-page .theme-doc-markdown
 
 .footer {
   border-top: var(--sd-border-width) solid var(--sd-border-subtle);
+  /* O horizontal é declarado aqui, e não deixado para a variável do Infima que o
+     adaptador alimenta. Motivo: no estreito o Infima **zera** essa variável
+     dentro do próprio `.footer`, que é mais perto do elemento que o `:root` do
+     adaptador — e reescrevê-la aqui abriria uma SEXTA exceção com escopo, contra
+     a lista fechada de cinco do ADR 1. Declarar a propriedade em vez da variável
+     mantém a regra de mão única intacta: o projeto nunca lê nem escreve
+     `--ifm-*` fora do adaptador. */
+  padding-inline: var(--sd-gutter);
   padding-bottom: var(--sd-space-16);
   font-size: var(--sd-type-sm);
 }
@@ -351,7 +378,7 @@ html.docs-doc-page .theme-doc-markdown
    Três dos quatro comportamentos se resolvem por construção, e só um custa
    declaração:
 
-   · o **breakout resolve para zero sozinho** — os `max-width` de 864 e 672
+   · o **breakout resolve para zero sozinho** — os `max-width` do cartão e da prosa
      ficam inertes quando a coluna é menor, e código e tabela deixam de escapar
      porque não há medida de prosa da qual escapar. Nenhuma regra a escrever;
    · o **gutter de 32 se preserva sozinho**, porque o token só dobra a partir de
@@ -368,13 +395,6 @@ html.docs-doc-page .theme-doc-markdown
 @media (max-width: 996px) {
   html.docs-doc-page .theme-doc-markdown {
     --sd-doc-preenchimento: calc(var(--sd-space-12) / 2);
-  }
-
-  /* O Infima zera o preenchimento horizontal do footer no estreito, e a
-     declaração dele mora no próprio `.footer` — mais perto do elemento que o
-     `:root` do adaptador. Uma linha restaura o gutter. */
-  .footer {
-    --ifm-footer-padding-horizontal: var(--sd-gutter);
   }
 
   /* A linha **quebra e não empilha**, revertendo deliberadamente o Infima. Ele

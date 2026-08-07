@@ -6,7 +6,7 @@ O manifesto, os três renderizadores, a marca e o teto duro.
 
 Documento transversal, ao lado de [`motion.md`](motion.md), [`foco.md`](foco.md) e [`swizzle.md`](swizzle.md): a sidebar é o consumidor principal, mas o catálogo de conteúdo, a marca e a Referência da API leem o mesmo manifesto.
 
-Tudo aqui é obrigatório, salvo bloco marcado `Livre`.
+Tudo aqui é obrigatório. Não há bloco `Livre`: os **desenhos** são skin e se trocam inteiros, mas o manifesto é contrato e não tem latitude interna.
 
 ---
 

@@ -20,14 +20,22 @@ import {existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync} from 'n
 import {join} from 'node:path';
 
 const MANIFESTO = 'src/icons/manifest.js';
+const CSS_DA_SIDEBAR = 'src/css/chrome.css';
 const DESTINO = 'static/icons';
-const TETO = 64;
 
 const fonte = readFileSync(MANIFESTO, 'utf8');
 
 const versao = fonte.match(/LUCIDE_VERSAO = '([^']+)'/)?.[1];
 if (!versao) {
   console.error(`${MANIFESTO} não declara LUCIDE_VERSAO.`);
+  process.exit(2);
+}
+
+// O teto vem do manifesto, não redigitado aqui. Um teto com duas versões é um
+// teto que vale o menor dos dois, e ninguém saberia qual.
+const TETO = Number(fonte.match(/TETO = (\d+)/)?.[1]);
+if (!TETO) {
+  console.error(`${MANIFESTO} não declara TETO.`);
   process.exit(2);
 }
 
@@ -46,12 +54,40 @@ const arquivos = new Map(entradas.map((e) => [e.nome, e.lucide]));
 const tags = entradas.reduce((n, e) => n + e.papeis.length, 0);
 const porPapel = (papel) => entradas.filter((e) => e.papeis.includes(papel)).length;
 
+// Os doze pares seção→ícone existem em três lugares: `PARES_SECAO` no
+// manifesto, o `className` de cada categoria nos arquivos de sidebar, e a regra
+// de máscara no CSS. Três cópias da mesma verdade e nenhuma marcada como errada
+// é o defeito que este repositório mais recusa — então aqui elas se conferem.
+const pares = [...(fonte.match(/PARES_SECAO = \{([^}]*)\}/s)?.[1] ?? '').matchAll(
+  /'?([a-z-]+)'?:\s*'([a-z0-9-]+)'/g,
+)].map((m) => ({secao: m[1], icone: m[2]}));
+
+const cssDaSidebar = readFileSync(CSS_DA_SIDEBAR, 'utf8');
+
 const problemas = [];
 if (arquivos.size !== entradas.length) {
   problemas.push('há nome repetido no manifesto — papel é tag na entrada, não entrada nova');
 }
 if (arquivos.size > TETO) {
   problemas.push(`${arquivos.size} arquivos contra o teto duro de ${TETO}`);
+}
+if (pares.length !== porPapel('navegacao')) {
+  problemas.push(
+    `PARES_SECAO tem ${pares.length} pares contra ${porPapel('navegacao')} tags de navegação`,
+  );
+}
+for (const {secao, icone} of pares) {
+  const entrada = entradas.find((e) => e.nome === icone);
+  if (!entrada) {
+    problemas.push(`o par \`${secao}\` aponta para \`${icone}\`, que não está no manifesto`);
+  } else if (!entrada.papeis.includes('navegacao')) {
+    problemas.push(`\`${icone}\` é usado por \`${secao}\` mas não carrega a tag \`navegacao\``);
+  }
+  if (!cssDaSidebar.includes(`.sidebar-icone--${secao} `)) {
+    problemas.push(`o par \`${secao}\` não tem regra \`.sidebar-icone--${secao}\` em ${CSS_DA_SIDEBAR}`);
+  } else if (!cssDaSidebar.includes(`/icons/${icone}.svg`)) {
+    problemas.push(`${CSS_DA_SIDEBAR} não mascara \`${icone}.svg\`, que o par \`${secao}\` pede`);
+  }
 }
 if (problemas.length) {
   console.error('Manifesto REPROVOU:');
@@ -64,6 +100,7 @@ console.log(
     `${porPapel('autoria')} autoria = ${tags} tags sobre ${arquivos.size} arquivos ` +
     `(teto ${TETO}, folga ${TETO - arquivos.size}).`,
 );
+console.log(`Os ${pares.length} pares seção→ícone batem com o manifesto e com ${CSS_DA_SIDEBAR}.`);
 
 if (process.argv[2] === '--conferir') {
   const ausentes = [...arquivos.keys()].filter((n) => !existsSync(join(DESTINO, `${n}.svg`)));

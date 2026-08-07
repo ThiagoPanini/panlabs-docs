@@ -145,6 +145,10 @@ Quatro peças, e a primeira detecta problema **antes de haver sintoma**.
 
 **3. `--typescript` sempre, mesmo em projeto JavaScript.** Sem a flag o eject ignora `.ts`/`.tsx` e copia o JavaScript transpilado de `lib/`. Com ela, mudança de props vira **erro de build** em vez de bug de runtime.
 
+> **Desvio registrado, e ele é o primeiro:** `NavbarItem/ComponentTypes` está em JavaScript. A regra do [ADR 2](../adr/0002-politica-de-swizzle.md) diz *sempre*, e ela é escrita para o que a flag protege — **assinatura de props**. Este arquivo não tem props: é um objeto de mapeamento, e a garantia que interessa nele é outra — **chave removida no upstream vira falha de resolução de `@theme/…` no build**, que acontece igual em JavaScript. Ligar TypeScript aqui custaria uma dependência nova de toolchain, contra o axioma 2, para comprar uma verificação que este arquivo já tem por outro caminho.
+>
+> O desvio vale **para registro, não para componente**. O primeiro `--eject` de componente que este repositório fizer reabre a conta, e aí a flag não é opcional.
+
 **4. Este ledger como tabela viva**, com a coluna *por que o degrau acima não alcançou*.
 
 ---

@@ -856,13 +856,22 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
    Brigar seletor a seletor com o framework custaria uma lista de alvos, que é
    exatamente a forma que o contrato de foco recusou. Neutralizar os tokens de
-   hover dele alcança tudo de uma vez, sem um único `!important`. O fundo do item
-   ATIVO vem de outra variável e não é tocado. */
+   hover dele alcança de uma vez tudo que TEM token, sem um único `!important`. O
+   fundo do item ATIVO vem de outra variável e não é tocado.
+
+   Perda nomeada, e ela é o limite do mecanismo: o hover do link de TOC e o do
+   breadcrumb não são alcançáveis por aqui. O Infima os escreve contra
+   `--ifm-color-primary` e `--ifm-breadcrumb-item-background-active`, que são o
+   acento e o realce do item ativo — neutralizá-los apagaria o estado ativo
+   junto. Os dois continuam grudando depois do tap, e o `:active` do contrato de
+   entrada é o que dá retorno neles. Ver `docs/design/foco.md` §8.3. */
 @media (hover: none) {
   :root,
   :root[data-theme] {
     --ifm-menu-color-background-hover: transparent;
     --ifm-navbar-link-hover-color: var(--sd-text-muted);
+    --ifm-footer-link-hover-color: var(--sd-text-muted);
+    --ifm-pagination-nav-color-hover: var(--sd-border-default);
   }
 }
 
