@@ -1,0 +1,41 @@
+/* Provisória — a landing é do slice 6. Zero literal, como todo CSS fora de
+   `tokens.css`. */
+
+.reserva {
+  max-width: var(--sd-container-width);
+  margin-inline: auto;
+  padding-block: var(--sd-space-16);
+  padding-inline: var(--sd-space-6);
+}
+
+.titulo {
+  font-size: var(--sd-type-4xl);
+  font-weight: var(--sd-weight-heading);
+  color: var(--sd-text-strong);
+  margin-block-end: var(--sd-space-4);
+}
+
+.linha {
+  font-size: var(--sd-type-lg);
+  line-height: var(--sd-leading-prose);
+  color: var(--sd-text-muted);
+  max-width: var(--sd-prose-width);
+  margin-block-end: var(--sd-space-8);
+}
+
+.acao {
+  display: inline-block;
+  padding: var(--sd-space-3) var(--sd-space-5);
+  border-radius: var(--sd-radius-sm);
+  background-color: var(--sd-accent);
+  color: var(--sd-accent-contrast);
+  font-weight: var(--sd-weight-ui);
+  box-shadow: var(--sd-shadow-1);
+  transition: background-color var(--sd-move-state);
+}
+
+.acao:hover {
+  background-color: var(--sd-accent-hover);
+  color: var(--sd-accent-contrast);
+  text-decoration: none;
+}
