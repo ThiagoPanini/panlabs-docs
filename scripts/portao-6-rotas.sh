@@ -6,8 +6,15 @@
 # dele, e o único que roda contra o mundo.
 #
 #   rota 1  GET <base>/docs/<qualquer>      -> 200 · text/html · SEM redirect
-#   rota 2  GET <base>/docs/<qualquer>.md   -> 200 · text/markdown · Content-Disposition: inline
+#   rota 2  GET <base>/docs/<qualquer>.md   -> 200 · text/markdown · disposição != attachment
 #   rota 3  GET <base>/docs/<qualquer>/     -> NÃO 200 (404, ou 301 para a forma sem barra)
+#
+# A rota 2 exige que a disposição NÃO seja `attachment`, e não que o cabeçalho
+# `Content-Disposition: inline` exista. Medido no slice 1: as referências do alvo
+# mandam o cabeçalho; o GitHub Pages não manda nenhum. Ausente não é attachment —
+# pela RFC 6266 a disposição default é inline, e o navegador confirma. Exigir o
+# cabeçalho literal reprovaria um host onde o recurso funciona, e portão que
+# reprova o que funciona é portão que alguém desliga.
 #
 # As rotas 1 e 3 nascem no slice 1. A rota 2 nasce no slice em que existirem
 # `.md` por rota; até lá ela é PULADA, e o pulo é dito em voz alta em vez de
@@ -71,7 +78,9 @@ echo
 
 # --- rota 2 -------------------------------------------------------------------
 echo "rota 2  PULADA — o \`.md\` por rota nasce num slice posterior."
-echo "        Quando existir: esperado 200 · text/markdown · Content-Disposition: inline."
+echo "        Quando existir: esperado 200 · text/markdown · disposição != attachment."
+echo "        Medido no slice 1 por sonda: este host devolve text/markdown e NENHUM"
+echo "        Content-Disposition, e o navegador renderiza inline. Ver ADR 7."
 echo
 
 if [ "$falhas" -gt 0 ]; then

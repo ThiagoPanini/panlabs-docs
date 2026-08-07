@@ -88,6 +88,22 @@ Três `curl` contra o host real, custo zero em dependência. É o único portão
 
 Implementado em `scripts/portao-6-rotas.sh`. As rotas 1 e 3 rodam desde o slice 1; a rota 2 é pulada em voz alta até existirem `.md` por rota.
 
+### Medição do host, feita no slice 1
+
+O portão 6 rodou contra `https://panlabs-tech.github.io/shinydoc-docusaurus` assim que o site subiu, e uma sonda temporária mediu o `.md`. Os três resultados:
+
+| Rota | Medido | Veredito |
+| ---: | --- | --- |
+| 1 | `200` · `text/html; charset=utf-8` · sem redirect | **passa** |
+| 3 | `404` | **passa** |
+| 2 (sonda) | `200` · `text/markdown; charset=utf-8` · **`Content-Disposition` ausente** | **passa com ressalva** |
+
+**A rota 1 passar é o resultado que mais importa deste slice:** o GitHub Pages faz resolução sem extensão, `trailingSlash: false` fica de pé, e a alavanca de emissão dupla continua guardada. O risco que este slice existia para concentrar está resolvido para *este* host — a lacuna sobre nginx, Apache, IIS, S3 e Artifactory continua aberta, e é ela que mantém a alavanca escrita.
+
+**A ressalva da rota 2, e por que ela não mata o recurso.** As duas referências do alvo mandam `Content-Disposition: inline` **explicitamente**; o GitHub Pages **não manda o cabeçalho**. Ausente não é `attachment`: pela RFC 6266 a disposição default é `inline`, e a verificação em navegador confirma — o Chromium abre a URL, `document.contentType` é `text/markdown`, o corpo renderiza e nenhum download dispara.
+
+**Consequência para a redação do portão:** a rota 2 exige que a disposição **não seja `attachment`**. Exigir o cabeçalho literal reprovaria um host onde o recurso funciona, e portão que reprova o que funciona é portão que alguém desliga. O que mata o recurso é `attachment`, não ausência.
+
 **Reprovar a rota 1 aciona a alavanca acima — não uma mudança no `trailingSlash`.** Reprovar a rota 2 mata o recurso de `.md` independentemente do `trailingSlash`, e é a mesma conversa com o mesmo time de infraestrutura: é esse o argumento que derruba a suposta economia do `true`. Ele não reduz a conversa de host de uma para zero; reduz de duas para uma, quebrando o recurso pelo qual a conversa existe.
 
 ## Dissenso registrado
