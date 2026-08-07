@@ -19,18 +19,18 @@ disso é escrito.
 ```html
 <div data-sd-component="callout" data-sd-variant="warning">
   <svg …>                                  <!-- alcançável por tipo -->
-  <div data-sd-part="content">
+  <div>                                    <!-- único <div> filho -->
     <p data-sd-part="title">…</p>          <!-- só quando há título -->
     …
   </div>
 </div>
 ```
 
-**Duas partes publicadas, e as duas por necessidade.** O ícone é um `<svg>` e o
-CSS o alcança por tipo — como **filho direto**, para que um ícone que o autor
-escreva dentro do corpo não seja atingido. O conteúdo e o título são um `<div>` e
-um `<p>` sem nada que os distinga do que o autor escreve dentro deles, e por isso
-ganham nome.
+**Uma parte publicada, e ela é a única que a régua obriga.** O ícone é um `<svg>`
+e o CSS o alcança por tipo — como **filho direto**, para que um ícone que o autor
+escreva dentro do corpo não seja atingido. O corpo é o único `<div>` filho, e
+`> div` o separa. O **título**, não: ele é um `<p>` no meio dos `<p>` que o autor
+escreve dentro do corpo, e nenhum seletor de tipo o distingue deles.
 
 O DOM **não é um `.alert` do Infima**. Ele nasce do nosso componente, alcançado
 pelo registro `Admonition/Types` — degrau 3, zero linha de upstream copiada. O
@@ -97,7 +97,7 @@ branco em volta. Isto era lacuna declarada e foi medido no artefato deste slice.
 
 Camada 2: `--sd-state-info`, `--sd-state-success`, `--sd-state-warn` e os
 `*-fill` e `*-edge` correspondentes; `--sd-border-subtle`, `--sd-border-default`,
-`--sd-text-muted` na variante neutra; `--sd-text-body`, `--sd-text-strong`.
+`--sd-text-strong` na variante neutra; `--sd-text-body`.
 
 Camada 1: `--sd-space-3`, `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
 `--sd-radius-md`, `--sd-weight-ui`, `--sd-leading-ui`.
@@ -105,6 +105,12 @@ Camada 1: `--sd-space-3`, `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
 Camada 3, declarados no escopo do componente: `--sd-callout-fill`,
 `--sd-callout-edge`, `--sd-callout-ink`. **É a variante que os move, e é só isso
 que a variante faz.**
+
+`--sd-callout-ink` pinta **o ícone e o título** — é a perna de *texto* da
+derivação, e ela existe porque a medição achou ícone e título na mesma cor
+sólida. **O corpo fica fora dela**, em `--sd-text-body`: é esse o par que a
+tabela de contraste verificou sobre fundo de callout, e o par que sustenta a
+leitura longa.
 
 ## Light e dark
 
@@ -141,6 +147,7 @@ texto ao lado, e anunciá-lo seria repetição.
 | `info` neutro, `note` azul | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) |
 | Título opcional na sintaxe | delta deliberado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — bug da âncora, duas equipes |
 | Fórmula de alfa de fundo e aresta | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — paleta medida; valores em [`tokens.md`](../tokens.md) |
+| Ícone e título na tinta da variante, corpo não | herdado (a tinta) + **origem própria (o recorte)** | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) mede ícone e texto na mesma cor sólida; deixar o corpo fora preserva o par de contraste que [`tokens.md`](../tokens.md) §10 verificou |
 | Ícone fixo por variante | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §8 |
 | Duas partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 — a régua estreita aplicada |
 | O DOM não é um `.alert` | **origem própria (implementação)** | consequência de `Types` apontar para componente nosso; ver a correção do adaptador em [`tokens.md`](../tokens.md) |

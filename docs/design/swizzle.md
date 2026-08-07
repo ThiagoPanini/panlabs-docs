@@ -98,7 +98,7 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
 | `NavbarItem/ComponentTypes` | acrescenta o tipo `custom-marca` | a marca precisa de `currentColor`, e `navbar.logo` renderiza `<img>`. `Logo` e `Navbar/Logo` **não estão no `getSwizzleConfig`** — caem no default `unsafe`, que o ADR 2 proíbe |
-| `MDXComponents` | registra os dezesseis componentes de conteúdo com tag própria, mais `Tabs`/`TabItem`, mais a chave `table` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
+| `MDXComponents` | registra os catorze componentes com tag própria (quinze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais a chave de elemento `table` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
 | `Admonition/Types` | substitui a anatomia vertical do Infima pela horizontal medida, nas quatro variantes de callout | não há variável nem classe que reoriente o eixo da admonition. O degrau 5 (`Admonition/Layout`) alcançaria, mas o 3 alcança **antes**: o arquivo é um objeto, e nada obriga as entradas dele a apontarem para o layout do upstream |
 
 **Os dois do catálogo copiam zero linha de upstream**, e é isso que os mantém no

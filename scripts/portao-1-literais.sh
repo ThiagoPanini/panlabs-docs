@@ -9,8 +9,15 @@
 # varredura passar.
 #
 # Escopo deliberado nas quatro categorias que carregam desenho. `0`, número sem
-# unidade, `%`, `fr`, `ch` e `auto` ficam de fora: são layout, e flagrá-los
+# unidade, `%`, `fr`, `ch`, `lh` e `auto` ficam de fora: são layout, e flagrá-los
 # transformaria o portão em ruído, que é como portão morre.
+#
+# `lh` entrou na lista no slice do catálogo, e entrou por decisão em vez de por
+# omissão. Ele é a altura da linha do próprio elemento — uma REFERÊNCIA ao que a
+# escala de tipografia já decidiu, como `%` é referência ao contêiner. Quem
+# escreve `calc((1lh - var(--sd-space-4)) / 2)` para centrar um ícone na primeira
+# linha não escolheu um número: pediu o que a entrelinha der. Cravar o mesmo
+# recuo em `px` é que seria literal, e esse o portão pega.
 #
 # ---------------------------------------------------------------------------
 # A SEGUNDA PERNA — e ela nasceu de um limite que a primeira redação previu

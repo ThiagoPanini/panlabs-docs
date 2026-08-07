@@ -21,9 +21,13 @@ comum, não só em página de endpoint.
 </div>
 ```
 
-**Uma parte publicada.** O nome é `<code>`, o chip é `<strong>` dentro da meta, e
-os dois alcançam por tipo. A meta é um `<span>` sem nada que a distinga, e ganha
-nome.
+**Uma parte publicada.** O nome é `<code>` e o chip é `<strong>` dentro da meta —
+os dois alcançam por tipo.
+
+**A meta é a única entrada do catálogo que a régua estreita não obrigaria**, e
+ela fica assim mesmo: `> span` a alcançaria hoje, mas a rota da Referência da API
+a nomeia verbatim no contrato dela, e despublicar depois quebra quem já dependeu
+— o que a mesma régua diz. Está registrado aqui para não parecer descuido.
 
 O aninhamento é [`expandable`](expandable.md), e a recursão dele é o autor
 escrevendo outro campo dentro do primeiro. **Nada disso custa JavaScript.**

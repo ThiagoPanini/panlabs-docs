@@ -273,11 +273,18 @@
      aparecendo duas vezes. Citar o token é honesto; repetir o número seria a
      segunda cópia que este arquivo existe para não ter.
 
-     Com este piso e `repeat(auto-fit, minmax(min(…, 100%), 1fr))`, a contagem de
-     cartões faz o trabalho sozinha — zero media query, zero container query,
-     zero prop de colunas.
+     Com este piso, a contagem de cartões faz o trabalho sozinha — zero media
+     query, zero container query, zero prop de colunas.
+
+     A LISTA DE FAIXAS mora aqui junto, e não só o piso. O motivo é que ela tem
+     dois consumidores — a grade de `card-group` dentro do MDX e a grade da
+     landing —, e "uma declaração serve as duas" só é verdade se a declaração
+     existir num lugar que as duas citem por nome. A escada de elevação já abriu
+     este precedente: `--sd-shadow-1` também é valor composto, e pelo mesmo
+     motivo.
      --------------------------------------------------------------------------- */
   --sd-card-min: calc((var(--sd-prose-width) - 2 * var(--sd-space-4)) / 3);
+  --sd-card-grid: repeat(auto-fit, minmax(min(var(--sd-card-min), 100%), 1fr));
 }
 
 /* O gutter dobra no limiar único do projeto, que é o literal compilado do

@@ -5,10 +5,10 @@
  * conteúdo não é versionado, a API é — por cabeçalho. Esta é a anatomia dessa
  * comunicação.
  *
- * Um `<section>` com `<header>`, e o header é o que evita atributo de parte: dois
- * `<div>` irmãos precisariam de nome, um `<header>` alcança por tipo. Só a
- * etiqueta de versão ganha `data-sd-part`, porque ela é um `<span>` no meio de
- * texto.
+ * Um `<section>` com `<header>`, e o header é o que evita atributo de parte:
+ * dois `<div>` irmãos precisariam de nome, um `<header>` alcança por tipo. A
+ * etiqueta também não ganha atributo — é o único elemento dentro do `<header>`,
+ * e a skin a alcança por `header > span`. **Zero partes publicadas.**
  *
  * Procedência: docs/design/componentes/update.md.
  */
@@ -21,11 +21,7 @@ export default function Update({label, tag, children}) {
     <section className={estilos.update} data-sd-component="update">
       <header className={estilos.updateHead}>
         {label}
-        {tag ? (
-          <span className={estilos.updateTag} data-sd-part="tag">
-            {tag}
-          </span>
-        ) : null}
+        {tag ? <span className={estilos.updateTag}>{tag}</span> : null}
       </header>
       <div className={estilos.updateBody}>{children}</div>
     </section>

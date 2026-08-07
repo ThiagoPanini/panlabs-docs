@@ -26,7 +26,9 @@ export default function Steps({children}) {
 export function Step({title, icon, children}) {
   return (
     <li className={estilos.step}>
-      <span className={estilos.stepMarker} data-sd-part="marker">
+      {/* Sem `data-sd-part`: o marcador é o único `<span>` filho do passo, e o
+          irmão é um `<div>` — a skin alcança por `li > span`. */}
+      <span className={estilos.stepMarker}>
         {icon ? <Icon name={icon} size="sm" /> : null}
       </span>
       <div className={estilos.stepBody}>

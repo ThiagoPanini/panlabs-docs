@@ -17,7 +17,8 @@
    que a deixa um degrau acima por construção.
 
    Onde um contexto precisa sobrescrever um componente, o seletor usa `:where()`,
-   que não soma especificidade — o teto de (0,1,0) fica de pé.
+   que não soma especificidade — e vem DEPOIS do que sobrescreve, porque
+   `:where()` empata em vez de vencer, e empate é resolvido por ordem.
 
    Este arquivo NÃO tem valor literal: cor, comprimento, tempo e curva vivem em
    `tokens.css` e chegam por nome. Ele nunca lê `--ifm-*`. E não tem uma linha de
@@ -58,23 +59,27 @@
 }
 
 /* -----------------------------------------------------------------------------
-   callout
+   callout, e o marcador de não-traduzido junto
 
    Anatomia HORIZONTAL: ícone numa coluna à esquerda, conteúdo à direita. Sem
    barra lateral, sem faixa de título, sem MAIÚSCULA — nada disso existe porque
    nada disso é escrito.
+
+   O `untranslated` divide a regra em vez de copiá-la: ele é deliberadamente o
+   callout neutro, e duas cópias da mesma anatomia é como elas divergem.
 
    Três tokens de camada 3, declarados no escopo do componente e nunca em
    `:root`. É a variante que os move, e é só isso que a variante faz: o
    componente **não sabe em que modo está**, porque quem bifurca é a camada 2.
    ----------------------------------------------------------------------------- */
 
-.callout {
+.callout,
+.untranslated {
   /* O default é a variante NEUTRA — `info`. Ela não tem classe própria porque
      não tem o que sobrescrever. */
   --sd-callout-fill: var(--sd-border-subtle);
   --sd-callout-edge: var(--sd-border-default);
-  --sd-callout-ink: var(--sd-text-muted);
+  --sd-callout-ink: var(--sd-text-strong);
 
   display: flex;
   gap: var(--sd-space-3);
@@ -89,7 +94,8 @@
 /* Filho DIRETO: um ícone que o autor escreva dentro do corpo não é alcançado.
    O deslocamento centra o glifo na primeira linha de texto sem inventar número —
    `1lh` é a altura da linha do próprio elemento. */
-.callout > svg {
+.callout > svg,
+.untranslated > svg {
   margin-block-start: calc((1lh - var(--sd-space-4)) / 2);
   color: var(--sd-callout-ink);
 }
@@ -99,17 +105,12 @@
   min-inline-size: 0;
 }
 
-.calloutContent > :first-child {
-  margin-block-start: 0;
-}
-
-.calloutContent > :last-child {
-  margin-block-end: 0;
-}
-
+/* O título carrega a tinta da variante, como o ícone — é a perna de TEXTO da
+   derivação. O corpo não: ele fica na tinta de leitura, que é o par de
+   contraste que o arquivo de tokens verificou sobre fundo de callout. */
 .calloutTitle {
   margin-block-end: var(--sd-space-2);
-  color: var(--sd-text-strong);
+  color: var(--sd-callout-ink);
   font-weight: var(--sd-weight-ui);
   line-height: var(--sd-leading-ui);
 }
@@ -132,25 +133,41 @@
   --sd-callout-ink: var(--sd-state-warn);
 }
 
+/* O marcador de não-traduzido é o callout neutro com o ar de cima removido —
+   ele mora logo abaixo do título da página. */
+.untranslated {
+  margin-block: 0 var(--sd-space-6);
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+}
+
+.untranslated p {
+  margin-block: 0;
+}
+
 /* -----------------------------------------------------------------------------
    card e card-group
 
-   A grade é UMA declaração, e ela serve a landing e o MDX. Zero prop de
-   colunas, zero media query, zero container query: `auto-fit` nunca cria mais
-   faixas do que há itens, então a contagem de cartões faz o trabalho sozinha.
+   A grade é UMA declaração, e o valor dela mora em `tokens.css` como
+   `--sd-card-grid`, para a landing citar o mesmo nome em vez de repetir a
+   lista de faixas. Zero prop de colunas, zero media query, zero container
+   query.
 
-   `min(…, 100%)` não é enfeite — sem ele um contêiner menor que o piso estoura
+   Como o `auto-fit` funciona, inteiro — a meia descrição é o que esconde o
+   caso: ele calcula quantas faixas cabem e **colapsa as que ficam vazias**. Com
+   menos cartões do que faixas, os que existem esticam e preenchem a linha (é o
+   que a medição da âncora mostra a três cartões). Com mais cartões do que
+   faixas, a última fila fica com o que sobrou e **não** estica — que é a fila
+   incompleta que a spec manda deixar incompleta.
+
+   `min(…, 100%)` não é enfeite: sem ele um contêiner menor que o piso estoura
    horizontalmente. É uma chamada de função contra um estouro silencioso.
-
-   A fila incompleta FICA incompleta. Esticar o último cartão é a regra decorável
-   que o resto da spec recusou, e ela ainda alargaria um cartão pequeno na faixa
-   em que ele já está espremido.
    ----------------------------------------------------------------------------- */
 
 .cardGroup {
   display: grid;
   gap: var(--sd-space-4);
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--sd-card-min), 100%), 1fr));
+  grid-template-columns: var(--sd-card-grid);
   margin-block: var(--sd-space-6);
 }
 
@@ -278,10 +295,6 @@ a.card:active {
   line-height: var(--sd-leading-ui);
 }
 
-.stepBody > :last-child {
-  margin-block-end: 0;
-}
-
 /* -----------------------------------------------------------------------------
    accordion, accordion-group e expandable
 
@@ -301,24 +314,25 @@ a.card:active {
   margin-block: var(--sd-space-6);
 }
 
-/* `:where()` não soma especificidade — o teto de (0,1,0) do arquivo fica de pé
-   mesmo num seletor de contexto. */
-.accordionGroup :where(.accordion) {
-  margin-block: 0;
-}
-
 .accordion {
   margin-block: var(--sd-space-4);
   border: var(--sd-border-width) solid var(--sd-border-default);
   border-radius: var(--sd-radius-md);
 }
 
-.accordionSummary {
+/* `:where()` não soma especificidade, então esta regra EMPATA com `.accordion` —
+   e empate é resolvido por ordem. Ela vem depois de propósito. Sem a margem
+   zerada, a sanfona dentro do grupo somaria a margem dela ao `gap` e a pilha
+   ficaria mais frouxa do que uma sanfona solta. */
+.accordionGroup :where(.accordion) {
+  margin-block: 0;
+}
+
+.accordionSummary,
+.expandableSummary {
   display: flex;
   align-items: center;
   gap: var(--sd-space-2);
-  padding: var(--sd-space-3) var(--sd-space-4);
-  color: var(--sd-text-strong);
   cursor: pointer;
   font-weight: var(--sd-weight-ui);
   line-height: var(--sd-leading-ui);
@@ -327,7 +341,8 @@ a.card:active {
   list-style: none;
 }
 
-.accordionSummary::-webkit-details-marker {
+.accordionSummary::-webkit-details-marker,
+.expandableSummary::-webkit-details-marker {
   display: none;
 }
 
@@ -335,19 +350,29 @@ a.card:active {
    mesmo `<summary>`, o seletor por tipo deixaria de alcançar o ícone do autor e
    o contrato de partes teria que crescer para pagar uma escolha de
    implementação. */
-.accordionSummary::after {
+.accordionSummary::after,
+.expandableSummary::before {
   content: '';
   flex: none;
-  margin-inline-start: auto;
-  inline-size: var(--sd-space-4);
-  block-size: var(--sd-space-4);
-  background-color: var(--sd-text-muted);
   mask: url('/icons/chevron-right.svg') center / contain no-repeat;
   transition: rotate var(--sd-move-expand);
 }
 
-.accordion[open] > .accordionSummary::after {
+.accordion[open] > .accordionSummary::after,
+.expandable[open] > .expandableSummary::before {
   rotate: 90deg;
+}
+
+.accordionSummary {
+  padding: var(--sd-space-3) var(--sd-space-4);
+  color: var(--sd-text-strong);
+}
+
+.accordionSummary::after {
+  margin-inline-start: auto;
+  inline-size: var(--sd-space-4);
+  block-size: var(--sd-space-4);
+  background-color: var(--sd-text-muted);
 }
 
 .accordionTitle {
@@ -364,14 +389,6 @@ a.card:active {
   padding: 0 var(--sd-space-4) var(--sd-space-4);
 }
 
-.accordionBody > :first-child {
-  margin-block-start: 0;
-}
-
-.accordionBody > :last-child {
-  margin-block-end: 0;
-}
-
 .expandable {
   margin-block: var(--sd-space-3);
   border-inline-start: var(--sd-border-width) solid var(--sd-border-default);
@@ -379,39 +396,16 @@ a.card:active {
 }
 
 .expandableSummary {
-  display: flex;
-  align-items: center;
-  gap: var(--sd-space-2);
   color: var(--sd-accent);
-  cursor: pointer;
   font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-ui);
-  line-height: var(--sd-leading-ui);
-  list-style: none;
-}
-
-.expandableSummary::-webkit-details-marker {
-  display: none;
 }
 
 /* Caret ANTES do rótulo, ao contrário do accordion: aqui ele não fecha uma
    moldura, abre uma linha. */
 .expandableSummary::before {
-  content: '';
-  flex: none;
   inline-size: var(--sd-space-3);
   block-size: var(--sd-space-3);
   background-color: currentColor;
-  mask: url('/icons/chevron-right.svg') center / contain no-repeat;
-  transition: rotate var(--sd-move-expand);
-}
-
-.expandable[open] > .expandableSummary::before {
-  rotate: 90deg;
-}
-
-.expandableBody > :last-child {
-  margin-block-end: 0;
 }
 
 .accordion::details-content,
@@ -498,10 +492,6 @@ a.card:active {
   margin-block-start: var(--sd-space-2);
 }
 
-.fieldBody > :last-child {
-  margin-block-end: 0;
-}
-
 /* `deprecated` é tachado mais texto apagado, e SEM abrir cor nova — senão ele
    dividiria o âmbar com `PUT` na mesma página. */
 .fieldDeprecated > .fieldHead > code {
@@ -582,14 +572,6 @@ a.card:active {
   font-size: var(--sd-type-xs);
 }
 
-.updateBody > :first-child {
-  margin-block-start: 0;
-}
-
-.updateBody > :last-child {
-  margin-block-end: 0;
-}
-
 /* -----------------------------------------------------------------------------
    frame
 
@@ -652,32 +634,33 @@ a.card:active {
 }
 
 /* -----------------------------------------------------------------------------
-   code-group e untranslated
+   code-group
    ----------------------------------------------------------------------------- */
 
 .codeGroup {
   margin-block: var(--sd-space-6);
 }
 
-/* Deliberadamente a mesma anatomia do callout neutro: o marcador é um aviso de
-   sistema, e um aviso que inventa forma própria é mais um vocabulário para o
-   leitor aprender. */
-.untranslated {
-  display: flex;
-  gap: var(--sd-space-3);
-  margin-block-end: var(--sd-space-6);
-  padding: var(--sd-space-4);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-md);
-  background-color: var(--sd-border-subtle);
-  color: var(--sd-text-muted);
-  font-size: var(--sd-type-sm);
+/* -----------------------------------------------------------------------------
+   O corpo de um componente não empurra a margem do primeiro e do último filho
+   para fora da caixa: quem espaça a caixa é o preenchimento dela.
+
+   Uma regra para os seis corpos, e não seis cópias do mesmo par: o idioma é o
+   mesmo em todos, e seis cópias é como um deles fica para trás.
+   ----------------------------------------------------------------------------- */
+
+:is(.calloutContent, .accordionBody, .updateBody) > :first-child {
+  margin-block-start: 0;
 }
 
-.untranslated > svg {
-  margin-block-start: calc((1lh - var(--sd-space-4)) / 2);
-}
-
-.untranslated p {
-  margin-block: 0;
+:is(
+    .calloutContent,
+    .accordionBody,
+    .expandableBody,
+    .updateBody,
+    .fieldBody,
+    .stepBody
+  )
+  > :last-child {
+  margin-block-end: 0;
 }

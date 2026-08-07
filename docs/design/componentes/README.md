@@ -42,6 +42,18 @@ implementa comportamento interativo. Ou o navegador entrega — `<details>`, `<a
 ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 `:focus-visible` já carregam a informação.
 
+> **A régua, escrita para não ser relitigada.** Uma parte ganha atributo quando
+> **um seletor de tipo de elemento sobre os filhos diretos é ambíguo hoje** — dois
+> `<span>` irmãos dentro do mesmo `<summary>`, ou um `<p>` de título no meio dos
+> `<p>` que o autor escreve. Quando o tipo já separa — `> div` sendo o único
+> `<div>`, `> svg`, `<summary>`, `<figcaption>`, `<code>`, `<table>` — **não
+> ganha**. Publicar depois é aditivo; despublicar quebra quem já dependia, e é
+> por isso que a dúvida se resolve para o lado de não publicar.
+>
+> Doze dos dezoito publicam **zero** partes. A única entrada que a régua não
+> obrigaria e que fica assim mesmo é a meta de [`param-field`](param-field.md),
+> porque a rota da Referência da API a nomeia verbatim no contrato dela.
+
 **5. Nenhum componente conhece modo de cor.** As duas exceções declaradas são
 [`code-block`](code-block.md) e [`frame`](frame.md), e só elas. Consequência
 prática: o corporativo troca **quatro** cores de callout, não vinte.
@@ -155,9 +167,12 @@ queria:
 - **`## Motion / reduced-motion`** só **nomeia o movimento**. Se um componente
   precisar dizer algo além de *herda*, o desenho está errado — e a regra de
   reduced-motion é propriedade da camada de token, nunca do componente.
-- **`## A11y`** **cita [`foco.md`](../foco.md) e para**, em vez de repetir a mesma
-  regra dezoito vezes. Onde há algo próprio a dizer — e há em exatamente um
-  componente —, ele está escrito.
+- **`## A11y`** **cita [`foco.md`](../foco.md) e para** quanto ao contrato de
+  estado de entrada, em vez de repetir a mesma regra dezoito vezes. O que cada
+  arquivo acrescenta é o que é **próprio dele** — qual elemento nativo carrega o
+  comportamento, o que é decorativo, o que cai de graça. **ARIA construído por
+  nós existe em exatamente um componente**, a [`table`](table.md), e é o único
+  lugar onde ele aparece porque o HTML não tem elemento para o caso.
 
 ---
 

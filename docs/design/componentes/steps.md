@@ -15,7 +15,7 @@ anuncia.
 ```html
 <ol data-sd-component="steps">
   <li>
-    <span data-sd-part="marker">…</span>   <!-- número, ou ícone -->
+    <span>…</span>                        <!-- único <span> filho do passo -->
     <div>
       <p data-sd-part="title">…</p>
       …
@@ -24,8 +24,9 @@ anuncia.
 </ol>
 ```
 
-**Duas partes publicadas.** O marcador e o título são `<span>` e `<p>` no meio de
-outros `<span>` e `<p>`, e nenhum dos dois alcança por tipo.
+**Uma parte publicada.** O marcador é o único `<span>` filho do passo e o irmão é
+um `<div>`, então `li > span` o alcança. O **título**, não: ele é um `<p>` no
+meio dos `<p>` que o autor escreve no corpo do passo.
 
 Um fio liga um marcador ao próximo e **não existe no último passo**: sequência que
 termina não aponta para lugar nenhum.
@@ -105,4 +106,4 @@ acessibilidade — a posição do item já é anunciada pela lista.
 | `<ol>`/`<li>` como substrato | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Contador nomeado em vez do implícito | **origem própria (implementação)** | um `<li>` que não é item de lista não incrementa o contador, e a falha seria muda |
 | O fio não existe no último passo | origem própria | este slice |
-| Duas partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Uma parte publicada | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |

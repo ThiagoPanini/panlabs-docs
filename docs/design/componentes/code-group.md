@@ -32,8 +32,18 @@ duas, a posição. **Nunca vazio** — aba sem nome é aba que não se clica de 
 ## Variantes
 
 **Não há.** Duas props, e as duas existem para o mesmo fim: `groupId` faz a
-linguagem escolhida seguir o leitor entre páginas, e `queryString` põe a escolha
-na URL.
+escolha seguir o leitor entre páginas, e `queryString` a põe na URL.
+
+**As duas nascem desligadas, e isso é decisão.** As abas de um grupo de código
+**nem sempre são linguagens** — um grupo cujas abas sejam `Node`, `Python` e
+`Resposta` gravaria `Resposta` na escolha compartilhada, e o defeito apareceria
+noutra página, como a aba errada selecionada. Ligar por default seria escolher o
+modo de falhar invisível: quem escreve o grupo não vê o estrago, quem lê outra
+página vê. Quem sabe que as abas são comparáveis é o autor, e é ele que liga.
+
+**Rótulo repetido no mesmo grupo lança.** Dois títulos iguais são dois valores de
+aba iguais, e a seleção acenderia na aba errada — falha alto, como nome de ícone
+inexistente e verbo fora da escada.
 
 **Abas e não dropdown**, e a escolha não é de gosto: a medição mostrou que a
 forma é função da contagem — dropdown quando há muitas linguagens, abas quando há
@@ -44,7 +54,7 @@ existir**.
 ## Autoria em MDX
 
 ````mdx
-<CodeGroup>
+<CodeGroup groupId="code-lang" queryString="lang">
 
 ```js title="Node"
 const cobranca = await trilho.cobrancas.criar({valor: 1000, meio: 'pix'});
@@ -90,6 +100,8 @@ contrato de estado de entrada mora em [`foco.md`](../foco.md).
 | Compõe `Tabs` em vez de swizzlar | herdado | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §3 |
 | Abas e não dropdown | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) — a forma é função da contagem; [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 transforma isso em regra de contrato |
 | `groupId` e `queryString` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 |
+| Os dois nascem desligados | **origem própria (correção)** | ligar por default polui a escolha compartilhada quando as abas não são linguagens, e o defeito só aparece noutra página |
+| Rótulo repetido lança | **origem própria (implementação)** | mesma doutrina do registro de ícones da [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §6 |
 | O título sai da moldura e vira rótulo de aba | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — anatomia medida |
 | Rótulo nunca vazio, com dois fallbacks | **origem própria (implementação)** | aba sem nome não é reclicável |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |

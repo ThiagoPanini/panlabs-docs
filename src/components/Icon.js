@@ -17,14 +17,22 @@ import clsx from 'clsx';
 import {resolverIcone} from '@site/src/icons/registry';
 import estilos from './catalogo.module.css';
 
-/** A tabela de compensação óptica de `icones.md` §2.1. Prop, nunca token de CSS. */
-const TRACO = {sm: 2.25, md: 2, lg: 1.75};
-
-/** O tamanho é classe de módulo; `data-sd-variant` é o gancho da skin. */
-const CLASSE = {sm: estilos.iconSm, md: estilos.iconMd, lg: estilos.iconLg};
+/**
+ * Um mapa por tamanho, e não dois com as mesmas chaves.
+ *
+ * `traco` é a tabela de compensação óptica de `icones.md` §2.1, e ela é **prop,
+ * nunca token de CSS** — o valor precisa restilizar o interior do desenho.
+ * `classe` é como o nosso CSS dimensiona; `data-sd-variant` é o gancho da skin.
+ */
+const TAMANHOS = {
+  sm: {traco: 2.25, classe: estilos.iconSm},
+  md: {traco: 2, classe: estilos.iconMd},
+  lg: {traco: 1.75, classe: estilos.iconLg},
+};
 
 export default function Icon({name, size = 'sm', label}) {
   const Desenho = resolverIcone(name);
+  const {traco, classe} = TAMANHOS[size] ?? TAMANHOS.sm;
 
   // Sem `label`, o ícone é decorativo e sai da árvore de acessibilidade — o que
   // está certo em toda a autoria medida: o significado está no texto ao lado.
@@ -38,8 +46,8 @@ export default function Icon({name, size = 'sm', label}) {
     <Desenho
       data-sd-component="icon"
       data-sd-variant={size}
-      className={clsx(estilos.icon, CLASSE[size])}
-      strokeWidth={TRACO[size]}
+      className={clsx(estilos.icon, classe)}
+      strokeWidth={traco}
       focusable="false"
       {...acessibilidade}
     />

@@ -74,8 +74,13 @@ export default {
   Tabs,
   TabItem,
 
-  // Os dezesseis com tag própria. Inicial maiúscula não é estilo: em MDX v3 a
-  // tag minúscula é elemento HTML, e um `<card>` sairia como tag desconhecida.
+  // Os catorze componentes com tag própria — QUINZE chaves, porque `steps` tem
+  // duas. Os outros quatro do catálogo de dezoito não têm tag: `callout` é
+  // `:::`, `code-block` é a cerca, `tabs` vem do Docusaurus acima, e `table` é a
+  // chave de elemento acima.
+  //
+  // Inicial maiúscula não é estilo: em MDX v3 a tag minúscula é elemento HTML, e
+  // um `<card>` sairia como tag desconhecida.
   Accordion,
   AccordionGroup,
   Card,

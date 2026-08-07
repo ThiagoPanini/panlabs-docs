@@ -164,10 +164,11 @@ export function assinaturaConfere(corpo, cabecalho, segredo) {
 }
 ```
 
-O `code-group` compõe as abas do Docusaurus, lê o título de cada cerca e põe a
-linguagem escolhida na URL — a escolha vira link.
+O `code-group` compõe as abas do Docusaurus e lê o título de cada cerca. Com
+`groupId` e `queryString`, a linguagem escolhida segue o leitor entre páginas e a
+escolha vira link.
 
-<CodeGroup>
+<CodeGroup groupId="code-lang" queryString="lang">
 
 ```js title="Node"
 const cobranca = await trilho.cobrancas.criar({
@@ -185,6 +186,13 @@ cobranca = trilho.cobrancas.criar(
 )
 ```
 
+</CodeGroup>
+
+A sincronização **não é o default**, e o motivo cabe numa frase: as abas de um
+grupo nem sempre são linguagens. A resposta abaixo é um bloco solto justamente
+por isso — pô-la como terceira aba gravaria `Resposta` na escolha compartilhada,
+e o defeito apareceria noutra página, como a aba errada selecionada.
+
 ```json title="Resposta"
 {
   "id": "cob_3nK2xQ",
@@ -194,8 +202,6 @@ cobranca = trilho.cobrancas.criar(
   "expira_em": "2026-08-07T18:40:00Z"
 }
 ```
-
-</CodeGroup>
 
 O `tabs` é o mesmo componente, consumido direto e sem cerca dentro — ele serve
 qualquer conteúdo, não só código.

@@ -10,9 +10,14 @@
  * do bloco** — mantê-lo desenharia a mesma palavra duas vezes, na aba e na
  * moldura.
  *
- * `groupId` faz a linguagem escolhida seguir o leitor entre páginas;
- * `queryString` põe a escolha na URL, que é o delta de outra referência
- * chegando sem componente novo e sem uma linha de JavaScript nossa.
+ * `groupId` faz a escolha seguir o leitor entre páginas e `queryString` a põe na
+ * URL — o delta de outra referência chegando sem componente novo e sem uma
+ * linha de JavaScript nossa. **Os dois são opcionais e nascem desligados**, e
+ * isso é decisão, não descuido: as abas de um grupo de código nem sempre são
+ * linguagens. Um grupo cujas abas são `Node`, `Python` e `Resposta` gravaria
+ * `Resposta` na escolha compartilhada, e o defeito apareceria noutra página,
+ * como a aba errada selecionada. Quem sincroniza é quem sabe que as abas são
+ * comparáveis: o autor.
  *
  * Nota de leitura do MDX: uma cerca dentro de JSX chega como `<pre>` cujo único
  * filho é o `<code>`, e é no `<code>` que moram `className` e `metastring`. O
@@ -31,6 +36,18 @@ const TITULO = /title="([^"]*)"/;
 const LINGUAGEM = /language-([\w-]+)/;
 
 /**
+ * Uma cerca dentro de JSX chega como `<pre>` cujo único filho é o `<code>`, e é
+ * no `<code>` que moram `className` e `metastring`. Esta função é o único lugar
+ * do projeto que conhece essa forma.
+ *
+ * @param {React.ReactElement} cerca
+ * @returns {{className?: string, metastring?: string, children?: unknown}}
+ */
+function conteudoDaCerca(cerca) {
+  return cerca.props?.children?.props ?? cerca.props;
+}
+
+/**
  * O rótulo da aba: o título da cerca; na falta dele, a linguagem; na falta das
  * duas, a posição. Nunca vazio — aba sem nome é aba que não se clica de novo.
  *
@@ -46,15 +63,30 @@ function rotuloDe(props, indice) {
   return linguagem ?? String(indice + 1);
 }
 
-export default function CodeGroup({groupId = 'code-lang', queryString = 'lang', children}) {
+export default function CodeGroup({groupId, queryString, children}) {
   const cercas = React.Children.toArray(children).filter(React.isValidElement);
+  const rotulos = cercas.map((cerca, i) => rotuloDe(conteudoDaCerca(cerca), i));
+
+  // Rótulo repetido é o valor da aba repetido, e o `Tabs` resolve isso
+  // selecionando a primeira — o autor clica na segunda e a primeira acende.
+  // Falha alto, como nome de ícone inexistente e verbo fora da escada.
+  const repetido = rotulos.find((r, i) => rotulos.indexOf(r) !== i);
+  if (repetido) {
+    throw new Error(
+      [
+        `Duas cercas do mesmo <CodeGroup> têm o rótulo "${repetido}".`,
+        'O rótulo é o valor da aba, e valor repetido faz a seleção acender na aba errada.',
+        'Dê um `title=` distinto a cada cerca.',
+      ].join('\n'),
+    );
+  }
 
   return (
     <div className={estilos.codeGroup} data-sd-component="code-group">
       <Tabs groupId={groupId} queryString={queryString}>
         {cercas.map((cerca, indice) => {
-          const props = cerca.props?.children?.props ?? cerca.props;
-          const rotulo = rotuloDe(props, indice);
+          const props = conteudoDaCerca(cerca);
+          const rotulo = rotulos[indice];
           const resto = (props.metastring ?? '').replace(TITULO, '').trim();
           return (
             <TabItem key={rotulo} value={rotulo} label={rotulo}>

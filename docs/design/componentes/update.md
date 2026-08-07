@@ -15,15 +15,16 @@ produto seria prosa solta.
 <section data-sd-component="update">
   <header>
     2026-08-01
-    <span data-sd-part="tag">2026-08-01</span>
+    <span>v1.4</span>                      <!-- único elemento do header -->
   </header>
   <div>…o que mudou…</div>
 </section>
 ```
 
-**Uma parte publicada.** O `<header>` e o corpo alcançam por tipo — é o `<header>`
-que evita a parte, porque dois `<div>` irmãos precisariam de nome. A etiqueta é
-um `<span>` no meio de texto, e ganha nome.
+**Zero partes publicadas**, e é o `<header>` que compra isso: dois `<div>` irmãos
+precisariam de nome, mas um `<header>` e um `<div>` se separam por tipo. A
+etiqueta é o único elemento dentro do cabeçalho, então `header > span` a
+alcança.
 
 Um fio no topo separa uma entrada da anterior. A data é monoespaçada, como todo
 identificador deste sistema.
@@ -84,5 +85,5 @@ O contrato de estado de entrada mora em [`foco.md`](../foco.md).
 | Componente do zero | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — ausente no Docusaurus, e muito usado numa das referências |
 | Ele tem consumidor: o changelog | herdado | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) — versão por cabeçalho, changelog em `Operação` |
 | Uma coluna em qualquer largura | **origem própria (implementação)** | duas colunas exigiriam uma largura que a cadeia de proporções da [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) não tem |
-| Uma parte publicada | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
 | `<section>` sem nome acessível, de propósito | origem própria | este slice |

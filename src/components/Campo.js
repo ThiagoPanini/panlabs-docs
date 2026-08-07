@@ -35,6 +35,11 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
       data-sd-variant={deprecated ? 'deprecated' : undefined}>
       <p className={estilos.fieldHead}>
         <code>{name}</code>
+        {/* `meta` é a única parte publicada do catálogo que a régua estreita
+            NÃO obriga: ela é o único `<span>` do cabeçalho, e a skin a
+            alcançaria por `> span`. Ela fica porque a rota da Referência da API
+            a nomeia verbatim no contrato, e despublicar depois quebra quem já
+            dependeu — o que a régua também diz. */}
         <span className={estilos.fieldMeta} data-sd-part="meta">
           {type}
           {padrao === undefined ? null : (

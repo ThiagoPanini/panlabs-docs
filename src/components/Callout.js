@@ -28,40 +28,40 @@ import estilos from './catalogo.module.css';
  * `info` é a variante NEUTRA e `note` é a azul. A inversão é deliberada e é o
  * que faz o sistema ler como a âncora; ver `componentes/callout.md`.
  */
-const GLIFO = {
-  note: 'pencil-line',
-  info: 'info',
-  tip: 'lightbulb',
-  warning: 'triangle-alert',
-};
-
 /**
- * A variante entra DUAS vezes, e é de propósito.
+ * Um mapa por variante, e não dois mapas com as mesmas chaves: duas tabelas
+ * paralelas é como uma variante ganha glifo e não ganha classe.
  *
- * Como classe de módulo, porque é assim que o nosso CSS pinta — especificidade
- * (0,1,0). Como `data-sd-variant`, porque é assim que a skin corporativa repinta
- * — (0,2,0), que vence sem um único `!important`. Nosso CSS nunca lê
- * `data-sd-*`: se lesse, as duas camadas empatariam e a ordem de carga passaria
- * a decidir.
+ * A variante entra no DOM duas vezes, e é de propósito. Como classe de módulo,
+ * porque é assim que o nosso CSS pinta — especificidade (0,1,0). Como
+ * `data-sd-variant`, porque é assim que a skin corporativa repinta — (0,2,0),
+ * que vence sem um único `!important`. Nosso CSS nunca lê `data-sd-*`: se lesse,
+ * as duas camadas empatariam e a ordem de carga passaria a decidir.
  *
- * `info` não aparece aqui porque ela é a variante NEUTRA, e neutro é o default
+ * `info` não tem classe porque ela é a variante NEUTRA, e neutro é o default
  * declarado no próprio `.callout`.
  */
-const VARIANTE = {
-  note: estilos.calloutNote,
-  tip: estilos.calloutTip,
-  warning: estilos.calloutWarning,
+const VARIANTES = {
+  note: {glifo: 'pencil-line', classe: estilos.calloutNote},
+  info: {glifo: 'info', classe: undefined},
+  tip: {glifo: 'lightbulb', classe: estilos.calloutTip},
+  warning: {glifo: 'triangle-alert', classe: estilos.calloutWarning},
 };
 
 export default function Callout({variant, title, id, children}) {
+  const {glifo, classe} = VARIANTES[variant] ?? VARIANTES.info;
   return (
     <div
-      className={clsx(estilos.callout, VARIANTE[variant])}
+      className={clsx(estilos.callout, classe)}
       id={id}
       data-sd-component="callout"
       data-sd-variant={variant}>
-      <Icon name={GLIFO[variant]} size="sm" />
-      <div className={estilos.calloutContent} data-sd-part="content">
+      <Icon name={glifo} size="sm" />
+      {/* Sem `data-sd-part` no corpo: ele é o único `<div>` filho, e o irmão é
+          um `<svg>` — a skin alcança por `> div`. O título, não: ele é um `<p>`
+          entre os `<p>` que o autor escreve, e nenhum seletor de tipo o separa
+          deles. */}
+      <div className={estilos.calloutContent}>
         {title ? (
           <p className={estilos.calloutTitle} data-sd-part="title">
             {title}
