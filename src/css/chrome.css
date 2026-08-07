@@ -1,0 +1,403 @@
+/* =============================================================================
+   shinydoc — o chrome
+
+   O shell da página de documentação: proporções, navbar, sidebar, TOC,
+   breadcrumb, paginação, footer e o comportamento em tela estreita.
+
+   Este arquivo NÃO tem valor literal — cor, comprimento, tempo e curva vivem em
+   `tokens.css` e chegam aqui por nome. A única exceção é o limiar de media
+   query, que é comprimento e que a media query não sabe ler de custom property;
+   o portão 1 tem uma segunda perna que exige que **todo limiar do projeto seja
+   996 ou 997**, o literal compilado do Infima.
+
+   E ele nunca lê `--ifm-*`. O adaptador de mão única escreve nessas variáveis;
+   nada do projeto as consome. Ver ADR 1.
+
+   Zero swizzle. Tudo aqui é degrau 0 (variável do Infima) ou degrau 1 (classe
+   estável — `ThemeClassNames`, classes do Infima, `className` em `sidebars.js`).
+   Procedência: docs/design/chrome.md.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. A cadeia de proporções
+
+   container 1152 → coluna 864 (75%) → cartão 864 → interior 768 → prosa 672.
+   Sidebar 264, navbar 56, shell 1416, gutter 32 → 64.
+
+   Ela fecha em três declarações, e as três existem por um motivo mecânico:
+
+   (a) O gutter mora no `<main>` e não no `.container`. Trocar o preenchimento
+       do container quebraria a cadeia inteira — a margem negativa do `.row` é
+       calibrada contra ele, e o `.col` de 75% mede o row. O container fica com
+       os 16 do Infima; o `<main>` completa o que falta para o gutter.
+   (b) O `.col` perde o preenchimento horizontal. Sem isso o cartão nasce com
+       832 e não com 864, porque os 16 de cada lado do `.col` são cobrados por
+       dentro dos 75%.
+   (c) A coluna do TOC recebe os 32 de separação de um lado só, para que a borda
+       direita dela feche com a borda direita do container.
+   ----------------------------------------------------------------------------- */
+
+html.docs-doc-page main {
+  padding-inline: calc(var(--sd-gutter) - var(--sd-space-4));
+}
+
+html.docs-doc-page main > .container > .row > .col {
+  padding-inline: 0;
+}
+
+html.docs-doc-page main > .container > .row > .col.col--3 {
+  padding-inline: var(--sd-space-8) 0;
+}
+
+/* -----------------------------------------------------------------------------
+   O cartão
+
+   Ele envolve **só** `.theme-doc-markdown`, que é `ThemeClassNames` estável e o
+   único recorte alcançável sem swizzle. Breadcrumb fica acima e paginação
+   abaixo, sobre o fundo da página: incluí-los exigiria `DocItem/Layout`, que é
+   `unsafe`. Efeito colateral bom — os cartões de paginação ficam com um passo de
+   elevação só, sem cartão dentro de cartão.
+
+   A separação é o anel `0 0 0 1px` embutido na sombra multi-camada, **não** uma
+   borda. Ele lê como borda sem ser borda, e é o que compra elevação sem
+   abandonar a leitura limpa da âncora.
+
+   `max-width` e não `width`, e é isso que trava a decisão central: quando a
+   página não tem heading, o Docusaurus não aplica a classe de 75% e a coluna vai
+   a 100% da linha. O cartão continua em 864, **no mesmo pixel**, e o que muda é
+   só o vazio à direita.
+   ----------------------------------------------------------------------------- */
+
+html.docs-doc-page .theme-doc-markdown {
+  /* Camada 3 — declarada no escopo do componente, nunca em `:root`. */
+  --sd-doc-preenchimento: var(--sd-space-12);
+
+  max-width: var(--sd-doc-width);
+  padding: var(--sd-doc-preenchimento);
+  border-radius: var(--sd-radius);
+  background-color: var(--sd-surface-card);
+  box-shadow: var(--sd-shadow-1);
+}
+
+html.docs-doc-page .theme-doc-markdown > :first-child {
+  margin-top: 0;
+}
+
+html.docs-doc-page .theme-doc-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   A medida da prosa — constante, com breakout de código e tabela
+
+   672 sempre, tenha a página TOC ou não. A âncora oscila de 768 para 576 quando
+   o TOC existe, e essa oscilação não é desenho: é efeito colateral de a largura
+   do texto depender de a página ter subtítulos. Páginas vizinhas da mesma seção
+   leem com larguras diferentes, sem motivo visível ao leitor.
+
+   O breakout não precisa de regra: quem NÃO está nesta lista fica com o interior
+   inteiro do cartão. Código e tabela respiram; o texto não.
+
+   Sem `!important`. A medida vai para DENTRO dos 75%, nunca contra eles.
+   ----------------------------------------------------------------------------- */
+
+html.docs-doc-page .theme-doc-markdown
+  > :is(p, ul, ol, dl, h1, h2, h3, h4, h5, h6, blockquote, hr) {
+  max-width: var(--sd-prose-width);
+  margin-inline: auto;
+}
+
+/* -----------------------------------------------------------------------------
+   2. Navbar
+
+   Três tabs à esquerda, e à direita a ordem declarada: Buscar · PT · GitHub.
+   A alternância de tema fecha a linha e não é declarável — o `Navbar/Content` a
+   renderiza depois dos itens da direita.
+
+   O slot de busca custa zero pixel enquanto estiver vazio: o próprio upstream
+   esconde o contêiner com `:empty`. Remover a busca não deixa buraco.
+
+   GitHub entra como **palavra**, não como glifo, e é decisão de orçamento: não
+   há marca de terceiro no manifesto de 63, e gastar o único slot livre num
+   logotipo de plataforma seria decidir por acidente o que a #32 deixou reservado
+   sem nome.
+   ----------------------------------------------------------------------------- */
+
+/* O `Logo` do upstream continua renderizando um link vazio, porque a marca não
+   passa por `navbar.logo`. Um link sem nome acessível é defeito; `:empty` o
+   remove do fluxo e da ordem de tabulação, no navbar e no painel estreito. */
+.navbar__brand:empty {
+  display: none;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-space-2);
+  color: var(--sd-text-strong);
+  font-family: var(--sd-font-heading);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-heading);
+  letter-spacing: var(--sd-tracking-tight);
+}
+
+.marca__glifo {
+  flex: none;
+  width: var(--sd-space-5);
+  height: var(--sd-space-5);
+  /* O único token que a marca consome. `currentColor` no SVG do Lucide vira
+     acento aqui, e é por isso que a marca é SVGR e não `<img>`. */
+  color: var(--sd-accent);
+}
+
+.marca__palavra {
+  font-weight: inherit;
+}
+
+/* -----------------------------------------------------------------------------
+   3. Sidebar
+
+   264 de largura, ícone por categoria de topo, hierarquia por nível e
+   falso-negrito no item ativo. **Nada disto custa swizzle**: o `className` é
+   contrato público do schema de item de sidebar, e o resto sai de
+   `ThemeClassNames`.
+
+   O ícone é `mask-image` + `currentColor` — o segundo renderizador. Não existe
+   ponto de swizzle `safe` para injetar componente React num item de sidebar, e
+   esta é a única rota zero-swizzle. Como a máscara é pintada com `currentColor`,
+   o estado ativo pinta o ícone junto com o texto, sem uma linha a mais e sem
+   segundo desenho para o modo escuro.
+
+   O rótulo da categoria é um `<a class="menu__link">` com um
+   `<button class="menu__caret">` irmão — a categoria é clicável e aponta para a
+   visão geral. O `::before` mora no link, não no `<li>`, para herdar a cor dele.
+   ----------------------------------------------------------------------------- */
+
+.sidebar-icone > .menu__list-item-collapsible > .menu__link::before {
+  content: '';
+  flex: none;
+  width: var(--sd-space-4);
+  height: var(--sd-space-4);
+  margin-right: var(--sd-space-2);
+  background-color: currentColor;
+  mask: var(--sd-sidebar-icone) center / contain no-repeat;
+}
+
+/* Os doze pares seção→ícone. `Receitas` é sidebar plana — sem categoria, logo
+   sem ícone, e não consome slot. As três tabs de navbar também não recebem
+   ícone: a regra é um slot por seção de topo da SIDEBAR. */
+.sidebar-icone--comece-aqui        { --sd-sidebar-icone: url('/icons/rocket.svg'); }
+.sidebar-icone--conceitos          { --sd-sidebar-icone: url('/icons/shapes.svg'); }
+.sidebar-icone--meios-de-pagamento { --sd-sidebar-icone: url('/icons/wallet.svg'); }
+.sidebar-icone--guias              { --sd-sidebar-icone: url('/icons/book-open.svg'); }
+.sidebar-icone--sdks               { --sd-sidebar-icone: url('/icons/package.svg'); }
+.sidebar-icone--operacao           { --sd-sidebar-icone: url('/icons/activity.svg'); }
+.sidebar-icone--introducao         { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
+.sidebar-icone--cobrancas          { --sd-sidebar-icone: url('/icons/receipt.svg'); }
+.sidebar-icone--clientes           { --sd-sidebar-icone: url('/icons/users.svg'); }
+.sidebar-icone--assinaturas        { --sd-sidebar-icone: url('/icons/repeat.svg'); }
+.sidebar-icone--reembolsos         { --sd-sidebar-icone: url('/icons/undo-2.svg'); }
+.sidebar-icone--webhooks           { --sd-sidebar-icone: url('/icons/webhook.svg'); }
+
+/* Hierarquia por nível. O teto de profundidade é 2, então existem exatamente
+   dois degraus a desenhar — e é por isso que a regra de ícone (obrigatório no
+   topo, ausente na folha) tem leitura em todos os nós que existem. */
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  color: var(--sd-text-strong);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-ui);
+}
+
+.theme-doc-sidebar-item-link-level-2 > .menu__link {
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-body);
+}
+
+/* Falso-negrito no item ativo. Trocar o peso reflui o texto e faz o item pular
+   de largura no instante em que o leitor navega. */
+.theme-doc-sidebar-menu .menu__link--active {
+  text-shadow: var(--sd-negrito-optico);
+}
+
+/* -----------------------------------------------------------------------------
+   4. TOC
+
+   A largura é **derivada do grid** — a coluna é o `.col--3`, um quarto do
+   container. Não há número a escolher aqui.
+
+   Perda registrada: a âncora usa até 448px de painel à direita. Alcançar isso
+   exigiria quebrar o 75/25, que vive numa classe hasheada de CSS Module e
+   custaria `unsafe` em `DocItem/Layout`. Fica em 288.
+   ----------------------------------------------------------------------------- */
+
+.theme-doc-toc-desktop {
+  font-size: var(--sd-type-sm);
+  line-height: var(--sd-leading-ui);
+}
+
+/* -----------------------------------------------------------------------------
+   5. Breadcrumb e paginação
+
+   Os dois vivem FORA do cartão — o breadcrumb acima, a paginação abaixo, sobre o
+   fundo da página. Não é escolha estética: `DocItem/Layout` é `unsafe`, e o
+   único recorte alcançável é o corpo.
+
+   Perda nomeada: o breadcrumb reestruturado como a eyebrow da âncora exigiria
+   `DocBreadcrumbs`, também `unsafe`. Fica o breadcrumb nativo, re-marcado por
+   variável. A divergência é visível, e ela é por restrição — não por escolha.
+   ----------------------------------------------------------------------------- */
+
+.theme-doc-breadcrumbs {
+  font-size: var(--sd-type-sm);
+}
+
+/* -----------------------------------------------------------------------------
+   6. Footer
+
+   **Uma linha.** Links à esquerda, copyright à direita, fio de ponta a ponta,
+   sem preenchimento próprio, sem ícone, sem coluna, sem elevação — e sem uma
+   única linha no ledger de swizzle. As oito peças de `Footer` são `safe` nas
+   duas ações e nenhuma é exercida.
+
+   Três divergências obrigatórias contra o Infima, e nenhuma é gosto:
+
+   · **preenchimento** — o Infima pinta o rodapé com `--ifm-color-emphasis-100`,
+     que seria um TERCEIRO nível de superfície contra os dois do sistema;
+   · **peso do título de coluna** — 700, que não existe na escala de três pesos
+     (a porta fica fechada na spec: `links` é lista plana e o schema recusa
+     misturar);
+   · **entrelinha de link** — 2, contra a entrelinha de UI.
+
+   Sem sombra, e é decisão: a escada de elevação é para superfície que sobe. O
+   footer não sobe — ele **é** a página. A separação é o fio.
+   ----------------------------------------------------------------------------- */
+
+.footer {
+  border-top: var(--sd-border-width) solid var(--sd-border-subtle);
+  padding-bottom: var(--sd-space-16);
+  font-size: var(--sd-type-sm);
+}
+
+/* O `.container` do footer perde o preenchimento e ele sobe para o `<footer>`.
+   Sem isso a compensação de alinhamento erra por 16px: o cartão fica rente à
+   borda do container, e o texto do rodapé começaria 16 depois dela. */
+.footer .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 0;
+}
+
+/* O `Footer/Layout` cola `text--center` nos dois filhos. Numa linha
+   `space-between` isso não tem leitura. */
+.footer .text--center {
+  text-align: start;
+}
+
+.footer__links {
+  margin-bottom: 0;
+}
+
+.footer__link-item {
+  line-height: var(--sd-leading-ui);
+  font-weight: var(--sd-weight-ui);
+}
+
+/* O ícone de link externo sai, e o motivo não é estética: `Icon/ExternalLink`
+   não está no `getSwizzleConfig` (logo é `unsafe`) e vem de um sprite injetado.
+   Ele ficaria com o desenho do Docusaurus, de outra família, em dois dos três
+   links. E não há perda de acessibilidade — nenhum link do footer leva `target`,
+   então o rótulo dele ("abre em nova aba") seria uma afirmação falsa. */
+.footer__link-item > svg {
+  display: none;
+}
+
+.footer__copyright {
+  color: var(--sd-text-muted);
+}
+
+/* A compensação de alinhamento.
+
+   O `<Footer/>` é irmão do `main-wrapper`, não filho da página de doc, então o
+   `.container` dele centra na VIEWPORT enquanto o da doc centra dentro de
+   `100% − sidebar`. A 1600px isso são 132px de desalinhamento entre o fio do
+   rodapé e a borda do cartão.
+
+   A compensação **soma o gutter** — sem isso erra pela largura dele. E o fio
+   continua de ponta a ponta, porque mora no `<footer>`, fora do preenchimento:
+   o separador lê como régua de site (o que ele é) e o conteúdo lê alinhado com
+   o que está acima dele.
+
+   `docs-doc-page` vem do `DocRoot`, então isto vale para as TRÊS instâncias. Na
+   landing a classe não existe, o preenchimento não aplica, e o footer centra na
+   viewport junto com o conteúdo de lá.
+
+   Perda nomeada: com a sidebar recolhida pelo leitor, o `DocRoot/Layout/Main`
+   troca para a largura escondida e o footer não acompanha. O estado mora em
+   classe de CSS Module hasheada; alcançá-la por `html:has(…)` é exatamente o que
+   se recusou ao desistir da proporção 56/44. */
+@media (min-width: 997px) {
+  html.docs-doc-page .footer {
+    padding-left: calc(var(--sd-sidebar-width) + var(--sd-gutter));
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   7. Tela estreita
+
+   Abaixo de 997px — o mesmo limiar em que a sidebar vira gaveta.
+
+   Três dos quatro comportamentos se resolvem por construção, e só um custa
+   declaração:
+
+   · o **breakout resolve para zero sozinho** — os `max-width` de 864 e 672
+     ficam inertes quando a coluna é menor, e código e tabela deixam de escapar
+     porque não há medida de prosa da qual escapar. Nenhuma regra a escrever;
+   · o **gutter de 32 se preserva sozinho**, porque o token só dobra a partir de
+     997;
+   · o **cartão fica**, e o preenchimento cai de 48 para 24 — derivado por
+     METADE, que é o mecanismo do `almond` (ele alterna 64/32). Uma declaração é
+     a história inteira do cartão no estreito.
+
+   O cartão não dissolve. Ele é nível de superfície, não moldura decorativa, e
+   derrubá-lo aqui seria derrubar um dos dois níveis de preenchimento do sistema
+   no aparelho em que a documentação é mais lida.
+   ----------------------------------------------------------------------------- */
+
+@media (max-width: 996px) {
+  html.docs-doc-page .theme-doc-markdown {
+    --sd-doc-preenchimento: calc(var(--sd-space-12) / 2);
+  }
+
+  /* O Infima zera o preenchimento horizontal do footer no estreito, e a
+     declaração dele mora no próprio `.footer` — mais perto do elemento que o
+     `:root` do adaptador. Uma linha restaura o gutter. */
+  .footer {
+    --ifm-footer-padding-horizontal: var(--sd-gutter);
+  }
+
+  /* A linha **quebra e não empilha**, revertendo deliberadamente o Infima. Ele
+     transforma cada link em `display: block`, o que faz uma linha virar cinco —
+     e "uma linha" é a decisão inteira do rodapé. Os rótulos com separador cabem
+     numa linha em 375px e quebram para duas em 320px. */
+  .footer .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sd-space-6);
+  }
+
+  /* `inline-flex` e não `inline`: a caixa continua participando da linha e
+     quebrando com ela, e ganha altura própria — que é o que faz o piso de alvo
+     de toque do contrato de entrada alcançar o link do rodapé, onde `inline`
+     ignoraria `min-height` em silêncio. */
+  .footer__link-item {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+  }
+
+  .footer__link-separator {
+    display: inline;
+  }
+}

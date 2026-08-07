@@ -38,6 +38,17 @@ jobs:
       - name: Portão 2 — motion
         run: npm run portao:2
 
+      # Portão 3 — `outline` fora do arquivo de foco. Este contrato não morre
+      # por anel feio; morre por `outline: none` escrito para "limpar" um botão.
+      - name: Portão 3 — outline
+        run: npm run portao:3
+
+      # A bijeção manifesto ↔ `static/icons/`. Não é portão: não precisa de rede
+      # (só confere o que está no repositório) e o build já quebra alto se um
+      # desenho faltar. Roda aqui porque a mensagem é melhor.
+      - name: Manifesto de ícones
+        run: npm run icones
+
       # O bloco css de docs/design/tokens.md é espelho de src/css/tokens.css.
       # Não é um portão — é a verificação que torna a palavra "espelho"
       # conferível.

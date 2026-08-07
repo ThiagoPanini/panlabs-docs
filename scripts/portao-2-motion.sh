@@ -27,7 +27,10 @@ set -uo pipefail
 
 PADRAO='(transition|animation)[a-z-]*:[^;{}]*([0-9.]+m?s\b|cubic-bezier)'
 
-achados=$(grep -rnE "$PADRAO" src/ --include='*.css') || true
+# Comentário sai antes da varredura: o portão cobra DECLARAÇÃO, não prosa. Ver
+# `scripts/css-sem-comentario.awk`.
+achados=$(find src -name '*.css' -exec awk -f scripts/css-sem-comentario.awk {} + \
+  | grep -E "$PADRAO") || true
 
 if [ -n "$achados" ]; then
   echo "Portão 2 REPROVOU — duração ou curva cravada numa transição/animação:"

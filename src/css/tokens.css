@@ -139,6 +139,13 @@
      e não valor, então não precisa de token. */
   --sd-tracking-tight: -0.025em;
 
+  /* Falso-negrito — o realce do item ativo da sidebar, e ele não é enfeite.
+     Trocar `font-weight` reflui o texto e o item PULA de largura no instante em
+     que o leitor navega; meio pixel de sombra engrossa sem mexer na métrica.
+     `currentColor` resolve no elemento, então o realce acompanha o acento sem
+     par declarado e sem segundo valor para o modo claro. */
+  --sd-negrito-optico: 0 0 0.4px currentColor;
+
   /* ---------------------------------------------------------------------------
      Espaço — base 4px, escada por calc(). Um literal só.
      Toda dimensão que o projeto travou é múltiplo de 8; a base fica em 4 para o
@@ -164,6 +171,11 @@
   --sd-radius-sm:   calc(var(--sd-radius) * 0.5);   /* botão, campo, aba, chip */
   --sd-radius-xs:   calc(var(--sd-radius) * 0.25);  /* código inline, badge, pílula de verbo */
   --sd-radius-full: 999px;                          /* marcador de Step, avatar, pílula */
+
+  /* O fio. Um só, e ele NÃO é a separação do cartão — essa é o anel
+     `0 0 0 1px` embutido na sombra multi-camada. Este aqui é a régua de
+     site: o fio do footer, e o que vier a precisar de um traço de verdade. */
+  --sd-border-width: 1px;
 
   /* ---------------------------------------------------------------------------
      Motion — escala de duração e vocabulário de easing. Camada 1, fora do bloco
@@ -207,6 +219,25 @@
   interpolate-size: allow-keywords;
 
   /* ---------------------------------------------------------------------------
+     Estado de entrada — camada 1, FORA do bloco de troca.
+
+     Espessura de anel não é identidade de marca; a cor já é, e ela segue o
+     acento pela camada 2 (`--sd-focus-ring`).
+
+     Estes são o segundo e o terceiro literal do sistema, e não vão disfarçados.
+     `calc(var(--sd-space-1) / 2)` daria 2px e passaria em qualquer varredura —
+     seria derivação FALSA: espessura de anel não tem relação com escala de
+     espaço, e a régua deste projeto existe justamente para impedir número que
+     só parece derivado. A procedência honesta é origem própria com âncora em
+     norma: 2px é o limiar de perímetro da SC 2.4.13, 44px é a SC 2.5.5.
+
+     Contrato completo: docs/design/foco.md e ADR 4.
+     --------------------------------------------------------------------------- */
+  --sd-focus-width:  2px;
+  --sd-focus-offset: 2px;
+  --sd-target-min:   44px;
+
+  /* ---------------------------------------------------------------------------
      Dimensões do chrome — camada 1.
      A anatomia completa é de docs/design/chrome.md; aqui ficam só os valores
      que o adaptador precisa escrever, porque ele não pode escrever de lugar
@@ -217,6 +248,26 @@
   --sd-navbar-height:     56px;
   --sd-toc-width:        288px;
   --sd-prose-width:      672px;
+
+  /* A coluna de conteúdo — e portanto o cartão, que a preenche. É `.col--9` do
+     grid de doze, então ela DERIVA do container em vez de repetir um número:
+     1152 × 0,75 = 864. A coluna do TOC é o quarto restante, e ela está acima
+     como valor porque o Infima a escreve como classe, não como conta. */
+  --sd-doc-width: calc(var(--sd-container-width) * 0.75);
+
+  /* A folga lateral do shell, de cada lado. Ela dobra a partir de 997px — o
+     mesmo limiar em que a sidebar aparece. O par 32/64 é herdado da âncora; o
+     ponto onde ele troca, não. */
+  --sd-gutter: var(--sd-space-8);
+}
+
+/* O gutter dobra no limiar único do projeto, que é o literal compilado do
+   Infima. Não são os 1024px da âncora: dois limiares brigando no mesmo eixo
+   custam mais do que a fidelidade compra. */
+@media (min-width: 997px) {
+  :root {
+    --sd-gutter: var(--sd-space-16);
+  }
 }
 
 /* =============================================================================
@@ -652,7 +703,11 @@
   --ifm-menu-color-active:            var(--sd-accent);
   --ifm-menu-color-background-active: var(--sd-surface-wash);
   --ifm-menu-color-background-hover:  var(--sd-border-subtle);
-  --ifm-menu-link-padding-horizontal: var(--sd-space-3);
+  /* 16 e não 12: somado ao preenchimento de 8 que o `DocSidebar/Desktop` põe na
+     lista, o item da sidebar começa em 24 — que é exatamente o preenchimento
+     horizontal do navbar. A marca e o primeiro ícone de seção ficam na mesma
+     vertical, e o alinhamento deixa de depender de coincidência. */
+  --ifm-menu-link-padding-horizontal: var(--sd-space-4);
   --ifm-menu-link-padding-vertical:   var(--sd-space-2);
 
   /* --- TOC ---------------------------------------------------------------- */
@@ -692,8 +747,12 @@
   --ifm-footer-link-color:       var(--sd-text-muted);
   --ifm-footer-link-hover-color: var(--sd-accent);
   --ifm-footer-title-color:      var(--sd-text-strong);
-  --ifm-footer-padding-horizontal: var(--sd-space-6);
-  --ifm-footer-padding-vertical:   var(--sd-space-8);
+  /* O horizontal é o gutter do shell, e o `.container` do footer perde o
+     preenchimento dele em `chrome.css` — sem isso o conteúdo do rodapé erra por
+     16px contra a borda do cartão. O vertical é o ar de cima; o de baixo é
+     maior e mora na regra do footer. */
+  --ifm-footer-padding-horizontal: var(--sd-gutter);
+  --ifm-footer-padding-vertical:   var(--sd-space-10);
 
   /* --- barra de rolagem --------------------------------------------------- */
   --ifm-scrollbar-track-background-color:      var(--sd-surface-page);
@@ -716,6 +775,27 @@
   :root,
   :root[data-theme] {
     --ifm-h1-font-size: var(--sd-type-4xl);
+  }
+}
+
+/* Hover — a outra metade do mecanismo de `(pointer: coarse)`, e ela atravessa
+   pelo adaptador exatamente como o reduced-motion.
+
+   A regra do projeto é que hover inteiro vive sob `@media (hover: hover)`.
+   Medido nesta implementação: o Infima tem **zero** ocorrência de
+   `(hover: hover)` em todo o framework, e o theme-classic tem uma. Ou seja, o
+   hover que NÓS não escrevemos gruda depois do tap — o fundo do item de sidebar
+   e a cor do link de navbar ficam marcados até o dedo tocar noutro lugar.
+
+   Brigar seletor a seletor com o framework custaria uma lista de alvos, que é
+   exatamente a forma que o contrato de foco recusou. Neutralizar os tokens de
+   hover dele alcança tudo de uma vez, sem um único `!important`. O fundo do item
+   ATIVO vem de outra variável e não é tocado. */
+@media (hover: none) {
+  :root,
+  :root[data-theme] {
+    --ifm-menu-color-background-hover: transparent;
+    --ifm-navbar-link-hover-color: var(--sd-text-muted);
   }
 }
 

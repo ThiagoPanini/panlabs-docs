@@ -96,8 +96,12 @@ const config = {
     defaultLocale: 'pt-BR',
     locales: ['pt-BR', 'en'],
     localeConfigs: {
-      'pt-BR': {label: 'Português', htmlLang: 'pt-BR', direction: 'ltr'},
-      en: {label: 'English', htmlLang: 'en', direction: 'ltr'},
+      // `PT` e não `Português (Brasil)`: o rótulo do `localeDropdown` é o do
+      // locale corrente, e o default do Docusaurus mede 165px contra 55px.
+      // O navbar carrega três tabs, busca, locale e GitHub — 110px é a
+      // diferença entre caber e não caber na faixa de 997 a 1200px.
+      'pt-BR': {label: 'PT', htmlLang: 'pt-BR', direction: 'ltr'},
+      en: {label: 'EN', htmlLang: 'en', direction: 'ltr'},
     },
   },
 
@@ -106,11 +110,13 @@ const config = {
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
+        // A tab `Documentação` é a instância `default` do plugin de docs.
+        //
+        // O conteúdo do Trilho mora em `conteudo/`, e não em `docs/`, porque
+        // `docs/` é a documentação DESTE repositório — agentes, ADRs, spec de
+        // design. A rota pública continua sendo `/docs`, que é o que o portão
+        // 6 verifica.
         docs: {
-          // O conteúdo do Trilho mora em `conteudo/`, e não em `docs/`, porque
-          // `docs/` é a documentação DESTE repositório — agentes, ADRs, spec de
-          // design. A rota pública continua sendo `/docs`, que é o que o portão
-          // 6 verifica.
           path: 'conteudo/documentacao',
           routeBasePath: 'docs',
           sidebarPath: './sidebars.js',
@@ -121,8 +127,44 @@ const config = {
         theme: {
           // A ordem importa: `tokens.css` é o primeiro item porque as raízes
           // precisam existir antes de qualquer regra que as consuma.
-          customCss: ['./src/css/tokens.css', './src/css/custom.css'],
+          customCss: [
+            './src/css/tokens.css',
+            './src/css/custom.css',
+            './src/css/chrome.css',
+            './src/css/foco.css',
+          ],
         },
+      }),
+    ],
+  ],
+
+  // As outras duas tabs. **Uma instância por tab, um-para-um**, e não uma
+  // instância com várias sidebars: `routeBasePath` é por instância, então
+  // compartilhar jogaria as receitas em `/docs/receitas/…` e a URL deixaria de
+  // ler o eixo — que é a decisão inteira da arquitetura de informação.
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'api',
+        path: 'conteudo/api-reference',
+        routeBasePath: 'api-reference',
+        sidebarPath: './sidebars-api.js',
+        // Opção PÚBLICA do plugin — vira literalmente o `component` da rota.
+        // Substitui o layout inteiro da página com custo de upgrade zero: não é
+        // swizzle, é componente de tema próprio. Ver ADR 2.
+        docItemComponent: '@theme/ApiDocItem',
+      }),
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'receitas',
+        path: 'conteudo/receitas',
+        routeBasePath: 'receitas',
+        sidebarPath: './sidebars-receitas.js',
       }),
     ],
   ],
@@ -138,23 +180,80 @@ const config = {
         disableSwitch: false,
       },
       navbar: {
-        // A marca é tipo mais um glifo do manifesto de ícones, e ela nasce no
-        // slice 2 junto com o resto do chrome.
-        title: 'Trilho',
+        // Sem `title` e sem `logo`, e é decisão: o `LogoSchema` exige `src` e o
+        // `Logo` renderiza `ThemedImage`, ou seja um `<img>`, que não herda
+        // `currentColor`. A marca é tipo mais um glifo do manifesto, em
+        // `--sd-accent`, e entra pelo item `custom-marca`. O `.navbar__brand`
+        // vazio que o upstream continua renderizando é escondido em
+        // `chrome.css`, com `:empty`.
         items: [
+          {type: 'custom-marca', position: 'left'},
+
+          // As três tabs. Cada uma troca a sidebar inteira, e cada sidebar é
+          // uma instância — o eixo de navegação é a natureza do conteúdo.
           {
             type: 'docSidebar',
             sidebarId: 'documentacao',
             position: 'left',
             label: 'Documentação',
           },
+          {
+            type: 'docSidebar',
+            docsPluginId: 'api',
+            sidebarId: 'api',
+            position: 'left',
+            label: 'Referência da API',
+          },
+          {
+            type: 'docSidebar',
+            docsPluginId: 'receitas',
+            sidebarId: 'receitas',
+            position: 'left',
+            label: 'Receitas',
+          },
+
+          // À direita, na ordem declarada: Buscar · PT · GitHub. A alternância
+          // de tema não é declarável — o `Navbar/Content` a renderiza depois
+          // dos itens da direita, e é por isso que ela fecha a linha.
+          //
+          // O slot de busca fica RESERVADO aqui e é preenchido no slice 7.
+          // Enquanto o `SearchBar` do tema for o placeholder vazio, o upstream
+          // esconde o contêiner sozinho (`.navbarSearchContainer:empty`), então
+          // reservar a posição custa zero pixel.
+          {type: 'search', position: 'right'},
+          {type: 'localeDropdown', position: 'right'},
+          {
+            href: 'https://github.com/panlabs-tech/shinydoc-docusaurus',
+            label: 'GitHub',
+            position: 'right',
+          },
         ],
       },
       footer: {
-        // A anatomia do footer — os quatro links e as três divergências contra o
-        // Infima — é de `chrome.md`, no slice 2.
-        style: 'dark',
-        copyright: `shinydoc — documentação de referência em Docusaurus.`,
+        // `style` NÃO é declarado. O default do schema é `'light'`; `'dark'`
+        // cravaria `#303846` literal mais quatro variáveis próprias. Não
+        // configurar é decisão limpa, não omissão.
+        //
+        // `links` é lista PLANA — nunca `MultiColumn`. Um sitemap no rodapé é
+        // segunda cópia de navegação que o leitor já tem à vista, e coluna
+        // exigiria inventar empresa em torno de um produto fictício.
+        //
+        // A regra que escolheu os links: **entra no footer só o que não está em
+        // nenhum outro lugar do site.** `llms.txt` é o quarto, e entra no slice
+        // 7 junto com o artefato.
+        //
+        // `target: '_self'` nos dois externos, e é correção de premissa medida
+        // nesta implementação: o `<Link>` do Docusaurus injeta
+        // `target="_blank"` SOZINHO em todo `href` externo. A decisão do rodapé
+        // é que nenhum link abre em nova aba — sem esta linha ela não valeria, e
+        // esconder o ícone de link externo passaria a apagar um anúncio
+        // verdadeiro em vez de um falso.
+        links: [
+          {label: 'Status', href: 'https://status.trilho.dev', target: '_self'},
+          {label: 'Changelog', to: '/docs/operacao/changelog'},
+          {label: 'Suporte', href: 'mailto:suporte@trilho.dev', target: '_self'},
+        ],
+        copyright: '© 2026 Trilho',
       },
       prism: {
         theme: temaPrism,

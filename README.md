@@ -13,7 +13,7 @@ Em **construção**. O [mapa de wayfinding](https://github.com/panlabs-tech/shin
 | Slice | O que entrega | Estado |
 | ---: | --- | --- |
 | 1 | [Bala traçante](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/34) — o site no ar com o sistema de tokens inteiro | feito |
-| 2 | [A página de documentação](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/35) — chrome, ícones, árvore | aberto |
+| 2 | [A página de documentação](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/35) — chrome, ícones, árvore | feito |
 | 3 | [O catálogo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36) — os dezoito componentes de conteúdo | aberto |
 | 4 | [O conteúdo do Trilho](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/37) — 43 páginas autorais e o EN parcial | aberto |
 | 5 | [A Referência da API](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/38) — contrato, gerador e três colunas | aberto |
@@ -26,7 +26,8 @@ Em **construção**. O [mapa de wayfinding](https://github.com/panlabs-tech/shin
 npm ci
 npm start                    # dev — não testa link quebrado nem host
 npm run build && npm run serve
-npm run portoes              # portões 1 e 2, cadência de commit
+npm run portoes              # portões 1, 2 e 3, cadência de commit
+npm run icones               # a bijeção manifesto ↔ static/icons/
 ```
 
 ## Onde está o quê
@@ -39,8 +40,13 @@ npm run portoes              # portões 1 e 2, cadência de commit
 | [`docs/research/`](docs/research/) | Índice das sete pesquisas. O material mora em branches `research/*`. |
 | `src/css/tokens.css` | **A sede única de valor.** O único arquivo do repo com literal. |
 | `src/css/custom.css` | As regras de base. Zero literal, e nunca lê `--ifm-*`. |
+| `src/css/chrome.css` | O shell da página de doc — proporções, navbar, sidebar, TOC, footer, estreito. |
+| `src/css/foco.css` | O contrato de estado de entrada. **O único arquivo onde `outline` pode aparecer.** |
+| `src/icons/manifest.js` | **O contrato de ícones** — 63 nomes, 66 tags, teto 64. Os desenhos são skin; os nomes não. |
+| `src/theme/` | Componente de tema próprio e registro. Nenhum swizzle — ver `docs/design/swizzle.md`. |
+| `static/icons/` | Os 63 desenhos vendorizados do Lucide (ISC). Trocáveis. |
 | `conteudo/` | O conteúdo do Trilho, o produto fictício. Fica fora de `docs/`, que é a documentação *deste* repositório. |
-| `scripts/` | Os portões, e a verificação de espelho de `tokens.md`. |
+| `scripts/` | Os portões, o espelho de `tokens.md` e o vendorizador de ícones. |
 
 ## Restrições travadas
 
