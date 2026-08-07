@@ -1,0 +1,109 @@
+/* =============================================================================
+   shinydoc — os dois componentes do catálogo que vêm prontos do Docusaurus
+
+   `code-block` e `tabs` são as duas entradas do catálogo cujo DOM **não é
+   nosso**. Nenhum dos dois é swizzle: um é CSS sobre classe estável mais opção
+   pública de config, o outro é CSS sobre as classes do Infima. Por isso eles não
+   emitem `data-sd-component` — e é a única exceção do contrato de partes, que é
+   declarada e não descoberta.
+
+   Consequência que vale escrita: para estes dois, o contrato de skin são as
+   classes do Infima e o ARIA que o Docusaurus emite. A skin corporativa engancha
+   nas MESMAS classes que este arquivo, então aqui não existe o degrau de
+   especificidade que separa nosso CSS do dela no resto do catálogo. Onde a
+   ordem de carga decidiria, o seletor soma o TIPO do elemento — `li.tabs__item`
+   em vez de `.tabs__item` — para vencer a classe de CSS Module hasheada do
+   upstream sem depender de ordem e sem um único `!important`.
+
+   Este arquivo NÃO tem valor literal, nunca lê `--ifm-*` e não escreve
+   `outline`.
+
+   Procedência: docs/design/componentes/code-block.md · tabs.md.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   code-block — a pastilha dentro de um berço
+
+   A anatomia medida: a moldura numa tinta, a área de código noutra, e alguns
+   pixels de preenchimento revelando a primeira em volta da segunda. Aqui ela
+   sai de graça, porque o `<pre>` já recebe `--sd-surface-code` pelo shim do
+   Prism: basta o contêiner ser o berço.
+
+   E é o único lugar do site que AFUNDA. Todo o resto sobe: a escada de elevação
+   é para superfície que se levanta, e o código é o contra-exemplo declarado —
+   por isso `--sd-shadow-sunken`, que existia no arquivo de tokens esperando
+   exatamente este consumidor.
+
+   `div.theme-code-block` e não `.theme-code-block`: o upstream pinta fundo,
+   raio e sombra numa classe de CSS Module (0,1,0), e empate resolvido por ordem
+   de carga é o tipo de dependência que este projeto recusa em toda parte.
+   ----------------------------------------------------------------------------- */
+
+div.theme-code-block {
+  /* Camada 3, no escopo do componente. O berço é a mistura das duas superfícies
+     que o modo já resolveu: um passo acima da pastilha, um passo abaixo do
+     cartão. Nenhum valor novo entra, e ele acompanha a troca de skin sozinho. */
+  --sd-code-berco: color-mix(in oklab, var(--sd-surface-code) 65%, var(--sd-surface-card));
+
+  padding: calc(var(--sd-border-width) * 2);
+  border-radius: var(--sd-radius-md);
+  background: var(--sd-code-berco);
+  box-shadow: var(--sd-shadow-sunken);
+}
+
+/* O título da cerca fica no berço, e o fio que o separa do código é o mesmo fio
+   do sistema. A classe do título é hasheada; o que é estável é ser o primeiro
+   filho do contêiner quando existe, e o `:not(:only-child)` impede a regra de
+   alcançar um bloco sem título. */
+div.theme-code-block > div:first-child:not(:only-child) {
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-ui);
+}
+
+/* -----------------------------------------------------------------------------
+   tabs — sublinhado puxado sobre a régua da lista
+
+   A anatomia medida sai só de CSS: a lista ganha um fio embaixo, a aba ganha um
+   sublinhado de duas vezes o fio, e uma margem negativa de um fio puxa o
+   sublinhado por cima da régua. Aba inativa fica com o sublinhado transparente,
+   e é isso que impede o texto de pular quando a seleção muda.
+
+   O estado é lido do ARIA que o Docusaurus já emite — `[aria-selected]` —, e
+   não da classe de modificador do Infima. Estado nunca vira atributo nosso
+   porque o HTML acessível já é obrigado a carregá-lo.
+   ----------------------------------------------------------------------------- */
+
+ul.tabs {
+  gap: var(--sd-space-1);
+  border-block-end: var(--sd-border-width) solid var(--sd-border-default);
+  font-weight: var(--sd-weight-ui);
+}
+
+li.tabs__item {
+  border-radius: 0;
+  border-block-end: calc(var(--sd-border-width) * 2) solid transparent;
+  margin-block-end: calc(var(--sd-border-width) * -1);
+  padding: var(--sd-space-2) var(--sd-space-3);
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+  line-height: var(--sd-leading-ui);
+  transition:
+    color var(--sd-move-state),
+    border-color var(--sd-move-state);
+}
+
+li.tabs__item[aria-selected='true'] {
+  border-block-end-color: var(--sd-accent);
+  color: var(--sd-text-strong);
+}
+
+/* O hover do Infima pinta um fundo. Aqui ele só revela a tinta do texto: a aba
+   é uma régua, e fundo numa régua a engorda. Sob `(hover: hover)`, como todo
+   hover do site. */
+@media (hover: hover) {
+  li.tabs__item:hover {
+    background-color: transparent;
+    color: var(--sd-text-strong);
+  }
+}

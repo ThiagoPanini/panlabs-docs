@@ -129,7 +129,9 @@ O tema entrega 14 de chrome e 5 de admonition, e **eles são de outra família**
 
 O que é alcançável e o que não é sai da regra da política, sem enumerar caso a caso: **o que só é alcançável por `unsafe` não é trocado.** Os de admonition e cinco dos de chrome são `safe` nas duas ações; `Icon/ExternalLink` não está no `getSwizzleConfig` e vem de sprite, então ele fica com o desenho do Docusaurus — no rodapé ele é escondido, e no resto do site ele continua de pé.
 
-A troca dos que são alcançáveis é do slice do catálogo. Este slice consome o manifesto na sidebar e na marca.
+**O que o slice do catálogo fez com isso, e é menos do que esta seção previa.** Os cinco de admonition **nunca precisaram ser trocados**: o callout ganhou DOM próprio pelo registro de `Admonition/Types`, e ele desenha os glifos do manifesto direto. Um `--eject` pré-autorizado que se resolve num registro é a escada funcionando.
+
+Os cinco de chrome (`Icon/Arrow`, `Icon/DarkMode`, `Icon/LightMode`, `Icon/Edit`, `Icon/Menu`) **continuam com o desenho do Docusaurus.** Eles são chrome, não catálogo, e trocá-los é `--eject` de cinco arquivos por estética de glifo — conta que o slice do catálogo não abriu, porque a superfície de swizzle dele fechou em duas linhas de degrau 3. A pré-autorização segue de pé em [`swizzle.md`](swizzle.md), sem dono.
 
 ---
 
@@ -298,3 +300,4 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | O nome do manifesto não se move por renomeação de terceiro | **origem própria (implementação)** | três dos 63 nomes já não existiam na versão fixada; o campo de nome upstream resolve numa linha |
 | `require.context` não funciona com SVGR | **origem própria (medição)** | a regra do plugin casa por *issuer*, e o issuer de um contexto é um diretório |
 | GitHub como palavra, não como glifo | origem própria | consequência do teto: não há marca de terceiro no manifesto, e o slot livre não tem nome cravado |
+| Os cinco ícones de admonition não são trocados por `--eject` | **origem própria (implementação)** | o callout tem DOM próprio pelo registro de `Admonition/Types` ([#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15)); o degrau 5 se resolveu no 3 |

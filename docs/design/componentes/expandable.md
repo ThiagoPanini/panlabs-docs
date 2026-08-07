@@ -1,0 +1,103 @@
+# `expandable`
+
+## Papel
+
+O aninhamento de um campo de API: um objeto que tem propriedades, dentro de um
+[`param-field`](param-field.md) ou de um [`response-field`](response-field.md).
+
+É a mesma primitiva do [`accordion`](accordion.md) **sem a moldura**. A moldura
+ali criaria cartão dentro de cartão a cada nível, e o teto de aninhamento é
+quatro.
+
+## Anatomia
+
+`<details>` e `<summary>` nativos, com um fio à esquerda no lugar da moldura — a
+mesma leitura de "isto pertence ao de cima" que a indentação daria, sem gastar
+indentação.
+
+```html
+<details data-sd-component="expandable" open>
+  <summary>…</summary>              <!-- alcançável por tipo -->
+  <div>…</div>                      <!-- único div filho de details -->
+</details>
+```
+
+**Zero partes publicadas.** `<summary>` e o único `<div>` filho alcançam por
+tipo, e o rótulo é o texto do `<summary>` — não há nó intermediário a nomear.
+
+O caret vem **antes** do rótulo, ao contrário do accordion: aqui ele não fecha
+uma moldura, abre uma linha.
+
+**Estado não vira atributo.** `[open]` já está no DOM porque o elemento é nativo.
+
+## Variantes
+
+**Não há.** Duas props: `title` (obrigatório) e `defaultOpen`.
+
+**Nível 1 nasce aberto; nível 2 em diante, fechado.** A regra existe porque há um
+conflito de medição **não adjudicado** sobre busca na página encontrar texto
+dentro de `<details>` fechado — uma leitura diz que encontra, outra diz que não, e
+nenhuma das duas foi medida nos navegadores alvo. Nível 1 aberto é a escolha que
+funciona sob **qualquer** das duas, e é por isso que ela vence.
+
+**Gatilho de reabertura:** se alguém medir e a leitura otimista estiver certa, o
+nível 1 pode fechar também, e custa uma prop.
+
+Quem decide o nível é o autor, porque é ele que sabe em que nível está.
+
+## Autoria em MDX
+
+```mdx
+<ParamField name="pagamento" type="object">
+Os dados do meio escolhido.
+
+<Expandable title="objeto pagamento" defaultOpen>
+
+<ParamField name="cartao.parcelas" type="integer" default="1">
+De 1 a 12.
+</ParamField>
+
+</Expandable>
+</ParamField>
+```
+
+## Tokens consumidos
+
+Camada 2: `--sd-accent`, `--sd-border-default`.
+
+Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-4`, `--sd-border-width`,
+`--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`, `--sd-move-expand`.
+
+## Light e dark
+
+**Não se aplica.** Consome token semântico e não conhece modo.
+
+## Motion / reduced-motion
+
+`--sd-move-expand`, na altura do conteúdo e na rotação do caret — o mesmo
+movimento e o mesmo mecanismo do [`accordion`](accordion.md). Herda o resto.
+
+## A11y
+
+**O navegador é a especificação**, exatamente como no
+[`accordion`](accordion.md): tecla, foco, anúncio e `aria-expanded` vêm dele, e
+não há um `keydown` escrito aqui.
+
+**Âncora de URL para um campo aninhado vem de graça** — o navegador abre todos os
+`<details>` ancestrais quando o alvo do fragmento está dentro deles. Num campo de
+quarto nível, isso é a diferença entre um link que funciona e um link que leva a
+lugar nenhum.
+
+O anel de foco e o piso de alvo de toque são universais e moram em
+[`foco.md`](../foco.md).
+
+## Procedência
+
+| Decisão | Classe | Fonte |
+| --- | --- | --- |
+| Componente do zero, sobre `<details>` | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4); [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
+| Nível 1 aberto, 2+ fechado | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6), ratificado pela [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §7.3 |
+| Busca na página em `<details>` fechado | **lacuna de medição** | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) e [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) se contradizem; nenhuma mediu nos navegadores alvo |
+| Âncora de URL abre os ancestrais | herdado | comportamento de especificação, registrado pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
+| Fio à esquerda em vez de moldura | **origem própria (implementação)** | moldura a cada nível é cartão dentro de cartão, até quatro níveis |
+| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |

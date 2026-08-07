@@ -57,7 +57,10 @@ const sidebars = {
       className: 'sidebar-icone sidebar-icone--guias',
       collapsed: false,
       link: {type: 'doc', id: 'guias/indice-de-guias'},
-      items: [],
+      // A fixture do catálogo. Ela é folha de `Guias` porque é uma página de
+      // autoria, e é a única folha que este slice entrega — as demais são do
+      // slice do conteúdo.
+      items: ['guias/catalogo-de-componentes'],
     },
     {
       type: 'category',

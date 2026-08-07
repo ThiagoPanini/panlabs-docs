@@ -131,6 +131,7 @@ const config = {
             './src/css/tokens.css',
             './src/css/custom.css',
             './src/css/chrome.css',
+            './src/css/componentes.css',
             './src/css/foco.css',
           ],
         },
