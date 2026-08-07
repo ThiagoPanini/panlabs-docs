@@ -9,6 +9,12 @@ on:
   push:
     branches:
       - main
+      # TEMPORÁRIO — sai junto com static/sonda-content-type.md, antes do merge.
+      # O portão 6 e a sonda de Content-Type só respondem contra o host real, e
+      # `workflow_dispatch` não alcança branch fora da default. Sem esta linha, a
+      # medição só existiria depois do merge — tarde demais para decidir se o
+      # `trailingSlash: false` fica de pé.
+      - worktree-primeira-versao-site
   workflow_dispatch:
 
 permissions:
