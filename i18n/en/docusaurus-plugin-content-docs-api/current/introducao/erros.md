@@ -32,7 +32,7 @@ even within the same version — handling by it is the most common
 integration mistake against this API.
 </ResponseField>
 
-<ResponseField name="detalhes" type="array de object">
+<ResponseField name="detalhes" type="array of object">
 Present only on `422`. One item per field that failed validation.
 
 <Expandable title="detalhes object" defaultOpen>

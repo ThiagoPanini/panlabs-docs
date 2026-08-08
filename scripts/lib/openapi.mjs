@@ -94,7 +94,7 @@ export function validarContrato(doc, {nomeArquivo, linguagensDeSnippet = [], lin
   function conferirContentTypes(content, caminho) {
     for (const tipo of Object.keys(content ?? {})) {
       if (tipo === 'multipart/form-data' || /^image\//.test(tipo) || tipo === 'application/octet-stream') {
-        throw new ErroDeValidacao(`Content-type de upload é recusado: "${tipo}". Este contrato é só "application/json".`, [...caminho, tipo] && ponteiro([...caminho, tipo]));
+        throw new ErroDeValidacao(`Content-type de upload é recusado: "${tipo}". Este contrato é só "application/json".`, ponteiro([...caminho, tipo]));
       }
     }
   }

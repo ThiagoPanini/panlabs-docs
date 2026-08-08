@@ -241,7 +241,10 @@ function valorLiteral(linguagem, v) {
   }
   if (typeof v === 'boolean') return linguagem === 'python' ? (v ? 'True' : 'False') : String(v);
   if (typeof v === 'number') return String(v);
-  return `'${v}'`;
+  // Aspa simples e barra invertida escapadas — sem isso, um exemplo com
+  // apóstrofo (num nome, numa descrição) quebraria a sintaxe do literal
+  // gerado em vez de só ficar feio.
+  return `'${String(v).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 }
 
 function chamadaSdk(linguagem, recurso, operacao) {
@@ -253,12 +256,15 @@ function chamadaSdk(linguagem, recurso, operacao) {
 
   const posicionais = doPath.map((p) => `'{{${p.name}}}'`);
 
+  // Consulta e corpo se somam no mesmo argumento em vez de `else if`: uma
+  // operação futura com os dois ao mesmo tempo (nenhuma das dezenove tem,
+  // hoje) não pode perder o corpo em silêncio só porque também tem query
+  // string — a ordem de leitura fica query primeiro, corpo depois.
   let objArg = null;
-  if (daQuery.length) {
+  if (daQuery.length || (corpo && typeof corpo === 'object')) {
     objArg = {};
     for (const q of daQuery) objArg[q.name] = {__espacoReservado: q.name};
-  } else if (corpo && typeof corpo === 'object') {
-    objArg = corpo;
+    if (corpo && typeof corpo === 'object') Object.assign(objArg, corpo);
   }
 
   const args = [...posicionais];

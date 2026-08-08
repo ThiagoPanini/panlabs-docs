@@ -149,6 +149,14 @@ the first one.
 
 ## Refunds
 
+Only four events, because a refund does not have the intermediate states a
+charge has — it is born, and ends one of three possible ways. The
+distinction between `reembolso.falhou` and `reembolso.limite_excedido`
+matters: the first is a payment method failure after the refund has
+already been accepted by Trilho; the second is a rejection before any
+attempt — the corresponding `Reembolso` **never comes to exist**, which is
+why `dados` carries the `Cobrança`, not an object that was never created.
+
 | Event | When | `dados` carries |
 | --- | --- | --- |
 | `reembolso.criado` | a refund, full or partial, was requested | the `Reembolso`, with `status: "pendente"` |
@@ -171,7 +179,13 @@ Events for the charge-splitting-across-recipients resource, documented in
 ## Chargeback
 
 The three events of the card dispute cycle, documented in detail in
-[Payment methods › Card](/docs/meios-de-pagamento/cartao#chargeback).
+[Payment methods › Card](/docs/meios-de-pagamento/cartao#chargeback). It is
+the only group in this catalog where the first event is already a loss:
+the amount leaves the balance the instant `chargeback.aberto` fires,
+before any decision — the money only comes back if `chargeback.resolvido`
+lands in the merchant's favor. An integration that only listens for the
+third event and ignores the first finds out about the dispute too late to
+respect the defense deadline.
 
 | Event | When | `dados` carries |
 | --- | --- | --- |
@@ -182,7 +196,12 @@ The three events of the card dispute cycle, documented in detail in
 ## Reconciliation
 
 Events tracking the generation of the reconciliation file, documented in
-[Operation › Movement file](/docs/operacao/arquivo-de-movimento).
+[Operation › Movement file](/docs/operacao/arquivo-de-movimento). The
+first two are routine — the file went out, the file matched; the third is
+the exception most integrations handle by email instead of code, but it
+exists as an event for completeness: high-volume accounts use it to open
+an investigation automatically, the minute a mismatch is detected, instead
+of waiting for someone to open the file by hand.
 
 | Event | When | `dados` carries |
 | --- | --- | --- |
@@ -193,7 +212,11 @@ Events tracking the generation of the reconciliation file, documented in
 ## Saved card
 
 Events for the lifecycle of a card tokenized for future use, outside the
-moment of a specific charge.
+moment of a specific charge — the use case is "save the customer's card
+for next time," which never touches `POST /cobrancas` until the customer
+comes back. Notice that neither event carries the same `verificacoes` that
+shows up under `cobranca.pagamento.cartao` — tokenizing authorizes
+nothing, so there is no issuer to consult yet.
 
 | Event | When | `dados` carries |
 | --- | --- | --- |
@@ -203,7 +226,11 @@ moment of a specific charge.
 ## Identity verification
 
 Events from the asynchronous document-validation process, when the
-account uses reinforced customer verification.
+account uses reinforced customer verification. "Asynchronous" is the word
+that matters here: unlike most checks in this catalog, document
+verification does not happen inside any call's response window — it runs
+afterward, and the webhook is the only way to learn the result without
+polling an endpoint this reference does not expose.
 
 | Event | When | `dados` carries |
 | --- | --- | --- |

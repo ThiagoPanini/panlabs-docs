@@ -145,6 +145,14 @@ o evento que deveria suspender acesso — nunca o primeiro.
 
 ## Reembolsos
 
+Só quatro eventos, porque um reembolso não tem os estados intermediários de
+uma cobrança — ele nasce, e termina de um dos três jeitos possíveis. A
+distinção entre `reembolso.falhou` e `reembolso.limite_excedido` importa: a
+primeira é uma falha do meio de pagamento depois que o reembolso já foi
+aceito pelo Trilho; a segunda é uma rejeição antes de qualquer tentativa —
+o `Reembolso` correspondente **nunca chega a existir**, e é por isso que
+`dados` traz a `Cobrança`, não um objeto que não foi criado.
+
 | Evento | Quando | `dados` traz |
 | --- | --- | --- |
 | `reembolso.criado` | um reembolso, total ou parcial, foi solicitado | o `Reembolso`, com `status: "pendente"` |
@@ -168,6 +176,11 @@ Eventos do recurso de divisão de cobrança entre recebedores, documentado em
 
 Os três eventos do ciclo de contestação de cartão, documentados em detalhe
 em [Meios de pagamento › Cartão](/docs/meios-de-pagamento/cartao#chargeback).
+É o único grupo do catálogo em que o primeiro evento já é uma perda: o
+valor sai do saldo no instante de `chargeback.aberto`, antes de qualquer
+decisão — o dinheiro só volta se `chargeback.resolvido` chegar a favor do
+lojista. Uma integração que só escuta o terceiro evento e ignora o
+primeiro descobre a disputa tarde demais para respeitar o prazo de defesa.
 
 | Evento | Quando | `dados` traz |
 | --- | --- | --- |
@@ -178,7 +191,12 @@ em [Meios de pagamento › Cartão](/docs/meios-de-pagamento/cartao#chargeback).
 ## Conciliação
 
 Eventos que acompanham a geração do arquivo de conciliação, documentado em
-[Operação › Arquivo de movimento](/docs/operacao/arquivo-de-movimento).
+[Operação › Arquivo de movimento](/docs/operacao/arquivo-de-movimento). Os
+dois primeiros são a rotina — o arquivo sai, o arquivo bateu certo; o
+terceiro é a exceção que a maioria das integrações trata por e-mail em vez
+de código, mas que existe como evento por completude: contas com volume
+alto o usam para abrir uma investigação automaticamente, no minuto em que
+a divergência é detectada, em vez de esperar alguém abrir o arquivo à mão.
 
 | Evento | Quando | `dados` traz |
 | --- | --- | --- |
@@ -189,7 +207,11 @@ Eventos que acompanham a geração do arquivo de conciliação, documentado em
 ## Cartão salvo
 
 Eventos do ciclo de vida de um cartão tokenizado para uso futuro, fora do
-momento de uma cobrança específica.
+momento de uma cobrança específica — o caso de uso é "salvar o cartão do
+cliente para a próxima compra", que não passa por `POST /cobrancas`
+nenhuma vez até o cliente voltar. Note que nenhum dos dois eventos carrega
+o mesmo `verificacoes` que aparece em `cobranca.pagamento.cartao` — a
+tokenização não autoriza nada, então não há emissor a consultar ainda.
 
 | Evento | Quando | `dados` traz |
 | --- | --- | --- |
@@ -199,7 +221,11 @@ momento de uma cobrança específica.
 ## Verificação de identidade
 
 Eventos do processo assíncrono de validação de documento, quando a conta
-usa verificação reforçada de cliente.
+usa verificação reforçada de cliente. "Assíncrono" é a palavra que importa
+aqui: ao contrário da maioria das checagens deste catálogo, a verificação
+de documento não acontece dentro da janela de resposta de nenhuma chamada
+— ela roda depois, e o webhook é o único jeito de saber o resultado sem
+fazer polling num endpoint que esta referência não expõe.
 
 | Evento | Quando | `dados` traz |
 | --- | --- | --- |

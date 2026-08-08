@@ -22,17 +22,15 @@
 
 set -uo pipefail
 
+# Só o `.mdx` — nunca o diretório inteiro. `webhooks/` mistura folha gerada
+# (`objeto-evento.mdx`, `listar-eventos.mdx`) com a folha autoral do
+# catálogo de eventos (`catalogo-de-eventos.md`), e um pathspec de
+# diretório pegaria as duas — reprovando o portão a cada edição legítima da
+# página autoral, que não é assunto do gerador. O glob de pathspec do git
+# (`:(glob)`) é o que restringe à extensão sem depender de `find`.
 CAMINHOS_GERADOS=(
-  'conteudo/api-reference/cobrancas'
-  'conteudo/api-reference/clientes'
-  'conteudo/api-reference/assinaturas'
-  'conteudo/api-reference/reembolsos'
-  'conteudo/api-reference/webhooks'
-  'i18n/en/docusaurus-plugin-content-docs-api/current/cobrancas'
-  'i18n/en/docusaurus-plugin-content-docs-api/current/clientes'
-  'i18n/en/docusaurus-plugin-content-docs-api/current/assinaturas'
-  'i18n/en/docusaurus-plugin-content-docs-api/current/reembolsos'
-  'i18n/en/docusaurus-plugin-content-docs-api/current/webhooks'
+  ':(glob)conteudo/api-reference/**/*.mdx'
+  ':(glob)i18n/en/docusaurus-plugin-content-docs-api/current/**/*.mdx'
   'sidebars-api.js'
 )
 
