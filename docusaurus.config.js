@@ -63,6 +63,19 @@ const temaPrism = {
   ],
 };
 
+/**
+ * As três tabs, na ordem do navbar — a fonte única de ordem dos dois plugins do
+ * slice 7. Só os ids: o RÓTULO de cada uma é lido do próprio navbar, mais
+ * abaixo neste arquivo, porque é lá que ele já existe e é lá que a tradução do
+ * `navbar.json` o alcança.
+ *
+ * A lista mora aqui, e não dentro de cada plugin, porque a ordem que a busca usa
+ * para desempatar e a ordem em que o navbar apresenta as tabs **são a mesma
+ * decisão** — e duas cópias dela divergiriam no dia em que uma quarta tab
+ * entrasse.
+ */
+const ABAS = ['default', 'api', 'receitas'];
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Trilho',
@@ -175,6 +188,17 @@ const config = {
         sidebarPath: './sidebars-receitas.js',
       }),
     ],
+
+    // Os dois plugins de caminho do slice 7. Nenhum é dependência npm, nenhum
+    // é serviço externo — eles são a mesma mecânica vista de dois lados, e leem
+    // as três instâncias acima pela mesma porta (`allContentLoaded`).
+    //
+    // `abas` é declarada UMA vez e servida aos dois: ela é a ordem do navbar,
+    // que a busca usa como primeiro desempate e o `llms.txt` usa como seção. Um
+    // id que não exista entre as instâncias **quebra o build** em vez de sumir
+    // um terço do site em silêncio.
+    ['./src/plugins/busca', {abas: ABAS}],
+    ['./src/plugins/ai-era', {abas: ABAS}],
   ],
 
   themeConfig:
@@ -256,10 +280,25 @@ const config = {
         // é que nenhum link abre em nova aba — sem esta linha ela não valeria, e
         // esconder o ícone de link externo passaria a apagar um anúncio
         // verdadeiro em vez de um falso.
+        // `llms.txt` é o quarto e último, e ele chega com o artefato. Ele é o
+        // único do site sem nenhuma entrada de navegação — logo indescobrível
+        // sem esta linha, que é exatamente a regra que escolheu os outros três.
+        //
+        // `pathname://` é a escotilha PÚBLICA do Docusaurus para apontar a um
+        // arquivo que não é rota (degrau 2 da escada). Ela faz três coisas de
+        // uma vez: o `<Link>` usa `<a>` em vez de `history.push()`, o
+        // verificador de links não cobra uma rota que nunca existiu, e o
+        // baseUrl continua sendo acrescentado — inclusive o do locale, que é
+        // onde o build do EN escreve o artefato dele.
+        //
+        // `target: '_self'` pelo mesmo motivo dos outros dois: o `<Link>`
+        // injeta `_blank` sozinho em tudo que ele lê como externo, e a decisão
+        // do rodapé é que nenhum link abre em nova aba.
         links: [
           {label: 'Status', href: 'https://status.trilho.dev', target: '_self'},
           {label: 'Changelog', to: '/docs/operacao/changelog'},
           {label: 'Suporte', href: 'mailto:suporte@trilho.dev', target: '_self'},
+          {label: 'llms.txt', href: 'pathname:///llms.txt', target: '_self'},
         ],
         copyright: '© 2026 Trilho',
       },

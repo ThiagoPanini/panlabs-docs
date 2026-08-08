@@ -16,9 +16,8 @@
 # cabeçalho literal reprovaria um host onde o recurso funciona, e portão que
 # reprova o que funciona é portão que alguém desliga.
 #
-# As rotas 1 e 3 nascem no slice 1. A rota 2 nasce no slice em que existirem
-# `.md` por rota; até lá ela é PULADA, e o pulo é dito em voz alta em vez de
-# passar como sucesso.
+# As rotas 1 e 3 nascem no slice 1. A rota 2 nasceu no slice 7, com o plugin
+# `sd-ai-era` — ela deixou de ser pulada e passou a rodar.
 #
 # Armadilha registrada: `docusaurus serve` NÃO testa isto. Ele aplica
 # `applyTrailingSlash` ao `req.url` e passa `cleanUrls: true` ao
@@ -61,6 +60,29 @@ else
 fi
 echo
 
+# --- rota 2 -------------------------------------------------------------------
+# `permalink + '.md'`, concatenação pura — é assim que o plugin escreve o
+# arquivo, e é assim que o leitor (ou a máquina) monta a URL.
+url2="${BASE}${ROTA}.md"
+resp2="$(cabecalhos "$url2")"
+codigo2="$(printf '%s' "$resp2" | grep -aiE '^HTTP/' | head -1 | awk '{print $2}')"
+tipo2="$(printf '%s' "$resp2" | grep -aiE '^content-type:' | head -1 | tr -d '\r' | cut -d' ' -f2-)"
+disp2="$(printf '%s' "$resp2" | grep -aiE '^content-disposition:' | head -1 | tr -d '\r' | cut -d' ' -f2-)"
+
+echo "rota 2  GET ${url2}"
+echo "        status ${codigo2:-?} · content-type ${tipo2:-—} · disposição ${disp2:-—(ausente)}"
+if [ "${codigo2:-}" = "200" ] &&
+  printf '%s' "${tipo2:-}" | grep -qi 'text/markdown' &&
+  ! printf '%s' "${disp2:-}" | grep -qi 'attachment'; then
+  echo "        PASSOU"
+else
+  echo "        REPROVOU — esperado 200 · text/markdown · disposição != attachment."
+  echo "        Ausente NÃO é attachment: pela RFC 6266 a disposição default é inline."
+  echo "        O que mata o recurso é \`attachment\`, que faz o link virar download."
+  falhas=$((falhas + 1))
+fi
+echo
+
 # --- rota 3 -------------------------------------------------------------------
 url3="${BASE}${ROTA}/"
 resp3="$(cabecalhos "$url3")"
@@ -76,16 +98,9 @@ else
 fi
 echo
 
-# --- rota 2 -------------------------------------------------------------------
-echo "rota 2  PULADA — o \`.md\` por rota nasce num slice posterior."
-echo "        Quando existir: esperado 200 · text/markdown · disposição != attachment."
-echo "        Medido no slice 1 por sonda: este host devolve text/markdown e NENHUM"
-echo "        Content-Disposition, e o navegador renderiza inline. Ver ADR 7."
-echo
-
 if [ "$falhas" -gt 0 ]; then
   echo "Portão 6 REPROVOU em ${falhas} rota(s)."
   exit 1
 fi
 
-echo "Portão 6 passou nas rotas 1 e 3."
+echo "Portão 6 passou nas três rotas."

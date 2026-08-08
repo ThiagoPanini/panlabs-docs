@@ -109,7 +109,10 @@ O inventário de focáveis do site é fechado:
 | `[role='tab']` | as abas do Docusaurus — tabindex móvel, só a aba ativa é parada |
 | `<pre tabindex='0'>` | região de rolagem do bloco de código |
 | `[role='region'][tabindex='0']` | invólucro de tabela larga |
-| `<input type='text'>` | painel da Referência da API — os únicos campos do site |
+| `<input type='text'>` | painel da Referência da API e o campo da busca — os únicos campos do site |
+| `<dialog>` | o modal de busca, e ele **não é parada de tabulação**: `showModal()` põe o elemento na camada superior e tranca o Tab dentro dele |
+
+**O `[role='option']` da busca não entra nesta lista, e a ausência é a decisão.** A opção ativa é apontada por `aria-activedescendant`, então o foco **nunca sai do campo** — é o que o padrão *Combobox With List Autocomplete* do APG compra, e é por isso que o modal de busca não escreve uma linha de gestão de foco. Um `tabindex` na opção transformaria uma lista de setenta e três resultados em setenta e três paradas de Tab.
 
 `:focus-visible` cobre todos, e não há caso para `:focus`:
 
@@ -198,6 +201,8 @@ Achado de escopo: a âncora de heading ser `:global` faz este conserto custar um
 **Dissenso registrado.** O piso é a SC 2.5.5, que é AAA. O piso AA é a SC 2.5.8, e nele **nada no site mudaria** — o item de sidebar do Infima já passa. Escolher o piso AA seria escrever uma regra que não faz nada. O piso AAA muda a densidade da gaveta de sidebar no estreito, e esse é o custo, aceito porque a gaveta rola e é operada com o polegar.
 
 **Nota de implementação medida:** elemento `inline` ignora altura mínima em silêncio. É por isso que o link do rodapé vira `inline-flex` no estreito, em [`chrome.md`](chrome.md) — sem isso o piso não alcançaria justamente a superfície mais estreita do site, e a falha seria invisível na leitura do CSS.
+
+**`[role='option']` entrou no seletor com a busca, e entrou pelo mesmo motivo de `[role='tab']`.** Os dois são `<li>` com papel de controle: o piso escrito só para `a, button, summary` não os alcançaria, e o resultado de busca é operado com o polegar tanto quanto qualquer item de sidebar. Não é lista de alvos crescendo — é a mesma lista de **tipos de controle**, e ela cresce quando um tipo novo aparece no site, não quando um elemento novo aparece.
 
 ### 8.3 O hover que não escrevemos
 

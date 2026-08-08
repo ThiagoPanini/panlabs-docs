@@ -8,8 +8,9 @@
  * Um espelho que envelhece devolve o problema com juros, porque passa a haver
  * duas versões da mesma verdade e nenhuma marcada como errada.
  *
- * Este script é o que impede isso. Não é um sétimo portão — é a verificação que
- * torna a palavra "espelho" conferível.
+ * Este script é o que impede isso. Não é um oitavo portão — é a verificação que
+ * torna a palavra "espelho" conferível. (Era *sétimo* até o slice 7, quando o
+ * portão do `swizzle --list` virou o sétimo de verdade.)
  *
  *   node scripts/espelho-tokens.mjs --sincronizar   reescreve o bloco a partir do CSS
  *   node scripts/espelho-tokens.mjs --verificar     falha se os dois divergirem
