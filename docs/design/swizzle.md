@@ -116,6 +116,8 @@ Referência da API precisar de linguagem fora do que `additionalLanguages` cobre
 
 Reservado, não gasto: a faixa de tabs de largura total abaixo do navbar sairia por envolver `DocSidebar` (`wrap: safe`). Ela é a perda 4 do §4 e não foi comprada.
 
+**Continua vazio depois do slice da landing, e ali ele teve a segunda chance de ser gasto.** Um footer com variante para a landing — outra tinta, outra anatomia, ou a faixa escura descendo até o fim da página — sairia por envolver `Footer`, que é `safe` nas duas ações. Não foi comprado: **o footer da landing é o mesmo da doc, sem variante**, e o motivo está em [`landing.md`](landing.md) §5 — ilha que aparece em toda página deixa de ser ilha.
+
 ### Degrau 5 — `--eject`
 
 **Continua vazio depois do slice do catálogo, e o motivo vale registrado.**
@@ -131,6 +133,8 @@ Pré-autorizados: os ícones de chrome que são `safe` nas duas ações (`Icon/A
 **Zero, e é verificável por varredura:** nenhum arquivo em `src/theme/` corresponde a um componente `unsafe` do `getSwizzleConfig`.
 
 O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não gastou. Os dois `unsafe` que ele encostou continuam de pé: o `Admonition` raiz, que despacha por tipo para o registro sem saber que o destino é nosso, e o `Tabs`, que é consumido como está e repaginado só por CSS.
+
+**O slice da landing não acrescentou uma linha a este ledger, e isso é o resultado esperado.** Uma landing inteira — cinco seções, faixa de espetáculo, quatro camadas e dois movimentos ambientes — sai de uma rota em `src/pages/`, um CSS Module e três `@keyframes` na folha global. Nada disso é customização de componente do tema: `plugin-content-pages` já vem no preset, e uma rota própria não envolve, não substitui e não ejeta nada. O único gancho que a landing usa fora do CSS dela é `data-sd-component`, que é **contrato nosso**, publicado pelo catálogo.
 
 ---
 

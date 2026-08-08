@@ -99,6 +99,70 @@ samp {
 }
 
 /* -----------------------------------------------------------------------------
+   Os `@keyframes` — na folha global, nunca em `*.module.css`
+
+   CSS Modules manglam o nome do `@keyframes` que o módulo **define**, e um
+   keyframe definido num módulo é inalcançável de fora dele. A falha é
+   silenciosa: não anima e não avisa. Um módulo pode **referenciar** keyframe
+   global sem problema, então a landing usa estes três e o confinamento dela
+   continua intacto — o que mora no módulo dela é a REGRA, não o desenho do
+   movimento.
+
+   São três, e são os três movimentos que a ilha e a landing licenciam. O quarto
+   — a entrada do modal de busca — nasce no slice da busca.
+
+   Nenhum deles crava duração ou curva: quem as escolhe é a regra que os
+   consome, por nome de movimento. E nenhum anima `filter` ou `blur`, que
+   repintam em vez de compor. Ver docs/design/motion.md §6.
+
+   ---------------------------------------------------------------------------
+   DUAS REGRAS DE CONSUMO, e as duas são achado de build — o sintoma delas é
+   `docusaurus start` animando e o site publicado não.
+
+     · de dentro de um CSS Module, referencie por `global(nome)`, sem
+       dois-pontos. A forma nua é manglada no consumidor e o minificador apaga
+       o keyframe órfão;
+     · nome de `@keyframes` NÃO viaja dentro de custom property, e é por isso
+       que a respiração do glow é desligada por uma regra no bloco `reduce` de
+       `tokens.css` em vez de por um token que valha `none`.
+
+   Os dois mecanismos, com o nome de cada plugin, estão em
+   docs/design/motion.md §6 — aqui ficam as regras, não a demonstração.
+   ----------------------------------------------------------------------------- */
+
+/* A entrada da ilha — `--sd-move-showcase`. A luz sobe uma vez, no
+   carregamento, e termina. Só `opacity`, e só sobre a camada decorativa:
+   nenhum texto, nenhuma borda e nenhuma caixa se mexe. */
+@keyframes sd-acende {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A respiração do glow — `--sd-move-ambient`, infinita. A amplitude é o par
+   declarado no escopo da ilha, e não um número escrito aqui: fora de
+   `[data-sd-showcase]` estas duas variáveis não resolvem. */
+@keyframes sd-respira {
+  from,
+  to {
+    opacity: var(--sd-glow-vale);
+  }
+
+  50% {
+    opacity: var(--sd-glow-crista);
+  }
+}
+
+/* O reveal por rolagem — `--sd-move-reveal`, dirigido pela posição de rolagem.
+   O deslocamento é um degrau da escala de espaço, não um valor de movimento. */
+@keyframes sd-revela {
+  from {
+    opacity: 0;
+    transform: translateY(var(--sd-space-4));
+  }
+}
+
+/* -----------------------------------------------------------------------------
    Foco — mudou de arquivo, e o portão 3 é quem garante que não volte
 
    O slice 1 escreveu aqui um piso de anel, porque o Infima tem ZERO

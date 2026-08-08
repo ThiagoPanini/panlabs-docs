@@ -1,41 +1,383 @@
-/* Provisória — a landing é do slice 6. Zero literal, como todo CSS fora de
-   `tokens.css`. */
+/* =============================================================================
+   shinydoc — a landing
 
-.reserva {
-  max-width: var(--sd-container-width);
+   A segunda ruptura de layout do site. Cinco seções, uma faixa de espetáculo
+   sobre as duas primeiras, quatro camadas de profundidade PARADAS, e o único
+   lugar do projeto onde movimento ambiente é licenciado.
+
+   Este arquivo NÃO tem valor literal — cor, comprimento, tempo e curva vivem em
+   `tokens.css` e chegam aqui por nome. A única exceção é o limiar de media
+   query, que é 997, o literal compilado do Infima e o único do projeto.
+
+   E ele nunca lê `--ifm-*`, nunca escreve `outline` e nunca declara
+   `@media (prefers-reduced-motion: reduce)` — os três são portão ou ADR.
+
+   **Por que ele é CSS Module e não uma folha global:** o reveal por rolagem
+   mora aqui, e morar aqui é o que impede uma página de documentação de
+   alcançá-lo. Confinamento por escopo físico, não por regra a lembrar.
+
+   Os `@keyframes` que este arquivo consome são GLOBAIS, em `custom.css`. CSS
+   Modules manglam o nome do keyframe que o módulo define, e a falha é
+   silenciosa. **Referenciá-los daqui exige `global(…)`** — sem isso o nome é
+   manglado no consumidor e o minificador apaga o keyframe órfão. Os dois
+   mecanismos estão em `custom.css` e em docs/design/motion.md §6.
+
+   Procedência: docs/design/landing.md.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. As três medidas — e nenhuma delas é nova
+
+   Prosa em `--sd-prose-width`, código em `--sd-code-width`, grade em
+   `--sd-container-width`. Cada bloco é **a medida mais dois gutters**: com
+   espaço sobrando a medida sai exata; sem espaço, o gutter sobrevive. É isso
+   que faz *"sangrar é o fundo, não o conteúdo"* ser verdade sem media query
+   nenhuma — a laje encolhe sozinha no estreito, como o cartão da doc.
+
+   A grade vai ao container e NÃO aos 768 do interior do cartão: 768 é 864 − 96,
+   derivado de um cartão que a landing não tem. A 768 uma fila de três daria
+   cartões de ~245px; a 1152 dá ~373px.
+   ----------------------------------------------------------------------------- */
+
+.prosa {
+  position: relative;
+  max-width: calc(var(--sd-prose-width) + 2 * var(--sd-gutter));
   margin-inline: auto;
-  padding-block: var(--sd-space-16);
-  padding-inline: var(--sd-space-6);
+  padding-inline: var(--sd-gutter);
 }
+
+.codigo {
+  position: relative;
+  max-width: calc(var(--sd-code-width) + 2 * var(--sd-gutter));
+  margin-inline: auto;
+  padding-inline: var(--sd-gutter);
+}
+
+.grade {
+  max-width: calc(var(--sd-container-width) + 2 * var(--sd-gutter));
+  margin-inline: auto;
+  padding-inline: var(--sd-gutter);
+}
+
+/* Os dois componentes do catálogo trazem a margem de bloco que usam dentro do
+   MDX, e aqui quem espaça é o `gap` do contêiner. O alcance é o **contrato de
+   partes** — `data-sd-component` é publicado —, não a classe hasheada deles. */
+.codigo > [data-sd-component='code-group'],
+.grade > [data-sd-component='card-group'] {
+  margin-block: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   2. A faixa de espetáculo — a única do site
+
+   Ela **sangra e não tem raio**. Faixa escura arredondada flutuando é um
+   cartão, e cartão é a linguagem da página de doc; sangrando e sem raio ela lê
+   como região, que é o que ela é.
+
+   **No modo escuro a landing é lisa:** a faixa é escura sobre página escura e
+   não se vê onde começa. A geometria é a mesma nos dois modos — o modo claro
+   REVELA uma borda que sempre esteve lá. Quem carrega o hero no modo canônico é
+   o glow.
+
+   `color` é declarado, e não é redundância: `body` recebeu a tinta do modo lá
+   em cima, e herança carrega o valor já computado. Dentro da ilha os tokens
+   escuros valem, mas só para quem os LÊ aqui dentro.
+
+   `overflow: clip` porque a caixa do glow é mais larga que a viewport no
+   estreito. `clip` e não `hidden`: ele não cria contêiner de rolagem, então
+   nada aqui dentro passa a poder ser rolado por acidente.
+   ----------------------------------------------------------------------------- */
+
+.faixa {
+  /* Camada 3 — no escopo do componente, nunca em `:root`.
+
+     O ar e o tamanho do título são o par que a REGRA DA DOBRA dimensiona: a
+     375 × 667 a borda de cima da laje precisa aparecer acima da dobra, e é a
+     restrição que manda nos dois valores. `--sd-space-8` e não `--sd-space-10`
+     porque a folga precisa cobrir o PIOR CASO de quebra, e não o caso nominal:
+     os dois botões quebrando para duas linhas custam mais que a folga que o
+     degrau maior deixava. A conta inteira está em docs/design/landing.md §4. */
+  --sd-hero-ar: var(--sd-space-8);
+  --sd-hero-titulo: var(--sd-type-4xl);
+
+  position: relative;
+  overflow: clip;
+  background-color: var(--sd-surface-page);
+  color: var(--sd-text-body);
+}
+
+/* De 997px o orçamento da dobra não é a restrição que manda, e o hero sobe para
+   o degrau de display da escala. O limiar é o único do projeto. */
+@media (min-width: 997px) {
+  .faixa {
+    --sd-hero-ar: var(--sd-space-16);
+    --sd-hero-titulo: var(--sd-type-5xl);
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   3. As quatro camadas de profundidade — e nenhuma se mexe
+
+   O parallax da referência está proibido verbatim. O que atravessa dela é a
+   profundidade por camadas, parada:
+
+     1 · figura   o trilho, sangrando
+     2 · glow     o radial, respirando
+     3 · conteúdo headline, pitch e os dois botões, em 672
+     4 · laje     o código, em 768, sobre tudo
+
+   **Zero `z-index`.** As camadas 1 e 2 são absolutas e vêm ANTES no DOM; as 3 e
+   4 são `position: relative` e vêm depois. Posicionado pinta em ordem de
+   árvore, então a ordem sai da estrutura em vez de uma escala de números que
+   alguém teria que manter.
+   ----------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  padding-block: var(--sd-hero-ar);
+}
+
+/* As camadas 1 e 2 num contêiner só, porque figura e glow são um objeto só: a
+   luz na linha. Um glow flutuando num fundo qualquer seria enfeite.
+
+   É este contêiner que carrega a ENTRADA da ilha — `--sd-move-showcase`, uma
+   vez, no carregamento, e ela termina sozinha. O que sobe é a luz; nenhum
+   texto, nenhuma borda e nenhuma caixa se mexe. */
+.luz {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: global(sd-acende) var(--sd-move-showcase) both;
+}
+
+/* Camada 1. A figura preenche a caixa do hero e sangra pelas laterais; o
+   contrato do slot está no fonte de `index.js`. */
+.figura {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  /* Camada 3, declarada no escopo da ilha em `tokens.css` — derivação de alfa é
+     cor, e cor nasce lá. `currentColor` é o que o contrato do slot manda a
+     `<svg>` usar, então trocar a figura não toca em CSS. */
+  color: var(--sd-trilho-tinta);
+}
+
+/* Camada 2 — UM glow na página inteira, ancorado onde o trilho encontra a laje:
+   o centro dele fica na aresta de baixo do hero, que é a aresta de cima da
+   seção do código.
+
+   O gradiente vem de `--sd-glow`, que só existe dentro de `[data-sd-showcase]`.
+   Numa página de documentação a variável não resolve para nada — a proibição de
+   glow fora daqui é fato de escopo, não regra.
+
+   `global(sd-respira)` e não `sd-respira`: dentro de um CSS Module o nome de
+   keyframe é localizado mesmo quando o módulo não o define, e o minificador
+   apaga o `@keyframes` que ficou órfão. A nota inteira, com os dois mecanismos,
+   está em `custom.css`.
+
+   Quem DESLIGA a respiração sob `prefers-reduced-motion: reduce` é o bloco
+   `reduce` de `tokens.css`, que alcança este elemento pelo `data-sd-part` — e é
+   por isso que ele existe no JSX. Movimento infinito é removido, não encurtado,
+   e nenhum componente escreve a media query própria. Ver ADR 3. */
+.glow {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 50%;
+  inline-size: var(--sd-glow-tamanho);
+  block-size: var(--sd-glow-tamanho);
+  translate: -50% 50%;
+  background: var(--sd-glow);
+  animation: global(sd-respira) var(--sd-move-ambient) infinite;
+}
+
+/* -----------------------------------------------------------------------------
+   4. Camada 3 — o conteúdo do hero
+
+   A prosa fica em 672 **inclusive aqui**, e é o que faz a landing ler como o
+   mesmo site em vez de uma página colada na frente.
+
+   Custo declarado: uma headline grande a 672 quebra em duas ou três linhas, e a
+   maioria das landings de documentação deixa o hero respirar mais. Aceito — a
+   medida constante foi comprada pagando por oscilação zero.
+   ----------------------------------------------------------------------------- */
 
 .titulo {
-  font-size: var(--sd-type-4xl);
-  font-weight: var(--sd-weight-heading);
+  margin-block: 0 var(--sd-space-4);
   color: var(--sd-text-strong);
-  margin-block-end: var(--sd-space-4);
+  font-size: var(--sd-hero-titulo);
+  line-height: var(--sd-leading-h1);
 }
 
-.linha {
+.pitch {
+  margin-block: 0 var(--sd-space-6);
+  color: var(--sd-text-muted);
   font-size: var(--sd-type-lg);
   line-height: var(--sd-leading-prose);
-  color: var(--sd-text-muted);
-  max-width: var(--sd-prose-width);
-  margin-block-end: var(--sd-space-8);
 }
 
+/* Os dois botões ficam LADO A LADO no estreito: eles somam menos que a largura
+   útil a 375px, e empilhar custaria uma linha inteira do orçamento da dobra por
+   nada. `flex-wrap` é a rede: se um dia não couberem, o rótulo está longo — e
+   isso é conserto de conteúdo, não de layout. */
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sd-space-3);
+}
+
+/* `inline-flex`, e o motivo é o rótulo e não a altura: no toque o piso de alvo
+   do contrato de entrada estica a caixa, e o `align-content: center` com que
+   `foco.css` centra o rótulo **não vale num flex de uma linha**. `align-items`
+   aqui faz o que ele faria lá; sem isso o texto encosta no topo do botão
+   esticado, e só no toque. */
 .acao {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: var(--sd-space-3) var(--sd-space-5);
   border-radius: var(--sd-radius-sm);
+  font-weight: var(--sd-weight-ui);
+  line-height: var(--sd-leading-ui);
+}
+
+.acaoPrimaria {
   background-color: var(--sd-accent);
   color: var(--sd-accent-contrast);
-  font-weight: var(--sd-weight-ui);
   box-shadow: var(--sd-shadow-1);
   transition: background-color var(--sd-move-state);
 }
 
-.acao:hover {
+.acaoSecundaria {
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  color: var(--sd-text-strong);
+  transition:
+    border-color var(--sd-move-state),
+    background-color var(--sd-move-state);
+}
+
+/* Hover inteiro sob `(hover: hover)`, como em todo o site: sem isso o estado
+   fica grudado depois do tap. */
+@media (hover: hover) {
+  .acaoPrimaria:hover {
+    background-color: var(--sd-accent-hover);
+    color: var(--sd-accent-contrast);
+    text-decoration: none;
+  }
+
+  .acaoSecundaria:hover {
+    border-color: var(--sd-accent);
+    background-color: var(--sd-border-subtle);
+    color: var(--sd-text-strong);
+    text-decoration: none;
+  }
+}
+
+/* Press: os MESMOS tokens do hover, e literalmente os mesmos. O `transition:
+   none` que o torna instantâneo é universal e mora em `foco.css`. */
+.acaoPrimaria:active {
   background-color: var(--sd-accent-hover);
   color: var(--sd-accent-contrast);
-  text-decoration: none;
+}
+
+.acaoSecundaria:active {
+  border-color: var(--sd-accent);
+  background-color: var(--sd-border-subtle);
+  color: var(--sd-text-strong);
+}
+
+/* -----------------------------------------------------------------------------
+   5. Camada 4 — a laje de código
+
+   Ela mantém o gutter, e dentro da ilha renderiza ESCURA mesmo no modo claro —
+   sem uma linha a mais aqui. O bloco de código continua não carregando
+   substrato próprio: ele lê `--sd-surface-code` do lugar onde está, e o lugar
+   declara os tokens do escuro.
+   ----------------------------------------------------------------------------- */
+
+.laje {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-space-6);
+  padding-block-end: var(--sd-space-16);
+}
+
+/* -----------------------------------------------------------------------------
+   6. As seções 3 e 4 — fora da faixa
+
+   Grade de cartão é oclusão pura, e oclusão atravessa os modos sozinha.
+   Escurecê-las seria escurecer por gosto, que é exatamente a licença que o
+   critério de emissão existe para fechar.
+   ----------------------------------------------------------------------------- */
+
+.secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-space-10);
+  padding-block: var(--sd-space-16);
+}
+
+.tituloDeSecao {
+  margin-block: 0;
+  color: var(--sd-text-strong);
+  font-size: var(--sd-type-2xl);
+  line-height: var(--sd-leading-h2);
+}
+
+.lede {
+  margin-block: var(--sd-space-3) 0;
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-lg);
+  line-height: var(--sd-leading-prose);
+}
+
+/* -----------------------------------------------------------------------------
+   7. O reveal por rolagem — CSS nativo, zero JavaScript
+
+   **Guarda dupla, e as duas falham para o lado seguro.** Fora de qualquer uma
+   delas não existe declaração nenhuma sobre estes elementos: eles são visíveis
+   e parados. É essa propriedade que elimina o único modo de falhar que a rota
+   com `IntersectionObserver` tem de verdade — elemento em opacidade zero que
+   nunca é revelado.
+
+   O `Ctrl+F` se resolve sozinho, porque a linha do tempo é a posição de
+   rolagem: o navegador rolar até o trecho **é** o que o revela.
+
+   **Alcance:** as seções 3 e 4, e os cartões dentro delas. O hero e a laje
+   ficam de fora — `view()` numa peça que já está visível no carregamento começa
+   com a linha do tempo parcialmente percorrida. Regra conferível: revela o que
+   nasce abaixo da dobra.
+
+   **`entry 0%` a `entry 100%`, e a faixa é a decisão inteira do gesto.** O
+   gesto termina no instante em que o elemento está inteiro na tela, e a partir
+   dali ele fica. Uma linha do tempo de rolagem é percorrida nos dois sentidos
+   por construção, então o que a faixa compra é que o caminho de volta só
+   acontece com o elemento já saindo pela aresta de baixo — nunca enquanto ele
+   está sendo lido. É por isso que quem revela é o CARTÃO e não a grade inteira:
+   peça pequena entra inteira depressa, e a grade de cinco no estreito é mais
+   alta que a viewport.
+
+   A ordem das três declarações é obrigatória: o atalho `animation` **rebobina**
+   `animation-timeline` e `animation-range` para o default, então as duas vêm
+   depois dele.
+
+   **A ordem do ANINHAMENTO também é obrigatória, e ela é achado de build.** O
+   `@media` vai por fora e o `@supports` por dentro. Invertido, o
+   `postcss-sort-media-queries` — que o preset de minificação do Docusaurus roda
+   antes de tudo — iça o `@media` para a raiz e o `@supports` que estava em
+   volta **desaparece**. O sintoma é silencioso e só existe no build de
+   produção: a guarda de suporte some, e num navegador sem
+   `animation-timeline` o reveal degrada para um fade de carregamento em vez de
+   ficar visível e parado. Medido no CSS emitido.
+   ----------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .revela > header,
+    .revela [data-sd-component='card'] {
+      animation: global(sd-revela) var(--sd-move-reveal) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
 }
