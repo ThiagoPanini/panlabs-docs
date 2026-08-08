@@ -1,0 +1,55 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Obter reembolso"
+description: "Um reembolso pelo `id`."
+sidebar_class_name: "api-metodo api-metodo--get"
+api_exemplos: {"metodo":"GET","caminho":"/reembolsos/{id}","parametros":[{"nome":"id","em":"path","exemplo":"reemb_9Xz4mT"}],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/reembolsos/{{id}} \\\n  -X GET \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\""},{"linguagem":"python","titulo":"Python","modelo":"trilho.reembolsos.obter('{{id}}')"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.reembolsos.obter('{{id}}');"}],"respostas":[{"status":"200","titulo":"200","corpo":{"id":"reemb_2Yx9fD","cobranca_id":"string","valor":0,"motivo":"string","status":"pendente","criado_em":"2026-08-07T18:12:04Z"}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"A chave está ausente, é inválida, ou é de outro ambiente."}},{"status":"404","titulo":"404","corpo":{"codigo":"recurso_nao_encontrado","mensagem":"O recurso não existe nesta conta."}}]}
+---
+
+# Obter reembolso
+
+<VerbBadge verb="GET" /> `/reembolsos/{id}`
+
+Um reembolso pelo `id`.
+
+## Parâmetros
+
+<ParamField name="id" type="string" required>
+O `id` do reembolso.
+</ParamField>
+
+## Resposta
+
+<ResponseField name="id" type="string">
+O identificador do reembolso, com prefixo `reemb_`.
+</ResponseField>
+
+<ResponseField name="cobranca_id" type="string">
+A cobrança reembolsada.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+Em centavos. Parcial é permitido — a soma dos reembolsos nunca excede o valor original.
+</ResponseField>
+
+<ResponseField name="motivo" type="string">
+Livre, seu. Aparece no extrato do pagador quando o meio suporta.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+Pix e boleto concluem em minutos; cartão pode levar dias, a depender do emissor.
+
+Valores possíveis: `pendente`, `concluido`, `falhou`.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+Quando o reembolso foi solicitado.
+</ResponseField>
+
+## Erros
+
+| Status | Quando |
+| --- | --- |
+| `401` | A chave está ausente, é inválida, ou é de outro ambiente. |
+| `404` | O reembolso não existe nesta conta. |
+

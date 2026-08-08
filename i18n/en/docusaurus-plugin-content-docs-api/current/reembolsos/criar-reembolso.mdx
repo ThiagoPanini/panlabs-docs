@@ -1,0 +1,70 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Create a refund"
+description: "Refunds a `paga` charge, in full or in part. Repeating creates a second refund — use `Idempotency-Key` to avoid it."
+sidebar_class_name: "api-metodo api-metodo--post"
+api_exemplos: {"metodo":"POST","caminho":"/reembolsos","parametros":[],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/reembolsos \\\n  -X POST \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\" \\\n  -H \"Idempotency-Key: <idempotency-key>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"cobranca_id\":\"cob_9Xz4mT\",\"valor\":5000,\"motivo\":\"Produto devolvido parcialmente\"}'"},{"linguagem":"python","titulo":"Python","modelo":"trilho.reembolsos.criar({'cobranca_id': 'cob_9Xz4mT', 'valor': 5000, 'motivo': 'Produto devolvido parcialmente'})"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.reembolsos.criar({cobranca_id: 'cob_9Xz4mT', valor: 5000, motivo: 'Produto devolvido parcialmente'});"}],"respostas":[{"status":"201","titulo":"201","corpo":{"id":"reemb_2Yx9fD","cobranca_id":"string","valor":0,"motivo":"string","status":"pendente","criado_em":"2026-08-07T18:12:04Z"}},{"status":"400","titulo":"400","corpo":{"codigo":"requisicao_invalida","mensagem":"The request is not valid against the contract."}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"The key is missing, invalid, or from another environment."}},{"status":"422","titulo":"422","corpo":{"codigo":"valores_invalidos","mensagem":"The request is valid and the values are not.","detalhes":[{"campo":"valor","motivo":"must be greater than zero"}]}}]}
+---
+
+# Create a refund
+
+<VerbBadge verb="POST" /> `/reembolsos`
+
+Refunds a `paga` charge, in full or in part. Repeating creates a second refund — use `Idempotency-Key` to avoid it.
+
+## Parameters
+
+<ParamField name="Idempotency-Key" type="string" required>
+A key you choose, up to 255 characters. Repeating the call with the same key and the same body, within 24 hours, returns the original response instead of creating again.
+</ParamField>
+
+## Body
+
+<ParamField name="cobranca_id" type="string" required>
+The charge to refund.
+</ParamField>
+
+<ParamField name="valor" type="integer">
+In cents. Omit to refund the full amount.
+</ParamField>
+
+<ParamField name="motivo" type="string">
+Free-form, yours.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+The refund identifier, prefixed `reemb_`.
+</ResponseField>
+
+<ResponseField name="cobranca_id" type="string">
+The refunded charge.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+In cents. Partial is allowed — the sum of refunds never exceeds the original amount.
+</ResponseField>
+
+<ResponseField name="motivo" type="string">
+Free-form, yours. Shows on the payer statement when the method supports it.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+Pix and boleto complete in minutes; card can take days, depending on the issuer.
+
+Possible values: `pendente`, `concluido`, `falhou`.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+When the refund was requested.
+</ResponseField>
+
+## Errors
+
+| Status | When |
+| --- | --- |
+| `400` | The request is not valid against the contract. |
+| `401` | The key is missing, invalid, or from another environment. |
+| `422` | The amount exceeds the charge’s refundable balance. |
+

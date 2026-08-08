@@ -43,6 +43,19 @@ jobs:
       - name: Portão 3 — outline
         run: npm run portao:3
 
+      # Portão 4 — volume, tipo de página, regra de heading e cobertura de
+      # locale em conteudo/documentacao e conteudo/receitas.
+      - name: Portão 4 — conteúdo
+        run: npm run portao:4
+
+      # Portão 5 — regenera a Referência da API a partir dos contratos e
+      # reprova em `git diff --exit-code`. É o único portão que não é `grep`:
+      # o gerador é determinístico, e divergência contra o que está commitado
+      # significa contrato editado sem regenerar, ou página gerada editada à
+      # mão. Ver ADR 5.
+      - name: Portão 5 — API
+        run: npm run portao:5
+
       # A bijeção manifesto ↔ `static/icons/`. Não é portão: não precisa de rede
       # (só confere o que está no repositório) e o build já quebra alto se um
       # desenho faltar. Roda aqui porque a mensagem é melhor.

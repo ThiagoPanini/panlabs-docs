@@ -240,6 +240,39 @@ html.docs-doc-page .theme-doc-markdown
 }
 
 /* -----------------------------------------------------------------------------
+   3.3 O badge de método — só na Referência da API, só na folha de endpoint.
+
+   `sidebar_class_name`, emitido pelo gerador (`scripts/gerar-api.mjs`) a
+   partir do verbo HTTP de cada operação — a mesma escada de dano que
+   `VerbBadge` pinta no cabeçalho da página, aqui reduzida a um ponto. É
+   `::after`, no LINK da folha; o ícone de seção é `::before`, no link da
+   CATEGORIA de topo — os dois nunca disputam o mesmo pseudo-elemento porque
+   nunca disputam o mesmo nó.
+
+   Zero token novo: as quatro cores já existem na camada 2, e são as mesmas
+   quatro que `VerbBadge` consome — ver docs/design/componentes/verb-badge.md.
+   ----------------------------------------------------------------------------- */
+.api-metodo > .menu__link {
+  display: flex;
+  align-items: center;
+}
+
+.api-metodo > .menu__link::after {
+  content: '';
+  flex: none;
+  width: var(--sd-space-2);
+  height: var(--sd-space-2);
+  margin-left: auto;
+  border-radius: var(--sd-radius-full);
+}
+
+.api-metodo--get::after { background-color: var(--sd-state-info); }
+.api-metodo--post::after { background-color: var(--sd-state-success); }
+.api-metodo--put::after,
+.api-metodo--patch::after { background-color: var(--sd-state-warn); }
+.api-metodo--delete::after { background-color: var(--sd-state-danger); }
+
+/* -----------------------------------------------------------------------------
    4. TOC
 
    A largura é **derivada do grid** — a coluna é o `.col--3`, um quarto do

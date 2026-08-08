@@ -1,0 +1,66 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "O objeto Assinatura"
+description: "Uma assinatura — cobrança recorrente sobre um cliente e um meio salvo."
+---
+
+# O objeto Assinatura
+
+Uma assinatura — cobrança recorrente sobre um cliente e um meio salvo.
+
+A forma completa de `Assinatura`, como qualquer endpoint desta seção a devolve.
+
+<ResponseField name="id" type="string">
+O identificador da assinatura, com prefixo `sub_`.
+</ResponseField>
+
+<ResponseField name="cliente_id" type="string">
+O `id` do cliente cobrado.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+`inadimplente` é o estado depois de todas as retentativas de uma cobrança falharem, sem cancelamento automático.
+
+Valores possíveis: `ativa`, `pausada`, `cancelada`, `inadimplente`.
+</ResponseField>
+
+<ResponseField name="meio" type="string">
+Boleto não recorre sozinho — não está nesta lista.
+
+Valores possíveis: `pix`, `cartao`.
+</ResponseField>
+
+<ResponseField name="plano" type="object">
+O valor e a cadência.
+
+<Expandable title="objeto plano" defaultOpen>
+
+<ResponseField name="nome" type="string">
+O nome do plano, seu — o Trilho não valida contra um catálogo.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+Em centavos, cobrado a cada ciclo.
+</ResponseField>
+
+<ResponseField name="intervalo" type="string">
+A cadência da cobrança.
+
+Valores possíveis: `mensal`, `anual`.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="proxima_cobranca_em" type="string">
+Nula quando `status` é `cancelada`.
+</ResponseField>
+
+<ResponseField name="cancelada_em" type="string">
+Quando a assinatura foi cancelada.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+Quando a assinatura foi criada.
+</ResponseField>
+

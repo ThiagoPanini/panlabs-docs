@@ -243,7 +243,13 @@ echo
 
 # --- 4. o marcador de tradução ------------------------------------------------
 echo "4  marcador de tradução"
-sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' "$CONTEUDO") || true
+# `conteudo/api-reference` fica de fora dos dois lados desta checagem. As
+# trinta páginas da Referência da API não têm estado de fallback para
+# sinalizar — o gerador entrega os dois locales JUNTOS a partir do contrato
+# bilíngue, e as seis autorais também nascem traduzidas de verdade no mesmo
+# slice (#38). `<Untranslated />` é sobre a página SÓ existir num locale;
+# aqui isso nunca acontece, então a convenção de uma linha não se aplica.
+sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' --exclude-dir='api-reference' "$CONTEUDO") || true
 if [ -n "$sem_marcador" ]; then
   reprova "fonte pt-BR sem \`<Untranslated />\`:"
   echo "$sem_marcador" | sed 's/^/    /'
@@ -255,9 +261,9 @@ if [ -n "$com_marcador_en" ]; then
   echo "$com_marcador_en" | sed 's/^/    /'
 fi
 
-fontes=$(find "$CONTEUDO" -name '*.md' | wc -l)
+fontes=$(find "$CONTEUDO" -path "${CONTEUDO}/api-reference" -prune -o -name '*.md' -print | wc -l)
 [ -z "$sem_marcador" ] && [ -z "$com_marcador_en" ] &&
-  echo "   os ${fontes} fontes pt-BR marcam; nenhuma tradução marca"
+  echo "   os ${fontes} fontes pt-BR marcam; nenhuma tradução marca (api-reference fora, de propósito)"
 echo
 
 # --- 5. a cobertura de locale -------------------------------------------------

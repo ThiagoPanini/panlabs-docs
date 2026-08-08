@@ -1,0 +1,84 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Cancel a subscription"
+description: "Cancels a subscription. There is no refund of the current cycle — the subscription serves through its end."
+sidebar_class_name: "api-metodo api-metodo--post"
+api_exemplos: {"metodo":"POST","caminho":"/assinaturas/{id}/cancelar","parametros":[{"nome":"id","em":"path","exemplo":"sub_9Xz4mT"}],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/assinaturas/{{id}}/cancelar \\\n  -X POST \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\""},{"linguagem":"python","titulo":"Python","modelo":"trilho.assinaturas.cancelar('{{id}}')"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.assinaturas.cancelar('{{id}}');"}],"respostas":[{"status":"200","titulo":"200","corpo":{"id":"sub_7Bn3wK","cliente_id":"string","status":"ativa","meio":"pix","plano":{"nome":"string","valor":0,"intervalo":"mensal"},"proxima_cobranca_em":"2026-08-07T18:12:04Z","cancelada_em":"2026-08-07T18:12:04Z","criado_em":"2026-08-07T18:12:04Z"}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"The key is missing, invalid, or from another environment."}},{"status":"404","titulo":"404","corpo":{"codigo":"recurso_nao_encontrado","mensagem":"The resource does not exist on this account."}},{"status":"409","titulo":"409","corpo":{"codigo":"conflito_de_estado","mensagem":"The resource is not in a state that accepts this operation."}}]}
+---
+
+# Cancel a subscription
+
+<VerbBadge verb="POST" /> `/assinaturas/{id}/cancelar`
+
+Cancels a subscription. There is no refund of the current cycle — the subscription serves through its end.
+
+## Parameters
+
+<ParamField name="id" type="string" required>
+The subscription `id`.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+The subscription identifier, prefixed `sub_`.
+</ResponseField>
+
+<ResponseField name="cliente_id" type="string">
+The `id` of the billed customer.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+`inadimplente` is the state after all retries of a charge fail, without automatic cancellation.
+
+Possible values: `ativa`, `pausada`, `cancelada`, `inadimplente`.
+</ResponseField>
+
+<ResponseField name="meio" type="string">
+Boleto does not recur on its own — it is not on this list.
+
+Possible values: `pix`, `cartao`.
+</ResponseField>
+
+<ResponseField name="plano" type="object">
+The amount and the cadence.
+
+<Expandable title="plano object" defaultOpen>
+
+<ResponseField name="nome" type="string">
+The plan name, yours — Trilho does not validate it against a catalog.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+In cents, charged every cycle.
+</ResponseField>
+
+<ResponseField name="intervalo" type="string">
+The billing cadence.
+
+Possible values: `mensal`, `anual`.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="proxima_cobranca_em" type="string">
+Null when `status` is `cancelada`.
+</ResponseField>
+
+<ResponseField name="cancelada_em" type="string">
+When the subscription was canceled.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+When the subscription was created.
+</ResponseField>
+
+## Errors
+
+| Status | When |
+| --- | --- |
+| `401` | The key is missing, invalid, or from another environment. |
+| `404` | The subscription does not exist on this account. |
+| `409` | The subscription is already `cancelada`. |
+

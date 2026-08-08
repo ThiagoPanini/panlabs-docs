@@ -1,0 +1,181 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Obter cobrança"
+description: "Uma cobrança pelo `id`."
+sidebar_class_name: "api-metodo api-metodo--get"
+api_exemplos: {"metodo":"GET","caminho":"/cobrancas/{id}","parametros":[{"nome":"id","em":"path","exemplo":"cob_9Xz4mT"}],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/cobrancas/{{id}} \\\n  -X GET \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\""},{"linguagem":"python","titulo":"Python","modelo":"trilho.cobrancas.obter('{{id}}')"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.cobrancas.obter('{{id}}');"}],"respostas":[{"status":"200","titulo":"200","corpo":{"id":"cob_9Xz4mT","status":"pendente","valor":14990,"moeda":"BRL","meio":"pix","capturar":true,"referencia_externa":"pedido-4821","motivo_recusa":"string","criado_em":"2026-08-07T18:12:04Z","pagamento":{"pix":{"qr_code":"string","copia_e_cola":"string","expira_em":"2026-08-07T18:12:04Z"},"boleto":{"linha_digitavel":"string","url":"string","vencimento":"string"},"cartao":{"bandeira":"visa","ultimos_quatro":"4242","parcelas":0,"verificacoes":{"cvv":"conferido","endereco":"conferido","autenticacao_3ds":"autenticado"}},"split":[{"recebedor_id":"string","valor":0}]}}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"A chave está ausente, é inválida, ou é de outro ambiente."}},{"status":"404","titulo":"404","corpo":{"codigo":"recurso_nao_encontrado","mensagem":"O recurso não existe nesta conta."}}]}
+---
+
+# Obter cobrança
+
+<VerbBadge verb="GET" /> `/cobrancas/{id}`
+
+Uma cobrança pelo `id`.
+
+## Parâmetros
+
+<ParamField name="id" type="string" required>
+O `id` da cobrança.
+</ParamField>
+
+## Resposta
+
+<ResponseField name="id" type="string">
+O identificador da cobrança, com prefixo `cob_`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+O estado atual. `recusada` é uma resposta `201` bem-sucedida — a requisição estava certa e o sistema financeiro respondeu não.
+
+Valores possíveis: `pendente`, `paga`, `recusada`, `expirada`, `cancelada`, `estornada`.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+Em centavos. Sempre inteiro.
+</ResponseField>
+
+<ResponseField name="moeda" type="string" default="BRL">
+Hoje só `BRL`. O campo existe para o dia em que não for.
+</ResponseField>
+
+<ResponseField name="meio" type="string">
+O meio de pagamento escolhido.
+
+Valores possíveis: `pix`, `boleto`, `cartao`.
+</ResponseField>
+
+<ResponseField name="capturar" type="boolean" default="true">
+Só para `cartao`. `false` autoriza sem capturar — ver `POST /cobrancas/{id}/capturar`.
+</ResponseField>
+
+<ResponseField name="referencia_externa" type="string">
+O identificador do seu lado — pedido, fatura. Ecoado sem interpretação.
+</ResponseField>
+
+<ResponseField name="motivo_recusa" type="string">
+Presente só quando `status` é `recusada`. O catálogo completo está em Operação › Códigos de recusa.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+Quando a cobrança foi criada.
+</ResponseField>
+
+<ResponseField name="pagamento" type="object">
+Os dados do meio escolhido. A chave que não é `null` é a de `meio`.
+
+<Expandable title="objeto pagamento" defaultOpen>
+
+<ResponseField name="pix" type="object">
+Presente quando `meio` é `pix`.
+
+<Expandable title="objeto pix">
+
+<ResponseField name="qr_code" type="string">
+A imagem do QR, em base64.
+</ResponseField>
+
+<ResponseField name="copia_e_cola" type="string">
+O payload copiável — o que o app do banco lê quando não há câmera.
+</ResponseField>
+
+<ResponseField name="expira_em" type="string">
+Quando o QR deixa de ser pagável.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="boleto" type="object">
+Presente quando `meio` é `boleto`.
+
+<Expandable title="objeto boleto">
+
+<ResponseField name="linha_digitavel" type="string">
+Os números que se digitam quando não há leitor de código de barras.
+</ResponseField>
+
+<ResponseField name="url" type="string">
+O PDF do boleto.
+</ResponseField>
+
+<ResponseField name="vencimento" type="string">
+A data limite de pagamento sem juros.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="cartao" type="object">
+Presente quando `meio` é `cartao`. O que sobrou do cartão depois da tokenização, mais o desfecho da autorização.
+
+<Expandable title="objeto cartao">
+
+<ResponseField name="bandeira" type="string">
+A bandeira do cartão.
+
+Valores possíveis: `visa`, `mastercard`, `elo`, `amex`, `hipercard`.
+</ResponseField>
+
+<ResponseField name="ultimos_quatro" type="string">
+Os quatro últimos dígitos. É tudo o que se pode exibir ao pagador.
+</ResponseField>
+
+<ResponseField name="parcelas" type="integer">
+De 1 a 12. O valor de cada parcela é arredondado pelo emissor.
+</ResponseField>
+
+<ResponseField name="verificacoes" type="object">
+O que o emissor conferiu na autorização. **É o quarto nível, e é o teto do sistema.**
+
+<Expandable title="objeto verificacoes">
+
+<ResponseField name="cvv" type="string">
+`nao_conferido` com autorização aprovada acontece, e é decisão de risco sua aceitar ou não.
+
+Valores possíveis: `conferido`, `nao_conferido`, `nao_enviado`.
+</ResponseField>
+
+<ResponseField name="endereco" type="string">
+`parcial` costuma ser CEP certo e número errado.
+
+Valores possíveis: `conferido`, `parcial`, `divergente`, `nao_enviado`.
+</ResponseField>
+
+<ResponseField name="autenticacao_3ds" type="string">
+Só `autenticado` transfere a responsabilidade do chargeback para o emissor.
+
+Valores possíveis: `autenticado`, `tentado`, `nao_autenticado`, `nao_aplicavel`.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="split" type="array de object">
+Presente quando a cobrança divide o valor entre recebedores. Ver Meios de pagamento › Split.
+
+<Expandable title="cada item de split">
+
+<ResponseField name="recebedor_id" type="string">
+O identificador do recebedor cadastrado.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+Em centavos, e a soma das fatias nunca excede `valor`.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+## Erros
+
+| Status | Quando |
+| --- | --- |
+| `401` | A chave está ausente, é inválida, ou é de outro ambiente. |
+| `404` | A cobrança não existe nesta conta. |
+

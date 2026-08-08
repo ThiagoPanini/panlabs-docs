@@ -265,6 +265,12 @@ const config = {
       },
       prism: {
         theme: temaPrism,
+        // Degrau 2 — opção pública. `bash` não está no bundle padrão do
+        // `prism-react-renderer`, e o painel da Referência da API emite
+        // snippet de cURL nessa linguagem. Sem o registro, o bloco sai sem
+        // realce e ninguém avisa; `scripts/lib/openapi.mjs` confere esta
+        // lista contra toda linguagem de snippet que o gerador produz.
+        additionalLanguages: ['bash'],
       },
     }),
 };

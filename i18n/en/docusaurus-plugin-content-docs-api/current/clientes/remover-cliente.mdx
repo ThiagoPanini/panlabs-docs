@@ -1,0 +1,31 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Remove a customer"
+description: "Removes a customer. Charges and subscriptions already created for them remain — removal is not retroactive."
+sidebar_class_name: "api-metodo api-metodo--delete"
+api_exemplos: {"metodo":"DELETE","caminho":"/clientes/{id}","parametros":[{"nome":"id","em":"path","exemplo":"cli_9Xz4mT"}],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/clientes/{{id}} \\\n  -X DELETE \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\""},{"linguagem":"python","titulo":"Python","modelo":"trilho.clientes.remover('{{id}}')"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.clientes.remover('{{id}}');"}],"respostas":[{"status":"204","titulo":"204","corpo":null},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"The key is missing, invalid, or from another environment."}},{"status":"404","titulo":"404","corpo":{"codigo":"recurso_nao_encontrado","mensagem":"The resource does not exist on this account."}}]}
+---
+
+# Remove a customer
+
+<VerbBadge verb="DELETE" /> `/clientes/{id}`
+
+Removes a customer. Charges and subscriptions already created for them remain — removal is not retroactive.
+
+## Parameters
+
+<ParamField name="id" type="string" required>
+The customer `id`.
+</ParamField>
+
+## Response
+
+No body.
+
+## Errors
+
+| Status | When |
+| --- | --- |
+| `401` | The key is missing, invalid, or from another environment. |
+| `404` | The customer does not exist on this account. |
+
