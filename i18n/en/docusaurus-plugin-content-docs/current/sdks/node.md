@@ -89,20 +89,23 @@ branch on — never the message.
 ```js
 import {TrilhoError, ErroDeValidacao, ErroDeLimite} from '@trilho/node';
 
-try {
-  await trilho.cobrancas.criar(dados);
-} catch (erro) {
-  if (erro instanceof ErroDeValidacao) {
-    // erro.detalhes -> [{campo, codigo}, ...] — all of them at once
-    return responder(422, erro.detalhes);
+export async function cobrar(dados) {
+  try {
+    return await trilho.cobrancas.criar(dados);
+  } catch (erro) {
+    if (erro instanceof ErroDeValidacao) {
+      // erro.detalhes -> [{campo, codigo}, ...] — all of them at once
+      return responder(422, erro.detalhes);
+    }
+    if (erro instanceof ErroDeLimite) {
+      // `retryAfterMs` is already milliseconds, ready for a `setTimeout`.
+      return agendar(erro.retryAfterMs);
+    }
+    if (erro instanceof TrilhoError) {
+      log.error({requisicao: erro.requisicao, codigo: erro.codigo});
+    }
+    throw erro;
   }
-  if (erro instanceof ErroDeLimite) {
-    return agendar(erro.retryAfterMs);
-  }
-  if (erro instanceof TrilhoError) {
-    log.error({requisicao: erro.requisicao, codigo: erro.codigo});
-  }
-  throw erro;
 }
 ```
 

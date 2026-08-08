@@ -16,7 +16,7 @@ Nada aqui é endpoint. É o vocabulário que faz o endpoint fazer sentido.
 
 <CardGroup>
 <Card title="Ciclo de vida da cobrança" icon="workflow" href="/docs/conceitos/ciclo-de-vida">
-Seis estados, transições de mão única, e por que não existe caminho de volta.
+Sete estados, transições de mão única, e por que não existe caminho de volta.
 </Card>
 <Card title="Idempotência" icon="refresh-cw" href="/docs/conceitos/idempotencia">
 O que a janela de 24 horas garante, e onde ela deixa de garantir.
@@ -28,7 +28,7 @@ O contrato de entrega e a verificação HMAC em três linguagens.
 Por que o saldo da API não é o saldo contábil.
 </Card>
 <Card title="Erros" icon="circle-alert" href="/docs/conceitos/erros">
-O envelope único, as cinco classes e a recusa que não é erro.
+O envelope único, as seis classes e a recusa que não é erro.
 </Card>
 </CardGroup>
 

@@ -75,11 +75,14 @@ The async form is the same surface with a different constructor:
 ```python
 from trilho import TrilhoAsync
 
-async with TrilhoAsync(os.environ["TRILHO_SECRET_KEY"]) as trilho:
-    cobranca = await trilho.cobrancas.criar(valor=14990, meio="pix")
 
-    async for evento in trilho.eventos.listar(tipo="cobranca.paga"):
-        print(evento.id)
+async def cobrar_e_acompanhar() -> None:
+    async with TrilhoAsync(os.environ["TRILHO_SECRET_KEY"]) as trilho:
+        cobranca = await trilho.cobrancas.criar(valor=14990, meio="pix")
+        print(cobranca.id)
+
+        async for evento in trilho.eventos.listar(tipo="cobranca.paga"):
+            print(evento.id)
 ```
 
 ## Error handling
@@ -90,16 +93,18 @@ branch on — never the message.
 ```python
 from trilho import TrilhoError, ErroDeValidacao, ErroDeLimite
 
-try:
-    trilho.cobrancas.criar(**dados)
-except ErroDeValidacao as erro:
-    # erro.detalhes -> [{"campo": ..., "codigo": ...}, ...] — all of them at once
-    return responder(422, erro.detalhes)
-except ErroDeLimite as erro:
-    return agendar(erro.retry_after_s)
-except TrilhoError as erro:
-    log.error("trilho", requisicao=erro.requisicao, codigo=erro.codigo)
-    raise
+
+def cobrar(dados: dict):
+    try:
+        return trilho.cobrancas.criar(**dados)
+    except ErroDeValidacao as erro:
+        # erro.detalhes -> [{"campo": ..., "codigo": ...}, ...] — all of them at once
+        return responder(422, erro.detalhes)
+    except ErroDeLimite as erro:
+        return agendar(erro.retry_after_s)
+    except TrilhoError as erro:
+        log.error("trilho", requisicao=erro.requisicao, codigo=erro.codigo)
+        raise
 ```
 
 `erro.requisicao` is the `req_...` of that call. It is the first thing support

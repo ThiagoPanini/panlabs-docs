@@ -75,6 +75,21 @@ que são os que você mais precisa conferir.
 conciliação vira casamento por valor e data, que funciona até existirem dois
 pedidos do mesmo valor no mesmo dia.
 
+Um dia com uma venda em Pix, uma em cartão antecipada e uma devolução de janeiro
+sai assim:
+
+```csv title="movimento-2026-08-07.csv"
+data_liquidacao;tipo;cobranca_id;referencia_externa;valor_bruto;taxa;valor_liquido;meio;recebedor_id
+2026-08-07;credito;cob_3nK2xQ;pedido-4821;14990;99;14891;pix;
+2026-08-07;credito;cob_9Xz4mT;pedido-4822;149900;4886;145014;cartao;
+2026-08-07;antecipacao;cob_9Xz4mT;pedido-4822;-2103;0;-2103;cartao;
+2026-08-07;devolucao;cob_1Aa2bC;pedido-3190;-5000;0;-5000;pix;
+```
+
+Repare que a antecipação é uma **linha própria**, negativa, com o mesmo
+`cobranca_id` da venda. Somar `valor_liquido` da coluna inteira dá o número certo;
+somar só as linhas de `credito` dá o número que ninguém consegue explicar.
+
 ## Quando o saldo diverge
 
 A ordem de investigação abaixo resolve a esmagadora maioria dos casos, e vale

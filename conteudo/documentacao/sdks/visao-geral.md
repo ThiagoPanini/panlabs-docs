@@ -16,7 +16,7 @@ deles conhece um campo que a referência não documente.
 | | Sem SDK | Com SDK |
 | --- | --- | --- |
 | Autenticação | cabeçalho à mão | construtor |
-| Idempotência | chave à mão | gerada por padrão em toda escrita |
+| Idempotência | chave à mão | gerada por padrão, e substituível |
 | Retentativa | sua | espera exponencial em `429` e `5xx` |
 | Paginação | cursor à mão | iterador |
 | Assinatura de webhook | HMAC à mão | uma chamada de verificação |
@@ -25,11 +25,20 @@ As duas últimas linhas são o motivo real de existir SDK. Cursor implementado
 errado devolve página repetida; verificação de HMAC implementada errada aceita
 requisição forjada.
 
+:::note[A chave gerada pelo SDK protege as retentativas dele, não as suas]
+
+Sem chave declarada, o SDK gera uma e a reusa nas **próprias** tentativas — é o
+que torna a espera exponencial dele segura. Ela não sobrevive à chamada: um
+segundo `criar` gera outra chave e cria outra cobrança. Para amarrar a
+idempotência ao **seu** pedido, declare a chave, como todas as receitas fazem.
+
+:::
+
 ## Onde os três divergem
 
 | | Node | Python | Go |
 | --- | --- | --- | --- |
-| Versão mínima | 20 | 3.10 | 1.22 |
+| Versão mínima | 20 | 3.10 | 1.23 |
 | Forma assíncrona | única | segundo construtor | `context.Context` |
 | Tipos | inclusos | inclusos | nativos |
 | **Snippet na Referência da API** | sim | sim | **não** |

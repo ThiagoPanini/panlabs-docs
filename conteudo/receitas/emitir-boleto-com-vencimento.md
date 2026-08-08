@@ -51,11 +51,12 @@ def emitir(pedido) -> dict:
         idempotency_key=f"{pedido.id}-boleto-1",
     )
 
-    boleto = cobranca["pagamento"]["boleto"]
+    # O SDK devolve modelo, não dicionário: acesso por atributo em toda parte.
+    boleto = cobranca.pagamento.boleto
     return {
-        "linha_digitavel": boleto["linha_digitavel"],
-        "pdf_url": boleto["pdf_url"],
-        "vence_em": boleto["vence_em"],
+        "linha_digitavel": boleto.linha_digitavel,
+        "pdf_url": boleto.pdf_url,
+        "vence_em": boleto.vence_em,
     }
 ```
 

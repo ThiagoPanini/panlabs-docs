@@ -229,8 +229,8 @@ import (
 const toleranceS = 300
 
 var (
-	secret                = []byte(os.Getenv("TRILHO_WEBHOOK_SECRET"))
-	ErrInvalidSignature   = errors.New("invalid signature")
+	secret              = []byte(os.Getenv("TRILHO_WEBHOOK_SECRET"))
+	ErrInvalidSignature = errors.New("invalid signature")
 )
 
 type Event struct {
@@ -327,7 +327,8 @@ implementation, and it is short enough to leave no excuse.
 If you return `4xx`, Trilho **retries anyway** — the retry policy does not
 distinguish your error from ours, because distinguishing would mean trusting the
 status code of a server that is, by definition, in trouble. After 12 attempts
-over 72 hours the event becomes `falhado` and shows up under
-**Developers › Webhooks** for manual resend.
+over 72 hours the **delivery** becomes `falhada` and shows up under
+**Developers › Webhooks** for manual resend. The enum belongs to the delivery,
+not the event: one event can have a failed delivery and a completed one.
 
 :::

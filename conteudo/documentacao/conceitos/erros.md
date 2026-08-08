@@ -1,6 +1,6 @@
 ---
 title: Erros
-description: O envelope de erro do Trilho, as cinco classes de status e a distinção entre erro de integração e recusa do sistema financeiro.
+description: O envelope de erro do Trilho, as seis classes de status e a distinção entre erro de integração e recusa do sistema financeiro.
 ---
 
 # Erros
@@ -37,7 +37,7 @@ A linha que decide tudo é a primeira: **ramifique por `codigo`, nunca por
 `mensagem`**. A mensagem é texto de produto, ela muda de redação e um dia vai
 mudar de idioma. Um `if` sobre ela é um bug com data marcada.
 
-## As cinco classes
+## As seis classes
 
 | Status | Classe | De quem é a culpa | Retentar? |
 | --- | --- | --- | --- |

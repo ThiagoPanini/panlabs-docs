@@ -15,20 +15,25 @@ depender do SDK.
 ```js title="Node"
 import {createHmac, timingSafeEqual} from 'node:crypto';
 
+const SEGREDO = process.env.TRILHO_WEBHOOK_SECRET;
 const TOLERANCIA_S = 300;
 
-export function verificarEvento(corpoCru, cabecalho, segredo) {
+// O tipo próprio é o que permite ao handler distinguir "forjado" de "meu bug",
+// e devolver 400 no primeiro caso em vez de 500 nos dois.
+export class AssinaturaInvalida extends Error {}
+
+export function verificarEvento(corpoCru, cabecalho, segredo = SEGREDO) {
   const partes = Object.fromEntries(
     String(cabecalho ?? '')
       .split(',')
       .map((item) => item.split('=').map((s) => s.trim())),
   );
   const {t, v1} = partes;
-  if (!t || !v1) throw new Error('cabeçalho malformado');
+  if (!t || !v1) throw new AssinaturaInvalida('cabeçalho malformado');
 
   const idade = Math.abs(Math.floor(Date.now() / 1000) - Number(t));
   if (!Number.isFinite(idade) || idade > TOLERANCIA_S) {
-    throw new Error('fora da janela de 5 minutos');
+    throw new AssinaturaInvalida('fora da janela de 5 minutos');
   }
 
   const esperado = createHmac('sha256', segredo)
@@ -38,7 +43,7 @@ export function verificarEvento(corpoCru, cabecalho, segredo) {
   const recebido = Buffer.from(v1, 'hex');
 
   if (recebido.length !== esperado.length || !timingSafeEqual(esperado, recebido)) {
-    throw new Error('assinatura não confere');
+    throw new AssinaturaInvalida('assinatura não confere');
   }
 
   return JSON.parse(corpoCru.toString('utf8'));
@@ -82,6 +87,11 @@ O `corpoCru` precisa ser `Buffer` ou `bytes` — nunca o objeto já decodificado
 o erro mais comum desta rotina, e ele se manifesta como *"funciona no teste e
 falha em produção"*, porque o teste costuma mandar um JSON que reserializa
 igual.
+
+O tipo de erro próprio não é cerimônia: é ele que permite ao handler responder
+`400` a um `POST` forjado e deixar passar um defeito seu como `500`. Um `throw`
+genérico colapsa os dois casos, e o `400` documentado em
+[Conceitos › Webhooks](/docs/conceitos/webhooks) deixa de acontecer.
 
 A comparação em tempo constante não é cerimônia. Um `==` normal para na primeira
 diferença de byte, e essa diferença de tempo é medível pela rede — é assim que se

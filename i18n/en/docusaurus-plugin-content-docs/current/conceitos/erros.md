@@ -1,6 +1,6 @@
 ---
 title: Errors
-description: Trilho's error envelope, the five status classes, and the difference between an integration error and a decline from the financial system.
+description: Trilho's error envelope, the six status classes, and the difference between an integration error and a decline from the financial system.
 ---
 
 # Errors
@@ -44,7 +44,7 @@ branch on it — `codigo` plus your own copy is the right pairing.
 
 :::
 
-## The five classes
+## The six classes
 
 | Status | Class | Whose fault | Retry? |
 | --- | --- | --- | --- |

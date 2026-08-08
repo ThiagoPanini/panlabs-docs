@@ -1,18 +1,18 @@
 ---
 title: Ciclo de vida da cobrança
-description: Os seis estados de uma cobrança, as transições de mão única entre eles e por que não existe caminho de volta.
+description: Os sete estados de uma cobrança, as transições de mão única entre eles e por que não existe caminho de volta.
 ---
 
 # Ciclo de vida da cobrança
 
 <Untranslated />
 
-Uma cobrança é uma máquina de estados com seis posições e nenhuma aresta de
+Uma cobrança é uma máquina de estados com sete posições e nenhuma aresta de
 volta. Isso não é uma restrição de implementação que um dia se afrouxa: é o que
 torna o histórico auditável, e é o que permite tratar `evento` como registro
 imutável em vez de log.
 
-## Os seis estados
+## Os sete estados
 
 | Estado | O que significa | Quem provoca a saída |
 | --- | --- | --- |
@@ -20,41 +20,51 @@ imutável em vez de log.
 | `pendente` | o QR, o boleto ou a autorização estão de pé, esperando | o pagador, ou o relógio |
 | `paga` | o dinheiro foi confirmado, ainda não caiu na sua conta | o ciclo de liquidação |
 | `liquidada` | o dinheiro está disponível no seu saldo | você, se estornar |
+| `recusada` | o sistema financeiro respondeu *não* | ninguém — é terminal |
 | `expirada` | o prazo passou sem pagamento | ninguém — é terminal |
 | `cancelada` | você desistiu antes do pagamento | ninguém — é terminal |
 
-`estornada` **não é um sétimo estado**. Um estorno é um objeto próprio, com `id`
+**`recusada` é um estado, e não um erro.** A requisição que a produz devolve
+`201`: ela estava certa, e a resposta do emissor é que foi negativa. O motivo vem
+em `motivo_recusa`, e o catálogo está em
+[Operação › Códigos de recusa](../operacao/codigos-de-recusa).
+
+`estornada` **não é o oitavo**. Um estorno é um objeto próprio, com `id`
 próprio, que aponta para a cobrança — que continua `liquidada`. Uma cobrança que
 mudasse de estado ao ser estornada apagaria o fato de ter sido paga, e é
 exatamente esse fato que a contabilidade precisa.
 
-<Frame caption="As transições possíveis. Nenhuma seta aponta para a esquerda.">
-<svg viewBox="0 0 640 156" width="640" height="156" role="img" aria-label="Máquina de estados: criada leva a pendente, que leva a paga, expirada ou cancelada; paga leva a liquidada">
+<Frame caption="As transições possíveis. Nenhuma seta aponta para a esquerda, e os três terminais não têm saída.">
+<svg viewBox="0 0 640 190" width="640" height="190" role="img" aria-label="Máquina de estados: criada leva a pendente, que leva a paga, recusada, expirada ou cancelada; paga leva a liquidada">
 <g fill="none" stroke="currentColor" strokeWidth="1.5">
-<rect x="1" y="58" width="112" height="38" rx="8" />
-<rect x="161" y="58" width="112" height="38" rx="8" />
-<rect x="321" y="58" width="112" height="38" rx="8" />
-<rect x="481" y="58" width="112" height="38" rx="8" />
+<rect x="1" y="101" width="112" height="38" rx="8" />
+<rect x="161" y="101" width="112" height="38" rx="8" />
+<rect x="321" y="101" width="112" height="38" rx="8" />
+<rect x="481" y="101" width="112" height="38" rx="8" />
 <rect x="321" y="1" width="112" height="38" rx="8" />
-<rect x="321" y="115" width="112" height="38" rx="8" />
-<path d="M113 77 h34" />
-<path d="M137 71 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
-<path d="M273 77 h34" />
-<path d="M297 71 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
-<path d="M433 77 h34" />
-<path d="M457 71 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
-<path d="M273 68 q22 -48 48 -48" />
-<path d="M311 14 l10 6 l-9 7" strokeLinecap="round" strokeLinejoin="round" />
-<path d="M273 86 q22 48 48 48" />
-<path d="M312 127 l9 7 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
+<rect x="321" y="51" width="112" height="38" rx="8" />
+<rect x="321" y="151" width="112" height="38" rx="8" />
+<path d="M113 120 h34" />
+<path d="M137 114 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
+<path d="M273 120 h34" />
+<path d="M297 114 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
+<path d="M433 120 h34" />
+<path d="M457 114 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
+<path d="M273 120 H293 V20 H307" />
+<path d="M297 14 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
+<path d="M273 120 H293 V70 H307" />
+<path d="M297 64 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
+<path d="M273 120 H293 V170 H307" />
+<path d="M297 164 l10 6 l-10 6" strokeLinecap="round" strokeLinejoin="round" />
 </g>
 <g fill="currentColor" stroke="none" fontSize="13" textAnchor="middle">
-<text x="57" y="82">criada</text>
-<text x="217" y="82">pendente</text>
-<text x="377" y="82">paga</text>
-<text x="537" y="82">liquidada</text>
+<text x="57" y="125">criada</text>
+<text x="217" y="125">pendente</text>
+<text x="377" y="125">paga</text>
+<text x="537" y="125">liquidada</text>
 <text x="377" y="25">expirada</text>
-<text x="377" y="139">cancelada</text>
+<text x="377" y="75">recusada</text>
+<text x="377" y="175">cancelada</text>
 </g>
 </svg>
 </Frame>
@@ -77,6 +87,21 @@ canônica para *o que aconteceu com este pedido*. Reconstruir a história a part
 de leituras periódicas de `status` devolve buracos: entre duas leituras cabem
 duas transições.
 
+O caminho que termina em `recusada` é mais curto, e não passa por `paga`:
+
+```json title="Uma autorização de cartão negada pelo emissor"
+{
+  "id": "cob_7Pd1nS",
+  "status": "recusada",
+  "meio": "cartao",
+  "motivo_recusa": {"codigo": "saldo_insuficiente", "reapresentar": true},
+  "eventos": [
+    {"tipo": "cobranca.criada",   "ocorrido_em": "2026-08-07T18:10:00Z"},
+    {"tipo": "cobranca.recusada", "ocorrido_em": "2026-08-07T18:10:01Z"}
+  ]
+}
+```
+
 ## O relógio, que é o outro ator
 
 Toda cobrança nasce com `expira_em`, e o default depende do meio:
@@ -85,7 +110,12 @@ Toda cobrança nasce com `expira_em`, e o default depende do meio:
 | --- | --- | --- |
 | Pix | 30 minutos | de 1 minuto a 30 dias |
 | Boleto | data de vencimento + 3 dias úteis | sim, na criação |
-| Cartão | não se aplica — a autorização é síncrona | — |
+| Cartão | 7 dias — o prazo da **autorização**, não da cobrança | não |
+
+A linha do cartão mede outra coisa. A autorização é síncrona, então não há
+espera pelo pagador; o que expira é a **reserva** feita no limite dele, e ela cai
+em 7 dias se você não capturar. Ver
+[Meios de pagamento › Cartão](../meios-de-pagamento/cartao).
 
 :::warning[Expiração não é um evento que você provoca]
 

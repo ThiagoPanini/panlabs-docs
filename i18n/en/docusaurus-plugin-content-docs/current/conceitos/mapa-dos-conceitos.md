@@ -15,7 +15,7 @@ sense.
 
 <CardGroup>
 <Card title="Charge lifecycle" icon="workflow" href="/docs/conceitos/ciclo-de-vida">
-Six states, one-way transitions, and why there is no path back.
+Seven states, one-way transitions, and why there is no path back.
 </Card>
 <Card title="Idempotency" icon="refresh-cw" href="/docs/conceitos/idempotencia">
 What the 24-hour window guarantees, and where it stops guaranteeing.
@@ -27,7 +27,7 @@ The delivery contract and HMAC verification in three languages.
 Why the API balance is not the accounting balance.
 </Card>
 <Card title="Errors" icon="circle-alert" href="/docs/conceitos/erros">
-The single envelope, the five classes, and the decline that is not an error.
+The single envelope, the six classes, and the decline that is not an error.
 </Card>
 </CardGroup>
 

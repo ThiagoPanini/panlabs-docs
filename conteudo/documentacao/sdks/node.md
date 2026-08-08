@@ -90,20 +90,23 @@ ramifica — nunca a mensagem.
 ```js
 import {TrilhoError, ErroDeValidacao, ErroDeLimite} from '@trilho/node';
 
-try {
-  await trilho.cobrancas.criar(dados);
-} catch (erro) {
-  if (erro instanceof ErroDeValidacao) {
-    // erro.detalhes -> [{campo, codigo}, ...] — todos de uma vez
-    return responder(422, erro.detalhes);
+export async function cobrar(dados) {
+  try {
+    return await trilho.cobrancas.criar(dados);
+  } catch (erro) {
+    if (erro instanceof ErroDeValidacao) {
+      // erro.detalhes -> [{campo, codigo}, ...] — todos de uma vez
+      return responder(422, erro.detalhes);
+    }
+    if (erro instanceof ErroDeLimite) {
+      // `retryAfterMs` já vem em milissegundos, pronto para um `setTimeout`.
+      return agendar(erro.retryAfterMs);
+    }
+    if (erro instanceof TrilhoError) {
+      log.error({requisicao: erro.requisicao, codigo: erro.codigo});
+    }
+    throw erro;
   }
-  if (erro instanceof ErroDeLimite) {
-    return agendar(erro.retryAfterMs);
-  }
-  if (erro instanceof TrilhoError) {
-    log.error({requisicao: erro.requisicao, codigo: erro.codigo});
-  }
-  throw erro;
 }
 ```
 

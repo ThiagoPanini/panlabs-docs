@@ -231,7 +231,7 @@ import (
 const toleranciaS = 300
 
 var (
-	segredo             = []byte(os.Getenv("TRILHO_WEBHOOK_SECRET"))
+	segredo               = []byte(os.Getenv("TRILHO_WEBHOOK_SECRET"))
 	ErrAssinaturaInvalida = errors.New("assinatura inválida")
 )
 
@@ -329,7 +329,8 @@ e ela é curta o bastante para não ter desculpa.
 Se você devolver `4xx`, o Trilho **retenta mesmo assim** — a política de
 retentativa não distingue erro seu de erro nosso, porque distinguir exigiria
 confiar no código de status de um servidor que, por definição, está com
-problema. Depois de 12 tentativas em 72 horas, o evento vira `falhado` e aparece
-em **Desenvolvedores › Webhooks** para reenvio manual.
+problema. Depois de 12 tentativas em 72 horas, a **entrega** vira `falhada` e aparece
+em **Desenvolvedores › Webhooks** para reenvio manual. O enum é da entrega, e
+não do evento: o mesmo evento pode ter uma entrega falhada e outra concluída.
 
 :::

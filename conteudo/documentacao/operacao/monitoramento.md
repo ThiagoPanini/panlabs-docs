@@ -55,9 +55,24 @@ para, mesmo que nenhuma requisição falhe. Alerte acima de 5 minutos.
 </Step>
 <Step title="Consumo de limite de taxa" icon="gauge">
 
-Todo resposta traz `X-Trilho-Limite-Restante`. Registre o valor mínimo por
+Toda resposta traz `X-Trilho-Limite-Restante`. Registre o valor mínimo por
 minuto — chegar perto de zero é o aviso que antecede o `429`, e ele aparece dias
 antes.
+
+```promql title="Os dois alertas que sobrevivem ao fim de semana"
+# Aprovação: queda RELATIVA, não piso fixo. Um piso de 85% dispara
+# todo domingo de madrugada e é desligado na segunda de manhã.
+(
+  sum(rate(trilho_cobrancas_total{status="paga"}[1h]))
+  / sum(rate(trilho_cobrancas_total[1h]))
+) < 0.9 * (
+  sum(rate(trilho_cobrancas_total{status="paga"}[1h] offset 1w))
+  / sum(rate(trilho_cobrancas_total[1h] offset 1w))
+)
+
+# Limite: o mínimo da janela, não a média — a média esconde a rajada.
+min_over_time(trilho_limite_restante[5m]) < 100
+```
 
 </Step>
 </Steps>

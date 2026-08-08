@@ -6,7 +6,8 @@ description: Install, configure, use and handle errors with Trilho's official Go
 # Go
 
 `github.com/trilho-dev/trilho-go` is a single module with no dependencies outside
-the standard library. Requires Go 1.22 or newer.
+the standard library. Requires Go 1.23 or newer — the pagination iterator is
+range-over-func, which landed there.
 
 :::warning[Go has no generated snippet in the API reference]
 
@@ -37,7 +38,9 @@ require github.com/trilho-dev/trilho-go v1.4.0
 
 ## Configure
 
-```go
+```go title="trilho.go"
+package pagamentos
+
 import (
 	"os"
 	"time"
@@ -45,7 +48,7 @@ import (
 	"github.com/trilho-dev/trilho-go"
 )
 
-cliente := trilho.Novo(os.Getenv("TRILHO_SECRET_KEY"), trilho.Opcoes{
+var Cliente = trilho.Novo(os.Getenv("TRILHO_SECRET_KEY"), trilho.Opcoes{
 	// Optional: without this, the SDK uses the version pinned on your account.
 	VersaoAPI: "2026-01-15",
 	// 3 attempts with exponential backoff on 429 and 5xx. Never on 4xx.
@@ -62,12 +65,14 @@ the statement.
 ## Use
 
 ```go
-cobranca, err := cliente.Cobrancas.Criar(ctx, trilho.CriarCobranca{
-	Valor:             14990,
-	Moeda:             "BRL",
-	Meio:              trilho.MeioPix,
-	ReferenciaExterna: "pedido-4821",
-}, trilho.ComIdempotencyKey("pedido-4821"))
+func CriarPix(ctx context.Context) (*trilho.Cobranca, error) {
+	return Cliente.Cobrancas.Criar(ctx, trilho.CriarCobranca{
+		Valor:             14990,
+		Moeda:             "BRL",
+		Meio:              trilho.MeioPix,
+		ReferenciaExterna: "pedido-4821",
+	}, trilho.ComIdempotencyKey("pedido-4821"))
+}
 ```
 
 `context.Context` is the first argument on every call, and it carries
@@ -78,13 +83,17 @@ new one.
 Pagination uses an iterator, and the cursor is the SDK's problem:
 
 ```go
-for cobranca, err := range cliente.Cobrancas.Listar(ctx, trilho.FiltroCobranca{
-	Status: trilho.StatusLiquidada,
-}) {
-	if err != nil {
-		return err
+func ListarLiquidadas(ctx context.Context) error {
+	// Range-over-func — this is what requires Go 1.23.
+	for cobranca, err := range Cliente.Cobrancas.Listar(ctx, trilho.FiltroCobranca{
+		Status: trilho.StatusLiquidada,
+	}) {
+		if err != nil {
+			return err
+		}
+		fmt.Println(cobranca.ID, cobranca.Valor)
 	}
-	fmt.Println(cobranca.ID, cobranca.Valor)
+	return nil
 }
 ```
 
@@ -94,20 +103,24 @@ Every API failure becomes a `*trilho.Erro`, and `Codigo` is what you branch on �
 never the message.
 
 ```go
-cobranca, err := cliente.Cobrancas.Criar(ctx, dados)
+func Cobrar(ctx context.Context, dados trilho.CriarCobranca) error {
+	cobranca, err := Cliente.Cobrancas.Criar(ctx, dados)
 
-var erroValidacao *trilho.ErroDeValidacao
-var erroLimite *trilho.ErroDeLimite
+	var erroValidacao *trilho.ErroDeValidacao
+	var erroLimite *trilho.ErroDeLimite
 
-switch {
-case errors.As(err, &erroValidacao):
-	// erroValidacao.Detalhes -> []Detalhe{{Campo, Codigo}} — all at once
-	return responder(422, erroValidacao.Detalhes)
-case errors.As(err, &erroLimite):
-	return agendar(erroLimite.RetryAfter)
-case err != nil:
-	log.Error("trilho", "requisicao", trilho.RequisicaoDe(err), "erro", err)
-	return err
+	switch {
+	case errors.As(err, &erroValidacao):
+		// erroValidacao.Detalhes -> []Detalhe{{Campo, Codigo}} — all at once
+		return responder(422, erroValidacao.Detalhes)
+	case errors.As(err, &erroLimite):
+		return agendar(erroLimite.RetryAfter)
+	case err != nil:
+		log.Error("trilho", "requisicao", trilho.RequisicaoDe(err), "erro", err)
+		return err
+	}
+
+	return registrar(cobranca)
 }
 ```
 
@@ -128,22 +141,34 @@ A charge declined for `saldo_insuficiente` returns `err == nil`. Read
 Signature verification is one call, and it takes the **raw bytes**:
 
 ```go
-corpoCru, _ := io.ReadAll(io.LimitReader(r.Body, 1<<20))
+func Receive(w http.ResponseWriter, r *http.Request) {
+	corpoCru, _ := io.ReadAll(io.LimitReader(r.Body, 1<<20))
 
-evento, err := trilho.VerificarWebhook(
-	corpoCru,
-	r.Header.Get("X-Trilho-Assinatura"),
-	os.Getenv("TRILHO_WEBHOOK_SECRET"),
-)
+	evento, err := trilho.VerificarWebhook(
+		corpoCru,
+		r.Header.Get("X-Trilho-Assinatura"),
+		os.Getenv("TRILHO_WEBHOOK_SECRET"),
+	)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	Enqueue(evento)
+}
 ```
 
 And a new resource shows up in the API before it shows up in the SDK. The escape
 hatch uses the same base URL, the same key and the same retry policy:
 
 ```go
-var resposta map[string]any
-err := cliente.Requisitar(ctx, "POST", "/recurso-novo",
-	map[string]any{"campo": "valor"}, &resposta)
+func RecursoNovo(ctx context.Context) (map[string]any, error) {
+	var resposta map[string]any
+	err := Cliente.Requisitar(ctx, "POST", "/recurso-novo",
+		map[string]any{"campo": "valor"}, &resposta)
+	return resposta, err
+}
 ```
 
 In Go this escape hatch gets used more than in the other two SDKs — and it is why

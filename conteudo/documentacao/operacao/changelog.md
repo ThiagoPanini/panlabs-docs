@@ -29,7 +29,7 @@ quem não manda o cabeçalho, e trocá-la é uma decisão separada, feita no pai
 
 ## As versões
 
-<Update label="2026-08-01" tag="2026-08-01">
+<Update label="2026-08-01">
 **`split` aceita `percentual`.** Cada recebedor pode declarar `valor` **ou**
 `percentual`, e misturar os dois na mesma lista devolve `422`.
 
@@ -40,7 +40,7 @@ diferença de centavo.
 Sem quebra: quem só usa `valor` não é alcançado.
 </Update>
 
-<Update label="2026-06-10" tag="2026-06-10">
+<Update label="2026-06-10">
 **`motivo_recusa` ganha `reapresentar` e `reapresentar_apos`.** Os dois campos
 tornam legível na resposta o que antes só existia no catálogo de códigos.
 
@@ -49,7 +49,7 @@ comparava `motivo_recusa === "saldo_insuficiente"` precisa ler
 `motivo_recusa.codigo`.
 </Update>
 
-<Update label="2026-05-14" tag="2026-05-14">
+<Update label="2026-05-14">
 **`descricao_curta` marcada como obsoleta** em favor de `descricao`. Ela continua
 sendo aceita e continua sendo devolvida — obsoleto aqui significa *não use em
 código novo*, não *vai sumir*.
@@ -57,7 +57,7 @@ código novo*, não *vai sumir*.
 **`GET /movimentos` passa a aceitar `de` e `ate`** no lugar de uma data única.
 </Update>
 
-<Update label="2026-04-02" tag="2026-04-02">
+<Update label="2026-04-02">
 **Devolução de Pix vira recurso próprio,** em `POST /devolucoes`. Antes ela era
 `POST /cobrancas/{id}/estornar`, que tratava Pix e cartão como a mesma operação —
 e eles têm prazos, origens de dinheiro e modos de falhar diferentes.
@@ -65,14 +65,14 @@ e eles têm prazos, origens de dinheiro e modos de falhar diferentes.
 **Quebra:** a rota antiga responde `410` a partir desta versão.
 </Update>
 
-<Update label="2026-03-18" tag="2026-03-18">
+<Update label="2026-03-18">
 **Erros de validação passam a devolver `detalhes` com a lista completa** de
 campos inválidos, em vez de parar no primeiro.
 
 Sem quebra: o envelope, o `codigo` e a `mensagem` continuam onde estavam.
 </Update>
 
-<Update label="2026-02-20" tag="2026-02-20">
+<Update label="2026-02-20">
 **`assinatura.politica_de_falha` ganha `retentar_e_suspender`,** que passa a ser
 o padrão para assinaturas novas. As existentes mantêm a política declarada.
 
@@ -80,7 +80,7 @@ o padrão para assinaturas novas. As existentes mantêm a política declarada.
 cartão salvo.
 </Update>
 
-<Update label="2026-02-05" tag="2026-02-05">
+<Update label="2026-02-05">
 **Todo valor passa a ser inteiro na menor unidade da moeda.** Os campos que
 aceitavam decimal — `valor`, `taxa`, `valor_liquido` — passam a aceitar e
 devolver centavos.
@@ -90,7 +90,7 @@ uma cobrança de R$ 1,49. A versão anterior continua respondendo no formato
 antigo, e é por isso que o cabeçalho existe.
 </Update>
 
-<Update label="2026-01-15" tag="2026-01-15">
+<Update label="2026-01-15">
 Primeira versão pública estável. Cobranças, clientes, assinaturas, reembolsos e
 webhooks, com Pix, boleto e cartão.
 </Update>

@@ -75,6 +75,21 @@ você pode gerar a sua a partir da string, e deve, se o seu app é nativo.
 </Step>
 <Step title="Espere o evento `cobranca.paga`" icon="bell">
 
+```json title="POST no seu endpoint"
+{
+  "id": "evt_9Lm4tZ",
+  "tipo": "cobranca.paga",
+  "ocorrido_em": "2026-08-07T18:12:04Z",
+  "dados": {
+    "cobranca": {
+      "id": "cob_3nK2xQ",
+      "status": "paga",
+      "referencia_externa": "pedido-4821"
+    }
+  }
+}
+```
+
 Não faça *polling*. Uma cobrança Pix pode ficar meia hora `pendente`, e consultar
 a API a cada segundo durante trinta minutos gasta o seu limite de taxa para
 descobrir o que o webhook te contaria de graça.
