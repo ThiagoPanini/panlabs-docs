@@ -1,8 +1,8 @@
 # Arquitetura de informação
 
-O produto fictício, a topologia, a árvore — e, conforme os slices fecham, os tipos de página, os orçamentos, as fixtures, o locale e os artefatos AI-era.
+O produto fictício, a topologia, a árvore, os tipos de página, os orçamentos, as treze fixtures, a regra de locale — e, no último slice, os artefatos AI-era.
 
-**Documento aberto.** Este slice escreve a **topologia e a árvore**; os tipos de página, os orçamentos por tipo e as treze fixtures chegam com o conteúdo, a Referência da API fecha a aba dela, e os artefatos AI-era entram no slice 7. As seções abertas estão marcadas como tal, com o slice dono — ausência marcada é buraco visível; ausência não marcada é omissão.
+**Uma seção continua aberta, e é a última.** O corpo está fechado: a topologia e a árvore vieram do slice 2, e o conteúdo do slice 4 fechou os **tipos de página (§6), as fixtures (§7) e o locale (§8)**. Falta o §9, dos artefatos AI-era, que é do slice 7. A seção aberta está marcada como tal, com o slice dono — ausência marcada é buraco visível; ausência não marcada é omissão.
 
 **Nenhum valor numérico de desenho aparece aqui.** Os números deste documento são **contagens** — quantas tabs, quantas categorias, quantas páginas.
 
@@ -119,25 +119,20 @@ Três fatos verificados na fonte fecham a questão:
 
 **Descartado: índice gerado pelo Docusaurus como destino de categoria.** Ele renderiza os cartões do próprio Docusaurus, enquanto o inventário de conteúdo já traz cartão **autoral** — seriam duas anatomias de cartão para especificar e dois conjuntos de token que precisam parecer a mesma coisa. Pior: o cartão do Docusaurus é um dos componentes reestruturados dentro do próprio v3, ou seja território `unsafe`.
 
-### 3.3 O que existe hoje, e o que falta
+### 3.3 O que existe, e o que falta
 
-Este slice escreve **oito páginas de visão geral** — as seis de `Documentação`, a intro de `Receitas` e `Referência da API › Introdução › Visão geral` — mais uma nona página que não é visão geral e tem motivo próprio.
+As duas árvores autorais estão **cheias**: 33 páginas em `Documentação` e 10 em `Receitas`, **43 no total**. O que falta é a instância `api`, inteira.
 
 | Estado | O quê | Slice dono |
 | --- | --- | --- |
-| escrito | as seis categorias de `Documentação`, clicáveis, com ícone | 2 |
-| escrito | `Receitas`, plana, com a intro | 2 |
+| escrito | as seis categorias de `Documentação`, clicáveis, com ícone, e as **27 folhas** | 2 e 4 |
+| escrito | `Receitas`, plana: a intro e as **nove receitas irmãs** | 2 e 4 |
 | escrito | `Referência da API › Introdução`, clicável, com ícone | 2 |
-| escrito | `Operação › Changelog` | 2 — ver abaixo |
-| escrito | `Guias › Catálogo de componentes` | 3 — ver abaixo |
-| **falta** | as cinco categorias de recurso da Referência da API, e as páginas `O objeto X` | 5 |
-| **falta** | as folhas de `Documentação` e as nove receitas | 4 |
+| **falta** | as cinco categorias de recurso da Referência da API, e as páginas geradas | 5 |
 
-**`Operação › Changelog` é escrita neste slice e não é visão geral.** O footer a linka em **todas** as rotas do site, e link de footer para rota inexistente reprova no verificador de links do build. A página existe com a URL definitiva e o corpo mínimo; o gabarito de changelog é do slice 4.
+**As cinco categorias de recurso da Referência da API não são escritas à mão.** Elas apontam para páginas geradas do contrato OpenAPI, e o gerador passa a emitir também o arquivo de sidebar da instância. Escrevê-las agora criaria exatamente a segunda fonte de verdade que o gerador existe para impedir — e uma categoria clicável cujo destino não existe reprova no build. **A árvore está portanto em 6 · 0 · 1 no artefato, e 6 · 0 · 6 é o alvo**; a diferença é a instância `api`, e ela fecha no slice 5.
 
-**`Guias › Catálogo de componentes` é escrita no slice do catálogo, e é a fixture dele.** Ela exercita os dezoito componentes de conteúdo com todas as variantes, e o critério de pronto daquele slice exige que ela **viva no site publicado** — a alternativa seria conferir a aparência de dezoito componentes espalhada por dezenas de páginas que ainda não existem. Ela é folha de `Guias`, o que promove a segunda categoria de `Documentação` à forma com filho, e é a única folha que aquele slice entrega. O gabarito de página de tipo `catálogo` continua sendo do slice 4.
-
-**As cinco categorias de recurso da Referência da API não são escritas à mão.** Elas apontam para páginas geradas do contrato OpenAPI, e o gerador passa a emitir também o arquivo de sidebar da instância. Escrevê-las agora criaria exatamente a segunda fonte de verdade que o gerador existe para impedir — e uma categoria clicável cujo destino não existe reprova no build. **A árvore está portanto em 6 · 0 · 1 no artefato deste slice, e 6 · 0 · 6 é o alvo**; a diferença é a instância `api`, e ela fecha no slice 5.
+**Duas páginas nasceram fora do slice do conteúdo, e as duas continuam onde estavam.** `Operação › Changelog` foi escrita no slice 2 porque o footer a linka em **todas** as rotas e link de footer para rota inexistente reprova no verificador de links; o slice 4 só encheu o corpo dela com as oito entradas do gabarito. `Guias › Catálogo de componentes` foi escrita no slice do catálogo, é a fixture dele, e é folha de `Guias` como sempre foi.
 
 **Os doze pares seção→ícone estão inteiros no manifesto e no CSS desde já**, inclusive os cinco que ainda não têm categoria. Eles não custam nada e não erram nada, e o vendorizador confere que os três lugares onde os pares vivem — manifesto, `className` de sidebar e regra de máscara — concordam.
 
@@ -148,7 +143,7 @@ Este slice escreve **oito páginas de visão geral** — as seis de `Documentaç
 Isso tem duas consequências, e as duas foram tratadas:
 
 - **o CSS de sidebar cobre as duas formas.** Com um seletor só, uma seção perderia o ícone no dia em que a última folha dela saísse, e a falha seria muda. O marcador é o `className` do manifesto, não o nível — `.sidebar-icone` **é** a definição de *seção de topo* neste sistema;
-- **o estado atual é honesto e visível:** as duas seções que já têm folha (`Comece aqui` e `Operação`) provam a forma de categoria — ícone, caret, aberta por padrão. As demais provam a forma de link, com o mesmo ícone e a mesma tipografia. Nenhuma perde a assinatura visual, e o slice 4 as promove a categoria ao entregar as folhas.
+- **a forma de link saiu de `Documentação` e continua viva na Referência da API.** Enquanto quatro das seis seções estavam vazias, a forma de link era visível na tab principal. Com as 27 folhas entregues, **as seis são categoria** — mas `Referência da API › Introdução` ainda declara `items: []` em `sidebars-api.js`, e é ela quem exercita o caso hoje. Quando o gerador do slice 5 entregar as folhas dela, a forma de link deixa de ter fixture, e aí a regra vira **cobertura sem fixture** — escrita para não ser removida por parecer morta.
 
 ---
 
@@ -160,7 +155,39 @@ Não é estilo. É a regra que produz as configurações de TOC que provam a med
 
 **Correção de premissa, medida em 3.10.2.** A primeira redação desta regra dizia que *"sem TOC, a coluna de conteúdo vai a 100% da linha em vez de 75%"*. Não é o que o Docusaurus faz: a classe de 75% é aplicada sempre que `hide_table_of_contents` não está no front matter, **independentemente de haver heading**. O que depende de heading é a coluna do TOC.
 
-Logo são **três** configurações, e não duas. A tabela completa está em [`chrome.md`](chrome.md) §1.5. A regra de heading continua valendo — ela é o que faz as três existirem no artefato em vez de existirem só no papel —, mas o argumento mudou: o cartão fica no mesmo pixel nas três **por causa do `max-width`**, não porque a coluna oscila.
+Logo são **três** configurações, e não duas. A tabela completa está em [`chrome.md`](chrome.md) §1.5. A regra de heading continua valendo — ela é o que põe **duas das três** no artefato, e a terceira (`hide_table_of_contents`) chega com a Referência da API no slice 5 —, mas o argumento mudou: o cartão fica no mesmo pixel nas três **por causa do `max-width`**, não porque a coluna oscila.
+
+### 4.1 A exceção é uma só, e é nomeada
+
+> **`Comece aqui › Ambientes` carrega ZERO `##`.** É a única página de `Documentação` abaixo do mínimo, e ela está lá de propósito.
+
+Isto **resolve a divergência** que a redação anterior deste documento deixou em aberto: *"ou a página encolhe, ou a fixture muda de dona"*. A página encolheu — de cinco `##` e ~700 palavras para nenhum e ~120 —, e o conteúdo que ela carregava foi para `Comece aqui › Autenticação`, que é uma página de tipo `Guia` e o lugar certo dele desde sempre.
+
+A escolha entre as duas saídas não foi de gosto. **A fixture é a razão de a regra existir**: sem uma página de `Documentação` sem heading, a configuração *coluna de 75% sem TOC* não aparece no artefato, e a afirmação central sobre a medida constante fica sem prova. Mudar a dona só empurraria a exceção para outra página; encolher esta a põe onde a spec já a tinha prometido.
+
+**Exceção anônima é buraco; exceção nomeada é decisão.** É por isso que ela está escrita aqui, no `sidebars.js` e no portão — e é por isso que a segunda reprova.
+
+### 4.2 O portão 4 — a régua de máquina das contagens
+
+Os critérios desta seção, do §6 e do §8 são todos **contagens**, e contagem que só existe em prosa é contagem que envelhece calada. Uma página a mais em `Guias` não quebra build nenhum; ela só faz este documento passar a mentir.
+
+`scripts/portao-4-conteudo.sh` cobra cinco coisas, na cadência de commit:
+
+| # | O que confere |
+| --- | --- |
+| 1 | o volume por seção — 4 · 6 · 7 · 6 · 4 · 6 em `Documentação`, 10 em `Receitas` |
+| 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
+| 3 | a regra de heading, com a exceção nomeada acima como **única** permitida |
+| 4 | todo fonte pt-BR carrega `<Untranslated />`, e nenhum arquivo de tradução carrega |
+| 5 | a cobertura de locale — 14 traduzidas, e as três seções sem EN continuam em zero |
+
+As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>` citado dentro de um trecho de código contariam.
+
+**O tipo de cada página mora no portão, e não no conteúdo.** O §6 trava que tipo é convenção de conteúdo e **zero layout** — sem front matter `type:`, sem classe CSS por tipo. Um manifesto de build não é nenhum dos dois: ele não toca a página nem o CSS, e não existe no artefato publicado. O que ele compra é que a coluna *quantas* do §6.2 deixe de ser afirmação e vire fato conferido — e foi ele que pegou as duas páginas classificadas errado que o §6.1 registra.
+
+**A coluna de palavras não é cobrada, e a de estrutura é.** Ver §6.2: palavra é proxy ruim, e cobrar por máquina um número que as páginas de código não têm por que bater só produziria prosa de enchimento.
+
+**E um terceiro `throw` entra na config junto.** `onBrokenAnchors` era `warn` por default, e este slice traz os primeiros links de âncora intra-página do site — a tabela de sintomas de `Operação › Diagnóstico`. Âncora quebrada que só avisa é âncora quebrada que fica. A consequência de contrato é pequena e vale escrever: **toda âncora citada por um link é declarada com `{#id}` no próprio heading**, em vez de depender de como o slugger trata acento.
 
 ---
 
@@ -179,11 +206,13 @@ O que isso simplifica, em ordem de tamanho:
 3. o navbar devolve o espaço do seletor;
 4. três árvores de conteúdo em vez de sete.
 
-**O que se perde, verificado e menor do que parecia:** a faixa e o selo de versão nunca aparecem no artefato. São, respectivamente, um alerta e um badge — **classes puras do Infima**, cobertas pelas regras de token que a spec precisa ter de qualquer jeito. Não viram ausência na spec; viram componente que herda. Registrado como **ausência conhecida**, não omissão.
+**O que se perde, verificado e menor do que parecia:** `DocVersionBanner` e `DocVersionBadge` nunca aparecem no artefato. Os dois nomes estão escritos aqui de propósito — *"a faixa e o selo de versão"* é a descrição deles, e uma ausência que só existe descrita não é greppável pelo próximo agente que vier procurar por ela.
+
+São, respectivamente, `alert alert--warning` e `badge badge--secondary` — **classes puras do Infima**, cobertas pelas regras de token que a spec precisa ter de qualquer jeito. Não viram ausência na spec; viram componente que herda. Registrado como **ausência conhecida**, não omissão.
 
 ---
 
-## 6. Tipos de página — *aberto, slice 4*
+## 6. Tipos de página — nove, todos convenção de conteúdo
 
 São nove, todos **convenção de conteúdo e zero layout**: sem front matter de tipo, sem classe CSS por tipo, sem componente próprio.
 
@@ -191,27 +220,130 @@ Sai por consequência, não por escolha nova: na âncora, quickstart, guia, SDK 
 
 > **O site inteiro tem exatamente duas rupturas de layout, e as duas foram decididas fora deste documento:** a Referência da API e a landing. **Nenhuma terceira nasce de um tipo.**
 
-Os nove gabaritos e os orçamentos de estrutura de cada um chegam no slice 4.
+### 6.1 Os nove gabaritos
+
+| Tipo | Onde vive | Gabarito |
+| --- | --- | --- |
+| **Quickstart** | Comece aqui | intro curta → `<Steps>` com código em cada passo → `<CardGroup>` de próximos passos |
+| **Conceitual** | Conceitos, Meios de pagamento | definição → por que existe → como aparece na API → armadilhas em `callout` |
+| **Guia** | Guias, Meios de pagamento, Operação, Comece aqui | pré-requisitos → `<Steps>` → verificação → variações |
+| **SDK** | SDKs | instalação em `<CodeGroup>` por gerenciador → configuração → uso → tratamento de erro → link para a referência HTTP |
+| **Referência de API** | Referência da API | **gerada** do contrato OpenAPI — o gabarito é a saída do gerador |
+| **Receita** | Receitas | o problema em uma frase → código completo copiável → 2-3 parágrafos só sobre o não óbvio |
+| **Catálogo** | Meios de pagamento, Operação | intro curta → como ler a tabela → **a tabela larga** → notas |
+| **Troubleshooting** | Operação | tabela de sintomas → uma seção por sintoma: causa, solução |
+| **Changelog** | Operação | cronologia reversa, uma entrada por versão de API |
+
+**Duas páginas de `Meios de pagamento` são `Conceitual` e não `Guia`,** e é por isso que `Conceitual` vive em duas seções. `Pix — QR dinâmico` e `Split` não têm procedimento: a primeira é a anatomia de um payload, a segunda é *como se declara e por que existe*. Escrever um `<Steps>` nelas para caber no gabarito de `Guia` seria inventar um passo a passo que o leitor não pediu. As outras quatro da seção — `Pix`, `Pix — devolução`, `Boleto` e `Cartão` — têm procedimento de verdade e continuam `Guia`.
+
+*Correção registrada:* a primeira redação classificou as duas como `Guia` e a régua de máquina do §4.2 as pegou sem `<Steps>`. **A saída foi mudar a classificação, não afrouxar o gabarito** — o gabarito de `Guia` continua exigindo o `<Steps>`, e agora o portão o cobra.
+
+### 6.2 O orçamento é de estrutura, e a palavra é indicativa
+
+**A coluna que obriga é a de estrutura.** O que estressa layout é contagem de estrutura, e *palavra é proxy ruim* — a frase é da resolução que criou os orçamentos, e este documento a leva a sério em vez de citá-la e fazer o contrário. É a coluna de estrutura que o portão 4 confere, página por página.
+
+**A coluna de palavras é indicativa**, e diz o tamanho que o tipo costuma ter. Ela não é cobrada por máquina, e por um motivo específico: as páginas cujo corpo é código — `SDK`, `Receita`, e a `Conceitual` que carrega a fixture de bloco longo — ficam abaixo da faixa **porque o código é o conteúdo**, e enchê-las de prosa para bater um número tornaria a documentação pior. Onde o número aperta de verdade é onde a prosa é o corpo, e ali o desvio é sintoma.
+
+| Tipo | Palavras | Estrutura mínima | Quantas no artefato |
+| --- | --- | --- | ---: |
+| Quickstart | 500-700 | 1 `<Steps>` de 5 passos · 5 blocos · 2 `:::` · 1 `<CardGroup>` | 1 |
+| Conceitual | 700-1000 | 4-6 `##` · 2 blocos · 1-2 `:::` · 1 tabela | **7** |
+| Guia | 600-900 | 1 `<Steps>` · 3-4 blocos · 2 `:::` | **12** |
+| SDK | 400-600 | 1 `<CodeGroup>` de instalação · 4-5 blocos | 3 |
+| Receita | 150-250 | 1-2 blocos **longos**, de 30 a 60 linhas · no máximo 1 `##` | 9 |
+| Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | 2 |
+| Troubleshooting | 800-1200 | 1 tabela de sintomas · 6-8 `##` | 1 |
+| Changelog | — | 6-8 entradas em `<Update>` | 1 |
+| Referência de API | — | a saída do gerador | 0 — slice 5 |
+| *índice de categoria* | piso do tipo da seção | + um índice das folhas | 6 |
+| *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 1 |
+| | | **total** | **43** |
+
+**Oito dos nove tipos têm instância no artefato.** O nono, `Referência de API`, é o único gerado, e ele chega no slice 5 com o gabarito que o gerador emitir.
+
+### 6.3 O índice de categoria é uma forma, não um décimo tipo
+
+**Sete páginas de entrada** — as seis visões gerais de categoria e a intro de `Receitas` — são **o tipo da seção no piso do orçamento, mais um índice das folhas**. Não ganham gabarito próprio, e é deliberado: um décimo tipo cujo único traço distintivo é *ser curto* seria um tipo que só existe para explicar por que os outros não se aplicam.
+
+**Por isso a coluna *quantas* do §6.2 conta seis, e não sete.** `Meios de pagamento › Comparativo` toma a forma de índice e é contada em `Catálogo`, porque é a fixture dele. Forma e tipo são eixos diferentes, e quando discordam quem manda no número é o tipo.
+
+Quatro indexam com `<CardGroup>` — `Conceitos`, `Guias`, `Operação` e a intro de `Receitas`. As três primeiras são a decisão original sobre *as categorias fracas*; a intro de `Receitas` entrou junto porque a tab é plana e a sidebar não agrupa nada, o que faz a página de entrada ser o único lugar do site onde as nove receitas aparecem juntas.
+
+As outras três indexam **em prosa ou em tabela**, e não em cartão: `Comece aqui › Visão geral` já tinha um caminho numerado, `SDKs › Visão geral` já tinha a tabela de divergência entre os três, e `Comparativo` é a fixture de tabela com prosa quase nula — pôr cartão nela contaminaria justamente a página que existe para provar isso.
+
+**E uma folha é de tipo `Guia` por ela mesma dizer que é.** `Guias › Catálogo de componentes` chama a si própria de *guia de autoria*, e é isso que ela é: um caminho inteiro sobre como escrever com os dezoito componentes. Ela não vira um tipo *fixture de catálogo* — o que ela tem de especial é o dono, que é o slice do catálogo, não a forma.
 
 ---
 
-## 7. Fixtures — *aberto, slice 4*
+## 7. As treze fixtures — cada caso difícil com uma dona nomeada
 
-**Cada caso difícil tem exatamente uma página dona, nomeada.** Não *"algumas páginas terão tabelas largas"* — *esta* página é a fixture da tabela larga. A spec aponta para um artefato em vez de descrever uma hipótese, e quem implementa sabe onde olhar para saber se acertou. São treze.
+**Cada caso difícil tem exatamente uma página dona, nomeada.** Não *"algumas páginas terão tabelas largas"* — *esta* página é a fixture da tabela larga. A spec aponta para um artefato em vez de descrever uma hipótese, e quem implementa sabe onde olhar para saber se acertou.
 
-**Uma divergência já existe e vai registrada em vez de descoberta depois.** A fixture de *página muito curta, sem TOC* é `Comece aqui › Ambientes`, especificada como ~120 palavras e zero `##`. A página escrita no slice 1 tem cinco `##` e é longa — ela nasceu como *"uma página de documentação real"* antes de a fixture existir. O slice 4 resolve: ou a página encolhe, ou a fixture muda de dona. **Enquanto isso, a configuração sem TOC é exercitada pela intro de `Receitas`**, que tem zero `##` por ser receita.
+| Caso | Página dona | O que prova | Slice |
+| --- | --- | --- | ---: |
+| Tabela larga | `Operação › Códigos de recusa` — 40 linhas × 5 colunas | o breakout e o scroll horizontal **dentro** do cartão | 4 |
+| Tabela como página inteira | `Meios de pagamento › Comparativo` — 24 linhas × 4 colunas | o tipo `Catálogo` com prosa quase nula | 4 |
+| Bloco de código longo | `Conceitos › Webhooks` — HMAC em Node, Python e Go | altura, `<CodeGroup>` e o título nu | 4 |
+| **Página muito curta** | `Comece aqui › Ambientes` — ~120 palavras, zero `##` | **o cartão no mesmo pixel sem coluna de TOC** | 4 |
+| Prosa pura | `Conceitos › Conciliação` — nenhum componente | a medida de prosa sozinha, sem nada para escondê-la | 4 |
+| Item de sidebar mais largo | `Meios de pagamento › Pix — QR dinâmico` | wrap ou truncamento no item, com ícone à esquerda | 4 |
+| Sidebar longa | a sidebar de `Documentação` — 6 categorias + 27 folhas | 33 linhas: scroll, `sticky` e os seis ícones em contraste | 4 |
+| Prosa mínima, código máximo | as 9 `Receitas` | o escape de medida repetido a cada dois parágrafos | 4 |
+| Fallback silencioso de locale | `/en/docs/meios-de-pagamento/pix` | `<Untranslated />` e texto pt-BR sob rota EN | 4 |
+| Navbar apertado | qualquer página entre 997 e 1200px | 3 tabs + busca + `PT` + GitHub | 4 |
+| Aninhamento profundo | `Cobranças › O objeto Cobrança` | `<ParamField>` sobre `<details>`, quatro níveis | 5 |
+| Página muito longa | `Webhooks › Catálogo de eventos` | TOC longo, `sticky` e scroll-spy | 5 |
+| Painel direito vazio | `Referência da API › Introdução › Autenticação` | `ApiDocItem` com prosa autoral — o painel condicional | 5 |
+
+**Dez das treze estão no artefato; as três últimas moram na Referência da API** e são cobradas no slice dela.
+
+**Duas fixtures ganharam da regra, e as duas ganharam pelo mesmo motivo.** `Ambientes` fica abaixo do mínimo de heading (§4.1) e `Conciliação` fica abaixo do mínimo de estrutura do tipo `Conceitual` — sem tabela, sem bloco e sem `:::`, porque *"prosa pura"* é literalmente o que ela existe para exercitar. **Quando a fixture e o orçamento discordam, ganha a fixture** — o orçamento existe para produzir páginas plausíveis, e a fixture existe para provar uma medida. São essas duas, e nenhuma terceira sem passar por aqui.
+
+**O domínio entrega o aninhamento de quatro níveis antes de a Referência precisar dele.** `cobranca.pagamento.cartao.verificacoes` está escrito em `Meios de pagamento › Cartão`, com `<ResponseField>` sobre `<Expandable>` em três `<details>` encaixados. A fixture do caso continua sendo a página gerada do slice 5; o que este slice garante é que **o domínio já produz a borda que o validador de lá vai travar**, em vez de a borda ser descoberta pelo gerador.
 
 ---
 
-## 8. Locale — *aberto, slice 4*
+## 8. Locale — 44 traduzidas, 29 buracos de propósito
 
 A regra: **o EN cobre orientar-se e consultar; o pt-BR cobre também executar no mercado local.** Um desenvolvedor de fora integrando com uma API de pagamento brasileira precisa do quickstart, dos conceitos, do SDK e da referência; Pix, boleto, split e conciliação não têm leitor de EN.
 
-**EN cobre 44 das 73 páginas; 29 são buraco de propósito.** *(Correção de aritmética: os números da resolução original somavam errado — as listas dela fecham em 44 e 29, não em 38 e 35.)*
+| Traduzido para EN | Só pt-BR |
+| --- | --- |
+| `Comece aqui` 4 · `Conceitos` 6 · `SDKs` 4 | `Meios de pagamento` 7 · `Guias` 6 |
+| **Referência da API** 30 — slice 5, do contrato bilíngue | `Operação` 6 · `Receitas` 10 |
+| **44** | **29** |
 
-A página não traduzida é gerada **em silêncio**, com o texto em português, sem aviso e sem relatório. Uma spec que nunca exercita esse estado não decidiu nada sobre ele; só não esbarrou nele. A sinalização é um componente de conteúdo que lê o locale corrente e devolve nada em pt-BR — e a mecânica se resolve sozinha, porque a tradução substitui o arquivo inteiro: o marcador aparece em `/en/` exatamente enquanto não houver contraparte, e some no instante em que houver. Sem lista para manter, sem flag, sem drift possível.
+**Deste slice saem 14 das 44.** As outras 30 são a Referência da API, e elas são o melhor negócio do projeto: o gerador emite os dois locales a partir de um contrato bilíngue, o que custa poucas linhas nele e entrega trinta páginas traduzidas.
 
-O detalhe fica no slice 4, com o conteúdo.
+*(Correção de aritmética, mantida: os números da resolução original somavam errado — as listas dela fecham em 44 e 29, não em 38 e 35.)*
+
+### 8.1 A sinalização se resolve sozinha, e é isso que a torna barata
+
+A página não traduzida é gerada **em silêncio**, com o texto em português, sem aviso e sem relatório. Uma spec que nunca exercita esse estado não decidiu nada sobre ele; só não esbarrou nele.
+
+A sinalização é um componente de conteúdo que lê o locale corrente e devolve nada em pt-BR. A mecânica se resolve sozinha porque **a tradução substitui o arquivo inteiro**: o marcador escrito no fonte pt-BR aparece em `/en/` exatamente enquanto não houver contraparte, e some no instante em que houver.
+
+A convenção de autoria que fecha o contrato é de uma linha, e ela vale para os **44** arquivos de `conteudo/` — as 43 autorais mais a introdução da Referência da API, que é pt-BR e ainda não tem contraparte:
+
+> **Todo arquivo de conteúdo em pt-BR abre com `<Untranslated />` logo abaixo do `# h1`. Nenhum arquivo de tradução o carrega.**
+
+**Sem lista para manter, sem flag, sem drift possível** — e agora sem confiar na memória de quem escreve, porque as duas metades da convenção são cobradas pelo portão 4 (§4.2). O custo é uma linha em cada fonte; o que ela compra é que traduzir uma seção nova não exige tocar em lugar nenhum além dos arquivos traduzidos.
+
+### 8.2 O que é traduzível fora do conteúdo
+
+| Superfície | Onde a tradução mora |
+| --- | --- |
+| Rótulos das três tabs | `i18n/en/docusaurus-theme-classic/navbar.json` |
+| Links e copyright do footer | `i18n/en/docusaurus-theme-classic/footer.json` |
+| Rótulos das seis categorias de sidebar | `i18n/en/docusaurus-plugin-content-docs/current.json` |
+| Texto dentro dos componentes do catálogo | `i18n/en/code.json` |
+| **`title` e `tagline`** | **não são traduzíveis** — e é por isso que o produto se chama `Trilho` |
+
+A última linha é a restrição que escolheu o nome do produto, lá no §1. Substantivo próprio atravessa os dois locales sem tradução, e o *workaround* que existe para o resto é declaradamente temporário e fora da API pública.
+
+**O gerador de traduções emite mais arquivos do que o site consome, e só os consumidos entram no repo.** Ele cria um `current.json` por instância de docs, e nas instâncias `api` e `receitas` esse arquivo sai com uma chave só — o rótulo da versão, que **nada renderiza**, porque o §5 dispensa versionamento. Arquivo de tradução sem string traduzível é a mesma classe de defeito das variáveis inertes do Infima, e ele fica de fora. A regra é *o que tem consumidor entra inteiro; o que não tem não entra* — e é por isso que o `current.json` da instância `default` fica com a chave de versão que ele também não usa: ele tem seis rótulos de categoria que são usados, e podar à mão um arquivo gerado é churn que o próximo `write-translations` desfaz.
+
+**O que também não se traduz, por decisão e não por limitação:** nome de objeto, nome de campo e valor de status. `cobranca`, `referencia_externa` e `paga` são contrato da API, não prosa — traduzi-los na página produziria um leitor de EN escrevendo código que não compila. Só a prosa em volta muda de idioma, e a página de entrada em EN diz isso em voz alta em vez de deixar o leitor deduzir.
 
 ---
 
@@ -247,5 +379,19 @@ A forma do `llms-full.txt`, o ponteiro de volta em cada `.md` e o aviso de `Cont
 | A sidebar da API vem do gerador | origem própria | consequência de a Referência ser gerada ([#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18)) |
 | `Changelog` escrita no slice 2 | **origem própria (implementação)** | o link de footer está em todas as rotas, e o verificador de links reprova rota ausente |
 | `Catálogo de componentes` como folha de `Guias` | **origem própria (implementação)** | o slice do catálogo ([#36](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36)) exige a fixture no site publicado |
-| A divergência da fixture de página curta | **origem própria (implementação)** | a página do slice 1 antecede a fixture |
+| Os nove gabaritos e os orçamentos de estrutura | herdado | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §4 e §5 |
+| As treze fixtures com dona nomeada | herdado | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §8 |
+| A exceção de heading é `Ambientes`, e é uma só | **origem própria (resolução)** | a divergência que a redação do slice 2 deixou aberta; a fixture é a razão de a regra existir |
+| Quando a fixture e o orçamento discordam, ganha a fixture | **origem própria** | `Ambientes` e `Conciliação` são as duas, e nenhuma terceira sem passar por aqui |
+| O índice de categoria não é um décimo tipo | **origem própria** | consequência de tipo ser convenção de conteúdo: piso do tipo da seção mais um índice |
+| `<CardGroup>` também na intro de `Receitas` | **origem própria** | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) deu cartão às três categorias fracas; a tab plana tem o mesmo problema e nenhuma sidebar que o resolva |
+| Go tem página e não tem snippet gerado | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) — a perda nº 3 da [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6), aterrissada à vista |
+| A convenção de uma linha do `<Untranslated />` | **origem própria (implementação)** | o componente já resolvia o drift; a convenção resolve o esquecimento |
+| Nome de objeto e de campo não se traduz | **origem própria** | contrato de API não é prosa — traduzi-lo produz código que não compila |
+| O portão 4 e o `onBrokenAnchors: 'throw'` | **origem própria (implementação)** | os critérios desta seção são contagens, e este slice traz as primeiras âncoras intra-página do site |
+| O manifesto de tipo mora no portão, não no conteúdo | **origem própria (implementação)** | o §6 proíbe `type:` no front matter; um manifesto de build não toca página nem CSS |
+| A coluna de estrutura obriga, a de palavras é indicativa | **origem própria (resolução)** | *palavra é proxy ruim* é da [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) §5, e este documento a leva a sério |
+| `Pix — QR dinâmico` e `Split` são `Conceitual` | **origem própria (correção)** | o portão as pegou sem `<Steps>`; mudou a classificação, não o gabarito |
+| Os dois nomes de componente de versão, verbatim | **origem própria (implementação)** | ausência descrita e não nomeada não é greppável |
+| A forma de link de categoria virou cobertura sem fixture | **origem própria (implementação)** | as seis seções passaram a ter folha; a regra fica, e o motivo de ficar vai escrito |
 | Este documento é dono dos artefatos AI-era | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16), fechando a lacuna de dono |

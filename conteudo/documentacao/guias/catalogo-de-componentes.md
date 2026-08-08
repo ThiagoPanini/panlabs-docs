@@ -5,14 +5,14 @@ description: Os dezoito componentes que a documentação do Trilho oferece a que
 
 # Catálogo de componentes
 
+<Untranslated />
+
 Esta página é a **fixture do catálogo**: ela exercita os dezoito componentes de
 conteúdo com todas as variantes, para que a aparência de cada um possa ser
 conferida num lugar só em vez de caçada por dezenas de páginas.
 
 Ela também é o guia de autoria. Tudo abaixo foi escrito num arquivo `.md` comum,
 **sem um único `import`** — os dezoito são globais.
-
-<Untranslated />
 
 ## Aviso e destaque
 
@@ -157,10 +157,21 @@ sobre a classe estável mais a paleta de sintaxe do arquivo de tokens.
 ```js title="verificar-assinatura.js"
 import {createHmac, timingSafeEqual} from 'node:crypto';
 
-export function assinaturaConfere(corpo, cabecalho, segredo) {
-  const esperado = createHmac('sha256', segredo).update(corpo).digest('hex');
+export function assinaturaConfere(corpoCru, cabecalho, segredo) {
+  // "t=1786745524,v1=8f3a…" — a string assinada é `t + "." + corpo`.
+  const {t, v1} = Object.fromEntries(
+    cabecalho.split(',').map((item) => item.split('=')),
+  );
+
+  const esperado = createHmac('sha256', segredo)
+    .update(`${t}.`)
+    .update(corpoCru)
+    .digest();
+  const recebido = Buffer.from(v1, 'hex');
+
   // Comparação em tempo constante: `===` vaza o prefixo correto pelo relógio.
-  return timingSafeEqual(Buffer.from(esperado), Buffer.from(cabecalho));
+  // O guarda de comprimento não é zelo — `timingSafeEqual` lança sem ele.
+  return recebido.length === esperado.length && timingSafeEqual(esperado, recebido);
 }
 ```
 
@@ -254,14 +265,19 @@ A `table` é Markdown puro. O que o componente acrescenta é o invólucro que ro
 e que devolve à tabela a semântica que o framework tirava dela ao torná-la um
 bloco.
 
+Estas seis linhas são um recorte verbatim de
+[Operação › Códigos de recusa](../operacao/codigos-de-recusa), que é a fixture da
+tabela larga. Duas cópias da mesma tabela divergem no primeiro mês, então esta é
+recorte e não paráfrase.
+
 | Código | Meio | Significado | Reapresentar? | Prazo |
 | --- | --- | --- | --- | --- |
-| `saldo_insuficiente` | Pix, cartão | O pagador não tem o valor disponível | sim, depois de 24h | imediato |
-| `cartao_expirado` | cartão | A validade passou | não, peça outro cartão | imediato |
-| `emissor_indisponivel` | cartão | O banco emissor não respondeu | sim, em minutos | até 30s |
-| `chave_pix_invalida` | Pix | A chave não existe ou foi removida | não | imediato |
-| `boleto_vencido` | boleto | A data de vencimento passou | não, gere outro | 3 dias úteis |
-| `limite_diario_excedido` | Pix | O pagador estourou o limite noturno | sim, no dia seguinte | imediato |
+| `saldo_insuficiente` | Pix, cartão | o pagador não tem o valor disponível | sim | 24 h |
+| `cartao_expirado` | cartão | a validade passou | **não** | peça outro cartão |
+| `emissor_indisponivel` | cartão | o banco emissor não respondeu | sim | 30 s |
+| `chave_pix_invalida` | Pix | a chave não existe ou foi removida | **não** | corrija a chave |
+| `boleto_vencido` | boleto | a data de vencimento passou | **não** | gere outro |
+| `limite_diario_excedido` | Pix, cartão | estourou o teto do dia | sim | no dia seguinte |
 
 O `icon` é o vocabulário do autor dentro da prosa, em três tamanhos com
 compensação óptica de traço: <Icon name="database" /> pequeno,
@@ -325,7 +341,8 @@ O identificador da cobrança, com prefixo `cob_`.
 </ResponseField>
 
 <ResponseField name="status" type="string">
-Um de `criada`, `paga`, `liquidada`, `expirada` ou `cancelada`.
+Um dos sete de [Conceitos › Ciclo de vida](../conceitos/ciclo-de-vida): `criada`,
+`pendente`, `paga`, `liquidada`, `recusada`, `expirada` ou `cancelada`.
 </ResponseField>
 
 <ResponseField name="eventos" type="array de object">
@@ -349,14 +366,18 @@ Quando aconteceu, no relógio do Trilho.
 O `update` é a entrada de changelog. O conteúdo desta documentação não é
 versionado; a API é, por cabeçalho — e este componente é onde a mudança se conta.
 
-<Update label="2026-08-01" tag="2026-08-01">
-`POST /cobrancas` passa a aceitar `referencia_externa`, e ela vira o campo de
-conciliação recomendado.
+São duas props: `label`, que é a data, e `tag`, que é a **etiqueta de versão** e é
+opcional. As duas entradas abaixo são fictícias e existem para mostrar as duas
+formas — o changelog de verdade está em
+[Operação › Changelog](../operacao/changelog).
 
-Sem quebra: quem não manda o campo continua funcionando.
+<Update label="12 de março" tag="v1.4">
+Com `tag`: a etiqueta aparece ao lado da data. Serve quando a versão tem nome
+próprio, como a de um SDK.
 </Update>
 
-<Update label="2026-05-14" tag="2026-05-14">
-`descricao_curta` marcada como obsoleta em favor de `descricao`. Ela continua
-sendo aceita e continua sendo devolvida.
+<Update label="27 de fevereiro">
+Sem `tag`: só a data. **É esta a forma que o changelog do Trilho usa**, porque
+aqui a versão da API *é* a data — repeti-la na etiqueta imprimiria o mesmo valor
+duas vezes.
 </Update>

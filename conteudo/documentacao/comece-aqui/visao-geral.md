@@ -5,6 +5,8 @@ description: O que o Trilho faz, o que ele deliberadamente não faz, e o caminho
 
 # Visão geral
 
+<Untranslated />
+
 O Trilho é uma API de pagamentos brasileira. Pix, boleto, cartão, split e
 assinaturas, sob um contrato só — `api.trilho.dev/v1`.
 
@@ -28,9 +30,11 @@ emite um, e é ele que chega no seu webhook.
 
 ## O que você faz primeiro
 
-1. Pegue uma chave de sandbox. Ela começa com `tk_test_` e não cobra ninguém.
-2. Crie uma cobrança de R$ 1,00 em Pix e leia o QR de volta.
-3. Aponte um webhook para um endpoint seu e confira a assinatura HMAC.
+1. Escolha o [ambiente](ambientes) e pegue a chave. Ela começa com `tk_test_` e
+   não cobra ninguém.
+2. Confira que a chave responde, em [Autenticação](autenticacao).
+3. Siga a [primeira cobrança](primeira-cobranca): crie um Pix de R$ 1,00, simule
+   o pagamento e receba o evento.
 
 Os três passos cabem em dez minutos e exercitam a API inteira: autenticação,
 criação, leitura e notificação. Depois disso, o resto é vocabulário.
