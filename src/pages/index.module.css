@@ -93,8 +93,11 @@
 
      O ar e o tamanho do título são o par que a REGRA DA DOBRA dimensiona: a
      375 × 667 a borda de cima da laje precisa aparecer acima da dobra, e é a
-     restrição que manda no valor. Ver docs/design/landing.md §4. */
-  --sd-hero-ar: var(--sd-space-10);
+     restrição que manda nos dois valores. `--sd-space-8` e não `--sd-space-10`
+     porque a folga precisa cobrir o PIOR CASO de quebra, e não o caso nominal:
+     os dois botões quebrando para duas linhas custam mais que a folga que o
+     degrau maior deixava. A conta inteira está em docs/design/landing.md §4. */
+  --sd-hero-ar: var(--sd-space-8);
   --sd-hero-titulo: var(--sd-type-4xl);
 
   position: relative;

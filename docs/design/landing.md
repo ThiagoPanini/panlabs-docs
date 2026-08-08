@@ -183,19 +183,41 @@ inteiro, somado por token:
 
 | | token | px |
 | --- | --- | ---: |
-| ar de cima | `--sd-space-10` | 40 |
+| ar de cima | `--sd-space-8` | 32 |
 | headline, 3 linhas | `--sd-type-4xl` × `--sd-leading-h1` | 120 |
 | headline → pitch | `--sd-space-4` | 16 |
 | pitch, 3 linhas | `--sd-type-lg` × `--sd-leading-prose` | 94,5 |
 | pitch → botões | `--sd-space-6` | 24 |
-| botões | 2 × `--sd-space-3` + `--sd-type-base` × `--sd-leading-ui` | 48 |
-| ar de baixo | `--sd-space-10` | 40 |
+| botões, uma linha | 2 × `--sd-space-3` + `--sd-type-base` × `--sd-leading-ui` | 48 |
+| ar de baixo | `--sd-space-8` | 32 |
 | `<h2>` da seção 2 | `--sd-type-2xl` × `--sd-leading-h2` | 32 |
 | `<h2>` → laje | `--sd-space-6` | 24 |
-| **= topo da laje** | | **438,5** |
+| **= topo da laje** | | **422,5** |
 
-**Folga: 46,5px** — mais que uma linha extra de headline (40). A regra existe
-para ser conferida, não para apertar.
+**Folga: 62,5px.** A fatia visível da laje fica em 74,5 — bem acima do piso de
+`--sd-radius-md`.
+
+> **A folga é dimensionada pelo pior caso, e não pelo nominal — e é por isso que
+> o ar é `--sd-space-8`.** Duas linhas da tabela **não saem de token**: quantas
+> linhas a headline e o pitch ocupam depende de medida de fonte, e medida de
+> fonte não é valor deste sistema. Então a folga é orçada contra as duas quebras
+> que de fato podem acontecer:
+>
+> | Quebra | Custo |
+> | --- | ---: |
+> | uma linha a mais de headline | 40 |
+> | uma linha a mais de pitch | 31,5 |
+> | os dois botões empilhando | 60 (48 do botão + 12 do `gap`) |
+>
+> **Qualquer uma das três cabe nos 62,5. Duas ao mesmo tempo, não** — e isso vai
+> escrito em vez de ficar implícito. Com o ar num degrau acima, a folga era 46,5
+> e a quebra dos botões **sozinha** já derrubava a laje: a regra passaria a
+> depender de os rótulos caberem, que é exatamente a falha silenciosa que ela
+> existe para pegar.
+
+**De 997px o ar sobe junto com o título**, para `--sd-space-16`. O orçamento da
+dobra é restrição do estreito, e acima do limiar ela deixa de mandar nos dois
+valores — não só no título. O limiar é o único do projeto.
 
 ### O tamanho do título, e quem manda nele
 
@@ -204,20 +226,24 @@ orçamento acima, e ele é `--sd-type-4xl`.**
 
 A conta que fecha a escolha: o degrau seguinte, `--sd-type-5xl`, mede 48 e
 quebra a mesma headline em quatro linhas de 53,3 — **213px onde três linhas de
-36 custam 120**. Os 93 de diferença não cabem nos 46,5 de folga. **A restrição
+36 custam 120**. Os 93 de diferença não cabem nos 62,5 de folga. **A restrição
 manda no valor**, e não o contrário.
 
-**De 997px o orçamento da dobra deixa de ser a restrição que manda, e o título
-sobe para `--sd-type-5xl`.** O limiar é o único do projeto — o literal compilado
-do Infima, o mesmo que mostra e esconde a sidebar.
+De 997px ela para de mandar, e o título sobe para `--sd-type-5xl` junto com o ar.
 
 `--sd-type-5xl` nasce com a landing e **não é escala nova**: é o próximo nome da
 mesma escala do alvo, e tem exatamente um consumidor no site inteiro.
 
 **Os dois botões ficam lado a lado no estreito.** `Começar` e `Referência da
 API` somam menos que os 311 disponíveis, e empilhar custaria uma linha inteira
-do orçamento por nada. Se um dia não couberem, o rótulo está longo — é conserto
-de conteúdo, não de layout.
+do orçamento por nada.
+
+**Mas a regra não depende de eles caberem, e essa é a diferença que importa.**
+Largura de rótulo é medida de fonte, e medida de fonte não é valor deste sistema
+— tratar o empilhamento como *"conserto de conteúdo, não de layout"* devolveria
+a regra da dobra ao terreno da falha silenciosa. Por isso o custo do
+empilhamento (60) está **dentro** da folga orçada acima: se um dia os rótulos
+crescerem, os botões quebram e a laje **continua** acima da dobra.
 
 ---
 
@@ -278,8 +304,15 @@ alguém teria que manter. O projeto continua sem escala de z-index.
 **As camadas 1 e 2 dividem um contêiner**, porque **figura e glow são um objeto
 só**: a luz na linha. Um glow flutuando num fundo qualquer seria enfeite; um
 glow sobre o trilho é o trilho aceso. É esse contêiner que resolve a ancoragem
-sem inventar um segundo elemento decorativo — o centro do glow fica na aresta de
-baixo do hero, que é **a aresta de cima da laje**.
+sem inventar um segundo elemento decorativo — **o centro do glow fica na aresta
+de baixo do hero, que é onde a figura termina.**
+
+> **Precisão que a primeira redação errou por 56px.** A aresta de baixo do hero
+> não é a aresta de cima da **laje**: entre as duas estão o `<h2>` da seção 2
+> (32) e o `gap` dela (24) — os dois já contados na tabela da §4. O que a aresta
+> de baixo do hero é, exatamente, é **o fim da figura e o começo da seção do
+> código**. A luz cobre os dois de qualquer jeito, porque a caixa dela é
+> quadrada e larga como o site; o que estava errado era a frase, não o pixel.
 
 ### A figura é o trilho
 
@@ -340,6 +373,20 @@ contra:** um elemento vivo num sistema imóvel lê como assinatura; dois é enfe
 | `--sd-move-showcase` | a entrada da ilha — a luz sobe uma vez, no carregamento | sim | encurta com a escala |
 | `--sd-move-ambient` | a respiração do glow | **não** — infinito | **removido** |
 | `--sd-move-reveal` | o reveal das seções 3 e 4 | **não** — dirigido por rolagem | **removido** |
+
+> **São três e não dois, e a terceira precisa de justificativa porque a issue
+> deste slice lista duas.** `--sd-move-showcase` não é movimento novo: ele é um
+> dos **seis** do vocabulário, o papel dele já estava escrito como *entrada da
+> ilha de espetáculo*, e [`motion.md`](motion.md) §6 já contava quatro
+> `@keyframes` no projeto inteiro — busca, **entrada da ilha**, reveal e
+> respiração. Este é o slice em que a ilha nasce, logo é o único slice em que
+> essa entrada pode ganhar consumidor.
+>
+> A alternativa era deixá-lo declarado e sem ninguém que o leia, que é
+> **variável inerte** — o defeito do Infima que este projeto nomeou para não
+> copiar. Ele também não disputa nada com o teto de um loop por página: a
+> entrada **termina sozinha**, e por isso encurta com a escala sob `reduce` em
+> vez de precisar ser removida.
 
 **Um loop por página, e só dentro de `[data-sd-showcase]`.** Fora da ilha
 `--sd-glow` não resolve para nada, e nem o par de amplitude nem a respiração
