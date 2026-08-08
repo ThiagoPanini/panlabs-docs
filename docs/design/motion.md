@@ -185,6 +185,8 @@ Sobram pouquíssimos, porque o vocabulário é transição: o modal de busca, a 
 
 A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não é mais estrito por acaso: o bloco de vocabulário sobrevive porque ele declara **tokens**, não declarações `transition:` ou `animation:`. *"Fora do bloco de vocabulário"* e *"em toda parte"* coincidem por construção.
 
+> **Emenda, do slice da landing.** O arquivo de tokens passou a ter **uma** declaração `animation:` — o `animation: none` que remove a respiração do glow no bloco `reduce` (§3). Ela passa no portão porque `none` não é duração nem curva, e a coincidência acima continua valendo pelo que ela de fato afirma: **o que o portão cobra é valor cravado, e o arquivo de tokens não crava nenhum fora dos tokens**. A regra não afrouxou; a frase é que era mais estreita que a regra.
+
 ---
 
 ## 8. Perdas nomeadas

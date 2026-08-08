@@ -454,6 +454,30 @@ Cada uma escrita como **perda com motivo**, e não como silêncio.
 ilustrador e sem pipeline, seria o item mais frágil da spec, e o axioma 5 não dá
 o que medir.
 
+### A perda nomeada: a landing é monolíngue
+
+**Em `/en/` a landing renderiza em pt-BR, sem sinal nenhum.** As cerca de vinte e
+cinco cadeias de texto dela são literais no JSX, e não passam por
+`@docusaurus/Translate` como as dos três componentes do catálogo que têm texto
+de chrome.
+
+**Isso é perda declarada, e não descuido.** As duas rotas de conserto foram
+pesadas e as duas custam mais do que compram neste slice:
+
+- **`<Translate>` em cada cadeia** é a rota certa em princípio, e ela **não cabe
+  na forma do arquivo**: `write-translations` extrai por AST e exige `id`
+  **literal**. As duas grades são `map` sobre um array de dados, então id literal
+  obrigaria a desenrolar os oito cartões em JSX explícito — e, sem arquivo de
+  tradução EN (que é buraco de propósito neste projeto), o resultado visível
+  continuaria sendo pt-BR. Ela paga a estrutura toda para não mudar um pixel;
+- **`<Untranslated />`**, o marcador que a documentação usa, **custa a regra da
+  §4**. Ele é uma faixa no topo do conteúdo; na landing ela entraria acima do
+  hero e empurraria a laje para baixo da dobra **no locale EN**. Uma regra
+  conferível que vale num locale e falha no outro é pior que a perda.
+
+**O que reabre:** o dia em que o EN deixar de ser parcial. Aí a rota é
+`<Translate>` com as grades desenroladas, e ela passa a comprar alguma coisa.
+
 ---
 
 ## 9. O que este slice não gastou
@@ -507,6 +531,9 @@ considerada.
 | Laje escura dentro da ilha no modo claro | herdado | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3 — a ilha declara os tokens, o bloco só os lê |
 | Quatro camadas de profundidade | mecanismo emprestado | `mkdocs-material`, com o parallax removido por [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
 | Zero `z-index` — ordem por árvore | **origem própria (implementação)** | o projeto não tem escala de z-index, e esta rota não abre uma |
+| Caixa do glow quadrada, com um comprimento só | **origem própria (implementação)** | dois lados exigiriam um segundo comprimento sem raiz — a derivação falsa que o arquivo de tokens recusa |
+| Tinta da figura na camada 3 da ilha, por `rgb(from …)` | herdado | a operação 1 das três legais de [`tokens.md`](tokens.md) §1; derivação de alfa é cor, e cor nasce no arquivo de tokens |
+| Landing monolíngue, como perda declarada | **origem própria (implementação)** | id de `Translate` precisa ser literal, e o marcador de tradução custaria a regra da dobra no locale EN |
 | Figura como `<svg>` inline do trilho | **origem própria** | [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) §5 — nome do produto; nada medido |
 | Figura fora do manifesto de ícones | origem própria | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) — manifesto governa glifo em tamanho de UI |
 | Contrato do slot da figura, seis linhas | **origem própria (implementação)** | [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) §5 pediu o contrato; as seis linhas saem de implementar |

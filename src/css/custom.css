@@ -116,39 +116,18 @@ samp {
    repintam em vez de compor. Ver docs/design/motion.md §6.
 
    ---------------------------------------------------------------------------
-   COMO SE REFERENCIA ISTO DE DENTRO DE UM CSS MODULE — e por que a forma óbvia
-   não funciona
+   DUAS REGRAS DE CONSUMO, e as duas são achado de build — o sintoma delas é
+   `docusaurus start` animando e o site publicado não.
 
-   Achado do slice da landing, medido no CSS emitido e não deduzido. A regra
-   escrita era *"um módulo pode referenciar keyframe global sem problema"*, e
-   ela está errada em produção, por dois mecanismos que se somam:
+     · de dentro de um CSS Module, referencie por `global(nome)`, sem
+       dois-pontos. A forma nua é manglada no consumidor e o minificador apaga
+       o keyframe órfão;
+     · nome de `@keyframes` NÃO viaja dentro de custom property, e é por isso
+       que a respiração do glow é desligada por uma regra no bloco `reduce` de
+       `tokens.css` em vez de por um token que valha `none`.
 
-     1. o `css-loader` localiza o nome de TODA declaração `animation` de um
-        módulo — inclusive nome que o módulo não define. `animation: sd-revela`
-        vira `animation: sd-revela_AtwH`, que não existe;
-     2. o minificador do Docusaurus (`cssnano-preset-advanced`) roda
-        `postcss-discard-unused`, que apaga `@keyframes` sem referência. Com o
-        nome manglado no consumidor, os três aqui viram órfãos e SOMEM do
-        bundle.
-
-   O sintoma é o pior possível: `docusaurus start` anima, o site publicado não,
-   e nada avisa em lugar nenhum.
-
-   A forma correta é `global(...)` dentro do valor — sem dois-pontos, que é
-   outra sintaxe e não casa:
-
-       animation: global(sd-revela) var(--sd-move-reveal) both;
-
-   Ela resolve os dois de uma vez: o nome chega inteiro ao CSS emitido, e o
-   minificador passa a enxergar a referência. `postcss-reduce-idents` continua
-   livre para encurtar o nome, porque agora ele vê os dois lados.
-
-   CONSEQUÊNCIA que vale escrita: nome de `@keyframes` **não viaja dentro de
-   custom property**. `animation: var(--um-token)` não é varrido por nenhum dos
-   dois plugins, então o keyframe volta a ser apagado — e se não fosse, o
-   `reduce-idents` renomearia o `@keyframes` sem renomear o token. É por isso
-   que a respiração do glow é desligada por uma REGRA no bloco `reduce` de
-   `tokens.css`, e não por um token que valha `none`.
+   Os dois mecanismos, com o nome de cada plugin, estão em
+   docs/design/motion.md §6 — aqui ficam as regras, não a demonstração.
    ----------------------------------------------------------------------------- */
 
 /* A entrada da ilha — `--sd-move-showcase`. A luz sobe uma vez, no

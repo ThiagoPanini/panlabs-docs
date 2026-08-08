@@ -523,6 +523,22 @@
 [data-sd-showcase] {
   --sd-glow: radial-gradient(circle, rgb(from var(--sd-accent) r g b / 12%), transparent 70%);
 
+  /* A caixa do glow, e ela é QUADRADA: o gradiente é `circle`, e caixa não
+     quadrada faz o raio da luz depender de qual lado é maior. Um lado só, e ele
+     é a largura do site — a luz tem a medida do conteúdo. Dois lados exigiriam
+     um segundo comprimento sem raiz, que é a derivação falsa que este arquivo
+     recusa em voz alta mais acima. */
+  --sd-glow-tamanho: var(--sd-container-width);
+
+  /* A tinta da figura do trilho. Derivação de ALFA, então é a operação 1 —
+     `rgb(from …)` sobre UMA cor —, e não `color-mix` com `transparent`, que
+     seria a operação 2 fingida sobre uma coisa que não é token.
+
+     Ela mora aqui e não no CSS Module da landing por consequência do portão 1:
+     cor nasce neste arquivo e em nenhum outro. E ganha de graça a propriedade
+     da ilha — fora dela não resolve. */
+  --sd-trilho-tinta: rgb(from var(--sd-text-strong) r g b / 24%);
+
   /* A amplitude da respiração — PAR DECLARADO sobre o alfa do glow, e não um
      segundo gradiente com outro alfa. São fatores, não cores: a camada
      decorativa multiplica por `opacity` o alfa que o gradiente já entrega, e o

@@ -18,7 +18,9 @@
 
    Os `@keyframes` que este arquivo consome são GLOBAIS, em `custom.css`. CSS
    Modules manglam o nome do keyframe que o módulo define, e a falha é
-   silenciosa. Referenciar keyframe global de dentro de um módulo funciona.
+   silenciosa. **Referenciá-los daqui exige `global(…)`** — sem isso o nome é
+   manglado no consumidor e o minificador apaga o keyframe órfão. Os dois
+   mecanismos estão em `custom.css` e em docs/design/motion.md §6.
 
    Procedência: docs/design/landing.md.
    ============================================================================= */
@@ -148,16 +150,13 @@
 /* Camada 1. A figura preenche a caixa do hero e sangra pelas laterais; o
    contrato do slot está no fonte de `index.js`. */
 .figura {
-  /* Camada 3 — a tinta do trilho, derivada da camada 2. `color-mix` porque é a
-     operação de derivação que sobrevive fora do arquivo de tokens: `oklch(from
-     …)` e `rgb(from …)` carregam o nome de uma função de cor, e o portão 1 as
-     reprova aqui — corretamente. */
-  --sd-trilho-tinta: color-mix(in oklab, var(--sd-text-strong) 24%, transparent);
-
   position: absolute;
   inset: 0;
   inline-size: 100%;
   block-size: 100%;
+  /* Camada 3, declarada no escopo da ilha em `tokens.css` — derivação de alfa é
+     cor, e cor nasce lá. `currentColor` é o que o contrato do slot manda a
+     `<svg>` usar, então trocar a figura não toca em CSS. */
   color: var(--sd-trilho-tinta);
 }
 
@@ -182,8 +181,8 @@
   position: absolute;
   inset-block-end: 0;
   inset-inline-start: 50%;
-  inline-size: var(--sd-container-width);
-  block-size: var(--sd-prose-width);
+  inline-size: var(--sd-glow-tamanho);
+  block-size: var(--sd-glow-tamanho);
   translate: -50% 50%;
   background: var(--sd-glow);
   animation: global(sd-respira) var(--sd-move-ambient) infinite;
@@ -224,8 +223,11 @@
   gap: var(--sd-space-3);
 }
 
-/* `inline-flex` e não `inline-block`: a caixa ganha altura própria, que é o que
-   faz o piso de alvo de toque do contrato de entrada alcançar o botão. */
+/* `inline-flex`, e o motivo é o rótulo e não a altura: no toque o piso de alvo
+   do contrato de entrada estica a caixa, e o `align-content: center` com que
+   `foco.css` centra o rótulo **não vale num flex de uma linha**. `align-items`
+   aqui faz o que ele faria lá; sem isso o texto encosta no topo do botão
+   esticado, e só no toque. */
 .acao {
   display: inline-flex;
   align-items: center;

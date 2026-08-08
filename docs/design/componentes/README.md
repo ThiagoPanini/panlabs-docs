@@ -54,6 +54,16 @@ ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 > obrigaria e que fica assim mesmo é a meta de [`param-field`](param-field.md),
 > porque a rota da Referência da API a nomeia verbatim no contrato dela.
 
+**O contrato tem um consumidor que não é um dos dezoito, e ele vale registrado.**
+A landing usa `data-sd-part="glow"` na camada decorativa do hero, e
+`data-sd-component` para alcançar `card` e `card-group` dentro do JSX dela — ver
+[`landing.md`](../landing.md) §7. Não é exceção à régua: é a régua aplicada fora
+do MDX. O `glow` existe porque o bloco `reduce` de `tokens.css` precisa alcançar
+um elemento cuja classe é de CSS Module e portanto **hasheada** — que é
+literalmente *o CSS não alcança por tipo de elemento*. E os dois
+`data-sd-component` já eram publicados: quem os lê de fora lê contrato, não
+implementação.
+
 **5. Nenhum componente conhece modo de cor.** As duas exceções declaradas são
 [`code-block`](code-block.md) e [`frame`](frame.md), e só elas. Consequência
 prática: o corporativo troca **quatro** cores de callout, não vinte.
