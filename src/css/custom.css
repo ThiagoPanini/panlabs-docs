@@ -99,6 +99,91 @@ samp {
 }
 
 /* -----------------------------------------------------------------------------
+   Os `@keyframes` — na folha global, nunca em `*.module.css`
+
+   CSS Modules manglam o nome do `@keyframes` que o módulo **define**, e um
+   keyframe definido num módulo é inalcançável de fora dele. A falha é
+   silenciosa: não anima e não avisa. Um módulo pode **referenciar** keyframe
+   global sem problema, então a landing usa estes três e o confinamento dela
+   continua intacto — o que mora no módulo dela é a REGRA, não o desenho do
+   movimento.
+
+   São três, e são os três movimentos que a ilha e a landing licenciam. O quarto
+   — a entrada do modal de busca — nasce no slice da busca.
+
+   Nenhum deles crava duração ou curva: quem as escolhe é a regra que os
+   consome, por nome de movimento. E nenhum anima `filter` ou `blur`, que
+   repintam em vez de compor. Ver docs/design/motion.md §6.
+
+   ---------------------------------------------------------------------------
+   COMO SE REFERENCIA ISTO DE DENTRO DE UM CSS MODULE — e por que a forma óbvia
+   não funciona
+
+   Achado do slice da landing, medido no CSS emitido e não deduzido. A regra
+   escrita era *"um módulo pode referenciar keyframe global sem problema"*, e
+   ela está errada em produção, por dois mecanismos que se somam:
+
+     1. o `css-loader` localiza o nome de TODA declaração `animation` de um
+        módulo — inclusive nome que o módulo não define. `animation: sd-revela`
+        vira `animation: sd-revela_AtwH`, que não existe;
+     2. o minificador do Docusaurus (`cssnano-preset-advanced`) roda
+        `postcss-discard-unused`, que apaga `@keyframes` sem referência. Com o
+        nome manglado no consumidor, os três aqui viram órfãos e SOMEM do
+        bundle.
+
+   O sintoma é o pior possível: `docusaurus start` anima, o site publicado não,
+   e nada avisa em lugar nenhum.
+
+   A forma correta é `global(...)` dentro do valor — sem dois-pontos, que é
+   outra sintaxe e não casa:
+
+       animation: global(sd-revela) var(--sd-move-reveal) both;
+
+   Ela resolve os dois de uma vez: o nome chega inteiro ao CSS emitido, e o
+   minificador passa a enxergar a referência. `postcss-reduce-idents` continua
+   livre para encurtar o nome, porque agora ele vê os dois lados.
+
+   CONSEQUÊNCIA que vale escrita: nome de `@keyframes` **não viaja dentro de
+   custom property**. `animation: var(--um-token)` não é varrido por nenhum dos
+   dois plugins, então o keyframe volta a ser apagado — e se não fosse, o
+   `reduce-idents` renomearia o `@keyframes` sem renomear o token. É por isso
+   que a respiração do glow é desligada por uma REGRA no bloco `reduce` de
+   `tokens.css`, e não por um token que valha `none`.
+   ----------------------------------------------------------------------------- */
+
+/* A entrada da ilha — `--sd-move-showcase`. A luz sobe uma vez, no
+   carregamento, e termina. Só `opacity`, e só sobre a camada decorativa:
+   nenhum texto, nenhuma borda e nenhuma caixa se mexe. */
+@keyframes sd-acende {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A respiração do glow — `--sd-move-ambient`, infinita. A amplitude é o par
+   declarado no escopo da ilha, e não um número escrito aqui: fora de
+   `[data-sd-showcase]` estas duas variáveis não resolvem. */
+@keyframes sd-respira {
+  from,
+  to {
+    opacity: var(--sd-glow-vale);
+  }
+
+  50% {
+    opacity: var(--sd-glow-crista);
+  }
+}
+
+/* O reveal por rolagem — `--sd-move-reveal`, dirigido pela posição de rolagem.
+   O deslocamento é um degrau da escala de espaço, não um valor de movimento. */
+@keyframes sd-revela {
+  from {
+    opacity: 0;
+    transform: translateY(var(--sd-space-4));
+  }
+}
+
+/* -----------------------------------------------------------------------------
    Foco — mudou de arquivo, e o portão 3 é quem garante que não volte
 
    O slice 1 escreveu aqui um piso de anel, porque o Infima tem ZERO

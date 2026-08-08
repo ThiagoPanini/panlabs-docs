@@ -174,8 +174,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
-     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-4xl)
+     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-5xl)
      para a procedência ficar legível no próprio token.
+
+     O degrau `5xl` nasceu com a landing, e ele NÃO é escala nova: é o próximo
+     nome da mesma escala do alvo, e tem exatamente um consumidor — o título do
+     hero, e só de 997px. Abaixo disso o hero desce para `4xl`, porque a regra da
+     dobra manda no valor: a 375 × 667, um título em 48px estoura o teto da faixa
+     do hero. Ver docs/design/landing.md §4.
      --------------------------------------------------------------------------- */
   --sd-type-xs:    12px;
   --sd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
@@ -184,7 +190,8 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-type-xl:    20px;
   --sd-type-2xl:   24px;
   --sd-type-3xl:   30px;    /* título de página, até 996px */
-  --sd-type-4xl:   36px;    /* título de página, de 997px */
+  --sd-type-4xl:   36px;    /* título de página, de 997px; título do hero até 996px */
+  --sd-type-5xl:   48px;    /* título do hero da landing, de 997px */
 
   /* Peso — três, nomeados por intenção. Nome de intenção não colide com o
      `semibold: 500` do Infima, que é a mesma palavra sobre outro número. */
@@ -321,6 +328,18 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      1152 × 0,75 = 864. A coluna do TOC é o quarto restante, e ela está acima
      como valor porque o Infima a escreve como classe, não como conta. */
   --sd-doc-width: calc(var(--sd-container-width) * 0.75);
+
+  /* A medida do código — o interior do cartão de doc, que é onde o código
+     respira no resto do site: 864 − 2 × 48 = 768. Dentro da página de doc ela
+     não precisa de regra (quem não está na lista de prosa fica com o interior
+     inteiro do cartão); a landing não tem cartão, então ela é o único lugar do
+     projeto que precisa CITAR a medida.
+
+     Ela deriva do cartão e continua não sendo largura nova: é a mesma medida,
+     nomeada. E é por ser derivada do cartão que a GRADE da landing não a usa —
+     lá a largura é o container, porque a grade não é conteúdo de cartão
+     nenhum. Ver docs/design/landing.md §3. */
+  --sd-code-width: calc(var(--sd-doc-width) - 2 * var(--sd-space-12));
 
   /* A folga lateral do shell, de cada lado. Ela dobra a partir de 997px — o
      mesmo limiar em que a sidebar aparece. O par 32/64 é herdado da âncora; o
@@ -570,6 +589,21 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
 [data-sd-showcase] {
   --sd-glow: radial-gradient(circle, rgb(from var(--sd-accent) r g b / 12%), transparent 70%);
+
+  /* A amplitude da respiração — PAR DECLARADO sobre o alfa do glow, e não um
+     segundo gradiente com outro alfa. São fatores, não cores: a camada
+     decorativa multiplica por `opacity` o alfa que o gradiente já entrega, e o
+     vale é o único número que a respiração acrescenta ao sistema.
+
+     Eles moram aqui, no escopo da ilha, pelo mesmo motivo que `--sd-glow`: fora
+     dela não resolvem, e a respiração fica confinada por FATO DE ESCOPO em vez
+     de por regra que alguém precisa lembrar.
+
+     A crista é 1 — o glow como o token o entrega. Uma crista acima de 1 seria
+     um alfa que o gradiente não declara, ou seja o segundo valor que este par
+     existe para não ter. */
+  --sd-glow-vale:   0.62;
+  --sd-glow-crista: 1;
 }
 
 /* =============================================================================
@@ -592,6 +626,29 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
     --sd-dur-1: 1ms;
     --sd-dur-2: 1ms;
     --sd-dur-3: 1ms;
+  }
+
+  /* Os dois que NÃO terminam sozinhos são removidos, não encurtados.
+
+     A respiração do glow sai por aqui: encurtá-la para 1ms produziria
+     estroboscópio, que é o oposto exato do que `reduce` pede.
+
+     Esta é a única regra de ELEMENTO do arquivo fora do adaptador, e ela existe
+     porque `animation: none` não tem como ser entregue por token. O nome do
+     `@keyframes` precisa aparecer LITERALMENTE numa declaração `animation` para
+     sobreviver ao minificador (ver a nota em `custom.css`), então a respiração
+     não pode viajar dentro de uma custom property — e sem isso o bloco `reduce`
+     não alcançaria uma classe de CSS Module hasheada.
+
+     O gancho é `data-sd-part`, que é contrato publicado do projeto, e o par de
+     seletores dá (0,2,0) contra a (0,1,0) da classe do módulo: vence sem
+     `!important` e sem depender de ordem de carga.
+
+     O reveal não aparece aqui porque ele some pelo outro lado: a regra dele
+     mora dentro de `@media (prefers-reduced-motion: no-preference)`, no CSS
+     Module da landing, e simplesmente não entra. Ver ADR 3. */
+  [data-sd-showcase] [data-sd-part='glow'] {
+    animation: none;
   }
 }
 
@@ -1296,6 +1353,10 @@ Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 | `--sd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) corrigindo a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
 | Dois níveis de latitude | mecanismo emprestado | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §3 — a distinção é da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11), aqui vira regra |
 | Dimensões do chrome no arquivo de tokens | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §5 — a anatomia é de `chrome.md` |
+| `--sd-type-5xl`, com um consumidor só | herdado (nome) + origem própria (uso) | o nome continua a série `text-xs … text-4xl` do alvo; o consumidor é o título do hero — [`landing.md`](landing.md) §4 |
+| `--sd-code-width` derivada do cartão | **origem própria (implementação)** | a medida já existia como interior do cartão; a landing é o primeiro consumidor que precisa citá-la por nome |
+| Par de amplitude do glow, no escopo da ilha | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5b — amplitude é par declarado sobre o alfa, não número novo |
+| Regra de elemento no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | ADR 3 — de `tokens.css` não há seletor que alcance uma classe hasheada, e nome de `@keyframes` não sobrevive dentro de custom property ([`motion.md`](motion.md) §6) |
 | Portão de `grep` de literal | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §7 |
 | Espelho verificado por script | origem própria | consequência da regra de fonte única da [#9](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/9) |
 | Aviso do `postcss-calc` sobre cor relativa | **origem própria (achado)** | observado ao rodar o build do slice 1; valor emitido conferido byte a byte |
