@@ -5,6 +5,8 @@ description: A superfície de máquina do Trilho — base, autenticação, vers�
 
 # Visão geral
 
+<Untranslated />
+
 A API do Trilho é REST sobre HTTPS, com corpo em JSON nos dois sentidos. Uma
 base, uma chave, um cabeçalho de versão.
 
@@ -32,12 +34,16 @@ no código, nunca a `mensagem`, que é para humano e pode mudar.
 | Classe | Significa |
 | --- | --- |
 | `400` | a requisição não é válida contra o contrato |
-| `401` | chave ausente, inválida ou de outro ambiente |
-| `402` | o meio de pagamento recusou; ver o catálogo de recusas |
+| `401` `403` | chave ausente, inválida, de outro ambiente ou sem permissão |
 | `404` | o recurso não existe **nesta** conta |
-| `409` | conflito de estado — a transição pedida não existe |
+| `409` | conflito de estado, ou chave de idempotência reusada |
+| `422` | a requisição é válida e os valores não são; `detalhes` traz todos |
 | `429` | limite de taxa; o cabeçalho diz quantas sobram |
 | `5xx` | nosso; pode repetir com a mesma chave de idempotência |
+
+**Recusa do meio de pagamento não está nesta tabela**, e é de propósito: ela é
+uma resposta `201` bem-sucedida, com o desfecho em `status` e `motivo_recusa`. A
+requisição estava certa e o sistema financeiro respondeu *não*.
 
 ## Idempotência
 

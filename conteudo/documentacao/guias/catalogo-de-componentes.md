@@ -5,14 +5,14 @@ description: Os dezoito componentes que a documentação do Trilho oferece a que
 
 # Catálogo de componentes
 
+<Untranslated />
+
 Esta página é a **fixture do catálogo**: ela exercita os dezoito componentes de
 conteúdo com todas as variantes, para que a aparência de cada um possa ser
 conferida num lugar só em vez de caçada por dezenas de páginas.
 
 Ela também é o guia de autoria. Tudo abaixo foi escrito num arquivo `.md` comum,
 **sem um único `import`** — os dezoito são globais.
-
-<Untranslated />
 
 ## Aviso e destaque
 

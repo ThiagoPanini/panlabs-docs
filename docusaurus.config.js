@@ -81,6 +81,13 @@ const config = {
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
+  // O terceiro do trio, e ele nasce neste slice porque é aqui que aparecem os
+  // primeiros links de âncora intra-página — a tabela de sintomas de
+  // `Operação › Diagnóstico`. O default do Docusaurus é `warn`, e âncora
+  // quebrada que só avisa é âncora quebrada que fica. Consequência de contrato:
+  // toda âncora citada por um link é declarada com `{#id}` no próprio heading,
+  // em vez de depender de como o slugger trata acento.
+  onBrokenAnchors: 'throw',
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: 'throw',

@@ -5,9 +5,11 @@ description: Os três SDKs oficiais do Trilho, o que eles cobrem e o que continu
 
 # Visão geral
 
-Três SDKs oficiais: **Node**, **Python** e **Go**. Todos geram do mesmo contrato
-OpenAPI que a Referência da API publica, então nenhum deles conhece um campo que
-a referência não documente.
+<Untranslated />
+
+Três SDKs oficiais: [**Node**](node), [**Python**](python) e [**Go**](go). Todos
+geram do mesmo contrato OpenAPI que a Referência da API publica, então nenhum
+deles conhece um campo que a referência não documente.
 
 ## O que o SDK faz por você
 
@@ -22,6 +24,19 @@ a referência não documente.
 As duas últimas linhas são o motivo real de existir SDK. Cursor implementado
 errado devolve página repetida; verificação de HMAC implementada errada aceita
 requisição forjada.
+
+## Onde os três divergem
+
+| | Node | Python | Go |
+| --- | --- | --- | --- |
+| Versão mínima | 20 | 3.10 | 1.22 |
+| Forma assíncrona | única | segundo construtor | `context.Context` |
+| Tipos | inclusos | inclusos | nativos |
+| **Snippet na Referência da API** | sim | sim | **não** |
+
+A última linha é uma perda declarada, não uma omissão: os exemplos por endpoint
+saem em cURL, Node e Python, e a receita de Go exige tipos nomeados que o
+contrato OpenAPI não carrega. A página de [Go](go) é a superfície canônica dele.
 
 ## O que continua HTTP
 

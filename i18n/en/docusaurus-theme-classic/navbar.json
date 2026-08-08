@@ -1,0 +1,18 @@
+{
+  "item.label.Documentação": {
+    "message": "Documentation",
+    "description": "Navbar item with label Documentação"
+  },
+  "item.label.Referência da API": {
+    "message": "API reference",
+    "description": "Navbar item with label Referência da API"
+  },
+  "item.label.Receitas": {
+    "message": "Recipes",
+    "description": "Navbar item with label Receitas"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

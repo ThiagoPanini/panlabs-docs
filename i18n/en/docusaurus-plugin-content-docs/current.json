@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.documentacao.category.Comece aqui": {
+    "message": "Get started",
+    "description": "The label for category 'Comece aqui' in sidebar 'documentacao'"
+  },
+  "sidebar.documentacao.category.Conceitos": {
+    "message": "Concepts",
+    "description": "The label for category 'Conceitos' in sidebar 'documentacao'"
+  },
+  "sidebar.documentacao.category.Meios de pagamento": {
+    "message": "Payment methods",
+    "description": "The label for category 'Meios de pagamento' in sidebar 'documentacao'"
+  },
+  "sidebar.documentacao.category.Guias": {
+    "message": "Guides",
+    "description": "The label for category 'Guias' in sidebar 'documentacao'"
+  },
+  "sidebar.documentacao.category.SDKs": {
+    "message": "SDKs",
+    "description": "The label for category 'SDKs' in sidebar 'documentacao'"
+  },
+  "sidebar.documentacao.category.Operação": {
+    "message": "Operations",
+    "description": "The label for category 'Operação' in sidebar 'documentacao'"
+  }
+}
