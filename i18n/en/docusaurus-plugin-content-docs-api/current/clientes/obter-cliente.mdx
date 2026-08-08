@@ -1,0 +1,93 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Get a customer"
+description: "A single customer by `id`."
+sidebar_class_name: "api-metodo api-metodo--get"
+api_exemplos: {"metodo":"GET","caminho":"/clientes/{id}","parametros":[{"nome":"id","em":"path","exemplo":"cli_9Xz4mT"}],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/clientes/{{id}} \\\n  -X GET \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\""},{"linguagem":"python","titulo":"Python","modelo":"trilho.clientes.obter('{{id}}')"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.clientes.obter('{{id}}');"}],"respostas":[{"status":"200","titulo":"200","corpo":{"id":"cli_4Lp8qR","nome":"string","email":"string","documento":"52998224725","telefone":"+5511987654321","endereco":{"logradouro":"string","numero":"string","complemento":"string","bairro":"string","cidade":"string","estado":"SP","cep":"01310100"},"metadados":{},"criado_em":"2026-08-07T18:12:04Z"}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"The key is missing, invalid, or from another environment."}},{"status":"404","titulo":"404","corpo":{"codigo":"recurso_nao_encontrado","mensagem":"The resource does not exist on this account."}}]}
+---
+
+# Get a customer
+
+<VerbBadge verb="GET" /> `/clientes/{id}`
+
+A single customer by `id`.
+
+## Parameters
+
+<ParamField name="id" type="string" required>
+The customer `id`.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+The customer identifier, prefixed `cli_`.
+</ResponseField>
+
+<ResponseField name="nome" type="string">
+The full name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+Used for receipts and declined-charge notifications.
+</ResponseField>
+
+<ResponseField name="documento" type="string">
+CPF or CNPJ, digits only — no punctuation.
+</ResponseField>
+
+<ResponseField name="telefone" type="string">
+In E.164, with country code.
+</ResponseField>
+
+<ResponseField name="endereco" type="object">
+Required for boleto and for card address verification.
+
+<Expandable title="endereco object" defaultOpen>
+
+<ResponseField name="logradouro" type="string">
+Street name.
+</ResponseField>
+
+<ResponseField name="numero" type="string">
+The number, as a string — some addresses have none.
+</ResponseField>
+
+<ResponseField name="complemento" type="string">
+Apartment, block.
+</ResponseField>
+
+<ResponseField name="bairro" type="string">
+The neighborhood.
+</ResponseField>
+
+<ResponseField name="cidade" type="string">
+The city.
+</ResponseField>
+
+<ResponseField name="estado" type="string">
+The state, two letters.
+</ResponseField>
+
+<ResponseField name="cep" type="string">
+Digits only.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="metadados" type="object">
+Free-form, yours. Trilho neither reads nor validates the content.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+When the customer was created.
+</ResponseField>
+
+## Errors
+
+| Status | When |
+| --- | --- |
+| `401` | The key is missing, invalid, or from another environment. |
+| `404` | The customer does not exist on this account. |
+

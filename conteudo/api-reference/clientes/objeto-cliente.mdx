@@ -1,0 +1,76 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "O objeto Cliente"
+description: "Um cliente — quem paga. Guardar o cliente uma vez e reusar o `id` é o que permite salvar cartão e assinatura."
+---
+
+# O objeto Cliente
+
+Um cliente — quem paga. Guardar o cliente uma vez e reusar o `id` é o que permite salvar cartão e assinatura.
+
+A forma completa de `Cliente`, como qualquer endpoint desta seção a devolve.
+
+<ResponseField name="id" type="string">
+O identificador do cliente, com prefixo `cli_`.
+</ResponseField>
+
+<ResponseField name="nome" type="string">
+O nome completo.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+Usado para recibo e para notificação de cobrança recusada.
+</ResponseField>
+
+<ResponseField name="documento" type="string">
+CPF ou CNPJ, só dígitos — sem pontuação.
+</ResponseField>
+
+<ResponseField name="telefone" type="string">
+Em E.164, com código do país.
+</ResponseField>
+
+<ResponseField name="endereco" type="object">
+Necessário para boleto e para verificação de endereço no cartão.
+
+<Expandable title="objeto endereco" defaultOpen>
+
+<ResponseField name="logradouro" type="string">
+Rua ou avenida.
+</ResponseField>
+
+<ResponseField name="numero" type="string">
+O número, como string — endereços têm "s/n".
+</ResponseField>
+
+<ResponseField name="complemento" type="string">
+Apartamento, bloco.
+</ResponseField>
+
+<ResponseField name="bairro" type="string">
+O bairro.
+</ResponseField>
+
+<ResponseField name="cidade" type="string">
+A cidade.
+</ResponseField>
+
+<ResponseField name="estado" type="string">
+A UF, duas letras.
+</ResponseField>
+
+<ResponseField name="cep" type="string">
+Só dígitos.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="metadados" type="object">
+Livre, seu. O Trilho não lê nem valida o conteúdo.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+Quando o cliente foi criado.
+</ResponseField>
+

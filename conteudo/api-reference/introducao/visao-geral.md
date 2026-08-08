@@ -5,8 +5,6 @@ description: A superfície de máquina do Trilho — base, autenticação, vers�
 
 # Visão geral
 
-<Untranslated />
-
 A API do Trilho é REST sobre HTTPS, com corpo em JSON nos dois sentidos. Uma
 base, uma chave, um cabeçalho de versão.
 

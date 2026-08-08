@@ -1,0 +1,112 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Create a customer"
+description: "Creates a customer. Storing the `id` is what lets you save a card and a subscription without repeating data on every charge."
+sidebar_class_name: "api-metodo api-metodo--post"
+api_exemplos: {"metodo":"POST","caminho":"/clientes","parametros":[],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/clientes \\\n  -X POST \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\" \\\n  -H \"Idempotency-Key: <idempotency-key>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"nome\":\"Maria Souza\",\"email\":\"maria@example.com\",\"documento\":\"52998224725\"}'"},{"linguagem":"python","titulo":"Python","modelo":"trilho.clientes.criar({'nome': 'Maria Souza', 'email': 'maria@example.com', 'documento': '52998224725'})"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.clientes.criar({nome: 'Maria Souza', email: 'maria@example.com', documento: '52998224725'});"}],"respostas":[{"status":"201","titulo":"201","corpo":{"id":"cli_4Lp8qR","nome":"string","email":"string","documento":"52998224725","telefone":"+5511987654321","endereco":{"logradouro":"string","numero":"string","complemento":"string","bairro":"string","cidade":"string","estado":"SP","cep":"01310100"},"metadados":{},"criado_em":"2026-08-07T18:12:04Z"}},{"status":"400","titulo":"400","corpo":{"codigo":"requisicao_invalida","mensagem":"The request is not valid against the contract."}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"The key is missing, invalid, or from another environment."}},{"status":"422","titulo":"422","corpo":{"codigo":"valores_invalidos","mensagem":"The request is valid and the values are not.","detalhes":[{"campo":"valor","motivo":"must be greater than zero"}]}}]}
+---
+
+# Create a customer
+
+<VerbBadge verb="POST" /> `/clientes`
+
+Creates a customer. Storing the `id` is what lets you save a card and a subscription without repeating data on every charge.
+
+## Parameters
+
+<ParamField name="Idempotency-Key" type="string" required>
+A key you choose, up to 255 characters. Repeating the call with the same key and the same body, within 24 hours, returns the original response instead of creating again.
+</ParamField>
+
+## Body
+
+<ParamField name="nome" type="string" required>
+The full name.
+</ParamField>
+
+<ParamField name="email" type="string" required>
+Used for receipts and notifications.
+</ParamField>
+
+<ParamField name="documento" type="string" required>
+CPF or CNPJ, digits only.
+</ParamField>
+
+<ParamField name="telefone" type="string">
+In E.164.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+The customer identifier, prefixed `cli_`.
+</ResponseField>
+
+<ResponseField name="nome" type="string">
+The full name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+Used for receipts and declined-charge notifications.
+</ResponseField>
+
+<ResponseField name="documento" type="string">
+CPF or CNPJ, digits only — no punctuation.
+</ResponseField>
+
+<ResponseField name="telefone" type="string">
+In E.164, with country code.
+</ResponseField>
+
+<ResponseField name="endereco" type="object">
+Required for boleto and for card address verification.
+
+<Expandable title="endereco object" defaultOpen>
+
+<ResponseField name="logradouro" type="string">
+Street name.
+</ResponseField>
+
+<ResponseField name="numero" type="string">
+The number, as a string — some addresses have none.
+</ResponseField>
+
+<ResponseField name="complemento" type="string">
+Apartment, block.
+</ResponseField>
+
+<ResponseField name="bairro" type="string">
+The neighborhood.
+</ResponseField>
+
+<ResponseField name="cidade" type="string">
+The city.
+</ResponseField>
+
+<ResponseField name="estado" type="string">
+The state, two letters.
+</ResponseField>
+
+<ResponseField name="cep" type="string">
+Digits only.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="metadados" type="object">
+Free-form, yours. Trilho neither reads nor validates the content.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+When the customer was created.
+</ResponseField>
+
+## Errors
+
+| Status | When |
+| --- | --- |
+| `400` | The request is not valid against the contract. |
+| `401` | The key is missing, invalid, or from another environment. |
+| `422` | The request is valid and the values are not. `detalhes` carries all of them. |
+

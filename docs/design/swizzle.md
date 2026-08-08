@@ -90,6 +90,7 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | `themeConfig.navbar.items` | as três tabs, o slot de busca, o locale, o GitHub | idem |
 | `themeConfig.footer` | os links, o copyright, a forma plana | idem |
 | `docItemComponent: '@theme/ApiDocItem'` | substitui o layout inteiro da página de API | classe não troca componente de rota |
+| `themeConfig.prism.additionalLanguages: ['bash']` | registra `bash` para o snippet de cURL do painel da Referência da API | `bash` não está no bundle padrão do `prism-react-renderer`; sem o registro o bloco sai sem realce e ninguém avisa |
 | `themeConfig.prism.theme` | paleta de sintaxe que só referencia token | `--prism-background-color` é injetada em estilo **inline**, e nenhum seletor vence estilo inline |
 | `localeConfigs[*].label` | o rótulo curto do seletor de idioma | o default vem de `Intl.DisplayNames`, em código |
 

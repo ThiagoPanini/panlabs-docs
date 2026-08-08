@@ -1,0 +1,118 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "Criar assinatura"
+description: "Cria uma assinatura sobre um cliente e um meio já salvo."
+sidebar_class_name: "api-metodo api-metodo--post"
+api_exemplos: {"metodo":"POST","caminho":"/assinaturas","parametros":[],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/assinaturas \\\n  -X POST \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\" \\\n  -H \"Idempotency-Key: <idempotency-key>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"cliente_id\":\"cli_4Lp8qR\",\"meio\":\"cartao\",\"plano\":{\"nome\":\"Pro mensal\",\"valor\":4990,\"intervalo\":\"mensal\"}}'"},{"linguagem":"python","titulo":"Python","modelo":"trilho.assinaturas.criar({'cliente_id': 'cli_4Lp8qR', 'meio': 'cartao', 'plano': {'nome': 'Pro mensal', 'valor': 4990, 'intervalo': 'mensal'}})"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.assinaturas.criar({cliente_id: 'cli_4Lp8qR', meio: 'cartao', plano: {nome: 'Pro mensal', valor: 4990, intervalo: 'mensal'}});"}],"respostas":[{"status":"201","titulo":"201","corpo":{"id":"sub_7Bn3wK","cliente_id":"string","status":"ativa","meio":"pix","plano":{"nome":"string","valor":0,"intervalo":"mensal"},"proxima_cobranca_em":"2026-08-07T18:12:04Z","cancelada_em":"2026-08-07T18:12:04Z","criado_em":"2026-08-07T18:12:04Z"}},{"status":"400","titulo":"400","corpo":{"codigo":"requisicao_invalida","mensagem":"A requisição não é válida contra o contrato."}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"A chave está ausente, é inválida, ou é de outro ambiente."}},{"status":"422","titulo":"422","corpo":{"codigo":"valores_invalidos","mensagem":"A requisição é válida e os valores não são.","detalhes":[{"campo":"valor","motivo":"deve ser maior que zero"}]}}]}
+---
+
+# Criar assinatura
+
+<VerbBadge verb="POST" /> `/assinaturas`
+
+Cria uma assinatura sobre um cliente e um meio já salvo.
+
+## Parâmetros
+
+<ParamField name="Idempotency-Key" type="string" required>
+Uma chave sua, de até 255 caracteres. Repetir a chamada com a mesma chave e o mesmo corpo, dentro de 24 horas, devolve a resposta original em vez de criar de novo.
+</ParamField>
+
+## Corpo
+
+<ParamField name="cliente_id" type="string" required>
+O `id` do cliente cobrado.
+</ParamField>
+
+<ParamField name="meio" type="string" required>
+Boleto não recorre sozinho.
+
+Valores possíveis: `pix`, `cartao`.
+</ParamField>
+
+<ParamField name="plano" type="object" required>
+O valor e a cadência.
+
+<Expandable title="objeto plano" defaultOpen>
+
+<ParamField name="nome" type="string">
+O nome do plano, seu.
+</ParamField>
+
+<ParamField name="valor" type="integer">
+Em centavos, a cada ciclo.
+</ParamField>
+
+<ParamField name="intervalo" type="string">
+A cadência.
+
+Valores possíveis: `mensal`, `anual`.
+</ParamField>
+
+</Expandable>
+</ParamField>
+
+## Resposta
+
+<ResponseField name="id" type="string">
+O identificador da assinatura, com prefixo `sub_`.
+</ResponseField>
+
+<ResponseField name="cliente_id" type="string">
+O `id` do cliente cobrado.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+`inadimplente` é o estado depois de todas as retentativas de uma cobrança falharem, sem cancelamento automático.
+
+Valores possíveis: `ativa`, `pausada`, `cancelada`, `inadimplente`.
+</ResponseField>
+
+<ResponseField name="meio" type="string">
+Boleto não recorre sozinho — não está nesta lista.
+
+Valores possíveis: `pix`, `cartao`.
+</ResponseField>
+
+<ResponseField name="plano" type="object">
+O valor e a cadência.
+
+<Expandable title="objeto plano" defaultOpen>
+
+<ResponseField name="nome" type="string">
+O nome do plano, seu — o Trilho não valida contra um catálogo.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+Em centavos, cobrado a cada ciclo.
+</ResponseField>
+
+<ResponseField name="intervalo" type="string">
+A cadência da cobrança.
+
+Valores possíveis: `mensal`, `anual`.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="proxima_cobranca_em" type="string">
+Nula quando `status` é `cancelada`.
+</ResponseField>
+
+<ResponseField name="cancelada_em" type="string">
+Quando a assinatura foi cancelada.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+Quando a assinatura foi criada.
+</ResponseField>
+
+## Erros
+
+| Status | Quando |
+| --- | --- |
+| `400` | A requisição não é válida contra o contrato. |
+| `401` | A chave está ausente, é inválida, ou é de outro ambiente. |
+| `422` | A requisição é válida e os valores não são. `detalhes` traz todos. |
+

@@ -1,0 +1,76 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "The Cliente object"
+description: "A customer — who pays. Storing the customer once and reusing the `id` is what lets you save a card and a subscription."
+---
+
+# The Cliente object
+
+A customer — who pays. Storing the customer once and reusing the `id` is what lets you save a card and a subscription.
+
+The complete shape of `Cliente`, as any endpoint in this section returns it.
+
+<ResponseField name="id" type="string">
+The customer identifier, prefixed `cli_`.
+</ResponseField>
+
+<ResponseField name="nome" type="string">
+The full name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+Used for receipts and declined-charge notifications.
+</ResponseField>
+
+<ResponseField name="documento" type="string">
+CPF or CNPJ, digits only — no punctuation.
+</ResponseField>
+
+<ResponseField name="telefone" type="string">
+In E.164, with country code.
+</ResponseField>
+
+<ResponseField name="endereco" type="object">
+Required for boleto and for card address verification.
+
+<Expandable title="endereco object" defaultOpen>
+
+<ResponseField name="logradouro" type="string">
+Street name.
+</ResponseField>
+
+<ResponseField name="numero" type="string">
+The number, as a string — some addresses have none.
+</ResponseField>
+
+<ResponseField name="complemento" type="string">
+Apartment, block.
+</ResponseField>
+
+<ResponseField name="bairro" type="string">
+The neighborhood.
+</ResponseField>
+
+<ResponseField name="cidade" type="string">
+The city.
+</ResponseField>
+
+<ResponseField name="estado" type="string">
+The state, two letters.
+</ResponseField>
+
+<ResponseField name="cep" type="string">
+Digits only.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="metadados" type="object">
+Free-form, yours. Trilho neither reads nor validates the content.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+When the customer was created.
+</ResponseField>
+

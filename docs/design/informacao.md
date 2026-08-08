@@ -127,10 +127,10 @@ As duas árvores autorais estão **cheias**: 33 páginas em `Documentação` e 1
 | --- | --- | --- |
 | escrito | as seis categorias de `Documentação`, clicáveis, com ícone, e as **27 folhas** | 2 e 4 |
 | escrito | `Receitas`, plana: a intro e as **nove receitas irmãs** | 2 e 4 |
-| escrito | `Referência da API › Introdução`, clicável, com ícone | 2 |
-| **falta** | as cinco categorias de recurso da Referência da API, e as páginas geradas | 5 |
+| escrito | `Referência da API › Introdução`, clicável, com ícone, mais quatro folhas autorais | 2 e 5 |
+| escrito | as cinco categorias de recurso da Referência da API, e as 24 páginas geradas do contrato OpenAPI | 5 |
 
-**As cinco categorias de recurso da Referência da API não são escritas à mão.** Elas apontam para páginas geradas do contrato OpenAPI, e o gerador passa a emitir também o arquivo de sidebar da instância. Escrevê-las agora criaria exatamente a segunda fonte de verdade que o gerador existe para impedir — e uma categoria clicável cujo destino não existe reprova no build. **A árvore está portanto em 6 · 0 · 1 no artefato, e 6 · 0 · 6 é o alvo**; a diferença é a instância `api`, e ela fecha no slice 5.
+**As cinco categorias de recurso da Referência da API não são escritas à mão.** Elas apontam para páginas geradas do contrato OpenAPI, e o gerador (`scripts/gerar-api.mjs`) emite também o arquivo de sidebar da instância — escrevê-las à mão seria exatamente a segunda fonte de verdade que o gerador existe para impedir. Ver [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) e [`api-reference.md`](api-reference.md). **A árvore fecha em 6 · 0 · 6 no artefato**, com o slice 5.
 
 **Duas páginas nasceram fora do slice do conteúdo, e as duas continuam onde estavam.** `Operação › Changelog` foi escrita no slice 2 porque o footer a linka em **todas** as rotas e link de footer para rota inexistente reprova no verificador de links; o slice 4 só encheu o corpo dela com as oito entradas do gabarito. `Guias › Catálogo de componentes` foi escrita no slice do catálogo, é a fixture dele, e é folha de `Guias` como sempre foi.
 
@@ -143,7 +143,7 @@ As duas árvores autorais estão **cheias**: 33 páginas em `Documentação` e 1
 Isso tem duas consequências, e as duas foram tratadas:
 
 - **o CSS de sidebar cobre as duas formas.** Com um seletor só, uma seção perderia o ícone no dia em que a última folha dela saísse, e a falha seria muda. O marcador é o `className` do manifesto, não o nível — `.sidebar-icone` **é** a definição de *seção de topo* neste sistema;
-- **a forma de link saiu de `Documentação` e continua viva na Referência da API.** Enquanto quatro das seis seções estavam vazias, a forma de link era visível na tab principal. Com as 27 folhas entregues, **as seis são categoria** — mas `Referência da API › Introdução` ainda declara `items: []` em `sidebars-api.js`, e é ela quem exercita o caso hoje. Quando o gerador do slice 5 entregar as folhas dela, a forma de link deixa de ter fixture, e aí a regra vira **cobertura sem fixture** — escrita para não ser removida por parecer morta.
+- **a forma de link saiu de `Documentação` e não tem mais fixture viva.** Enquanto quatro das seis seções de `Documentação` estavam vazias, e enquanto `Referência da API › Introdução` declarava `items: []`, a forma de link era visível. Com as 27 folhas de `Documentação` entregues no slice 4 e as quatro folhas de `Introdução` entregues no slice 5, **as doze seções de topo do site são todas categoria com filhos** — a regra vira **cobertura sem fixture**, escrita para não ser removida por parecer morta.
 
 ---
 
@@ -254,12 +254,12 @@ Sai por consequência, não por escolha nova: na âncora, quickstart, guia, SDK 
 | Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | 2 |
 | Troubleshooting | 800-1200 | 1 tabela de sintomas · 6-8 `##` | 1 |
 | Changelog | — | 6-8 entradas em `<Update>` | 1 |
-| Referência de API | — | a saída do gerador | 0 — slice 5 |
+| Referência de API | — | a saída do gerador | 30 — 24 geradas + 6 autorais, fora desta contagem (ver [`api-reference.md`](api-reference.md)) |
 | *índice de categoria* | piso do tipo da seção | + um índice das folhas | 6 |
 | *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 1 |
 | | | **total** | **43** |
 
-**Oito dos nove tipos têm instância no artefato.** O nono, `Referência de API`, é o único gerado, e ele chega no slice 5 com o gabarito que o gerador emitir.
+**Os nove tipos têm instância no artefato.** O nono, `Referência de API`, é o único gerado — o gabarito é a saída de `scripts/gerar-api.mjs`, fechado no slice 5.
 
 ### 6.3 O índice de categoria é uma forma, não um décimo tipo
 
@@ -291,11 +291,11 @@ As outras três indexam **em prosa ou em tabela**, e não em cartão: `Comece aq
 | Prosa mínima, código máximo | as 9 `Receitas` | o escape de medida repetido a cada dois parágrafos | 4 |
 | Fallback silencioso de locale | `/en/docs/meios-de-pagamento/pix` | `<Untranslated />` e texto pt-BR sob rota EN | 4 |
 | Navbar apertado | qualquer página entre 997 e 1200px | 3 tabs + busca + `PT` + GitHub | 4 |
-| Aninhamento profundo | `Cobranças › O objeto Cobrança` | `<ParamField>` sobre `<details>`, quatro níveis | 5 |
+| Aninhamento profundo | `Cobranças › Criar cobrança` | `<ResponseField>` sobre `<Expandable>`, quatro níveis | 5 |
 | Página muito longa | `Webhooks › Catálogo de eventos` | TOC longo, `sticky` e scroll-spy | 5 |
 | Painel direito vazio | `Referência da API › Introdução › Autenticação` | `ApiDocItem` com prosa autoral — o painel condicional | 5 |
 
-**Dez das treze estão no artefato; as três últimas moram na Referência da API** e são cobradas no slice dela.
+**As treze estão no artefato** — as três últimas na Referência da API, entregues no slice 5. Ver [`api-reference.md`](api-reference.md) para o desenho do layout que as prova.
 
 **Duas fixtures ganharam da regra, e as duas ganharam pelo mesmo motivo.** `Ambientes` fica abaixo do mínimo de heading (§4.1) e `Conciliação` fica abaixo do mínimo de estrutura do tipo `Conceitual` — sem tabela, sem bloco e sem `:::`, porque *"prosa pura"* é literalmente o que ela existe para exercitar. **Quando a fixture e o orçamento discordam, ganha a fixture** — o orçamento existe para produzir páginas plausíveis, e a fixture existe para provar uma medida. São essas duas, e nenhuma terceira sem passar por aqui.
 

@@ -1,0 +1,32 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "O objeto Evento"
+description: "Um evento — o que um webhook entrega. `dados` varia por `tipo`; o catálogo completo está em Webhooks › Catálogo de eventos."
+---
+
+# O objeto Evento
+
+Um evento — o que um webhook entrega. `dados` varia por `tipo`; o catálogo completo está em Webhooks › Catálogo de eventos.
+
+A forma completa de `Evento`, como qualquer endpoint desta seção a devolve.
+
+<ResponseField name="id" type="string">
+O identificador do evento, com prefixo `evt_`. É a chave de deduplicação.
+</ResponseField>
+
+<ResponseField name="tipo" type="string">
+O nome do evento, como `cobranca.paga`.
+</ResponseField>
+
+<ResponseField name="ocorrido_em" type="string">
+Quando o evento ocorreu — não quando ele chegou ao seu servidor.
+</ResponseField>
+
+<ResponseField name="versao_api" type="string">
+A versão da API sob a qual o evento foi emitido.
+</ResponseField>
+
+<ResponseField name="dados" type="object">
+O payload, que varia por `tipo`.
+</ResponseField>
+

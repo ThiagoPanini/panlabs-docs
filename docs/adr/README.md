@@ -16,7 +16,7 @@ São sete ao todo, e a numeração é a da spec — não a ordem em que os arqui
 | 2 | [Política de swizzle](0002-politica-de-swizzle.md) — escada de seis degraus, orçamento `unsafe` zero, disciplina de registro | escrito |
 | 3 | [Reduced-motion é propriedade da camada de token](0003-reduced-motion-na-camada-de-token.md), não dos componentes | escrito |
 | 4 | [Contrato de estado de entrada](0004-contrato-de-estado-de-entrada.md) — `outline` universal em `:focus-visible`, `:active`, piso de alvo no toque | escrito |
-| 5 | A Referência da API é gerada de contrato OpenAPI, por script, com a saída versionada | slice 5 |
+| 5 | [A Referência da API é gerada de contrato OpenAPI](0005-referencia-da-api-gerada-de-contrato.md) — dois contratos JSON, gerador fora do build, saída commitada | escrito |
 | 6 | A busca é índice local no repositório, sem serviço externo | slice 7 |
 | 7 | [`trailingSlash: false`](0007-trailingslash-false.md) — URLs sem barra final | escrito |
 
@@ -24,4 +24,4 @@ São sete ao todo, e a numeração é a da spec — não a ordem em que os arqui
 
 ## Leitura obrigatória antes de escrever código
 
-Os cinco escritos, nesta ordem. O ADR 1 primeiro: quem escreve CSS sem ele produz modo escuro que quebra em silêncio. O ADR 4 fecha a lista porque ele governa componente que ainda nem existe — a seção de a11y de todo arquivo do catálogo o cita e para.
+Os seis escritos, nesta ordem. O ADR 1 primeiro: quem escreve CSS sem ele produz modo escuro que quebra em silêncio. O ADR 5 fecha a lista porque ele governa a única rota gerada do site — quem edita a Referência da API sem lê-lo edita a página em vez do contrato.

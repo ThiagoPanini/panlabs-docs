@@ -1,0 +1,75 @@
+---
+# gerado por scripts/gerar-api.mjs — não editar à mão
+title: "List refunds"
+description: "The account’s refunds, most recent first, cursor-paginated."
+sidebar_class_name: "api-metodo api-metodo--get"
+api_exemplos: {"metodo":"GET","caminho":"/reembolsos","parametros":[{"nome":"limite","em":"query","exemplo":"20"},{"nome":"a_partir_de","em":"query","exemplo":""},{"nome":"cobranca_id","em":"query","exemplo":""}],"exemplos":[{"linguagem":"bash","titulo":"cURL","modelo":"curl https://api.trilho.dev/v1/reembolsos?limite={{limite}}&a_partir_de={{a_partir_de}}&cobranca_id={{cobranca_id}} \\\n  -X GET \\\n  -H \"Authorization: Bearer $TRILHO_API_KEY\""},{"linguagem":"python","titulo":"Python","modelo":"trilho.reembolsos.listar({'limite': '{{limite}}', 'a_partir_de': '{{a_partir_de}}', 'cobranca_id': '{{cobranca_id}}'})"},{"linguagem":"javascript","titulo":"JavaScript","modelo":"await trilho.reembolsos.listar({limite: '{{limite}}', a_partir_de: '{{a_partir_de}}', cobranca_id: '{{cobranca_id}}'});"}],"respostas":[{"status":"200","titulo":"200","corpo":{"dados":[{"id":"reemb_2Yx9fD","cobranca_id":"string","valor":0,"motivo":"string","status":"pendente","criado_em":"2026-08-07T18:12:04Z"}],"proxima_pagina":"string"}},{"status":"401","titulo":"401","corpo":{"codigo":"chave_invalida","mensagem":"The key is missing, invalid, or from another environment."}},{"status":"429","titulo":"429","corpo":{"codigo":"limite_de_taxa_excedido","mensagem":"Rate limit exceeded. The header says how many calls remain."}}]}
+---
+
+# List refunds
+
+<VerbBadge verb="GET" /> `/reembolsos`
+
+The account’s refunds, most recent first, cursor-paginated.
+
+## Parameters
+
+<ParamField name="limite" type="integer" default="20">
+How many items per page. Maximum 100.
+</ParamField>
+
+<ParamField name="a_partir_de" type="string">
+The cursor of the last page read. Omit to get the first page.
+</ParamField>
+
+<ParamField name="cobranca_id" type="string">
+Filters to the refunds of a single charge.
+</ParamField>
+
+## Response
+
+<ResponseField name="dados" type="array of object">
+The refunds on this page.
+
+<Expandable title="each item of dados" defaultOpen>
+
+<ResponseField name="id" type="string">
+The refund identifier, prefixed `reemb_`.
+</ResponseField>
+
+<ResponseField name="cobranca_id" type="string">
+The refunded charge.
+</ResponseField>
+
+<ResponseField name="valor" type="integer">
+In cents. Partial is allowed — the sum of refunds never exceeds the original amount.
+</ResponseField>
+
+<ResponseField name="motivo" type="string">
+Free-form, yours. Shows on the payer statement when the method supports it.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+Pix and boleto complete in minutes; card can take days, depending on the issuer.
+
+Possible values: `pendente`, `concluido`, `falhou`.
+</ResponseField>
+
+<ResponseField name="criado_em" type="string">
+When the refund was requested.
+</ResponseField>
+
+</Expandable>
+</ResponseField>
+
+<ResponseField name="proxima_pagina" type="string">
+The cursor for the next call. Null on the last page.
+</ResponseField>
+
+## Errors
+
+| Status | When |
+| --- | --- |
+| `401` | The key is missing, invalid, or from another environment. |
+| `429` | Rate limit exceeded. The header says how many calls remain. |
+
