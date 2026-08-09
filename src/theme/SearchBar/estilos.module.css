@@ -105,8 +105,8 @@
 }
 
 /* A entrada usa `--sd-move-enter`, cujo ÚNICO consumidor no projeto é este
-   modal. `allow-discrete` é o que faz a transição rodar sobre `display`, que o
-   `<dialog>` alterna: sem ele o painel apareceria pronto. */
+   modal. `allow-discrete` é o que faz a SAÍDA rodar sobre `display`, que o
+   `<dialog>` alterna: sem ele o painel sumiria de uma vez. */
 .modal,
 .modal::backdrop {
   opacity: 0;
@@ -116,16 +116,22 @@
     overlay var(--sd-move-enter) allow-discrete;
 }
 
+/* A ENTRADA é `@keyframes`, não `@starting-style`, e a troca foi medida no CSS
+   emitido: o minificador do Docusaurus DESCARTA o bloco `@starting-style`
+   inteiro — `Invalid property name` no aviso de build — e o modal publicado
+   abria pronto, sem uma transição, enquanto `docusaurus start` animava. O
+   sintoma é o que motion.md §6 já cataloga como o pior do documento.
+
+   `global(…)` sem dois-pontos pelo motivo do mesmo §6: dentro de um CSS Module
+   o nome de um `@keyframes` é manglado mesmo quando o módulo não o define, e o
+   `postcss-discard-unused` apaga o keyframe global que ficou órfão.
+
+   A saída continua sendo a transição acima: quando `[open]` sai, a animação sai
+   com ele, e a opacidade cai de 1 a 0 pelo caminho de sempre. */
 .modal[open],
 .modal[open]::backdrop {
   opacity: 1;
-}
-
-@starting-style {
-  .modal[open],
-  .modal[open]::backdrop {
-    opacity: 0;
-  }
+  animation: global(sd-busca-abre) var(--sd-move-enter) both;
 }
 
 /* -----------------------------------------------------------------------------

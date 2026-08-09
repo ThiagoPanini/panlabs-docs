@@ -88,8 +88,20 @@ jobs:
       - name: Espelho de tokens
         run: node scripts/espelho-tokens.mjs --verificar
 
+      # As quatro invariantes de FORMA da spec. Não são portão — os portões
+      # cobram o código, e estas cobram o documento. A spec é o entregável deste
+      # projeto (axioma 6), e entregável sem régua envelhece calado.
+      - name: As quatro invariantes de forma
+        run: npm run invariantes
+
       # `onBrokenLinks: throw` faz a verificação de link acontecer aqui. Ela
       # nunca acontece em `docusaurus start`, que devolve 200 com o shell da SPA
       # para qualquer rota.
       - name: Build (pt-BR e en)
         run: npm run build
+
+      # Os cinco zeros, conferidos e não afirmados. Roda DEPOIS do build porque
+      # o terceiro zero confere o HTML publicado: nada carrega recurso de outra
+      # origem. Sem `build/` ele só olharia `src/`, que é metade da resposta.
+      - name: Os cinco zeros
+        run: npm run zeros

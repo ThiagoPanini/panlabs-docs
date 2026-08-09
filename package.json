@@ -21,6 +21,8 @@
     "portao:5": "./scripts/portao-5-api.sh",
     "portao:7": "./scripts/portao-7-swizzle.sh",
     "swizzle:congelar": "node scripts/swizzle-list.mjs --congelar",
+    "invariantes": "./scripts/invariantes.sh",
+    "zeros": "./scripts/cinco-zeros.sh",
     "gerar:api": "node scripts/gerar-api.mjs",
     "icones": "node scripts/vendorizar-icones.mjs --conferir"
   },

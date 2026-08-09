@@ -162,6 +162,22 @@ samp {
   }
 }
 
+/* A entrada do modal de busca — `--sd-move-enter`.
+
+   Ele nasceu de `@starting-style`, e `@starting-style` NÃO SOBREVIVE ao
+   minificador: medido no CSS emitido, o bloco inteiro é descartado com o aviso
+   `Invalid property name`, e o site publicado abre o modal sem transição
+   nenhuma enquanto `docusaurus start` anima. É o mesmo sintoma que a nota
+   acima cataloga — dev anima, publicado não —, por um terceiro mecanismo.
+
+   `@keyframes` referenciado por `global(…)` é a forma que este projeto já sabe
+   que atravessa o minificador inteira. Ver docs/design/motion.md §6. */
+@keyframes sd-busca-abre {
+  from {
+    opacity: 0;
+  }
+}
+
 /* -----------------------------------------------------------------------------
    Foco — mudou de arquivo, e o portão 3 é quem garante que não volte
 

@@ -31,12 +31,32 @@
  */
 
 import {execFileSync} from 'node:child_process';
-import {readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
+import {
+  closeSync,
+  mkdtempSync,
+  openSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
+import {tmpdir} from 'node:os';
 import path from 'node:path';
 
 const ARTEFATO = 'scripts/swizzle-list.txt';
 const TEMA = '@docusaurus/theme-classic';
 const RAIZ_DO_TEMA = 'src/theme';
+const CLI = 'node_modules/@docusaurus/core/bin/docusaurus.mjs';
+
+/**
+ * As sequências de cor do CLI.
+ *
+ * O ESC vai como escape `\u001b`, e não como byte literal: literal no fonte é
+ * um caractere de controle **invisível** no editor e no diff — e este arquivo
+ * é justamente o que existe para cobrar o que passa despercebido.
+ */
+const ANSI = new RegExp('\\u001b\\[[0-9;]*m', 'g');
 
 /**
  * Os componentes de tema PRÓPRIOS — os que o `theme-classic` não tem.
@@ -57,15 +77,63 @@ if (modo !== '--congelar' && modo !== '--verificar') {
   process.exit(2);
 }
 
+/**
+ * A saída bruta do CLI, capturada num ARQUIVO e não num pipe.
+ *
+ * **Medido nesta implementação, e não deduzido:** com `stdio: 'pipe'` a saída
+ * volta **truncada no meio da tabela** — 80.173 bytes contra 115.270, cortada em
+ * `Icon/Socials/Mastodon`, sem a borda que fecha a tabela. O Node escreve em
+ * pipe de forma assíncrona, e o CLI termina antes de o pipe drenar; em
+ * descritor de arquivo a escrita é síncrona e a saída sai inteira.
+ *
+ * Isto não é detalhe de performance — foi o defeito que congelou um artefato
+ * com **157 dos 220 componentes** e o fez diffar contra outra leitura truncada.
+ * Um portão que existe para pegar falha silenciosa tinha uma.
+ *
+ * `--typescript` está aqui porque sem a flag o CLI **pergunta a linguagem** e
+ * fica esperando resposta que nunca vem. A escolha não altera a lista.
+ */
+function saidaDoCli() {
+  const pasta = mkdtempSync(path.join(tmpdir(), 'sd-swizzle-'));
+  const destino = path.join(pasta, 'list.txt');
+  const fd = openSync(destino, 'w');
+  try {
+    execFileSync(process.execPath, [CLI, 'swizzle', TEMA, '--list', '--typescript'], {
+      stdio: ['ignore', fd, 'ignore'],
+    });
+  } finally {
+    closeSync(fd);
+  }
+  try {
+    return readFileSync(destino, 'utf8');
+  } finally {
+    rmSync(pasta, {recursive: true, force: true});
+  }
+}
+
 /** A saída do CLI, sem ANSI e sem a moldura da tabela. */
 function listaDeAgora() {
-  const bruto = execFileSync(
-    'npx',
-    ['docusaurus', 'swizzle', TEMA, '--list', '--typescript'],
-    {encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 8 * 1024 * 1024},
-  );
+  const todas = saidaDoCli().replace(ANSI, '').split('\n');
+
+  // O CLI imprime TRÊS tabelas: os componentes, e depois duas legendas — as
+  // ações (`Wrap`/`Eject`) e os níveis de segurança (`Safe`/`Unsafe`/
+  // `Forbidden`). Só a primeira é contrato; as legendas são prosa do CLI e
+  // entrariam no artefato como se fossem componentes.
+  const fim = todas.findIndex((l) => l.startsWith('└'));
+
+  // A borda que fecha a tabela é a prova de que a saída chegou inteira. Sem
+  // esta guarda, uma leitura truncada vira artefato congelado, e o portão passa
+  // a diffar um pedaço contra outro pedaço — que é exatamente o defeito que
+  // esta versão do script corrige.
+  if (fim === -1) {
+    throw new Error(
+      'O `swizzle --list` não fechou a tabela — a saída chegou truncada. ' +
+        'O artefato NÃO foi tocado: congelar uma leitura parcial é pior que não congelar.',
+    );
+  }
+
   const linhas = [];
-  for (const linha of bruto.replace(/\[[0-9;]*m/g, '').split('\n')) {
+  for (const linha of todas.slice(0, fim)) {
     if (!linha.startsWith('│')) {
       continue;
     }

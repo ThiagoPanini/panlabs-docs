@@ -171,6 +171,14 @@ Com `global(…)`, a landing usa os keyframes globais e a regra não conflita co
 
 Sobram pouquíssimos, porque o vocabulário é transição: o modal de busca, a entrada da ilha, o reveal e a respiração.
 
+> **Terceiro mecanismo, medido no slice 7, e ele fecha a porta de `@starting-style`.** O minificador **descarta o bloco `@starting-style` inteiro** — o aviso de build é `Invalid property name`, e o CSS emitido não tem uma ocorrência da regra. Quem dependia dele para o estado de partida perde a transição de entrada **só no site publicado**.
+>
+> Foi assim que a entrada do modal de busca apareceu quebrada: `docusaurus start` animava, o publicado abria pronto. Mesmo sintoma dos dois mecanismos acima, terceira causa.
+>
+> **Consequência para o vocabulário: entrada a partir de `display: none` é `@keyframes`, não `@starting-style`.** A saída continua sendo transição — ela não precisa de estado de partida, e `allow-discrete` já a cobre.
+>
+> Nota de conferência: `sd-busca-abre` e `sd-acende` são byte a byte iguais — `from { opacity: 0 }` —, e o `postcss-merge-idents` funde as duas num `@keyframes` só no bundle. Isso é correto e não é colisão: o que separa os dois movimentos é o **token**, que carrega duração e curva, e não o nome do keyframe.
+
 `interpolate-size: allow-keywords` é declaração de `:root` e mora junto do vocabulário, não dentro do componente que a consome — é ela que habilita `<details>` a transicionar para altura automática, e serve todos os componentes de `<details>` de uma vez.
 
 ---
@@ -228,3 +236,6 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Entrada da ilha como consumidor de `--sd-move-showcase` | **origem própria (implementação)** | o movimento estava licenciado e sem consumidor; variável inerte é o defeito do Infima que não se copia |
 | Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna de alcance** | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
 | A curva da seta do `summary` deixa de ser perda | **origem própria (correção)** | a exceção 2 do adaptador substitui o valor inteiro, não só a duração |
+| `@starting-style` não sobrevive ao minificador | **origem própria (medição)** | o bloco é descartado com `Invalid property name`; zero ocorrências no CSS emitido, nos dois locales |
+| Entrada a partir de `display: none` é `@keyframes` | **origem própria (correção)** | consequência da linha acima, encontrada na entrada do modal de busca do slice 7 |
+| Keyframes idênticos fundidos num só no bundle | **origem própria (verificação)** | `postcss-merge-idents`; o que separa os movimentos é o token, não o nome |

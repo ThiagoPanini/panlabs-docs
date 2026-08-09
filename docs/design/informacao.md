@@ -1,8 +1,8 @@
 # Arquitetura de informação
 
-O produto fictício, a topologia, a árvore, os tipos de página, os orçamentos, as treze fixtures, a regra de locale — e, no último slice, os artefatos AI-era.
+O produto fictício, a topologia, a árvore, os tipos de página, os orçamentos, as treze fixtures, a regra de locale e os artefatos AI-era.
 
-**Uma seção continua aberta, e é a última.** O corpo está fechado: a topologia e a árvore vieram do slice 2, e o conteúdo do slice 4 fechou os **tipos de página (§6), as fixtures (§7) e o locale (§8)**. Falta o §9, dos artefatos AI-era, que é do slice 7. A seção aberta está marcada como tal, com o slice dono — ausência marcada é buraco visível; ausência não marcada é omissão.
+**Documento fechado.** A topologia e a árvore vieram do slice 2; o conteúdo do slice 4 fechou os **tipos de página (§6), as fixtures (§7) e o locale (§8)**; o slice 7 fechou o **§9, dos artefatos AI-era** — a última seção que estava marcada como aberta.
 
 **Nenhum valor numérico de desenho aparece aqui.** Os números deste documento são **contagens** — quantas tabs, quantas categorias, quantas páginas.
 
@@ -347,13 +347,75 @@ A última linha é a restrição que escolheu o nome do produto, lá no §1. Sub
 
 ---
 
-## 9. Artefatos AI-era — *aberto, slice 7*
+## 9. Artefatos AI-era
 
 `.md` por rota, `llms.txt` e `llms-full.txt`. **Este documento é o dono deles**, e o motivo é que os três são artefato de **conteúdo**, não de chrome: são a mesma árvore servida noutro formato, e é a arquitetura de informação quem sabe qual é a árvore.
 
 [`chrome.md`](chrome.md) fica com **uma linha**, pelo link do rodapé, e nada mais.
 
-A forma do `llms-full.txt`, o ponteiro de volta em cada `.md` e o aviso de `Content-Type` do host chegam no slice 7.
+Os três saem de um plugin de caminho, `src/plugins/ai-era/` — **zero swizzle, zero dependência, zero serviço**. Ele lê a mesma porta que a busca (`src/plugins/paginas.js`, ver [`busca.md`](busca.md) §1) e escreve no `postBuild`.
+
+### 9.1 O `.md` por rota
+
+**O caminho é `permalink + '.md'`, concatenação pura.** Nenhuma transformação, e é o [ADR 7](../adr/0007-trailingslash-false.md) que a torna possível: sob `trailingSlash: false` o permalink já vem sem barra.
+
+Três decisões mecânicas, e as três estão no ADR 7:
+
+- **os permalinks saem de `allContentLoaded`**, não de `postBuild({routesPaths})` — `routesPaths[0]` é sempre `/404.html`, e a API carrega TODO de depreciação para a v4. O `postBuild` continua sendo onde se **escreve**; só não é de onde se lê o caminho;
+- **`applyTrailingSlash` não é importado.** Ele existe e é exportado, mas não tem página de doc oficial nem semver documentada — e sob `false` seria no-op de qualquer forma;
+- **os arquivos são escritos no `outDir`, não em `static/`.** Commita-se artefato que muda por **decisão**; um `.md` que muda toda vez que a prosa muda seriam 73 arquivos de ruído em todo diff de conteúdo.
+
+**Perda aceita e nomeada:** em `docusaurus start` as rotas `.md` não existem e devolvem **200 com o shell da SPA** — não 404. É recurso de build, e quem o verifica é o portão 6 rota 2, contra o host real.
+
+O corpo servido é o MDX **quase cru**: front matter fora, `import`/`export` do topo fora por regex, e nada mais. **Não é preciso transformador de AST** — o estado da arte serve MDX quase cru, e a tag `<ParamField>` que sobra diz à máquina exatamente o que ela é.
+
+> *Do topo* não é detalhe de redação. Dez páginas de `Receitas` têm `import` na primeira coluna **dentro de bloco cercado**, porque é o que uma receita de SDK mostra. Uma varredura global comeria o exemplo, o `.md` sairia com o código mutilado, e o build passaria.
+
+### 9.2 O ponteiro de volta
+
+**Cada `.md` abre com uma linha apontando para o `llms.txt` e para a própria página.** É o que transforma arquivos soltos em grafo navegável: quem chega num `.md` por link direto descobre que existe uma lista, e a máquina que o lê acha o resto do site.
+
+Sem ele, os 73 arquivos são 73 becos sem saída.
+
+### 9.3 `llms.txt` — a lista de links
+
+Título, tagline, preâmbulo global, e uma seção `##` por tab com um item por página: rótulo, URL do `.md`, e a description.
+
+**O rótulo da seção é o do navbar**, lido de `themeConfig` e não declarado numa opção do plugin. São a mesma decisão — e o rótulo do navbar já chega **traduzido**, porque o core aplica `translateThemeConfig` antes de `allContentLoaded` rodar. Declarar o rótulo na opção criaria uma segunda cópia, e ela sairia em português no build do EN.
+
+**`## Optional` não é usada.** Ela tem significado especial na spec do llms.txt — *pode ser pulada se o contexto for curto* — e nenhuma das três referências medidas a usa. Marcar uma seção inteira como descartável é uma decisão sobre o conteúdo que este site não tomou.
+
+### 9.4 `llms-full.txt` — na forma do Neon
+
+A mesma abertura, e depois o conteúdo inteiro, documento a documento:
+
+```
+--- [Document source](https://…/docs/conceitos/idempotencia) ---
+
+> Summary: Por que toda escrita no Trilho aceita Idempotency-Key…
+
+# Idempotência
+
+…
+```
+
+**É a única das três formas medidas que é inequívoca para máquina.** O separador carrega a URL de origem, então o parser não precisa inferir onde um documento termina nem de onde ele veio — e `> Summary:` dá a ele um resumo antes do corpo, que é o que decide se vale ler o resto.
+
+### 9.5 O preâmbulo global sai em pt-BR nos dois locales
+
+Ele diz o que a máquina tem em mãos: quantas páginas, por qual eixo estão divididas, que toda página é servida como Markdown, e que **o Trilho é fictício**. A última linha não é modéstia — sem ela, um assistente responde sobre a API do Trilho como se ela existisse.
+
+**Ele não é traduzido, e é a mesma regra do §8.** As 29 páginas sem contraparte em inglês também saem em português sob `/en/`; o preâmbulo é a mesma classe de fallback, num artefato cujo leitor é máquina. O que **tem** tradução chega traduzido: título, description e rótulo de seção.
+
+A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles` + `translateContent` no plugin põem a prosa em `i18n/<locale>/sd-ai-era/`.
+
+### 9.6 O `Content-Type` do host, e o quarto link do footer
+
+**O portão 6 rota 2 nasce aqui**, e ele só pôde nascer agora: `GET <base>/docs/<qualquer>.md` precisa devolver `200 text/markdown` com disposição diferente de `attachment`. As três rotas rodam nos **dois locales** — o `.md` é escrito por locale, num `outDir` diferente, e o baseUrl do EN carrega o prefixo. É exatamente onde a concatenação erraria sem ninguém ver.
+
+**Armadilha registrada, e ela vale repetida:** `docusaurus serve` **não testa isso.** Ele aplica `applyTrailingSlash` ao `req.url` e passa `cleanUrls: true` ao `serve-handler` — valida a config, não o host.
+
+**O quarto link do footer entra agora:** `llms.txt`, o único artefato do site sem nenhuma entrada de navegação, logo indescobrível sem ele. Ele usa `pathname://`, que é a escotilha **pública** do Docusaurus para apontar a um arquivo que não é rota — degrau 2 da escada. Ela faz três coisas de uma vez: o `<Link>` usa `<a>` em vez de `history.push()`, o verificador de links não cobra uma rota que nunca existiu, e o baseUrl continua sendo acrescentado, **inclusive o do locale**.
 
 ---
 
@@ -395,3 +457,11 @@ A forma do `llms-full.txt`, o ponteiro de volta em cada `.md` e o aviso de `Cont
 | Os dois nomes de componente de versão, verbatim | **origem própria (implementação)** | ausência descrita e não nomeada não é greppável |
 | A forma de link de categoria virou cobertura sem fixture | **origem própria (implementação)** | as seis seções passaram a ter folha; a regra fica, e o motivo de ficar vai escrito |
 | Este documento é dono dos artefatos AI-era | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16), fechando a lacuna de dono |
+| `permalink + '.md'`, `allContentLoaded`, `outDir` | herdado | [ADR 7](../adr/0007-trailingslash-false.md) — os três verificados no fonte da 3.10.2 |
+| `import`/`export` removidos só do TOPO | **origem própria (implementação)** | dez receitas têm `import` na primeira coluna dentro de bloco cercado |
+| A forma do `llms-full.txt` | **mecanismo emprestado** | o Neon; é a única das três medidas inequívoca para máquina |
+| `## Optional` fora | herdado | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) — significado especial na spec, e nenhuma referência a usa |
+| Ponteiro de volta em cada `.md` | herdado | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) — é o que faz grafo em vez de arquivo solto |
+| O rótulo da seção vem do navbar | **origem própria (correção)** | medido: `translateThemeConfig` roda antes de `allContentLoaded`, e a opção do plugin sairia em português no EN |
+| O preâmbulo em pt-BR nos dois locales | **origem própria** | a mesma regra do §8; a rota de tradução do plugin fica registrada e não comprada |
+| `pathname://` no link do footer | herdado | escotilha pública do Docusaurus para arquivo que não é rota — degrau 2 |
