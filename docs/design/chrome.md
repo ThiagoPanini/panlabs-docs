@@ -121,9 +121,9 @@ Altura `--sd-navbar-height`, fixa no topo, sem faixa de tabs de largura total.
 
 **Nada, e isso é medido.** O `Navbar/Search` do upstream tem `:empty { display: none }` no próprio módulo — enquanto o `SearchBar` do tema for o placeholder vazio, o contêiner some sozinho.
 
-Consequência: declarar `type: 'search'` **reserva a posição a custo zero**. Sem a declaração, o `Navbar/Content` renderiza a busca depois da alternância de tema, e a ordem sairia errada no dia em que ela existisse. Com ela, o slice 7 preenche o slot e nada mais se move.
+Consequência: declarar `type: 'search'` **reserva a posição a custo zero**. Sem a declaração, o `Navbar/Content` renderiza a busca depois da alternância de tema, e a ordem sairia errada no dia em que ela existisse. Com ela, o slice 7 preencheu o slot e **nada mais se moveu** — a previsão se confirmou no artefato.
 
-Um transplante corporativo que remova a busca não deixa buraco no navbar.
+Um transplante corporativo que remova a busca não deixa buraco no navbar: o `SearchBar` lê o dado global, não o encontra, e devolve `null` — o que devolve o slot ao estado vazio que o `:empty` do upstream esconde. A superfície da busca é de [`busca.md`](busca.md).
 
 ---
 
@@ -197,7 +197,9 @@ Os dois herdam do adaptador e não têm anatomia própria. **Perda nomeada:** o 
 | `Status` | convenção dura de API de pagamentos; não tem página nem entrada de sidebar |
 | `Changelog` | é o **único** canal de comunicação de versão da API, e está enterrado como folha de `Operação` |
 | `Suporte` | fecha com o canal humano |
-| `llms.txt` | **slice 7** — é o único artefato do site sem nenhuma entrada de navegação, logo indescobrível sem este link |
+| `llms.txt` | é o único artefato do site sem nenhuma entrada de navegação, logo indescobrível sem este link |
+
+**O `llms.txt` entra por `pathname://`**, e é degrau 2 — escotilha pública do Docusaurus para apontar a um arquivo que **não é rota**. Sem ela, o `<Link>` tentaria `history.push()` numa rota que não existe e o verificador de links reprovaria o build. Com ela: `<a>` de verdade, verificador satisfeito, e o baseUrl continua sendo acrescentado — inclusive o do locale, que é onde o build do EN escreve o artefato dele. A forma do artefato é de [`informacao.md`](informacao.md) §9.
 
 **Nenhum abre em nova aba, e isso precisa ser declarado.** Correção de premissa medida nesta implementação: o `<Link>` do Docusaurus injeta `target="_blank"` **sozinho** em todo `href` externo. A decisão do rodapé é que nenhum link abre em nova aba, e sem declarar o contrário ela não valeria.
 

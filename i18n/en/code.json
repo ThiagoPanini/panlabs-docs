@@ -341,5 +341,41 @@
   "theme.tags.tagsPageTitle": {
     "message": "Tags",
     "description": "The title of the tag list page"
+  },
+  "shinydoc.busca.abrir": {
+    "message": "Search",
+    "description": "Rótulo do botão que abre a busca"
+  },
+  "shinydoc.busca.campo": {
+    "message": "Search the documentation",
+    "description": "Nome acessível do campo de busca"
+  },
+  "shinydoc.busca.fechar": {
+    "message": "Close search",
+    "description": "Nome acessível do botão que fecha o modal de busca"
+  },
+  "shinydoc.busca.resultados": {
+    "message": "Results",
+    "description": "Nome acessível da lista de resultados da busca"
+  },
+  "shinydoc.busca.fallback": {
+    "message": "in Portuguese",
+    "description": "Marca de resultado cuja página ainda está em português"
+  },
+  "shinydoc.busca.contagem": {
+    "message": "{n} results",
+    "description": "Anúncio do número de resultados, para leitor de tela"
+  },
+  "shinydoc.busca.tecla.navegar": {
+    "message": "navigate",
+    "description": "Legenda das setas no rodapé do modal"
+  },
+  "shinydoc.busca.tecla.abrir": {
+    "message": "open",
+    "description": "Legenda do Enter no rodapé do modal"
+  },
+  "shinydoc.busca.tecla.fechar": {
+    "message": "close",
+    "description": "Legenda do Esc no rodapé do modal"
   }
 }

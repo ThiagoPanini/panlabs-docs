@@ -49,12 +49,32 @@ jobs:
         run: npm run portao:4
 
       # Portão 5 — regenera a Referência da API a partir dos contratos e
-      # reprova em `git diff --exit-code`. É o único portão que não é `grep`:
-      # o gerador é determinístico, e divergência contra o que está commitado
-      # significa contrato editado sem regenerar, ou página gerada editada à
-      # mão. Ver ADR 5.
+      # reprova em `git diff --exit-code`. O gerador é determinístico, e
+      # divergência contra o que está commitado significa contrato editado sem
+      # regenerar, ou página gerada editada à mão. Ver ADR 5.
+      #
+      # (O ADR 5 o chama de *o único portão que não é `grep`*. Desde o slice 7
+      # são dois: o portão 7 é da mesma família — regenera e diffa.)
       - name: Portão 5 — API
         run: npm run portao:5
+
+      # Portão 7 — a superfície de swizzle congelada, e `src/theme/` conferido
+      # contra ela. A CADÊNCIA dele é de UPGRADE: ele só tem o que reprovar
+      # quando o `@docusaurus/theme-classic` muda de versão. Ele roda aqui em
+      # toda CI mesmo assim, e o motivo é que não existe gatilho barato para
+      # *"houve um upgrade"* — `package-lock.json` muda por dez razões, e um
+      # portão que depende de alguém lembrar de rodá-lo é um portão que não
+      # roda. Dez segundos por CI é o preço de ver a falha silenciosa que
+      # nenhum build reprova.
+      - name: Portão 7 — swizzle
+        run: npm run portao:7
+
+      # A régua do algoritmo da busca — `node --test`, do próprio runtime, sem
+      # dependência nova. Os portões são varredura, e ordenação de resultado não
+      # é varrível: ou existe um caso que a exercita, ou "escada determinística"
+      # fica sendo afirmação de prosa.
+      - name: Régua da busca
+        run: npm test
 
       # A bijeção manifesto ↔ `static/icons/`. Não é portão: não precisa de rede
       # (só confere o que está no repositório) e o build já quebra alto se um
@@ -68,8 +88,20 @@ jobs:
       - name: Espelho de tokens
         run: node scripts/espelho-tokens.mjs --verificar
 
+      # As quatro invariantes de FORMA da spec. Não são portão — os portões
+      # cobram o código, e estas cobram o documento. A spec é o entregável deste
+      # projeto (axioma 6), e entregável sem régua envelhece calado.
+      - name: As quatro invariantes de forma
+        run: npm run invariantes
+
       # `onBrokenLinks: throw` faz a verificação de link acontecer aqui. Ela
       # nunca acontece em `docusaurus start`, que devolve 200 com o shell da SPA
       # para qualquer rota.
       - name: Build (pt-BR e en)
         run: npm run build
+
+      # Os cinco zeros, conferidos e não afirmados. Roda DEPOIS do build porque
+      # o terceiro zero confere o HTML publicado: nada carrega recurso de outra
+      # origem. Sem `build/` ele só olharia `src/`, que é metade da resposta.
+      - name: Os cinco zeros
+        run: npm run zeros

@@ -346,6 +346,22 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      ponto onde ele troca, não. */
   --sd-gutter: var(--sd-space-8);
 
+  /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7, e o
+     único do projeto medido contra a viewport.
+
+     Ele está aqui, e não inline no CSS Module, porque a alternativa seria
+     escrever `60dvh` num arquivo que não é este. `dvh` não está no padrão do
+     portão 1 — `px|rem|em|ms|s` —, então o literal PASSARIA, e passar por buraco
+     de varredura é a única forma de literal que este projeto não admite: a
+     saída correta seria fechar o buraco, e fechá-lo aqui custa uma linha em vez
+     de uma perna nova de portão.
+
+     A LARGURA não vira token: ela é `--sd-code-width`, citada por nome. O painel
+     abre com a medida do interior do cartão — a mesma que o leitor já estava
+     lendo quando apertou a tecla —, e nomeá-la de novo criaria uma segunda cópia
+     do mesmo número. */
+  --sd-busca-height: 60dvh;
+
   /* ---------------------------------------------------------------------------
      Grade de cartões — camada 1, e UMA declaração serve a landing e o MDX.
 
@@ -403,11 +419,17 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 [data-sd-showcase] {
   color-scheme: dark;
 
-  /* surface */
+  /* surface — `scrim` é o véu do `::backdrop` do modal de busca, e ele é o
+     ÚNICO papel semântico novo do slice 7. Ele deriva do extremo escuro da
+     rampa, que é o mesmo nos dois modos; o que bifurca é a opacidade, e ela
+     bifurca por um motivo mecânico: no escuro a página já está perto da 950, e
+     um véu leve não se distinguiria dela. No claro, a mesma opacidade
+     transformaria a página num buraco preto em vez de empurrá-la para trás. */
   --sd-surface-page:  var(--sd-gray-950);
   --sd-surface-card:  var(--sd-surface-dark);
   --sd-surface-code:  var(--sd-gray-950);
   --sd-surface-wash:  rgb(from var(--sd-accent) r g b / 12%);
+  --sd-surface-scrim: rgb(from var(--sd-gray-950) r g b / 72%);
 
   /* text — `faint` é a parada 500, o meio matemático da rampa. É a única
      reprovação deliberada de AA do sistema (3,04:1 aqui) e é PROIBIDA para
@@ -489,6 +511,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-surface-card:  var(--sd-surface-light);
   --sd-surface-code:  oklch(from var(--sd-gray-50) 100% 0 h);
   --sd-surface-wash:  rgb(from var(--sd-accent) r g b / 12%);
+  --sd-surface-scrim: rgb(from var(--sd-gray-950) r g b / 40%);
 
   /* text */
   --sd-text-strong:  var(--sd-gray-950);
@@ -1307,11 +1330,13 @@ Consequência que vale dita: mover o ângulo de um matiz de estado **não conseg
 | ---: | --- | --- | --- |
 | 1 | Literal de cor, comprimento, tempo ou curva fora de `src/css/tokens.css` | commit | `npm run portao:1` |
 | 2 | `transition:`/`animation:` com `ms`, `s` ou `cubic-bezier` cravado | commit | `npm run portao:2` |
-| 6 | Rotas 1 e 3 contra o host real | implantação | `npm run portao:6 -- <url-base>` |
+| 6 | As três rotas contra o host real, nos dois locales | implantação | `npm run portao:6 -- <url-base> [rota]` |
 
 Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 
 **Limite conhecido do portão 1, escrito em voz alta:** media query não lê custom property, e o limiar dela é um comprimento. Enquanto o único limiar do projeto morar no arquivo de tokens, o portão passa sem exceção. O dia em que um CSS Module precisar do limiar é o dia de reabrir esta linha — e não de afrouxar o portão em silêncio.
+
+**Segundo limite, e ele foi fechado em vez de explorado.** O padrão do portão 1 é `px|rem|em|ms|s`; `dvh` **não está nele**. A altura máxima do modal de busca é `60dvh`, e escrevê-la inline num CSS Module passaria pela varredura. **Passar por buraco de varredura é a única forma de literal que este projeto não admite** — a saída correta seria fechar o buraco, e fechá-lo custa uma linha aqui em vez de uma perna nova de portão. Por isso `--sd-busca-height` é token, e o portão 1 continua com o padrão que sempre teve.
 
 **Achado da implementação:** o `postcss-calc`, que roda na minificação, **não entende sintaxe de cor relativa** e emite aviso ao encontrar `calc(c * var(--sd-brand-tint))` e `calc(l + 0.06)`. Ele **não toca no valor** — verificado byte a byte no CSS emitido, a rampa e os acentos saem intactos. O aviso é ruído, não defeito, e está registrado aqui para ninguém "consertar" a rampa por causa dele.
 
@@ -1376,3 +1401,6 @@ Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 | Portão de `grep` de literal | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §7 |
 | Espelho verificado por script | origem própria | consequência da regra de fonte única da [#9](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/9) |
 | Aviso do `postcss-calc` sobre cor relativa | **origem própria (achado)** | observado ao rodar o build do slice 1; valor emitido conferido byte a byte |
+| `--sd-surface-scrim`, par declarado | **origem própria** | não há medição de véu nas referências. A opacidade bifurca por motivo mecânico: no escuro a página já está na parada 950, e no claro o mesmo alfa faria buraco em vez de profundidade ([`busca.md`](busca.md) §5.3) |
+| `--sd-busca-height` como token de camada 1 | **origem própria (correção)** | `dvh` não está no padrão do portão 1, e o literal passaria pela varredura — fechar o buraco custa uma linha aqui |
+| A largura do modal de busca **não** vira token | **origem própria (implementação)** | é `--sd-code-width`, o interior do cartão, citado por nome; nomeá-la de novo criaria segunda cópia do mesmo número |

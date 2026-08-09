@@ -243,7 +243,8 @@ a[href='#__docusaurus_skipToContent_fallback'] {
   a,
   button,
   summary,
-  [role='tab'] {
+  [role='tab'],
+  [role='option'] {
     min-height: var(--sd-target-min);
     align-content: center;
   }

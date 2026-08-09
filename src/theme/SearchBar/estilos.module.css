@@ -1,0 +1,303 @@
+/* =============================================================================
+   `SearchBar` — o botão do navbar e o modal.
+
+   Camada 3: tudo aqui deriva de token de camada 1 e 2. Os dois tokens novos do
+   slice moram em `tokens.css` — `--sd-surface-scrim`, papel `surface` com par
+   declarado, e `--sd-busca-height`, a única medida do projeto relativa à
+   viewport. A LARGURA do painel não é token novo: é `--sd-code-width`, o
+   interior do cartão de doc, citada por nome.
+
+   NENHUMA declaração `outline` neste arquivo — o portão 3 reprova outline fora
+   de `src/css/foco.css`, e não há exceção a pedir: `:focus-visible` já é
+   universal e o botão, o campo e o × o herdam de graça.
+
+   Procedência: docs/design/busca.md.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   O gatilho — BOTÃO, não campo.
+
+   A âncora e três das quatro referências abrem um modal; um `<input>` no navbar
+   que não aceita digitação é um controle que mente sobre o que faz. O botão diz
+   *isto abre outra coisa*, que é o que de fato acontece.
+
+   Um limiar só, o do Infima: acima de 997 o botão carrega ícone, rótulo e
+   tecla; abaixo, ícone puro. Abaixo do limiar o navbar já está no aperto
+   máximo — é onde a sidebar virou gaveta e o hambúrguer apareceu.
+   ----------------------------------------------------------------------------- */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sd-space-2);
+  padding: var(--sd-space-1) var(--sd-space-2);
+  border: none;
+  border-radius: var(--sd-radius-sm);
+  background: transparent;
+  color: var(--sd-text-muted);
+  font: inherit;
+  font-size: var(--sd-type-sm);
+  cursor: pointer;
+  transition: color var(--sd-move-state), background-color var(--sd-move-state);
+}
+
+.botao:hover {
+  color: var(--sd-text-strong);
+  background: var(--sd-surface-wash);
+}
+
+.rotulo,
+.atalho {
+  display: none;
+}
+
+/* O `<kbd>` do gatilho: uma pastilha, não uma tecla desenhada. Ela é anúncio de
+   atalho, e o rodapé do modal é que é legenda de tecla. */
+.atalho {
+  padding: 0 var(--sd-space-1);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-xs);
+  color: var(--sd-text-faint);
+  font-family: var(--sd-font-mono);
+  font-size: var(--sd-type-xs);
+  line-height: var(--sd-leading-ui);
+}
+
+@media (min-width: 997px) {
+  .rotulo,
+  .atalho {
+    display: inline;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   O modal — `<dialog>` com `showModal()`.
+
+   O elemento entra na TOP LAYER do navegador, então ele não participa de
+   `z-index` nenhum: não há número a escolher e não há empilhamento a brigar com
+   o navbar fixo. Zero declaração de `z-index` neste arquivo, e é consequência
+   da escolha do elemento.
+
+   Ancorado no topo: um modal centrado verticalmente pula quando a lista cresce,
+   e a lista cresce a cada tecla. `margin-block-start` fixo mais
+   `margin-inline: auto` deixa o painel parado enquanto o conteúdo muda.
+   ----------------------------------------------------------------------------- */
+.modal {
+  inline-size: min(var(--sd-code-width), calc(100% - 2 * var(--sd-gutter)));
+  max-block-size: var(--sd-busca-height);
+  margin-block: var(--sd-space-16) auto;
+  margin-inline: auto;
+  padding: 0;
+  border: none;
+  border-radius: var(--sd-radius);
+  background: var(--sd-surface-card);
+  color: var(--sd-text-body);
+  box-shadow: var(--sd-shadow-3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* O `::backdrop` é o único consumidor de `--sd-surface-scrim`, e o único véu do
+   site. Ele existe porque `showModal()` o cria — com `show()` não haveria
+   backdrop nenhum, nem armadilha de foco. */
+.modal::backdrop {
+  background: var(--sd-surface-scrim);
+}
+
+/* A entrada usa `--sd-move-enter`, cujo ÚNICO consumidor no projeto é este
+   modal. `allow-discrete` é o que faz a SAÍDA rodar sobre `display`, que o
+   `<dialog>` alterna: sem ele o painel sumiria de uma vez. */
+.modal,
+.modal::backdrop {
+  opacity: 0;
+  transition:
+    opacity var(--sd-move-enter),
+    display var(--sd-move-enter) allow-discrete,
+    overlay var(--sd-move-enter) allow-discrete;
+}
+
+/* A ENTRADA é `@keyframes`, não `@starting-style`, e a troca foi medida no CSS
+   emitido: o minificador do Docusaurus DESCARTA o bloco `@starting-style`
+   inteiro — `Invalid property name` no aviso de build — e o modal publicado
+   abria pronto, sem uma transição, enquanto `docusaurus start` animava. O
+   sintoma é o que motion.md §6 já cataloga como o pior do documento.
+
+   `global(…)` sem dois-pontos pelo motivo do mesmo §6: dentro de um CSS Module
+   o nome de um `@keyframes` é manglado mesmo quando o módulo não o define, e o
+   `postcss-discard-unused` apaga o keyframe global que ficou órfão.
+
+   A saída continua sendo a transição acima: quando `[open]` sai, a animação sai
+   com ele, e a opacidade cai de 1 a 0 pelo caminho de sempre. */
+.modal[open],
+.modal[open]::backdrop {
+  opacity: 1;
+  animation: global(sd-busca-abre) var(--sd-move-enter) both;
+}
+
+/* -----------------------------------------------------------------------------
+   O campo
+   ----------------------------------------------------------------------------- */
+.campo {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-space-3);
+  padding: var(--sd-space-4) var(--sd-space-5);
+  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
+  color: var(--sd-text-faint);
+}
+
+.campo input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  border: none;
+  background: transparent;
+  color: var(--sd-text-strong);
+  font: inherit;
+  font-size: var(--sd-type-lg);
+}
+
+.campo input::placeholder {
+  color: var(--sd-text-faint);
+}
+
+.fechar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sd-space-1);
+  border: none;
+  border-radius: var(--sd-radius-sm);
+  background: transparent;
+  color: var(--sd-text-muted);
+  cursor: pointer;
+  transition: color var(--sd-move-state);
+}
+
+.fechar:hover {
+  color: var(--sd-text-strong);
+}
+
+/* -----------------------------------------------------------------------------
+   A lista
+
+   Sem teto de resultados: ela rola. Truncar em dez seria esconder acerto sem
+   dizer que escondeu, e é o modo de falhar que este projeto recusa.
+   ----------------------------------------------------------------------------- */
+.lista {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: var(--sd-space-2);
+  overflow-y: auto;
+  list-style: none;
+}
+
+.opcao {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0 var(--sd-space-2);
+  align-items: baseline;
+  padding: var(--sd-space-2) var(--sd-space-3);
+  border-radius: var(--sd-radius-sm);
+  cursor: pointer;
+}
+
+/* O estado ativo NÃO vira atributo — `aria-selected` já carrega a informação, e
+   o contrato de partes é estreito por decisão. */
+.opcao[aria-selected='true'] {
+  background: var(--sd-surface-wash);
+}
+
+.titulo {
+  color: var(--sd-text-strong);
+  font-size: var(--sd-type-base);
+  font-weight: var(--sd-weight-ui);
+}
+
+.aba,
+.fallback {
+  color: var(--sd-text-faint);
+  font-size: var(--sd-type-xs);
+}
+
+.fallback {
+  padding-inline: var(--sd-space-1);
+  border: var(--sd-border-width) solid var(--sd-border-subtle);
+  border-radius: var(--sd-radius-xs);
+}
+
+.trecho {
+  grid-column: 1 / -1;
+  color: var(--sd-text-muted);
+  font-size: var(--sd-type-sm);
+  line-height: var(--sd-leading-ui);
+  /* Duas linhas e reticências: o corpo indexado tem 200 caracteres, e deixá-lo
+     correr faria a altura de cada resultado depender do texto. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* O realce é por PESO, e o fundo fica explicitamente em `none`.
+
+   A linha ativa já é uma superfície de estado (`--sd-surface-wash`, que é o
+   acento a 12%). Um `<mark>` tingido poria acento sobre acento no mesmo pixel —
+   duas ênfases brigando, e a de baixo perdendo. O elemento continua sendo
+   `<mark>` porque é ele que carrega o significado; o que troca é a tinta. */
+.opcao mark {
+  background: none;
+  color: var(--sd-text-strong);
+  font-weight: var(--sd-weight-heading);
+}
+
+/* -----------------------------------------------------------------------------
+   O anúncio de contagem — `role="status"`, fora da tela e dentro da árvore.
+
+   `display: none` o tiraria da árvore de acessibilidade e o leitor de tela
+   nunca ouviria a contagem. O recorte de um pixel é a técnica que mantém o nó
+   vivo sem ocupar espaço.
+   ----------------------------------------------------------------------------- */
+.aVozAlta {
+  position: absolute;
+  inline-size: var(--sd-border-width);
+  block-size: var(--sd-border-width);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* -----------------------------------------------------------------------------
+   O rodapé — legendas de tecla em CARACTERE, nunca em ícone.
+
+   Três setas desenhadas custariam três slots do manifesto e estourariam o teto
+   de 64. `↑`, `↓`, `↵` e `esc` já são glifos da fonte.
+   ----------------------------------------------------------------------------- */
+.rodape {
+  display: flex;
+  gap: var(--sd-space-4);
+  padding: var(--sd-space-2) var(--sd-space-5);
+  border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
+  color: var(--sd-text-faint);
+  font-size: var(--sd-type-xs);
+}
+
+.rodape kbd {
+  padding: 0 var(--sd-space-1);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-xs);
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font-family: var(--sd-font-mono);
+  font-size: inherit;
+}
+
+/* Abaixo do limiar o rodapé sai: quem está no toque não tem tecla, e a linha
+   viraria ruído ocupando a altura que a lista quer. */
+@media (max-width: 996px) {
+  .rodape {
+    display: none;
+  }
+}
