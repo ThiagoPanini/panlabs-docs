@@ -153,6 +153,19 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 
 **Pior caso 4,32:1 contra os 3:1 que a SC 1.4.11 pede. Folga de 1,44×.**
 
+> **Divergência aberta com [`tokens.md`](tokens.md) §10 — dono: o dono do projeto.** As duas tabelas medem o **mesmo par** (anel de foco contra cartão e contra página) e discordam em três das quatro células:
+>
+> | par | aqui | `tokens.md` §10 |
+> | --- | ---: | ---: |
+> | cartão, escuro | 5,33 | 5,34 |
+> | cartão, claro | **6,08** | **6,26** |
+> | página, claro | **5,82** | **5,99** |
+> | página, escuro | 7,04 | 7,04 |
+>
+> Achado pelo teste de reconstrução ([`README.md`](README.md) §6). Nenhuma das duas foi corrigida aqui, porque **adivinhar qual está certa seria inventar um número medido** — e é o axioma 5 que está em jogo. Uma medição adjudica as duas, e a que sobreviver vira a única.
+>
+> **Nada nesta seção depende do desempate:** as quatro células passam com folga sobre os 3:1 da SC 1.4.11, e a obrigação é satisfeita por construção — pelas travas de luminosidade do acento, não pelos valores desta tabela.
+
 Três coisas que esta tabela resolve:
 
 - a pastilha de código é a terceira superfície, e não a segunda. No escuro ela reusa o preenchimento da página; no claro é branco puro, que é o melhor caso do modo;

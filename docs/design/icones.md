@@ -2,7 +2,13 @@
 
 O manifesto, os três renderizadores, a marca e o teto duro.
 
-**Nenhum valor numérico de desenho aparece neste documento.** Tamanho e espaçamento de ícone moram em [`tokens.md`](tokens.md). Os números que aparecem aqui são **contagens** — quantos arquivos, quantas tags, qual o teto — e a espessura de traço da tabela de compensação óptica, que é prop de componente e não token de CSS.
+**Nenhum valor numérico de desenho aparece neste documento.** Os números que aparecem aqui são **contagens** — quantos arquivos, quantas tags, qual o teto — e a espessura de traço da tabela de compensação óptica, que é prop de componente e não token de CSS.
+
+> **De onde sai o tamanho de um ícone, dito porque a primeira redação errou.** Ela mandava procurar em [`tokens.md`](tokens.md), e **não há token de tamanho de ícone lá** — nem `--sd-icon-*` nem equivalente. O ponteiro apontava para o vazio, e o teste de reconstrução ([`README.md`](README.md) §6) tropeçou exatamente aqui.
+>
+> A regra é: **ícone de chrome se dimensiona pela escala de espaço**, e o par em uso na sidebar é `--sd-space-4` para o quadrado e `--sd-space-2` para o afastamento do rótulo. Não é derivação falsa: um ícone de sidebar é um item de lista ao lado de texto, e o que o alinha ao ritmo da lista é a mesma escala que dá o `gap` dela.
+>
+> Ícone **dentro** de componente do catálogo é outra conta, e ela é prop — ver a tabela de compensação óptica do §4.
 
 Documento transversal, ao lado de [`motion.md`](motion.md), [`foco.md`](foco.md) e [`swizzle.md`](swizzle.md): a sidebar é o consumidor principal, mas o catálogo de conteúdo, a marca e a Referência da API leem o mesmo manifesto.
 

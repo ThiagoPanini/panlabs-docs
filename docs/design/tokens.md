@@ -1267,7 +1267,9 @@ O `src` começa em `/` e mesmo assim sobrevive ao `baseUrl` em subcaminho: o web
 
 ### Renderização de prosa
 
-`hyphens: none` porque a hifenização de português é inconsistente entre motores, e na medida de prosa deste projeto o alinhamento à esquerda não precisa dela. `text-wrap: pretty` no corpo e `balance` em título e lead, que matam órfã sem custar nada.
+`hyphens: none` porque a hifenização de português é inconsistente entre motores, e na medida de prosa deste projeto o alinhamento à esquerda não precisa dela. `text-wrap: pretty` no corpo e `balance` em título, que matam órfã sem custar nada.
+
+> *Correção de vocabulário, do teste de reconstrução ([`README.md`](README.md) §6):* a redação anterior dizia *"em título **e lead**"*. **Não existe elemento `lead` nesta spec** — nenhum dos trinta e um documentos o define, e o CSS aplica `balance` só a `h1`–`h6`. Termo sem definição é o tipo de palavra que quem implementa tenta honrar inventando o elemento.
 
 > **Livre — ninguém.** Nada aqui é opcional. A linha existe porque estas três regras não tinham endereço e viravam folclore.
 
@@ -1334,7 +1336,11 @@ Consequência que vale dita: mover o ângulo de um matiz de estado **não conseg
 
 Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 
-**Limite conhecido do portão 1, escrito em voz alta:** media query não lê custom property, e o limiar dela é um comprimento. Enquanto o único limiar do projeto morar no arquivo de tokens, o portão passa sem exceção. O dia em que um CSS Module precisar do limiar é o dia de reabrir esta linha — e não de afrouxar o portão em silêncio.
+**Limite conhecido do portão 1, escrito em voz alta:** media query não lê custom property, e o limiar dela é um comprimento — então o prelúdio de `@media` **não tem como** passar pela varredura de literal.
+
+> *Correção do teste de reconstrução ([`README.md`](README.md) §6):* a redação anterior resolvia isso dizendo que *"enquanto o único limiar do projeto morar no arquivo de tokens, o portão passa sem exceção"*. **É falso, e subestima o portão.** O limiar mora também em `src/css/chrome.css`, que é onde o comportamento de tela estreita precisa dele; quem lesse a frase concluiria que uma media query fora do arquivo de tokens reprova, e ela não reprova.
+>
+> O que o portão 1 de fato faz são **duas pernas**: o prelúdio de `@media` sai da varredura de literal **e entra numa segunda perna**, que cobra que todo limiar seja o limiar único do projeto — 996/997px. Um `@media (min-width: 1024px)` novo reprova, que é exatamente onde ele precisa reprovar. A exceção não é buraco: é uma regra mais estreita, escrita noutro lugar.
 
 **Segundo limite, e ele foi fechado em vez de explorado.** O padrão do portão 1 é `px|rem|em|ms|s`; `dvh` **não está nele**. A altura máxima do modal de busca é `60dvh`, e escrevê-la inline num CSS Module passaria pela varredura. **Passar por buraco de varredura é a única forma de literal que este projeto não admite** — a saída correta seria fechar o buraco, e fechá-lo custa uma linha aqui em vez de uma perna nova de portão. Por isso `--sd-busca-height` é token, e o portão 1 continua com o padrão que sempre teve.
 

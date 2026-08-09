@@ -2,7 +2,7 @@
 
 A espinha. Ela é escrita **por último** porque indexa o que existe — um índice redigido antes dos documentos indexa a intenção, e a intenção é a coisa que envelhece calada.
 
-**Isto é o entregável.** O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.* Tudo neste diretório existe para satisfazer essa frase, e o **§6** é onde ela é cobrada — hoje com o protocolo escrito e o resultado ainda em aberto, que é o único ponto aberto da spec.
+**Isto é o entregável.** O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.* Tudo neste diretório existe para satisfazer essa frase, e o **§6** é onde ela foi cobrada de verdade — com o protocolo, o resultado, e os quatro erros de fato que ele encontrou.
 
 ---
 
@@ -173,9 +173,9 @@ Mais três verificações que **não são portão** e rodam junto:
 
 ---
 
-## 6. O axioma 6, exercido — *aberto; dono: o dono do projeto*
+## 6. O axioma 6, exercido
 
-**Ainda não rodou, e a ausência está marcada em vez de preenchida.** Ausência marcada é buraco visível; ausência não marcada é a omissão que este documento existe para impedir. O resto da spec está fechado — esta seção é o único ponto aberto dela.
+**Rodou.** Deixa de ser promessa nesta linha, e o resultado — inclusive o que ele desmentiu — está no §6.4.
 
 ### 6.1 Por que ele não pode ser rodado por quem escreveu a spec
 
@@ -183,7 +183,7 @@ O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referê
 
 **A sessão que escreveu a spec é a única que não pode cobrá-la.** Ela tem a conversa inteira, leu as sete pesquisas e escreveu o código; o que ela reconstruísse viria da memória e não do documento, e o teste devolveria um "passou" que não mede nada. Um teste que só o autor pode aplicar não é teste — é a promessa outra vez, com outra roupa.
 
-Por isso o dono desta seção é o **dono do projeto**, e o custo dela é uma sessão de agente limpa.
+Por isso ele custa uma **sessão de agente limpa**, e foi assim que rodou: um sandbox com `spec/design/` e `spec/adr/` e nada mais, sem acesso ao repositório.
 
 ### 6.2 O protocolo
 
@@ -206,11 +206,59 @@ O critério é **reconhecível**, não idêntico. Três perguntas, e a terceira 
 
 A terceira é a única que gera trabalho. As duas primeiras dizem *passou* ou *não passou*; a terceira devolve a lista de linhas a escrever.
 
-### 6.4 O que fica registrado aqui quando ele rodar
+### 6.4 O resultado
 
-O commit da spec contra o qual ele rodou, a URL pública do site no ar naquele commit, o recorte que o agente recebeu, e **a lista de reinterpretações** — cada uma virando linha de spec ou linha de `Procedência`.
+| | |
+| --- | --- |
+| **Commit da spec** | `fa5eec4` |
+| **URL pública no ar naquele commit** | <https://panlabs-tech.github.io/shinydoc-docusaurus/> |
+| **Recorte** | o do §6.2, inteiro — camada de tokens **e** página de documentação, em pt-BR |
+| **O que o agente recebeu** | `docs/design/` e `docs/adr/`. Nada mais |
 
-Enquanto esta subseção estiver vazia, o axioma 6 é **posição declarada e não verificada**, e a spec diz isso em voz alta em vez de deixar o leitor supor o contrário.
+**O build passou nos dois locales, sem link quebrado**, com as sete dependências de produção e as duas de desenvolvimento que o `create-docusaurus classic` escreve — o segundo dos cinco zeros se sustentou sem ser dito. Os portões 2 e 3 passaram sobre o que ele escreveu.
+
+#### O veredito, em três linhas
+
+- **camada de tokens: sim, sem ressalva.** Zero decisões — ver §6.5;
+- **chrome estrutural: sim, com ressalvas nomeáveis** — a cadeia de proporções, o cartão, a medida de prosa, a hierarquia de sidebar e o footer saíram do documento;
+- **acabamento: não.** Onze valores foram chute, e dois deles mudam a tela de forma imediatamente visível.
+
+#### O padrão, que é o achado de verdade
+
+**A spec é impecável onde descreve mecanismo de upstream e derivação declarada, e é muda onde precisa de um valor de acabamento que ninguém mediu.** Isso é o axioma 5 funcionando e cobrando o preço dele.
+
+A saída **não é medir mais**. É que valor não medido também precisa de endereço — nem que seja um bloco `Livre` com dono e um default cravado. Hoje esses onze valores não são `Livre` nem obrigatórios: são a **terceira categoria que a régua do §1 diz não existir** — silêncio.
+
+#### As reinterpretações que mais custam
+
+| # | O que a spec não respondeu | Onde | Consequência |
+| ---: | --- | --- | --- |
+| 1 | O mapeamento *token type* do Prism → os sete papéis `--sd-code-*` | `tokens.md` §7 | **decide a cor de metade dos caracteres de todo bloco de código.** Duas implementações razoáveis não se parecem |
+| 2 | Qual degrau de elevação o cartão de doc usa | `chrome.md` §1.3 | os quatro degraus embutem o anel, então a frase não desambigua. `-1` contra `-2` é 1px contra 6px de projeção |
+| 3 | A folga entre cartão e TOC | `chrome.md` §1.2c | *"a folga que se quer"* não nomeia token; move a largura útil do TOC em até 16px |
+| 4 | A lista de elementos de prosa | `chrome.md` §1.4 | a lista de quem **escapa** está deliberadamente não escrita; a de quem **fica**, que é a que se implementa, também não estava |
+| 5 | Onde moram `chrome.css` e `custom.css`, e como as folhas entram no build | — | os dois só apareciam por *basename*, dentro de comentários |
+
+#### Quatro erros de fato, e os três primeiros já corrigidos
+
+| Erro | Estado |
+| --- | --- |
+| [`icones.md`](icones.md) mandava procurar tamanho de ícone em [`tokens.md`](tokens.md), **e não há token de tamanho de ícone lá** | corrigido — a regra é a escala de espaço, e agora está escrita |
+| [`tokens.md`](tokens.md) §11 dizia que o portão 1 passa *"enquanto o único limiar morar no arquivo de tokens"*; o limiar mora também em `chrome.css` e **o portão tem uma segunda perna** que a frase não mencionava | corrigido — a descrição subestimava o portão |
+| [`tokens.md`](tokens.md) §8 mandava aplicar `text-wrap: balance` em *"título e **lead**"*, e **`lead` não é definido em nenhum dos trinta e um documentos** | corrigido — termo sem definição |
+| As tabelas de contraste de [`tokens.md`](tokens.md) §10 e [`foco.md`](foco.md) §6 **discordam** para o mesmo par em três das quatro células | **aberto** — adivinhar qual está certa seria inventar um número medido. Ver [`foco.md`](foco.md) §6 |
+
+#### A que passou por engano, e vale registrada
+
+O tamanho do ícone de sidebar o agente marcou como **chute** — e acertou o valor exato, `--sd-space-4` com `--sd-space-2` de afastamento. Ele raciocinou até a resposta certa **porque a spec o obrigou a apostar**, não porque ela respondeu. Um acerto obtido assim conta como buraco, não como cobertura: a próxima aposta cai do outro lado.
+
+### 6.5 O que a spec acertou, e por que isso também é resultado
+
+O **bloco espelhado de [`tokens.md`](tokens.md) §3 é o arquivo, não uma descrição dele.** A camada de tokens inteira foi reconstruída com **zero decisões**, e o espelho confere byte a byte.
+
+Vale dito em voz alta que isso torna metade do recorte uma **cópia**, e não uma reconstrução — o teste do §6.2 é forte no chrome e fraco nos tokens, por construção. O que ele mede de verdade é a prosa.
+
+Idem, sem uma decisão: o adaptador do Infima com o porquê de cada exclusão, as três declarações que fecham a cadeia de proporções, a declaração única do footer, as três exceções de foco e as duas formas do seletor de sidebar.
 
 ---
 
