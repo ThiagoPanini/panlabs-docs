@@ -28,6 +28,14 @@ Sete pesquisas alimentam o [mapa de wayfinding](https://github.com/panlabs-tech/
 | `research/busca-i18n-versionamento` | [#7](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/7) | 750 linhas | Mecânica dos três e o impacto no chrome. Levantou os bloqueadores **jurídicos** do Algolia DocSearch, e a rota local que não viola o vanilla-first. |
 | `research/recursos-ai-era` | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) | 543 linhas | `llms.txt`, Markdown por rota e o controle de copiar/abrir — medido num **Docusaurus 3.10.2 real**, com o plugin escrito e o build rodado. |
 
+## O teste de reconstrução
+
+Não é pesquisa — é o **contrário** dela. As sete acima alimentaram as decisões; esta cobra o resultado. Mesma convenção de branch, pelo mesmo motivo: o material é longo e a síntese mora onde a decisão se lê.
+
+| Branch | Onde a síntese mora | Tamanho | O que mediu |
+| --- | --- | --- | --- |
+| `research/reconstrucao-axioma-6` | [`docs/design/README.md`](../design/README.md) §6 | 522 linhas | O **axioma 6**, cobrado: uma sessão de agente que só recebeu `docs/design/` e `docs/adr/` reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. Build verde nos dois locales; **vinte e cinco reinterpretações e quatro erros de fato** na spec. |
+
 ## Por que os branches não são mergeados
 
 Pesquisa é insumo datado, não contrato. Ela alimenta decisões e depois envelhece — o Docusaurus sobe de versão, o Mintlify muda o CSS, o Algolia muda os termos. Manter o material na `main` daria a ele um status de verdade corrente que ele não tem.

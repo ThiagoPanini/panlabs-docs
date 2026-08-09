@@ -22,7 +22,9 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 
 **73 páginas em três abas**, landing, busca, artefatos AI-era e dois locales. A spec são trinta e um arquivos mais sete ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
 
-**Um ponto continua aberto, e ele está marcado onde importa:** o [§6 da espinha](docs/design/README.md) — *o axioma 6, exercido*. O teste de reconstrução tem protocolo escrito e **ainda não rodou**, porque quem escreveu a spec é justamente quem não pode cobrá-la. Até ele rodar, o axioma 6 é posição declarada e não verificada.
+**O axioma 6 foi cobrado, e não só declarado.** O [§6 da espinha](docs/design/README.md) registra o teste de reconstrução: uma sessão de agente limpa, com `docs/design/` e `docs/adr/` e nada mais, reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. **O build passou nos dois locales.**
+
+O veredito é de três níveis — *sim* na camada de tokens, *sim com ressalvas* no chrome estrutural, *não* no acabamento — e o teste devolveu **quatro erros de fato na spec**, três já corrigidos e um em aberto por precisar de medição. O padrão que ele expôs: a spec é impecável onde descreve mecanismo e derivação declarada, e é muda onde precisaria de um valor que ninguém mediu.
 
 ## Rodar
 
