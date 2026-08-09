@@ -2,7 +2,7 @@
 
 A espinha. Ela é escrita **por último** porque indexa o que existe — um índice redigido antes dos documentos indexa a intenção, e a intenção é a coisa que envelhece calada.
 
-**Isto é o entregável.** O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.* Tudo neste diretório existe para satisfazer essa frase, e o §6 registra a vez em que ela foi cobrada de verdade.
+**Isto é o entregável.** O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.* Tudo neste diretório existe para satisfazer essa frase, e o **§6** é onde ela é cobrada — hoje com o protocolo escrito e o resultado ainda em aberto, que é o único ponto aberto da spec.
 
 ---
 
@@ -93,7 +93,7 @@ Quatro são de forma e se cobram por `grep`. A quinta é de conteúdo e é a ún
 
 **A quinta é a que importa mais, e é a mais cara.** As quatro de forma passariam com a tipografia inteiramente ausente: um documento que não existe não tem seção vazia, não tem número solto e não tem procedência órfã. Só a completude enxerga ausência.
 
-`npm run invariantes` roda as quatro primeiras. A quinta é leitura, e o resultado dela está no §6.
+`npm run invariantes` roda as quatro primeiras. A quinta é leitura, e o resultado dela está no §4.2.
 
 ### 4.1 Duas das quatro precisaram de régua mais fina que o mapa previa
 
@@ -173,9 +173,44 @@ Mais três verificações que **não são portão** e rodam junto:
 
 ---
 
-## 6. O axioma 6, exercido
+## 6. O axioma 6, exercido — *aberto; dono: o dono do projeto*
 
-*(Preenchido pelo teste de reconstrução — ver `RECONSTRUCAO` abaixo.)*
+**Ainda não rodou, e a ausência está marcada em vez de preenchida.** Ausência marcada é buraco visível; ausência não marcada é a omissão que este documento existe para impedir. O resto da spec está fechado — esta seção é o único ponto aberto dela.
+
+### 6.1 Por que ele não pode ser rodado por quem escreveu a spec
+
+O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.*
+
+**A sessão que escreveu a spec é a única que não pode cobrá-la.** Ela tem a conversa inteira, leu as sete pesquisas e escreveu o código; o que ela reconstruísse viria da memória e não do documento, e o teste devolveria um "passou" que não mede nada. Um teste que só o autor pode aplicar não é teste — é a promessa outra vez, com outra roupa.
+
+Por isso o dono desta seção é o **dono do projeto**, e o custo dela é uma sessão de agente limpa.
+
+### 6.2 O protocolo
+
+| | |
+| --- | --- |
+| **O que o agente recebe** | `docs/design/` e `docs/adr/`, e nada mais |
+| **O que ele não recebe** | as issues, os branches `research/*`, o `conteudo/`, e qualquer arquivo de `src/` |
+| **O que ele constrói** | um Docusaurus vazio, e sobre ele a **camada de tokens inteira** mais **a página de documentação** — chrome, sidebar, TOC, footer — em pt-BR |
+| **Quanto tempo** | uma sessão; se não couber, o recorte é a camada de tokens sozinha |
+
+O recorte não é economia: `tokens.css` mais o chrome é o menor pedaço que atravessa **os três** — a sede única de valor, o adaptador do Infima e a escada de swizzle. Quem reconstrói isso lendo o documento provou o que interessa; quem tropeça mostra exatamente onde.
+
+### 6.3 Como se julga
+
+O critério é **reconhecível**, não idêntico. Três perguntas, e a terceira é a que vale:
+
+1. os **portões 1, 2 e 3** passam sobre o que o agente escreveu?
+2. o resultado é reconhecivelmente a mesma skin — a mesma rampa, a mesma cadeia de proporções, o mesmo contrato de foco?
+3. **onde ele precisou reinterpretar?** Toda vez que o agente escolheu por conta própria, a spec tem um buraco — e o endereço do buraco é o produto deste teste.
+
+A terceira é a única que gera trabalho. As duas primeiras dizem *passou* ou *não passou*; a terceira devolve a lista de linhas a escrever.
+
+### 6.4 O que fica registrado aqui quando ele rodar
+
+O commit da spec contra o qual ele rodou, a URL pública do site no ar naquele commit, o recorte que o agente recebeu, e **a lista de reinterpretações** — cada uma virando linha de spec ou linha de `Procedência`.
+
+Enquanto esta subseção estiver vazia, o axioma 6 é **posição declarada e não verificada**, e a spec diz isso em voz alta em vez de deixar o leitor supor o contrário.
 
 ---
 

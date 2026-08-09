@@ -22,6 +22,8 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 
 **73 páginas em três abas**, landing, busca, artefatos AI-era e dois locales. A spec são trinta e um arquivos mais sete ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
 
+**Um ponto continua aberto, e ele está marcado onde importa:** o [§6 da espinha](docs/design/README.md) — *o axioma 6, exercido*. O teste de reconstrução tem protocolo escrito e **ainda não rodou**, porque quem escreveu a spec é justamente quem não pode cobrá-la. Até ele rodar, o axioma 6 é posição declarada e não verificada.
+
 ## Rodar
 
 ```bash
