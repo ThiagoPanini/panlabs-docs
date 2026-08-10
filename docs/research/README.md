@@ -28,6 +28,17 @@ Sete pesquisas alimentam o [mapa de wayfinding](https://github.com/panlabs-tech/
 | `research/busca-i18n-versionamento` | [#7](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/7) | 750 linhas | Mecânica dos três e o impacto no chrome. Levantou os bloqueadores **jurídicos** do Algolia DocSearch, e a rota local que não viola o vanilla-first. |
 | `research/recursos-ai-era` | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) | 543 linhas | `llms.txt`, Markdown por rota e o controle de copiar/abrir — medido num **Docusaurus 3.10.2 real**, com o plugin escrito e o build rodado. |
 
+## As pesquisas do mapa do `mint`
+
+Duas alimentam o [segundo mapa](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49), que troca o tema de `almond` para `mint` e substitui o Trilho por um acervo pessoal de aprendizado. Mesma convenção: material no branch, síntese na issue.
+
+| Branch | Issue | Tamanho | O que mediu |
+| --- | --- | --- | --- |
+| `research/devin-mint` | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) | 1.251 linhas | O Devin remedido no tema `mint`, agora como **referência única**. Achou que **o CSS do Mintlify mudou embaixo** — MD5 novo, o antigo dá 404 —, que a página é **plana** (zero elevação em seis páginas) e que o `mint` precisa de **dois limiares**, não cinco. **Desmentiu quatro valores da medição anterior**, entre eles o trilho do TOC, que é 304 e não 448. |
+| `research/faixa-de-tabs` | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) | — | Se a faixa de tabs de largura total custa um swizzle `unsafe`. **Não custa:** degraus 0+1+2, portão 7 verde com ela montada, e o fundo sangra porque quem pinta é o próprio `<nav>`. Corrigiu a **perda 4**, que está errada em três documentos. |
+
+**A primeira mediu com Chrome headless dirigido por CDP, e sem dependência nova** — o Node 24 tem `WebSocket` nativo. O axioma 2 vale também para o instrumento de medição, e é por isso que nem puppeteer nem playwright entraram.
+
 ## O teste de reconstrução
 
 Não é pesquisa — é o **contrário** dela. As sete acima alimentaram as decisões; esta cobra o resultado. Mesma convenção de branch, pelo mesmo motivo: o material é longo e a síntese mora onde a decisão se lê.
