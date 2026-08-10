@@ -1,5 +1,13 @@
 # Domain docs
 
+> **Um mapa aberto vai mexer neste documento.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) troca o tema do Mintlify de `almond` para `mint` e substitui o conteúdo do Trilho por um acervo pessoal de aprendizado.
+>
+> **Já travado, e contraria o que está escrito abaixo:** a página de doc deixa de ter cartão; as três abas passam a ser `Jornadas` · `Procedimentos` · `Ferramentas`; o teto de profundidade sobe de 2 para 3; a regra de ícone vira *só no nó de topo da sidebar*; o índice de jornada vira um décimo tipo de página.
+>
+> Sob revisão, e ainda **não** decididos: **Trilho**, **Tab**, **Tipo de página**, **Fixture**, **Cadeia de proporções**, **Delta deliberado**, **Superfície de espetáculo**. Os **seis axiomas continuam inteiros.**
+>
+> Este documento é atualizado a cada ticket do mapa que fecha. O que estiver aqui **sem** aviso continua valendo.
+
 Este repo é **single-context**. Os documentos de domínio moram em `docs/`.
 
 ## Onde está o quê
