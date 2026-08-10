@@ -2,6 +2,8 @@
 
 Documentação de referência em Docusaurus. Conteúdo mockado; o produto é **estrutura e customização visual**. Alvo de replicação: ambiente corporativo com Docusaurus obrigatório e espaço de dependências apertado.
 
+> **Mapa aberto.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) troca o tema de `almond` para `mint` (sem cartão) e substitui o Trilho por um acervo pessoal de aprendizado. Os **seis axiomas continuam inteiros**; o vocabulário e a spec, não. Leia o aviso no topo de [docs/agents/domain.md](docs/agents/domain.md) antes de agir sobre eles.
+
 Orientação de domínio antes de qualquer trabalho substantivo:
 
 - [docs/agents/domain.md](docs/agents/domain.md) — o que é, vocabulário, **axiomas** (posições travadas na cartografia).

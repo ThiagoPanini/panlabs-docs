@@ -1,5 +1,7 @@
 # A spec de design
 
+> **Descreve fielmente o site no ar, e deixa de ser a verdade da decisão a partir de agora.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) já travou decisões que desmancham parte dela — a página de doc perde o cartão, e o Trilho dá lugar a um acervo pessoal de aprendizado. Por decisão do mapa, `docs/design/` e `docs/adr/` só são reescritos na fase de implementação, slice a slice. Este aviso é de uma linha de propósito: a invariante 2 exige a declaração de literais nas 20 primeiras linhas, e o preâmbulo não tem folga.
+
 A espinha. Ela é escrita **por último** porque indexa o que existe — um índice redigido antes dos documentos indexa a intenção, e a intenção é a coisa que envelhece calada.
 
 **Isto é o entregável.** O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.* Tudo neste diretório existe para satisfazer essa frase, e o **§6** é onde ela foi cobrada de verdade — com o protocolo, o resultado, e os quatro erros de fato que ele encontrou.
