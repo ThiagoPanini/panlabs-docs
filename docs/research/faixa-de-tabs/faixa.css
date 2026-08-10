@@ -1,0 +1,77 @@
+/* EVIDÊNCIA da pesquisa da issue #51 — NÃO é proposta pronta.
+ *
+ * Ele mora AQUI, e não em `src/css/`, de propósito: o portão 1 varre `src/`, e
+ * este arquivo REPROVA nele — os seis valores (104, 56, 48, 57, 1, 0) ainda são
+ * literais, e na implementação nascem como token em `tokens.css`. Um branch de
+ * pesquisa não deveria carregar um portão vermelho.
+ *
+ * Outras duas coisas que ele ainda não é: as tabs alinham ao preenchimento do
+ * navbar e não à coluna de conteúdo, e a altura de 104px é a de HOJE (56 + 48),
+ * não uma decisão da spec.
+ *
+ * Para rodar, copie para `src/css/` e siga o apêndice B de
+ * `docs/research/faixa-de-tabs.md`. A íntegra do achado está lá. */
+
+@media (min-width: 997px) {
+  :root[data-theme] {
+    /* Especificidade (0,2,0): `tokens.css` declara sob `:root[data-theme]`, e um
+       `:root` puro (0,1,0) PERDE. Medido — a primeira tentativa falhou aqui. */
+    --ifm-navbar-height: 104px; /* 56 da linha 1 + 48 da faixa */
+    --sd-faixa-altura: 48px;
+
+    /* O preenchimento vertical do navbar precisa ir a zero, senão as duas
+       linhas ficam dentro de uma caixa de conteúdo de 88px e desalinham da
+       faixa pintada em 9px — medido. As linhas passam a mandar na altura. */
+    --ifm-navbar-padding-vertical: 0px;
+  }
+
+  /* A faixa SANGRA porque quem a pinta é o próprio <nav>, que já vai de x=0 a
+     x=100vw. Zero DOM novo, zero pseudo-elemento. */
+  .navbar {
+    background-image: linear-gradient(
+      to bottom,
+      transparent 0 56px,
+      var(--sd-border-subtle) 56px 57px,
+      var(--sd-surface-card) 57px 104px
+    );
+  }
+
+  .navbar__inner {
+    align-items: flex-start;
+  }
+
+  /* A quebra. `.navbar__items` passa a envolver; o espaçador de base 100% e
+     altura 0 abre a linha, e as tabs caem nela. */
+  .navbar__items:not(.navbar__items--right) {
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+  }
+
+  .navbar__items > .quebra-de-faixa {
+    flex: 0 0 100%;
+    height: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* A linha 1 precisa de altura DETERMINADA, senão ela encolhe para a altura
+     natural da marca (medido: 24,5px) e a faixa desenhada não casa com as tabs.
+     `.navbar__brand` é classe do Infima — degrau 1, não acoplamento ao projeto. */
+  .navbar__items > .navbar__brand {
+    min-height: 56px;
+    align-items: center;
+  }
+
+  .navbar__items:not(.navbar__items--right) > .navbar__item:not(.quebra-de-faixa) {
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* O cluster da direita fica na linha 1, não centrado contra as duas. */
+  .navbar__items--right {
+    align-self: flex-start;
+    height: 56px;
+  }
+}
