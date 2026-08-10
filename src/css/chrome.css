@@ -102,10 +102,14 @@ html.docs-doc-page .theme-doc-markdown > :last-child {
    inteiro do cartão. Código e tabela respiram; o texto não.
 
    Sem `!important`. A medida vai para DENTRO dos 75%, nunca contra eles.
+
+   `header` está na lista porque o remark do Docusaurus embrulha o h1 do MDX
+   num `<header>` no próprio conteúdo compilado — não é o título sintético,
+   é o h1 que a página escreve. `h1` sozinho nunca casa como filho direto.
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page .theme-doc-markdown
-  > :is(p, ul, ol, dl, h1, h2, h3, h4, h5, h6, blockquote, hr) {
+  > :is(p, ul, ol, dl, h1, h2, h3, h4, h5, h6, blockquote, hr, header) {
   max-width: var(--sd-prose-width);
   margin-inline: auto;
 }

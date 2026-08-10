@@ -64,6 +64,8 @@ A âncora oscila — a coluna de texto encolhe quando o TOC existe —, e essa o
 
 **O breakout não precisa de regra.** Quem não está na lista de elementos de prosa fica com o interior inteiro do cartão: código e tabela respiram, o texto não. Escrever a lista de quem escapa seria escrever a lista errada — ela cresce a cada componente novo do catálogo.
 
+**A lista de quem fica**, implementada em `chrome.css`: `p`, `ul`, `ol`, `dl`, `h1`–`h6`, `blockquote`, `hr`, e `header`. `header` está aí porque o remark do Docusaurus embrulha o h1 do próprio MDX num `<header>` no HTML compilado — não é o título sintético de front matter, é o heading que a página escreve. Sem ele na lista, todo h1 de doc escapava para os 768px do cartão enquanto o resto da prosa media 672, e o título saía desalinhado do parágrafo abaixo dele. `h1` continua na lista por via das dúvidas: só não casa como filho direto quando o primeiro heading do MDX não é ele (aí o remark não embrulha nada, e um h1 mais abaixo no documento chegaria desembrulhado).
+
 **Sem `!important`.** A medida vai para **dentro** dos 75%, nunca contra eles.
 
 **O custo, declarado:** a medida dá mais caracteres por linha do que o teto clássico. Aceito porque documentação se varre mais do que se lê corrido, e porque heading, lista e bloco de código quebram a linha longa o tempo todo — **mas só se sustenta com a entrelinha generosa** que `tokens.md` trava. Baixar a entrelinha do corpo reabre esta decisão.
