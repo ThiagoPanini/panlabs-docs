@@ -2,7 +2,7 @@
 
 Documentação de referência em Docusaurus. Conteúdo mockado; o produto é **estrutura e customização visual**. Alvo de replicação: ambiente corporativo com Docusaurus obrigatório e espaço de dependências apertado.
 
-> **Mapa aberto.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) troca o tema de `almond` para `mint` (sem cartão) e substitui o Trilho por um acervo pessoal de aprendizado. Os **seis axiomas continuam inteiros**; o vocabulário e a spec, não. Leia o aviso no topo de [docs/agents/domain.md](docs/agents/domain.md) antes de agir sobre eles.
+> **Mapa aberto.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) troca o tema de `almond` para `mint` (sem cartão) e substitui o Trilho por **`panlabs`**, o acervo pessoal de aprendizado de um dev dentro de uma empresa que nunca é nomeada. Os **seis axiomas continuam inteiros**; o vocabulário e a spec, não. Leia o aviso no topo de [docs/agents/domain.md](docs/agents/domain.md) antes de agir sobre eles.
 
 Orientação de domínio antes de qualquer trabalho substantivo:
 
@@ -39,6 +39,8 @@ Não se renegociam sem reabrir o mapa. Íntegra em `docs/agents/domain.md`.
 5. Medição, não invenção — valores saem da dissecção das referências em produção.
 6. A spec é o entregável; o critério de pronto é implementabilidade sem reinterpretação.
 
-## Idioma
+## Idioma e voz
 
 Prosa deste repo — docs, ADR, issue, commit — em **pt-BR**. O conteúdo mockado da documentação também nasce em pt-BR, com EN como segundo locale.
+
+A voz do conteúdo é **`você` + imperativo**, no site inteiro. **Zero primeira pessoa, sem exceção.** O acervo é pessoal pelo que escolhe documentar, não pela gramática. Ver **Voz da casa** em `docs/agents/domain.md`.
