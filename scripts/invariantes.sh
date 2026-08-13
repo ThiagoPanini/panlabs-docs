@@ -78,7 +78,10 @@ for arquivo in "${COMPONENTES}"/*.md; do
   done < <(printf '%s\n' "${GABARITO[@]}")
 done
 if [ "$vazias" -eq 0 ] && [ "$fora_de_ordem" -eq 0 ]; then
-  echo "   18 documentos, 9 seções cada, nenhuma vazia."
+  # A contagem é CONTADA, não redigitada. Ela já mentiu uma vez: o catálogo caiu
+  # de dezoito para dezessete e esta linha continuou dizendo dezoito, num script
+  # cujo assunto inteiro é impedir que a spec envelheça calada.
+  echo "   $(find "$COMPONENTES" -name '*.md' -not -name 'README.md' | wc -l) documentos, ${#GABARITO[@]} seções cada, nenhuma vazia."
 else
   falhas=$((falhas + 1))
 fi

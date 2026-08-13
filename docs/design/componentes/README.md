@@ -1,6 +1,6 @@
 # Componentes de conteúdo
 
-O catálogo é **fechado, e são dezoito**. Componente de conteúdo é o que o autor
+O catálogo é **fechado, e são dezessete**. Componente de conteúdo é o que o autor
 escreve dentro do MDX, por oposição ao [chrome](../chrome.md), que não se autora
 — se entorta.
 
@@ -17,16 +17,16 @@ Tudo é obrigatório, salvo bloco marcado `Livre`. Todo bloco `Livre` nomeia o d
 
 ---
 
-## As cinco regras que atravessam os dezoito
+## As cinco regras que atravessam os dezessete
 
-**1. Todos globais, nenhum importado.** Os dezoito estão registrados em
+**1. Todos globais, nenhum importado.** Os dezessete estão registrados em
 `src/theme/MDXComponents`. **Nenhum arquivo de conteúdo escreve um `import`** — a
 medição das referências achou zero imports de snippet nos alvos, e catálogo que
 exige import é catálogo que vira declaração inline no próprio arquivo.
 
 **2. Não existe válvula de escape.** `className` solto no MDX é proibido, e não
 há camada de classes utilitárias. Quando uma página precisa de um arranjo que os
-dezoito não cobrem, **a página muda e não o catálogo**. Isso não é aperto
+dezessete não cobrem, **a página muda e não o catálogo**. Isso não é aperto
 acidental: as duas referências que pareciam ter catálogo suficiente resolviam o
 resto com mais de mil `className` de utilitário escritos à mão dentro do MDX, e o
 Docusaurus vanilla não tem essa porta.
@@ -50,11 +50,11 @@ ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 > ganha**. Publicar depois é aditivo; despublicar quebra quem já dependia, e é
 > por isso que a dúvida se resolve para o lado de não publicar.
 >
-> Doze dos dezoito publicam **zero** partes. A única entrada que a régua não
+> Onze dos dezessete publicam **zero** partes. A única entrada que a régua não
 > obrigaria e que fica assim mesmo é a meta de [`param-field`](param-field.md),
 > porque a rota da Referência da API a nomeia verbatim no contrato dela.
 
-**O contrato tem um consumidor que não é um dos dezoito, e ele vale registrado.**
+**O contrato tem um consumidor que não é um dos dezessete, e ele vale registrado.**
 A landing usa `data-sd-part="glow"` na camada decorativa do hero, e
 `data-sd-component` para alcançar `card` e `card-group` dentro do JSX dela — ver
 [`landing.md`](../landing.md) §7. Não é exceção à régua: é a régua aplicada fora
@@ -73,7 +73,7 @@ de sintaxe, o `frame` pelo `currentColor` do diagrama. O que mudou nos dois foi 
 **superfície**, e superfície é papel da camada 2, que já bifurcou: nenhum dos
 dois passou a saber em que modo está.
 
-> **Zero sombra no catálogo, e é conferível por varredura.** Nenhum dos dezoito
+> **Zero sombra no catálogo, e é conferível por varredura.** Nenhum dos dezessete
 > escreve `box-shadow`, e `src/css/componentes.css` também não. A profundidade
 > saiu do conteúdo por medição — a
 > [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) achou zero
@@ -84,7 +84,7 @@ dois passou a saber em que modo está.
 > painel da Referência da API, que é componente de tema e tem dono próprio em
 > [`api-reference.md`](../api-reference.md). O CSS dele o declara *"a única
 > superfície elevada desta página, e agora a única do corpo de qualquer página"*
-> — a afirmação daqui é sobre **os dezoito**, e é por isso que ela é varredura de
+> — a afirmação daqui é sobre **os dezessete**, e é por isso que ela é varredura de
 > duas pastas e não do repositório.
 
 ---
@@ -109,7 +109,6 @@ dois passou a saber em que modo está.
 | [`icon`](icon.md) | o vocabulário de ícone dentro da prosa | global | do zero |
 | [`update`](update.md) | uma entrada de changelog | global | do zero |
 | [`table`](table.md) | a tabela de Markdown, rolável e semântica | global (chave `table`) | do zero |
-| [`verb-badge`](verb-badge.md) | a pílula de verbo HTTP | global | do zero |
 | [`untranslated`](untranslated.md) | sinaliza página sem tradução | global | do zero |
 
 **Componente com inicial maiúscula na autoria.** Não é estilo: em MDX v3 a tag
@@ -192,13 +191,13 @@ linhas.
 Três seções são quase sempre curtas, e a brevidade delas é o resultado que se
 queria:
 
-- **`## Light e dark`** diz *não se aplica* em **dezesseis dos dezoito**. É isso
+- **`## Light e dark`** diz *não se aplica* em **quinze dos dezessete**. É isso
   que faz as duas exceções reais saltarem aos olhos.
 - **`## Motion / reduced-motion`** só **nomeia o movimento**. Se um componente
   precisar dizer algo além de *herda*, o desenho está errado — e a regra de
   reduced-motion é propriedade da camada de token, nunca do componente.
 - **`## A11y`** **cita [`foco.md`](../foco.md) e para** quanto ao contrato de
-  estado de entrada, em vez de repetir a mesma regra dezoito vezes. O que cada
+  estado de entrada, em vez de repetir a mesma regra dezessete vezes. O que cada
   arquivo acrescenta é o que é **próprio dele** — qual elemento nativo carrega o
   comportamento, o que é decorativo, o que cai de graça. **ARIA construído por
   nós existe em exatamente um componente**, a [`table`](table.md), e é o único
@@ -210,8 +209,9 @@ queria:
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| O catálogo tem dezoito e é fechado | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — uso zero em 1.740 páginas; [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) fecha o inventário |
-| O décimo oitavo é `untranslated` | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16), aceito pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
+| O catálogo tem dezessete e é fechado | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — uso zero em 1.740 páginas; [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) fecha o inventário |
+| **`verb-badge` sai, e sem carimbo vazio** | **origem própria (consequência)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — o contrato deixou de falar HTTP e os ~50 consumidores morreram com o Trilho; diferente de `circle-check`, não há estado plausível que o peça de volta |
+| O décimo sétimo é `untranslated` | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16), aceito pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
 | Todos globais, nenhum importado | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — zero imports de snippet medidos |
 | Sem válvula de escape | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §1 — veto do dono do projeto |
 | Zero JS de interação | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |

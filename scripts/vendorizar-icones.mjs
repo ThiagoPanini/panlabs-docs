@@ -54,7 +54,7 @@ const arquivos = new Map(entradas.map((e) => [e.nome, e.lucide]));
 const tags = entradas.reduce((n, e) => n + e.papeis.length, 0);
 const porPapel = (papel) => entradas.filter((e) => e.papeis.includes(papel)).length;
 
-// Os doze pares seção→ícone existem em três lugares: `PARES_SECAO` no
+// Os onze pares seção→ícone existem em três lugares: `PARES_SECAO` no
 // manifesto, o `className` de cada categoria nos arquivos de sidebar, e a regra
 // de máscara no CSS. Três cópias da mesma verdade e nenhuma marcada como errada
 // é o defeito que este repositório mais recusa — então aqui elas se conferem.
@@ -63,6 +63,27 @@ const pares = [...(fonte.match(/PARES_SECAO = \{([^}]*)\}/s)?.[1] ?? '').matchAl
 )].map((m) => ({secao: m[1], icone: m[2]}));
 
 const cssDaSidebar = readFileSync(CSS_DA_SIDEBAR, 'utf8');
+
+// O TERCEIRO lado, que este script afirmava conferir e não conferia.
+//
+// Ele casava `PARES_SECAO` contra o manifesto e contra o CSS — dois lados —, e o
+// comentário acima já prometia três. O `className` das sidebars ficava de fora, e
+// o modo de falhar é exatamente o que a máscara tem de pior: **mudo**. Renomear
+// uma categoria no arquivo de sidebar sem mexer no manifesto não quebra build,
+// não some com a página, e não tira o item da lista; ele só deixa de ter ícone,
+// e a sidebar continua parecendo certa para quem não conhece a árvore.
+//
+// A varredura ficou barata quando as sidebars viraram três: um arquivo por aba,
+// com o `className` escrito à mão em toda categoria de topo.
+const SIDEBARS = ['sidebars-jornadas.js', 'sidebars-procedimentos.js', 'sidebars-ferramentas.js'];
+// O `'` de fechamento no fim NÃO é enfeite: `[a-z0-9-]+` casa PREFIXO, então
+// `sidebar-icone--api-ownerX` extrairia `api-owner` e a conferência passaria
+// achando que o par existe. Medido escrevendo o rename de propósito.
+const declaradasNaSidebar = new Set(
+  SIDEBARS.flatMap((arquivo) =>
+    [...readFileSync(arquivo, 'utf8').matchAll(/sidebar-icone--([a-zA-Z0-9-]+)'/g)].map((m) => m[1]),
+  ),
+);
 
 const problemas = [];
 if (arquivos.size !== entradas.length) {
@@ -87,6 +108,20 @@ for (const {secao, icone} of pares) {
     problemas.push(`o par \`${secao}\` não tem regra \`.sidebar-icone--${secao}\` em ${CSS_DA_SIDEBAR}`);
   } else if (!cssDaSidebar.includes(`/icons/${icone}.svg`)) {
     problemas.push(`${CSS_DA_SIDEBAR} não mascara \`${icone}.svg\`, que o par \`${secao}\` pede`);
+  }
+  if (!declaradasNaSidebar.has(secao)) {
+    problemas.push(
+      `o par \`${secao}\` não é declarado por nenhuma sidebar — nenhum nó carrega \`sidebar-icone--${secao}\``,
+    );
+  }
+}
+// E o sentido contrário, que é o que pega o rename: uma categoria que pede um
+// ícone que o manifesto não conhece fica sem máscara, calada.
+for (const secao of declaradasNaSidebar) {
+  if (!pares.some((p) => p.secao === secao)) {
+    problemas.push(
+      `uma sidebar declara \`sidebar-icone--${secao}\` e \`PARES_SECAO\` não tem esse par`,
+    );
   }
 }
 if (problemas.length) {

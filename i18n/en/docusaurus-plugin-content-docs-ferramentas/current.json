@@ -1,0 +1,22 @@
+{
+  "sidebar.ferramentas.category.Bibliotecas": {
+    "message": "Libraries",
+    "description": "The label for category 'Bibliotecas' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Biblioteca C": {
+    "message": "Library C",
+    "description": "The label for category 'Biblioteca C' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Módulos Terraform": {
+    "message": "Terraform modules",
+    "description": "The label for category 'Módulos Terraform' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Skills": {
+    "message": "Skills",
+    "description": "The label for category 'Skills' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Servidores MCP": {
+    "message": "MCP servers",
+    "description": "The label for category 'Servidores MCP' in sidebar 'ferramentas'"
+  }
+}

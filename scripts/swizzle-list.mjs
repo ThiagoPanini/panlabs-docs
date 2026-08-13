@@ -67,8 +67,12 @@ const ANSI = new RegExp('\\u001b\\[[0-9;]*m', 'g');
  * `docs/design/swizzle.md` §2.
  */
 const PROPRIOS = [
-  'ApiDocItem', // degrau 2 — `docItemComponent` da instância `api`
-  'NavbarItem/Marca', // consumido pelo registro de `NavbarItem/ComponentTypes`
+  'ApiDocItem', // degrau 2 — `docItemComponent` da instância `ferramentas`
+  // `NavbarItem/Marca` SAIU. A marca ficou só com a palavra e voltou para o
+  // `.navbar__brand` nativo por `navbar.title`, então o componente que
+  // desenhava o par glifo+palavra perdeu o assunto. É a única entrada que este
+  // repositório já removeu daqui, e o efeito é o que a perna 2 promete: um
+  // arquivo a menos em `src/theme/`, sem nada ficar sem endereço.
 ];
 
 const modo = process.argv[2];

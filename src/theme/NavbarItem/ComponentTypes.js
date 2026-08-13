@@ -25,8 +25,6 @@ import DocSidebarNavbarItem from '@theme/NavbarItem/DocSidebarNavbarItem';
 import DocsVersionNavbarItem from '@theme/NavbarItem/DocsVersionNavbarItem';
 import DocsVersionDropdownNavbarItem from '@theme/NavbarItem/DocsVersionDropdownNavbarItem';
 
-import MarcaNavbarItem from '@theme/NavbarItem/Marca';
-
 const ComponentTypes = {
   default: DefaultNavbarItem,
   localeDropdown: LocaleDropdownNavbarItem,
@@ -38,9 +36,18 @@ const ComponentTypes = {
   docsVersion: DocsVersionNavbarItem,
   docsVersionDropdown: DocsVersionDropdownNavbarItem,
 
-  // A única chave nossa. O prefixo `custom-` é o que o schema do tema aceita
-  // sem validar o resto do objeto (`CustomNavbarItemRegexp`).
-  'custom-marca': MarcaNavbarItem,
+  // **Zero chaves nossas, e o objeto passa a ser idêntico ao do upstream.**
+  //
+  // A única que existia era `custom-marca`, e ela morreu com o glifo: a marca
+  // ficou só com a palavra, e `navbar.title` a renderiza pelo `.navbar__brand`
+  // nativo. Com ela some `NavbarItem/Marca`, e `src/theme/` fica com um arquivo
+  // a menos.
+  //
+  // **Por isso a entrada de degrau 3 deste arquivo sai do ledger.** O ledger é
+  // inventário de customização, e aqui não há mais nenhuma — o arquivo continua
+  // como o ponto de extensão já ejetado, e o portão 7 continua casando o nome
+  // dele com a lista congelada. A regra do ledger é *um item sai quando a
+  // customização é removida*, e é isso que acabou de acontecer.
 };
 
 export default ComponentTypes;

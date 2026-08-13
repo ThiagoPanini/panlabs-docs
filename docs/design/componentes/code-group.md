@@ -76,12 +76,12 @@ existir**.
 ````mdx
 <CodeGroup groupId="code-lang" queryString="lang">
 
-```js title="Node"
-const cobranca = await trilho.cobrancas.criar({valor: 1000, meio: 'pix'});
+```bash title="pip"
+pip install --index-url "$PANLABS_INDICE" "panlabs-catalogo>=2.4"
 ```
 
-```python title="Python"
-cobranca = trilho.cobrancas.criar(valor=1000, meio="pix")
+```bash title="uv"
+uv add --index "$PANLABS_INDICE" "panlabs-catalogo>=2.4"
 ```
 
 </CodeGroup>

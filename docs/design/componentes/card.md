@@ -64,8 +64,8 @@ esta documentação documenta não tem tela para fotografar, e diagrama tem
 
 ```mdx
 <CardGroup>
-<Card title="Comece aqui" icon="rocket" href="/docs/comece-aqui/visao-geral">
-Suba a primeira cobrança autorizada em dez minutos.
+<Card title="Visão geral" icon="rocket" href="/ferramentas/bibliotecas/biblioteca-c/visao-geral">
+Da instalação ao primeiro workflow gerado, em cinco passos.
 </Card>
 <Card title="Sem link, sem ícone">
 Um cartão que não leva a lugar nenhum é uma caixa de destaque, não um botão.

@@ -5,9 +5,9 @@
 # Cadência: implantação. É o único portão do projeto que depende de alguém fora
 # dele, e o único que roda contra o mundo.
 #
-#   rota 1  GET <base>/docs/<qualquer>      -> 200 · text/html · SEM redirect
-#   rota 2  GET <base>/docs/<qualquer>.md   -> 200 · text/markdown · disposição != attachment
-#   rota 3  GET <base>/docs/<qualquer>/     -> NÃO 200 (404, ou 301 para a forma sem barra)
+#   rota 1  GET <base>/<qualquer>      -> 200 · text/html · SEM redirect
+#   rota 2  GET <base>/<qualquer>.md   -> 200 · text/markdown · disposição != attachment
+#   rota 3  GET <base>/<qualquer>/     -> NÃO 200 (404, ou 301 para a forma sem barra)
 #
 # A rota 2 exige que a disposição NÃO seja `attachment`, e não que o cabeçalho
 # `Content-Disposition: inline` exista. Medido no slice 1: as referências do alvo
@@ -28,12 +28,22 @@
 #
 # Uso: scripts/portao-6-rotas.sh <url-base> [caminho-da-rota]
 #      scripts/portao-6-rotas.sh https://panlabs-tech.github.io/shinydoc-docusaurus
+#
+# **A rota default é a fixture de página curta**, e a escolha não é decorativa:
+# ela é a única página do acervo sem coluna de TOC, então o `.md` dela é o menor
+# do site e o teste das três rotas roda contra o caso mais magro que existe. Se
+# ele passa ali, o host não está tratando o `.md` por tamanho nem por conteúdo.
+#
+# Ela é também a rota que mais envelhece: um portão de cadência de IMPLANTAÇÃO
+# não roda em commit, então uma rota morta aqui só aparece no dia do deploy.
+# Este default já apontou para `/docs/comece-aqui/ambientes` depois de `/docs`
+# deixar de existir, e quem pegou foi revisão e não execução.
 
 set -uo pipefail
 
 BASE="${1:?uso: portao-6-rotas.sh <url-base> [caminho-da-rota]}"
 BASE="${BASE%/}"
-ROTA="${2:-/docs/comece-aqui/ambientes}"
+ROTA="${2:-/procedimentos/ambiente/indice}"
 
 falhas=0
 

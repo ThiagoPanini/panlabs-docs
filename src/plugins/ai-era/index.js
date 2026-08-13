@@ -76,7 +76,7 @@ export default function pluginAiEra(context, options) {
       //
       // Escritos no `outDir`, nunca em `static/`. O que se commita é artefato
       // que muda por DECISÃO; um `.md` que muda toda vez que a prosa muda seria
-      // 73 arquivos de ruído em todo diff de conteúdo.
+      // dezenas de arquivos de ruído em todo diff de conteúdo.
       //
       // O ponteiro de volta ao índice é o que transforma arquivos soltos em
       // grafo navegável: quem chega num `.md` por link direto descobre que
@@ -141,11 +141,11 @@ export default function pluginAiEra(context, options) {
  *
  * Ele existe para dizer à máquina o que ela tem em mãos antes do primeiro
  * documento: quantas páginas, por qual eixo estão divididas, e que o conteúdo é
- * de um produto fictício. A última linha não é modéstia: sem ela, um assistente
- * responde sobre a API do Trilho como se ela existisse.
+ * ficção. A última linha não é modéstia: sem ela, um assistente responde sobre
+ * as ferramentas do `panlabs` como se elas existissem.
  *
  * **Ele sai em pt-BR nos dois locales, e é a mesma regra do resto do site.** As
- * 29 páginas sem contraparte em inglês também saem em português sob `/en/`
+ * 31 páginas sem contraparte em inglês também saem em português sob `/en/`
  * (`informacao.md` §8) — o preâmbulo é a mesma classe de fallback, num artefato
  * cujo leitor é máquina. O que TEM tradução chega traduzido: título, descrição
  * e rótulo de seção. A rota para mudar isso está registrada e não foi comprada:
@@ -157,10 +157,10 @@ function preambulo({paginas, abas, rotulos, locale}) {
     .map((aba, i) => `${paginas.filter((pagina) => pagina.aba === aba).length} em ${rotulos[i]}`)
     .join(', ');
   return [
-    `Documentação do Trilho, uma API de pagamentos brasileira. ${paginas.length} páginas (${contagem}), locale \`${locale}\`.`,
+    `\`panlabs\` — o acervo de aprendizado de um desenvolvedor. ${paginas.length} páginas (${contagem}), locale \`${locale}\`.`,
     '',
     `Toda página deste site também é servida como Markdown: acrescente \`.md\` à URL dela.`,
     '',
-    `O Trilho é um produto **fictício**, e esta documentação é conteúdo de demonstração de um projeto de estrutura e customização visual em Docusaurus. A API descrita não existe.`,
+    `O \`panlabs\` é **ficção**, e esta documentação é conteúdo de demonstração de um projeto de estrutura e customização visual em Docusaurus. As bibliotecas, módulos e skills descritos não existem, e a empresa em que eles teriam sido escritos nunca é nomeada.`,
   ].join('\n');
 }

@@ -2,7 +2,7 @@
 
 Projeto de **documentação de referência** construído com Docusaurus.
 
-O conteúdo é mockado e descartável — documenta uma plataforma developer-facing fictícia com API. O produto é a **estrutura** e a **customização visual**: um boilerplate que mostra até onde dá para levar o Docusaurus sem sair do preset `classic`.
+O conteúdo é mockado e descartável — documenta o `panlabs`, o acervo de aprendizado fictício de um desenvolvedor dentro de uma empresa que nunca é nomeada. O produto é a **estrutura** e a **customização visual**: um boilerplate que mostra até onde dá para levar o Docusaurus sem sair do preset `classic`.
 
 O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigatório e o espaço de dependências é apertado. Tudo aqui existe para ser transplantado para lá.
 
@@ -14,13 +14,15 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 | ---: | --- | --- |
 | 1 | [Bala traçante](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/34) — o site no ar com o sistema de tokens inteiro | feito |
 | 2 | [A página de documentação](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/35) — chrome, ícones, árvore | feito |
-| 3 | [O catálogo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36) — os dezoito componentes de conteúdo | feito |
-| 4 | [O conteúdo do Trilho](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/37) — 43 páginas autorais e o EN parcial | feito |
+| 3 | [O catálogo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36) — os componentes de conteúdo | feito |
+| 4 | [O conteúdo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/37) — as páginas autorais e o EN parcial | feito |
 | 5 | [A Referência da API](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/38) — contrato, gerador e três colunas | feito |
-| 6 | [A landing](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/39) — cinco seções e a ilha de espetáculo | feito |
+| 6 | [A landing](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/39) — a ilha de espetáculo | feito |
 | 7 | [Busca e artefatos AI-era](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/40) — e o fechamento da spec | feito |
 
-**73 páginas em três abas**, landing, busca, artefatos AI-era e dois locales. A spec são trinta e um arquivos mais sete ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
+**O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. Falta a referência gerada de contrato de assinatura, e com ela `Ferramentas` fecha em 21.
+
+**46 páginas autorais em três abas**, mais 15 traduções, landing, busca, artefatos AI-era e dois locales. A spec são trinta arquivos mais sete ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
 
 **O axioma 6 foi cobrado, e não só declarado.** O [§6 da espinha](docs/design/README.md) registra o teste de reconstrução: uma sessão de agente limpa, com `docs/design/` e `docs/adr/` e nada mais, reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. **O build passou nos dois locales.**
 
@@ -49,19 +51,19 @@ npm run icones               # a bijeção manifesto ↔ static/icons/
 | --- | --- |
 | [`docs/adr/`](docs/adr/) | Os sete ADRs. **Leitura obrigatória antes de escrever código.** |
 | [`docs/design/README.md`](docs/design/README.md) | **A espinha da spec** — ordem de leitura, a régua, o índice, as invariantes e os oito portões. Comece por aqui. |
-| [`docs/design/principios.md`](docs/design/principios.md) | A âncora, os quatro deltas deliberados e as cinco classes de procedência. |
+| [`docs/design/principios.md`](docs/design/principios.md) | A âncora, o carimbo de delta deliberado vazio e as cinco classes de procedência. |
 | [`docs/agents/`](docs/agents/) | Como um agente trabalha neste repo — tracker, domínio, labels, fluxo. |
 | [`docs/research/`](docs/research/) | Índice das sete pesquisas. O material mora em branches `research/*`. |
 | `src/css/tokens.css` | **A sede única de valor.** O único arquivo do repo com literal. |
 | `src/css/custom.css` | As regras de base. Zero literal, e nunca lê `--ifm-*`. |
 | `src/css/chrome.css` | O shell da página de doc — proporções, navbar, sidebar, TOC, footer, estreito. |
 | `src/css/foco.css` | O contrato de estado de entrada. **O único arquivo onde `outline` pode aparecer.** |
-| `src/icons/manifest.js` | **O contrato de ícones** — 64 nomes, 68 tags, teto 64 e folga zero. Os desenhos são skin; os nomes não. |
+| `src/icons/manifest.js` | **O contrato de ícones** — 60 nomes, 69 tags, teto 64 e folga quatro. Os desenhos são skin; os nomes não. |
 | `src/theme/` | Componente de tema próprio, registro, e o **único swizzle** do projeto — ver `docs/design/swizzle.md`. |
 | `src/plugins/` | Os dois plugins de caminho: a busca e os artefatos AI-era. Nenhum é dependência npm. |
-| `static/icons/` | Os 64 desenhos vendorizados do Lucide (ISC). Trocáveis. |
-| `conteudo/` | O conteúdo do Trilho, o produto fictício. Fica fora de `docs/`, que é a documentação *deste* repositório. |
-| `scripts/` | Os portões, o espelho de `tokens.md` e o vendorizador de ícones. |
+| `static/icons/` | Os 60 desenhos vendorizados do Lucide (ISC). Trocáveis. |
+| `conteudo/` | O acervo `panlabs`, o conteúdo fictício — `jornadas/`, `procedimentos/`, `ferramentas/`. Fica fora de `docs/`, que é a documentação *deste* repositório. |
+| `scripts/` | Os oito portões, o espelho de `tokens.md` e o vendorizador de ícones. |
 
 ## Restrições travadas
 

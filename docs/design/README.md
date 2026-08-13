@@ -45,7 +45,7 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 3. [`informacao.md`](informacao.md) — a árvore, os tipos de página, as fixtures, o locale, os artefatos AI-era.
 4. [`chrome.md`](chrome.md) — o shell da página de doc.
 5. Os transversais, em qualquer ordem: [`foco.md`](foco.md), [`motion.md`](motion.md), [`icones.md`](icones.md), [`swizzle.md`](swizzle.md).
-6. [`componentes/`](componentes/) — o catálogo fechado de dezoito.
+6. [`componentes/`](componentes/) — o catálogo fechado de dezessete.
 7. As duas rupturas de layout: [`api-reference.md`](api-reference.md) e [`landing.md`](landing.md).
 8. [`busca.md`](busca.md) — a única superfície de interação que o projeto autora.
 
@@ -53,9 +53,9 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 
 ## 3. O índice — uma linha por documento
 
-**Trinta e um arquivos.**
+**Trinta arquivos.**
 
-> *Correção de contagem, registrada:* a resolução do slice 7 dizia *"trinta arquivos"*. São trinta e um, e o trigésimo primeiro é [`busca.md`](busca.md). Ele ganhou arquivo próprio em vez de virar seção de [`chrome.md`](chrome.md) por um motivo estrutural, não por tamanho: `chrome.md` abre dizendo que **chrome não se autora, se entorta**, e que tudo nele é degrau 0 ou 1 da escada. A busca é degrau 5, com JS autorado e ARIA descrita em prosa — ela **contradiz a premissa do documento** que a hospedaria. Enfiá-la lá teria custado a frase de abertura de `chrome.md`, que é uma das mais úteis da spec.
+> *Correção de contagem, registrada duas vezes.* A resolução do slice 7 dizia *"trinta arquivos"*; eram trinta e um, e o trigésimo primeiro é [`busca.md`](busca.md). **Voltaram a ser trinta** quando `componentes/verb-badge.md` saiu com o catálogo — e a segunda correção não desfaz a primeira: o motivo de `busca.md` ter arquivo próprio continua de pé. Ele ganhou arquivo próprio em vez de virar seção de [`chrome.md`](chrome.md) por um motivo estrutural, não por tamanho: `chrome.md` abre dizendo que **chrome não se autora, se entorta**, e que tudo nele é degrau 0 ou 1 da escada. A busca é degrau 5, com JS autorado e ARIA descrita em prosa — ela **contradiz a premissa do documento** que a hospedaria. Enfiá-la lá teria custado a frase de abertura de `chrome.md`, que é uma das mais úteis da spec.
 
 ### 3.1 Os transversais e as superfícies
 
@@ -63,21 +63,21 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | --- | --- |
 | [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, os quatro deltas deliberados, a régua de coerência e as cinco classes de procedência |
 | [`tokens.md`](tokens.md) | as três camadas, a superfície de troca, a rampa, a tipografia, o espaço, a elevação, o adaptador do Infima e as suas quatro exceções |
-| [`informacao.md`](informacao.md) | o produto fictício, as três tabs, a árvore, os nove tipos de página, os orçamentos, as treze fixtures, a regra de locale e os artefatos AI-era |
+| [`informacao.md`](informacao.md) | o acervo, as três tabs, a árvore, os dez tipos de página, os orçamentos, as onze fixtures, a regra de locale e os artefatos AI-era |
 | [`chrome.md`](chrome.md) | a cadeia de proporções, navbar, sidebar, TOC, breadcrumb, paginação, footer e o comportamento no estreito |
 | [`foco.md`](foco.md) | `:focus-visible` universal, `:active`, o piso de alvo no toque, e o portão que impede `outline: none` |
 | [`motion.md`](motion.md) | as duas durações, as duas curvas, os seis movimentos nomeados e o reduced-motion resolvido na camada de token |
-| [`icones.md`](icones.md) | o manifesto de 64 nomes com teto de 64 e folga zero, os dois renderizadores, a marca e os doze pares seção→ícone |
+| [`icones.md`](icones.md) | o manifesto de 60 nomes com teto de 64 e folga quatro, os dois renderizadores, a marca sem glifo e os onze pares seção→ícone |
 | [`swizzle.md`](swizzle.md) | o ledger vivo, os três significados de `src/theme/`, as perdas nomeadas e a disciplina de registro |
 | [`api-reference.md`](api-reference.md) | a primeira ruptura de layout — o contrato, o gerador e as três colunas |
 | [`landing.md`](landing.md) | a segunda ruptura — quatro seções, a faixa de espetáculo de dois focos, as três camadas e a lista fechada de seis |
 | [`busca.md`](busca.md) | o índice local, a escada de pontuação, o modal `<dialog>` e o ARIA por citação do APG |
 
-### 3.2 O catálogo — dezenove arquivos
+### 3.2 O catálogo — dezoito arquivos
 
 [`componentes/README.md`](componentes/README.md) é o índice e o contrato comum: o gabarito de **nove** seções, o contrato de partes, a regra de `className` proibido, e a razão de o catálogo ser **fechado**.
 
-Os dezoito, com uma linha cada, estão no índice dele. Eles não se repetem aqui — dois índices da mesma lista é o defeito de duplicação que a própria spec nomeia no rodapé de [`chrome.md`](chrome.md).
+Os dezessete, com uma linha cada, estão no índice dele. Eles não se repetem aqui — dois índices da mesma lista é o defeito de duplicação que a própria spec nomeia no rodapé de [`chrome.md`](chrome.md).
 
 ---
 
@@ -126,7 +126,7 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) direção de arte | [`tokens.md`](tokens.md) — a rampa, os sete papéis, os oito `--sd-code-*` |
 | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) glow e profundidade no claro | [`tokens.md`](tokens.md) §8, [`landing.md`](landing.md) §6 |
 | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) estratégia de swizzle | [ADR 2](../adr/0002-politica-de-swizzle.md) e [`swizzle.md`](swizzle.md) inteiro |
-| [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) inventário de componentes | os dezenove de [`componentes/`](componentes/) |
+| [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) inventário de componentes | os dezessete de [`componentes/`](componentes/) |
 | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) IA e o produto fictício | [`informacao.md`](informacao.md) §1 a §8 |
 | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) vocabulário de motion | [`motion.md`](motion.md), [ADR 3](../adr/0003-reduced-motion-na-camada-de-token.md) |
 | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) rota do API Reference | [`api-reference.md`](api-reference.md), [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) |
@@ -138,7 +138,7 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#27](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/27) anatomia do footer | [`chrome.md`](chrome.md) §6 |
 | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) tela pequena | [`chrome.md`](chrome.md) §7, [`landing.md`](landing.md) §7, [`api-reference.md`](api-reference.md) |
 | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) tipografia e `@property` | [`tokens.md`](tokens.md) §4 e §5 |
-| [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) os doze pares seção→ícone | [`icones.md`](icones.md) §3 e §5 |
+| [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) os pares seção→ícone | [`icones.md`](icones.md) §3 e §5 — **onze** sob a árvore do `panlabs` |
 | [#33](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/33) `trailingSlash` | [ADR 7](../adr/0007-trailingslash-false.md) |
 
 **E os itens de entrega cruzada foram conferidos um a um, não no atacado.** Vinte itens concretos e nomeáveis — `--sd-glow` pronto para a landing, o modal como único consumidor de `--sd-move-enter`, `circle-check` saindo do manifesto, `--sd-shadow-lip` a 0% no claro, `applyTrailingSlash` não importado, a entrelinha que não desce, `Icon/ExternalLink` como `unsafe` de sprite, o teto de um loop por página, a sidebar estreita sem armadilha de foco — **todos os vinte têm endereço**.
@@ -157,7 +157,7 @@ Três cadências: **commit**, **upgrade** e **implantação**.
 | 2 | `transition:`/`animation:` com tempo ou curva cravada | commit | `npm run portao:2` |
 | 3 | `outline` fora de `src/css/foco.css` | commit | `npm run portao:3` |
 | 4 | Volume, tipo de página, regra de heading e cobertura de locale do conteúdo | commit | `npm run portao:4` |
-| 5 | O gerador da Referência da API e o artefato commitado concordam | commit | `npm run portao:5` |
+| 5 | A referência gerada está declarada pendente, e nada a antecipou pela metade | commit | `npm run portao:5` |
 | 6 | As três rotas contra o host real, nos dois locales | **implantação** | `npm run portao:6 -- <url-base> [rota]` |
 | 7 | O `swizzle --list` congelado, e `src/theme/` conferido contra ele | **upgrade** | `npm run portao:7` |
 | 8 | Os seis efeitos da landing, em contagem exata, mais a metade negativa | commit | `npm run portao:8` |
@@ -276,7 +276,7 @@ A saída **não é medir mais**. É que valor não medido também precisa de end
 | --- | --- |
 | [`icones.md`](icones.md) mandava procurar tamanho de ícone em [`tokens.md`](tokens.md), **e não há token de tamanho de ícone lá** | corrigido — a regra é a escala de espaço, e agora está escrita |
 | [`tokens.md`](tokens.md) §11 dizia que o portão 1 passa *"enquanto o único limiar morar no arquivo de tokens"*; o limiar mora também em `chrome.css` e **o portão tem uma segunda perna** que a frase não mencionava | corrigido — a descrição subestimava o portão |
-| [`tokens.md`](tokens.md) §8 mandava aplicar `text-wrap: balance` em *"título e **lead**"*, e **`lead` não é definido em nenhum dos trinta e um documentos** | corrigido — termo sem definição |
+| [`tokens.md`](tokens.md) §8 mandava aplicar `text-wrap: balance` em *"título e **lead**"*, e **`lead` não é definido em nenhum documento da spec** | corrigido — termo sem definição |
 | As tabelas de contraste de [`tokens.md`](tokens.md) §10 e [`foco.md`](foco.md) §6 **discordam** para o mesmo par em três das quatro células | **aberto** — adivinhar qual está certa seria inventar um número medido. Ver [`foco.md`](foco.md) §6 |
 
 #### A que passou por engano, e vale registrada

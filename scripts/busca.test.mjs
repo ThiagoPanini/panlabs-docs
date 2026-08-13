@@ -48,7 +48,7 @@ test('a normalização roda nos DOIS lados — consulta sem acento acha o acentu
 });
 
 test('termosDe parte em espaço e descarta o vazio', () => {
-  assert.deepEqual(termosDe('  pix   dinamico '), ['pix', 'dinamico']);
+  assert.deepEqual(termosDe('  chave   rotacao '), ['chave', 'rotacao']);
   assert.deepEqual(termosDe('   '), []);
 });
 
@@ -82,37 +82,37 @@ test('no título, começo de PALAVRA vence meio de palavra', () => {
 test('título vence heading, que vence descrição, que vence corpo, que vence URL', () => {
   const r = pontuar(
     indice([
-      reg({u: '/url-pix', t: 'Zeta', d: 'nada', b: 'nada'}),
-      reg({u: '/e', t: 'Zeta', b: 'fala de pix aqui'}),
-      reg({u: '/d', t: 'Zeta', d: 'sobre pix'}),
-      reg({u: '/c', t: 'Zeta', s: ['Erros de pix']}),
-      reg({u: '/b', t: 'Sobre pix'}),
+      reg({u: '/url-chave', t: 'Zeta', d: 'nada', b: 'nada'}),
+      reg({u: '/e', t: 'Zeta', b: 'fala de chave aqui'}),
+      reg({u: '/d', t: 'Zeta', d: 'sobre chave'}),
+      reg({u: '/c', t: 'Zeta', s: ['Erros de chave']}),
+      reg({u: '/b', t: 'Sobre chave'}),
     ]),
-    'pix',
+    'chave',
   );
-  assert.deepEqual(r.map((x) => x.u), ['/b', '/c', '/d', '/e', '/url-pix']);
+  assert.deepEqual(r.map((x) => x.u), ['/b', '/c', '/d', '/e', '/url-chave']);
 });
 
 test('um termo que não casa derruba o registro inteiro', () => {
-  const i = indice([reg({u: '/a', t: 'Pix', d: 'pagamento instantâneo'})]);
-  assert.equal(pontuar(i, 'pix').length, 1);
-  assert.equal(pontuar(i, 'pix boleto').length, 0);
+  const i = indice([reg({u: '/a', t: 'Chave', d: 'rotacao em uma linha'})]);
+  assert.equal(pontuar(i, 'chave').length, 1);
+  assert.equal(pontuar(i, 'chave segredo').length, 0);
 });
 
 test('consulta de dois termos soma os degraus dos dois', () => {
-  const i = indice([reg({u: '/a', t: 'Pix boleto'})]);
-  assert.equal(pontuar(i, 'pix boleto')[0].pontos, 64 + 64);
+  const i = indice([reg({u: '/a', t: 'Chave segredo'})]);
+  assert.equal(pontuar(i, 'chave segredo')[0].pontos, 64 + 64);
 });
 
 test('consulta vazia não devolve nada — nem tudo', () => {
-  const i = indice([reg({u: '/a', t: 'Pix'}), reg({u: '/b', t: 'Boleto'})]);
+  const i = indice([reg({u: '/a', t: 'Chave'}), reg({u: '/b', t: 'Segredo'})]);
   assert.deepEqual(pontuar(i, ''), []);
   assert.deepEqual(pontuar(i, '   '), []);
 });
 
 test('sem teto: cem registros que casam devolvem cem', () => {
-  const muitos = Array.from({length: 100}, (_, n) => reg({u: `/p${n}`, t: `Pix ${n}`}));
-  assert.equal(pontuar(indice(muitos), 'pix').length, 100);
+  const muitos = Array.from({length: 100}, (_, n) => reg({u: `/p${n}`, t: `Chave ${n}`}));
+  assert.equal(pontuar(indice(muitos), 'chave').length, 100);
 });
 
 // ---------------------------------------------------------------------------
@@ -147,9 +147,9 @@ test('empate de aba é desfeito pela ordem da sidebar — a ordem do índice', (
 // ---------------------------------------------------------------------------
 
 test('o trecho é a descrição quando ela casa, e o corpo quando é ele quem casa', () => {
-  const r = reg({u: '/a', t: 'Zeta', d: 'sobre pix', b: 'fala de boleto'});
-  assert.equal(trecho(r, ['pix']), 'sobre pix');
-  assert.equal(trecho(r, ['boleto']), 'fala de boleto');
+  const r = reg({u: '/a', t: 'Zeta', d: 'sobre chave', b: 'fala de segredo'});
+  assert.equal(trecho(r, ['chave']), 'sobre chave');
+  assert.equal(trecho(r, ['segredo']), 'fala de segredo');
 });
 
 // ---------------------------------------------------------------------------
@@ -157,21 +157,21 @@ test('o trecho é a descrição quando ela casa, e o corpo quando é ele quem ca
 // ---------------------------------------------------------------------------
 
 test('a faixa de realce recorta o texto ORIGINAL, com acento inteiro', () => {
-  const texto = 'Conciliação de saldo';
-  const [faixa] = faixasDeRealce(texto, ['conciliacao']);
-  assert.equal(texto.slice(faixa[0], faixa[1]), 'Conciliação');
+  const texto = 'Propagação parcial';
+  const [faixa] = faixasDeRealce(texto, ['propagacao']);
+  assert.equal(texto.slice(faixa[0], faixa[1]), 'Propagação');
 });
 
 test('faixas não se sobrepõem e saem em ordem', () => {
-  const texto = 'pix e pix de novo';
-  const faixas = faixasDeRealce(texto, ['pix']);
-  assert.deepEqual(faixas, [[0, 3], [6, 9]]);
+  const texto = 'chave e chave de novo';
+  const faixas = faixasDeRealce(texto, ['chave']);
+  assert.deepEqual(faixas, [[0, 5], [8, 13]]);
 });
 
 test('termo ausente não produz faixa', () => {
-  assert.deepEqual(faixasDeRealce('Boleto', ['pix']), []);
-  assert.deepEqual(faixasDeRealce('', ['pix']), []);
-  assert.deepEqual(faixasDeRealce('Boleto', []), []);
+  assert.deepEqual(faixasDeRealce('Segredo', ['chave']), []);
+  assert.deepEqual(faixasDeRealce('', ['chave']), []);
+  assert.deepEqual(faixasDeRealce('Segredo', []), []);
 });
 
 test('o realce sobrevive a caractere fora do plano básico', () => {

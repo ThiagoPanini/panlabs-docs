@@ -11,6 +11,16 @@ moram lá; este documento faz contas com eles.
 
 ---
 
+> ### Errata — o contrato deixou de falar HTTP, e este documento está entre dois
+>
+> A árvore do `panlabs` ([#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81)) **matou o produto que este documento descreve.** Não há mais API de pagamentos, não há mais instância `api`, não há mais contrato OpenAPI, não há mais gerador `gerar-api.mjs`, e o `VerbBadge` saiu do catálogo por não ter sobrado verbo HTTP para pintar.
+>
+> **O que sobreviveu, e está no ar:** o `ApiDocItem` como componente de tema próprio (degrau 2), o comutador por front matter, a aritmética do layout de três colunas, e `align-self: start` junto com `position: sticky`. A instância que o declara agora é `ferramentas`, e as 15 folhas autorais dela passam pela perna que **delega** — o painel é inalcançável, não vazio.
+>
+> **O que morreu e ainda está escrito abaixo:** tudo o que descreve verbo, caminho, `paths`, `requestBody`, snippet de cURL e as 24 páginas geradas de endpoint. **Leia como registro histórico**, não como spec.
+>
+> Este documento é **renomeado e reescrito** no ticket seguinte, contra um contrato de assinatura de função, tipo e módulo. Reescrevê-lo aqui seria escrever contra um contrato que ainda não existe.
+
 > ### Errata — o cartão morreu, e com ele a premissa deste documento
 >
 > A geometria `mint` ([#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78)) matou o cartão da página de doc: **nenhuma página do site tem fundo, anel, preenchimento ou raio no corpo.** Ver [`chrome.md`](chrome.md) §2.
@@ -113,7 +123,7 @@ Fixa, e o gerador a produz sempre na mesma sequência:
 
 1. `# Título` — o `summary` da operação
 2. `<VerbBadge/>` mais o caminho, em prosa — o gerador escreve a pílula
-   (ver [`verb-badge.md`](componentes/verb-badge.md)), o autor nunca
+   (ver `componentes/verb-badge.md`, **removido** com o catálogo), o autor nunca
 3. A `description` da operação
 4. `## Parâmetros` — um `<ParamField>` por parâmetro de caminho, consulta
    e cabeçalho, nesta ordem; ausente quando a operação não tem nenhum

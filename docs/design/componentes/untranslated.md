@@ -38,11 +38,11 @@ sem pensar em qual locale está lendo.
 ## Autoria em MDX
 
 ```mdx
-# Visão geral
+# A política de versão
 
 <Untranslated />
 
-O Trilho é uma API de pagamentos brasileira.
+Versionar por data não responde a única pergunta que o consumidor faz.
 ```
 
 Uma tag auto-fechada, logo abaixo do título. O texto que ele renderiza **sai da

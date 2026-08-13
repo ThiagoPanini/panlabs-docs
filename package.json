@@ -24,7 +24,6 @@
     "swizzle:congelar": "node scripts/swizzle-list.mjs --congelar",
     "invariantes": "./scripts/invariantes.sh",
     "zeros": "./scripts/cinco-zeros.sh",
-    "gerar:api": "node scripts/gerar-api.mjs",
     "icones": "node scripts/vendorizar-icones.mjs --conferir",
     "contraste": "node scripts/contraste.mjs --verificar"
   },

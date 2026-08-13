@@ -270,9 +270,9 @@ Medido em 1440 de viewport, com a faixa montada:
 
 ```
 marca      @ y=0     ← linha 1
-Documentação      @ y=64   ┐
-Referência da API @ y=64   ├ a faixa
-Receitas          @ y=64   ┘
+Jornadas          @ y=64   ┐
+Procedimentos     @ y=64   ├ a faixa
+Ferramentas       @ y=64   ┘
 Buscar     @ y=16    ← volta para a linha 1
 PT         @ y=22
 GitHub     @ y=10

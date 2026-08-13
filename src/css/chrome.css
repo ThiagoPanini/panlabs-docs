@@ -241,18 +241,9 @@ html.docs-doc-page .subtitulo {
    esconde o contêiner com `:empty`. Remover a busca não deixa buraco.
 
    GitHub entra como **palavra**, não como glifo, e é decisão de orçamento: não
-   há marca de terceiro no manifesto, e gastar o slot que sobrava num logotipo de
-   plataforma seria decidir por acidente o que a #32 deixou reservado sem nome.
-   O slot foi para `wrench`, na porta `Ferramentas` da landing, e a folga do teto
-   agora é ZERO — a decisão envelheceu bem.
+   há marca de terceiro no manifesto. A marca do site é palavra pelo mesmo
+   motivo, e por um mais forte — ver abaixo.
    ----------------------------------------------------------------------------- */
-
-/* O `Logo` do upstream continua renderizando um link vazio, porque a marca não
-   passa por `navbar.logo`. Um link sem nome acessível é defeito; `:empty` o
-   remove do fluxo e da ordem de tabulação, no navbar e no painel estreito. */
-.navbar__brand:empty {
-  display: none;
-}
 
 /* O ESPAÇADOR DA FAIXA no painel do estreito — o mesmo defeito, medido.
    O `HtmlNavbarItem` renderiza o item com `menu__list-item` quando é móvel, e
@@ -265,28 +256,37 @@ html.docs-doc-page .subtitulo {
   display: none;
 }
 
-.marca {
+/* A MARCA — só a palavra, e monocromática.
+
+   Ela voltou para o caminho NATIVO: `navbar.title` sem `navbar.logo` faz o
+   upstream renderizar `<b class="navbar__title">` dentro do `.navbar__brand`.
+   Não há mais glifo, não há mais componente de tema próprio para desenhá-lo, e
+   não há mais `.navbar__brand:empty` — o link não é mais vazio, porque a marca
+   passa pela config.
+
+   O argumento é o da figura da landing, com força maior: a marca aparece em
+   TODA página e a landing em uma. Tingir uma palavra de acento no canto
+   superior esquerdo é o enfeite que a régua recusa, então ela fica em
+   `--sd-text-strong` — a MESMA tinta que a palavra já tinha. O que saiu foi o
+   glifo, que era a única coisa aqui a consumir `--sd-accent`.
+
+   Medido no artefato, nos dois modos: `250,242,249` no escuro e `15,10,15` no
+   claro, os dois iguais a `--sd-text-strong` resolvido e diferentes do acento.
+
+   Duas classes do Infima, degrau 1: `.navbar__brand` posiciona, `.navbar__title`
+   carrega a tipografia. As declarações são as mesmas que a marca tinha — o que
+   saiu foi o glifo, não a forma da palavra. */
+.navbar__brand {
   display: flex;
   align-items: center;
-  gap: var(--sd-space-2);
   color: var(--sd-text-strong);
+}
+
+.navbar__title {
   font-family: var(--sd-font-heading);
   font-size: var(--sd-type-sm);
   font-weight: var(--sd-weight-heading);
   letter-spacing: var(--sd-tracking-tight);
-}
-
-.marca__glifo {
-  flex: none;
-  width: var(--sd-space-5);
-  height: var(--sd-space-5);
-  /* O único token que a marca consome. `currentColor` no SVG do Lucide vira
-     acento aqui, e é por isso que a marca é SVGR e não `<img>`. */
-  color: var(--sd-accent);
-}
-
-.marca__palavra {
-  font-weight: inherit;
 }
 
 /* A FAIXA — três das quatro peças. A primeira mora em `tokens.css`, porque é
@@ -398,21 +398,21 @@ html.docs-doc-page .subtitulo {
   mask: var(--sd-sidebar-icone) center / contain no-repeat;
 }
 
-/* Os doze pares seção→ícone. `Receitas` é sidebar plana — sem categoria, logo
-   sem ícone, e não consome slot. As três tabs de navbar também não recebem
-   ícone: a regra é um slot por seção de topo da SIDEBAR. */
-.sidebar-icone--comece-aqui        { --sd-sidebar-icone: url('/icons/rocket.svg'); }
-.sidebar-icone--conceitos          { --sd-sidebar-icone: url('/icons/shapes.svg'); }
-.sidebar-icone--meios-de-pagamento { --sd-sidebar-icone: url('/icons/wallet.svg'); }
-.sidebar-icone--guias              { --sd-sidebar-icone: url('/icons/book-open.svg'); }
-.sidebar-icone--sdks               { --sd-sidebar-icone: url('/icons/package.svg'); }
-.sidebar-icone--operacao           { --sd-sidebar-icone: url('/icons/activity.svg'); }
-.sidebar-icone--introducao         { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
-.sidebar-icone--cobrancas          { --sd-sidebar-icone: url('/icons/receipt.svg'); }
-.sidebar-icone--clientes           { --sd-sidebar-icone: url('/icons/users.svg'); }
-.sidebar-icone--assinaturas        { --sd-sidebar-icone: url('/icons/repeat.svg'); }
-.sidebar-icone--reembolsos         { --sd-sidebar-icone: url('/icons/undo-2.svg'); }
-.sidebar-icone--webhooks           { --sd-sidebar-icone: url('/icons/webhook.svg'); }
+/* Os onze pares seção→ícone. `Biblioteca C` não recebe: ela é categoria de
+   SEGUNDO nível, e a regra é *ícone só no nó de topo da sidebar* — foi a
+   reescrita dela, e não o teto de profundidade, que destravou o nível 3. As três
+   tabs de navbar também não recebem. */
+.sidebar-icone--api-owner          { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
+.sidebar-icone--security-champion  { --sd-sidebar-icone: url('/icons/lock.svg'); }
+.sidebar-icone--ambiente           { --sd-sidebar-icone: url('/icons/layers.svg'); }
+.sidebar-icone--esteiras           { --sd-sidebar-icone: url('/icons/workflow.svg'); }
+.sidebar-icone--infraestrutura     { --sd-sidebar-icone: url('/icons/cloud.svg'); }
+.sidebar-icone--acessos            { --sd-sidebar-icone: url('/icons/key.svg'); }
+.sidebar-icone--diagnostico        { --sd-sidebar-icone: url('/icons/activity.svg'); }
+.sidebar-icone--bibliotecas        { --sd-sidebar-icone: url('/icons/package.svg'); }
+.sidebar-icone--modulos-terraform  { --sd-sidebar-icone: url('/icons/puzzle.svg'); }
+.sidebar-icone--skills             { --sd-sidebar-icone: url('/icons/bot.svg'); }
+.sidebar-icone--servidores-mcp     { --sd-sidebar-icone: url('/icons/server.svg'); }
 
 /* Hierarquia. O teto de profundidade é 2, então existem exatamente dois degraus
    a desenhar — e é por isso que a regra de ícone (obrigatório no topo, ausente
@@ -441,39 +441,6 @@ html.docs-doc-page .subtitulo {
 .theme-doc-sidebar-menu .menu__link--active {
   text-shadow: var(--sd-negrito-optico);
 }
-
-/* -----------------------------------------------------------------------------
-   3.3 O badge de método — só na Referência da API, só na folha de endpoint.
-
-   `sidebar_class_name`, emitido pelo gerador (`scripts/gerar-api.mjs`) a
-   partir do verbo HTTP de cada operação — a mesma escada de dano que
-   `VerbBadge` pinta no cabeçalho da página, aqui reduzida a um ponto. É
-   `::after`, no LINK da folha; o ícone de seção é `::before`, no link da
-   CATEGORIA de topo — os dois nunca disputam o mesmo pseudo-elemento porque
-   nunca disputam o mesmo nó.
-
-   Zero token novo: as quatro cores já existem na camada 2, e são as mesmas
-   quatro que `VerbBadge` consome — ver docs/design/componentes/verb-badge.md.
-   ----------------------------------------------------------------------------- */
-.api-metodo > .menu__link {
-  display: flex;
-  align-items: center;
-}
-
-.api-metodo > .menu__link::after {
-  content: '';
-  flex: none;
-  width: var(--sd-space-2);
-  height: var(--sd-space-2);
-  margin-left: auto;
-  border-radius: var(--sd-radius-full);
-}
-
-.api-metodo--get::after { background-color: var(--sd-state-info); }
-.api-metodo--post::after { background-color: var(--sd-state-success); }
-.api-metodo--put::after,
-.api-metodo--patch::after { background-color: var(--sd-state-warn); }
-.api-metodo--delete::after { background-color: var(--sd-state-danger); }
 
 /* -----------------------------------------------------------------------------
    4. TOC

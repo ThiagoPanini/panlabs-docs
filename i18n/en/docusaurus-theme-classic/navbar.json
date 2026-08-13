@@ -1,15 +1,19 @@
 {
-  "item.label.Documentação": {
-    "message": "Documentation",
-    "description": "Navbar item with label Documentação"
+  "title": {
+    "message": "panlabs",
+    "description": "The title in the navbar"
   },
-  "item.label.Referência da API": {
-    "message": "API reference",
-    "description": "Navbar item with label Referência da API"
+  "item.label.Jornadas": {
+    "message": "Journeys",
+    "description": "Navbar item with label Jornadas"
   },
-  "item.label.Receitas": {
-    "message": "Recipes",
-    "description": "Navbar item with label Receitas"
+  "item.label.Procedimentos": {
+    "message": "Procedures",
+    "description": "Navbar item with label Procedimentos"
+  },
+  "item.label.Ferramentas": {
+    "message": "Tools",
+    "description": "Navbar item with label Ferramentas"
   },
   "item.label.GitHub": {
     "message": "GitHub",

@@ -502,47 +502,6 @@ a.card:active {
 }
 
 /* -----------------------------------------------------------------------------
-   verb-badge
-
-   Preenchimento e texto pela fórmula do sistema — a mesma dos quatro estados —
-   e não pelo alfa único que a medição achou na âncora. Uma segunda fórmula de
-   alfa faria o componente saber em que modo está.
-   ----------------------------------------------------------------------------- */
-
-.verbBadge {
-  display: inline-block;
-  border-radius: var(--sd-radius-xs);
-  padding-inline: var(--sd-space-2);
-  background-color: var(--sd-verb-fill);
-  color: var(--sd-verb-ink);
-  font-family: var(--sd-font-mono);
-  font-size: var(--sd-type-xs);
-  font-weight: var(--sd-weight-heading);
-  line-height: var(--sd-leading-ui);
-}
-
-.verbGet {
-  --sd-verb-fill: var(--sd-state-info-fill);
-  --sd-verb-ink: var(--sd-state-info);
-}
-
-.verbPost {
-  --sd-verb-fill: var(--sd-state-success-fill);
-  --sd-verb-ink: var(--sd-state-success);
-}
-
-.verbPut,
-.verbPatch {
-  --sd-verb-fill: var(--sd-state-warn-fill);
-  --sd-verb-ink: var(--sd-state-warn);
-}
-
-.verbDelete {
-  --sd-verb-fill: var(--sd-state-danger-fill);
-  --sd-verb-ink: var(--sd-state-danger);
-}
-
-/* -----------------------------------------------------------------------------
    update
 
    Uma coluna em qualquer largura. A forma de duas colunas — data à esquerda,

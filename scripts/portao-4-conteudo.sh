@@ -1,36 +1,52 @@
 #!/usr/bin/env bash
 #
-# Portão 4 — o volume, o tipo de página, a regra de heading e a cobertura de
-# locale.
+# Portão 4 — o volume, o tipo de página, os dois gabaritos de `Jornadas`, a
+# regra de heading, as fixtures e a cobertura de locale.
 #
 # Cadência: commit.
 #
 # Este portão existe porque os critérios da arquitetura de informação são todos
 # CONTAGENS, e contagem escrita em documento é contagem que envelhece calada.
-# Uma página a mais em `Guias` não quebra build nenhum; um `Guia` sem `<Steps>`
-# tampouco. Os dois só fazem a spec passar a mentir. Aqui eles reprovam.
+# Uma página a mais em `Esteiras` não quebra build nenhum; um `Guia` sem
+# `<Steps>` tampouco. Os dois só fazem a spec passar a mentir. Aqui eles
+# reprovam.
 #
-# São cinco cobranças:
+# **Ele foi reescrito inteiro com a árvore do `panlabs`**, e o que ele ganhou é
+# uma classe de cobrança que a versão do Trilho não tinha: **proibição por
+# localização**. Até aqui um gabarito EXIGIA e LIMITAVA; nenhum dizia *"aqui não
+# entra"*. `<Steps>` fora de toda `Jornadas` e `<CardGroup>` fora dos dois
+# índices são teto de zero, e existem onde a alternativa era confiar em bom
+# senso.
 #
-#   1. o volume por seção          33 em Documentação, 10 em Receitas
-#   2. o tipo de cada página        toda página tem tipo declarado, e cumpre o
-#                                   orçamento ESTRUTURAL dele
-#   3. a regra de heading           Documentação >= 3 `##`; Receita <= 1
-#   4. o marcador de tradução       todo fonte pt-BR tem `<Untranslated />`,
-#                                   e nenhum arquivo de tradução tem
-#   5. a cobertura de locale        14 páginas em EN, e são as três seções
-#                                   declaradas
+# São treze cobranças: as **doze** que a árvore nova trouxe, mais a cobertura de
+# locale, que é a única sobrevivente da versão anterior deste portão — ela não é
+# acréscimo, é a linha que não foi jogada fora com o resto.
+#
+#    1. o volume por aba e por categoria     12 · 19 · 15 autorais, 15 em EN
+#    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
+#    3. a regra de heading                    com UMA exceção nomeada
+#    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
+#    5. o índice de jornada                   `<CardGroup>` fora, dois headings
+#                                             literais dentro
+#    6. prosa antes do primeiro `##`          em todo capítulo
+#    7. a lista ordenada de `## Como foi`     N itens para N capítulos
+#    8. o estado                              exatamente uma palavra na abertura
+#    9. o marcador de tradução                31 páginas, e nenhuma tradução
+#   10. `description`                         em 100% das páginas
+#   11. as onze fixtures                      por caminho nomeado
+#   12. os dez tipos têm instância            `Referência de API` pendente
+#   13. a cobertura de locale                 15 em EN, e só `Ferramentas`
 #
 # **O tipo mora AQUI, e não no conteúdo.** `informacao.md` §6 trava que tipo de
 # página é convenção de conteúdo e ZERO layout — sem front matter `type:`, sem
 # classe CSS por tipo. Um manifesto de build não é nenhum dos dois: ele não
-# toca a página nem o CSS, e some do artefato publicado. O que ele compra é que
-# a tabela do §6.2 deixe de ser uma afirmação e vire um fato conferido.
+# toca a página nem o CSS, e some do artefato publicado.
 #
-# **A exceção de heading é uma só, e é nomeada.** `comece-aqui/ambientes`
-# carrega ZERO `##` de propósito: é a fixture que prova que o cartão fica no
-# mesmo pixel sem coluna de TOC. Exceção anônima seria buraco; nomeada aqui,
-# ela reprova no dia em que alguém escrever a segunda.
+# **A exceção de heading é uma só, e é nomeada.** `ambiente/indice` carrega ZERO
+# `##` de propósito: é a fixture que prova que a coluna fica no mesmo pixel sem
+# coluna de TOC. Os tetos que saem de GABARITO — `Receita` em no máximo um, o
+# índice de jornada em exatamente dois — não são exceção: são o orçamento do
+# tipo. Exceção é a página que rompe a própria forma, e ela é uma.
 #
 # **A coluna de palavras do §6.2 NÃO é cobrada, e isso é decisão.** O que
 # estressa layout é contagem de estrutura; palavra é proxy ruim, e as páginas
@@ -39,17 +55,19 @@
 # Contagem de `##` e de componente ignora bloco cercado — senão um comentário
 # `##` ou um `<Steps>` citado dentro de um trecho de código contariam.
 #
-# Procedência: docs/design/informacao.md §4.2, §6, §7 e §8.
+# Procedência: docs/design/informacao.md §4, §6, §7 e §8.
 
 set -uo pipefail
 
 CONTEUDO='conteudo'
-DOCS='conteudo/documentacao'
-RECEITAS='conteudo/receitas'
-EN='i18n/en/docusaurus-plugin-content-docs/current'
+JORNADAS='conteudo/jornadas'
+PROCEDIMENTOS='conteudo/procedimentos'
+FERRAMENTAS='conteudo/ferramentas'
+EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 
-# A única página de `Documentação` que pode ter menos de três `##`.
-EXCECAO_DE_HEADING='comece-aqui/ambientes'
+# A única página que pode ficar abaixo do piso de heading sem que um gabarito o
+# autorize. Ver informacao.md §4.1.
+EXCECAO_DE_HEADING='procedimentos/ambiente/indice'
 
 falhas=0
 
@@ -60,54 +78,111 @@ reprova() {
 
 # `chave=valor` separados por espaço, lidos com `${par%%=*}` / `${par##*=}` —
 # o repo não tem bash 4 garantido, então nada de array associativo.
-VOLUME_ESPERADO='comece-aqui=4 conceitos=6 meios-de-pagamento=7 guias=6 sdks=4 operacao=6'
+#
+# `Ferramentas` conta 15 e não 21: as **6 páginas geradas** de `Biblioteca C`
+# são do ticket seguinte, e uma sidebar sem o ramo gerado é válida. Quando elas
+# chegarem, `bibliotecas` vai a 13 e a aba a 21.
+VOLUME_JORNADAS='api-owner=7 security-champion=5'
+VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=4 infraestrutura=4 acessos=4 diagnostico=4'
+VOLUME_FERRAMENTAS='bibliotecas=7 modulos-terraform=3 skills=3 servidores-mcp=2'
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 43 autorais.
-# `indice` e `fixture-curta` são FORMAS, não tipos: ver §6.3 e §4.1.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 46 autorais.
+#
+# `indice` e `fixture-curta` são FORMAS de índice de categoria, não tipos (§6.3);
+# `capitulo` é o gabarito da folha de `Jornadas`, e também não é tipo — os dez
+# tipos são os da tabela do §6.1, e `indice-de-jornada` é o décimo.
 TIPOS=$(cat <<'FIM'
-documentacao/comece-aqui/visao-geral:indice
-documentacao/comece-aqui/ambientes:fixture-curta
-documentacao/comece-aqui/autenticacao:guia
-documentacao/comece-aqui/primeira-cobranca:quickstart
-documentacao/conceitos/mapa-dos-conceitos:indice
-documentacao/conceitos/ciclo-de-vida:conceitual
-documentacao/conceitos/idempotencia:conceitual
-documentacao/conceitos/webhooks:conceitual
-documentacao/conceitos/conciliacao:fixture-prosa-pura
-documentacao/conceitos/erros:conceitual
-documentacao/meios-de-pagamento/comparativo:catalogo
-documentacao/meios-de-pagamento/pix:guia
-documentacao/meios-de-pagamento/pix-qr-dinamico:conceitual
-documentacao/meios-de-pagamento/pix-devolucao:guia
-documentacao/meios-de-pagamento/boleto:guia
-documentacao/meios-de-pagamento/cartao:guia
-documentacao/meios-de-pagamento/split:conceitual
-documentacao/guias/indice-de-guias:indice
-documentacao/guias/aceitar-pix-com-qr-dinamico:guia
-documentacao/guias/cobrar-cartao-com-autenticacao:guia
-documentacao/guias/assinar-um-cliente:guia
-documentacao/guias/migrar-de-outro-provedor:guia
-documentacao/guias/catalogo-de-componentes:guia
-documentacao/sdks/visao-geral:indice
-documentacao/sdks/node:sdk
-documentacao/sdks/python:sdk
-documentacao/sdks/go:sdk
-documentacao/operacao/indice:indice
-documentacao/operacao/monitoramento:guia
-documentacao/operacao/diagnostico:troubleshooting
-documentacao/operacao/codigos-de-recusa:catalogo
-documentacao/operacao/arquivo-de-movimento:guia
-documentacao/operacao/changelog:changelog
-receitas/intro:indice
-receitas/checkout-pix-em-dez-minutos:receita
-receitas/verificar-assinatura-de-webhook:receita
-receitas/cobrar-cartao-salvo:receita
-receitas/emitir-boleto-com-vencimento:receita
-receitas/dividir-uma-cobranca-com-split:receita
-receitas/estornar-parcialmente:receita
-receitas/retentativa-com-espera-exponencial:receita
-receitas/paginar-o-historico-de-cobrancas:receita
-receitas/conciliar-com-referencia-externa:receita
+jornadas/api-owner/indice:indice-de-jornada
+jornadas/api-owner/o-contrato-que-nao-existia:capitulo
+jornadas/api-owner/o-que-o-contrato-nao-cobre:capitulo
+jornadas/api-owner/a-politica-de-versao:capitulo
+jornadas/api-owner/o-schema-que-mudou-sem-aviso:capitulo
+jornadas/api-owner/depreciar-em-seis-meses:capitulo
+jornadas/api-owner/o-consumidor-invisivel:capitulo
+jornadas/security-champion/indice:indice-de-jornada
+jornadas/security-champion/a-varredura-que-reprovava-tudo:capitulo
+jornadas/security-champion/o-segredo-no-commit:capitulo
+jornadas/security-champion/a-excecao-que-virou-regra:capitulo
+jornadas/security-champion/o-inventario-de-imagens:capitulo
+procedimentos/ambiente/indice:fixture-curta
+procedimentos/ambiente/comparativo-dev-staging-prod:catalogo
+procedimentos/ambiente/preparar-a-maquina-local:guia
+procedimentos/esteiras/indice:indice
+procedimentos/esteiras/verificar-a-assinatura-hmac:guia
+procedimentos/esteiras/publicar-um-pacote-interno:guia
+procedimentos/esteiras/rodar-a-esteira-localmente:guia
+procedimentos/infraestrutura/indice:indice
+procedimentos/infraestrutura/o-output-de-um-modulo:conceitual
+procedimentos/infraestrutura/criar-um-bucket-versionado:guia
+procedimentos/infraestrutura/promover-um-modulo:guia
+procedimentos/acessos/indice:indice
+procedimentos/acessos/permissoes-por-papel:catalogo
+procedimentos/acessos/assumir-um-papel-na-aws:guia
+procedimentos/acessos/rotacionar-uma-chave:guia
+procedimentos/diagnostico/indice-de-sintomas:troubleshooting
+procedimentos/diagnostico/monitoramento-e-alertas:conceitual
+procedimentos/diagnostico/o-mesmo-erro-em-tres-formas:troubleshooting
+procedimentos/diagnostico/o-diff-que-resolveu:troubleshooting
+ferramentas/bibliotecas/indice:indice
+ferramentas/bibliotecas/biblioteca-a:sdk
+ferramentas/bibliotecas/biblioteca-b:sdk
+ferramentas/bibliotecas/biblioteca-c/visao-geral:quickstart
+ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao:guia
+ferramentas/bibliotecas/biblioteca-c/tratamento-de-erros:conceitual
+ferramentas/bibliotecas/biblioteca-c/changelog:changelog
+ferramentas/modulos-terraform/indice:indice
+ferramentas/modulos-terraform/modulo-de-bucket:guia
+ferramentas/modulos-terraform/modulo-de-papel-iam:guia
+ferramentas/skills/indice:indice
+ferramentas/skills/scaffold-de-esteira:receita
+ferramentas/skills/rotacao-de-segredo:receita
+ferramentas/servidores-mcp/indice:indice
+ferramentas/servidores-mcp/servidor-de-catalogo-mcp:sdk
+FIM
+)
+
+# Os dez tipos, e onde cada um tem instância. `referencia-de-api` é o único sem
+# nenhuma, e a ausência é DECLARADA: as 6 páginas geradas de `Biblioteca C`
+# chegam no ticket seguinte. Declarar a pendência aqui é o que impede a lista de
+# dez virar lista de nove sem ninguém notar.
+DEZ_TIPOS='quickstart conceitual guia sdk referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
+TIPO_PENDENTE='referencia-de-api'
+
+# As onze fixtures, por caminho nomeado. Cada caso difícil tem exatamente uma
+# página dona — a spec aponta para o artefato em vez de descrever a hipótese, e
+# quem implementa sabe onde olhar para saber se acertou.
+#
+# `fallback-de-locale` é a única que se prova por AUSÊNCIA: a página existe em
+# pt-BR e NÃO tem contraparte em EN, que é o estado que ela exercita.
+FIXTURES=$(cat <<'FIM'
+tabela-larga:procedimentos/acessos/permissoes-por-papel
+tabela-como-pagina-inteira:procedimentos/ambiente/comparativo-dev-staging-prod
+bloco-de-codigo-longo:procedimentos/esteiras/verificar-a-assinatura-hmac
+pagina-muito-curta:procedimentos/ambiente/indice
+prosa-pura:jornadas/security-champion/indice
+item-de-sidebar-mais-largo:jornadas/security-champion/a-varredura-que-reprovava-tudo
+prosa-minima-codigo-maximo:ferramentas/skills/scaffold-de-esteira
+fallback-de-locale:jornadas/api-owner/a-politica-de-versao
+aninhamento-profundo:procedimentos/infraestrutura/o-output-de-um-modulo
+pagina-muito-longa:jornadas/api-owner/o-contrato-que-nao-existia
+painel-direito-vazio:ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao
+FIM
+)
+
+# Os QUATRO casos que o domínio novo trouxe e que NÃO são fixture — eles não
+# substituem nenhum caso antigo e não nasceram de um teto de layout; são
+# cobertura de conteúdo com dona nomeada. Ficam cobrados pelo mesmo mecanismo
+# para não virarem promessa em prosa.
+#
+# `irmao-curto` é o quarto, e ele mora aqui e não em FIXTURES: o lado longo do
+# par prova *página muito longa* sozinho — TOC longo, `sticky`, scroll-spy —, e o
+# que o par prova junto é *comprimento desigual entre irmãos*, que é caso do
+# domínio. Contá-lo como fixture faria a lista fechar em doze, e são onze.
+CASOS_DO_DOMINIO=$(cat <<'FIM'
+saida-literal-de-terminal:jornadas/api-owner/o-schema-que-mudou-sem-aviso
+varias-linguagens-na-mesma-pagina:procedimentos/diagnostico/o-mesmo-erro-em-tres-formas
+diff:procedimentos/diagnostico/o-diff-que-resolveu
+irmao-curto:jornadas/api-owner/o-que-o-contrato-nao-cobre
 FIM
 )
 
@@ -120,35 +195,50 @@ contar() {
   ' "$1"
 }
 
+# O volume de uma aba, categoria a categoria, mais o total.
+#
+# O resultado sai em `$volume`, e não por `echo` dentro de `$( )`: a substituição
+# de comando roda em subshell, e ali `falhas` incrementaria numa cópia que morre
+# no fecha-parêntese. Um portão que conta errado as próprias reprovações é pior
+# que um portão ausente.
+volume=0
+volume_da_aba() {
+  local raiz="$1" esperado_total="$2" nome="$3" pares="$4"
+  local par categoria esperado achado
+  volume=0
+  for par in $pares; do
+    categoria="${par%%=*}"
+    esperado="${par##*=}"
+    achado=$(find "${raiz}/${categoria}" -name '*.md' 2>/dev/null | wc -l)
+    volume=$((volume + achado))
+    [ "$achado" = "$esperado" ] ||
+      reprova "${nome}/${categoria}: ${achado} páginas, esperado ${esperado}"
+  done
+  [ "$volume" = "$esperado_total" ] ||
+    reprova "${nome}: ${volume} páginas, esperado ${esperado_total}"
+}
+
 echo "Portão 4 — conteúdo"
 echo
 
 # --- 1. o volume --------------------------------------------------------------
-echo "1  volume por seção"
-total_docs=0
+echo "1  volume por aba e por categoria"
 
-for par in $VOLUME_ESPERADO; do
-  secao="${par%%=*}"
-  esperado="${par##*=}"
-  achado=$(find "${DOCS}/${secao}" -name '*.md' 2>/dev/null | wc -l)
-  total_docs=$((total_docs + achado))
-  [ "$achado" = "$esperado" ] ||
-    reprova "${secao}: ${achado} páginas, esperado ${esperado}"
-done
+volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
+volume_da_aba "$PROCEDIMENTOS" 19 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
+volume_da_aba "$FERRAMENTAS" 15 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
 
-[ "$total_docs" = 33 ] || reprova "Documentação: ${total_docs} páginas, esperado 33"
+autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
+[ "$autorais" = 46 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 46"
 
-total_receitas=$(find "$RECEITAS" -name '*.md' | wc -l)
-[ "$total_receitas" = 10 ] || reprova "Receitas: ${total_receitas} páginas, esperado 10"
-
-echo "   Documentação ${total_docs} · Receitas ${total_receitas}"
+echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${total_ferramentas} = ${autorais} autorais"
+echo "   (Ferramentas fecha em 21 quando o ramo gerado de Biblioteca C chegar)"
 echo
 
 # --- 2. o tipo, e o orçamento estrutural dele ---------------------------------
 echo "2  tipo de página e orçamento estrutural"
 
 declaradas=$(printf '%s\n' "$TIPOS" | wc -l)
-autorais=$((total_docs + total_receitas))
 [ "$declaradas" = "$autorais" ] ||
   reprova "o manifesto declara ${declaradas} páginas e existem ${autorais}"
 
@@ -165,7 +255,18 @@ while IFS=: read -r relativo tipo; do
   cards=$(contar "$arquivo" '^<CardGroup>')
   codegroups=$(contar "$arquivo" '^<CodeGroup')
   # A cerca é o `code-block`, e o contador de `##` já ignora o interior dela.
-  blocos=$(( $(grep -c '^```' "$arquivo") / 2 ))
+  #
+  # **A cerca INDENTADA conta**, e essa é uma correção de fato contra a versão
+  # anterior deste portão: ela casava `^```` e a função `contar` casa
+  # `^[[:space:]]*````, então uma cerca dentro de `<Steps>` abria e fechava o
+  # estado *dentro de bloco* sem nunca ser contada como bloco. O desacordo era
+  # inofensivo enquanto o `<Steps>` carregava pouco código; na árvore nova ele
+  # carrega quase todo o código dos guias, e a contagem saía pela metade.
+  #
+  # Indentar cerca dentro de JSX é seguro: o MDX **desliga** o bloco de código
+  # por indentação, que é exatamente o que permite indentar Markdown dentro de
+  # um componente.
+  blocos=$(( $(grep -c '^[[:space:]]*```' "$arquivo") / 2 ))
 
   exigir() { # exigir <o quê> <achado> <mínimo>
     [ "$2" -ge "$3" ] 2>/dev/null ||
@@ -184,14 +285,13 @@ while IFS=: read -r relativo tipo; do
     catalogo)       exigir 'tabelas' "$tabelas" 1 ;;
     troubleshooting) exigir 'tabelas' "$tabelas" 1 ;;
     changelog)      exigir 'entradas <Update>' "$(contar "$arquivo" '^<Update ')" 6 ;;
+    # O gabarito do capítulo: 2 blocos e 1 `:::`. A espinha de 3 a 6 `##` e a
+    # prosa antes do primeiro heading são cobradas nas seções 3 e 6.
+    capitulo)       exigir 'blocos' "$blocos" 2; exigir 'callouts' "$callouts" 1 ;;
+    # O décimo tipo. As duas seções obrigatórias são cobradas na seção 5, e a
+    # ausência de componente é o que faz dele a página mais nua do site.
+    indice-de-jornada) : ;;
     indice)         : ;; # forma, não tipo — o piso do tipo da seção, mais o índice
-    fixture-prosa-pura)
-      # A fixture ganha do orçamento: `Conceitual` sem NENHUM componente.
-      for achado in "$blocos:blocos" "$tabelas:tabelas" "$callouts:callouts" \
-                    "$cards:<CardGroup>" "$steps:<Steps>"; do
-        [ "${achado%%:*}" = 0 ] ||
-          reprova "${relativo}: prosa pura não admite ${achado##*:} (achou ${achado%%:*})"
-      done ;;
     fixture-curta)  : ;; # a exceção de heading, cobrada na seção 3
     *)              reprova "${relativo}: tipo desconhecido '${tipo}'" ;;
   esac
@@ -201,58 +301,201 @@ echo "   ${declaradas} páginas com tipo declarado, cada uma no orçamento estru
 echo
 
 # --- 3. a regra de heading ----------------------------------------------------
+#
+# O piso é três `##` em toda página. Dois gabaritos abrem teto próprio, e nenhum
+# dos dois é exceção: `Receita` fica em no máximo um, e o índice de jornada em
+# exatamente dois, que são os dois literais da seção 5. A exceção NOMEADA é uma
+# só — a página que rompe a própria forma.
 echo "3  regra de heading"
-docs_sem_toc=0
+sem_toc=0
+com_toc=0
 
-while IFS= read -r arquivo; do
-  relativo="${arquivo#"${DOCS}/"}"
-  relativo="${relativo%.md}"
+while IFS=: read -r relativo tipo; do
+  arquivo="${CONTEUDO}/${relativo}.md"
+  [ -f "$arquivo" ] || continue
   h2=$(contar "$arquivo" '^## ')
 
   if [ "$relativo" = "$EXCECAO_DE_HEADING" ]; then
     [ "$h2" = 0 ] || reprova "${relativo}: ${h2} \`##\`, e a fixture exige ZERO"
-    docs_sem_toc=$((docs_sem_toc + 1))
-  elif ! [ "$h2" -ge 3 ] 2>/dev/null; then
-    reprova "${relativo}: ${h2} \`##\`, mínimo 3 em Documentação"
-  fi
-done < <(find "$DOCS" -name '*.md' | sort)
-
-receitas_com_toc=0
-receitas_sem_toc=0
-while IFS= read -r arquivo; do
-  h2=$(contar "$arquivo" '^## ')
-  if ! [ "$h2" -le 1 ] 2>/dev/null; then
-    reprova "${arquivo#"${RECEITAS}/"}: ${h2} \`##\`, máximo 1 em Receita"
-  elif [ "$h2" = 1 ]; then
-    receitas_com_toc=$((receitas_com_toc + 1))
+  elif [ "$tipo" = 'receita' ]; then
+    [ "$h2" -le 1 ] 2>/dev/null ||
+      reprova "${relativo}: ${h2} \`##\`, máximo 1 em Receita"
+  elif [ "$tipo" = 'indice-de-jornada' ]; then
+    [ "$h2" = 2 ] ||
+      reprova "${relativo}: ${h2} \`##\`, e o índice de jornada tem exatamente 2"
+  elif [ "$tipo" = 'capitulo' ]; then
+    { [ "$h2" -ge 3 ] && [ "$h2" -le 6 ]; } 2>/dev/null ||
+      reprova "${relativo}: ${h2} \`##\`, e a espinha do capítulo é de 3 a 6"
   else
-    receitas_sem_toc=$((receitas_sem_toc + 1))
+    [ "$h2" -ge 3 ] 2>/dev/null ||
+      reprova "${relativo}: ${h2} \`##\`, mínimo 3"
   fi
-done < <(find "$RECEITAS" -name '*.md' | sort)
 
-echo "   Documentação: ${docs_sem_toc} sem coluna de TOC (a exceção nomeada)"
-echo "   Receitas: ${receitas_com_toc} com um \`##\` · ${receitas_sem_toc} sem nenhum"
+  if [ "$h2" = 0 ]; then sem_toc=$((sem_toc + 1)); else com_toc=$((com_toc + 1)); fi
+done <<< "$TIPOS"
 
-# As DUAS configurações de coluna que este slice pode produzir precisam existir
-# no artefato. A terceira, `hide_table_of_contents`, chega com a Referência da
-# API — ver informacao.md §4.
-[ "$docs_sem_toc" -ge 1 ] || reprova "nenhuma página de Documentação sem TOC"
-[ "$receitas_com_toc" -ge 1 ] || reprova "nenhuma Receita monta coluna de TOC"
-[ "$receitas_sem_toc" -ge 1 ] || reprova "nenhuma Receita fica sem coluna de TOC"
+echo "   ${sem_toc} sem coluna de TOC · ${com_toc} com"
+
+# **A exceção nomeada já foi cobrada acima**, página a página: fora de um
+# gabarito, só `EXCECAO_DE_HEADING` pode ficar abaixo do piso. Contar aqui
+# quantas páginas ficam sem TOC seria cobrar outra coisa — a `Receita` fica em
+# zero pelo orçamento dela, e orçamento não é exceção.
+#
+# O que esta contagem cobra é que as DUAS configurações de coluna que este
+# acervo produz existam no artefato. A terceira, `hide_table_of_contents`, chega
+# com o ramo gerado.
+[ "$sem_toc" -ge 1 ] || reprova "nenhuma página sem coluna de TOC"
+[ "$com_toc" -ge 1 ] || reprova "nenhuma página monta coluna de TOC"
 echo
 
-# --- 4. o marcador de tradução ------------------------------------------------
-echo "4  marcador de tradução"
-# `conteudo/api-reference` fica de fora dos dois lados desta checagem. As
-# trinta páginas da Referência da API não têm estado de fallback para
-# sinalizar — o gerador entrega os dois locales JUNTOS a partir do contrato
-# bilíngue, e as seis autorais também nascem traduzidas de verdade no mesmo
-# slice (#38). `<Untranslated />` é sobre a página SÓ existir num locale;
-# aqui isso nunca acontece, então a convenção de uma linha não se aplica.
-sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' --exclude-dir='api-reference' "$CONTEUDO") || true
+# --- 4. `<Steps>` fora de `Jornadas` ------------------------------------------
+#
+# A fronteira entre duas abas, escrita como regra conferível: `Procedimentos`
+# diz como se faz; `Jornadas` diz o que aconteceu e o que ficou. Se um capítulo
+# pode carregar `<Steps>`, o leitor abre a página e não consegue dizer por que
+# ela não está na outra aba.
+echo "4  \`<Steps>\` fora de \`Jornadas\`"
+com_steps=''
+while IFS= read -r arquivo; do
+  [ "$(contar "$arquivo" '^<Steps>')" = 0 ] || com_steps="${com_steps}${arquivo}"$'\n'
+done < <(find "$JORNADAS" -name '*.md' | sort)
+
+if [ -n "$com_steps" ]; then
+  reprova "\`<Steps>\` é a espinha de \`Procedimentos\`, e não entra em \`Jornadas\`:"
+  printf '%s' "$com_steps" | sed 's/^/    /'
+else
+  echo "   nenhuma das ${total_jornadas} páginas de Jornadas carrega \`<Steps>\`"
+fi
+echo
+
+# --- 5. o índice de jornada ---------------------------------------------------
+#
+# `<CardGroup>` é proibido porque grade não tem ordem, e o traço que justifica o
+# décimo tipo é ORDENAR POR TEMPO. Uma página que ordenasse por tempo e
+# renderizasse em grade não mostraria o traço.
+echo "5  o índice de jornada — grade fora, duas seções dentro"
+indices=0
+while IFS=: read -r relativo tipo; do
+  [ "$tipo" = 'indice-de-jornada' ] || continue
+  arquivo="${CONTEUDO}/${relativo}.md"
+  [ -f "$arquivo" ] || continue
+  indices=$((indices + 1))
+
+  cards=$(contar "$arquivo" '^<CardGroup>')
+  [ "$cards" = 0 ] ||
+    reprova "${relativo}: ${cards} \`<CardGroup>\`, e grade não tem ordem"
+
+  for heading in '## Como foi' '## O que não funcionou'; do
+    grep -qxF "$heading" "$arquivo" ||
+      reprova "${relativo}: falta o heading literal \`${heading}\`"
+  done
+done <<< "$TIPOS"
+
+[ "$indices" = 2 ] || reprova "${indices} índices de jornada, esperado 2"
+echo "   ${indices} índices, sem grade, com \`## Como foi\` e \`## O que não funcionou\`"
+echo
+
+# --- 6. prosa antes do primeiro `##`, em todo capítulo -------------------------
+#
+# O parágrafo de contexto é o que separa o capítulo de uma lista de passos com
+# outro nome. A varredura ignora o `<Untranslated />` — ele é convenção de
+# autoria, não prosa — e ignora componente e cerca.
+echo "6  prosa entre o \`# h1\` e o primeiro \`##\`"
+capitulos=0
+while IFS=: read -r relativo tipo; do
+  [ "$tipo" = 'capitulo' ] || continue
+  arquivo="${CONTEUDO}/${relativo}.md"
+  [ -f "$arquivo" ] || continue
+  capitulos=$((capitulos + 1))
+
+  prosa=$(awk '
+    /^# / { depois_do_titulo = 1; next }
+    /^## / { exit }
+    !depois_do_titulo { next }
+    /^[[:space:]]*```/ { dentro = !dentro; next }
+    dentro { next }
+    /^[[:space:]]*$/ { next }
+    /^<Untranslated \/>$/ { next }
+    /^[<:|]/ { next }
+    { n++ }
+    END { print n + 0 }
+  ' "$arquivo")
+
+  [ "$prosa" -ge 1 ] 2>/dev/null ||
+    reprova "${relativo}: nenhuma linha de prosa entre o título e o primeiro \`##\`"
+done <<< "$TIPOS"
+
+[ "$capitulos" = 10 ] || reprova "${capitulos} capítulos, esperado 10"
+echo "   ${capitulos} capítulos, todos com parágrafo de contexto antes da espinha"
+echo
+
+# --- 7. a lista ordenada de `## Como foi` --------------------------------------
+#
+# Um item por capítulo, e é a lista que carrega o traço do tipo: tempo precisa
+# de linha, e lista ordenada é a linha. O número sai da árvore, não de uma
+# constante — assim a cobrança acompanha a jornada que crescer.
+echo "7  \`## Como foi\` com um item por capítulo"
+while IFS= read -r jornada; do
+  arquivo="${JORNADAS}/${jornada}/indice.md"
+  [ -f "$arquivo" ] || continue
+  capitulos_da_jornada=$(( $(find "${JORNADAS}/${jornada}" -name '*.md' | wc -l) - 1 ))
+
+  itens=$(awk '
+    /^## Como foi$/ { dentro = 1; next }
+    /^## / { dentro = 0 }
+    dentro && /^[0-9]+\. / { n++ }
+    END { print n + 0 }
+  ' "$arquivo")
+
+  [ "$itens" = "$capitulos_da_jornada" ] ||
+    reprova "${jornada}: \`## Como foi\` lista ${itens} itens para ${capitulos_da_jornada} capítulos"
+done < <(find "$JORNADAS" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
+echo "   as duas listas têm um item por capítulo"
+echo
+
+# --- 8. o estado, uma palavra na abertura -------------------------------------
+#
+# `Em curso` · `Encerrada`, e o vocabulário fecha em dois. `Abandonada` saiu por
+# não ter instância — vocabulário sem consumidor é o defeito que este projeto
+# mata por nome. A abertura é o que vem entre o marcador de tradução e o
+# primeiro `##`.
+echo "8  o estado — exatamente uma palavra na abertura"
+while IFS=: read -r relativo tipo; do
+  [ "$tipo" = 'indice-de-jornada' ] || continue
+  arquivo="${CONTEUDO}/${relativo}.md"
+  [ -f "$arquivo" ] || continue
+
+  estados=$(awk '
+    /^# / { depois_do_titulo = 1; next }
+    /^## / { exit }
+    !depois_do_titulo { next }
+    { n += gsub(/Em curso|Encerrada/, "&") }
+    END { print n + 0 }
+  ' "$arquivo")
+
+  [ "$estados" = 1 ] ||
+    reprova "${relativo}: ${estados} palavras de estado na abertura, e é exatamente uma"
+done <<< "$TIPOS"
+echo "   \`Em curso\` · \`Encerrada\` — uma palavra por índice, e o vocabulário fecha em dois"
+echo
+
+# --- 9. o marcador de tradução ------------------------------------------------
+#
+# **A regra apertou**, e é consequência de o locale ter fronteira: `<Untranslated
+# />` é sobre a página SÓ existir num locale, e isso só acontece em `Jornadas` e
+# `Procedimentos`. As 15 de `Ferramentas` nascem traduzidas, então marcá-las
+# seria carimbar um estado que elas nunca terão.
+echo "9  marcador de tradução"
+sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS") || true
 if [ -n "$sem_marcador" ]; then
-  reprova "fonte pt-BR sem \`<Untranslated />\`:"
+  reprova "fonte sem contraparte em EN e sem \`<Untranslated />\`:"
   echo "$sem_marcador" | sed 's/^/    /'
+fi
+
+com_marcador_demais=$(grep -Rl '<Untranslated />' --include='*.md' "$FERRAMENTAS") || true
+if [ -n "$com_marcador_demais" ]; then
+  reprova "\`Ferramentas\` nasce traduzida — o marcador não se aplica:"
+  echo "$com_marcador_demais" | sed 's/^/    /'
 fi
 
 com_marcador_en=$(grep -Rl '<Untranslated />' --include='*.md' "$EN" 2>/dev/null) || true
@@ -261,31 +504,81 @@ if [ -n "$com_marcador_en" ]; then
   echo "$com_marcador_en" | sed 's/^/    /'
 fi
 
-fontes=$(find "$CONTEUDO" -path "${CONTEUDO}/api-reference" -prune -o -name '*.md' -print | wc -l)
-[ -z "$sem_marcador" ] && [ -z "$com_marcador_en" ] &&
-  echo "   os ${fontes} fontes pt-BR marcam; nenhuma tradução marca (api-reference fora, de propósito)"
+marcadas=$(grep -Rl '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS" 2>/dev/null | wc -l)
+[ "$marcadas" = 31 ] || reprova "${marcadas} páginas com marcador, esperado 31"
+echo "   ${marcadas} marcam (12 de Jornadas + 19 de Procedimentos); Ferramentas e as traduções não"
 echo
 
-# --- 5. a cobertura de locale -------------------------------------------------
-echo "5  cobertura de locale"
+# --- 10. `description` em 100% ------------------------------------------------
+#
+# O subtítulo abaixo do `h1` sai deste campo, e ele já quebra o build quando
+# falta — o registro de `MDXComponents` lança. O portão o cobra mesmo assim
+# porque build quebrado diz *uma* página, e a varredura diz TODAS de uma vez.
+echo "10  \`description\` em toda página"
+sem_description=$(grep -RL '^description: ' --include='*.md' "$CONTEUDO" "$EN" 2>/dev/null) || true
+if [ -n "$sem_description" ]; then
+  reprova "página sem \`description\` no front matter:"
+  echo "$sem_description" | sed 's/^/    /'
+else
+  todas=$(find "$CONTEUDO" "$EN" -name '*.md' 2>/dev/null | wc -l)
+  echo "   ${todas} de ${todas} páginas com \`description\` — o subtítulo tem fonte única"
+fi
+echo
+
+# --- 11. as onze fixtures, por caminho nomeado --------------------------------
+echo "11  as onze fixtures"
+n_fixtures=0
+while IFS=: read -r caso caminho; do
+  n_fixtures=$((n_fixtures + 1))
+  [ -f "${CONTEUDO}/${caminho}.md" ] ||
+    reprova "a fixture \`${caso}\` aponta para ${caminho}, que não existe"
+done <<< "$FIXTURES"
+
+# A fixture de fallback se prova por AUSÊNCIA da contraparte. `Jornadas` inteira
+# fica fora do EN, então a conferência é a mesma da seção 9 vista pelo avesso —
+# e vale escrita, porque o dia em que alguém traduzir a aba é o dia em que a
+# fixture morre calada.
+[ ! -e "i18n/en/docusaurus-plugin-content-docs/current/api-owner/a-politica-de-versao.md" ] ||
+  reprova "a fixture de fallback ganhou contraparte em EN, e o estado que ela prova sumiu"
+
+while IFS=: read -r caso caminho; do
+  [ -f "${CONTEUDO}/${caminho}.md" ] ||
+    reprova "o caso \`${caso}\` aponta para ${caminho}, que não existe"
+done <<< "$CASOS_DO_DOMINIO"
+
+n_casos=$(printf '%s\n' "$CASOS_DO_DOMINIO" | wc -l)
+[ "$n_fixtures" = 11 ] || reprova "${n_fixtures} fixtures declaradas, e a spec fecha em onze"
+[ "$n_casos" = 4 ] || reprova "${n_casos} casos do domínio declarados, e a spec fecha em quatro"
+echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio novo, todos por caminho nomeado"
+echo
+
+# --- 12. os dez tipos têm instância -------------------------------------------
+echo "12  os dez tipos têm instância"
+for tipo in $DEZ_TIPOS; do
+  n=$(printf '%s\n' "$TIPOS" | grep -c ":${tipo}$" || true)
+  if [ "$tipo" = "$TIPO_PENDENTE" ]; then
+    [ "$n" = 0 ] ||
+      reprova "\`${tipo}\` está declarado pendente e tem ${n} instância(s) — atualize a pendência"
+    continue
+  fi
+  [ "$n" -ge 1 ] || reprova "o tipo \`${tipo}\` não tem nenhuma instância no artefato"
+done
+echo "   nove dos dez com instância; \`${TIPO_PENDENTE}\` pendente do ramo gerado de Biblioteca C"
+echo
+
+# --- 13. a cobertura de locale ------------------------------------------------
+echo "13  cobertura de locale — só \`Ferramentas\`"
 traduzidas=$(find "$EN" -name '*.md' 2>/dev/null | wc -l)
-[ "$traduzidas" = 14 ] || reprova "EN: ${traduzidas} páginas, esperado 14"
+[ "$traduzidas" = "$total_ferramentas" ] ||
+  reprova "EN: ${traduzidas} páginas, esperado ${total_ferramentas} (uma por folha de Ferramentas)"
 
-for secao in comece-aqui conceitos sdks; do
-  esperado=$(find "${DOCS}/${secao}" -name '*.md' | wc -l)
-  achado=$(find "${EN}/${secao}" -name '*.md' 2>/dev/null | wc -l)
-  [ "$achado" = "$esperado" ] ||
-    reprova "EN/${secao}: ${achado} de ${esperado} páginas traduzidas"
+for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
+  n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)
+  [ "$n" = 0 ] ||
+    reprova "${outra}: ${n} páginas, e estas duas abas são buraco de propósito"
 done
 
-for secao in meios-de-pagamento guias operacao; do
-  achado=$(find "${EN}/${secao}" -name '*.md' 2>/dev/null | wc -l)
-  [ "$achado" = 0 ] ||
-    reprova "EN/${secao}: ${achado} páginas, e esta seção é buraco de propósito"
-done
-
-buracos=$(( autorais - traduzidas ))
-echo "   ${traduzidas} traduzidas · ${buracos} das 43 autorais sem EN, de propósito"
+echo "   ${traduzidas} traduzidas · ${marcadas} das ${autorais} autorais sem EN, de propósito"
 echo
 
 if [ "$falhas" -gt 0 ]; then
