@@ -68,6 +68,25 @@ implementação.
 [`code-block`](code-block.md) e [`frame`](frame.md), e só elas. Consequência
 prática: o corporativo troca **quatro** cores de callout, não vinte.
 
+**As duas continuam pelas mesmas razões de sempre** — o `code-block` pela paleta
+de sintaxe, o `frame` pelo `currentColor` do diagrama. O que mudou nos dois foi a
+**superfície**, e superfície é papel da camada 2, que já bifurcou: nenhum dos
+dois passou a saber em que modo está.
+
+> **Zero sombra no catálogo, e é conferível por varredura.** Nenhum dos dezoito
+> escreve `box-shadow`, e `src/css/componentes.css` também não. A profundidade
+> saiu do conteúdo por medição — a
+> [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) achou zero
+> componentes de conteúdo com sombra em seis páginas da âncora. A tabela de quem
+> ainda carrega sombra está em [`tokens.md`](../tokens.md) §6.
+>
+> **Uma superfície do corpo sobrevive com sombra, e ela não é do catálogo:** o
+> painel da Referência da API, que é componente de tema e tem dono próprio em
+> [`api-reference.md`](../api-reference.md). O CSS dele o declara *"a única
+> superfície elevada desta página, e agora a única do corpo de qualquer página"*
+> — a afirmação daqui é sobre **os dezoito**, e é por isso que ela é varredura de
+> duas pastas e não do repositório.
+
 ---
 
 ## A tabela-catálogo
@@ -135,13 +154,14 @@ substituto**.
 Isto está escrito aqui para que ninguém reabra por intuição. Reabrir exige
 medição nova, não gosto.
 
-**Três outros ficaram de fora com motivo próprio:**
+**Quatro outros ficaram de fora com motivo próprio:**
 
 | Fora | Motivo |
 | --- | --- |
 | Layout de duas colunas pareadas | a medida de prosa não comporta duas colunas de texto; o layout de três colunas da Referência da API tem rota própria |
 | Seletor de SDK por página | é rota e arquitetura de informação, não componente |
 | Componente gerado de contrato | já é ADR pela rota da Referência da API |
+| **Mídia binária** — vídeo e screenshot | três razões independentes, e nenhuma depende de o produto documentado ser inventado: sem CDN o asset entra no repositório, captura de UI de terceiro apodrece sozinha, e **raster não herda `currentColor`**. O contrato de vídeo da âncora fica **medido e não exercido** — ver [`frame.md`](frame.md) |
 
 E **uma variante** morreu junto: `check` foi fundida em [`tip`](callout.md), por
 serem pixel a pixel idênticas na medição.

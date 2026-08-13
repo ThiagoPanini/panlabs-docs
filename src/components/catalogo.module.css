@@ -171,9 +171,11 @@
   margin-block: var(--sd-space-6);
 }
 
-/* Borda e não superfície, e é decisão de sistema: o cartão de documentação já é
-   a única superfície elevada da tela, e um cartão de conteúdo pintado sobre ele
-   seria o terceiro nível que a regra de dois preenchimentos fecha. */
+/* Borda e não superfície — e a justificativa MUDOU quando o cartão morreu, para
+   melhor. Ela era de sistema: *"o cartão de documentação já é a única superfície
+   elevada da tela"*, e esse argumento morreu com o cartão. A conclusão sobrevive
+   por medição direta, que é mais forte: na âncora o cartão é 1px de
+   `gray-950/10` no claro e `white/10` no escuro, sem sombra e sem preenchimento. */
 .card {
   display: flex;
   flex-direction: column;
@@ -182,9 +184,7 @@
   border: var(--sd-border-width) solid var(--sd-border-default);
   border-radius: var(--sd-radius);
   color: var(--sd-text-body);
-  transition:
-    border-color var(--sd-move-state),
-    background-color var(--sd-move-state);
+  transition: border-color var(--sd-move-state);
 }
 
 /* O ícone do cartão é o detalhe que mais define a aparência dele, e é o único
@@ -206,12 +206,15 @@
   line-height: var(--sd-leading-ui);
 }
 
-/* Hover inteiro sob `(hover: hover)`. Sem isso o estado fica grudado depois do
+/* O hover é a BORDA VIRANDO COR DE MARCA, e nada mais. Nada se move e nenhum
+   fundo é pintado: a medição da âncora diz borda e só, e a ficha do componente
+   declarava borda *e* fundo — o fundo era nosso, não dela.
+
+   Hover inteiro sob `(hover: hover)`. Sem isso o estado fica grudado depois do
    tap, porque no toque não existe ponteiro para tirar de cima. */
 @media (hover: hover) {
   a.card:hover {
     border-color: var(--sd-accent);
-    background-color: var(--sd-border-subtle);
     text-decoration: none;
   }
 }
@@ -222,7 +225,6 @@
    `foco.css`. */
 a.card:active {
   border-color: var(--sd-accent);
-  background-color: var(--sd-border-subtle);
 }
 
 /* -----------------------------------------------------------------------------
@@ -581,6 +583,14 @@ a.card:active {
 
    Sem fundo quadriculado: ele existe na âncora para enquadrar imagem com
    transparência, e enquadrando diagrama perde a razão de ser.
+
+   O PALCO É TINGIDO, e é o mesmo defeito que o bloco de código tinha: ele
+   declarava `--sd-surface-page`, que é a cor exata do que está atrás dele.
+   Enquanto havia cartão, a moldura assentava sobre o cartão e a página tingia
+   por dentro; sem cartão, uma moldura da cor da página é uma borda em volta de
+   nada. A âncora confirma: o `Frame` dela tem fundo tingido, não o fundo da
+   página. A #56 achou o defeito no bloco de código e não olhou para cá — a
+   causa é a mesma e o tratamento é o mesmo.
    ----------------------------------------------------------------------------- */
 
 .frame {
@@ -593,7 +603,7 @@ a.card:active {
   padding: var(--sd-space-6);
   border: var(--sd-border-width) solid var(--sd-border-default);
   border-radius: var(--sd-radius-md);
-  background-color: var(--sd-surface-page);
+  background-color: var(--sd-surface-raised);
   color: var(--sd-text-body);
 }
 

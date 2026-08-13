@@ -8,6 +8,14 @@ media query, nem container query: a contagem de cartões faz o trabalho sozinha.
 Uma declaração serve **a landing e o MDX**. Não são duas grades parecidas que
 precisam ser mantidas juntas; é a mesma.
 
+**O nome fica `CardGroup`, e a âncora hoje chama isto de `Columns`.** Ela
+deprecou o nome antigo em favor do novo, e o shinydoc **não segue** — por razão
+de contrato, não de gosto: `Columns` é nomeado pela **contagem de colunas**, que
+é exatamente a prop que este componente recusa ter. Adotar o nome sem a prop
+seria publicar na autoria um contrato que a implementação não honra, e o autor
+que escrevesse `<Columns cols={3}>` levaria um erro de prop desconhecida em vez
+da resposta que o nome prometeu.
+
 ## Anatomia
 
 ```html
@@ -115,3 +123,4 @@ cheia.
 | `--sd-card-min` na camada 1 | origem própria | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) — o piso é derivado e compartilhado |
 | A lista de faixas também na camada 1, como `--sd-card-grid` | **origem própria (implementação)** | *"uma declaração serve a landing e o MDX"* só é conferível se a declaração morar num lugar que as duas citem; o precedente é a escada de elevação, que é valor composto pelo mesmo motivo |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| O nome `CardGroup` fica, com a âncora já em `Columns` | **origem própria** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — `Columns` é nomeado pela contagem de colunas que este componente recusa ter; adotar o nome sem a prop publicaria um contrato que a implementação não honra |

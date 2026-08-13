@@ -22,17 +22,29 @@
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   code-block — a pastilha dentro de um berço
+   code-block — um objeto preenchido um passo acima da página
 
-   A anatomia medida: a moldura numa tinta, a área de código noutra, e alguns
-   pixels de preenchimento revelando a primeira em volta da segunda. Aqui ela
-   sai de graça, porque o `<pre>` já recebe `--sd-surface-code` pelo shim do
-   Prism: basta o contêiner ser o berço.
+   O berço morreu com o cartão. A anatomia medida era uma pastilha dentro de uma
+   moldura de outra tinta, e a moldura era o cartão aparecendo em volta: sem
+   cartão não há de onde tirar a segunda tinta, e o `color-mix` que a produzia
+   passaria a misturar a superfície do código com uma superfície que a página
+   não tem mais embaixo dele.
 
-   E é o único lugar do site que AFUNDA. Todo o resto sobe: a escada de elevação
-   é para superfície que se levanta, e o código é o contra-exemplo declarado —
-   por isso `--sd-shadow-sunken`, que existia no arquivo de tokens esperando
-   exatamente este consumidor.
+   O que fica é mais simples e é o que a regra pede: um retângulo preenchido com
+   `--sd-surface-code`, um passo acima da página nos DOIS modos, com fio e sem
+   sombra. O preenchimento sai de graça — `CodeBlock/Container` declara
+   `background: var(--prism-background-color)`, e o shim de `themeConfig.prism`
+   aponta essa variável para `--sd-surface-code`. Repetir a declaração aqui
+   seria escrever de novo o que o próprio contrato de skin já resolve.
+
+   Some junto o preenchimento de dois pixels: ele existia para REVELAR o berço
+   em volta da pastilha, e com uma tinta só não revela coisa nenhuma. Sem ele o
+   `<pre>` volta a encostar na borda, e o raio dele — que é o mesmo
+   `--sd-radius-md` do contêiner — coincide com o do fio em vez de aparecer dois
+   pixels adentro.
+
+   NADA AFUNDA MAIS. `--sd-shadow-sunken` era o contra-exemplo declarado da
+   elevação, e afundar era relativo ao cartão.
 
    `div.theme-code-block` e não `.theme-code-block`: o upstream pinta fundo,
    raio e sombra numa classe de CSS Module (0,1,0), e empate resolvido por ordem
@@ -40,24 +52,14 @@
    ----------------------------------------------------------------------------- */
 
 div.theme-code-block {
-  /* Camada 3, no escopo do componente. O berço é a mistura das duas superfícies
-     que o modo já resolveu: um passo acima da pastilha, um passo abaixo do
-     cartão. Nenhum valor novo entra, e ele acompanha a troca de skin sozinho. */
-  --sd-code-berco: color-mix(in oklab, var(--sd-surface-code) 65%, var(--sd-surface-raised));
-
-  padding: calc(var(--sd-border-width) * 2);
-  /* O fio que era o anel `0 0 0 1px` dentro de `--sd-shadow-sunken`, agora borda
-     de verdade — o berço é a quarta e última superfície que carregava o anel. */
   border: var(--sd-border-width) solid var(--sd-border-subtle);
   border-radius: var(--sd-radius-md);
-  background: var(--sd-code-berco);
-  box-shadow: var(--sd-shadow-sunken);
 }
 
-/* O título da cerca fica no berço, e o fio que o separa do código é o mesmo fio
-   do sistema. A classe do título é hasheada; o que é estável é ser o primeiro
-   filho do contêiner quando existe, e o `:not(:only-child)` impede a regra de
-   alcançar um bloco sem título. */
+/* O título da cerca fica dentro do objeto, na mesma tinta, e o fio que o separa
+   do código é o mesmo fio do sistema. A classe do título é hasheada; o que é
+   estável é ser o primeiro filho do contêiner quando existe, e o
+   `:not(:only-child)` impede a regra de alcançar um bloco sem título. */
 div.theme-code-block > div:first-child:not(:only-child) {
   color: var(--sd-text-muted);
   font-size: var(--sd-type-sm);

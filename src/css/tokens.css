@@ -447,10 +447,21 @@
      rampa, que é o mesmo nos dois modos; o que bifurca é a opacidade, e ela
      bifurca por um motivo mecânico: no escuro a página já está perto da 950, e
      um véu leve não se distinguiria dela. No claro, a mesma opacidade
-     transformaria a página num buraco preto em vez de empurrá-la para trás. */
+     transformaria a página num buraco preto em vez de empurrá-la para trás.
+
+     `code` SUBIU para a 900, e a regra passou a ser simétrica: a superfície do
+     código é um passo acima da página nos DOIS modos. Ela era a 950 aqui — o
+     mesmo valor de `page`, dois nomes para uma cor —, e isso só se sustentava
+     com o cartão no meio, que dava ao bloco um fundo contra o qual se destacar.
+     Sem o cartão, o bloco de código tinha a cor exata da página no modo
+     canônico: é literalmente o defeito do Infima que este projeto nomeou.
+
+     Dissenso registrado: a 900 é o degrau imediatamente acima na rampa, e é a
+     única derivação honesta disponível — NÃO é uma medida. O berço que morreu
+     era anatomia medida da âncora. */
   --sd-surface-page:   var(--sd-gray-950);
   --sd-surface-raised: var(--sd-surface-dark);
-  --sd-surface-code:   var(--sd-gray-950);
+  --sd-surface-code:   var(--sd-gray-900);
   --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
   --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 72%);
 
@@ -566,10 +577,14 @@
 :root[data-theme='light'] {
   color-scheme: light;
 
-  /* surface — a página desce para a parada 100 e o cartão sobe para a 50: se a
-     página ficasse na 50, o cartão teria que ser branco puro para subir, e aí o
-     tint da marca sumiria da maior superfície do modo claro. A pastilha de
-     código toma o extremo do modo, que aqui é branco. */
+  /* surface — a página desce para a parada 100 e a levantada sobe para a 50: se
+     a página ficasse na 50, a levantada teria que ser branco puro para subir, e
+     aí o tint da marca sumiria da maior superfície do modo claro. A pastilha de
+     código toma o extremo do modo, que aqui é branco.
+
+     Aqui a superfície do código JÁ estava acima da página, e é o escuro que veio
+     ao encontro dela. A assimetria — igual à página no escuro, acima dela no
+     claro — era o que o cartão escondia. */
   --sd-surface-page:   var(--sd-gray-100);
   --sd-surface-raised: var(--sd-surface-light);
   --sd-surface-code:   oklch(from var(--sd-gray-50) 100% 0 h);
@@ -657,9 +672,19 @@
    prometia. Está escrito porque quem abrir sem contexto vai ler over-engineering
    e merece a resposta curta.
 
-   `--sd-shadow-sunken` perdeu o anel junto e sobrevive só até o berço do bloco
-   de código sair: ele é o contra-exemplo declarado da elevação, e afundar era
-   relativo ao cartão.
+   `--sd-shadow-sunken` MORREU aqui, e a morte vale a linha: ele era o
+   contra-exemplo declarado da elevação — o único lugar do site que afundava —,
+   e afundar era relativo ao cartão. Sem cartão, o contra-exemplo perde contra o
+   quê ser exemplo, e o único consumidor dele era o berço do bloco de código,
+   que morreu no mesmo commit.
+
+   Sobraram DOIS papéis, e nenhum deles é consumido por conteúdo. `float` é o
+   chrome flutuante — dropdown, gaveta, modal de busca, botão de voltar ao topo.
+   `raised` NÃO flutua: os dois consumidores dele são o painel da Referência da
+   API e o botão primário da landing, que são superfície levantada e controle.
+   A profundidade saiu do CONTEÚDO, não do site — a #50 mediu zero componente de
+   conteúdo com sombra em seis páginas da âncora, e o único portador de sombra
+   medido lá é um chip de 24px no hover de heading.
    ----------------------------------------------------------------------------- */
 
 :root {
@@ -669,7 +694,6 @@
                       0 1px 2px -1px var(--sd-shadow-cast);
   --sd-shadow-float:  inset 0 1px 0 0 var(--sd-shadow-lip),
                       0 20px 48px -12px var(--sd-shadow-cast);
-  --sd-shadow-sunken: inset 0 1px 3px 0 var(--sd-shadow-cast);
 }
 
 /* =============================================================================
@@ -816,7 +840,7 @@
   --ifm-color-white:              var(--sd-gray-50);
 
   /* --- marca e estados.
-         Exceção 5 do adaptador: das seis shades por cor semântica, só as VIVAS
+         Exceção 4 do adaptador: das seis shades por cor semântica, só as VIVAS
          são atribuídas — base, -dark, -darker, -contrast-background e
          -contrast-foreground. As quatro restantes (-light, -lighter, -lightest,
          -darkest) foram resolvidas em build time pelo color-mod() e não têm
@@ -937,6 +961,23 @@
   /* --- elevação. Preenche a lacuna que o Infima tem por desenho: ele não
          redefine sombra no escuro, e as dele somem sobre fundo escuro.
 
+         A PROFUNDIDADE SAI DO CONTEÚDO, e é medição: a #50 achou zero
+         componente de conteúdo com sombra em seis páginas da âncora — `shadow-md`
+         e maiores existem no CSS dela e nunca são usados. Então `lw` e a sombra
+         de alerta valem `none`, e sobra sombra só onde algo de fato flutua.
+
+         Quem lê `lw` de verdade, medido no fonte da 3.10.2 — e o ticket errava:
+         ele nomeava `.card` do Infima, que ESTE site não renderiza (o nosso
+         cartão é classe de CSS Module, e `.card` nua não a alcança). Os leitores
+         vivos são `CodeBlock/Container`, que é conteúdo, e `BackToTopButton`,
+         que é chrome flutuante. A conclusão não muda para o bloco de código; o
+         botão recupera a sombra por classe estável em `chrome.css`.
+
+         `--ifm-alert-shadow` fica em `none` pela mesma regra, e ela é a linha
+         que o Infima lê em `.alert` — o nosso callout tem DOM próprio e não é um
+         `.alert`. O adaptador escreve o que o FRAMEWORK consome, não o que a
+         nossa página hoje renderiza.
+
          `md` e `tl` recebem o MESMO token, e isso não é duplicação nossa: o
          Infima tem três nomes para o que aqui tem dois papéis, e o adaptador
          existe para traduzir. O precedente está neste arquivo —
@@ -944,10 +985,10 @@
          Verificado no Infima: `md` é lida por `.dropdown__menu` e
          `.navbar-sidebar`, que são chrome flutuante; `tl` só por `.shadow--tl`,
          que ninguém usa. ---------------------------------------------------- */
-  --ifm-global-shadow-lw: var(--sd-shadow-raised);
+  --ifm-global-shadow-lw: none;
   --ifm-global-shadow-md: var(--sd-shadow-float);
   --ifm-global-shadow-tl: var(--sd-shadow-float);
-  --ifm-alert-shadow:      var(--sd-shadow-raised);
+  --ifm-alert-shadow:      none;
   --ifm-blockquote-shadow: none;
   --ifm-navbar-shadow:     none;
 
@@ -958,7 +999,7 @@
   --ifm-link-hover-decoration: underline;
 
   /* --- código. --ifm-pre-background é sobrescrita dentro do bloco de código
-         por --prism-background-color; ver a exceção 4 no fim do arquivo. ---- */
+         por --prism-background-color; ver a exceção 3 no fim do arquivo. ---- */
   --ifm-code-background:  var(--sd-surface-code);
   --ifm-pre-background:   var(--sd-surface-code);
   --ifm-pre-color:        var(--sd-code-fg);
@@ -1126,7 +1167,19 @@
 /* =============================================================================
    ADAPTADOR — as exceções com escopo
 
-   Cinco pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA.
+   Quatro pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA.
+
+   Eram cinco. A do `--docusaurus-tag-list-border` saiu porque ela não tinha
+   superfície viva: nenhuma página deste site declara `tags:`, e o front matter
+   da âncora — `title`, `description`, `icon`, `sidebarTitle`, `hidden`,
+   `noindex`, `searchable`, `deprecated`, `groups` — não tem o campo. O valor
+   de uma lista fechada é ser conferível membro a membro, e linha
+   permanentemente infalsificável é o oposto disso.
+
+   Dissenso registrado: a exceção custava uma linha e defendia contra um
+   descuido; o modo de falhar que a saída dela abre é o SILENCIOSO que a spec
+   combate em toda parte. Se a arquitetura de informação criar tag um dia, ela
+   volta no mesmo commit, por uma linha.
    ============================================================================= */
 
 /* --- Exceção 1 — --ifm-alert-background-color-highlight -----------------------
@@ -1156,16 +1209,7 @@ details[class] {
   --docusaurus-details-transition: transform var(--sd-move-expand);
 }
 
-/* --- Exceção 3 — --docusaurus-tag-list-border --------------------------------
-   Mesma mecânica: declarada em `.tag` dentro de CSS Module. O elemento é um
-   <a> (o Tag renderiza um <Link>), então `a[class*='tag_']` é (0,1,1) e vence a
-   classe hasheada. O prefixo `tag_` é estável: o padrão de nome é
-   `[local]_[contenthash:base64:4]`, e `local` é o nome escrito no módulo. */
-a[class*='tag_'] {
-  --docusaurus-tag-list-border: var(--sd-border-default);
-}
-
-/* --- Exceção 4 — --prism-background-color ------------------------------------
+/* --- Exceção 3 — --prism-background-color ------------------------------------
    Ela não vem de CSS nenhum: `CodeBlock/Container` a injeta no atributo `style`
    INLINE, a partir de `themeConfig.prism.theme.plain`, via
    `getPrismCssVariables`. Nenhum seletor de folha de estilo vence estilo inline.
@@ -1177,6 +1221,6 @@ a[class*='tag_'] {
    Escrever aqui uma regra `.theme-code-block { --prism-background-color: … }`
    seria exatamente a linha morta que sugere funcionar. */
 
-/* --- Exceção 5 — as shades de cor semântica ---------------------------------
+/* --- Exceção 4 — as shades de cor semântica ---------------------------------
    Não é seletor, é regra de conteúdo do adaptador: só as shades VIVAS são
    atribuídas. Escrita no bloco do adaptador, acima. */

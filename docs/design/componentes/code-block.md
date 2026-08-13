@@ -16,28 +16,52 @@ Docusaurus já entrega título, botão de cópia e quebra de linha.
 
 ## Anatomia
 
-**Uma pastilha dentro de um berço.** O contêiner é o berço; o `<pre>` é a
-pastilha, e alguns pixels de preenchimento revelam o primeiro em volta do
-segundo. O título da cerca, quando existe, fica no berço, separado do código pelo
-fio do sistema.
+**Um objeto preenchido, um passo acima da página, com fio e sem sombra.** O
+contêiner inteiro é `--sd-surface-code`; o título da cerca, quando existe, fica
+dentro dele, separado do código pelo fio do sistema.
 
 ```html
-<div class="theme-code-block">     <!-- berço -->
+<div class="theme-code-block">     <!-- o objeto inteiro, preenchido -->
   <div>…título…</div>              <!-- quando a cerca declara title= -->
   <div>
-    <pre tabindex="0">…</pre>      <!-- pastilha -->
+    <pre tabindex="0">…</pre>      <!-- mesma tinta, sem moldura em volta -->
     <button>…</button>             <!-- copiar, quebrar -->
   </div>
 </div>
 ```
 
-**É o único lugar do site que AFUNDA.** Todo o resto sobe: a escada de elevação é
-para superfície que se levanta, e o código é o contra-exemplo declarado.
+**O berço morreu com o cartão, e a regra ficou simétrica.** A anatomia medida era
+uma pastilha dentro de uma moldura de outra tinta — e a moldura era o cartão
+aparecendo em volta. Sem cartão não há de onde tirar a segunda tinta, e a
+superfície do código passa a ser **um passo acima da página nos dois modos**. Ela
+era *igual* à página no escuro e *acima* dela no claro; a assimetria só se
+sustentava com o cartão no meio.
+
+**Nada afunda.** A escada de elevação era para superfície que se levanta, e o
+código era o contra-exemplo declarado — mas afundar era relativo ao cartão, e
+sem ele o contra-exemplo perde contra o quê ser exemplo.
 
 **Não emite `data-sd-component`** — o DOM não é nosso. O contrato de skin é a
 classe estável `.theme-code-block`. Como a skin corporativa engancha na mesma
 classe que o nosso CSS, o seletor nosso soma o **tipo do elemento** para vencer a
 classe de CSS Module hasheada do upstream sem depender de ordem de carga.
+
+**O preenchimento sai de graça, e a regra escrita vale mais que a economia:**
+`CodeBlock/Container` declara `background: var(--prism-background-color)`, e o
+shim de `themeConfig.prism` aponta essa variável para `--sd-surface-code`. O
+nosso CSS declara **só o fio e o raio**.
+
+**A separação foi medida, e é o número que o defeito produzia que importa:** o
+bloco contra a página dá **1,113:1** no escuro e **1,147:1** no claro. Antes
+desta mudança a célula do escuro era **1,000:1** — não "pouco contraste", e sim
+a mesma cor, duas vezes. É literalmente o defeito do Infima que este projeto
+nomeou.
+
+> **Dissenso registrado, herdado da [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56).**
+> O berço era **anatomia medida** das referências, e morre por argumento de
+> arquitetura. A parada 900 é o degrau imediatamente acima na rampa — a única
+> derivação honesta disponível, e **não uma medida**. Se ao vivo o bloco ficar
+> pesado no escuro, o ajuste é uma linha no arquivo de tokens.
 
 ## Variantes
 
@@ -62,17 +86,15 @@ registrada em `themeConfig.prism.additionalLanguages`** — opção pública, de
 
 ## Tokens consumidos
 
-Camada 2: `--sd-surface-code`, `--sd-surface-raised`, `--sd-border-subtle`,
-`--sd-shadow-cast`, `--sd-text-muted`, e os oito `--sd-code-*` da paleta de
-sintaxe.
+Camada 2: `--sd-surface-code`, `--sd-border-subtle`, `--sd-text-muted`, e os oito
+`--sd-code-*` da paleta de sintaxe.
 
 Camada 1: `--sd-border-width`, `--sd-radius-md`, `--sd-type-sm`,
-`--sd-weight-ui`, `--sd-leading-code`, `--sd-shadow-sunken`.
+`--sd-weight-ui`, `--sd-leading-code`.
 
-Camada 3, declarado no escopo do componente: `--sd-code-berco`, a tinta da
-moldura. Ele é a mistura das duas superfícies que o modo já resolveu — um passo
-acima da pastilha, um passo abaixo do cartão —, então **nenhum valor novo entra e
-ele acompanha a troca de skin sozinho**.
+**Camada 3: nenhum.** Este componente declarava `--sd-code-berco`, a tinta da
+moldura, e ela morreu com o cartão de que era mistura. Nenhum token de escopo
+sobrou.
 
 ## Light e dark
 
@@ -117,9 +139,9 @@ toque ele some sem erro, sem aviso e sem sintoma para quem testa no desktop.
 | --- | --- | --- |
 | Não é swizzle: CSS mais opção pública | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), corrigindo a rota de swizzle da raiz pela escada da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) |
 | Sem numeração, realce, foco, diff nem ícone | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — zero usos medidos |
-| Pastilha dentro de berço | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — anatomia medida |
-| O berço como mistura das duas superfícies | **origem própria (implementação)** | mantém o componente cego ao modo e sem valor novo |
-| O código afunda | herdado | [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) — *tudo sobe, só o código afunda* |
+| ~~Pastilha dentro de berço~~ · **objeto preenchido um passo acima da página** | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — a moldura era o cartão aparecendo em volta, e com ele morreram a segunda tinta e o `--sd-code-berco` que a produzia |
+| A superfície do código sobe para a parada 900 no escuro | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — ela era o **mesmo valor** de `--sd-surface-page`, e o bloco sumia contra a página no modo canônico |
+| ~~O código afunda~~ · **nada afunda** | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — afundar era relativo ao cartão; `--sd-shadow-sunken` morreu junto |
 | Paleta de sintaxe na camada 2 | herdado (semeadura autorizada) | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §9 |
 | Shim de config que só referencia token | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
 | `--prism-background-color` só é alcançável pelo shim | **origem própria (correção)** | medido no fonte da versão em uso — estilo inline vence folha de estilo |

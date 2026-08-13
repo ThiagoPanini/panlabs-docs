@@ -144,7 +144,7 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 | --- | ---: | ---: |
 | página | 7,33 | 5,70 |
 | superfície levantada | 5,55 | 5,96 |
-| pastilha de código | 7,33 | 6,54 |
+| pastilha de código | 6,58 | 6,54 |
 | fundo de callout `info` | 3,78 | 5,12 |
 | fundo de callout `success` | **3,72** | 5,11 |
 | fundo de callout `warn` | 3,78 | 5,12 |
@@ -165,7 +165,7 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 
 Três coisas que esta tabela resolve:
 
-- a pastilha de código é a terceira superfície, e não a segunda. No escuro ela reusa o preenchimento da página — os dois valores são o mesmo número por isso, e não por coincidência; no claro é branco puro, que é o melhor caso do modo;
+- a pastilha de código é a terceira superfície, e agora ela é mesmo a terceira. Até o cartão sair ela **reusava o preenchimento da página** no escuro, e as duas células eram o mesmo número por isso; hoje ela é um degrau acima da página nos dois modos, e a célula dela desceu de 7,33 para 6,58 no escuro — o anel encontra uma superfície mais clara, e continua com o dobro da obrigação;
 - **a obrigação é satisfeita por construção, não por esta skin.** As travas de luminosidade do acento — piso no escuro, teto no claro — garantem a folga para qualquer marca que o corporativo cole. Não há verificação por skin a fazer, do mesmo jeito que não há para AA de texto;
 - não existe token de cor de foco separado do acento. Abrir um seria abrir um nono papel semântico, que é edição de spec com linha de procedência.
 

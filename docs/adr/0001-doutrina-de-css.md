@@ -1,6 +1,14 @@
 # ADR 1 — Doutrina de CSS
 
-**Status:** aceito · slice 1 · 2026-08-07
+**Status:** aceito · slice 1 · 2026-08-07 · **com errata** · 2026-08-13
+
+> ### Errata — a contagem das «Consequências» é de cinco, e a lista tem quatro
+>
+> **A decisão não muda.** O adaptador de mão única, a proibição de `@layer`, o escuro no fallback e a regra de linha morta ficam inteiros, e nada aqui é supersedido. O que esta errata corrige é **um número**, e ele envelheceu.
+>
+> Duas consequências dizem *"cinco pontos do Docusaurus não são alcançáveis de `:root`"*. **São quatro**, desde a [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79): a exceção de `--docusaurus-tag-list-border` saiu por não ter superfície viva — nenhuma página deste site declara `tags:`, e o front matter da âncora não tem o campo.
+>
+> **Errata e não supersessão**, e o próprio texto abaixo diz por quê: ele delega a lista — *"a lista é fechada e vive em `docs/design/tokens.md`"*. O número aqui sempre foi um retrato de uma lista que mora noutro lugar, e é lá que ele se confere. O que a doutrina afirma continua verdadeiro palavra por palavra: **existem** pontos inalcançáveis de `:root`, a lista deles é **fechada**, e **nenhum** deles exige swizzle.
 
 ## Contexto
 

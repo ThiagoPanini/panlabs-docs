@@ -144,7 +144,10 @@ As classes são cinco e continuam cinco. O que os documentos acrescentam é **qu
 | `origem própria (medição)` | medir o artefato que nós mesmos produzimos |
 | `origem própria (correção)` | corrigir uma afirmação anterior do mapa que a implementação desmentiu |
 | `origem própria (implementação)` | descobrir escrevendo o código — coisa que nenhuma resolução previu |
+| `origem própria (consequência)` | **deduzir de uma regra que a spec já carregava** — o valor não é medido nem descoberto: ele cai de uma decisão anterior |
 | `origem própria com âncora normativa` | não tem medição atrás, mas tem **norma** (uma SC do WCAG, um padrão do APG) |
+
+**O de `consequência` entrou nesta tabela depois de já estar em uso**, e a demora vale registrada: ele nasceu no slice do catálogo, em [`componentes/frame.md`](componentes/frame.md), e ficou fora da lista até a [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) precisar dele num segundo documento. Um qualificador em uso e fora da lista fechada é o mesmo defeito que a lista existe para fechar.
 
 **`lacuna por restrição` é a única que muda de leitura**, e por isso ela vale um parágrafo. Ela **não** é dimensão não medida: é dimensão **medida e não alcançável** — o Docusaurus não permite sem `unsafe`. Ela reabre com a **plataforma**, não com a régua, e é a classe de todas as divergências do §3.1.
 
@@ -217,6 +220,6 @@ Cada linha aqui é uma coisa que a medição entregou e que a spec **não** usou
 | A regra de derivação | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §3 — mecânica de propósito |
 | Os três portões da régua | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §7, [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2, [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §11 |
 | As cinco classes de procedência | herdado | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) — consolidadas aqui, num lugar só |
-| Os qualificadores estreitam em vez de abrir uma sexta | **origem própria (implementação)** | os quatro nasceram do uso, nos slices 1 a 6 |
+| Os qualificadores estreitam em vez de abrir uma sexta | **origem própria (implementação)** | os cinco nasceram do uso, nos slices 1 a 6; o de `consequência` só foi para a lista na [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) |
 | A assinatura numa frase | origem própria | síntese; não medida |
 | A tabela do que foi medido e descartado | **origem própria** | descarte anônimo é indistinguível de descuido |

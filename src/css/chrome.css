@@ -763,3 +763,31 @@ html.docs-doc-page .pagination-nav__label {
 .navbar-sidebar {
   border: var(--sd-border-width) solid var(--sd-border-subtle);
 }
+
+/* -----------------------------------------------------------------------------
+   O botão de voltar ao topo — a terceira superfície flutuante, e ela recupera
+   a sombra que a saída da profundidade do CONTEÚDO levou junto
+
+   `--ifm-global-shadow-lw` passou a valer `none` porque a profundidade sai do
+   conteúdo. O leitor que essa mudança tinha em mente é `CodeBlock/Container`;
+   medido no fonte da 3.10.2, quem mais a lê neste site é `BackToTopButton` — um
+   botão `position: fixed` de 3rem sobre `--ifm-color-emphasis-200`, que é o fio
+   translúcido. Sem sombra ele fica quase invisível sobre a página.
+
+   Ele é chrome flutuante pela mesma definição que põe o dropdown e a gaveta
+   aqui, então recebe o mesmo papel. O gancho é `ThemeClassNames` e não classe
+   hasheada, então isto não abre exceção nenhuma no adaptador.
+
+   `button.theme-back-to-top-button` e não `.theme-back-to-top-button`: o
+   upstream pinta a sombra numa classe de CSS Module, que é (0,1,0) — o mesmo
+   peso da classe estável. Empate resolvido por ORDEM DE CARGA, e o módulo do
+   theme-classic carrega depois: a forma nua perde, em silêncio e sem sintoma.
+   Somar o tipo do elemento leva o seletor a (0,1,1) e o tira da ordem. É o
+   mesmo mecanismo que `div.theme-code-block` usa em `componentes.css`, e a
+   primeira redação desta regra caiu exatamente na armadilha que aquele
+   comentário descreve.
+   ----------------------------------------------------------------------------- */
+
+button.theme-back-to-top-button {
+  box-shadow: var(--sd-shadow-float);
+}
