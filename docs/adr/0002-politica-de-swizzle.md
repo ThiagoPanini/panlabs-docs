@@ -1,6 +1,20 @@
 # ADR 2 — Política de swizzle
 
-**Status:** aceito · slice 1 · 2026-08-07
+**Status:** aceito · slice 1 · 2026-08-07 · **com errata** · 2026-08-13
+
+> ### Errata — a consequência 4 é fato errado
+>
+> **A decisão não muda.** A escada de seis degraus, o orçamento `unsafe` zero e a disciplina de registro ficam inteiros, e nada aqui é supersedido. O que esta errata corrige é **um fato afirmado nas «Consequências»**, e ele estava errado desde o slice 1.
+>
+> A consequência 4 diz que a **faixa de tabs de largura total abaixo do navbar** *"exigiria reestruturar `Navbar/*`"*. **Não exige.**
+>
+> Medido num Docusaurus 3.10.2 real pela [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) e montado em produção pela [#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78): a faixa sai de **degraus 0, 1 e 2** — dois tokens do Infima, quatro regras sobre classes estáveis e um item de `themeConfig.navbar.items`. `Navbar/Layout` e `Navbar/Content` continuam `unsafe` nas duas ações e continuam **intocados**, e o portão 7 passa **com a faixa montada**.
+>
+> Consequência para a política, e ela é a favor dela: o zero de `unsafe` custava uma peça de chrome a menos do que este documento cobrava. **Um item que a lista dava por perdido era alcançável o tempo todo** — que é exatamente o resultado que a última coluna do ledger existe para produzir, e o motivo de a escada mandar descer um degrau só quando o de cima *comprovadamente* não alcança.
+>
+> **Errata e não supersessão** é a forma certa aqui: os ADRs deste repositório são imutáveis, a decisão continua valendo verbatim, e o que se corrige é uma afirmação de fato. Reabrir o ADR inteiro para consertar uma linha de consequência transformaria o registro num documento vivo, que é o oposto do que um ADR é.
+>
+> As outras cinco consequências continuam de pé. O ledger correspondente está em [`docs/design/swizzle.md`](../design/swizzle.md) §4, e a anatomia da faixa em [`docs/design/chrome.md`](../design/chrome.md) §3.1.
 
 ## Contexto
 
@@ -73,7 +87,7 @@ O zero cobra um preço, e cada linha é perda nomeada — não silêncio:
 1. **Qualquer nó injetado dentro do corpo da página de documentação** — eyebrow acima do título, bloco de feedback no rodapé, CTA lateral. `DocItem/Layout` e `DocItem/Content` são `unsafe`, e não é contornável por CSS.
 2. **Breadcrumb reestruturado.** `DocBreadcrumbs` é `unsafe`. Fica o breadcrumb nativo, re-marcado por variável e classe estável.
 3. **A proporção ~56/44 do alvo.** Exigiria `max-width: 75% !important` em classe hasheada.
-4. **Faixa de tabs de largura total abaixo do navbar.** Exigiria reestruturar `Navbar/*`.
+4. ~~**Faixa de tabs de largura total abaixo do navbar.** Exigiria reestruturar `Navbar/*`.~~ **Fato errado — ver a errata no topo.** A faixa custa degraus 0, 1 e 2; `Navbar/*` continua `unsafe` e intocado.
 5. **TOC com anatomia nova** — barra de progresso, seções extras. `TOC` e `TOCItems` são `unsafe`; estilo e profundidade seguem alcançáveis.
 6. **Ícone preso dentro de componente `unsafe`** mantém o desenho padrão do Docusaurus. A regra responde sem enumerar: **o que só é alcançável por `unsafe` não é trocado.**
 

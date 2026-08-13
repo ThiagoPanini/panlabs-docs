@@ -170,9 +170,11 @@ reta em vez de superfície começando.
 | | token | px |
 | --- | --- | ---: |
 | `100svh` a 375 × 667, com a barra visível | — | ~553 |
-| − navbar sticky | `--sd-navbar-height` | 56 |
+| − navbar sticky | `--sd-navbar-height` | 64 |
 | − fatia visível da laje | `--sd-radius-md` | 12 |
-| **= teto da faixa do hero** | | **~485** |
+| **= teto da faixa do hero** | | **~477** |
+
+> **A faixa de tabs não entra nesta conta, e é decisão de escopo e não esquecimento:** ela some abaixo de 997, e esta régua é medida a 375 de largura. O que entra é a linha 1, que subiu de 56 para 64 com a geometria `mint` ([#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78)) — oito pixels a menos de teto, e a folga continua confortável.
 
 > **Correção registrada contra a resolução do mapa, que escreveu ~481.** Ela
 > descontou 16px de fatia, que é `--sd-radius`. O raio da laje **não** é o raio

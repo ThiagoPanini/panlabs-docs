@@ -255,10 +255,37 @@ skip link
   → footer
 ```
 
-**Está correta como entregue. Nada a fazer.** Duas observações registradas:
+**A ordem do DOM está correta como entregue.** O que deixou de estar correto é a relação dela com a tela — ver §10.1.
+
+Duas observações registradas:
 
 - o botão de voltar ao topo é `visibility: hidden` quando escondido, então não existe parada fantasma. Quando aparece, é parada **antes** da sidebar, o que é cedo para um botão que flutua embaixo à direita. Corrigir exigiria `unsafe`;
 - o TOC é o último do DOM, depois do artigo e da paginação. Visualmente ele está à direita, e ordem de leitura à direita depois do conteúdo é o esperado.
+
+### 10.1 A faixa de tabs desalinha o `Tab` da leitura visual
+
+**É a perda que a faixa de tabs cobra, e ela não é contornável nesta rota.**
+
+Medido em 1440 de viewport, com a faixa montada:
+
+```
+marca      @ y=0     ← linha 1
+Documentação      @ y=64   ┐
+Referência da API @ y=64   ├ a faixa
+Receitas          @ y=64   ┘
+Buscar     @ y=16    ← volta para a linha 1
+PT         @ y=22
+GitHub     @ y=10
+tema       @ y=16
+```
+
+O `Tab` **desce para a faixa e volta a subir**. A causa é estrutural: o `Navbar/Content` emite **dois blocos** — a esquerda inteira, depois a direita inteira —, e a faixa distribui a esquerda em duas linhas. A ordem do DOM continua sendo *esquerda → direita*; o que mudou é que a esquerda agora ocupa duas alturas.
+
+**Não é contornável por CSS.** `order` e `flex-direction` mexem na ordem *visual* e nunca na de tabulação — em teclado, o efeito seria o inverso do desejado. `tabindex` positivo é anti-padrão declarado e quebraria a ordem do documento inteiro. E os dois componentes que emitem os blocos, `Navbar/Layout` e `Navbar/Content`, são `unsafe` nas duas ações.
+
+**Este é o único ponto do projeto onde a conta do `unsafe` voltaria à mesa**, e ele fica registrado com esse peso. Quem quiser a faixa *e* a ordem de foco alinhada precisa escrever o ADR que reabre o zero — não decidir num ticket. É o que a escotilha do [ADR 2](../adr/0002-politica-de-swizzle.md) manda.
+
+**O que sobrevive intacto**, e é o que impede isto de ser um defeito de acessibilidade em vez de uma divergência: todo item continua alcançável por `Tab`, na ordem do documento, com anel visível e sem parada fantasma. A ordem de leitura para um leitor de tela — que segue o DOM — continua sendo a mesma de antes da faixa. **Quem paga é o leitor com visão que navega por teclado**, e paga em previsibilidade, não em alcance.
 
 ---
 
@@ -286,6 +313,8 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 
 **A posição do botão de voltar ao topo na ordem de tabulação** (§10).
 
+**A divergência entre ordem de foco e leitura visual no navbar** (§10.1) — consequência da faixa de tabs, e **o único ponto do projeto onde a conta do `unsafe` voltaria à mesa**. Não é contornável nesta rota: `order` mexe no visual e não no `Tab`, `tabindex` positivo é anti-padrão, e os dois componentes que emitem os blocos são `unsafe`.
+
 **O hover do framework fora de `(hover: hover)`** — neutralizado por token no adaptador (§8.3), não por reescrita. **O link do TOC e o breadcrumb ficam de fora**, porque o Infima os escreve contra o acento e contra o realce do item ativo, e neutralizá-los apagaria o estado ativo junto. Nos dois, o hover gruda depois do tap e quem dá retorno é o `:active`.
 
 ---
@@ -309,6 +338,7 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 | `inline` ignora altura mínima, e o rodapé vira `inline-flex` | **origem própria (implementação)** | medido ao escrever o CSS do estreito |
 | Neutralizar o hover do framework pelo adaptador | **origem própria (correção)** | varredura desta implementação: o Infima tem zero `(hover: hover)`, contra o que a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) supunha |
 | Ordem de tabulação | herdado | correta como o Docusaurus entrega |
+| **A divergência entre ordem de foco e leitura visual** | **lacuna por restrição** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medida com a faixa montada; o `Navbar/Content` emite dois blocos e a faixa distribui um deles em duas linhas |
 | Skip link | herdado, mais uma linha de forma | WCAG G1 já implementado pelo upstream |
 | Comentário fora da varredura dos portões | **origem própria (implementação)** | o portão cobra declaração, e reprovar por prosa ensinaria a escrever comentário pobre |
 | Sidebar de tela estreita sem armadilha de foco | **lacuna por restrição** | `unsafe`; o fonte marca o ponto como workaround temporário |

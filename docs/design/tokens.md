@@ -358,17 +358,51 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      A anatomia completa é de docs/design/chrome.md; aqui ficam só os valores
      que o adaptador precisa escrever, porque ele não pode escrever de lugar
      nenhum.
+
+     `--sd-tabs-height` é LITERAL, e não `var(--sd-space-12)`, ainda que os dois
+     entreguem 48. Altura de chrome não tem relação com escala de espaço, e
+     derivar por coincidência de número é a derivação FALSA que o bloco de foco
+     recusa em voz alta trinta linhas acima. A procedência honesta é a mesma dos
+     outros comprimentos deste bloco: medida na âncora.
      --------------------------------------------------------------------------- */
   --sd-container-width: 1152px;  /* as DUAS variáveis de container do Infima recebem este */
-  --sd-sidebar-width:    264px;
-  --sd-navbar-height:     56px;
+  --sd-sidebar-width:    288px;
+  --sd-navbar-height:     64px;  /* a LINHA 1 do topo, não o topo inteiro */
+  --sd-tabs-height:       48px;
   --sd-toc-width:        288px;
-  --sd-prose-width:      672px;
+  --sd-prose-width:      720px;
 
-  /* A coluna de conteúdo — e portanto o cartão, que a preenche. É `.col--9` do
-     grid de doze, então ela DERIVA do container em vez de repetir um número:
-     1152 × 0,75 = 864. A coluna do TOC é o quarto restante, e ela está acima
-     como valor porque o Infima a escreve como classe, não como conta. */
+  /* O recuo do subtítulo sob o título. LITERAL pelo mesmo motivo da altura da
+     faixa: é medida de chrome, não parada da escala de espaço, e escrevê-lo como
+     `--sd-space-2` mais meio passo daria o número sem comprar a derivação.
+
+     Na âncora ele sai de um `mt-2` de 8 colapsando contra o `space-y-2.5` do
+     contêiner. O que se copia é o RESULTADO medido, não a aritmética de um
+     framework de utilitários que este projeto não tem. */
+  --sd-subtitulo-recuo:   10px;
+
+  /* O TOPO GRUDADO — a altura que o navbar de fato ocupa, e o offset de tudo o
+     que gruda abaixo dele. Uma linha no estreito; duas de 997 para cima.
+
+     Ele é o único ponto onde a faixa de tabs vira número, e mora aqui porque
+     tem DOIS consumidores fora do adaptador — o `--ifm-navbar-height`, que
+     propaga para os nove pontos do theme-classic que grudam, e o painel da
+     Referência da API, que gruda por conta própria num CSS Module.
+
+     O escopo por media query é OBRIGATÓRIO, e é a armadilha mais cara desta
+     faixa: `.navbar-sidebar__brand` e `.navbar-sidebar__items` leem o mesmo
+     `--ifm-navbar-height`. Sem o escopo, o cabeçalho do drawer do estreito
+     infla para a altura de duas linhas que ali não existem. */
+  --sd-topo-grudado: var(--sd-navbar-height);
+
+  /* A coluna de conteúdo. É `.col--9` do grid de doze, então ela DERIVA do
+     container em vez de repetir um número: 1152 × 0,75 = 864. A coluna do TOC é
+     o quarto restante, e ela está acima como valor porque o Infima a escreve
+     como classe, não como conta.
+
+     Sem cartão, ela deixou de ter quem a preencha e passou a ser CAIXA
+     INVISÍVEL: o único consumidor é o `max-width` da coluna, que segura a página
+     no mesmo pixel na configuração sem TOC. Ver `chrome.css`. */
   --sd-doc-width: calc(var(--sd-container-width) * 0.75);
 
   /* A MEDIDA DO CÓDIGO morreu aqui, e vale a linha de lápide. A derivação dela
@@ -383,9 +417,15 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      hoje ele erra por 96px. */
 
   /* A folga lateral do shell, de cada lado. Ela dobra a partir de 997px — o
-     mesmo limiar em que a sidebar aparece. O par 32/64 é herdado da âncora; o
-     ponto onde ele troca, não. */
-  --sd-gutter: var(--sd-space-8);
+     mesmo limiar em que a sidebar aparece. O par 16/32 é herdado da âncora; o
+     ponto onde ele troca, não.
+
+     O par ANTIGO era 32/64, e ele caiu junto com o cartão: a folga de lá era a
+     do shell em volta de uma superfície levantada, e não há mais superfície
+     levantada. O par novo é o do `mint`, e é ele que faz o congelamento fechar
+     em 1472 — `sidebar + container + 2 × (gutter − 16)`, com os 16 do
+     preenchimento que o Infima já põe no `.container`. */
+  --sd-gutter: var(--sd-space-4);
 
   /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7, e o
      único do projeto medido contra a viewport.
@@ -410,10 +450,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      os dois gaps e dividido por três, sai o menor cartão que a âncora admite
      numa fila de três.
 
-     42rem é 672, que é `--sd-prose-width`. Não é coincidência aproveitada: as
-     duas medidas são o MESMO `max-w-2xl` do framework de utilitários da âncora,
-     aparecendo duas vezes. Citar o token é honesto; repetir o número seria a
-     segunda cópia que este arquivo existe para não ter.
+     A CITAÇÃO A `--sd-prose-width` MORREU AQUI, e a lápide vale a linha. Ela
+     valia enquanto a prosa media 672: os dois eram o MESMO `max-w-2xl` do
+     framework de utilitários da âncora, aparecendo duas vezes, e citar o token
+     era honesto. Sob o `mint` a prosa é 720 e o limiar de colapso continua 672
+     — continuar citando faria o piso derivar de um número que deixou de ser o
+     medido, que é a derivação FALSA que este arquivo recusa em voz alta no
+     bloco de foco. O limiar volta a ser o que sempre foi: um literal medido,
+     com nome próprio.
 
      Com este piso, a contagem de cartões faz o trabalho sozinha — zero media
      query, zero container query, zero prop de colunas.
@@ -425,16 +469,22 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      este precedente: `--sd-shadow-raised` também é valor composto, e pelo mesmo
      motivo.
      --------------------------------------------------------------------------- */
-  --sd-card-min: calc((var(--sd-prose-width) - 2 * var(--sd-space-4)) / 3);
+  --sd-card-colapso: 672px;   /* o `max-w-2xl` em que o `Columns` da âncora colapsa */
+  --sd-card-min: calc((var(--sd-card-colapso) - 2 * var(--sd-space-4)) / 3);
   --sd-card-grid: repeat(auto-fit, minmax(min(var(--sd-card-min), 100%), 1fr));
 }
 
 /* O gutter dobra no limiar único do projeto, que é o literal compilado do
    Infima. Não são os 1024px da âncora: dois limiares brigando no mesmo eixo
-   custam mais do que a fidelidade compra. */
+   custam mais do que a fidelidade compra.
+
+   A SEGUNDA LINHA DO TOPO nasce no mesmo limiar, e pelo mesmo motivo: um evento
+   visual em vez de dois. A faixa de tabs aparece exatamente quando a sidebar
+   aparece, e some exatamente quando ela vira gaveta. */
 @media (min-width: 997px) {
   :root {
-    --sd-gutter: var(--sd-space-16);
+    --sd-gutter: var(--sd-space-8);
+    --sd-topo-grudado: calc(var(--sd-navbar-height) + var(--sd-tabs-height));
   }
 }
 
@@ -999,7 +1049,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-table-cell-padding:       var(--sd-space-3);
 
   /* --- navbar ------------------------------------------------------------- */
-  --ifm-navbar-height:                 var(--sd-navbar-height);
+  /* O TOPO INTEIRO, não a linha 1: são os nove pontos do theme-classic que
+     grudam abaixo do navbar — o `top` do TOC, o do próprio `<nav>`, o
+     `scroll-margin` das âncoras — e todos se realinham de graça quando a
+     segunda linha entra. Ver `--sd-topo-grudado`. */
+  --ifm-navbar-height:                 var(--sd-topo-grudado);
   --ifm-navbar-background-color:       var(--sd-surface-page);
   --ifm-navbar-link-color:             var(--sd-text-muted);
   --ifm-navbar-link-hover-color:       var(--sd-text-strong);
@@ -1088,6 +1142,21 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   :root,
   :root[data-theme] {
     --ifm-h1-font-size: var(--sd-type-4xl);
+
+    /* O preenchimento vertical do navbar vai a ZERO no dia em que ele carrega
+       duas linhas, e é peça da faixa, não afinação. Com ele, as duas linhas
+       ficam dentro de uma caixa de conteúdo mais curta que o `<nav>` e
+       desalinham da faixa PINTADA, que é desenhada contra a borda do elemento.
+       Zerado, quem manda na altura são as duas linhas.
+
+       Abaixo de 997 ele não é tocado: lá o navbar tem uma linha só, e o mesmo
+       token preenche o cabeçalho do drawer.
+
+       O par de seletores repete o do adaptador de propósito — `:root` sozinho
+       é (0,1,0) e PERDE para o `:root[data-theme]` (0,2,0) que escreveu o
+       valor de base. É a armadilha de especificidade do ADR 1, reencontrada em
+       campo ao montar a faixa. */
+    --ifm-navbar-padding-vertical: 0;
   }
 }
 
