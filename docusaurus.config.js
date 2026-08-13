@@ -74,12 +74,16 @@ const temaPrism = {
  * decisão** — e duas cópias dela divergiriam no dia em que uma quarta tab
  * entrasse.
  */
-const ABAS = ['default', 'api', 'receitas'];
+const ABAS = ['default', 'procedimentos', 'ferramentas'];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Trilho',
-  tagline: 'A plataforma de pagamentos que some do caminho',
+  // `panlabs` — minúsculo, sem nome de produto acima dele. O nome resolve a
+  // mesma restrição dura que batizou o produto anterior: `title` e `tagline`
+  // NÃO são traduzíveis no Docusaurus, e um namespace atravessa os dois locales
+  // sem tradução.
+  title: 'panlabs',
+  tagline: 'O acervo de aprendizado de um desenvolvedor',
 
   // GitHub Pages, do próprio repositório.
   url: 'https://panlabs-tech.github.io',
@@ -94,9 +98,8 @@ const config = {
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
-  // O terceiro do trio, e ele nasce neste slice porque é aqui que aparecem os
-  // primeiros links de âncora intra-página — a tabela de sintomas de
-  // `Operação › Diagnóstico`. O default do Docusaurus é `warn`, e âncora
+  // O terceiro do trio. Os links de âncora intra-página do acervo estão na
+  // tabela de sintomas de `Procedimentos › Diagnóstico › Índice de sintomas`. O default do Docusaurus é `warn`, e âncora
   // quebrada que só avisa é âncora quebrada que fica. Consequência de contrato:
   // toda âncora citada por um link é declarada com `{#id}` no próprio heading,
   // em vez de depender de como o slugger trata acento.
@@ -130,16 +133,15 @@ const config = {
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        // A tab `Documentação` é a instância `default` do plugin de docs.
+        // A tab `Jornadas` é a instância `default` do plugin de docs.
         //
-        // O conteúdo do Trilho mora em `conteudo/`, e não em `docs/`, porque
-        // `docs/` é a documentação DESTE repositório — agentes, ADRs, spec de
-        // design. A rota pública continua sendo `/docs`, que é o que o portão
-        // 6 verifica.
+        // O acervo mora em `conteudo/`, e não em `docs/`, porque `docs/` é a
+        // documentação DESTE repositório — agentes, ADRs, spec de design. A
+        // rota pública é `/jornadas`, e é ela que o portão 6 verifica.
         docs: {
-          path: 'conteudo/documentacao',
-          routeBasePath: 'docs',
-          sidebarPath: './sidebars.js',
+          path: 'conteudo/jornadas',
+          routeBasePath: 'jornadas',
+          sidebarPath: './sidebars-jornadas.js',
         },
         // Sem blog: nada no mapa o pediu, e um plugin ligado sem consumidor é a
         // mesma classe de defeito que as variáveis inertes do Infima.
@@ -161,31 +163,39 @@ const config = {
 
   // As outras duas tabs. **Uma instância por tab, um-para-um**, e não uma
   // instância com várias sidebars: `routeBasePath` é por instância, então
-  // compartilhar jogaria as receitas em `/docs/receitas/…` e a URL deixaria de
-  // ler o eixo — que é a decisão inteira da arquitetura de informação.
+  // compartilhar jogaria as ferramentas em `/jornadas/ferramentas/…` e a URL
+  // deixaria de ler o eixo — que é a decisão inteira da arquitetura de
+  // informação.
   plugins: [
     [
       '@docusaurus/plugin-content-docs',
       /** @type {import('@docusaurus/plugin-content-docs').Options} */
       ({
-        id: 'api',
-        path: 'conteudo/api-reference',
-        routeBasePath: 'api-reference',
-        sidebarPath: './sidebars-api.js',
-        // Opção PÚBLICA do plugin — vira literalmente o `component` da rota.
-        // Substitui o layout inteiro da página com custo de upgrade zero: não é
-        // swizzle, é componente de tema próprio. Ver ADR 2.
-        docItemComponent: '@theme/ApiDocItem',
+        id: 'procedimentos',
+        path: 'conteudo/procedimentos',
+        routeBasePath: 'procedimentos',
+        sidebarPath: './sidebars-procedimentos.js',
       }),
     ],
     [
       '@docusaurus/plugin-content-docs',
       /** @type {import('@docusaurus/plugin-content-docs').Options} */
       ({
-        id: 'receitas',
-        path: 'conteudo/receitas',
-        routeBasePath: 'receitas',
-        sidebarPath: './sidebars-receitas.js',
+        id: 'ferramentas',
+        path: 'conteudo/ferramentas',
+        routeBasePath: 'ferramentas',
+        sidebarPath: './sidebars-ferramentas.js',
+        // Opção PÚBLICA do plugin — vira literalmente o `component` da rota.
+        // Substitui o layout inteiro da página com custo de upgrade zero: não é
+        // swizzle, é componente de tema próprio. Ver ADR 2.
+        //
+        // **A instância inteira o declara, e as 15 folhas autorais dela não
+        // mudam de layout.** O `ApiDocItem` comuta POR PÁGINA pelo front matter
+        // `api_exemplos` e delega para `@theme/DocItem` quando o campo falta —
+        // verificado no código, não deduzido. Hoje nenhuma folha o declara: o
+        // ramo gerado de `Biblioteca C` chega no ticket seguinte, e é ele que
+        // acende a outra perna do comutador.
+        docItemComponent: '@theme/ApiDocItem',
       }),
     ],
 
@@ -212,15 +222,25 @@ const config = {
         disableSwitch: false,
       },
       navbar: {
-        // Sem `title` e sem `logo`, e é decisão: o `LogoSchema` exige `src` e o
-        // `Logo` renderiza `ThemedImage`, ou seja um `<img>`, que não herda
-        // `currentColor`. A marca é tipo mais um glifo do manifesto, em
-        // `--sd-accent`, e entra pelo item `custom-marca`. O `.navbar__brand`
-        // vazio que o upstream continua renderizando é escondido em
-        // `chrome.css`, com `:empty`.
-        items: [
-          {type: 'custom-marca', position: 'left'},
+        // **A MARCA É SÓ A PALAVRA**, e ela volta para o caminho nativo.
+        //
+        // `title` sem `logo` faz o upstream renderizar `<b class="navbar__title">`
+        // dentro do `.navbar__brand` — tipo puro, sem `<img>`, sem glifo. Some
+        // com isso o componente de tema próprio que existia só para desenhar o
+        // par glifo+palavra, e some a regra `.navbar__brand:empty` que escondia
+        // o link vazio que o upstream renderizava sem `title`.
+        //
+        // O argumento é o da figura da landing, com força maior: a marca aparece
+        // em TODA página e a landing em uma. Ela fica **monocromática**, em
+        // `--sd-text-strong` — tingir uma palavra de acento no canto superior
+        // esquerdo é o enfeite que a régua recusa. A tipografia não mudou: o que
+        // saiu foi o glifo, que era a única coisa a consumir `--sd-accent`.
+        //
+        // `title` é string traduzível e entra em `navbar.json`; `panlabs` fica
+        // IDÊNTICA nos dois locales, que é a razão de o nome ter sido escolhido.
+        title: 'panlabs',
 
+        items: [
           // O ESPAÇADOR QUE ABRE A FAIXA DE TABS — degrau 2, opção pública, e a
           // única peça da faixa que não é CSS. Ele tem base 100% e altura 0
           // (`chrome.css`), então força a quebra de linha dentro de
@@ -246,23 +266,23 @@ const config = {
           // uma instância — o eixo de navegação é a natureza do conteúdo.
           {
             type: 'docSidebar',
-            sidebarId: 'documentacao',
+            sidebarId: 'jornadas',
             position: 'left',
-            label: 'Documentação',
+            label: 'Jornadas',
           },
           {
             type: 'docSidebar',
-            docsPluginId: 'api',
-            sidebarId: 'api',
+            docsPluginId: 'procedimentos',
+            sidebarId: 'procedimentos',
             position: 'left',
-            label: 'Referência da API',
+            label: 'Procedimentos',
           },
           {
             type: 'docSidebar',
-            docsPluginId: 'receitas',
-            sidebarId: 'receitas',
+            docsPluginId: 'ferramentas',
+            sidebarId: 'ferramentas',
             position: 'left',
-            label: 'Receitas',
+            label: 'Ferramentas',
           },
 
           // À direita, na ordem declarada: Buscar · PT · GitHub. A alternância
@@ -295,15 +315,17 @@ const config = {
         // nenhum outro lugar do site.** `llms.txt` é o quarto, e entra no slice
         // 7 junto com o artefato.
         //
-        // `target: '_self'` nos dois externos, e é correção de premissa medida
-        // nesta implementação: o `<Link>` do Docusaurus injeta
-        // `target="_blank"` SOZINHO em todo `href` externo. A decisão do rodapé
-        // é que nenhum link abre em nova aba — sem esta linha ela não valeria, e
-        // esconder o ícone de link externo passaria a apagar um anúncio
-        // verdadeiro em vez de um falso.
-        // `llms.txt` é o quarto e último, e ele chega com o artefato. Ele é o
-        // único do site sem nenhuma entrada de navegação — logo indescobrível
-        // sem esta linha, que é exatamente a regra que escolheu os outros três.
+        // **Eram quatro; são dois**, e os dois que saíram saíram com o produto.
+        // `Status` e `Suporte` apontavam para um host e uma caixa de e-mail do
+        // Trilho, e o acervo não tem nem um nem outro: a empresa **nunca é
+        // nomeada**, então não há domínio de status a citar, e o desenvolvedor
+        // **não tem nome**, então não há para quem escrever. Inventar os dois
+        // seria nomear o empregador por acidente, que é a única coisa que a
+        // narrativa do acervo proíbe por escrito.
+        //
+        // O que sobra passa a satisfazer a regra melhor do que antes: `llms.txt`
+        // é o único artefato do site sem nenhuma entrada de navegação, logo
+        // indescobrível sem esta linha.
         //
         // `pathname://` é a escotilha PÚBLICA do Docusaurus para apontar a um
         // arquivo que não é rota (degrau 2 da escada). Ela faz três coisas de
@@ -312,24 +334,28 @@ const config = {
         // baseUrl continua sendo acrescentado — inclusive o do locale, que é
         // onde o build do EN escreve o artefato dele.
         //
-        // `target: '_self'` pelo mesmo motivo dos outros dois: o `<Link>`
-        // injeta `_blank` sozinho em tudo que ele lê como externo, e a decisão
+        // `target: '_self'`, e é correção de premissa medida: o `<Link>` injeta
+        // `target="_blank"` SOZINHO em tudo que ele lê como externo, e a decisão
         // do rodapé é que nenhum link abre em nova aba.
         links: [
-          {label: 'Status', href: 'https://status.trilho.dev', target: '_self'},
-          {label: 'Changelog', to: '/docs/operacao/changelog'},
-          {label: 'Suporte', href: 'mailto:suporte@trilho.dev', target: '_self'},
+          {label: 'Changelog', to: '/ferramentas/bibliotecas/biblioteca-c/changelog'},
           {label: 'llms.txt', href: 'pathname:///llms.txt', target: '_self'},
         ],
-        copyright: '© 2026 Trilho',
+        copyright: '© 2026 panlabs',
       },
       prism: {
         theme: temaPrism,
         // Degrau 2 — opção pública. `bash` não está no bundle padrão do
-        // `prism-react-renderer`, e o painel da Referência da API emite
-        // snippet de cURL nessa linguagem. Sem o registro, o bloco sai sem
-        // realce e ninguém avisa; `scripts/lib/openapi.mjs` confere esta
-        // lista contra toda linguagem de snippet que o gerador produz.
+        // `prism-react-renderer`, e sem o registro o bloco sai sem realce e
+        // ninguém avisa.
+        //
+        // **O consumidor mudou de dono e ficou maior.** Ele era o snippet de
+        // cURL que o gerador da Referência emitia, e o gerador morreu com o
+        // contrato HTTP; agora são as cercas `bash` do próprio acervo — a AWS
+        // CLI é um terço do cenário fixado, e ela aparece na laje da landing e
+        // em folhas de `Procedimentos` e `Ferramentas`. A conferência que
+        // `scripts/lib/openapi.mjs` fazia sobre a lista sai junto com ele; o
+        // que pega o esquecimento hoje é a cerca sem realce à vista.
         additionalLanguages: ['bash'],
       },
     }),

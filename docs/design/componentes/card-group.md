@@ -75,11 +75,11 @@ faixa em que ele já está espremido.
 
 ```mdx
 <CardGroup>
-<Card title="Pix" icon="zap" href="/docs/meios-de-pagamento/comparativo">
-Liquidação em segundos, irreversível.
+<Card title="Instalação e configuração" icon="download" href="instalacao-e-configuracao">
+As opções, o arquivo de configuração e a adoção em projeto existente.
 </Card>
-<Card title="Boleto" icon="receipt" href="/docs/meios-de-pagamento/comparativo">
-Compensação em dias úteis.
+<Card title="Tratamento de erros" icon="circle-alert" href="tratamento-de-erros">
+Por que a geração falha alto, e como ler o ponteiro do erro.
 </Card>
 </CardGroup>
 ```

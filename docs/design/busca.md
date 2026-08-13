@@ -43,12 +43,12 @@ As chaves são curtas porque cada uma se repete setenta e três vezes por locale
 
 ### 2.2 A fonte é o MDX
 
-Não o HTML renderizado — o que dispensa `cheerio` e é o que faz **as 24 páginas geradas da Referência da API entrarem pelo mesmo caminho das 43 autorais, sem caso especial**. Uma página gerada é um `.mdx` em disco como qualquer outra.
+Não o HTML renderizado — o que dispensa `cheerio` e é o que fará **as páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 46 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e é por isso que o índice não precisa saber que o ramo gerado chegou.
 
 O que sai antes de indexar, e por quê:
 
 - **front matter**, que carrega o `api_exemplos` das páginas geradas — um blob JSON que sozinho estouraria o teto;
-- **`import`/`export` do topo**, e só do topo. Dez páginas de `Receitas` têm `import` na primeira coluna **dentro de bloco cercado**, porque é o que uma receita de SDK mostra; uma varredura global comeria o exemplo;
+- **`import`/`export` do topo**, e só do topo. Páginas de SDK e de biblioteca têm `import` e `from` na primeira coluna **dentro de bloco cercado**, porque é o que um exemplo de Python mostra; uma varredura global comeria o exemplo;
 - **bloco cercado inteiro.** Uma consulta que casasse dentro de um `curl` devolveria a página com um trecho ilegível, e o realce cairia no meio de uma string JSON;
 - **marcação** — tag JSX, marcador de admonition, linha de tabela, sintaxe de link. Sobra prosa.
 
@@ -60,7 +60,11 @@ Os headings viram `s`; o resto vira `b`, cortado no começo.
 
 O motivo é mecânico: o índice viaja no bundle principal de **toda página do site**. Um índice que cresce sem limite vira lentidão difusa que ninguém atribui à busca — e o dia em que alguém atribuir, a causa já terá anos.
 
-*Medido nesta implementação:* **35 612 bytes** para 73 páginas, no locale EN. A folga é de 45%.
+*Medido nesta implementação:* **24 894 bytes** para 46 páginas, no locale EN. A folga é de 62%.
+
+> **A medição anterior era 35 612 bytes para 73 páginas, e ela caiu com a árvore.** O número desceu mais que a contagem de páginas porque as trinta páginas geradas de endpoint eram as maiores do índice — corpo de referência é denso e repetitivo. A folga que sobra **não é convite**: o ramo gerado de `Biblioteca C` volta a consumi-la.
+
+**A varredura também confere a aritmética do locale de graça:** dos 46 registros do índice EN, **31 carregam a marca de fallback**, que é exatamente a contagem que [`informacao.md`](informacao.md) §8 declara. Duas superfícies independentes chegando ao mesmo número é a forma mais barata de conferência que este projeto tem.
 
 ### 2.4 O que fica de fora
 
@@ -233,7 +237,7 @@ A regra não afrouxou aqui. Ela diz que **comportamento à mão obriga a spec a 
 | 2 | **Sem ranqueamento estatístico** | a escada é explicável e conferível; TF-IDF não é nenhum dos dois |
 | 3 | **O índice não vê o texto que os componentes geram** | a fonte é o MDX; o que o catálogo renderiza a partir de props não está lá |
 | 4 | **Clique no `::backdrop` não fecha** | o `<dialog>` não faz sozinho, e a detecção por alvo de clique conta o preenchimento do painel como o painel. `Escape` e o × cobrem |
-| 5 | **A escala não escala** | 73 páginas é onde a troca é boa; a nota de migração do ADR 6 é o que fica escrito para a outra ordem de grandeza |
+| 5 | **A escala não escala** | dezenas de páginas é onde a troca é boa; a nota de migração do ADR 6 é o que fica escrito para a outra ordem de grandeza |
 
 ---
 

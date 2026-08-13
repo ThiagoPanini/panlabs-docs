@@ -156,7 +156,7 @@ A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa d
 | linha 1, direita | `Buscar` · `PT` · `GitHub` | `search`, `localeDropdown`, link |
 | linha 1, direita | alternância de tema | **não declarável** |
 | — | o espaçador que abre a faixa | `html` — degrau 2 |
-| faixa | `Documentação` · `Referência da API` · `Receitas` | `docSidebar`, uma por instância |
+| faixa | `Jornadas` · `Procedimentos` · `Ferramentas` | `docSidebar`, uma por instância |
 
 **A ordem à direita é declarada, menos a última.** O `Navbar/Content` renderiza a alternância de tema depois dos itens da direita, por construção.
 
@@ -264,7 +264,7 @@ Toda página do site ganha uma linha abaixo do `h1`: **`--sd-type-lg`, num bloco
 
 Um **override da chave `h1` no registro de `@theme/MDXComponents`, degrau 3**, lendo `useDoc().frontMatter.description` — API pública, já consumida pelo `ApiDocItem`.
 
-A condição estava escrita em [`swizzle.md`](swizzle.md) §4, na nota da perda 10, e está conferida: **73 de 73 páginas escrevem o próprio `# Título`**, nenhuma escreve dois, e 73 de 73 já têm `description`. O mesmo vale para os 44 arquivos de `i18n/`.
+A condição estava escrita em [`swizzle.md`](swizzle.md) §4, na nota da perda 10, e está conferida: **61 de 61 páginas escrevem o próprio `# Título`**, nenhuma escreve dois, e 61 de 61 já têm `description` — as 46 autorais mais as 15 traduções. **Quem confere hoje não é uma varredura de mão:** a cobrança 10 do portão 4 percorre `conteudo/` e a árvore de tradução e reprova a primeira página sem o campo.
 
 A alternativa era injetar nó no corpo da página, que é a **perda 1** do ledger e exige `DocItem/Layout` ou `DocItem/Content` — os dois `unsafe`, os dois proibidos. A rota escolhida não encosta neles.
 
@@ -278,7 +278,7 @@ Conferido, removendo o campo de uma página e rodando o build:
 
 ```
 Error: Página sem `description` no front matter:
-  @site/conteudo/documentacao/comece-aqui/ambientes.md
+  @site/conteudo/procedimentos/ambiente/indice.md
 ```
 
 A mensagem **nomeia o arquivo**, que é a metade da doutrina que uma exceção genérica não entrega.
@@ -333,10 +333,12 @@ O que sobra, medido em vez de suposto: o nome acessível do link é o **título 
 
 | Rótulo | Por que existe |
 | --- | --- |
-| `Status` | convenção dura de API de pagamentos; não tem página nem entrada de sidebar |
-| `Changelog` | é o **único** canal de comunicação de versão da API, e está enterrado como folha de `Operação` |
-| `Suporte` | fecha com o canal humano |
+| `Changelog` | é o **único** canal de comunicação de versão dos artefatos, e está enterrado no nível 3 de `Ferramentas` |
 | `llms.txt` | é o único artefato do site sem nenhuma entrada de navegação, logo indescobrível sem este link |
+
+**Eram quatro, e são dois.** `Status` e `Suporte` saíram com o produto anterior: o primeiro apontava para um host de status, o segundo para uma caixa de e-mail, e o acervo não tem nem um nem outro — **a empresa nunca é nomeada**, então não há domínio a citar, e **o desenvolvedor não tem nome**, então não há para quem escrever. Ver [`informacao.md`](informacao.md) §1.1.
+
+A regra fica **mais** satisfeita do que antes, e não menos: os dois que sobraram são exatamente os dois que nenhuma outra superfície do site alcança.
 
 **O `llms.txt` entra por `pathname://`**, e é degrau 2 — escotilha pública do Docusaurus para apontar a um arquivo que **não é rota**. Sem ela, o `<Link>` tentaria `history.push()` numa rota que não existe e o verificador de links reprovaria o build.
 
@@ -346,7 +348,7 @@ Isso é pré-requisito do parágrafo seguinte, não detalhe: o ícone de link ex
 
 **O ícone de link externo sai, e o motivo não é estética.** `Icon/ExternalLink` não está no `getSwizzleConfig` — cai no default `unsafe` — e vem de um sprite injetado. A regra da política responde sem enumerar: **o que só é alcançável por `unsafe` não é trocado**.
 
-**Sem logotipo e sem wordmark estilizado no copyright.** O schema de logo exige um arquivo de imagem, e a marca deste sistema é tipo mais glifo. Consequência limpa: o footer consome **zero** dos 64 ícones.
+**Sem logotipo e sem wordmark estilizado no copyright.** O schema de logo exige um arquivo de imagem, e a marca deste sistema é **só a palavra** — ver [`icones.md`](icones.md) §3. Consequência limpa: o footer consome **zero** dos 60 ícones, e o navbar também.
 
 ### 8.2 As três divergências obrigatórias contra o Infima
 

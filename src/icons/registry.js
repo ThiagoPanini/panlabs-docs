@@ -12,7 +12,7 @@
  * `::before`, em `src/css/chrome.css`. Não é inconsistência: não existe ponto de
  * swizzle `safe` para injetar componente React num item de sidebar, então a
  * rota de `className` + máscara é a **única** zero-swizzle. Os dois leem os
- * mesmos 64 arquivos.
+ * mesmos 60 arquivos.
  *
  * **Nada aqui degrada em silêncio.** Nome desconhecido lança; o Docusaurus
  * prerenderiza toda página no build, então o `throw` *é* falha de build, sem
@@ -20,7 +20,7 @@
  * que é o retorno certo em desenvolvimento.
  *
  * ---------------------------------------------------------------------------
- * Por que 64 `import` à mão e não um `require.context`
+ * Por que 60 `import` à mão e não um `require.context`
  *
  * Medido nesta implementação, não deduzido: a regra de SVGR do
  * `plugin-svgr@3.10.2` casa por **issuer**, e o issuer precisa ser um arquivo
@@ -29,9 +29,11 @@
  * SVG cai na regra de asset. O que volta é uma **data URI**, não um componente,
  * e o sintoma é `Invalid tag: data:image/svg+xml;base64,…` no prerender.
  *
- * Registro estático também é o que a decisão de orçamento pediu: os 64 no
- * bundle principal, ~20 KB crus e ~6 KB gzip, que é o preço de `icon="rocket"`
- * funcionar sem import dinâmico.
+ * Registro estático também é o que a decisão de orçamento pediu: os 60 no
+ * bundle principal, que é o preço de `icon="rocket"` funcionar sem import
+ * dinâmico. A medição que acompanhava esta linha — *"~20 KB crus e ~6 KB
+ * gzip"* — era de quando eram 64, e sai em vez de ser ajustada a olho: número
+ * medido que se corrige por estimativa deixa de ser medição.
  *
  * Custo aceito: a lista aparece duas vezes — aqui e no manifesto. A bijeção é
  * conferida nos dois sentidos logo abaixo, e o `--conferir` do vendorizador
@@ -47,7 +49,6 @@ import Info from '@site/static/icons/info.svg';
 import Lightbulb from '@site/static/icons/lightbulb.svg';
 import TriangleAlert from '@site/static/icons/triangle-alert.svg';
 import PencilLine from '@site/static/icons/pencil-line.svg';
-import TrainTrack from '@site/static/icons/train-track.svg';
 import ChevronRight from '@site/static/icons/chevron-right.svg';
 import Check from '@site/static/icons/check.svg';
 import Copy from '@site/static/icons/copy.svg';
@@ -65,11 +66,9 @@ import ArrowRight from '@site/static/icons/arrow-right.svg';
 
 import Rocket from '@site/static/icons/rocket.svg';
 import Shapes from '@site/static/icons/shapes.svg';
-import Wallet from '@site/static/icons/wallet.svg';
 import BookOpen from '@site/static/icons/book-open.svg';
 import Activity from '@site/static/icons/activity.svg';
 import CodeXml from '@site/static/icons/code-xml.svg';
-import Receipt from '@site/static/icons/receipt.svg';
 import Repeat from '@site/static/icons/repeat.svg';
 import Undo2 from '@site/static/icons/undo-2.svg';
 
@@ -92,7 +91,6 @@ import Key from '@site/static/icons/key.svg';
 import Lock from '@site/static/icons/lock.svg';
 import Mail from '@site/static/icons/mail.svg';
 import Calendar from '@site/static/icons/calendar.svg';
-import CreditCard from '@site/static/icons/credit-card.svg';
 import Users from '@site/static/icons/users.svg';
 import Globe from '@site/static/icons/globe.svg';
 import Package from '@site/static/icons/package.svg';
@@ -116,7 +114,6 @@ const DESENHOS = {
   'lightbulb': Lightbulb,
   'triangle-alert': TriangleAlert,
   'pencil-line': PencilLine,
-  'train-track': TrainTrack,
   'chevron-right': ChevronRight,
   'check': Check,
   'copy': Copy,
@@ -134,11 +131,9 @@ const DESENHOS = {
 
   'rocket': Rocket,
   'shapes': Shapes,
-  'wallet': Wallet,
   'book-open': BookOpen,
   'activity': Activity,
   'code-xml': CodeXml,
-  'receipt': Receipt,
   'repeat': Repeat,
   'undo-2': Undo2,
 
@@ -161,7 +156,6 @@ const DESENHOS = {
   'lock': Lock,
   'mail': Mail,
   'calendar': Calendar,
-  'credit-card': CreditCard,
   'users': Users,
   'globe': Globe,
   'package': Package,

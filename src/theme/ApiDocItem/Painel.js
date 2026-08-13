@@ -32,7 +32,6 @@ import React, {useMemo, useState} from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
-import VerbBadge from '@site/src/components/VerbBadge';
 import estilos from './estilos.module.css';
 
 const PLACEHOLDER = /\{\{(\w+)\}\}/g;
@@ -42,7 +41,13 @@ function substituir(modelo, valores) {
 }
 
 export default function Painel({exemplos}) {
-  const {metodo, caminho, parametros, exemplos: snippets, respostas} = exemplos;
+  // **O verbo saiu daqui junto com o `VerbBadge`.** O contrato deixou de ser
+  // HTTP: não há verbo para pintar, e o badge saiu do catálogo por não ter
+  // sobrado nenhum estado plausível que o peça de volta. O cabeçalho fica com o
+  // identificador nu até o ticket seguinte, que o troca pela ASSINATURA da
+  // função — é lá que o contrato novo chega, e adiantar a forma dele aqui seria
+  // desenhar contra um dado que ainda não existe.
+  const {caminho, parametros, exemplos: snippets, respostas} = exemplos;
 
   const [valores, setValores] = useState(() => Object.fromEntries(parametros.map((p) => [p.nome, p.exemplo])));
 
@@ -54,7 +59,7 @@ export default function Painel({exemplos}) {
   return (
     <div className={estilos.painel} data-sd-component="api-painel">
       <p className={estilos.painelCabecalho}>
-        <VerbBadge verb={metodo} /> <code>{caminho}</code>
+        <code>{caminho}</code>
       </p>
 
       {parametros.length > 0 && (

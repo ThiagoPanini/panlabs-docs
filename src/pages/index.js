@@ -157,17 +157,22 @@ const FALHAS = [
  * repetir o glifo de nenhuma das categorias que ela abre**, senão o cartão e um
  * quarto da aba leem a mesma hierarquia.
  *
- * **As contagens são as da spec, e a árvore ainda não existe.** Por um ticket,
- * a landing promete o que o conteúdo entrega depois — é consequência da ordem
- * escolhida, e fica dita aqui em vez de aparecer como surpresa. Pelo mesmo
- * motivo os `href` apontam para a tab que hoje ocupa aquela posição: quem move
- * `routeBasePath` é o ticket da árvore.
+ * **A árvore chegou, e as contagens fecham.** A landing prometia `2 jornadas ·
+ * 10 capítulos`, `5 categorias · 19 páginas` e `4 famílias · 21 páginas` antes
+ * de o conteúdo existir; os três números são agora o que o portão 4 conta — com
+ * a ressalva de que as 6 últimas de `Ferramentas` são o ramo gerado de
+ * `Biblioteca C`, que é o ticket seguinte. **Nada liga os dois lados**: mudar
+ * uma contagem aqui sem mudar a árvore não reprova em lugar nenhum.
+ *
+ * Os `href` deixaram de apontar para a tab que ocupava a posição e passaram a
+ * apontar para a raiz de cada aba — o destino da categoria clicável, que é onde
+ * a sidebar abre.
  */
 const PORTAS = [
   {
     titulo: 'Jornadas',
     icone: 'book-open',
-    href: '/docs/comece-aqui/visao-geral',
+    href: '/jornadas/api-owner/indice',
     linha:
       'Dois papéis, na ordem em que aconteceram — e cada índice termina com o que não funcionou.',
     conta: '2 jornadas · 10 capítulos',
@@ -175,7 +180,7 @@ const PORTAS = [
   {
     titulo: 'Procedimentos',
     icone: 'terminal',
-    href: '/api-reference/introducao/visao-geral',
+    href: '/procedimentos/ambiente/indice',
     linha:
       'Ambiente, esteiras, infraestrutura, acessos e diagnóstico. O passo a passo que a máquina cobra.',
     conta: '5 categorias · 19 páginas',
@@ -183,7 +188,7 @@ const PORTAS = [
   {
     titulo: 'Ferramentas',
     icone: 'wrench',
-    href: '/receitas/intro',
+    href: '/ferramentas/bibliotecas/indice',
     linha:
       'Bibliotecas, módulos Terraform, skills e servidores MCP — o que saiu daqui para outros times.',
     conta: '4 famílias · 21 páginas',
@@ -267,12 +272,12 @@ export default function Home() {
                 <div className={estilos.acoes}>
                   <Link
                     className={clsx(estilos.acao, estilos.acaoPrimaria)}
-                    to="/docs/comece-aqui/visao-geral">
+                    to="/jornadas/api-owner/indice">
                     Abrir o acervo
                   </Link>
                   <Link
                     className={clsx(estilos.acao, estilos.acaoSecundaria)}
-                    to="/receitas/intro">
+                    to="/ferramentas/bibliotecas/indice">
                     Ferramentas
                   </Link>
                 </div>

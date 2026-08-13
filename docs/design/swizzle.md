@@ -6,10 +6,11 @@ O ledger vivo, as perdas nomeadas e a disciplina de registro.
 
 A **política** — a escada de seis degraus, o orçamento `unsafe` zero, a escotilha por ADR novo — mora no [ADR 2](../adr/0002-politica-de-swizzle.md), porque sobrevive à troca de skin. Este documento **cita** e nunca repete.
 
-**Documento reaberto** pela geometria `mint`, e ele fecha de novo quando o `swizzle --list` for recongelado no fim da reconstrução. O que a reabertura trouxe está em duas linhas, e as duas mudam o inventário e não a política:
+**Documento reaberto** pela geometria `mint`, e ele fecha de novo quando o `swizzle --list` for recongelado no fim da reconstrução. O que a reabertura trouxe está em três linhas, e as três mudam o inventário e não a política:
 
 - **a perda 4 sai** — a faixa de tabs de largura total **não** exigia reestruturar `Navbar/*`, e isso está medido. Ver §4 e a errata do [ADR 2](../adr/0002-politica-de-swizzle.md);
-- **o registro de `MDXComponents` ganha superfície nova no mesmo degrau** — ele passa a redefinir um elemento de HTML para *acrescentar nó*. Ver §3.
+- **o registro de `MDXComponents` ganha superfície nova no mesmo degrau** — ele passa a redefinir um elemento de HTML para *acrescentar nó*. Ver §3;
+- **uma entrada de degrau 3 é APOSENTADA, e é a primeira vez que isso acontece.** A marca ficou só com a palavra, e com ela morreram o componente de tema próprio que a desenhava e a chave que o registrava. Ver §3 e §3.1.
 
 **O orçamento `unsafe` continua em zero, e o degrau 4 continua vazio.**
 
@@ -47,12 +48,13 @@ Hoje `src/theme/` tem os três, e **um só é swizzle**:
 
 ```
 src/theme/ApiDocItem/            componente de tema próprio  (degrau 2)
-src/theme/NavbarItem/Marca.js    componente de tema próprio  (consumido pelo registro)
-src/theme/NavbarItem/ComponentTypes.js   registro            (degrau 3)
+src/theme/NavbarItem/ComponentTypes.js   registro            (SEM customização — ver §3.1)
 src/theme/MDXComponents/index.js         registro            (degrau 3)
 src/theme/Admonition/Types.js            registro            (degrau 3)
 src/theme/SearchBar/                     SWIZZLE, --eject    (degrau 5)
 ```
+
+**São nove arquivos, e eram dez.** `NavbarItem/Marca.js` saiu inteiro.
 
 O `SearchBar` entrou no slice 7 e é o **primeiro e único** swizzle do repositório. Ele tem uma propriedade que nenhum outro degrau 5 teria: ver §3.
 
@@ -113,10 +115,25 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
-| `NavbarItem/ComponentTypes` | acrescenta o tipo `custom-marca` | a marca precisa de `currentColor`, e `navbar.logo` renderiza `<img>`. `Logo` e `Navbar/Logo` **não estão no `getSwizzleConfig`** — caem no default `unsafe`, que o ADR 2 proíbe |
-| `MDXComponents` | registra os catorze componentes com tag própria (quinze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais **duas** chaves de elemento: `table` e `h1` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
+| `MDXComponents` | registra os treze componentes com tag própria (catorze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais **duas** chaves de elemento: `table` e `h1` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
 | `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description` | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: 73 de 73 páginas escrevem o próprio `# Título`, e nenhuma escreve dois |
 | `Admonition/Types` | substitui a anatomia vertical do Infima pela horizontal medida, nas quatro variantes de callout | não há variável nem classe que reoriente o eixo da admonition. O degrau 5 (`Admonition/Layout`) alcançaria, mas o 3 alcança **antes**: o arquivo é um objeto, e nada obriga as entradas dele a apontarem para o layout do upstream |
+
+### 3.1 A entrada aposentada — `NavbarItem/ComponentTypes`
+
+**A primeira linha que este ledger perde por remoção de customização, e não por promoção de degrau.**
+
+Ela dizia: *acrescenta o tipo `custom-marca`; a marca precisa de `currentColor`, e `navbar.logo` renderiza `<img>`*. Nada disso é falso — mas a marca **deixou de ter glifo**. Ela ficou só com a palavra, monocromática na cor de texto do navbar, e a rota passou a ser `themeConfig.navbar.title` renderizando no `.navbar__brand` nativo, que é **degrau 2**. Sem `<img>` no caminho, o argumento inteiro do degrau 3 perdeu o assunto. Ver [`icones.md`](icones.md) §3.
+
+O que sai junto:
+
+- `src/theme/NavbarItem/Marca.js` — **um arquivo a menos em `src/theme/`**, e o portão 7 passa com nove;
+- a chave `custom-marca` do registro, que era a única nossa. O objeto voltou a ser idêntico ao do upstream;
+- a declaração `.navbar__brand:empty` de `chrome.css`, que escondia o link vazio que o upstream renderizava sem `title`. Ele não é mais vazio.
+
+**O arquivo do registro fica, e a entrada dele não.** A regra deste documento é *um item sai quando a customização é removida*, e aqui não há mais nenhuma: o objeto é espalhado sem acréscimo. Ele continua sendo o ponto de extensão já ejetado do navbar, e o portão 7 continua casando o nome dele com a lista congelada — mas ledger é inventário do que **existe**, não do que já foi.
+
+> **A rota foi medida, contra a resolução que a declarava provável.** A resolução deste ticket registrava a rota como *"provável e não medida"*. Ela foi medida em Chrome headless, nas duas preferências de esquema de cor: o `.navbar__brand` renderiza `<b class="navbar__title">panlabs</b>`, com **zero `<svg>` e zero `<img>`** dentro, e a palavra resolve para `250,242,249` no escuro e `15,10,15` no claro — os dois iguais a `--sd-text-strong` no pixel, e nenhum igual ao acento. A tabela está em [`icones.md`](icones.md) §3. O carimbo sobe de *origem própria* para **origem própria (medição)** — que é a única forma honesta de fechar uma linha que a spec pediu para deixar aberta.
 
 **Os dois do catálogo copiam zero linha de upstream**, e é isso que os mantém no
 degrau 3: um espalha o objeto original e acrescenta chaves; o outro é escrito do
@@ -137,7 +154,7 @@ mudou na tela precisa achar o subtítulo aqui, não deduzi-lo da palavra
 **O portão 7 continua passando porque nenhum arquivo novo entra em
 `src/theme/`** — o componente do subtítulo mora dentro do próprio registro.
 Fatorá-lo para um arquivo ao lado seria trocar quinze linhas por uma linha nova
-na perna 2 do portão.
+na perna 2 do portão. **E ele passa com um arquivo a MENOS**, pela §3.1.
 
 **Pré-autorizados e ainda não exercidos:** `prism-include-languages`, se a
 Referência da API precisar de linguagem fora do que `additionalLanguages` cobre.
@@ -175,11 +192,13 @@ Pré-autorizados e ainda não exercidos: os ícones de chrome que são `safe` na
 
 ### `unsafe`
 
-**Zero, e desde o slice 7 isso deixou de ser afirmação: é saída de portão.** O portão 7 (§5) percorre `src/theme/`, casa cada arquivo com o `swizzle --list` congelado, e reprova se algum deles cair sobre um componente cuja ação de `eject` não seja `Safe`. A varredura de hoje: **220 componentes no artefato, 10 arquivos em `src/theme/` com endereço, zero `unsafe`.**
+**Zero, e desde o slice 7 isso deixou de ser afirmação: é saída de portão.** O portão 7 (§5) percorre `src/theme/`, casa cada arquivo com o `swizzle --list` congelado, e reprova se algum deles cair sobre um componente cuja ação de `eject` não seja `Safe`. A varredura de hoje: **220 componentes no artefato, 9 arquivos em `src/theme/` com endereço, zero `unsafe`.**
 
 O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não gastou. Os dois `unsafe` que ele encostou continuam de pé: o `Admonition` raiz, que despacha por tipo para o registro sem saber que o destino é nosso, e o `Tabs`, que é consumido como está e repaginado só por CSS.
 
 **O slice da busca gastou o degrau 5 sem encostar no orçamento**, e é o resultado que a escada existe para produzir: o degrau mais fundo foi para o único lugar onde os degraus acima comprovadamente não alcançam, e o `unsafe` continua intacto.
+
+**O slice da árvore REMOVEU uma linha e não acrescentou nenhuma**, o que é o resultado mais raro que este ledger já produziu: 46 páginas autorais, três instâncias novas, um manifesto de ícones reescrito e uma marca trocada saíram sem custar um degrau. A árvore é config e conteúdo; a marca desceu de degrau em vez de subir; e o `docItemComponent` da segunda instância é a mesma opção pública que a primeira já usava.
 
 **O slice da landing não acrescentou uma linha a este ledger, e isso é o resultado esperado.** Uma landing inteira — quatro seções, faixa de espetáculo de dois focos, três camadas de profundidade, um loop ambiente e um reveal por rolagem — sai de uma rota em `src/pages/`, um CSS Module e três `@keyframes` na folha global. Nada disso é customização de componente do tema: `plugin-content-pages` já vem no preset, e uma rota própria não envolve, não substitui e não ejeta nada. O único gancho que a landing usa fora do CSS dela é `data-sd-component`, que é **contrato nosso**, publicado pelo catálogo.
 
@@ -315,8 +334,10 @@ Um item **sai** quando a customização é removida. Sair do ledger sem sair do 
 | As perdas 8 e 9 | **lacuna por restrição** | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §8 e §15 |
 | A perda 10, e a rota `safe` registrada | **decisão de produto** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2.1 |
 | A disciplina de registro | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5), consolidado em [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §6 |
-| A marca no degrau 3 | **origem própria (implementação)** | `Logo` e `Navbar/Logo` fora do `getSwizzleConfig`; o schema de logo exige arquivo de imagem |
+| **A marca desce para o degrau 2, e a entrada de degrau 3 é aposentada** | **origem própria (medição)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — sem glifo não há `<img>` no caminho, e `navbar.title` alcança; medida no artefato publicado, contra a resolução que a declarava não medida |
+| **A primeira linha removida deste ledger** | **origem própria (implementação)** | a regra §6 já dizia *um item sai quando a customização é removida*; esta é a primeira vez que ela é exercida |
 | Degrau 4 vazio | origem própria | resultado da política, não meta |
+| `verb-badge` fora do registro de `MDXComponents` | **origem própria (consequência)** | o catálogo caiu para dezessete quando o contrato deixou de falar HTTP |
 | `MDXComponents` no degrau 3 | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §3 pré-autorizou; exercido pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §4 |
 | `Admonition/Types` no degrau 3, sem tocar em `Layout` | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), reconciliando a resolução original com a escada da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) — o degrau 3 alcança, então o 5 não se compra |
 | `code-block` fora da coluna de swizzle | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) — a aparência que falta é CSS sobre classe estável mais opção pública |

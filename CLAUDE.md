@@ -2,7 +2,7 @@
 
 Documentação de referência em Docusaurus. Conteúdo mockado; o produto é **estrutura e customização visual**. Alvo de replicação: ambiente corporativo com Docusaurus obrigatório e espaço de dependências apertado.
 
-> **Mapa aberto.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) troca o tema de `almond` para `mint` (sem cartão) e substitui o Trilho por **`panlabs`**, o acervo pessoal de aprendizado de um dev dentro de uma empresa que nunca é nomeada. Os **seis axiomas continuam inteiros**; o vocabulário e a spec, não. Leia o aviso no topo de [docs/agents/domain.md](docs/agents/domain.md) antes de agir sobre eles.
+> **Mapa aberto.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) trocou o tema de `almond` para `mint` (sem cartão) e substituiu o Trilho por **`panlabs`**, o acervo de aprendizado de um dev dentro de uma empresa que nunca é nomeada. **A árvore está no ar** — três abas (`Jornadas` · `Procedimentos` · `Ferramentas`), 46 páginas autorais e 15 traduções. Falta a **referência gerada de contrato de assinatura** ([#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82)) e o **fecho da spec** ([#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83)). Os **seis axiomas continuam inteiros**; o vocabulário e a spec, não. Leia o aviso no topo de [docs/agents/domain.md](docs/agents/domain.md) antes de agir sobre eles.
 
 Orientação de domínio antes de qualquer trabalho substantivo:
 

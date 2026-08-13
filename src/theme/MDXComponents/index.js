@@ -23,8 +23,8 @@
  *
  * **Custo aceito, registrado:** `MDXComponents` é importado por `MDXContent`,
  * que envolve todo conteúdo MDX, então este objeto entra no bundle de toda
- * página com MDX, sem tree-shaking. Se um dia doer, separar os quatro de
- * Referência da API — `ParamField`, `ResponseField`, `Expandable`, `VerbBadge` —
+ * página com MDX, sem tree-shaking. Se um dia doer, separar os três de
+ * referência — `ParamField`, `ResponseField` e `Expandable` —
  * é mecânico e não muda a sintaxe dos outros.
  *
  * **Armadilha fechada:** não se anota este arquivo com
@@ -68,7 +68,6 @@ import Steps, {Step} from '@site/src/components/Steps';
 import Table from '@site/src/components/Table';
 import Untranslated from '@site/src/components/Untranslated';
 import Update from '@site/src/components/Update';
-import VerbBadge from '@site/src/components/VerbBadge';
 import {ParamField, ResponseField} from '@site/src/components/Campo';
 
 /**
@@ -158,8 +157,8 @@ export default {
   Tabs,
   TabItem,
 
-  // Os catorze componentes com tag própria — QUINZE chaves, porque `steps` tem
-  // duas. Os outros quatro do catálogo de dezoito não têm tag: `callout` é
+  // Os treze componentes com tag própria — CATORZE chaves, porque `steps` tem
+  // duas. Os outros quatro do catálogo de dezessete não têm tag: `callout` é
   // `:::`, `code-block` é a cerca, `tabs` vem do Docusaurus acima, e `table` é a
   // chave de elemento acima.
   //
@@ -179,5 +178,4 @@ export default {
   Steps,
   Untranslated,
   Update,
-  VerbBadge,
 };

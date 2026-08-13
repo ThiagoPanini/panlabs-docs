@@ -111,11 +111,16 @@ tinha na página.
 
 **Cartão de navegação com número é conteúdo; sem número é decoração.**
 
-> **Elas anunciam os números finais da spec antes de o conteúdo existir.** Por um
-> ticket, a landing promete uma árvore que o site ainda não tem, e os `href`
-> apontam para a tab que hoje ocupa aquela posição — quem move `routeBasePath` é
-> o ticket da árvore. É consequência da ordem escolhida, e está dita aqui em vez
-> de aparecer como surpresa.
+> **A árvore chegou, e os três números fecham.** A landing os anunciou por um
+> ticket, antes de o conteúdo existir; hoje eles são o que o portão 4 conta, com
+> uma ressalva: as **6 últimas** de `Ferramentas` são o ramo gerado de
+> `Biblioteca C`, que é o ticket seguinte. Os `href` deixaram de apontar para a
+> tab que ocupava a posição e apontam para a raiz de cada aba.
+>
+> **Nada liga os dois lados, e isso continua verdadeiro.** Mudar uma contagem
+> aqui sem mudar a árvore não reprova em portão nenhum — o portão 8 conta
+> efeitos, não conteúdo, e o portão 4 conta a árvore, não a landing. É a única
+> afirmação desta página que depende de disciplina em vez de máquina.
 
 **A landing não inventa componente nenhum.** Ela compõe, no JSX dela, o que o
 catálogo já tem — `card`, `card-group`, `code-group`, `code-block`, `icon`. A

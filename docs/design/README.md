@@ -45,7 +45,7 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 3. [`informacao.md`](informacao.md) — a árvore, os tipos de página, as fixtures, o locale, os artefatos AI-era.
 4. [`chrome.md`](chrome.md) — o shell da página de doc.
 5. Os transversais, em qualquer ordem: [`foco.md`](foco.md), [`motion.md`](motion.md), [`icones.md`](icones.md), [`swizzle.md`](swizzle.md).
-6. [`componentes/`](componentes/) — o catálogo fechado de dezoito.
+6. [`componentes/`](componentes/) — o catálogo fechado de dezessete.
 7. As duas rupturas de layout: [`api-reference.md`](api-reference.md) e [`landing.md`](landing.md).
 8. [`busca.md`](busca.md) — a única superfície de interação que o projeto autora.
 
@@ -53,9 +53,9 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 
 ## 3. O índice — uma linha por documento
 
-**Trinta e um arquivos.**
+**Trinta arquivos.**
 
-> *Correção de contagem, registrada:* a resolução do slice 7 dizia *"trinta arquivos"*. São trinta e um, e o trigésimo primeiro é [`busca.md`](busca.md). Ele ganhou arquivo próprio em vez de virar seção de [`chrome.md`](chrome.md) por um motivo estrutural, não por tamanho: `chrome.md` abre dizendo que **chrome não se autora, se entorta**, e que tudo nele é degrau 0 ou 1 da escada. A busca é degrau 5, com JS autorado e ARIA descrita em prosa — ela **contradiz a premissa do documento** que a hospedaria. Enfiá-la lá teria custado a frase de abertura de `chrome.md`, que é uma das mais úteis da spec.
+> *Correção de contagem, registrada duas vezes.* A resolução do slice 7 dizia *"trinta arquivos"*; eram trinta e um, e o trigésimo primeiro é [`busca.md`](busca.md). **Voltaram a ser trinta** quando `componentes/verb-badge.md` saiu com o catálogo — e a segunda correção não desfaz a primeira: o motivo de `busca.md` ter arquivo próprio continua de pé. Ele ganhou arquivo próprio em vez de virar seção de [`chrome.md`](chrome.md) por um motivo estrutural, não por tamanho: `chrome.md` abre dizendo que **chrome não se autora, se entorta**, e que tudo nele é degrau 0 ou 1 da escada. A busca é degrau 5, com JS autorado e ARIA descrita em prosa — ela **contradiz a premissa do documento** que a hospedaria. Enfiá-la lá teria custado a frase de abertura de `chrome.md`, que é uma das mais úteis da spec.
 
 ### 3.1 Os transversais e as superfícies
 
@@ -77,7 +77,7 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 
 [`componentes/README.md`](componentes/README.md) é o índice e o contrato comum: o gabarito de **nove** seções, o contrato de partes, a regra de `className` proibido, e a razão de o catálogo ser **fechado**.
 
-Os dezoito, com uma linha cada, estão no índice dele. Eles não se repetem aqui — dois índices da mesma lista é o defeito de duplicação que a própria spec nomeia no rodapé de [`chrome.md`](chrome.md).
+Os dezessete, com uma linha cada, estão no índice dele. Eles não se repetem aqui — dois índices da mesma lista é o defeito de duplicação que a própria spec nomeia no rodapé de [`chrome.md`](chrome.md).
 
 ---
 
@@ -157,7 +157,7 @@ Três cadências: **commit**, **upgrade** e **implantação**.
 | 2 | `transition:`/`animation:` com tempo ou curva cravada | commit | `npm run portao:2` |
 | 3 | `outline` fora de `src/css/foco.css` | commit | `npm run portao:3` |
 | 4 | Volume, tipo de página, regra de heading e cobertura de locale do conteúdo | commit | `npm run portao:4` |
-| 5 | O gerador da Referência da API e o artefato commitado concordam | commit | `npm run portao:5` |
+| 5 | A referência gerada está declarada pendente, e nada a antecipou pela metade | commit | `npm run portao:5` |
 | 6 | As três rotas contra o host real, nos dois locales | **implantação** | `npm run portao:6 -- <url-base> [rota]` |
 | 7 | O `swizzle --list` congelado, e `src/theme/` conferido contra ele | **upgrade** | `npm run portao:7` |
 | 8 | Os seis efeitos da landing, em contagem exata, mais a metade negativa | commit | `npm run portao:8` |
@@ -276,7 +276,7 @@ A saída **não é medir mais**. É que valor não medido também precisa de end
 | --- | --- |
 | [`icones.md`](icones.md) mandava procurar tamanho de ícone em [`tokens.md`](tokens.md), **e não há token de tamanho de ícone lá** | corrigido — a regra é a escala de espaço, e agora está escrita |
 | [`tokens.md`](tokens.md) §11 dizia que o portão 1 passa *"enquanto o único limiar morar no arquivo de tokens"*; o limiar mora também em `chrome.css` e **o portão tem uma segunda perna** que a frase não mencionava | corrigido — a descrição subestimava o portão |
-| [`tokens.md`](tokens.md) §8 mandava aplicar `text-wrap: balance` em *"título e **lead**"*, e **`lead` não é definido em nenhum dos trinta e um documentos** | corrigido — termo sem definição |
+| [`tokens.md`](tokens.md) §8 mandava aplicar `text-wrap: balance` em *"título e **lead**"*, e **`lead` não é definido em nenhum documento da spec** | corrigido — termo sem definição |
 | As tabelas de contraste de [`tokens.md`](tokens.md) §10 e [`foco.md`](foco.md) §6 **discordam** para o mesmo par em três das quatro células | **aberto** — adivinhar qual está certa seria inventar um número medido. Ver [`foco.md`](foco.md) §6 |
 
 #### A que passou por engano, e vale registrada
