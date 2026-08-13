@@ -402,12 +402,22 @@ const exigir = (ok, msg) => ok || falhas.push(msg);
 
 /* 1 — os pisos que a spec afirma ------------------------------------------- */
 
+/* Os DOIS pisos de sintaxe são comparados na PRECISÃO PUBLICADA, e os outros
+   três não. A diferença não é conveniência:
+   · os pisos de sintaxe são esta mesma grandeza medida antes e escrita na spec
+     com duas casas. Comparar o float cru contra um número que só tem duas casas
+     reprova por ruído de arredondamento — e reprovou, quando a superfície do
+     código subiu um degrau: a medição deu 8,04, o piso é 8,04, e `>=` acusou;
+   · 4,5 e 3:1 são limiares NORMATIVOS (SC 1.4.3 e 1.4.11). Ali 4,4951 falha de
+     verdade, e arredondar seria comprar folga contra a norma. */
+const naPrecisaoPublicada = (x) => Number(x.toFixed(2));
+
 exigir(
-  piorSintaxe('dark') >= PISOS.sintaxeEscuro,
+  naPrecisaoPublicada(piorSintaxe('dark')) >= PISOS.sintaxeEscuro,
   `piso de sintaxe no escuro: ${duasCasas(piorSintaxe('dark'))} < ${duasCasas(PISOS.sintaxeEscuro)}`,
 );
 exigir(
-  piorSintaxe('light') >= PISOS.sintaxeClaro,
+  naPrecisaoPublicada(piorSintaxe('light')) >= PISOS.sintaxeClaro,
   `piso de sintaxe no claro: ${duasCasas(piorSintaxe('light'))} < ${duasCasas(PISOS.sintaxeClaro)}`,
 );
 for (const m of ['dark', 'light']) {

@@ -1,19 +1,21 @@
 /**
  * `frame` — a moldura de **diagrama**, não de screenshot.
  *
- * A decisão de conteúdo vem antes da de anatomia: um produto fictício não tem
- * UI para fotografar, e screenshot de produto que não existe seria o artefato
- * mais caro e mais falso do repositório. O que a moldura enquadra é fluxo de
- * API, ciclo de vida de webhook, modelo de dados.
+ * A decisão de conteúdo vem antes da de anatomia, e ela não depende mais de o
+ * produto ser fictício: sem CDN o asset binário entra no repositório, captura de
+ * UI de terceiro apodrece sozinha, e **raster não herda `currentColor`**. Os três
+ * cortam contra mídia binária de qualquer origem. O que a moldura enquadra é
+ * fluxo, ciclo de vida, modelo de dados.
  *
  * Isso encolhe o componente: o fundo quadriculado da âncora existe para
  * enquadrar imagem com transparência, e sem screenshot ele perde a razão de ser.
- * Sobra borda mais legenda.
+ * Sobra o palco tingido mais a legenda.
  *
  * E cria a segunda das **duas** exceções do catálogo à regra de que nenhum
  * componente conhece modo de cor: o palco declara `color`, e o diagrama que
  * vive nele usa `currentColor` — **um arquivo para os dois modos**, nunca um
- * asset por modo.
+ * asset por modo. É a mesma regra que fecha a rota de entrega: o diagrama chega
+ * ao MDX como SVG INLINE, porque `<img src="x.svg">` não herda `currentColor`.
  *
  * Procedência: docs/design/componentes/frame.md.
  */

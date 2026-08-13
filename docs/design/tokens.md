@@ -514,10 +514,21 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      rampa, que é o mesmo nos dois modos; o que bifurca é a opacidade, e ela
      bifurca por um motivo mecânico: no escuro a página já está perto da 950, e
      um véu leve não se distinguiria dela. No claro, a mesma opacidade
-     transformaria a página num buraco preto em vez de empurrá-la para trás. */
+     transformaria a página num buraco preto em vez de empurrá-la para trás.
+
+     `code` SUBIU para a 900, e a regra passou a ser simétrica: a superfície do
+     código é um passo acima da página nos DOIS modos. Ela era a 950 aqui — o
+     mesmo valor de `page`, dois nomes para uma cor —, e isso só se sustentava
+     com o cartão no meio, que dava ao bloco um fundo contra o qual se destacar.
+     Sem o cartão, o bloco de código tinha a cor exata da página no modo
+     canônico: é literalmente o defeito do Infima que este projeto nomeou.
+
+     Dissenso registrado: a 900 é o degrau imediatamente acima na rampa, e é a
+     única derivação honesta disponível — NÃO é uma medida. O berço que morreu
+     era anatomia medida da âncora. */
   --sd-surface-page:   var(--sd-gray-950);
   --sd-surface-raised: var(--sd-surface-dark);
-  --sd-surface-code:   var(--sd-gray-950);
+  --sd-surface-code:   var(--sd-gray-900);
   --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
   --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 72%);
 
@@ -633,10 +644,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 :root[data-theme='light'] {
   color-scheme: light;
 
-  /* surface — a página desce para a parada 100 e o cartão sobe para a 50: se a
-     página ficasse na 50, o cartão teria que ser branco puro para subir, e aí o
-     tint da marca sumiria da maior superfície do modo claro. A pastilha de
-     código toma o extremo do modo, que aqui é branco. */
+  /* surface — a página desce para a parada 100 e a levantada sobe para a 50: se
+     a página ficasse na 50, a levantada teria que ser branco puro para subir, e
+     aí o tint da marca sumiria da maior superfície do modo claro. A pastilha de
+     código toma o extremo do modo, que aqui é branco.
+
+     Aqui a superfície do código JÁ estava acima da página, e é o escuro que veio
+     ao encontro dela. A assimetria — igual à página no escuro, acima dela no
+     claro — era o que o cartão escondia. */
   --sd-surface-page:   var(--sd-gray-100);
   --sd-surface-raised: var(--sd-surface-light);
   --sd-surface-code:   oklch(from var(--sd-gray-50) 100% 0 h);
@@ -724,9 +739,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    prometia. Está escrito porque quem abrir sem contexto vai ler over-engineering
    e merece a resposta curta.
 
-   `--sd-shadow-sunken` perdeu o anel junto e sobrevive só até o berço do bloco
-   de código sair: ele é o contra-exemplo declarado da elevação, e afundar era
-   relativo ao cartão.
+   `--sd-shadow-sunken` MORREU aqui, e a morte vale a linha: ele era o
+   contra-exemplo declarado da elevação — o único lugar do site que afundava —,
+   e afundar era relativo ao cartão. Sem cartão, o contra-exemplo perde contra o
+   quê ser exemplo, e o único consumidor dele era o berço do bloco de código,
+   que morreu no mesmo commit.
+
+   Sobraram DOIS papéis, e os dois são chrome flutuante. A profundidade saiu
+   inteira do conteúdo: a #50 mediu zero componente de conteúdo com sombra em
+   seis páginas da âncora, e o único portador de sombra medido lá é um chip de
+   24px no hover de heading.
    ----------------------------------------------------------------------------- */
 
 :root {
@@ -736,7 +758,6 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
                       0 1px 2px -1px var(--sd-shadow-cast);
   --sd-shadow-float:  inset 0 1px 0 0 var(--sd-shadow-lip),
                       0 20px 48px -12px var(--sd-shadow-cast);
-  --sd-shadow-sunken: inset 0 1px 3px 0 var(--sd-shadow-cast);
 }
 
 /* =============================================================================
@@ -883,7 +904,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-color-white:              var(--sd-gray-50);
 
   /* --- marca e estados.
-         Exceção 5 do adaptador: das seis shades por cor semântica, só as VIVAS
+         Exceção 4 do adaptador: das seis shades por cor semântica, só as VIVAS
          são atribuídas — base, -dark, -darker, -contrast-background e
          -contrast-foreground. As quatro restantes (-light, -lighter, -lightest,
          -darkest) foram resolvidas em build time pelo color-mod() e não têm
@@ -1004,6 +1025,23 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   /* --- elevação. Preenche a lacuna que o Infima tem por desenho: ele não
          redefine sombra no escuro, e as dele somem sobre fundo escuro.
 
+         A PROFUNDIDADE SAI DO CONTEÚDO, e é medição: a #50 achou zero
+         componente de conteúdo com sombra em seis páginas da âncora — `shadow-md`
+         e maiores existem no CSS dela e nunca são usados. Então `lw` e a sombra
+         de alerta valem `none`, e sobra sombra só onde algo de fato flutua.
+
+         Quem lê `lw` de verdade, medido no fonte da 3.10.2 — e o ticket errava:
+         ele nomeava `.card` do Infima, que ESTE site não renderiza (o nosso
+         cartão é classe de CSS Module, e `.card` nua não a alcança). Os leitores
+         vivos são `CodeBlock/Container`, que é conteúdo, e `BackToTopButton`,
+         que é chrome flutuante. A conclusão não muda para o bloco de código; o
+         botão recupera a sombra por classe estável em `chrome.css`.
+
+         `--ifm-alert-shadow` fica em `none` pela mesma regra, e ela é a linha
+         que o Infima lê em `.alert` — o nosso callout tem DOM próprio e não é um
+         `.alert`. O adaptador escreve o que o FRAMEWORK consome, não o que a
+         nossa página hoje renderiza.
+
          `md` e `tl` recebem o MESMO token, e isso não é duplicação nossa: o
          Infima tem três nomes para o que aqui tem dois papéis, e o adaptador
          existe para traduzir. O precedente está neste arquivo —
@@ -1011,10 +1049,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
          Verificado no Infima: `md` é lida por `.dropdown__menu` e
          `.navbar-sidebar`, que são chrome flutuante; `tl` só por `.shadow--tl`,
          que ninguém usa. ---------------------------------------------------- */
-  --ifm-global-shadow-lw: var(--sd-shadow-raised);
+  --ifm-global-shadow-lw: none;
   --ifm-global-shadow-md: var(--sd-shadow-float);
   --ifm-global-shadow-tl: var(--sd-shadow-float);
-  --ifm-alert-shadow:      var(--sd-shadow-raised);
+  --ifm-alert-shadow:      none;
   --ifm-blockquote-shadow: none;
   --ifm-navbar-shadow:     none;
 
@@ -1025,7 +1063,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-link-hover-decoration: underline;
 
   /* --- código. --ifm-pre-background é sobrescrita dentro do bloco de código
-         por --prism-background-color; ver a exceção 4 no fim do arquivo. ---- */
+         por --prism-background-color; ver a exceção 3 no fim do arquivo. ---- */
   --ifm-code-background:  var(--sd-surface-code);
   --ifm-pre-background:   var(--sd-surface-code);
   --ifm-pre-color:        var(--sd-code-fg);
@@ -1193,7 +1231,19 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 /* =============================================================================
    ADAPTADOR — as exceções com escopo
 
-   Cinco pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA.
+   Quatro pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA.
+
+   Eram cinco. A do `--docusaurus-tag-list-border` saiu porque ela não tinha
+   superfície viva: nenhuma página deste site declara `tags:`, e o front matter
+   da âncora — `title`, `description`, `icon`, `sidebarTitle`, `hidden`,
+   `noindex`, `searchable`, `deprecated`, `groups` — não tem o campo. O valor
+   de uma lista fechada é ser conferível membro a membro, e linha
+   permanentemente infalsificável é o oposto disso.
+
+   Dissenso registrado: a exceção custava uma linha e defendia contra um
+   descuido; o modo de falhar que a saída dela abre é o SILENCIOSO que a spec
+   combate em toda parte. Se a arquitetura de informação criar tag um dia, ela
+   volta no mesmo commit, por uma linha.
    ============================================================================= */
 
 /* --- Exceção 1 — --ifm-alert-background-color-highlight -----------------------
@@ -1223,16 +1273,7 @@ details[class] {
   --docusaurus-details-transition: transform var(--sd-move-expand);
 }
 
-/* --- Exceção 3 — --docusaurus-tag-list-border --------------------------------
-   Mesma mecânica: declarada em `.tag` dentro de CSS Module. O elemento é um
-   <a> (o Tag renderiza um <Link>), então `a[class*='tag_']` é (0,1,1) e vence a
-   classe hasheada. O prefixo `tag_` é estável: o padrão de nome é
-   `[local]_[contenthash:base64:4]`, e `local` é o nome escrito no módulo. */
-a[class*='tag_'] {
-  --docusaurus-tag-list-border: var(--sd-border-default);
-}
-
-/* --- Exceção 4 — --prism-background-color ------------------------------------
+/* --- Exceção 3 — --prism-background-color ------------------------------------
    Ela não vem de CSS nenhum: `CodeBlock/Container` a injeta no atributo `style`
    INLINE, a partir de `themeConfig.prism.theme.plain`, via
    `getPrismCssVariables`. Nenhum seletor de folha de estilo vence estilo inline.
@@ -1244,7 +1285,7 @@ a[class*='tag_'] {
    Escrever aqui uma regra `.theme-code-block { --prism-background-color: … }`
    seria exatamente a linha morta que sugere funcionar. */
 
-/* --- Exceção 5 — as shades de cor semântica ---------------------------------
+/* --- Exceção 4 — as shades de cor semântica ---------------------------------
    Não é seletor, é regra de conteúdo do adaptador: só as shades VIVAS são
    atribuídas. Escrita no bloco do adaptador, acima. */
 ```
@@ -1348,6 +1389,20 @@ Os dois acentos derivados saem como **expressão**, e não como hex repetido, po
 
 Isso torna a auditoria uma leitura de bloco: **token que aparece no bloco escuro e não no claro é um buraco visível**, não uma omissão que passa batido. Os dois blocos declaram a mesma lista, na mesma ordem.
 
+### A superfície do código sobe um degrau, e a regra fica simétrica
+
+`--sd-surface-code` era `--sd-gray-950` no escuro, que é **o mesmo valor de `--sd-surface-page`**. Dois nomes para uma cor, no modo canônico — e é literalmente o defeito do Infima que este projeto nomeou.
+
+Aquilo se sustentava enquanto havia cartão: o bloco de código vivia sobre o cartão, e o que o destacava era o cartão em volta, não a tinta dele. Sem cartão, o bloco de código passou a ter **a cor exata da página**.
+
+Ela sobe para `--sd-gray-900`, e a regra passa a ser: **a superfície do código é um passo acima da página nos dois modos.** No claro ela já era — a pastilha toma o extremo do modo, que é branco —, então a assimetria (igual à página no escuro, acima dela no claro) desaparece por o escuro vir ao encontro do claro.
+
+Medido, contra a página: **1,113:1** no escuro e **1,147:1** no claro. A célula do escuro era **1,000:1**.
+
+> **Dissenso registrado, herdado da [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56).** A parada 900 é o degrau imediatamente acima na rampa — a **única derivação honesta disponível**, e não uma medida. O que morre no lugar dela era anatomia medida da âncora. Se ao vivo o bloco ficar pesado no escuro, o ajuste é uma linha, e é o tipo de coisa que só se julga com a implementação montada.
+
+O par do `Frame` levou a mesma correção pela mesma causa, e está em [`componentes/frame.md`](componentes/frame.md): o palco dele citava `--sd-surface-page` e passou a citar `--sd-surface-raised`. A [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) achou o defeito num componente e não olhou para o outro.
+
 ### O segundo seletor do bloco escuro
 
 O bloco escuro tem **dois** seletores: `:root, [data-sd-showcase]`. O segundo é a **ilha de espetáculo**.
@@ -1372,9 +1427,23 @@ As sombras moram junto, pelo mesmo motivo: a composição é a mesma nos dois mo
 
 > **Exceção declarada, e é a única do sistema.** A camada 2 é só cor, e as sombras carregam comprimentos inline. `box-shadow` é valor atômico: separar geometria de cor exigiria seis tokens de comprimento para compor duas sombras. Elas moram no arquivo de tokens, cabem num bloco que se lê inteiro, e a exceção é **declarada** — não descuido.
 
-### A sombra deixou de ser escada
+### A sombra deixou de ser escada, e a profundidade saiu do conteúdo
 
 Eram **quatro degraus numerados**, com um anel `0 0 0 1px` embutido em cada composição. São **dois papéis nomeados por intenção** — `raised` e `float` —, e o anel saiu.
+
+**`--sd-shadow-sunken` morreu junto, e a morte vale a linha.** Ele era o contra-exemplo declarado da elevação — *"tudo sobe, só o código afunda"* —, tinha um consumidor só, o berço do bloco de código, e **afundar era relativo ao cartão**. Sem cartão, o contra-exemplo perde contra o quê ser exemplo.
+
+**A profundidade sai do conteúdo, e isso é medição.** A [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) mediu **zero componentes de conteúdo com sombra em seis páginas** da âncora: `shadow-md` e maiores existem no CSS dela e **nunca são usados**. O único portador de sombra do site medido é um chip de 24px no hover de heading. Então o adaptador escreve:
+
+| Variável do Infima | Quem a lê de verdade | Recebe |
+| --- | --- | --- |
+| `--ifm-global-shadow-lw` | `CodeBlock/Container` (conteúdo) e `BackToTopButton` (chrome flutuante) | **`none`** |
+| `--ifm-alert-shadow` | `.alert` do Infima — o nosso callout tem DOM próprio e não é um `.alert` | **`none`** |
+| `--ifm-global-shadow-md` / `-tl` | `.dropdown__menu` e `.navbar-sidebar` — chrome flutuante | `--sd-shadow-float` |
+
+**Correção medida contra o que o ticket afirmava.** A decisão nomeava `.card` como o leitor real de `lw`, *"o cartão do `card-group`, que é conteúdo"*. **Este site não renderiza `.card` nenhum:** o nosso cartão é classe de CSS Module, e a `.card` nua do Infima não a alcança. Os leitores vivos, medidos no fonte da 3.10.2 e no HTML publicado, são outros dois. A conclusão não muda para o bloco de código; o que muda é que **o botão de voltar ao topo perderia a sombra por tabela**, e ele é chrome flutuante pela mesma definição que põe o dropdown e a gaveta nessa classe. Ele a recupera por classe estável em `chrome.css` — sem exceção nova no adaptador, porque `.theme-back-to-top-button` é `ThemeClassNames`.
+
+`md` e `tl` recebendo o mesmo valor **não é duplicação nossa**: o Infima tem três nomes para o que aqui tem dois papéis, e o adaptador existe para traduzir. O precedente está no próprio arquivo — `--ifm-container-width` e `-xl` recebem os dois o mesmo token.
 
 **O anel virou borda de verdade, e a razão é alcance e não estética.** O Infima declara `--ifm-*-border-color` em todo componente, então o adaptador pinta o fio inteiro com o vocabulário que já existe. Anel dentro de `box-shadow` obrigaria a sobrescrever a sombra de cada componente, um por um, só para desenhar uma linha. O `box-sizing` global é `border-box`, então o fio entra no mesmo pixel em que o anel estava — a troca não move geometria.
 
@@ -1407,19 +1476,24 @@ Dois achados da implementação que a arquitetura não tinha:
 - **`--ifm-transition-slow` não tem consumidor.** O Infima a declara e nada a lê. A arquitetura previa que o adaptador a escrevesse; ela sai, pela regra 2.
 - **A escala de ênfase do Infima é invertida por ele no bloco escuro, e nós não podemos invertê-la** — o adaptador é cego ao modo. A rota correta é apontar cada degrau para um papel da camada 2, que já bifurcou. A escala tem dez degraus consumidos e o nosso texto tem quatro paradas, então alguns degraus repetem. **Repetir é honesto; inventar parada não seria.** O degrau 600 não é consumido por ninguém e por isso não é atribuído.
 
-### As cinco exceções com escopo — lista fechada
+### As quatro exceções com escopo — lista fechada
 
-Cinco pontos do Docusaurus não são alcançáveis de `:root`.
+Quatro pontos do Docusaurus não são alcançáveis de `:root`.
 
 | # | Ponto | Por que escapa | Como o adaptador alcança |
 | ---: | --- | --- | --- |
 | 1 | `--ifm-alert-background-color-highlight` | `rgba()` **literal por variante** dentro de `.alert--*`, não derivado da primária — é o ponto onde a re-marcação por variável do Infima **vaza** | uma declaração no seletor de cada variante |
 | 2 | `--docusaurus-details-decoration-color`, `-transition`, `-summary-arrow-size` | declaradas dentro de classe de CSS Module, nunca em `:root` | `details[class]`, que é (0,1,1) e vence a classe hasheada sem depender do hash |
-| 3 | `--docusaurus-tag-list-border` | idem, em `.tag` | `a[class*='tag_']`, mesma mecânica. O prefixo é estável porque o padrão de nome é `[local]_[hash]` |
-| 4 | `--prism-background-color` | **não vem de CSS nenhum** | ver abaixo — a arquitetura previa um seletor, e ela estava errada |
-| 5 | shades de cor semântica | quatro das seis são inertes | atribuir **só as vivas**: base, `-dark`, `-darker`, `-contrast-background`, `-contrast-foreground` |
+| 3 | `--prism-background-color` | **não vem de CSS nenhum** | ver abaixo — a arquitetura previa um seletor, e ela estava errada |
+| 4 | shades de cor semântica | quatro das seis são inertes | atribuir **só as vivas**: base, `-dark`, `-darker`, `-contrast-background`, `-contrast-foreground` |
 
-**Correção registrada na exceção 4.** A arquitetura previa alcançar `--prism-background-color` *"por seletor na classe do bloco de código"*. **Não é alcançável assim** — medido no fonte da versão em uso: `CodeBlock/Container` injeta a variável no atributo `style` **inline**, via `getPrismCssVariables`, e nenhum seletor de folha de estilo vence estilo inline. O ponto de escrita é o **shim** de `themeConfig.prism.theme`. Escrever a regra de seletor mesmo assim seria exatamente a linha morta que sugere funcionar.
+**Eram cinco, e a que saiu é a do `--docusaurus-tag-list-border`.** Ela alcançava a borda do chip de tag por `a[class*='tag_']`, e **não tem superfície viva**: nenhuma página deste site declara `tags:`, e a medição fecha o caso — o front matter da âncora tem `title`, `description`, `icon`, `sidebarTitle`, `hidden`, `noindex`, `searchable`, `deprecated` e `groups`, e **não tem `tags`**. O carimbo dela é `herdado`, não defesa.
+
+O valor de uma lista fechada é ser **conferível membro a membro**, e linha permanentemente infalsificável é o oposto disso: ninguém consegue mostrar que ela funciona, porque não há página onde ela apareça.
+
+> **Dissenso registrado.** Isso remove uma defesa que custava uma linha, e o modo de falhar que a saída dela abre é exatamente o **silencioso** que a spec combate em toda parte: o dia em que uma página declarar `tags:`, o chip sai com a borda default do Infima e nada avisa. Se a arquitetura de informação criar tag, a exceção volta **no mesmo commit**, por uma linha.
+
+**Correção registrada na exceção 3.** A arquitetura previa alcançar `--prism-background-color` *"por seletor na classe do bloco de código"*. **Não é alcançável assim** — medido no fonte da versão em uso: `CodeBlock/Container` injeta a variável no atributo `style` **inline**, via `getPrismCssVariables`, e nenhum seletor de folha de estilo vence estilo inline. O ponto de escrita é o **shim** de `themeConfig.prism.theme`. Escrever a regra de seletor mesmo assim seria exatamente a linha morta que sugere funcionar.
 
 ### O shim do Prism
 
@@ -1529,9 +1603,9 @@ Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superf
 | acento como link, sobre levantada / página | 5,55 / 7,33 | 5,96 / 5,70 |
 | `text-inverse` sobre preenchimento de acento | 7,85 | 6,54 |
 | anel de foco vs levantada / página (SC 1.4.11 pede 3:1) | 5,55 / 7,33 | 5,96 / 5,70 |
-| anel de foco vs pastilha de código | 7,33 | 6,54 |
+| anel de foco vs pastilha de código | 6,58 | 6,54 |
 | `text-strong` sobre o wash do item ativo | 15,35 | 14,34 |
-| **sintaxe, pior token, sobre a pastilha** | **8,94** | **6,29** |
+| **sintaxe, pior token, sobre a pastilha** | **8,04** | **6,29** |
 | ícone de estado sobre o próprio fundo, pior caso | 4,96 | 5,45 |
 | corpo sobre fundo de callout, pior caso | 6,47 | 7,98 |
 
@@ -1552,7 +1626,11 @@ O método vale registro, porque ele é o que reproduz o número. Duas escolhas o
 
 **`node scripts/contraste.mjs --verificar` reprova se o pior token cair abaixo de 8,04 no escuro ou 6,29 no claro, ou se o croma máximo passar de 0,095.**
 
-Hoje ele mede **8,94** no escuro, e a folga tem explicação: os 8,04 são o piso contra a pastilha um degrau acima na rampa, que é onde ela vai parar quando o cartão sair. O piso do comando é o mais apertado dos dois de propósito — ele precisa continuar valendo depois da mudança de superfície, e não reprovar hoje para passar amanhã.
+Hoje ele mede **8,04** no escuro, **exatamente o piso** — e essa coincidência é o recibo de que o piso foi bem posto. Ele foi escrito quando a pastilha ainda era a cor da página, medindo então 8,94, e o número gravado foi o da pastilha **um degrau acima na rampa, que é onde ela ia parar quando o cartão saísse**. O cartão saiu, a pastilha subiu, e a medição caiu em cima do piso. O comando não reprovou hoje para passar amanhã: ele já cobrava o amanhã.
+
+> **Uma correção de mecânica veio junto, e ela é do script.** Com a medida caindo em cima do piso, o `>=` reprovava por **ruído de arredondamento**: os dois pisos de sintaxe são esta mesma grandeza medida antes e escrita com duas casas, e comparar o float cru contra um número de duas casas acusa uma diferença que a spec não afirma. Os dois passaram a ser comparados **na precisão publicada**. Os limiares de AA e da SC 1.4.11 **não** — ali 4,4951 falha de verdade, e arredondar seria comprar folga contra a norma.
+
+**A folga agora é zero, e isso é o desenho.** Qualquer mexida futura que baixe o pior token um centésimo reprova a CI. É o que "piso" significa.
 
 Os três números que convertem *"não muito neon"* de gosto em régua:
 
@@ -1560,7 +1638,9 @@ Os três números que convertem *"não muito neon"* de gosto em régua:
 | --- | ---: | ---: | ---: |
 | semeadura anterior | 0,104 / 0,089 | 0,173 / 0,113 | 7,77 / 5,66 |
 | o par padrão da âncora | 0,075 / 0,115 | 0,112 / 0,207 | 5,87 / 4,55 |
-| **esta paleta** | **0,057 / 0,062** | **0,095 / 0,090** | **8,94 / 6,29** |
+| **esta paleta** | **0,057 / 0,062** | **0,095 / 0,090** | **8,04 / 6,29** |
+
+*A coluna de contraste desta tabela deixou de ser comparável coluna a coluna no escuro, e isso fica dito em vez de escondido:* as duas primeiras linhas foram medidas sobre a pastilha **antiga**, que era a cor da página, e só a terceira foi remedida sobre a nova. A coluna do claro continua comparável, porque a pastilha clara não se mexeu. Remedir as outras duas exigiria as duas paletas inteiras, que não moram neste repositório — e a comparação que a tabela existe para fazer é de **croma**, onde as três linhas continuam saindo do mesmo método.
 
 *As três linhas foram medidas pelo mesmo comando, e a primeira adjudica um número que estava em disputa:* a resolução que escolheu esta paleta registrou o piso da semeadura anterior como **7,02**, e a tabela deste documento registrava **7,77**. **7,77 é o certo** — quem tinha razão era o registro antigo, e é ele que fica.
 
@@ -1639,8 +1719,9 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 | Escada de raio por múltiplo | mecanismo emprestado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §7 — raio paramétrico da Vapi, disciplina do Neon |
 | Escuro em `:root`, claro como override | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §4 — Infima e alvo põem claro em `:root`; axioma 4 |
 | Adaptador de mão única | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2, derivado das armadilhas da [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
-| As cinco exceções com escopo | herdado | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
-| A exceção 4 não é alcançável por seletor | **origem própria (correção)** | medido no fonte da 3.10.2 ao implementar o slice 1 — `style` inline vence folha de estilo |
+| As exceções com escopo, como lista fechada | herdado | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
+| **Elas caem de cinco para quatro** — `--docusaurus-tag-list-border` sai | **herdado** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — o front matter da âncora não tem `tags`, e nenhuma página deste site declara o campo. Linha permanentemente infalsificável é o oposto de lista conferível. *Dissenso: o modo de falhar que a saída abre é silencioso* |
+| A exceção do Prism não é alcançável por seletor | **origem própria (correção)** | medido no fonte da 3.10.2 ao implementar o slice 1 — `style` inline vence folha de estilo |
 | `--ifm-transition-slow` fora do adaptador | **origem própria (correção)** | varredura de `var(--ifm-*)` no Infima e no theme-classic — zero consumidores |
 | Ênfase mapeada em papéis da camada 2 | origem própria | consequência de o adaptador ser cego ao modo |
 | `@property` em três raízes | origem própria | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §2, corrigindo a [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §2d |
@@ -1649,11 +1730,15 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 | Página clara na parada 100 | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §4 — preserva o tint na maior superfície do claro |
 | O papel da superfície levantada troca de nome | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — o nome anterior citava o cartão, que está de saída, e já colidia com a grade de `card-group` e com o cartão-componente. `raised` nomeia o papel: *o que não é a página* |
 | Pastilha de código no extremo do modo | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §4 — Clerk e a anatomia da Perplexity |
+| **A pastilha do escuro sobe para a parada 900** | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — ela era o **mesmo valor** de `--sd-surface-page`, e sem cartão o bloco sumia contra a página. *Dissenso: a 900 é o degrau imediatamente acima na rampa, e não uma medida; o que morre no lugar era anatomia medida* |
 | Borda = tinta a 7% | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §5 — reproduz os dois valores medidos com um mecanismo |
 | `--sd-shadow-lip` como valor único, ancorado no topo da rampa | origem própria | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §2, corrigindo a tinta da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
 | Dois papéis de sombra, nomeados por intenção | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — os consumidores de sombra em `src/`, com o cartão de saída. Uma escala de dois não é escala |
 | O anel embutido vira borda de verdade | **origem própria (verificação)** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o adaptador alcança `--ifm-*-border-color` em todo componente; anel em `box-shadow` exige sobrescrita por componente |
 | `--ifm-global-shadow-md` e `-tl` ao papel flutuante | **origem própria (verificação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — no Infima, `md` é lida por `.dropdown__menu` e `.navbar-sidebar`; `tl` só por uma classe que ninguém usa |
+| **`--sd-shadow-sunken` morre; zero sombra no conteúdo** | **herdado** | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) — zero componentes de conteúdo com sombra em seis páginas da âncora; `shadow-md` e maiores existem no CSS dela e nunca são usados. Afundar era relativo ao cartão |
+| **`--ifm-global-shadow-lw` e `--ifm-alert-shadow` em `none`** | **origem própria (verificação)** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60), com uma **correção medida**: a decisão nomeava `.card` do Infima como leitor de `lw`, e este site não renderiza `.card` nenhum. Os leitores vivos são `CodeBlock/Container` e `BackToTopButton` |
+| O botão de voltar ao topo recupera a sombra em `chrome.css` | **origem própria (consequência)** | ele é chrome flutuante pela mesma definição que classifica o dropdown e a gaveta, e o gancho é `ThemeClassNames` — nenhuma exceção nova no adaptador |
 | `--sd-shadow-cast` como par declarado | herdado | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §2 — derivá-lo sai ajuste de curva com literais mágicos |
 | Segundo seletor do bloco escuro, e a ilha | origem própria | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3 — glow não existe em nenhuma das sete |
 | `--sd-glow` na camada 3, em regra própria | origem própria | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3a |

@@ -8,6 +8,26 @@ comprimento da página.
 
 Ele **compõe** o [`tabs`](tabs.md); não swizzla nada.
 
+### Por que ele fica, e as duas razões são independentes
+
+Este componente foi o **único candidato nomeado** a repovoar o carimbo
+`delta deliberado`, sob a aposta de que mantê-lo *"onde a âncora resolve com
+`Tabs`"* seria divergir por escolha. A aposta não produziu membro, e nenhuma das
+duas razões depende da outra:
+
+1. **O critério de corte deste catálogo é uso ZERO**, e a âncora usa `CodeGroup`
+   **cinco vezes**. Os treze componentes cortados morreram por *"uso zero em
+   1.740 páginas"* — cinco usos não é o mesmo teste com um resultado diferente,
+   é o outro lado dele.
+2. **O *"resolve com `Tabs`"* nunca foi contado.** Dos 105 `Tab` medidos na
+   âncora, **52 embrulham `Frame`** — metade das abas dela embrulha imagem, não
+   código. O pareamento por aba nunca foi medido, e a pesquisa é explícita
+   quanto a isso.
+
+**Manter um componente que a âncora tem e usa não é divergir da âncora.** O
+emprego que sobra aqui é estreito e real: instalação por gerenciador de pacote em
+três folhas, mais a fixture de várias linguagens.
+
 ## Anatomia
 
 O autor escreve cercas de código com título, como escreveria fora do grupo. O
@@ -98,6 +118,7 @@ contrato de estado de entrada mora em [`foco.md`](../foco.md).
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | Compõe `Tabs` em vez de swizzlar | herdado | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §3 |
+| **Ele fica no catálogo** | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) e [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — a âncora usa `CodeGroup` cinco vezes, e o critério de corte é uso zero; o *"resolve com `Tabs`"* nunca foi contado, e 52 dos 105 `Tab` medidos lá embrulham `Frame` |
 | Abas e não dropdown | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) — a forma é função da contagem; [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 transforma isso em regra de contrato |
 | `groupId` e `queryString` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 |
 | Os dois nascem desligados | **origem própria (correção)** | ligar por default polui a escolha compartilhada quando as abas não são linguagens, e o defeito só aparece noutra página |
