@@ -1,8 +1,12 @@
 /* =============================================================================
    shinydoc — o chrome
 
-   O shell da página de documentação: proporções, navbar, sidebar, TOC,
-   breadcrumb, paginação, footer e o comportamento em tela estreita.
+   O shell da página de documentação: proporções, navbar com faixa de tabs,
+   sidebar, TOC, eyebrow, subtítulo, paginação, footer e o comportamento em tela
+   estreita.
+
+   NÃO HÁ CARTÃO. A página é plana, e o que segura a geometria são duas caixas
+   invisíveis — uma na coluna, uma no `<article>`.
 
    Este arquivo NÃO tem valor literal — cor, comprimento, tempo e curva vivem em
    `tokens.css` e chegam aqui por nome. A única exceção é o limiar de media
@@ -21,9 +25,17 @@
 /* -----------------------------------------------------------------------------
    1. A cadeia de proporções
 
-   `--sd-container-width` → `--sd-doc-width` (75%) → cartão → interior → prosa.
-   Os valores moram em `tokens.css`; aqui e no documento eles se citam por nome,
-   para que a cadeia não tenha uma segunda versão que envelhece sozinha.
+   `--sd-container-width` → `--sd-doc-width` (75%) → prosa. Os valores moram em
+   `tokens.css`; aqui e no documento eles se citam por nome, para que a cadeia
+   não tenha uma segunda versão que envelhece sozinha.
+
+   O CONGELAMENTO é `sidebar + container + 2 × (gutter − 16)`, e ele é o número
+   a partir do qual nada mais se mexe na tela. Os 16 são o preenchimento que o
+   Infima já põe no `.container`; o `<main>` completa o que falta.
+
+   Correção de premissa que morre aqui: o *"shell total = container + sidebar"*
+   que este arquivo e `chrome.md` escreviam NUNCA foi o congelamento — ele
+   ignora o preenchimento do `<main>` e erra para menos.
 
    Ela fecha em três declarações, e as três existem por um motivo mecânico:
 
@@ -31,14 +43,33 @@
        do container quebraria a cadeia inteira — a margem negativa do `.row` é
        calibrada contra ele, e o `.col` de 75% mede a row. O container fica com
        o que o Infima dá; o `<main>` completa o que falta para o gutter.
-   (b) O `.col` perde o preenchimento horizontal. Sem isso o cartão nasce menor
-       que a coluna, porque os dois lados são cobrados por dentro dos 75%.
+   (b) O `.col` perde o preenchimento horizontal. Sem isso a coluna de conteúdo
+       nasce menor que os 75%, porque os dois lados são cobrados por dentro
+       deles.
    (c) A coluna do TOC recebe a separação de um lado só, para que a borda
-       direita dela feche com a borda direita do container.
+       direita dela feche com a borda direita do container. A separação é
+       `--sd-space-6` e é ORIGEM PRÓPRIA: ela foi escolhida para a LISTA cair
+       em 264, que é o número medido. A coluna fica em 288 porque é 25% de um
+       grid de doze que não se mexe — o elo que não fecha contra a âncora, e
+       ele vai escrito em `chrome.md` como tal.
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page main {
   padding-inline: calc(var(--sd-gutter) - var(--sd-space-4));
+
+  /* O TOPO DO CONTEÚDO — o último elo da cadeia, e o único vertical.
+
+     Ele completa no `<main>` o que o container já dá, exatamente como o gutter
+     horizontal na linha acima. E aqui isso não é simetria de estilo: é a ÚNICA
+     rota. O `DocRoot/Layout/Main` cola `padding-top--md` no container, e essa
+     classe do Infima é `!important` — nenhuma declaração de folha de estilo a
+     vence sem escrever um `!important` de volta, que é o que este projeto não
+     faz em lugar nenhum.
+
+     Somando por fora, a conta fecha sem brigar: 16 do container mais o que
+     falta para 40. Medido: o `<article>` abre em 152 numa viewport larga, com o
+     topo grudado em 112. */
+  padding-top: calc(var(--sd-space-10) - var(--sd-space-4));
 }
 
 html.docs-doc-page main > .container > .row > .col {
@@ -46,50 +77,56 @@ html.docs-doc-page main > .container > .row > .col {
 }
 
 html.docs-doc-page main > .container > .row > .col.col--3 {
-  padding-inline: var(--sd-space-8) 0;
+  padding-inline: var(--sd-space-6) 0;
 }
 
 /* -----------------------------------------------------------------------------
-   O cartão
+   O CARTÃO MORREU, E A CAIXA INVISÍVEL FICOU
 
-   Ele envolve **só** `.theme-doc-markdown`, que é `ThemeClassNames` estável e o
-   único recorte alcançável sem swizzle. Breadcrumb fica acima e paginação
-   abaixo, sobre o fundo da página: incluí-los exigiria `DocItem/Layout`, que é
-   `unsafe`. Efeito colateral bom — os cartões de paginação ficam com um passo de
-   elevação só, sem cartão dentro de cartão.
+   `.theme-doc-markdown` deixa de ser superfície. Nem fundo, nem anel, nem
+   preenchimento, nem raio, nem sombra — a página fica plana, e `grep` por
+   `.theme-doc-markdown` como superfície não acha nada.
 
-   A separação é uma BORDA de verdade, com a mesma tinta que o anel tinha. Ela
-   era o `0 0 0 1px` embutido na sombra multi-camada até a skin nova, e a troca é
-   decisão de alcance: uma linha de `border` contra a sombra inteira redeclarada,
-   porque `box-shadow` não se acrescenta — se redeclara.
+   O que sobrevive do cartão é o `max-width`, e ele MUDA DE DONO: sobe do corpo
+   para a coluna. O motivo é o mesmo de sempre, e é o que a caixa invisível
+   existe para segurar — medido em 3.10.2, o `DocItem/Layout` aplica a classe de
+   75% sempre que `hide_table_of_contents` NÃO está no front matter, inclusive
+   em página sem heading. São TRÊS configurações, não duas, e é a terceira que
+   manda a coluna a 100% da linha.
 
-   O FIO MUDA DE PIXEL, e vale dito porque a leitura fácil é a contrária. O anel
-   era `box-shadow` com spread, e spread pinta FORA da caixa. A borda, sob o
-   `box-sizing: border-box` global, come para DENTRO: a aresta externa fica onde
-   estava, e quem encolhe um pixel de cada lado é a área de conteúdo — de 768
-   para 766, com `--sd-doc-width` em 864 e o preenchimento em 48. Nenhuma medida
-   da cadeia de proporções deriva daí, então nada mais se move; mas *"entra no
-   mesmo pixel"* seria falso.
+   Verificado no fonte: na configuração sem TOC a classe hasheada **não é
+   aplicada**, então não há `!important` a vencer. Nas outras duas a declaração é
+   INERTE, porque 75% de 1152 é exatamente `--sd-doc-width`. Ela serve uma
+   configuração que nenhuma página usa hoje, e existe para o defeito não voltar
+   mudo.
 
-   `max-width` e não `width`, e é isso que trava a decisão central. Medido em
-   3.10.2: o `DocItem/Layout` aplica a classe de 75% sempre que
-   `hide_table_of_contents` NÃO está no front matter — inclusive em página sem
-   heading, ao contrário do que o mapa supunha. É a terceira configuração, a de
-   `hide_table_of_contents: true`, que manda a coluna a 100% da linha; e é o
-   `max-width` que segura o cartão **no mesmo pixel** nas três, deixando mudar só
-   o vazio à direita.
+   A MEDIDA DA PROSA sai de dois seletores estáveis — um elemento e uma classe do
+   Infima — no lugar da lista de onze elementos que crescia a cada componente
+   novo do catálogo. Com a lista morre a superfície que produziu o defeito do
+   `<header>`: não há mais lista da qual um elemento possa escapar.
+
+   E O BREAKOUT MORRE JUNTO. Código e tabela ficam nos mesmos 720 do texto,
+   porque a medida agora é do `<article>` inteiro e não de uma lista de filhos.
+   A âncora tem uma largura só.
+
+   O `.pagination-nav` entra pelo mesmo motivo que o `<article>`: ele é IRMÃO
+   dele, não filho, e sem a segunda linha a paginação mediria a coluna inteira
+   enquanto o texto acima dela mede a prosa.
+
+   O ancestral `main > .container > .row > .col` está aqui de propósito, e não
+   por gosto de especificidade: a Referência da API tem layout próprio, com o
+   `<article>` dela dentro de um `.row` cujo filho NÃO é `.col`. Sem o escopo, a
+   paginação daquela página encolheria para a prosa e sairia do prumo com a
+   coluna de texto que ela fecha.
    ----------------------------------------------------------------------------- */
 
-html.docs-doc-page .theme-doc-markdown {
-  /* Camada 3 — declarada no escopo do componente, nunca em `:root`. */
-  --sd-doc-preenchimento: var(--sd-space-12);
-
+html.docs-doc-page main > .container > .row > .col:not(.col--3) {
   max-width: var(--sd-doc-width);
-  padding: var(--sd-doc-preenchimento);
-  border: var(--sd-border-width) solid var(--sd-border-subtle);
-  border-radius: var(--sd-radius);
-  background-color: var(--sd-surface-raised);
-  box-shadow: var(--sd-shadow-raised);
+}
+
+html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
+  max-width: var(--sd-prose-width);
+  margin-inline: auto;
 }
 
 html.docs-doc-page .theme-doc-markdown > :first-child {
@@ -101,35 +138,104 @@ html.docs-doc-page .theme-doc-markdown > :last-child {
 }
 
 /* -----------------------------------------------------------------------------
-   A medida da prosa — constante, com breakout de código e tabela
+   O ritmo vertical — assimétrico, e é a regra que uma reprodução ingênua erraria
 
-   `--sd-prose-width` sempre, tenha a página TOC ou não. A âncora encolhe a
-   coluna de texto quando o TOC existe, e essa oscilação não é desenho: é efeito
-   colateral de a largura do texto depender de a página ter subtítulos. Páginas
-   vizinhas da mesma seção leem com larguras diferentes, sem motivo visível.
+   48 antes de um cabeçalho, 16 depois, com `h2` e `h3` abrindo IDÊNTICO. O
+   Infima escala o ar de cima com o tamanho do título (`h2` a 2 × leading, `h3`
+   a 1,5), o que é o gesto intuitivo e o errado: o que separa uma seção da
+   anterior não tem relação com o corpo do título dela.
 
-   O breakout não precisa de regra: quem NÃO está nesta lista fica com o interior
-   inteiro do cartão. Código e tabela respiram; o texto não.
+   É esta regra que resgata `--sd-space-12`. Ele tinha DOIS consumidores — o
+   preenchimento do cartão e a metade dele no estreito —, e os dois morrem com o
+   cartão. Sem esta regra o degrau ficaria órfão, que é o defeito do Infima que
+   este projeto nomeou.
 
-   Sem `!important`. A medida vai para DENTRO dos 75%, nunca contra eles.
-
-   `header` está na lista porque o remark do Docusaurus embrulha o h1 do MDX
-   num `<header>` no próprio conteúdo compilado — não é o título sintético,
-   é o h1 que a página escreve. `h1` sozinho nunca casa como filho direto.
+   Especificidade: (0,2,2) contra a (0,1,1) do Infima. Vence sem `!important`, e
+   sem reescrever `--ifm-*-vertical-rhythm-*` fora do adaptador — que abriria uma
+   sexta exceção com escopo contra a lista fechada do ADR 1.
    ----------------------------------------------------------------------------- */
 
-html.docs-doc-page .theme-doc-markdown
-  > :is(p, ul, ol, dl, h1, h2, h3, h4, h5, h6, blockquote, hr, header) {
-  max-width: var(--sd-prose-width);
-  margin-inline: auto;
+html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
+  margin-top: var(--sd-space-12);
+  margin-bottom: var(--sd-space-4);
 }
 
 /* -----------------------------------------------------------------------------
-   2. Navbar
+   O subtítulo — a linha que toda página do site ganha
 
-   Três tabs à esquerda, e à direita a ordem declarada: Buscar · PT · GitHub.
-   A alternância de tema fecha a linha e não é declarável — o `Navbar/Content` a
-   renderiza depois dos itens da direita.
+   Ele nasce do `description` do front matter e é injetado pelo override da chave
+   `h1` no registro de `@theme/MDXComponents` (degrau 3). O CSS aqui não sabe
+   disso: ele vê um parágrafo com a nossa classe, logo abaixo do título.
+
+   `--sd-subtitulo-recuo` e não a margem do título: as margens de irmãos
+   adjacentes COLAPSAM para a maior das duas, então o ar de baixo do `h1` — que é
+   maior — venceria e o recuo medido nunca apareceria. Zerar o do `h1` é o que
+   deixa o do subtítulo mandar.
+
+   Peso e cor não são declarados, e isso é fiel: na âncora o subtítulo herda o
+   bloco de prosa. O que ele declara é o corpo, que é o único que foi medido.
+   ----------------------------------------------------------------------------- */
+
+html.docs-doc-page h1:has(+ .subtitulo) {
+  margin-bottom: 0;
+}
+
+html.docs-doc-page .subtitulo {
+  margin-top: var(--sd-subtitulo-recuo);
+  font-size: var(--sd-type-lg);
+}
+
+/* -----------------------------------------------------------------------------
+   2. Navbar — DUAS LINHAS, e a segunda sangra de ponta a ponta
+
+   A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa
+   de largura total abaixo dela. Total: `--sd-topo-grudado`.
+
+   ISTO ERA A PERDA 4, e ela estava errada. `chrome.md` §8, `swizzle.md` §4 e o
+   ADR 2 diziam que a faixa *"exigiria reestruturar `Navbar/*`"*. Não exige: ela
+   sai de degrau 0 (dois tokens do Infima), degrau 1 (as quatro regras abaixo) e
+   degrau 2 (um item de config). `Navbar/Layout` e `Navbar/Content` continuam
+   `unsafe`, e continuam INTOCADOS — o portão 7 passa com a faixa montada.
+
+   Quatro peças, e nenhuma é decorativa:
+
+   1. **A altura do topo**, em `tokens.css`. `.navbar` tem `height` fixo e não
+      `min-height`; sem o token novo a segunda linha TRANSBORDA e pinta sobre o
+      conteúdo da página. O preenchimento vertical vai a zero junto, senão as
+      duas linhas ficam dentro de uma caixa de conteúdo mais curta que o `<nav>`
+      e desalinham da faixa pintada.
+   2. **A quebra**, aqui: `.navbar__items` passa a envolver, e um espaçador de
+      base 100% e altura 0 abre a linha. O espaçador é OPÇÃO PÚBLICA — um item
+      `{type: 'html'}` entre a marca e as tabs. Escolhido em vez de dar
+      `flex-basis: 100%` à marca porque não acopla a faixa à existência de uma
+      marca.
+   3. **A altura determinada da linha 1**, por `min-height` na marca e
+      `align-self: flex-start` no cluster da direita. Sem ela a linha 1 encolhe
+      para a altura natural da marca e a faixa pintada não casa com as tabs.
+   4. **O sangramento**, por parada dura de `linear-gradient` no próprio `.navbar`.
+      O `<nav>` já mede a viewport inteira, e SÓ O FUNDO precisa sangrar — o
+      fundo não é das tabs. Zero DOM novo, zero pseudo-elemento.
+
+   O escopo `@media (min-width: 997px)` é OBRIGATÓRIO, e é a armadilha mais cara
+   desta faixa: abaixo do limiar o navbar volta a uma linha, as tabs vão para
+   dentro do hambúrguer, e `.navbar-sidebar__brand` e `.navbar-sidebar__items`
+   leem o mesmo `--ifm-navbar-height`. Sem o escopo, o cabeçalho do drawer infla
+   no estreito.
+
+   TRÊS PERDAS NOMEADAS, e a primeira é a que dói:
+
+   · **a ordem de foco passa a divergir da leitura visual.** O `Tab` desce para a
+     faixa e volta a subir, porque o DOM tem dois blocos (esquerda inteira,
+     depois direita inteira) enquanto a faixa distribui a esquerda em duas
+     linhas. **Não é contornável nesta rota**, e é o único ponto do projeto onde
+     a conta do `unsafe` voltaria à mesa. Ver `docs/design/foco.md`;
+   · **a largura útil da faixa é a de `.navbar__items`, não a da viewport.** O
+     fundo sangra; o conteúdo não;
+   · **são 48px de chrome vertical em toda página.**
+
+   À direita a ordem declarada continua: Buscar · PT · GitHub. A alternância de
+   tema fecha a linha e não é declarável — o `Navbar/Content` a renderiza depois
+   dos itens da direita.
 
    O slot de busca custa zero pixel enquanto estiver vazio: o próprio upstream
    esconde o contêiner com `:empty`. Remover a busca não deixa buraco.
@@ -144,6 +250,17 @@ html.docs-doc-page .theme-doc-markdown
    passa por `navbar.logo`. Um link sem nome acessível é defeito; `:empty` o
    remove do fluxo e da ordem de tabulação, no navbar e no painel estreito. */
 .navbar__brand:empty {
+  display: none;
+}
+
+/* O ESPAÇADOR DA FAIXA no painel do estreito — o mesmo defeito, medido.
+   O `HtmlNavbarItem` renderiza o item com `menu__list-item` quando é móvel, e
+   a classe traz um degrau de margem: mede zero de altura e ainda assim abre 4px
+   de espaço fantasma entre a marca e a primeira tab, dentro da lista do drawer.
+
+   A faixa não existe abaixo do limiar; o espaçador dela tampouco. O seletor se
+   escopa sozinho — `menu__list-item` só é aplicada na forma móvel. */
+.menu__list-item.quebra-de-faixa {
   display: none;
 }
 
@@ -169,6 +286,77 @@ html.docs-doc-page .theme-doc-markdown
 
 .marca__palavra {
   font-weight: inherit;
+}
+
+/* A FAIXA — três das quatro peças. A primeira mora em `tokens.css`, porque é
+   token, e o espaçador é item de config em `docusaurus.config.js`.
+
+   São QUATRO PEÇAS e SEIS REGRAS, e a diferença vale dita para o número não
+   virar promessa: uma peça é uma decisão, não uma declaração. O sangramento é
+   uma regra; a quebra são três — envolver, abrir a linha e impedir que as duas
+   linhas se estiquem para dividir a altura; a altura determinada são duas, uma
+   por cluster; e a altura das tabs é a que faz o realce de estado ter a forma da
+   faixa em vez da forma da palavra. */
+@media (min-width: 997px) {
+  /* O sangramento. Quem pinta a faixa é o próprio `<nav>`, que já vai de x=0 a
+     x=100vw; a parada dura recorta a faixa dentro dele. Transparente na linha 1
+     para o `--ifm-navbar-background-color` do adaptador continuar valendo, fio
+     de uma borda, e a superfície levantada no resto.
+
+     `background-image` e não `background`: a tinta da linha 1 continua sendo a
+     do token, e sobrescrevê-la aqui seria pintar duas vezes o que o adaptador já
+     pinta uma. */
+  .navbar {
+    background-image: linear-gradient(
+      to bottom,
+      transparent 0 var(--sd-navbar-height),
+      var(--sd-border-subtle) var(--sd-navbar-height)
+        calc(var(--sd-navbar-height) + var(--sd-border-width)),
+      var(--sd-surface-raised) calc(var(--sd-navbar-height) + var(--sd-border-width))
+        var(--sd-topo-grudado)
+    );
+  }
+
+  /* As duas colunas do `.navbar__inner` param de se centrar contra as DUAS
+     linhas — a da esquerda porque ela é quem tem duas, a da direita porque ela
+     mora na linha 1. */
+  .navbar__inner {
+    align-items: flex-start;
+  }
+
+  /* A quebra. `align-content: flex-start` é o que impede as duas linhas de se
+     esticarem para dividir a altura do `<nav>` entre elas: sem ele a linha 1
+     rouba metade da folga e a faixa pintada deixa de casar com as tabs. */
+  .navbar__items:not(.navbar__items--right) {
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+
+  .navbar__items > .quebra-de-faixa {
+    flex: 0 0 100%;
+    height: 0;
+    padding: 0;
+  }
+
+  /* A linha 1, determinada. `.navbar__brand` é classe do Infima — degrau 1, e
+     não acoplamento a nome nosso. */
+  .navbar__items > .navbar__brand {
+    min-height: var(--sd-navbar-height);
+  }
+
+  .navbar__items--right {
+    align-self: flex-start;
+    height: var(--sd-navbar-height);
+  }
+
+  /* As tabs preenchem a faixa em vez de flutuar nela. Sem a altura declarada o
+     item mede o texto e o realce de estado ficaria com a forma da palavra em
+     vez da forma da faixa. */
+  .navbar__items:not(.navbar__items--right) > .navbar__item:not(.quebra-de-faixa) {
+    display: flex;
+    align-items: center;
+    height: var(--sd-tabs-height);
+  }
 }
 
 /* -----------------------------------------------------------------------------
@@ -303,19 +491,87 @@ html.docs-doc-page .theme-doc-markdown
 }
 
 /* -----------------------------------------------------------------------------
-   5. Breadcrumb e paginação
+   5. A eyebrow — o breadcrumb POR SUBTRAÇÃO
 
-   Os dois vivem FORA do cartão — o breadcrumb acima, a paginação abaixo, sobre o
-   fundo da página. Não é escolha estética: `DocItem/Layout` é `unsafe`, e o
-   único recorte alcançável é o corpo.
+   Escondendo o item de home, o item ativo e o separador que sobra, resta
+   exatamente o nome da categoria — e ele já está no lugar onde a eyebrow da
+   âncora fica, acima do título. Tudo classe do Infima, degrau 1, zero swizzle e
+   zero nó novo no DOM.
 
-   Perda nomeada: o breadcrumb reestruturado como a eyebrow da âncora exigiria
-   `DocBreadcrumbs`, também `unsafe`. Fica o breadcrumb nativo, re-marcado por
-   variável. A divergência é visível, e ela é por restrição — não por escolha.
+   O `BreadcrumbsStructuredData` continua emitido intacto: ele é um `<script
+   type="application/ld+json">` irmão do `<nav>`, e nada aqui o alcança. O que
+   sai é pixel, não dado — o JSON-LD segue com a trilha inteira.
+
+   A METADE REAL DA PERDA 2 FICA DE PÉ, e vale escrita porque a subtração é
+   fácil de confundir com alcance: não dá para pôr eyebrow em página SEM
+   categoria, não dá para alterar a ordem, e não dá para inserir texto novo.
+   O que a subtração alcança é o caso comum, não o mecanismo.
+
+   O separador escondido é o do último item VISÍVEL, e não todos: `:nth-last-
+   child(2)` é o vizinho do ativo. Numa trilha de três níveis os separadores
+   entre categorias sobrevivem, que é o que se quer — o teto de profundidade é
+   2 hoje, e a regra não quebra no dia em que ele subir.
    ----------------------------------------------------------------------------- */
 
-.theme-doc-breadcrumbs {
+html.docs-doc-page .theme-doc-breadcrumbs {
   font-size: var(--sd-type-sm);
+}
+
+/* O item de home — o `<li>` do ícone de casa. Ele é o primeiro sempre que a
+   rota de landing existe, e ela existe: `src/pages/index.js`. */
+html.docs-doc-page .breadcrumbs__item:first-child,
+html.docs-doc-page .breadcrumbs__item--active {
+  display: none;
+}
+
+html.docs-doc-page .breadcrumbs__item:nth-last-child(2)::after {
+  display: none;
+}
+
+/* O que resta deixa de ler como pastilha e passa a ler como eyebrow: sem
+   preenchimento, sem realce de fundo, na tinta secundária. */
+html.docs-doc-page .breadcrumbs__link {
+  padding: 0;
+  background: none;
+  color: var(--sd-text-muted);
+  font-weight: var(--sd-weight-ui);
+}
+
+/* -----------------------------------------------------------------------------
+   A paginação — plana
+
+   Sem borda, sem fundo, sem preenchimento e sem nenhuma classe responsiva: os
+   dois cartões de paginação eram a última superfície levantada do corpo da
+   página, e o cartão que os justificava morreu.
+
+   PERDA NOMEADA, e ela é mais funda do que a spec do ticket supunha. A decisão
+   era *"rótulo anterior/próximo só em `aria-label`"* — mover a palavra do texto
+   para o atributo. Isso não é alcançável: `PaginatorNavLink`, `DocPaginator` e
+   `DocItem/Paginator` são os TRÊS `Unsafe` nas duas ações no artefato congelado
+   do portão 7, e não há opção pública, classe nem variável que acrescente
+   atributo a um nó.
+
+   O que sobra, e vale medido em vez de suposto: o nome acessível do link é o
+   TÍTULO da página vizinha, que é descritivo por si; a direção continua no `«` e
+   no `»` que o Infima desenha por pseudo-elemento e que o navegador expõe na
+   árvore de acessibilidade; e a região tem `aria-label` do `DocPaginator`. O
+   critério de propósito de link continua satisfeito — o que se perde é a palavra
+   redundante, não a orientação.
+   ----------------------------------------------------------------------------- */
+
+html.docs-doc-page .pagination-nav__link {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+html.docs-doc-page .pagination-nav__sublabel {
+  display: none;
+}
+
+html.docs-doc-page .pagination-nav__label {
+  font-size: var(--sd-type-base);
+  font-weight: var(--sd-weight-ui);
 }
 
 /* -----------------------------------------------------------------------------
@@ -354,8 +610,8 @@ html.docs-doc-page .theme-doc-markdown
 }
 
 /* O `.container` do footer perde o preenchimento e ele sobe para o `<footer>`.
-   Sem isso a compensação de alinhamento erra por 16px: o cartão fica rente à
-   borda do container, e o texto do rodapé começaria 16 depois dela. */
+   Sem isso a compensação de alinhamento erra por 16px: a coluna de conteúdo fica
+   rente à borda do container, e o texto do rodapé começaria 16 depois dela. */
 .footer .container {
   display: flex;
   align-items: center;
@@ -395,8 +651,8 @@ html.docs-doc-page .theme-doc-markdown
 
    O `<Footer/>` é irmão do `main-wrapper`, não filho da página de doc, então o
    `.container` dele centra na VIEWPORT enquanto o da doc centra dentro de
-   `100% − sidebar`. A 1600px isso são 132px de desalinhamento entre o fio do
-   rodapé e a borda do cartão.
+   `100% − sidebar`. A 1600px isso são mais de cem pixels de desalinhamento entre
+   o fio do rodapé e a borda da coluna de conteúdo.
 
    A compensação **soma o gutter** — sem isso erra pela largura dele. E o fio
    continua de ponta a ponta, porque mora no `<footer>`, fora do preenchimento:
@@ -420,28 +676,47 @@ html.docs-doc-page .theme-doc-markdown
 /* -----------------------------------------------------------------------------
    7. Tela estreita
 
-   Abaixo de 997px — o mesmo limiar em que a sidebar vira gaveta.
+   Abaixo de 997px — o mesmo limiar em que a sidebar vira gaveta, em que a faixa
+   de tabs some e em que o gutter volta a 16.
 
-   Três dos quatro comportamentos se resolvem por construção, e só um custa
-   declaração:
+   Três dos quatro comportamentos se resolvem por construção, e a única peça de
+   navegação que custa declaração é a que SAI:
 
-   · o **breakout resolve para zero sozinho** — os `max-width` do cartão e da prosa
-     ficam inertes quando a coluna é menor, e código e tabela deixam de escapar
-     porque não há medida de prosa da qual escapar. Nenhuma regra a escrever;
-   · o **gutter de 32 se preserva sozinho**, porque o token só dobra a partir de
-     997;
-   · o **cartão fica**, e o preenchimento cai de 48 para 24 — derivado por
-     METADE, que é o mecanismo do `almond` (ele alterna 64/32). Uma declaração é
-     a história inteira do cartão no estreito.
-
-   O cartão não dissolve. Ele é nível de superfície, não moldura decorativa, e
-   derrubá-lo aqui seria derrubar um dos dois níveis de preenchimento do sistema
-   no aparelho em que a documentação é mais lida.
+   · **o cartão não está mais lá para encolher.** A história inteira dele no
+     estreito era uma declaração de meio preenchimento, e ela morre junto com a
+     superfície que a consumia;
+   · o **breakout já resolveu para zero** — não há mais lista de escape em lugar
+     nenhum, nem no largo;
+   · o **gutter de 16 se preserva sozinho**, porque o token só dobra a partir de
+     997. A faixa de tabs some sozinha pelo mesmo mecanismo, do outro lado do
+     mesmo limiar;
+   · **o TOC móvel sai.** É o único lugar onde o critério *"mais perto da
+     âncora"* REMOVE uma peça de navegação, e por isso ele é uma declaração e
+     não uma omissão: se um dia doer, é uma linha que se apaga. O leitor no
+     estreito troca o índice colapsado pela rolagem, e o que ele ganha é a
+     página começando no conteúdo.
    ----------------------------------------------------------------------------- */
 
 @media (max-width: 996px) {
-  html.docs-doc-page .theme-doc-markdown {
-    --sd-doc-preenchimento: calc(var(--sd-space-12) / 2);
+  html.docs-doc-page .theme-doc-toc-mobile {
+    display: none;
+  }
+
+  /* O `.col` RECUPERA o preenchimento, e a razão é que a regra (b) da cadeia só
+     vale onde a cadeia existe.
+
+     Ela zera o preenchimento de coluna porque, no largo, os dois lados são
+     cobrados por dentro dos 75% e sem isso a coluna não fecha em
+     `--sd-doc-width`. Abaixo do limiar não há 75%, não há 864 e não há cadeia a
+     fechar — e a compensação vira defeito: a margem negativa da `.row` cancela o
+     preenchimento do `.container`, o `<main>` fica com `gutter − 16`, que no
+     estreito é ZERO, e o texto encosta na borda da viewport.
+
+     Medido a 390 antes desta regra: `x=0` no eyebrow, no título e em cada
+     parágrafo. É o gutter do estreito que precisa aparecer aqui, e ele aparece
+     pelo token — nunca pelo valor que o Infima por acaso também usa. */
+  html.docs-doc-page main > .container > .row > .col {
+    padding-inline: var(--sd-gutter);
   }
 
   /* A linha **quebra e não empilha**, revertendo deliberadamente o Infima. Ele

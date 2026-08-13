@@ -6,7 +6,12 @@ O ledger vivo, as perdas nomeadas e a disciplina de registro.
 
 A **política** — a escada de seis degraus, o orçamento `unsafe` zero, a escotilha por ADR novo — mora no [ADR 2](../adr/0002-politica-de-swizzle.md), porque sobrevive à troca de skin. Este documento **cita** e nunca repete.
 
-**Documento fechado**, no slice 7, junto com o artefato de `swizzle --list` congelado e o portão que o diffa.
+**Documento reaberto** pela geometria `mint`, e ele fecha de novo quando o `swizzle --list` for recongelado no fim da reconstrução. O que a reabertura trouxe está em duas linhas, e as duas mudam o inventário e não a política:
+
+- **a perda 4 sai** — a faixa de tabs de largura total **não** exigia reestruturar `Navbar/*`, e isso está medido. Ver §4 e a errata do [ADR 2](../adr/0002-politica-de-swizzle.md);
+- **o registro de `MDXComponents` ganha superfície nova no mesmo degrau** — ele passa a redefinir um elemento de HTML para *acrescentar nó*. Ver §3.
+
+**O orçamento `unsafe` continua em zero, e o degrau 4 continua vazio.**
 
 ---
 
@@ -73,8 +78,14 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
-| `.theme-doc-markdown` | o cartão: largura constante, preenchimento, raio, superfície, sombra, medida de prosa e breakout | não existe variável do Infima para nada disso |
-| `main`, `.container`, `.row`, `.col`, `.col--3` | a cadeia de proporções: gutter, colunas sem preenchimento, separação do TOC | idem |
+| `main`, `.container`, `.row`, `.col`, `.col--3` | a cadeia de proporções: gutter, colunas sem preenchimento, separação do TOC, e a **caixa invisível** que segura a coluna sem TOC | não existe variável do Infima para nada disso |
+| `article`, `.pagination-nav` | a medida de prosa. **Dois seletores no lugar de onze** — a lista de elementos de prosa morreu junto com o cartão, e com ela a superfície que produzia o defeito do `<header>` | idem |
+| `.markdown > :is(h2…h6)` | o ritmo vertical assimétrico, 48 antes e 16 depois | as variáveis de ritmo do Infima são declaradas dentro de `.markdown`, e valor declarado no elemento vence valor herdado de `:root` — reescrevê-las fora do adaptador abriria uma sexta exceção com escopo contra o [ADR 1](../adr/0001-doutrina-de-css.md) |
+| `.navbar`, `.navbar__inner`, `.navbar__items`, `.navbar__brand`, `.navbar__item` | **a faixa de tabs**: a quebra de linha, a altura determinada da linha 1 e o sangramento por gradiente | `Navbar/Layout` e `Navbar/Content` são `unsafe` nas duas ações, e o degrau 0 só entrega a ALTURA do topo — a anatomia de duas linhas não tem variável |
+| `.breadcrumbs__item`, `.breadcrumbs__link` | **a eyebrow por subtração**: home, ativo e o separador que sobra saem, e resta o nome da categoria | `DocBreadcrumbs` é `unsafe`; as variáveis de breadcrumb do Infima alcançam tinta e preenchimento, não presença |
+| `.pagination-nav__link`, `.pagination-nav__sublabel`, `.pagination-nav__label` | a paginação plana: sem borda, sem fundo, sem preenchimento | idem — não há variável que remova a borda sem apagar a cor dela |
+| `.theme-doc-toc-mobile` | o TOC móvel sai no estreito | não há opção que desligue só o móvel; `hide_table_of_contents` desligaria os dois |
+| `.sd-subtitulo` | o corpo e o recuo do subtítulo | a classe é **nossa**, publicada pelo registro do §3 — aqui o degrau 1 é consumidor, não alcance |
 | `className` em `sidebars*.js` | ícone por categoria de topo, por máscara | `className` **é** o mecanismo público; não há variável |
 | `theme-doc-sidebar-item-*-level-<n>` | hierarquia da sidebar | idem |
 | `.menu__link--active` | falso-negrito no item ativo | não há variável de peso por estado |
@@ -91,6 +102,7 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | --- | --- | --- |
 | Três instâncias de `plugin-content-docs` | as três tabs, cada uma com `routeBasePath` e sidebar próprios | `routeBasePath` é por instância; classe não cria rota |
 | `themeConfig.navbar.items` | as três tabs, o slot de busca, o locale, o GitHub | idem |
+| `navbar.items[]` do tipo `html` | **o espaçador que abre a faixa de tabs** — base 100%, altura 0. Escolhido em vez de dar `flex-basis: 100%` à marca porque não acopla a faixa à existência de uma marca | não há classe estável num nó que o tema não renderiza; o item é o que cria o nó |
 | `themeConfig.footer` | os links, o copyright, a forma plana | idem |
 | `docItemComponent: '@theme/ApiDocItem'` | substitui o layout inteiro da página de API | classe não troca componente de rota |
 | `themeConfig.prism.additionalLanguages: ['bash']` | registra `bash` para o snippet de cURL do painel da Referência da API | `bash` não está no bundle padrão do `prism-react-renderer`; sem o registro o bloco sai sem realce e ninguém avisa |
@@ -102,13 +114,30 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
 | `NavbarItem/ComponentTypes` | acrescenta o tipo `custom-marca` | a marca precisa de `currentColor`, e `navbar.logo` renderiza `<img>`. `Logo` e `Navbar/Logo` **não estão no `getSwizzleConfig`** — caem no default `unsafe`, que o ADR 2 proíbe |
-| `MDXComponents` | registra os catorze componentes com tag própria (quinze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais a chave de elemento `table` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
+| `MDXComponents` | registra os catorze componentes com tag própria (quinze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais **duas** chaves de elemento: `table` e `h1` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
+| `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description` | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: 73 de 73 páginas escrevem o próprio `# Título`, e nenhuma escreve dois |
 | `Admonition/Types` | substitui a anatomia vertical do Infima pela horizontal medida, nas quatro variantes de callout | não há variável nem classe que reoriente o eixo da admonition. O degrau 5 (`Admonition/Layout`) alcançaria, mas o 3 alcança **antes**: o arquivo é um objeto, e nada obriga as entradas dele a apontarem para o layout do upstream |
 
 **Os dois do catálogo copiam zero linha de upstream**, e é isso que os mantém no
 degrau 3: um espalha o objeto original e acrescenta chaves; o outro é escrito do
 zero apontando para componentes nossos. O `Admonition` raiz — `unsafe` — continua
 **intocado**.
+
+**A superfície nova, nomeada.** Até a geometria `mint`, este registro só
+*acrescentava chave de componente* e trocava um elemento por outro (`table`).
+O `h1` é a primeira vez que ele **redefine um elemento de HTML para acrescentar
+nó**: o override envolve o `h1` do upstream e devolve um irmão junto.
+
+Não é degrau novo — continua sendo objeto espalhado, e o que o upgrade cobra
+continua sendo *chave removida vira erro de build*. Mas é **uso novo do mesmo
+degrau**, e por isso tem linha própria: quem ler a tabela procurando o que
+mudou na tela precisa achar o subtítulo aqui, não deduzi-lo da palavra
+*"registro"*.
+
+**O portão 7 continua passando porque nenhum arquivo novo entra em
+`src/theme/`** — o componente do subtítulo mora dentro do próprio registro.
+Fatorá-lo para um arquivo ao lado seria trocar quinze linhas por uma linha nova
+na perna 2 do portão.
 
 **Pré-autorizados e ainda não exercidos:** `prism-include-languages`, se a
 Referência da API precisar de linguagem fora do que `additionalLanguages` cobre.
@@ -117,7 +146,12 @@ Referência da API precisar de linguagem fora do que `additionalLanguages` cobre
 
 **Vazio, e é resultado, não coincidência.**
 
-Reservado, não gasto: a faixa de tabs de largura total abaixo do navbar sairia por envolver `DocSidebar` (`wrap: safe`). Ela é a perda 4 do §4 e não foi comprada.
+**A reserva que ele carregava foi cancelada, e não gasta.** Este parágrafo dizia que a faixa de tabs de largura total *"sairia por envolver `DocSidebar` (`wrap: safe`)"*. Duas coisas estavam erradas nessa frase, e as duas foram medidas na [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51):
+
+- **`DocSidebar` não alcançaria.** Ele é a sidebar de docs, e não tem como emitir uma faixa dentro do `<nav>`. A rota reservada nunca teria funcionado;
+- **a faixa não precisa de degrau 4 nenhum.** Ela sai de degraus 0, 1 e 2, e está montada.
+
+O degrau 4 continua vazio, e agora por um motivo mais forte que antes: não é que a faixa não foi comprada — é que **ela não custa isto**.
 
 **Continua vazio depois do slice da landing, e ali ele teve a segunda chance de ser gasto.** Um footer com variante para a landing — outra tinta, outra anatomia, ou a faixa escura descendo até o fim da página — sairia por envolver `Footer`, que é `safe` nas duas ações. Não foi comprado: **o footer da landing é o mesmo da doc, sem variante**, e o motivo está em [`landing.md`](landing.md) §5 — ilha que aparece em toda página deixa de ser ilha.
 
@@ -155,22 +189,42 @@ O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não 
 
 O zero cobra um preço, e cada linha é perda escrita — não silêncio.
 
+**Eram dez. São nove, e a numeração não foi remendada** — os sobreviventes ficam com o número que já tinham. Renumerar uma lista citada por outro documento para fechar um buraco é o mesmo churn que este arquivo recusou ao decidir que o portão do `swizzle --list` é o 7 e não o 5.
+
 | # | Perda | Componente que a obriga | Onde ela aparece |
 | ---: | --- | --- | --- |
-| 1 | Qualquer nó injetado **dentro** do corpo da página de doc — eyebrow, bloco de feedback, CTA lateral | `DocItem/Layout`, `DocItem/Content` | [`chrome.md`](chrome.md) §8 |
-| 2 | Breadcrumb reestruturado como a eyebrow da âncora | `DocBreadcrumbs` | [`chrome.md`](chrome.md) §5 |
-| 3 | A proporção da âncora entre conteúdo e painel | classe hasheada de CSS Module | [`chrome.md`](chrome.md) §8 |
-| 4 | Faixa de tabs de largura total abaixo do navbar | `Navbar/*` | [`chrome.md`](chrome.md) §8 |
-| 5 | TOC com anatomia nova — barra de progresso, seções extras | `TOC`, `TOCItems` | [`chrome.md`](chrome.md) §4 |
+| 1 | Qualquer nó injetado **dentro** do corpo da página de doc — bloco de feedback, CTA lateral | `DocItem/Layout`, `DocItem/Content` | [`chrome.md`](chrome.md) §10 |
+| 2 | Breadcrumb reestruturado — eyebrow em página **sem** categoria, ordem trocada, texto novo | `DocBreadcrumbs` | [`chrome.md`](chrome.md) §7.1 |
+| 3 | A proporção da âncora entre conteúdo e painel | classe hasheada de CSS Module | [`chrome.md`](chrome.md) §5 |
+| ~~4~~ | ~~Faixa de tabs de largura total abaixo do navbar~~ | — | **removida** — ver abaixo |
+| 5 | TOC com anatomia nova — barra de progresso, seções extras | `TOC`, `TOCItems` | [`chrome.md`](chrome.md) §5 |
 | 6 | Ícone preso dentro de componente `unsafe` mantém o desenho do Docusaurus | vários; `Icon/ExternalLink` é o caso concreto | [`icones.md`](icones.md) §4.2 |
-| 7 | Footer dentro da coluna de prosa, como a âncora faz | `<Footer/>` é irmão do `main-wrapper` | [`chrome.md`](chrome.md) §6.3 |
+| 7 | Footer dentro da coluna de prosa, como a âncora faz | `<Footer/>` é irmão do `main-wrapper` | [`chrome.md`](chrome.md) §8.3 |
 | 8 | Armadilha de foco na sidebar de tela estreita | `Navbar/MobileSidebar/*` | [`foco.md`](foco.md) §12 |
 | 9 | Posição do botão de voltar ao topo na ordem de tabulação | `DocRoot/Layout` | [`foco.md`](foco.md) §10 |
 | 10 | O controle de página AI-era — *Copiar página* e deep-link para assistente | `DocItem/Layout` | fora **por produto**, não por preço |
 
+### A perda 4 sai, e não por ter sido comprada
+
+Ela era **fato errado**. O ledger dizia que a faixa de tabs de largura total exigia reestruturar `Navbar/*`; a [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) mediu num Docusaurus 3.10.2 real e a faixa sai de **degraus 0, 1 e 2** — dois tokens do Infima, quatro regras sobre classes estáveis e um item de config.
+
+`Navbar/Layout` e `Navbar/Content` **continuam `unsafe` nas duas ações**, e continuam **intocados**. O detalhe que muda como se lê o rótulo: o `getSwizzleConfig` do `theme-classic` não tem entrada nenhuma para eles — caem no default `unsafe` do CLI. É **ausência de declaração**, não aviso deliberado, e é o que explica a vizinhança inteira do navbar ser `Unsafe` em bloco.
+
+**O portão 7 passa com a faixa montada**, não depois de desmontá-la. A anatomia está em [`chrome.md`](chrome.md) §3.1, e a perda que ela **de fato** cobra — a ordem de foco divergindo da leitura visual — está em [`foco.md`](foco.md) §10, não aqui: ela não é perda de swizzle.
+
+A mesma errata está no [ADR 2](../adr/0002-politica-de-swizzle.md), «Consequências» item 4.
+
+### Duas perdas encolheram sem sair
+
+**A perda 1 perdeu o subtítulo.** Ela dizia *"qualquer nó injetado dentro do corpo da página — eyebrow, bloco de feedback, CTA lateral"*, e o subtítulo é exatamente um nó injetado dentro do corpo. Ele foi comprado sem encostar em `DocItem/Layout`: a rota é o override de `h1` do §3, ancorado num nó que a página já escreve. **O que a perda 1 de fato cobre é nó injetado numa posição que o MDX não alcança** — antes do breadcrumb, depois da paginação, ao lado da coluna.
+
+**A perda 2 perdeu a eyebrow visível.** Escondendo três coisas com classe do Infima, o breadcrumb *lê* como eyebrow. O que fica de perda é o **mecanismo**: página sem categoria não ganha eyebrow, a ordem não muda, e texto novo não entra.
+
 **A perda 6 é a que a regra resolve sem enumerar:** *o que só é alcançável por `unsafe` não é trocado.* Não há lista a manter.
 
 **A perda 10 tem nota própria, e ela importa para o orçamento.** O recurso saiu por decisão de produto, e a rota `safe` fica registrada: ancorar o controle no `<h1>` via `MDXComponents` (degrau 3) alcança, desde que toda página escreva o próprio `# Título`. **O zero de `unsafe` não é comprado com o sacrifício desse recurso** — mesmo que ele voltasse, caberia no degrau 3.
+
+**E a rota agora tem precedente exercido, não só registrado.** O subtítulo é essa mesma rota, montada e medida. Quem reabrir a perda 10 não precisa mais confiar na frase: pode ler o `h1` do §3.
 
 **Perdas fora do alcance do adaptador**, que não são de swizzle mas envelhecem junto: as curvas de easing cravadas no CSS do navbar e a curva da transição de largura da sidebar. Elas estão em [`motion.md`](motion.md).
 
@@ -254,7 +308,10 @@ Um item **sai** quando a customização é removida. Sair do ledger sem sair do 
 | A escada de seis degraus | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §1 — vive no ADR 2 |
 | Os três significados de `src/theme/` | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §0 |
 | Orçamento `unsafe` zero | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2 |
-| As sete perdas de chrome | **lacuna por restrição** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §4 |
+| As perdas de chrome | **lacuna por restrição** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §4 |
+| **A perda 4 sai, e a numeração não é remendada** | **origem própria (correção)** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medido num 3.10.2 real, com o portão 7 verde e a faixa montada; renumerar quebraria citação |
+| **O subtítulo por override de `h1`** | **origem própria (verificação)** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) §2 — a rota já estava registrada na nota da perda 10; 73/73 confere a condição |
+| **A eyebrow por subtração encolhe a perda 2** | **origem própria (implementação)** | três `display: none` sobre classes do Infima; o mecanismo continua fora de alcance |
 | As perdas 8 e 9 | **lacuna por restrição** | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §8 e §15 |
 | A perda 10, e a rota `safe` registrada | **decisão de produto** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2.1 |
 | A disciplina de registro | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5), consolidado em [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §6 |

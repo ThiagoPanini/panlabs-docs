@@ -221,6 +221,27 @@ const config = {
         items: [
           {type: 'custom-marca', position: 'left'},
 
+          // O ESPAÇADOR QUE ABRE A FAIXA DE TABS — degrau 2, opção pública, e a
+          // única peça da faixa que não é CSS. Ele tem base 100% e altura 0
+          // (`chrome.css`), então força a quebra de linha dentro de
+          // `.navbar__items` e não ocupa um pixel.
+          //
+          // Escolhido em vez de dar `flex-basis: 100%` à marca — que também
+          // funciona, e está medido — porque não acopla a faixa à EXISTÊNCIA de
+          // uma marca. O estilo é replicável como template da casa, e um
+          // transplante que troque a marca por outra coisa não perde a faixa
+          // junto.
+          //
+          // `value` NÃO pode ser vazio: o schema reprova o build com
+          // `"navbar.items[N].value" is not allowed to be empty`. Um comentário
+          // HTML satisfaz o schema e não renderiza nada.
+          {
+            type: 'html',
+            position: 'left',
+            className: 'quebra-de-faixa',
+            value: '<!--quebra-->',
+          },
+
           // As três tabs. Cada uma troca a sidebar inteira, e cada sidebar é
           // uma instância — o eixo de navegação é a natureza do conteúdo.
           {

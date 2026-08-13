@@ -48,9 +48,12 @@
     flex: 0 0 var(--sd-prose-width);
   }
 
-  /* A aritmética do comutador: 672 (prosa) + 32 (--sd-space-8, o gutter desta
-     grade) + 448 = 1152 (--sd-container-width). O painel não é um número
-     escolhido — é o resto da conta, e `calc()` deriva em vez de repetir. */
+  /* A aritmética do comutador: 720 (prosa) + 32 (--sd-space-8, o gutter desta
+     grade) + 400 = 1152 (--sd-container-width). O painel não é um número
+     escolhido — é o resto da conta, e `calc()` deriva em vez de repetir. Foi
+     essa derivação que fez a geometria `mint` chegar aqui sem uma linha de
+     ajuste: a prosa subiu de 672 para 720 e o painel desceu de 448 para 400,
+     sozinho. */
   .colunaPainel {
     flex: 0 0 calc(var(--sd-container-width) - var(--sd-prose-width) - var(--sd-space-8));
     /* O erro nº 1 de quem reconstrói este layout: sem `align-self: start`,
@@ -59,9 +62,11 @@
        a rolagem inteira, então não sobra distância para "grudar" depois de. */
     align-self: start;
     position: sticky;
-    /* O offset reusa `--sd-navbar-height` (56px) — o painel gruda logo
-       abaixo da barra fixa, não no topo absoluto da viewport. */
-    top: var(--sd-navbar-height);
+    /* O offset reusa `--sd-topo-grudado` — o painel gruda logo abaixo da barra
+       fixa, não no topo absoluto da viewport. É o TOPO INTEIRO e não a linha 1:
+       com a faixa de tabs montada, `--sd-navbar-height` mediria só a primeira
+       das duas linhas e o painel deslizaria por baixo da faixa. */
+    top: var(--sd-topo-grudado);
   }
 }
 
@@ -79,12 +84,19 @@
 }
 
 /* -----------------------------------------------------------------------------
-   O painel — a única superfície elevada desta página. "O painel É o cartão":
-   preenchimento, raio e sombra são os mesmos tokens do cartão do resto do
-   site, só que num preenchimento menor — não sobra pixel para os 96px
-   (2 × --sd-space-12) que o cartão padrão usa, e por isso o painel usa
-   --sd-space-6, não --sd-space-12. É a décima perda nomeada da rota,
-   registrada em docs/design/api-reference.md.
+   O painel — a única superfície elevada desta página, e agora a única do corpo
+   de QUALQUER página.
+
+   A frase que estava aqui — *"o painel é o cartão"* — perdeu o referente: a
+   geometria `mint` matou o cartão de doc, e nenhuma página tem mais fundo, anel
+   ou preenchimento no corpo. Ver docs/design/chrome.md §2.
+
+   O painel sobrevive como objeto porque ele não é moldura de prosa: é um bloco
+   de dados ao lado do texto, e a separação dele do texto é a razão de ele ter
+   aresta. A aritmética que decidia o preenchimento dele — *"não sobra pixel
+   para os 96px do cartão"* — vira consequência sem premissa, e o
+   `--sd-space-6` fica pelo que ele de fato é: o preenchimento que a coluna
+   deste painel comporta.
    ----------------------------------------------------------------------------- */
 .painel {
   display: flex;

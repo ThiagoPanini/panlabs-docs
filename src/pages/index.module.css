@@ -32,7 +32,7 @@
    bloco é **a medida mais dois gutters**: com espaço sobrando a medida sai
    exata; sem espaço, o gutter sobrevive. É isso que faz *"sangrar é o fundo,
    não o conteúdo"* ser verdade sem media query nenhuma — a laje encolhe sozinha
-   no estreito, como o cartão da doc.
+   no estreito, como a coluna de conteúdo da doc.
 
    Eram TRÊS. A laje de código tinha medida própria, derivada do interior do
    cartão de doc, e ela morreu junto com a derivação: o cartão está de saída, e

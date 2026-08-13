@@ -11,35 +11,39 @@ moram lá; este documento faz contas com eles.
 
 ---
 
+> ### Errata — o cartão morreu, e com ele a premissa deste documento
+>
+> A geometria `mint` ([#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78)) matou o cartão da página de doc: **nenhuma página do site tem fundo, anel, preenchimento ou raio no corpo.** Ver [`chrome.md`](chrome.md) §2.
+>
+> Três consequências caem sobre este documento, e ele **é reescrito no slice da Referência da API**, não aqui:
+>
+> - **os números da aritmética mudaram**, e estão corrigidos abaixo — a medida de prosa foi de 672 para 720, e o painel, que é o resto da conta, de 448 para 400. A soma continua fechando o container exato, **sem uma linha de ajuste**: o `calc()` deriva em vez de repetir, e foi ele que absorveu a troca sozinho;
+> - **a frase *"o painel é o cartão"* perdeu o referente.** Não há cartão do qual ele seja a versão desta página. O painel continua sendo objeto porque é um bloco de dados ao lado do texto, não porque herdou uma moldura;
+> - **a perda 10 perdeu a premissa.** Ela dizia que esta é *"a única página do site sem cartão"*. Hoje isso vale para todas, e a perda que sobrevive é outra e menor: **esta página não tem TOC**, porque o painel ocupa a coluna dele.
+>
+> O que continua verdadeiro sem ressalva: a aritmética manda no layout, o comutador é o front matter, e o `position: sticky` do painel exige `align-self: start`.
+
 ## 1. A aritmética decide o layout, não o gosto
 
 ```
-672 (--sd-prose-width) + 32 (--sd-space-8) + 448 = 1152 (--sd-container-width)
+720 (--sd-prose-width) + 32 (--sd-space-8) + 400 = 1152 (--sd-container-width)
 ```
 
 O painel não é uma largura escolhida — é o resto da conta:
 
 ```
-448 = calc(var(--sd-container-width) - var(--sd-prose-width) - var(--sd-space-8))
+400 = calc(var(--sd-container-width) - var(--sd-prose-width) - var(--sd-space-8))
 ```
 
 `--sd-space-8` aqui é o gutter **entre as duas colunas desta grade**, não o
-`--sd-gutter` do shell do site (que seria o espaço entre o cartão e a
-sidebar/TOC numa página comum) — os dois têm o mesmo valor de raiz por
-coincidência de escala, não porque sejam o mesmo token.
+`--sd-gutter` do shell do site (que seria o espaço entre a coluna de conteúdo e
+a sidebar/TOC numa página comum) — os dois vêm da mesma escala por coincidência
+de valor, não porque sejam o mesmo token.
 
-A soma fecha exatamente o container, e é isso que fecha a decisão central
-da rota: **não sobra pixel para os 96px de preenchimento do cartão**
-(2 × `--sd-space-12`, o mesmo preenchimento que `.theme-doc-markdown` usa em
-toda página comum). A página de endpoint é a única do site sem cartão — não
-por escolha visual, por aritmética de grid. É a décima perda nomeada, no
-§6.
-
-O que resolve isso sem ficar com uma página nua: **o painel é o cartão.**
-Ele carrega preenchimento, raio e sombra — os mesmos tokens de elevação do
-cartão comum, só que com um preenchimento menor (`--sd-space-6`, não
-`--sd-space-12` — não sobra pixel para o maior). Continua havendo
-exatamente **uma** superfície elevada na tela; ela só migrou de dono.
+**É o `calc()` que faz esta seção sobreviver à geometria `mint`.** A prosa subiu
+de 672 para 720 e o painel desceu de 448 para 400 **sozinho**, sem uma linha de
+ajuste — e a soma continua fechando o container no pixel. Um 448 cravado teria
+quebrado calado.
 
 ## 2. O comutador, nas duas pernas
 
@@ -57,12 +61,12 @@ são mecânicas, não estéticas:
 
 | `api_exemplos` | Layout | Largura da coluna de conteúdo | TOC |
 | --- | --- | --- | --- |
-| ausente | delega para `@theme/DocItem`, sem tocar em mais nada | `--sd-doc-width` (864, cartão) | coluna de 288, se houver heading |
-| presente | layout próprio, `LayoutComPainel` | `--sd-prose-width` (672, sem cartão) | ausente — o painel ocupa o espaço |
+| ausente | delega para `@theme/DocItem`, sem tocar em mais nada | `--sd-prose-width` (720, dentro da coluna de 864) | coluna de 288, se houver heading |
+| presente | layout próprio, `LayoutComPainel` | `--sd-prose-width` (720) | ausente — o painel ocupa o espaço |
 
 A perna "ausente" é a que prova que o painel é **inalcançável, não vazio**,
 quando a página não é de endpoint: `Referência da API › Introdução ›
-Autenticação` é a fixture — prosa autoral, zero `api_exemplos`, cartão e
+Autenticação` é a fixture — prosa autoral, zero `api_exemplos`, coluna e
 TOC como qualquer página de doc comum. Uma implementação que deixasse uma
 coluna direita vazia ali estaria errada; o correto é essa coluna nem
 existir, porque a página passou pela **outra** perna do comutador.
@@ -86,7 +90,7 @@ numa tela onde a prosa é curta.
 .colunaPainel {
   align-self: start;
   position: sticky;
-  top: var(--sd-navbar-height); /* 56px — gruda abaixo do navbar fixo, não no topo absoluto */
+  top: var(--sd-topo-grudado); /* o topo INTEIRO: com a faixa de tabs montada, a linha 1 sozinha deixaria o painel deslizar por baixo dela */
 }
 ```
 
@@ -174,20 +178,19 @@ de entender o que esta rota acrescenta.
 
 A décima é desta rota, e diferente das nove: não é preço do orçamento
 `unsafe` zero — `ApiDocItem` não esbarrou em nenhum limite de swizzle para
-chegar nela. É consequência pura da aritmética do §1: 672 + 32 + 448 fecha
-o container exato, sem sobra para os 96px que o cartão precisaria.
+chegar nela. É consequência pura da aritmética do §1: 720 + 32 + 400 fecha
+o container exato, e não sobra coluna para o TOC.
 
 | # | Perda | Por quê |
 | ---: | --- | --- |
-| 10 | A página de endpoint não tem cartão nem breakout | não sobra largura para o preenchimento do cartão — a soma das três medidas já fecha o container; ver §1 |
+| 10 | A página de endpoint não tem TOC | a soma das três medidas já fecha o container, e a coluna do TOC é justamente o que o painel ocupa; ver §1 |
 
-**A perda 10 não é troca de um cartão por nada.** O painel herda a
-elevação — preenchimento, raio, sombra — e continua havendo exatamente uma
-superfície elevada na página. O que se perde é o breakout: sem cartão, não
-existe "interior" do qual código ou tabela larga possam escapar. Na
-prática isso nunca aperta, porque o gerador nunca emite cerca de código no
-corpo — todo bloco vive no painel — e a única tabela que a prosa gerada
-produz (`## Erros`) cabe dentro dos 672px sem precisar respirar mais.
+**A perda 10 encolheu com a geometria `mint`.** Ela dizia *"a página de
+endpoint não tem cartão nem breakout"*; hoje nenhuma página tem cartão e
+nenhuma tem breakout, então isso deixou de ser uma perda DESTA rota. O que
+sobra é o TOC: o painel ocupa a coluna dele, e o leitor navega a página pela
+lista de operações da sidebar em vez de pela dos headings. Na prática isso
+nunca aperta, porque o gerador emite duas seções de prosa por página.
 
 ---
 
@@ -195,12 +198,12 @@ produz (`## Erros`) cabe dentro dos 672px sem precisar respirar mais.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| A aritmética 672 + 32 + 448 = 1152 | origem própria | issue #38 — a medida de prosa, o gutter e o painel medido somam o container travado pela #14 |
-| O painel é o cartão | origem própria | issue #38 — resolve a falta de espaço para o preenchimento sem perder a elevação |
+| A aritmética 720 + 32 + 400 = 1152 | origem própria | issue #38 — a medida de prosa, o gutter e o painel somam o container; o `calc()` absorveu a troca de medida da [#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78) sem ajuste |
+| O painel é objeto, e o único do corpo | **origem própria (correção)** | era *"o painel é o cartão"*; o cartão morreu na [#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78) e o painel sobrevive por ser bloco de dados ao lado do texto, não moldura de prosa |
 | Front matter em vez de marcador em MDX | origem própria | `position: sticky` exige ancestral com contexto de rolagem previsível |
 | Nenhuma página da instância carrega `hide_table_of_contents` | origem própria | seria segunda fonte para uma decisão que o componente já toma |
 | `align-self: start` com `position: sticky` | **origem própria (implementação)** | o erro nº 1 medido ao implementar o layout — sem ele o item estica e sticky não tem onde grudar |
-| Offset do sticky em `--sd-navbar-height` | herdado | o valor já é medido em `tokens.md` |
+| Offset do sticky em `--sd-topo-grudado` | **origem própria (correção)** | era `--sd-navbar-height`, que passou a medir só a linha 1 quando a faixa de tabs entrou na [#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78) |
 | Zero `order`, DOM fixo prosa-depois-painel | origem própria | issue #38 — a mesma ordem em `row` largo e `column` estreito |
 | A ordem das seções de endpoint | origem própria (implementação) | decidida ao escrever `scripts/gerar-api.mjs` |
 | O gerador e o contrato | origem própria | [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) |
