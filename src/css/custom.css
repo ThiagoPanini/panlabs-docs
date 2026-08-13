@@ -12,10 +12,16 @@
 /* -----------------------------------------------------------------------------
    Fontes auto-hospedadas
 
-   Geist e Geist Mono, variáveis, OFL, servidas do próprio domínio. Zero CDN: o
-   ambiente corporativo alvo tem CSP, e uma requisição externa esbarra nela.
-   Auto-hospedar custa o mesmo que a CDN (zero dependência npm), então não há
-   troca a fazer.
+   Inter e Paper Mono, variáveis, OFL, servidas do próprio domínio — a mesma
+   tipografia da âncora. Zero CDN: o ambiente corporativo alvo tem CSP, e uma
+   requisição externa esbarra nela. Auto-hospedar custa o mesmo que a CDN (zero
+   dependência npm), então não há troca a fazer.
+
+   DOIS ARQUIVOS, não quinze. O Devin serve 14 faces de Inter, e essa contagem é
+   subconjunto por script para tráfego global — cirílico, grego, vietnamita. É
+   decisão de multi-tenant, e o ambiente corporativo alvo não tem esse problema:
+   copiar a contagem seria herdar uma restrição que não é nossa, o mesmo
+   argumento já escrito para o contrato de partes.
 
    O caminho começa em `/` e mesmo assim sobrevive ao `baseUrl` em subcaminho:
    o webpack do Docusaurus registra os diretórios de `staticDirectories` em
@@ -24,17 +30,17 @@
    ----------------------------------------------------------------------------- */
 
 @font-face {
-  font-family: 'Geist';
-  src: url('/fonts/Geist-Variable.woff2') format('woff2-variations');
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Variable.woff2') format('woff2-variations');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Geist Mono';
-  src: url('/fonts/GeistMono-Variable.woff2') format('woff2-variations');
-  font-weight: 100 900;
+  font-family: 'Paper Mono';
+  src: url('/fonts/PaperMono-Variable.woff2') format('woff2-variations');
+  font-weight: 100 800;
   font-style: normal;
   font-display: swap;
 }
@@ -49,6 +55,19 @@
 
 html {
   scroll-behavior: auto;
+
+  /* As quatro variantes de caractere da Inter, ligadas globalmente. `herdado`
+     por medição direta: está verbatim no CSS que a âncora serve, e é boa parte
+     do porquê de o texto dela não parecer Inter default.
+
+     Ela mora aqui e não em `tokens.css` porque não é valor — é um interruptor
+     de fonte, e a única linha da tipografia que não é token. Com uma pilha que
+     não seja a Inter o navegador as ignora em silêncio, o que é a razão de ela
+     só fazer sentido depois da troca de família.
+
+     Perda nomeada: `cv02`/`cv03`/`cv04` mexem em `a`, `g` e `l` minúsculos, e
+     ninguém avaliou o efeito delas em pt-BR — o corpus da âncora é inglês. */
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 /* -----------------------------------------------------------------------------

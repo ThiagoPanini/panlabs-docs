@@ -161,17 +161,22 @@ Três cadências: **commit**, **upgrade** e **implantação**.
 | 6 | As três rotas contra o host real, nos dois locales | **implantação** | `npm run portao:6 -- <url-base> [rota]` |
 | 7 | O `swizzle --list` congelado, e `src/theme/` conferido contra ele | **upgrade** | `npm run portao:7` |
 
-Mais três verificações que **não são portão** e rodam junto:
+Mais **quatro** verificações que **não são portão** e rodam junto:
 
 - `node scripts/espelho-tokens.mjs --verificar` — o bloco `css` de `tokens.md` é `src/css/tokens.css` byte a byte;
+- `npm run contraste` — as tabelas de contraste de [`tokens.md`](tokens.md) §10 e [`foco.md`](foco.md) §6, computadas do CSS e **comparadas célula a célula** com o que os dois documentos publicam;
 - `npm run icones` — a bijeção manifesto ↔ `static/icons/`;
 - `npm test` — a régua do algoritmo da busca, em `node --test`. Os portões são varredura, e ordenação de resultado não é varrível.
+
+> **Eram três, e a quarta nasceu de um defeito que a leitura não pegava.** As duas tabelas de contraste mediam o **mesmo par** e discordavam em três das quatro células, e a divergência sobreviveu a uma auditoria inteira — porque conferi-la exigia refazer a conta à mão, e ninguém refaz. Ela entra como verificação e não como portão pela régua desta seção: ela não protege uma regra de escrita, ela confere que duas cópias da mesma verdade não divergiram.
+>
+> *Dissenso registrado:* é mais uma coisa rodando na CI de todo commit, num projeto que já cobra sete portões e três verificações. Aceito porque o custo é de milissegundos e porque a alternativa — deixar a spec afirmar números que ninguém consegue reproduzir — é o que produziu o defeito.
 
 > **São sete, e eram seis até este slice.** A resolução do slice 7 chamava o portão do `swizzle --list` de *portão 5*; o número já estava gasto pelo portão do gerador da API, citado pelo [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) **pelo número**. Renumerar um portão commitado para satisfazer um número escrito antes de ele existir quebraria a citação. Ele é o 7. Ver [`swizzle.md`](swizzle.md) §5.
 >
 > Consequência menor, dita para não envelhecer calada: a frase do [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) que chama o portão 5 de *"o único do conjunto que não é `grep`"* passou a ter companhia — o portão 7 é da mesma família, regenera e diffa.
 
-**Onde cada um roda.** Os de commit, mais as três verificações, estão em `.github/workflows/ci.yml`. O 6 está em `.github/workflows/deploy.yml`, depois da publicação, porque ele é o único que depende de alguém fora do repositório. O 7 tem cadência de upgrade e roda na CI de todo commit mesmo assim: não existe gatilho barato para *"houve um upgrade"*, e um portão que depende de alguém lembrar de rodá-lo é um portão que não roda.
+**Onde cada um roda.** Os de commit, mais as quatro verificações, estão em `.github/workflows/ci.yml`. O 6 está em `.github/workflows/deploy.yml`, depois da publicação, porque ele é o único que depende de alguém fora do repositório. O 7 tem cadência de upgrade e roda na CI de todo commit mesmo assim: não existe gatilho barato para *"houve um upgrade"*, e um portão que depende de alguém lembrar de rodá-lo é um portão que não roda.
 
 ---
 

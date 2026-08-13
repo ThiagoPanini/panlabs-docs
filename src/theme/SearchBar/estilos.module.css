@@ -4,8 +4,10 @@
    Camada 3: tudo aqui deriva de token de camada 1 e 2. Os dois tokens novos do
    slice moram em `tokens.css` — `--sd-surface-scrim`, papel `surface` com par
    declarado, e `--sd-busca-height`, a única medida do projeto relativa à
-   viewport. A LARGURA do painel não é token novo: é `--sd-code-width`, o
-   interior do cartão de doc, citada por nome.
+   viewport. A LARGURA do painel não é token novo: é `--sd-prose-width`, citada
+   por nome. O painel abre com a medida que o leitor estava lendo quando apertou
+   a tecla — e desde que a medida do código morreu, essa frase é literalmente
+   verdadeira em vez de errar por 96px.
 
    NENHUMA declaração `outline` neste arquivo — o portão 3 reprova outline fora
    de `src/css/foco.css`, e não há exceção a pedir: `:focus-visible` já é
@@ -82,16 +84,18 @@
    `margin-inline: auto` deixa o painel parado enquanto o conteúdo muda.
    ----------------------------------------------------------------------------- */
 .modal {
-  inline-size: min(var(--sd-code-width), calc(100% - 2 * var(--sd-gutter)));
+  inline-size: min(var(--sd-prose-width), calc(100% - 2 * var(--sd-gutter)));
   max-block-size: var(--sd-busca-height);
   margin-block: var(--sd-space-16) auto;
   margin-inline: auto;
   padding: 0;
-  border: none;
+  /* A borda do `<dialog>` que o agente de usuário desenha é substituída, não
+     removida: o fio aqui é o mesmo que era o anel embutido na sombra. */
+  border: var(--sd-border-width) solid var(--sd-border-subtle);
   border-radius: var(--sd-radius);
-  background: var(--sd-surface-card);
+  background: var(--sd-surface-raised);
   color: var(--sd-text-body);
-  box-shadow: var(--sd-shadow-3);
+  box-shadow: var(--sd-shadow-float);
   overflow: hidden;
   display: flex;
   flex-direction: column;

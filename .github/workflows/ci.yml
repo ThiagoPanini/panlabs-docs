@@ -88,6 +88,17 @@ jobs:
       - name: Espelho de tokens
         run: node scripts/espelho-tokens.mjs --verificar
 
+      # As duas tabelas de contraste da spec, COMPUTADAS de `tokens.css` em vez
+      # de transcritas. Também não é portão, e pela mesma régua do espelho: ela
+      # confere que duas cópias da mesma verdade não divergiram — o número
+      # escrito na spec e a cor que o CSS entrega.
+      #
+      # Ela nasceu do defeito que fechou: `tokens.md` §10 e `foco.md` §6 mediam
+      # o MESMO par e discordavam em três das quatro células, e ninguém tinha
+      # como saber qual estava certa.
+      - name: Contraste medido
+        run: npm run contraste
+
       # As quatro invariantes de FORMA da spec. Não são portão — os portões
       # cobram o código, e estas cobram o documento. A spec é o entregável deste
       # projeto (axioma 6), e entregável sem régua envelhece calado.

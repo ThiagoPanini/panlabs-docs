@@ -141,7 +141,7 @@ Consequência que vale escrita: **zero `z-index` no arquivo**. O elemento entra 
 
 | Dimensão | Valor | De onde sai |
 | --- | --- | --- |
-| Largura | `--sd-code-width` | é o **interior do cartão de doc** — a mesma medida que o leitor estava lendo quando apertou a tecla |
+| Largura | `--sd-prose-width` | é **a medida que o leitor estava lendo** quando apertou a tecla |
 | Altura máxima | `--sd-busca-height` | a única medida do projeto relativa à viewport |
 | Ancoragem | topo, `margin-inline: auto` | um modal centrado verticalmente **pula** quando a lista cresce, e ela cresce a cada tecla |
 

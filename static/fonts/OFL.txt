@@ -1,8 +1,26 @@
-Copyright (c) 2023 Vercel, in collaboration with basement.studio
+Este arquivo cobre as TRÊS famílias auto-hospedadas em `static/fonts/`, e as
+duas faces variáveis servidas por elas:
 
-This Font Software is licensed under the SIL Open Font License, Version 1.1.
-This license is copied below, and is also available with a FAQ at:
-http://scripts.sil.org/OFL
+  Inter · Inter Display   Inter-Variable.woff2    Versão 4.001
+    Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
+    Uma face só cobre as duas famílias: o eixo `opsz` (14 → 32) é o que o
+    upstream publica separadamente como Inter e Inter Display. Subconjunto de
+    latin + latin-ext, com `cv02` `cv03` `cv04` `cv11` preservadas.
+
+  Paper Mono              PaperMono-Variable.woff2   Versão 0.310
+    Copyright 2025 The Paper Mono Project Authors
+    (https://github.com/paper-design/paper-mono)
+
+Modificação declarada: o arquivo da Inter é um SUBCONJUNTO do
+`web/InterVariable.woff2` publicado — cobertura de caracteres reduzida a
+latin + latin-ext —, e não uma face redesenhada. Nenhum contorno foi tocado, e
+os dois arquivos mantêm o nome que o upstream lhes deu. O da Paper Mono é
+cópia byte a byte de `fonts/webfonts/PaperMono[wght].woff2`.
+
+Os dois arquivos são licenciados sob a SIL Open Font License, Version 1.1,
+copiada abaixo e também disponível, com um FAQ, em:
+https://openfontlicense.org
+
 
 -----------------------------------------------------------
 SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007

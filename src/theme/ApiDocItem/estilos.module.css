@@ -91,9 +91,11 @@
   flex-direction: column;
   gap: var(--sd-space-6);
   padding: var(--sd-space-6);
+  /* O fio que era o anel `0 0 0 1px` da sombra, agora borda de verdade. */
+  border: var(--sd-border-width) solid var(--sd-border-subtle);
   border-radius: var(--sd-radius);
-  background-color: var(--sd-surface-card);
-  box-shadow: var(--sd-shadow-1);
+  background-color: var(--sd-surface-raised);
+  box-shadow: var(--sd-shadow-raised);
 }
 
 .painelCabecalho {

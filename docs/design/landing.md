@@ -101,7 +101,7 @@ coincidência — ver [`swizzle.md`](swizzle.md) §3.
 
 ---
 
-## 3. As três larguras — nenhuma nova
+## 3. As duas larguras — nenhuma nova
 
 **Sangrar é o fundo, não o conteúdo.** Dentro da faixa, o conteúdo respeita as
 medidas que o sistema já tem:
@@ -109,15 +109,19 @@ medidas que o sistema já tem:
 | Faixa | Token | Medida | Origem |
 | --- | --- | ---: | --- |
 | prosa — headline, pitch, lede de seção | `--sd-prose-width` | 672 | a medida de leitura do site |
-| laje de código | `--sd-code-width` | 768 | o interior do cartão de doc: 864 − 2 × 48 |
+| laje de código | `--sd-prose-width` | 672 | a mesma medida: o Devin tem uma largura só |
 | grade de cartões | `--sd-container-width` | 1152 | o container do shell |
 | faixa de espetáculo (fundo) | — | **sangra** | ilha de espetáculo |
 
-`--sd-code-width` **nasce neste slice e não é largura nova**: é a medida onde o
-código já respira no resto do site, derivada do cartão em vez de repetida como
-número. Dentro da página de doc ela não precisa de regra — quem não está na
-lista de prosa fica com o interior inteiro do cartão. A landing não tem cartão,
-e por isso é o único lugar do projeto que precisa **citar** a medida.
+**São duas medidas, e eram três.** A laje tinha token próprio, derivado do
+interior do cartão de doc — 864 − 2 × 48 = 768 —, e ele morreu com a skin nova:
+sem cartão não há interior, e sobraria um 768 sem raiz, que é a derivação falsa
+que a régua recusa. A laje passa a citar a medida de prosa, e isso fecha o
+critério do dono: **o Devin tem uma largura só**, landing e modal inclusive.
+
+*Dissenso registrado:* a landing perde um degrau de ritmo — de três larguras
+para duas — e o Devin não tem landing para arbitrar. Se a laje larga fizer falta
+ao vivo, ela volta **com raiz própria declarada**, não herdando número órfão.
 
 **Cada bloco é a medida mais dois gutters**, e é isso que dispensa media query:
 com espaço sobrando a medida sai exata; sem espaço, o gutter sobrevive. A laje
@@ -133,9 +137,10 @@ mesmo site, e não como uma página colada na frente.
 > medida constante foi comprada pagando explicitamente por oscilação zero, e o
 > hero não é motivo bom o bastante para reabrir a compra.
 
-**A grade vai a 1152 e não aos 768 do interior do cartão**, porque 768 é
-`864 − 96` — derivado de um cartão que aqui não existe. Uma fila de três a 768
-dá cartões de ~245px; a 1152 dá ~373px.
+**A grade vai a 1152 e não à medida de prosa.** A conta é a que decide: numa fila
+de três, 672 dá cartões de ~213px e 1152 dá ~373px. O argumento antigo comparava
+com os 768 do interior do cartão; o número de comparação mudou e a conclusão
+ficou mais forte, porque a medida de prosa é ainda mais estreita.
 
 **O colapso das duas grades não custa uma linha.** Elas usam `--sd-card-grid`,
 que é a mesma declaração do `card-group` dentro do MDX: `auto-fit` com piso em
@@ -569,8 +574,8 @@ considerada.
 | Landing sem cartão | herdado | consequência de escopo do CSS do cartão, de [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) |
 | Footer sem variante, fora da ilha | origem própria | [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) §3 — derivado da raridade que a ilha exige |
 | Prosa da landing em 672 | herdado | a medida de leitura de [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) |
-| Grade em 1152, código em 768 | herdado | container de [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14), breakout de [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) |
-| `--sd-code-width` como token | **origem própria (implementação)** | a medida já existia; a landing é o primeiro consumidor que precisa citá-la por nome |
+| Grade em 1152 | herdado | container de [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) |
+| A laje de código na medida de prosa | **origem própria (implementação)** | a medida própria dela derivava do interior do cartão, e morreu com ele ([#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56)) |
 | Bloco = medida + dois gutters | **origem própria (implementação)** | resolve o estreito por construção, como o `max-width` do cartão |
 | Colapso das grades por `auto-fit` | herdado + **lacuna de medição** | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — a âncora para em 4 colunas |
 | Faixa de espetáculo cobrindo hero + código | **origem própria** | [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) §3 — glow não existe em nenhuma das sete |
