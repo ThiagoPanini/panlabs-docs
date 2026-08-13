@@ -6,13 +6,15 @@
  * nomes: nenhum componente e nenhum MDX é reescrito.
  *
  * Três papéis, UM registro, UM orçamento. **O papel é uma tag na entrada, não
- * uma pilha separada de desenhos** — é por isso que `package`, `users` e
- * `webhook` carregam duas tags e consomem um arquivo só.
+ * uma pilha separada de desenhos** — é por isso que `package`, `users`,
+ * `webhook` e `book-open` carregam duas tags e consomem um arquivo só.
  *
- *   19 sistema + 12 navegação + 35 autoria = 66 tags sobre 63 arquivos
+ *   19 sistema + 12 navegação + 37 autoria = 68 tags sobre 64 arquivos
  *
- * O teto é 64 — **teto, não meta**. Sobra um slot. O 65º ícone é revisão de
- * design, não commit.
+ * O teto é 64 — **teto, não meta**, e ele acabou de ser alcançado: o slot que
+ * sobrava foi para `wrench`, o único desenho novo do mapa do `mint`. **Folga
+ * zero.** O 65º ícone deixou de ser revisão de design e virou troca: ou entra no
+ * lugar de outro, ou não entra.
  *
  * Procedência: docs/design/icones.md.
  */
@@ -63,7 +65,10 @@ const NAVEGACAO = [
   {nome: 'rocket', papeis: ['navegacao'], onde: 'Documentação › Comece aqui'},
   {nome: 'shapes', papeis: ['navegacao'], onde: 'Documentação › Conceitos'},
   {nome: 'wallet', papeis: ['navegacao'], onde: 'Documentação › Meios de pagamento'},
-  {nome: 'book-open', papeis: ['navegacao'], onde: 'Documentação › Guias'},
+  // Retagueado pela landing: ele ganha a segunda tag e o segundo ponto de
+  // consumo. A porta é escrita como STRING — `<Card icon="book-open">` —, que é
+  // a mesma superfície do MDX, e é a tag de autoria que a governa.
+  {nome: 'book-open', papeis: ['navegacao', 'autoria'], onde: 'Documentação › Guias · landing › porta Jornadas'},
   {nome: 'activity', papeis: ['navegacao'], onde: 'Documentação › Operação'},
   {nome: 'code-xml', papeis: ['navegacao'], onde: 'Referência da API › Introdução'},
   {nome: 'receipt', papeis: ['navegacao'], onde: 'Referência da API › Cobranças'},
@@ -72,9 +77,12 @@ const NAVEGACAO = [
 ];
 
 /**
- * Autoria · 35 — o vocabulário do autor no MDX.
- * Três entradas carregam a segunda tag `navegacao`, e é isso que faz a conta
- * fechar em 63 arquivos.
+ * Autoria · 37 — o vocabulário escrito como STRING: o MDX do autor e, agora, as
+ * três portas da landing, que usam a mesma superfície `<Card icon="…">`.
+ *
+ * Três entradas carregam a segunda tag `navegacao` e moram aqui; `book-open`
+ * carrega o par na direção contrária e mora em NAVEGACAO. As quatro juntas são o
+ * que faz 68 tags caberem em 64 arquivos.
  * @type {Entrada[]}
  */
 const AUTORIA = [
@@ -88,10 +96,15 @@ const AUTORIA = [
   {nome: 'plus', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'filter', papeis: ['autoria'], onde: 'vocabulário do autor', lucide: 'funnel'},
 
-  // Objetos · 14
+  // Objetos · 15
   {nome: 'file-text', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'folder', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'terminal', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'terminal', papeis: ['autoria'], onde: 'vocabulário do autor · landing › porta Procedimentos'},
+  // O único desenho NOVO do mapa do `mint`, e o único ponto em que o teto de 64
+  // compra alguma coisa: na porta `Ferramentas`, todo glifo adequado do acervo
+  // já é uma das quatro famílias que aquela aba abre, e a regra da porta é não
+  // repetir o glifo de nenhuma categoria que ela abre.
+  {nome: 'wrench', papeis: ['autoria'], onde: 'vocabulário do autor · landing › porta Ferramentas'},
   {nome: 'database', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'server', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'cloud', papeis: ['autoria'], onde: 'vocabulário do autor'},
@@ -99,6 +112,9 @@ const AUTORIA = [
   {nome: 'lock', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'mail', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'calendar', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  // Sem consumidor desde que a grade de cinco cartões da landing morreu, e ele
+  // FICA. O corte é do ticket da árvore, que é quem reescreve o manifesto
+  // inteiro; cortá-lo aqui adiantaria metade de uma decisão que lá é uma só.
   {nome: 'credit-card', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'users', papeis: ['navegacao', 'autoria'], onde: 'Referência da API › Clientes · vocabulário do autor'},
   {nome: 'globe', papeis: ['autoria'], onde: 'vocabulário do autor'},
@@ -125,7 +141,7 @@ const AUTORIA = [
 /** @type {Entrada[]} */
 export const ICONES = [...SISTEMA, ...NAVEGACAO, ...AUTORIA];
 
-/** Os 63 nomes de arquivo, em ordem de manifesto. */
+/** Os 64 nomes de arquivo, em ordem de manifesto. */
 export const NOMES = ICONES.map((i) => i.nome);
 
 /**

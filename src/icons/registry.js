@@ -12,7 +12,7 @@
  * `::before`, em `src/css/chrome.css`. Não é inconsistência: não existe ponto de
  * swizzle `safe` para injetar componente React num item de sidebar, então a
  * rota de `className` + máscara é a **única** zero-swizzle. Os dois leem os
- * mesmos 63 arquivos.
+ * mesmos 64 arquivos.
  *
  * **Nada aqui degrada em silêncio.** Nome desconhecido lança; o Docusaurus
  * prerenderiza toda página no build, então o `throw` *é* falha de build, sem
@@ -20,7 +20,7 @@
  * que é o retorno certo em desenvolvimento.
  *
  * ---------------------------------------------------------------------------
- * Por que 63 `import` à mão e não um `require.context`
+ * Por que 64 `import` à mão e não um `require.context`
  *
  * Medido nesta implementação, não deduzido: a regra de SVGR do
  * `plugin-svgr@3.10.2` casa por **issuer**, e o issuer precisa ser um arquivo
@@ -29,7 +29,7 @@
  * SVG cai na regra de asset. O que volta é uma **data URI**, não um componente,
  * e o sintoma é `Invalid tag: data:image/svg+xml;base64,…` no prerender.
  *
- * Registro estático também é o que a decisão de orçamento pediu: os 63 no
+ * Registro estático também é o que a decisão de orçamento pediu: os 64 no
  * bundle principal, ~20 KB crus e ~6 KB gzip, que é o preço de `icon="rocket"`
  * funcionar sem import dinâmico.
  *
@@ -84,6 +84,7 @@ import Filter from '@site/static/icons/filter.svg';
 import FileText from '@site/static/icons/file-text.svg';
 import Folder from '@site/static/icons/folder.svg';
 import Terminal from '@site/static/icons/terminal.svg';
+import Wrench from '@site/static/icons/wrench.svg';
 import Database from '@site/static/icons/database.svg';
 import Server from '@site/static/icons/server.svg';
 import Cloud from '@site/static/icons/cloud.svg';
@@ -152,6 +153,7 @@ const DESENHOS = {
   'file-text': FileText,
   'folder': Folder,
   'terminal': Terminal,
+  'wrench': Wrench,
   'database': Database,
   'server': Server,
   'cloud': Cloud,

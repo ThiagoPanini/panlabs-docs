@@ -18,7 +18,7 @@ Tudo aqui é obrigatório. Não há bloco `Livre`: os **desenhos** são skin e s
 
 ## 1. Origem — Lucide vendorizado
 
-**63 arquivos `.svg` do Lucide (ISC), copiados para dentro do repositório.** Não é dependência, não é CDN, não é resolução em runtime.
+**64 arquivos `.svg` do Lucide (ISC), copiados para dentro do repositório.** Não é dependência, não é CDN, não é resolução em runtime.
 
 O axioma 2 fecha a porta do **pacote**, não a do desenho: `npm install` de uma biblioteca de ícones está proibido, mas copiar arquivos de licença permissiva custa **zero dependência** e um arquivo de licença. A restrição sempre foi mais estreita do que parecia.
 
@@ -36,7 +36,7 @@ O axioma 2 fecha a porta do **pacote**, não a do desenho: `npm install` de uma 
 
 **O Lucide renomeia glifo entre versões.** O manifesto declara a versão de origem, e `scripts/vendorizar-icones.mjs` baixa contra ela — lendo o manifesto do fonte, nunca uma segunda lista.
 
-Isto não é cerimônia. Na primeira execução, **três dos 63 nomes não existiam mais** na versão fixada. O mecanismo pegou os três alto, em vez de deixá-los virarem quadrado vazio na sidebar seis meses depois.
+Isto não é cerimônia. Na primeira execução, **três dos nomes então vigentes não existiam mais** na versão fixada. O mecanismo pegou os três alto, em vez de deixá-los virarem quadrado vazio na sidebar seis meses depois.
 
 **A resolução importa mais que o achado: o nome do manifesto é NOSSO contrato e não se move por renomeação de terceiro.** Quem paga a divergência é um campo opcional na entrada, que registra o nome do upstream onde ele diverge — não o MDX de 73 páginas, e não os componentes.
 
@@ -69,7 +69,7 @@ O ícone da sidebar é o único que roda por máscara e não recebe compensaçã
 
 ## 3. Três renderizadores, uma fonte de verdade
 
-Não é inconsistência: cada um é **forçado pelo contexto**, e os três leem os mesmos 63 arquivos.
+Não é inconsistência: cada um é **forçado pelo contexto**, e os três leem os mesmos 64 arquivos.
 
 ### (a) Componentes de conteúdo → SVGR inline
 
@@ -110,12 +110,14 @@ Duas consequências de implementação, e as duas são medidas:
 | --- | ---: | ---: |
 | Sistema — o componente escolhe, o autor nunca | 19 | 19 |
 | Navegação — um por seção de topo de sidebar | 12 | **9** |
-| Autoria — o vocabulário do autor no MDX | 35 | 35 |
-| **Total** | **66** | **63** |
+| Autoria — o vocabulário escrito como string | 37 | 36 |
+| **Total** | **68** | **64** |
 
-As três entradas que carregam duas tags — `package`, `users` e `webhook` — são o que separa 66 de 63.
+As **quatro** entradas que carregam duas tags — `package`, `users`, `webhook` e `book-open` — são o que separa 68 de 64. As três primeiras moram na lista de autoria; `book-open` carrega o par na direção contrária e mora na de navegação.
 
-**O teto é 64. Teto, não meta.** Sobra **um slot**, e a folga vai escrita: teto duro significa que o próximo ícone que alguém quiser custa cortar outro. O 65º ícone é revisão de design, não commit.
+> **A tag de autoria deixou de significar *"o MDX do autor"* e passou a significar *"o nome escrito como string"*.** A landing escreve `<Card icon="book-open">`, que é a **mesma superfície** de autoria do MDX — mesmo componente, mesma prop, mesma falha alta se o nome não existir. Dizer *MDX* era descrever o único consumidor que existia, não a regra; a regra é a superfície.
+
+**O teto é 64. Teto, não meta — e ele foi alcançado.** O slot que sobrava foi para **`wrench`**, e a folga agora é **zero**. Isso muda o que o teto cobra: o 65º ícone deixou de ser *revisão de design* e virou **troca** — ou entra no lugar de outro, ou não entra.
 
 A razão de haver teto: conjunto que cresce sob demanda vira dívida. Ninguém audita trezentos ícones em busca de coerência de família, mas 64 cabem numa tela e a incoerência salta aos olhos.
 
@@ -146,8 +148,8 @@ Os cinco de chrome (`Icon/Arrow`, `Icon/DarkMode`, `Icon/LightMode`, `Icon/Edit`
 O manifesto vive em `src/icons/manifest.js`, e ele **é o contrato**:
 
 ```
-static/icons/*.svg     ← 63 desenhos.  TROCÁVEL — é skin, axioma 3
-src/icons/manifest.js  ← 63 nomes + papéis.  CONTRATO. Não troca.
+static/icons/*.svg     ← 64 desenhos.  TROCÁVEL — é skin, axioma 3
+src/icons/manifest.js  ← 64 nomes + papéis.  CONTRATO. Não troca.
 ```
 
 Os nomes são **semânticos** (`rocket`, `database`, `shield-check`), nunca de marca. O corporativo com iconografia própria **substitui os arquivos e mantém os nomes**: nenhum componente e nenhum MDX é reescrito. Isso torna a troca de iconografia uma operação do mesmo tipo que a troca de paleta — mexer na skin, não no sistema.
@@ -175,6 +177,24 @@ Os doze pares seção→ícone, **verbatim**:
 
 **`Receitas` não recebe ícone** — sidebar plana, sem categoria, logo sem slot. **As três tabs de navbar também não**: a regra é *um slot por seção de topo da **sidebar***, e o navbar já carrega tabs, busca, locale e GitHub sem folga para enfeite.
 
+#### As três portas da landing têm ícone, e não são navegação
+
+A tab no navbar continua sem glifo. **O cartão de porta da landing tem**, e a distinção é de superfície, não de inconsistência: a porta é um `<Card icon="…">`, escrito como string, contado na tag de **autoria**. A tag de navegação é 1:1 com os doze pares seção→ícone, e o vendorizador cobra essa igualdade — abrir a lista de navegação para a landing quebraria o único lugar onde a aritmética de ícone é conferida por máquina.
+
+As portas eram declaradas *"sem ícone, e é ritmo, não esquecimento"*. Elas ganham glifo por decisão, sob uma regra:
+
+> **A porta não pode repetir o glifo de nenhuma das categorias que ela abre.**
+
+Sem ela, o cartão e um quarto da aba leem a mesma hierarquia, e o leitor não sabe se o glifo nomeia o eixo ou uma seção dentro dele.
+
+| Porta | Glifo | Origem |
+| --- | --- | --- |
+| Jornadas | `book-open` | reuso, retagueado |
+| Procedimentos | `terminal` | reuso, retagueado |
+| Ferramentas | **`wrench`** | **o único desenho novo** |
+
+**`wrench` é o único ponto de todo o esforço em que o teto compra alguma coisa.** Na porta `Ferramentas`, todo glifo adequado do acervo — `package`, `puzzle`, `bot`, `server` — já é uma das quatro famílias que aquela aba abre, e a regra acima os elimina um a um. Não havia reuso disponível; havia o slot livre.
+
 **O registro é sóbrio, não ilustrativo.** O ícone marca posição; não narra a seção. É o registro que combina com um sistema onde tudo é imóvel e a assinatura mora no ritmo da página, não no enfeite.
 
 Três pares merecem o motivo escrito:
@@ -185,11 +205,15 @@ Três pares merecem o motivo escrito:
 
 **As duas abas são duas barras laterais, vistas uma de cada vez.** Os doze nunca competem numa lista só; competem em duas listas de seis. A coerência é exigida **dentro** de cada aba, e o que segura as duas juntas é a família.
 
-### Autoria · 35
+### Autoria · 37 tags sobre 36 arquivos
 
 **Ações (8):** `play` · `download` · `upload` · `refresh-cw` · `send` · `trash-2` · `plus` · `filter`
 
-**Objetos (14):** `file-text` · `folder` · `terminal` · `database` · `server` · `cloud` · `key` · `lock` · `mail` · `calendar` · `credit-card` · `users` · `globe` · `package`
+**Objetos (15):** `file-text` · `folder` · `terminal` · **`wrench`** · `database` · `server` · `cloud` · `key` · `lock` · `mail` · `calendar` · `credit-card` · `users` · `globe` · `package`
+
+**Mais `book-open`**, que mora na lista de navegação e carrega a segunda tag aqui.
+
+> **`credit-card` ficou sem consumidor**, e fica. O único uso medido dele era a grade de cinco cartões da landing, que morreu com as quatro seções. O corte é do ticket da árvore — é lá que o manifesto é reescrito inteiro, e adiantar metade de uma decisão que lá é uma só custaria mais do que a linha que ele ocupa aqui.
 
 **Estados e sinais (7):** `zap` · `clock` · `circle-alert` · `circle-help` · `sparkles` · `trending-up` · `gauge`
 
@@ -210,7 +234,7 @@ Três pares merecem o motivo escrito:
 ```
 Ícone "rockett" não existe.
 Você quis dizer "rocket"?
-63 ícones disponíveis em src/icons/manifest.js.
+64 ícones disponíveis em src/icons/manifest.js.
 ```
 
 A distância de edição são oito linhas próprias. `leven` é dependência transitiva do core, mas amarrar em dependência transitiva é dívida — as oito linhas são mais baratas que o risco. A sugestão só aparece quando é plausível: acima de um terço do comprimento do nome ela vira ruído, e mandar alguém para o glifo errado é pior que não sugerir.
@@ -232,7 +256,7 @@ O manifesto, o registro React e o diretório de desenhos são três listas da me
 
 O último é o único que viaja calado sem essa conferência: arquivo órfão não é importado por ninguém e não quebra nada — só engorda o artefato.
 
-**Nota de implementação medida, e ela custou um build:** `require.context` **não** funciona com SVGR. A regra do plugin casa por *issuer*, e num contexto o issuer de cada arquivo é o módulo de contexto — um diretório —, então a regra não casa e o SVG cai na regra de asset. O que volta é uma **data URI**, não um componente, e o sintoma é `Invalid tag: data:image/svg+xml;base64,…` no prerender. Por isso são 63 `import` à mão, e por isso a bijeção é conferida em vez de derivada.
+**Nota de implementação medida, e ela custou um build:** `require.context` **não** funciona com SVGR. A regra do plugin casa por *issuer*, e num contexto o issuer de cada arquivo é o módulo de contexto — um diretório —, então a regra não casa e o SVG cai na regra de asset. O que volta é uma **data URI**, não um componente, e o sintoma é `Invalid tag: data:image/svg+xml;base64,…` no prerender. Por isso são 64 `import` à mão, e por isso a bijeção é conferida em vez de derivada.
 
 ---
 
@@ -268,7 +292,7 @@ A regra da sidebar é a que sustenta o teto de profundidade da árvore: num terc
 
 ## 9. Custo de bundle, aceito conscientemente
 
-Registro estático coloca os 63 no bundle principal. É o preço de `icon="rocket"` funcionar sem import dinâmico, e é barato — dezenas de kilobytes crus, poucos gzipados.
+Registro estático coloca os 64 no bundle principal. É o preço de `icon="rocket"` funcionar sem import dinâmico, e é barato — dezenas de kilobytes crus, poucos gzipados.
 
 O caminho da sidebar não paga isso duas vezes: as máscaras entram no CSS, e como os arquivos são pequenos o empacotador as embute como dado em vez de gerar requisição. Um desenho, dois consumidores, zero divergência possível.
 
@@ -294,7 +318,10 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | A marca por registro de navbar | **origem própria (implementação)** | `Logo` e `Navbar/Logo` são `unsafe`, e o schema de logo exige arquivo de imagem |
 | A marca é `train-track` | origem própria | [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) §3, respondendo ao pedido da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
 | O papel é tag na entrada | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §4 |
-| 66 tags sobre 63 arquivos, um slot livre | **origem própria (correção)** | [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) §1 — só a aritmética é nova; a regra já estava escrita |
+| 68 tags sobre 64 arquivos, folga zero | **origem própria (correção)** | [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) §1 — só a aritmética é nova; a regra já estava escrita |
+| A tag de autoria é *nome escrito como string*, não *MDX* | **origem própria (correção)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — a landing usa `<Card icon="…">`, a mesma superfície; a redação antiga descrevia o único consumidor, não a regra |
+| Ícone nas três portas da landing, sob a regra de não repetir glifo de categoria | **origem própria** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — nada medido; a regra existe para o cartão não ler como a aba |
+| `wrench` como o único desenho novo | **origem própria (implementação)** | descoberto aplicando a regra da porta: em `Ferramentas` todo reuso adequado já é uma das quatro famílias que a aba abre |
 | `circle-check` fora | **delta deliberado** | consequência da variante morta na [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), pela regra de *sem consumidor* |
 | `rocket`, `book-open`, `activity`, `code-xml` | origem própria | lista-exemplo da [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21), que se declarou não travada |
 | Os outros oito pares | origem própria | [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) §2 |

@@ -211,14 +211,22 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
-     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-5xl)
+     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-6xl)
      para a procedência ficar legível no próprio token.
 
-     O degrau `5xl` nasceu com a landing, e ele NÃO é escala nova: é o próximo
-     nome da mesma escala do alvo, e tem exatamente um consumidor — o título do
-     hero, e só de 997px. Abaixo disso o hero desce para `4xl`, porque a regra da
-     dobra manda no valor: a 375 × 667, um título em 48px estoura o teto da faixa
-     do hero. Ver docs/design/landing.md §4.
+     O degrau de display é `6xl`, e ele NÃO é escala nova: é um nome da mesma
+     escala do alvo, saltando o `5xl`. Um consumidor no site inteiro — o título
+     do hero da landing, e só de 997px. Abaixo disso o hero desce para `4xl`,
+     porque a regra da dobra manda no valor: a 375 × 667, um título de display
+     estoura o teto da faixa do hero. Ver docs/design/landing.md §4.
+
+     O `5xl` SAIU, e a lápide vale a linha. Ele nasceu na mesma landing que o
+     mata, e nos dois casos quem decidiu foi a largura de onde o título mora: em
+     672 o degrau que cabia era 48, e com o bloco do hero tomando o container o
+     título cabe numa linha em 60. Deixá-lo declarado seria variável sem
+     consumidor — o defeito do Infima que este arquivo nomeia para não copiar.
+     Registrado como dissenso em docs/design/landing.md: o degrau de display do
+     projeto foi decidido duas vezes, com respostas diferentes.
      --------------------------------------------------------------------------- */
   --sd-type-xs:    12px;
   --sd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
@@ -228,7 +236,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-type-2xl:   24px;
   --sd-type-3xl:   30px;    /* título de página, até 996px */
   --sd-type-4xl:   36px;    /* título de página, de 997px; título do hero até 996px */
-  --sd-type-5xl:   48px;    /* título do hero da landing, de 997px */
+  --sd-type-6xl:   60px;    /* o degrau de display — título do hero da landing, de 997px */
 
   /* Peso — três, nomeados por intenção. Nome de intenção não colide com o
      `semibold: 500` do Infima, que é a mesma palavra sobre outro número. */
@@ -775,28 +783,38 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    ============================================================================= */
 
 [data-sd-showcase] {
-  --sd-glow: radial-gradient(circle, rgb(from var(--sd-accent) r g b / 12%), transparent 70%);
+  /* DOIS focos, e o segundo não afrouxa o critério que autoriza a ilha: os dois
+     são luz emitida pelo mesmo mecanismo, num tom diferente.
+
+     O primeiro subiu de 12% para 30%, e quem pagou foi a FIGURA. Enquanto havia
+     desenho embaixo, a luz era o brilho sobre ele; sem desenho ela carrega o
+     hero sozinha, e 12% não carrega. O centro dele reancora na aresta de cima da
+     laje, então a luz nasce ATRÁS do material em vez de flutuar — e isso é
+     reinterpretação, não medição. Vai como dissenso em landing.md.
+
+     O segundo é o cyan, no canto oposto, a 24%. Ele cita `--sd-code-parameter`,
+     que é o tom do identificador na paleta de sintaxe: dentro da ilha a laje é o
+     material, e a segunda luz é a cor do material. Não é hex novo — é a operação
+     1 sobre um token que já existe. */
+  --sd-glow:   radial-gradient(circle, rgb(from var(--sd-accent) r g b / 30%), transparent 70%);
+  --sd-glow-2: radial-gradient(circle, rgb(from var(--sd-code-parameter) r g b / 24%), transparent 70%);
 
   /* A caixa do glow, e ela é QUADRADA: o gradiente é `circle`, e caixa não
      quadrada faz o raio da luz depender de qual lado é maior. Um lado só, e ele
      é a largura do site — a luz tem a medida do conteúdo. Dois lados exigiriam
      um segundo comprimento sem raiz, que é a derivação falsa que este arquivo
-     recusa em voz alta mais acima. */
+     recusa em voz alta mais acima. Um comprimento para os DOIS focos, pelo mesmo
+     motivo: um segundo tamanho seria o segundo número que não tem raiz. */
   --sd-glow-tamanho: var(--sd-container-width);
-
-  /* A tinta da figura do trilho. Derivação de ALFA, então é a operação 1 —
-     `rgb(from …)` sobre UMA cor —, e não `color-mix` com `transparent`, que
-     seria a operação 2 fingida sobre uma coisa que não é token.
-
-     Ela mora aqui e não no CSS Module da landing por consequência do portão 1:
-     cor nasce neste arquivo e em nenhum outro. E ganha de graça a propriedade
-     da ilha — fora dela não resolve. */
-  --sd-trilho-tinta: rgb(from var(--sd-text-strong) r g b / 24%);
 
   /* A amplitude da respiração — PAR DECLARADO sobre o alfa do glow, e não um
      segundo gradiente com outro alfa. São fatores, não cores: a camada
      decorativa multiplica por `opacity` o alfa que o gradiente já entrega, e o
      vale é o único número que a respiração acrescenta ao sistema.
+
+     QUEM RESPIRA É UM DOS DOIS, e isso é o teto de um loop por página lido ao
+     pé da letra: são dois focos e uma respiração. O cyan é luz parada, e o par
+     abaixo nunca o alcança.
 
      Eles moram aqui, no escopo da ilha, pelo mesmo motivo que `--sd-glow`: fora
      dela não resolvem, e a respiração fica confinada por FATO DE ESCOPO em vez
@@ -1463,11 +1481,17 @@ Então o adaptador escreve:
 
 > **Dissenso registrado, e ele é sobre a defesa da seção inteira.** A profundidade era a demonstração mais visível do sistema, e agora ela levanta um botão e um modal. Quem abrir o arquivo de tokens sem contexto vai ler *over-engineering*, e merece a resposta curta: **a defesa deixou de ser "é um sistema" e passou a ser "são dois papéis medidos que compartilham dois ingredientes"** — `lip` e `cast`. É verdade, e é menos do que o arquivo prometia.
 
-### O glow mora na camada 3, em regra própria
+### Os dois glows moram na camada 3, em regra própria
 
-`--sd-glow` **não é papel semântico** — é um gradiente, não uma cor, e não cabe na lista fechada de oito. Ele é token de componente, e o componente é a própria ilha.
+`--sd-glow` e `--sd-glow-2` **não são papel semântico** — são gradientes, não cores, e não cabem na lista fechada de oito. São token de componente, e o componente é a própria ilha.
 
-**A regra dele é separada de propósito.** Entrar no bloco `:root, [data-sd-showcase]` o poria em `:root`, e o glow vazaria para o site inteiro. Fora da ilha, `var(--sd-glow)` **não resolve para nada** — a confinação deixa de depender de alguém lembrar dela e vira fato de escopo.
+**A regra deles é separada de propósito.** Entrar no bloco `:root, [data-sd-showcase]` os poria em `:root`, e o glow vazaria para o site inteiro. Fora da ilha, `var(--sd-glow)` **não resolve para nada** — a confinação deixa de depender de alguém lembrar dela e vira fato de escopo. Ela custa **zero** na superfície de troca, que continua em dez linhas.
+
+**São dois, e o segundo não afrouxa o critério de emissão.** O magenta a **30%** cita `--sd-accent`; o cyan a **24%** cita `--sd-code-parameter`, que é o tom do identificador na paleta de sintaxe — dentro da ilha a laje é o material, e a segunda luz é a cor do material. Nenhum hex novo: as duas são a operação 1 sobre token que já existe.
+
+> **O primeiro subiu de 12% para 30%, e o registro anterior estava errado sobre a origem.** [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) escreveu o par `0,24 / 0,30` supondo que o `--sd-glow` publicado já fosse 0,30; ele era **12%, desde o primeiro commit**. O par estava certo sobre o destino. Quem paga a diferença é a **figura**: enquanto havia desenho embaixo, a luz era o brilho sobre ele; sem desenho ela carrega o hero sozinha, e 12% não carrega. Ver [`landing.md`](landing.md) §5.
+
+**Um respira, o outro não.** O par de amplitude alcança só o magenta, e é assim que o teto de *um loop por página* se lê ao pé da letra: dois focos, uma respiração.
 
 ---
 
@@ -1521,7 +1545,7 @@ Um shim serve os **dois** modos: o Docusaurus cai em `prism.theme` quando `prism
 
 Dezenove nomes, e **zero valor novo** em relação ao que a direção de arte travou. Eles existem porque a regra mais dura da spec é *zero valor fora deste documento*: um arquivo de componente que escreve "peso 600" já é violação — ele precisa de um nome para citar.
 
-- **Tamanho:** `--sd-type-xs` … `--sd-type-4xl`. Os degraus levam o nome do alvo, para a procedência ficar legível no próprio token e quem confere não precisar traduzir. Numerar de um a oito jogaria isso fora.
+- **Tamanho:** `--sd-type-xs` … `--sd-type-4xl`, mais o degrau de display `--sd-type-6xl`. Os degraus levam o nome do alvo, para a procedência ficar legível no próprio token e quem confere não precisar traduzir. Numerar de um a oito jogaria isso fora — e é o nome do alvo que deixa o **buraco no `5xl` ser legível** em vez de parecer erro.
 - **Peso:** `--sd-weight-body`, `-ui`, `-heading` — nomeados por **intenção**, não por número. `--sd-weight-600: 600` é uma identidade que não ensina nada, e nome de intenção fecha uma armadilha: o Infima chama **500** de `semibold`, e o nosso `semibold` seria 600 — a mesma palavra sobre dois números dentro do mesmo repositório.
 - **Entrelinha:** `--sd-leading-prose`, `-ui`, `-code`, `-h1` a `-h4`. `-h4` repete o valor de `-ui` e mantém nome próprio: mesmo número hoje, intenções diferentes; fundi-los faria uma mudança em h4 mexer em toda a rotulagem de UI.
 - **Tracking:** `--sd-tracking-tight`, um só, e **só em título**. O corpo usa o `normal` do navegador, que é keyword e não valor.
@@ -1535,6 +1559,14 @@ O título fica em `--sd-type-3xl` até 996px e em `--sd-type-4xl` a partir de 99
 O par 30/36 é herdado; **o ponto onde ele troca, não.** 640 seria um segundo limiar de media query no mesmo eixo, contra a regra de limiar único do projeto, que alinha as media queries aos literais compilados do Infima. E alinhado, o título cresce **no mesmo instante em que a sidebar aparece** — um evento visual em vez de dois.
 
 **Perda nomeada:** entre 640 e 996px o título fica em 30px onde o alvo dá 36. É a única faixa em que a nossa maior tipografia é menor que a da âncora.
+
+### O degrau de display, e o buraco no `5xl`
+
+`--sd-type-6xl` é **60px**, e tem **um** consumidor no site inteiro: o título do hero da landing, de 997px. Abaixo do limiar o hero desce para `--sd-type-4xl`, porque quem manda ali é a regra da dobra.
+
+**O `5xl` saiu da escala**, e a lápide vale a linha porque ele nasceu e morreu na mesma superfície. Ele foi escolhido quando o hero era um bloco de prosa de 672: naquela largura, 48px era o maior degrau que o orçamento da dobra tolerava. Com o bloco do hero tomando o container, o título cabe numa linha em 60, e o degrau anterior ficaria **sem consumidor** — o defeito do Infima que este documento nomeia para não copiar.
+
+> *Dissenso registrado:* o degrau de display do projeto foi decidido **duas vezes**, em dois mapas seguidos, com respostas diferentes. Fica escrito porque o que mudou não foi o gosto — foi a largura de onde o título mora —, e essa é a única leitura que impede a próxima mudança de largura de virar a terceira resposta em silêncio.
 
 ### As fontes
 
@@ -1779,7 +1811,9 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 | `--sd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) corrigindo a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
 | Dois níveis de latitude | mecanismo emprestado | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §3 — a distinção é da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11), aqui vira regra |
 | Dimensões do chrome no arquivo de tokens | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §5 — a anatomia é de `chrome.md` |
-| `--sd-type-5xl`, com um consumidor só | herdado (nome) + origem própria (uso) | o nome continua a série `text-xs … text-4xl` do alvo; o consumidor é o título do hero — [`landing.md`](landing.md) §4 |
+| `--sd-type-6xl`, com um consumidor só | herdado (nome) + origem própria (uso) | o nome continua a série `text-xs … text-4xl` do alvo; o consumidor é o título do hero — [`landing.md`](landing.md) §4 |
+| O `5xl` sai da escala | **origem própria (correção)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — ele foi dimensionado para um hero de 672, e com o hero no container ficaria sem consumidor |
+| `--sd-glow` a 30%, e `--sd-glow-2` cyan a 24% | **origem própria (correção)** + origem própria | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) escreveu o par supondo 0,30 na origem; o publicado era 12%, e sem a figura a luz carrega o hero sozinha |
 | A medida do código morre; os dois consumidores citam a de prosa | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — a derivação era o interior do cartão, e sem cartão sobraria um 768 sem raiz |
 | Par de amplitude do glow, no escopo da ilha | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5b — amplitude é par declarado sobre o alfa, não número novo |
 | Regra de elemento no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | ADR 3 — de `tokens.css` não há seletor que alcance uma classe hasheada, e nome de `@keyframes` não sobrevive dentro de custom property ([`motion.md`](motion.md) §6) |

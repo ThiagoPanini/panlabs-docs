@@ -69,6 +69,16 @@ jobs:
       - name: Portão 7 — swizzle
         run: npm run portao:7
 
+      # Portão 8 — a licença de "wow" da landing, em contagem. Ele protege uma
+      # regra de escrita — *a landing pode ter isto e nada mais* —, e a saída
+      # dele É a lista dos seis efeitos: ler o log é ler a licença.
+      #
+      # Cadência de commit, e é onde ele precisa estar: o modo de um sétimo
+      # efeito entrar não é alguém decidir que pode, é alguém acrescentar sem
+      # perceber que a lista era fechada.
+      - name: Portão 8 — a landing
+        run: npm run portao:8
+
       # A régua do algoritmo da busca — `node --test`, do próprio runtime, sem
       # dependência nova. Os portões são varredura, e ordenação de resultado não
       # é varrível: ou existe um caso que a exercita, ou "escada determinística"

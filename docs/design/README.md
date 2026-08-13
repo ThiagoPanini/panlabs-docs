@@ -70,7 +70,7 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | [`icones.md`](icones.md) | o manifesto de 63 nomes com teto de 64, os dois renderizadores, a marca e os doze pares seção→ícone |
 | [`swizzle.md`](swizzle.md) | o ledger vivo, os três significados de `src/theme/`, as perdas nomeadas e a disciplina de registro |
 | [`api-reference.md`](api-reference.md) | a primeira ruptura de layout — o contrato, o gerador e as três colunas |
-| [`landing.md`](landing.md) | a segunda ruptura — cinco seções, a faixa de espetáculo e as quatro camadas |
+| [`landing.md`](landing.md) | a segunda ruptura — quatro seções, a faixa de espetáculo de dois focos, as três camadas e a lista fechada de seis |
 | [`busca.md`](busca.md) | o índice local, a escada de pontuação, o modal `<dialog>` e o ARIA por citação do APG |
 
 ### 3.2 O catálogo — dezenove arquivos
@@ -147,7 +147,7 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 
 ---
 
-## 5. Os sete portões
+## 5. Os oito portões
 
 Três cadências: **commit**, **upgrade** e **implantação**.
 
@@ -160,6 +160,7 @@ Três cadências: **commit**, **upgrade** e **implantação**.
 | 5 | O gerador da Referência da API e o artefato commitado concordam | commit | `npm run portao:5` |
 | 6 | As três rotas contra o host real, nos dois locales | **implantação** | `npm run portao:6 -- <url-base> [rota]` |
 | 7 | O `swizzle --list` congelado, e `src/theme/` conferido contra ele | **upgrade** | `npm run portao:7` |
+| 8 | Os seis efeitos da landing, em contagem exata, mais a metade negativa | commit | `npm run portao:8` |
 
 Mais **quatro** verificações que **não são portão** e rodam junto:
 
@@ -172,7 +173,30 @@ Mais **quatro** verificações que **não são portão** e rodam junto:
 >
 > *Dissenso registrado:* é mais uma coisa rodando na CI de todo commit, num projeto que já cobra sete portões e três verificações. Aceito porque o custo é de milissegundos e porque a alternativa — deixar a spec afirmar números que ninguém consegue reproduzir — é o que produziu o defeito.
 
-> **São sete, e eram seis até este slice.** A resolução do slice 7 chamava o portão do `swizzle --list` de *portão 5*; o número já estava gasto pelo portão do gerador da API, citado pelo [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) **pelo número**. Renumerar um portão commitado para satisfazer um número escrito antes de ele existir quebraria a citação. Ele é o 7. Ver [`swizzle.md`](swizzle.md) §5.
+### 5.1 O oitavo, e o que ele protege que nenhum dos sete protegia
+
+**Ele é irmão do portão 1** — mesma forma de script, mesma remoção de comentário antes da varredura, mesma saída de contagem. E é a régua desta seção que o classifica como portão e não como verificação: **ele protege uma regra de escrita**, e ela cabe numa frase — *a landing pode ter isto, e nada mais*.
+
+*"Impacto sem extravagância"* não sobrevive como adjetivo, porque adjetivo não passa por revisão. Ele vira **seis contagens**:
+
+| # | O que a landing pode ter de único | Contagem |
+| ---: | --- | ---: |
+| 1 | a faixa escura sangrada | **1** `data-sd-showcase` no site |
+| 2 | dois focos de luz | **2** `radial-gradient`, os dois na regra da ilha |
+| 3 | um loop ambiente | **1** `infinite` em todo o CSS |
+| 4 | um reveal por rolagem | **1** declaração de `animation-timeline` |
+| 5 | um degrau de tipo acima do site | **1** consumidor de `--sd-type-6xl` |
+| 6 | uma sombra de conteúdo | **1** consumidor de `--sd-shadow-raised` **na landing** |
+
+Mais a metade negativa, na mesma varredura: **zero `@keyframes` novo** (quatro no projeto, e a landing consome três sem definir nenhum), **zero componente novo**, **zero literal** no CSS Module dela, **zero `z-index`**. **Um sétimo item é extravagância por definição.**
+
+**A linha 2 não é contagem cega, e a diferença importa.** Contar dois `radial-gradient` em algum lugar deixaria passar um gradiente idêntico declarado em `:root`, que acenderia o site inteiro. O portão lê o **seletor do bloco** em que cada gradiente cai, e reprova qualquer um fora de `[data-sd-showcase]`.
+
+> **Correção de fato contra a resolução que pediu este portão.** A linha 6 foi escrita como *"1 consumidor de `--sd-shadow-raised`"*, site inteiro. **São dois** — o botão primário da landing e o painel da Referência da API —, e [`tokens.md`](tokens.md) §6 já dizia isso por escrito. A contagem que se sustenta é a da landing, e é a que o portão cobra. A régua não afrouxou: ela passou a dizer o que mede.
+
+> *Dissenso registrado:* é o oitavo portão num projeto que já tinha sete, e ele protege **uma página**. A alternativa — deixar a lista como prosa em [`landing.md`](landing.md) — foi recusada porque uma lista de contagens que ninguém conta é adjetivo com tabela.
+
+> **São sete, e eram seis até o slice 7.** A resolução do slice 7 chamava o portão do `swizzle --list` de *portão 5*; o número já estava gasto pelo portão do gerador da API, citado pelo [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) **pelo número**. Renumerar um portão commitado para satisfazer um número escrito antes de ele existir quebraria a citação. Ele é o 7. Ver [`swizzle.md`](swizzle.md) §5. **Hoje são oito**, e o mesmo argumento vale ao contrário: o 8 é o próximo número livre, e não o número que a lista *pareceria* querer.
 >
 > Consequência menor, dita para não envelhecer calada: a frase do [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) que chama o portão 5 de *"o único do conjunto que não é `grep`"* passou a ter companhia — o portão 7 é da mesma família, regenera e diffa.
 
