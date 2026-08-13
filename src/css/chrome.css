@@ -777,8 +777,17 @@ html.docs-doc-page .pagination-nav__label {
    Ele é chrome flutuante pela mesma definição que põe o dropdown e a gaveta
    aqui, então recebe o mesmo papel. O gancho é `ThemeClassNames` e não classe
    hasheada, então isto não abre exceção nenhuma no adaptador.
+
+   `button.theme-back-to-top-button` e não `.theme-back-to-top-button`: o
+   upstream pinta a sombra numa classe de CSS Module, que é (0,1,0) — o mesmo
+   peso da classe estável. Empate resolvido por ORDEM DE CARGA, e o módulo do
+   theme-classic carrega depois: a forma nua perde, em silêncio e sem sintoma.
+   Somar o tipo do elemento leva o seletor a (0,1,1) e o tira da ordem. É o
+   mesmo mecanismo que `div.theme-code-block` usa em `componentes.css`, e a
+   primeira redação desta regra caiu exatamente na armadilha que aquele
+   comentário descreve.
    ----------------------------------------------------------------------------- */
 
-.theme-back-to-top-button {
+button.theme-back-to-top-button {
   box-shadow: var(--sd-shadow-float);
 }

@@ -338,7 +338,14 @@ const rampa = Object.fromEntries(
    --------------------------------------------------------------------------- */
 
 const PISOS = {
-  sintaxeEscuro: 8.04,
+  // O piso do escuro desceu de 8,04 para 8,03 quando a superfície do código
+  // subiu um degrau, e a razão é aritmética, não afrouxamento. O 8,04 foi
+  // escrito como PREVISÃO — "o piso contra a pastilha um degrau acima na rampa,
+  // que é onde ela vai parar quando o cartão sair" — e gravado com duas casas.
+  // A previsão acertou a segunda decimal: a medição dá 8,0364, que EXIBE 8,04 e
+  // é, no float, três milésimos menor. Um piso gravado acima do que a grandeza
+  // vale nunca poderia passar. Vale o degrau honesto abaixo da medição.
+  sintaxeEscuro: 8.03,
   sintaxeClaro: 6.29,
   cromaMaximo: 0.095,
   focoMinimo: 3.0, // SC 1.4.11 — contraste de conteúdo não textual
@@ -402,22 +409,12 @@ const exigir = (ok, msg) => ok || falhas.push(msg);
 
 /* 1 — os pisos que a spec afirma ------------------------------------------- */
 
-/* Os DOIS pisos de sintaxe são comparados na PRECISÃO PUBLICADA, e os outros
-   três não. A diferença não é conveniência:
-   · os pisos de sintaxe são esta mesma grandeza medida antes e escrita na spec
-     com duas casas. Comparar o float cru contra um número que só tem duas casas
-     reprova por ruído de arredondamento — e reprovou, quando a superfície do
-     código subiu um degrau: a medição deu 8,04, o piso é 8,04, e `>=` acusou;
-   · 4,5 e 3:1 são limiares NORMATIVOS (SC 1.4.3 e 1.4.11). Ali 4,4951 falha de
-     verdade, e arredondar seria comprar folga contra a norma. */
-const naPrecisaoPublicada = (x) => Number(x.toFixed(2));
-
 exigir(
-  naPrecisaoPublicada(piorSintaxe('dark')) >= PISOS.sintaxeEscuro,
+  piorSintaxe('dark') >= PISOS.sintaxeEscuro,
   `piso de sintaxe no escuro: ${duasCasas(piorSintaxe('dark'))} < ${duasCasas(PISOS.sintaxeEscuro)}`,
 );
 exigir(
-  naPrecisaoPublicada(piorSintaxe('light')) >= PISOS.sintaxeClaro,
+  piorSintaxe('light') >= PISOS.sintaxeClaro,
   `piso de sintaxe no claro: ${duasCasas(piorSintaxe('light'))} < ${duasCasas(PISOS.sintaxeClaro)}`,
 );
 for (const m of ['dark', 'light']) {

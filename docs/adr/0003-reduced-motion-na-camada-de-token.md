@@ -1,6 +1,12 @@
 # ADR 3 — Reduced-motion é propriedade da camada de token
 
-**Status:** aceito · slice 1 · 2026-08-07
+**Status:** aceito · slice 1 · 2026-08-07 · **com errata** · 2026-08-13
+
+> ### Errata — *"uma das cinco exceções do adaptador"* passou a ser uma das quatro
+>
+> **A decisão não muda**, e a consequência que carrega o número continua verdadeira no que ela afirma: `--docusaurus-details-transition` **é** alcançada por seletor estrutural com escopo, e nem a duração nem a curva dela ficam de fora. Ela é a **exceção 2**, e não foi ela que saiu.
+>
+> A lista do adaptador caiu de cinco para quatro na [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) — a de `--docusaurus-tag-list-border` saiu por não ter superfície viva. A lista fechada vive em [`docs/design/tokens.md`](../design/tokens.md) §7, e é lá que ela se confere membro a membro.
 
 ## Contexto
 

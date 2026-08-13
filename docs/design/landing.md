@@ -286,7 +286,7 @@ se vê onde começa — a geometria é a mesma nos dois modos, e o claro apenas
 **sem uma linha de CSS a mais**. Isso não contradiz a decisão de que bloco de
 código não é *dark-only*: ele continua **não** carregando substrato próprio —
 lê `--sd-surface-code` do lugar onde está, e o lugar declara os tokens do
-escuro. O mesmo vale para o berço, para as abas e para o anel de foco.
+escuro. O mesmo vale para o fio do bloco, para as abas e para o anel de foco.
 
 ---
 

@@ -678,10 +678,13 @@
    quê ser exemplo, e o único consumidor dele era o berço do bloco de código,
    que morreu no mesmo commit.
 
-   Sobraram DOIS papéis, e os dois são chrome flutuante. A profundidade saiu
-   inteira do conteúdo: a #50 mediu zero componente de conteúdo com sombra em
-   seis páginas da âncora, e o único portador de sombra medido lá é um chip de
-   24px no hover de heading.
+   Sobraram DOIS papéis, e nenhum deles é consumido por conteúdo. `float` é o
+   chrome flutuante — dropdown, gaveta, modal de busca, botão de voltar ao topo.
+   `raised` NÃO flutua: os dois consumidores dele são o painel da Referência da
+   API e o botão primário da landing, que são superfície levantada e controle.
+   A profundidade saiu do CONTEÚDO, não do site — a #50 mediu zero componente de
+   conteúdo com sombra em seis páginas da âncora, e o único portador de sombra
+   medido lá é um chip de 24px no hover de heading.
    ----------------------------------------------------------------------------- */
 
 :root {

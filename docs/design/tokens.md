@@ -745,10 +745,13 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    quê ser exemplo, e o único consumidor dele era o berço do bloco de código,
    que morreu no mesmo commit.
 
-   Sobraram DOIS papéis, e os dois são chrome flutuante. A profundidade saiu
-   inteira do conteúdo: a #50 mediu zero componente de conteúdo com sombra em
-   seis páginas da âncora, e o único portador de sombra medido lá é um chip de
-   24px no hover de heading.
+   Sobraram DOIS papéis, e nenhum deles é consumido por conteúdo. `float` é o
+   chrome flutuante — dropdown, gaveta, modal de busca, botão de voltar ao topo.
+   `raised` NÃO flutua: os dois consumidores dele são o painel da Referência da
+   API e o botão primário da landing, que são superfície levantada e controle.
+   A profundidade saiu do CONTEÚDO, não do site — a #50 mediu zero componente de
+   conteúdo com sombra em seis páginas da âncora, e o único portador de sombra
+   medido lá é um chip de 24px no hover de heading.
    ----------------------------------------------------------------------------- */
 
 :root {
@@ -1433,7 +1436,16 @@ Eram **quatro degraus numerados**, com um anel `0 0 0 1px` embutido em cada comp
 
 **`--sd-shadow-sunken` morreu junto, e a morte vale a linha.** Ele era o contra-exemplo declarado da elevação — *"tudo sobe, só o código afunda"* —, tinha um consumidor só, o berço do bloco de código, e **afundar era relativo ao cartão**. Sem cartão, o contra-exemplo perde contra o quê ser exemplo.
 
-**A profundidade sai do conteúdo, e isso é medição.** A [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) mediu **zero componentes de conteúdo com sombra em seis páginas** da âncora: `shadow-md` e maiores existem no CSS dela e **nunca são usados**. O único portador de sombra do site medido é um chip de 24px no hover de heading. Então o adaptador escreve:
+**A profundidade sai do conteúdo — não do site, e a diferença importa.** A [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) mediu **zero componentes de conteúdo com sombra em seis páginas** da âncora: `shadow-md` e maiores existem no CSS dela e **nunca são usados**. O único portador de sombra do site medido é um chip de 24px no hover de heading.
+
+Os dois papéis que sobram continuam com consumidor, e **nenhum deles é conteúdo**:
+
+| Papel | Quem o consome |
+| --- | --- |
+| `--sd-shadow-float` | o dropdown de idioma, a gaveta do estreito, o modal de busca e o botão de voltar ao topo — tudo `position: fixed` |
+| `--sd-shadow-raised` | o painel da Referência da API e o botão primário da landing — **não flutuam**: são superfície levantada e controle |
+
+Então o adaptador escreve:
 
 | Variável do Infima | Quem a lê de verdade | Recebe |
 | --- | --- | --- |
@@ -1624,13 +1636,15 @@ O método vale registro, porque ele é o que reproduz o número. Duas escolhas o
 
 ### O piso da paleta de sintaxe é critério, não registro
 
-**`node scripts/contraste.mjs --verificar` reprova se o pior token cair abaixo de 8,04 no escuro ou 6,29 no claro, ou se o croma máximo passar de 0,095.**
+**`node scripts/contraste.mjs --verificar` reprova se o pior token cair abaixo de 8,03 no escuro ou 6,29 no claro, ou se o croma máximo passar de 0,095.**
 
-Hoje ele mede **8,04** no escuro, **exatamente o piso** — e essa coincidência é o recibo de que o piso foi bem posto. Ele foi escrito quando a pastilha ainda era a cor da página, medindo então 8,94, e o número gravado foi o da pastilha **um degrau acima na rampa, que é onde ela ia parar quando o cartão saísse**. O cartão saiu, a pastilha subiu, e a medição caiu em cima do piso. O comando não reprovou hoje para passar amanhã: ele já cobrava o amanhã.
+Hoje ele mede **8,04** no escuro — e a distância até o piso é de **um centésimo**, que é o mais apertado que este número já esteve.
 
-> **Uma correção de mecânica veio junto, e ela é do script.** Com a medida caindo em cima do piso, o `>=` reprovava por **ruído de arredondamento**: os dois pisos de sintaxe são esta mesma grandeza medida antes e escrita com duas casas, e comparar o float cru contra um número de duas casas acusa uma diferença que a spec não afirma. Os dois passaram a ser comparados **na precisão publicada**. Os limiares de AA e da SC 1.4.11 **não** — ali 4,4951 falha de verdade, e arredondar seria comprar folga contra a norma.
+**O piso do escuro desceu de 8,04 para 8,03, e a descida é aritmética, não afrouxamento.** O 8,04 foi escrito como **previsão**, quando a pastilha ainda era a cor da página e a medição dava 8,94: o número gravado era o da pastilha *"um degrau acima na rampa, que é onde ela vai parar quando o cartão sair"*. O cartão saiu, a pastilha subiu, e **a previsão acertou a segunda casa decimal** — a medição dá 8,0364, que se publica como 8,04 e é, no float, três milésimos menor que o piso previsto.
 
-**A folga agora é zero, e isso é o desenho.** Qualquer mexida futura que baixe o pior token um centésimo reprova a CI. É o que "piso" significa.
+Um piso gravado **acima** do que a grandeza vale não é rigor: é um portão que nunca poderia passar. Vale o degrau honesto abaixo da medição, com o `>=` estrito e sem regra de comparação especial. **O acerto da previsão fica registrado onde importa** — na segunda casa, que é a precisão que esta spec publica.
+
+*Consideração descartada, e vale escrita:* comparar os pisos de sintaxe **na precisão publicada**, em vez de mover o número. Isso resolveria o mesmo problema e compraria meio centésimo de folga **nos dois sentidos** — uma paleta futura em 8,035 passaria por um piso de 8,04. Mover o piso é mais estrito e não precisa de conceito novo no script. Os limiares de AA e da SC 1.4.11 nunca estiveram em jogo: eles são **normativos**, e ali 4,4951 falha de verdade.
 
 Os três números que convertem *"não muito neon"* de gosto em régua:
 

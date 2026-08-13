@@ -73,12 +73,19 @@ de sintaxe, o `frame` pelo `currentColor` do diagrama. O que mudou nos dois foi 
 **superfície**, e superfície é papel da camada 2, que já bifurcou: nenhum dos
 dois passou a saber em que modo está.
 
-> **Zero sombra no conteúdo, e é conferível por varredura.** Nenhum dos dezoito
+> **Zero sombra no catálogo, e é conferível por varredura.** Nenhum dos dezoito
 > escreve `box-shadow`, e `src/css/componentes.css` também não. A profundidade
-> saiu inteira do conteúdo por medição — a
+> saiu do conteúdo por medição — a
 > [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) achou zero
-> componentes de conteúdo com sombra em seis páginas da âncora. Onde a sombra
-> sobrevive é chrome flutuante, e a tabela está em [`tokens.md`](../tokens.md) §6.
+> componentes de conteúdo com sombra em seis páginas da âncora. A tabela de quem
+> ainda carrega sombra está em [`tokens.md`](../tokens.md) §6.
+>
+> **Uma superfície do corpo sobrevive com sombra, e ela não é do catálogo:** o
+> painel da Referência da API, que é componente de tema e tem dono próprio em
+> [`api-reference.md`](../api-reference.md). O CSS dele o declara *"a única
+> superfície elevada desta página, e agora a única do corpo de qualquer página"*
+> — a afirmação daqui é sobre **os dezoito**, e é por isso que ela é varredura de
+> duas pastas e não do repositório.
 
 ---
 

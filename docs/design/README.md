@@ -62,7 +62,7 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | Documento | O que ele decide |
 | --- | --- |
 | [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, os quatro deltas deliberados, a régua de coerência e as cinco classes de procedência |
-| [`tokens.md`](tokens.md) | as três camadas, a superfície de troca, a rampa, a tipografia, o espaço, a elevação, o adaptador do Infima e as suas cinco exceções |
+| [`tokens.md`](tokens.md) | as três camadas, a superfície de troca, a rampa, a tipografia, o espaço, a elevação, o adaptador do Infima e as suas quatro exceções |
 | [`informacao.md`](informacao.md) | o produto fictício, as três tabs, a árvore, os nove tipos de página, os orçamentos, as treze fixtures, a regra de locale e os artefatos AI-era |
 | [`chrome.md`](chrome.md) | a cadeia de proporções, navbar, sidebar, TOC, breadcrumb, paginação, footer e o comportamento no estreito |
 | [`foco.md`](foco.md) | `:focus-visible` universal, `:active`, o piso de alvo no toque, e o portão que impede `outline: none` |

@@ -201,7 +201,7 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 
 **Os `ease-in-out` literais do `navbar.pcss`.** O Infima crava a curva em três lugares do navbar, e ele não tem escala de easing nenhuma. O adaptador alcança as variáveis de transição do Infima, mas não esses três. Ficam com a curva dele. Some da lista se um dia o navbar for reescrito por CSS próprio, o que não está previsto.
 
-**A curva da seta do `summary`.** `--docusaurus-details-transition` é declarada dentro de classe de CSS Module. Ela é alcançada por seletor estrutural com escopo — uma das cinco exceções do adaptador —, então nem a duração nem a curva ficam de fora. *Correção sobre a redação original da decisão de motion, que a dava como perda: ela não é, porque a exceção do adaptador substitui o valor inteiro em vez de só a duração.*
+**A curva da seta do `summary`.** `--docusaurus-details-transition` é declarada dentro de classe de CSS Module. Ela é alcançada por seletor estrutural com escopo — a exceção 2 do adaptador —, então nem a duração nem a curva ficam de fora. *Correção sobre a redação original da decisão de motion, que a dava como perda: ela não é, porque a exceção do adaptador substitui o valor inteiro em vez de só a duração.*
 
 ---
 
