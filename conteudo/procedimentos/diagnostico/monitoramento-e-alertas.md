@@ -70,6 +70,6 @@ executar sem contexto.
 
 :::tip
 O teste de um alerta novo é lê-lo às três da manhã, sem contexto, e perguntar
-*"o que eu faço agora?"*. Se a resposta for *"olhar o painel para entender"*, ele
+*"o que fazer agora?"*. Se a resposta for *"olhar o painel para entender"*, ele
 é um painel, e o lugar dele é lá.
 :::

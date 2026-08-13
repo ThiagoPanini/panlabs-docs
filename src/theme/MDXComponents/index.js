@@ -81,8 +81,10 @@ import {ParamField, ResponseField} from '@site/src/components/Campo';
  * **Por que ele cabe no degrau 3.** A alternativa era injetar nó no corpo da
  * página, que é a perda 1 do ledger e exige `DocItem/Layout` ou
  * `DocItem/Content` — os dois `unsafe`, os dois proibidos. Ancorar no `<h1>`
- * pelo registro alcança, e a condição que isso exige está conferida: **73 de 73
- * páginas escrevem o próprio `# Título`**, e nenhuma escreve dois.
+ * pelo registro alcança, e a condição que isso exige está conferida: **61 de 61
+ * páginas escrevem o próprio `# Título`**, e nenhuma escreve dois. A conferência
+ * deixou de ser varredura de mão: a cobrança 10 do portão 4 percorre `conteudo/`
+ * e a árvore de tradução e reprova a primeira página sem `description`.
  *
  * **Superfície nova no mesmo degrau.** É a primeira vez que este registro
  * REDEFINE um elemento de HTML em vez de acrescentar componente. Não é degrau

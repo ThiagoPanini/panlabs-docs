@@ -234,7 +234,7 @@ Por isso o marcador do rótulo de seção é o **`className` do manifesto**, e n
 
 O alinhamento não é coincidência: o preenchimento horizontal do item de menu foi escolhido para que, somado ao preenchimento que o `DocSidebar` põe na lista, o ícone caia **na mesma vertical do preenchimento do navbar**.
 
-Os doze pares seção→ícone estão em [`icones.md`](icones.md), verbatim.
+Os onze pares seção→ícone estão em [`icones.md`](icones.md), verbatim.
 
 ### 4.2 Hierarquia e item ativo
 
@@ -447,7 +447,7 @@ Consequência direta do orçamento `unsafe` zero. Cada linha é perda escrita, n
 | Falso-negrito por `text-shadow` | herdado | medido nas referências |
 | **O subtítulo existe, sai do `description`, mede 18 e fica a 10 do `h1`** | herdado | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) §2 |
 | **Chrome e não componente** | **origem própria (implementação)** | o campo já existe; componente duplicaria a fonte |
-| **Rota por override de `h1`, degrau 3** | **origem própria (verificação)** | a rota estava registrada em `swizzle.md` §4; 73/73 confere a condição |
+| **Rota por override de `h1`, degrau 3** | **origem própria (verificação)** | a rota estava registrada em `swizzle.md` §4; 61/61 confere a condição, e o portão 4 passou a cobrá-la |
 | **Obrigatório, ausência quebra o build** | **origem própria** | a âncora o faz condicional; a doutrina da casa é falhar alto |
 | **A eyebrow por subtração** | **origem própria (implementação)** | três `display: none` sobre classes do Infima; o JSON-LD é irmão e não é alcançado |
 | **A eyebrow vazia na visão geral de categoria** | **consequência declarada** | o breadcrumb dela é `home → categoria(ativa)`, e os dois são o que a subtração esconde |

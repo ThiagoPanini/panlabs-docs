@@ -63,17 +63,17 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | --- | --- |
 | [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, os quatro deltas deliberados, a régua de coerência e as cinco classes de procedência |
 | [`tokens.md`](tokens.md) | as três camadas, a superfície de troca, a rampa, a tipografia, o espaço, a elevação, o adaptador do Infima e as suas quatro exceções |
-| [`informacao.md`](informacao.md) | o produto fictício, as três tabs, a árvore, os nove tipos de página, os orçamentos, as treze fixtures, a regra de locale e os artefatos AI-era |
+| [`informacao.md`](informacao.md) | o acervo, as três tabs, a árvore, os dez tipos de página, os orçamentos, as onze fixtures, a regra de locale e os artefatos AI-era |
 | [`chrome.md`](chrome.md) | a cadeia de proporções, navbar, sidebar, TOC, breadcrumb, paginação, footer e o comportamento no estreito |
 | [`foco.md`](foco.md) | `:focus-visible` universal, `:active`, o piso de alvo no toque, e o portão que impede `outline: none` |
 | [`motion.md`](motion.md) | as duas durações, as duas curvas, os seis movimentos nomeados e o reduced-motion resolvido na camada de token |
-| [`icones.md`](icones.md) | o manifesto de 64 nomes com teto de 64 e folga zero, os dois renderizadores, a marca e os doze pares seção→ícone |
+| [`icones.md`](icones.md) | o manifesto de 60 nomes com teto de 64 e folga quatro, os dois renderizadores, a marca sem glifo e os onze pares seção→ícone |
 | [`swizzle.md`](swizzle.md) | o ledger vivo, os três significados de `src/theme/`, as perdas nomeadas e a disciplina de registro |
 | [`api-reference.md`](api-reference.md) | a primeira ruptura de layout — o contrato, o gerador e as três colunas |
 | [`landing.md`](landing.md) | a segunda ruptura — quatro seções, a faixa de espetáculo de dois focos, as três camadas e a lista fechada de seis |
 | [`busca.md`](busca.md) | o índice local, a escada de pontuação, o modal `<dialog>` e o ARIA por citação do APG |
 
-### 3.2 O catálogo — dezenove arquivos
+### 3.2 O catálogo — dezoito arquivos
 
 [`componentes/README.md`](componentes/README.md) é o índice e o contrato comum: o gabarito de **nove** seções, o contrato de partes, a regra de `className` proibido, e a razão de o catálogo ser **fechado**.
 
@@ -126,7 +126,7 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) direção de arte | [`tokens.md`](tokens.md) — a rampa, os sete papéis, os oito `--sd-code-*` |
 | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) glow e profundidade no claro | [`tokens.md`](tokens.md) §8, [`landing.md`](landing.md) §6 |
 | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) estratégia de swizzle | [ADR 2](../adr/0002-politica-de-swizzle.md) e [`swizzle.md`](swizzle.md) inteiro |
-| [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) inventário de componentes | os dezenove de [`componentes/`](componentes/) |
+| [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) inventário de componentes | os dezessete de [`componentes/`](componentes/) |
 | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) IA e o produto fictício | [`informacao.md`](informacao.md) §1 a §8 |
 | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) vocabulário de motion | [`motion.md`](motion.md), [ADR 3](../adr/0003-reduced-motion-na-camada-de-token.md) |
 | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) rota do API Reference | [`api-reference.md`](api-reference.md), [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) |
@@ -138,7 +138,7 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#27](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/27) anatomia do footer | [`chrome.md`](chrome.md) §6 |
 | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) tela pequena | [`chrome.md`](chrome.md) §7, [`landing.md`](landing.md) §7, [`api-reference.md`](api-reference.md) |
 | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) tipografia e `@property` | [`tokens.md`](tokens.md) §4 e §5 |
-| [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) os doze pares seção→ícone | [`icones.md`](icones.md) §3 e §5 |
+| [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) os pares seção→ícone | [`icones.md`](icones.md) §3 e §5 — **onze** sob a árvore do `panlabs` |
 | [#33](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/33) `trailingSlash` | [ADR 7](../adr/0007-trailingslash-false.md) |
 
 **E os itens de entrega cruzada foram conferidos um a um, não no atacado.** Vinte itens concretos e nomeáveis — `--sd-glow` pronto para a landing, o modal como único consumidor de `--sd-move-enter`, `circle-check` saindo do manifesto, `--sd-shadow-lip` a 0% no claro, `applyTrailingSlash` não importado, a entrelinha que não desce, `Icon/ExternalLink` como `unsafe` de sprite, o teto de um loop por página, a sidebar estreita sem armadilha de foco — **todos os vinte têm endereço**.

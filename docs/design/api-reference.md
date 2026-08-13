@@ -123,7 +123,7 @@ Fixa, e o gerador a produz sempre na mesma sequência:
 
 1. `# Título` — o `summary` da operação
 2. `<VerbBadge/>` mais o caminho, em prosa — o gerador escreve a pílula
-   (ver [`verb-badge.md`](componentes/verb-badge.md)), o autor nunca
+   (ver `componentes/verb-badge.md`, **removido** com o catálogo), o autor nunca
 3. A `description` da operação
 4. `## Parâmetros` — um `<ParamField>` por parâmetro de caminho, consulta
    e cabeçalho, nesta ordem; ausente quando a operação não tem nenhum

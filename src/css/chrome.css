@@ -398,9 +398,10 @@ html.docs-doc-page .subtitulo {
   mask: var(--sd-sidebar-icone) center / contain no-repeat;
 }
 
-/* Os doze pares seção→ícone. `Receitas` é sidebar plana — sem categoria, logo
-   sem ícone, e não consome slot. As três tabs de navbar também não recebem
-   ícone: a regra é um slot por seção de topo da SIDEBAR. */
+/* Os onze pares seção→ícone. `Biblioteca C` não recebe: ela é categoria de
+   SEGUNDO nível, e a regra é *ícone só no nó de topo da sidebar* — foi a
+   reescrita dela, e não o teto de profundidade, que destravou o nível 3. As três
+   tabs de navbar também não recebem. */
 .sidebar-icone--api-owner          { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
 .sidebar-icone--security-champion  { --sd-sidebar-icone: url('/icons/lock.svg'); }
 .sidebar-icone--ambiente           { --sd-sidebar-icone: url('/icons/layers.svg'); }

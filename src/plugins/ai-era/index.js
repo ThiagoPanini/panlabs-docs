@@ -76,7 +76,7 @@ export default function pluginAiEra(context, options) {
       //
       // Escritos no `outDir`, nunca em `static/`. O que se commita é artefato
       // que muda por DECISÃO; um `.md` que muda toda vez que a prosa muda seria
-      // 73 arquivos de ruído em todo diff de conteúdo.
+      // dezenas de arquivos de ruído em todo diff de conteúdo.
       //
       // O ponteiro de volta ao índice é o que transforma arquivos soltos em
       // grafo navegável: quem chega num `.md` por link direto descobre que

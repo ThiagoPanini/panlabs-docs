@@ -18,7 +18,9 @@
 # índices são teto de zero, e existem onde a alternativa era confiar em bom
 # senso.
 #
-# São doze cobranças:
+# São treze cobranças: as **doze** que a árvore nova trouxe, mais a cobertura de
+# locale, que é a única sobrevivente da versão anterior deste portão — ela não é
+# acréscimo, é a linha que não foi jogada fora com o resto.
 #
 #    1. o volume por aba e por categoria     12 · 19 · 15 autorais, 15 em EN
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
@@ -33,6 +35,7 @@
 #   10. `description`                         em 100% das páginas
 #   11. as onze fixtures                      por caminho nomeado
 #   12. os dez tipos têm instância            `Referência de API` pendente
+#   13. a cobertura de locale                 15 em EN, e só `Ferramentas`
 #
 # **O tipo mora AQUI, e não no conteúdo.** `informacao.md` §6 trava que tipo de
 # página é convenção de conteúdo e ZERO layout — sem front matter `type:`, sem
@@ -162,19 +165,24 @@ prosa-minima-codigo-maximo:ferramentas/skills/scaffold-de-esteira
 fallback-de-locale:jornadas/api-owner/a-politica-de-versao
 aninhamento-profundo:procedimentos/infraestrutura/o-output-de-um-modulo
 pagina-muito-longa:jornadas/api-owner/o-contrato-que-nao-existia
-irmao-curto:jornadas/api-owner/o-que-o-contrato-nao-cobre
 painel-direito-vazio:ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao
 FIM
 )
 
-# Os três casos que o domínio novo trouxe e que NÃO são fixture — eles não
+# Os QUATRO casos que o domínio novo trouxe e que NÃO são fixture — eles não
 # substituem nenhum caso antigo e não nasceram de um teto de layout; são
 # cobertura de conteúdo com dona nomeada. Ficam cobrados pelo mesmo mecanismo
 # para não virarem promessa em prosa.
+#
+# `irmao-curto` é o quarto, e ele mora aqui e não em FIXTURES: o lado longo do
+# par prova *página muito longa* sozinho — TOC longo, `sticky`, scroll-spy —, e o
+# que o par prova junto é *comprimento desigual entre irmãos*, que é caso do
+# domínio. Contá-lo como fixture faria a lista fechar em doze, e são onze.
 CASOS_DO_DOMINIO=$(cat <<'FIM'
 saida-literal-de-terminal:jornadas/api-owner/o-schema-que-mudou-sem-aviso
 varias-linguagens-na-mesma-pagina:procedimentos/diagnostico/o-mesmo-erro-em-tres-formas
 diff:procedimentos/diagnostico/o-diff-que-resolveu
+irmao-curto:jornadas/api-owner/o-que-o-contrato-nao-cobre
 FIM
 )
 
@@ -538,9 +546,10 @@ while IFS=: read -r caso caminho; do
     reprova "o caso \`${caso}\` aponta para ${caminho}, que não existe"
 done <<< "$CASOS_DO_DOMINIO"
 
-# Doze caminhos para onze casos: `pagina-muito-longa` e `irmao-curto` são o PAR
-# que prova comprimento desigual entre irmãos, e um par precisa dos dois lados.
-echo "   ${n_fixtures} caminhos nomeados para as onze fixtures, mais os três casos do domínio novo"
+n_casos=$(printf '%s\n' "$CASOS_DO_DOMINIO" | wc -l)
+[ "$n_fixtures" = 11 ] || reprova "${n_fixtures} fixtures declaradas, e a spec fecha em onze"
+[ "$n_casos" = 4 ] || reprova "${n_casos} casos do domínio declarados, e a spec fecha em quatro"
+echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio novo, todos por caminho nomeado"
 echo
 
 # --- 12. os dez tipos têm instância -------------------------------------------
@@ -557,7 +566,7 @@ done
 echo "   nove dos dez com instância; \`${TIPO_PENDENTE}\` pendente do ramo gerado de Biblioteca C"
 echo
 
-# --- a cobertura de locale ----------------------------------------------------
+# --- 13. a cobertura de locale ------------------------------------------------
 echo "13  cobertura de locale — só \`Ferramentas\`"
 traduzidas=$(find "$EN" -name '*.md' 2>/dev/null | wc -l)
 [ "$traduzidas" = "$total_ferramentas" ] ||

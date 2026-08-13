@@ -116,7 +116,7 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
 | `MDXComponents` | registra os treze componentes com tag própria (catorze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais **duas** chaves de elemento: `table` e `h1` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
-| `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description` | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: 73 de 73 páginas escrevem o próprio `# Título`, e nenhuma escreve dois |
+| `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description` | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: 61 de 61 páginas escrevem o próprio `# Título`, e nenhuma escreve dois |
 | `Admonition/Types` | substitui a anatomia vertical do Infima pela horizontal medida, nas quatro variantes de callout | não há variável nem classe que reoriente o eixo da admonition. O degrau 5 (`Admonition/Layout`) alcançaria, mas o 3 alcança **antes**: o arquivo é um objeto, e nada obriga as entradas dele a apontarem para o layout do upstream |
 
 ### 3.1 A entrada aposentada — `NavbarItem/ComponentTypes`

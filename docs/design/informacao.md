@@ -357,7 +357,7 @@ O domínio anterior cobria quatro buracos de layout; o acervo cobre os mesmos e 
 | Diff | `Diagnóstico › O diff que resolveu` |
 | Comprimento muito desigual entre irmãos | o par `O contrato que não existia` (~1800) e `O que o contrato não cobre` (~180) |
 
-O último compartilha dona com a fixture de página muito longa, e é por isso que ele é **caso** e não fixture: o teto que ele exercita é o mesmo, visto de dois lados.
+O último compartilha dona com a fixture de página muito longa, e é por isso que ele é **caso** e não fixture: o lado longo do par prova *página muito longa* sozinho — TOC longo, `sticky`, scroll-spy —, e o que o par prova junto é a desigualdade. Contá-lo como fixture faria a lista fechar em doze, e são onze; o portão 4 cobra os dois números separados, onze e quatro.
 
 ### 7.2 A regra de desempate, com UMA exceção
 
@@ -530,7 +530,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | Os dois nomes de componente de versão, verbatim | **origem própria (implementação)** | ausência descrita e não nomeada não é greppável |
 | O portão 4 e o `onBrokenAnchors: 'throw'` | **origem própria (implementação)** | os critérios deste documento são contagens, e a tabela de sintomas traz âncoras intra-página |
 | O manifesto de tipo mora no portão, não no conteúdo | **origem própria (implementação)** | o §6 proíbe `type:` no front matter; um manifesto de build não toca página nem CSS |
-| A coluna de estrutura obriga, a de palavras é indicativa | **origem própria (resolução)** | *palavra é proxy ruim*, e este documento leva a frase a sério |
+| A coluna de estrutura obriga, a de palavras é indicativa | **origem própria** | *palavra é proxy ruim*, e este documento leva a frase a sério |
 | `Referência de API` declarada pendente no portão | **origem própria (implementação)** | declarar a pendência é o que impede a lista de dez virar lista de nove sem ninguém notar |
 | O footer cai para dois links | **origem própria (consequência)** | `Status` e `Suporte` exigiriam nomear a empresa ou o desenvolvedor |
 | Este documento é dono dos artefatos AI-era | origem própria | os três são artefato de conteúdo, e é a arquitetura de informação quem sabe qual é a árvore |

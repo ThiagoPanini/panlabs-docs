@@ -11,7 +11,7 @@
  * corpo da requisição é sempre estático — reflete `requestBody.example` do
  * contrato, sem input nenhum. Editar um parâmetro só troca texto nos três
  * snippets, por substituição de string; não existe chamada de rede, e não
- * existe campo de token — o snippet mostra `$TRILHO_API_KEY` como variável
+ * existe campo de token — o snippet mostra `$PANLABS_TOKEN` como variável
  * de shell (ou o equivalente de ambiente em Python/JavaScript), o que
  * dispensa a conversa de segurança de pedir uma chave de verdade dentro de
  * um site estático em vez de vencê-la.

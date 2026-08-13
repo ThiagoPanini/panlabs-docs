@@ -79,4 +79,4 @@ publicada, todos em caminho executado; o mais antigo tinha quatro dias.
 O que mudou entre as duas tentativas não foi ferramenta, nem política, nem
 patrocínio: foi a **ordem**. Relatar primeiro, encurtar com critério, bloquear
 depois. E a lista curta é o que torna o bloqueio defensável, porque cada linha
-dele responde à pergunta *"o que eu faço agora?"*.
+dele responde à pergunta *"o que fazer agora?"*.

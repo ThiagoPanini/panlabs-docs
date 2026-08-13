@@ -307,7 +307,6 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 | Ícone de `Card` | **cor de marca** — não cinza. A medição chama isto de *"o detalhe que mais define a aparência do card"* |
 | Ícone de sidebar | `currentColor` — herda ativo, hover e modo **de graça** |
 | Ícone de `Callout` | a cor da variante |
-| A marca | `--sd-accent` |
 | Ícones de sistema | a rampa de cinzas tingida com o matiz da marca |
 
 ---

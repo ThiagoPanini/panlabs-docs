@@ -15,7 +15,7 @@ cima dela responde.
 
 ## A pergunta que o número precisa responder
 
-O consumidor faz uma pergunta só, e ela é binária: **isso quebra o meu código?**
+O consumidor faz uma pergunta só, e ela é binária: **isso quebra quem já usa?**
 
 Data não responde. `2026-03-14` é posterior a `2026-02-02` e isso é tudo o que
 se sabe — a mudança pode ter sido um campo novo opcional ou a remoção do campo
