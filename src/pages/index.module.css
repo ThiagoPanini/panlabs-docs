@@ -157,11 +157,17 @@
    a ordem sai da estrutura em vez de uma escala de números que alguém teria que
    manter.
 
-   `.hero` é o `<section>` INTEIRO — hero e laje na mesma unidade —, e `.topo` é
-   a parte de cima dele. A divisão não é cosmética: é `.topo` que dá caixa à
-   camada 1, e a aresta de baixo dessa caixa é a aresta de cima da laje. É assim
-   que o glow ancora no material sem um segundo elemento decorativo e sem um
-   comprimento inventado.
+   **O `<section>` do hero não tem classe, e isso é resultado e não esquecimento.**
+   Ele existe para dizer que hero e laje são uma unidade só — o `<h2>` que os
+   separava saiu —, e não sobrou nada para ele declarar: quem tem caixa é
+   `.topo`, e quem tem medida é `.bloco`. Uma classe vazia aqui seria a chave de
+   CSS Module que não resolve para regra nenhuma, e essa falha é muda: o React
+   serializa `undefined` sem uma palavra.
+
+   `.topo` é a parte de cima da seção, e a divisão não é cosmética: é ela que dá
+   caixa à camada 1, e a **aresta de baixo dessa caixa é a aresta de cima da
+   laje**. É assim que o glow ancora no material sem um segundo elemento
+   decorativo e sem um comprimento inventado.
    ----------------------------------------------------------------------------- */
 
 .topo {
@@ -398,7 +404,7 @@
 /* A assinatura do capítulo de origem, e a contagem da porta. Os dois são o mesmo
    papel visto em dois lugares: um dado curto, em mono, que se lê como etiqueta e
    não como prosa. */
-.de,
+.capitulo,
 .conta {
   display: block;
   margin-block-start: var(--sd-space-2);

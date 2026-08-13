@@ -31,17 +31,17 @@
 
   # `{` no fim da linha fecha o prelúdio acumulado e nomeia o bloco.
   if (codigo ~ /\{[ \t]*$/) {
-    seletor = prelude substr(codigo, 1, index(codigo, "{") - 1)
+    seletor = preludio substr(codigo, 1, index(codigo, "{") - 1)
     gsub(/[ \t]+/, " ", seletor)
     gsub(/^ | $/, "", seletor)
-    prelude = ""
+    preludio = ""
     next
   }
 
-  if (codigo ~ /^\}/) { seletor = ""; prelude = ""; next }
+  if (codigo ~ /^\}/) { seletor = ""; preludio = ""; next }
 
   # Declaração termina em `;` e não é fragmento de seletor.
-  if (codigo ~ /;[ \t]*$/) { prelude = ""; next }
+  if (codigo ~ /;[ \t]*$/) { preludio = ""; next }
 
-  prelude = prelude codigo " "
+  preludio = preludio codigo " "
 }

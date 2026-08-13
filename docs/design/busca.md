@@ -106,7 +106,7 @@ Ela roda **nos dois lados** — no índice, uma vez na montagem, e na consulta, 
 
 ### 3.2 A régua de máquina
 
-Os sete portões cobrem CSS e conteúdo por **varredura**. Ordenação de resultado não é varrível: ou existe um caso que a exercita, ou *"escada determinística"* fica sendo afirmação de prosa.
+Os oito portões cobrem CSS, conteúdo e a landing por **varredura**. Ordenação de resultado não é varrível: ou existe um caso que a exercita, ou *"escada determinística"* fica sendo afirmação de prosa.
 
 Por isso a lógica pura mora em `src/theme/SearchBar/escada.mjs`, separada do JSX, e `scripts/busca.test.mjs` a cobra com `node --test` — o runner do **próprio runtime**, zero dependência nova. Roda com `npm test`, cadência de commit.
 

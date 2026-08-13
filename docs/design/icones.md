@@ -193,6 +193,15 @@ Sem ela, o cartão e um quarto da aba leem a mesma hierarquia, e o leitor não s
 | Procedimentos | `terminal` | reuso, retagueado |
 | Ferramentas | **`wrench`** | **o único desenho novo** |
 
+> **A regra vale contra a árvore que a landing promete, e hoje ela está violada —
+> por um ticket.** `book-open` é, neste commit, o glifo de `Documentação › Guias`,
+> que é uma categoria dentro da tab que a porta `Jornadas` abre. A colisão é real
+> e é temporária: a árvore do `panlabs` chega no ticket seguinte, e nos **onze
+> pares** dela `book-open` não é o glifo de categoria nenhuma. Fica dita aqui pelo
+> mesmo motivo que as contagens das portas ficam ditas em
+> [`landing.md`](landing.md) §2 — é consequência da ordem escolhida, e ordem
+> escolhida não vira surpresa.
+
 **`wrench` é o único ponto de todo o esforço em que o teto compra alguma coisa.** Na porta `Ferramentas`, todo glifo adequado do acervo — `package`, `puzzle`, `bot`, `server` — já é uma das quatro famílias que aquela aba abre, e a regra acima os elimina um a um. Não havia reuso disponível; havia o slot livre.
 
 **O registro é sóbrio, não ilustrativo.** O ícone marca posição; não narra a seção. É o registro que combina com um sistema onde tudo é imóvel e a assinatura mora no ritmo da página, não no enfeite.

@@ -129,22 +129,22 @@ aws secretsmanager rotate-secret \\
  */
 const FALHAS = [
   {
-    o_que: 'Ligar a varredura em modo bloqueante no primeiro dia.',
+    tentativa: 'Ligar a varredura em modo bloqueante no primeiro dia.',
     linha:
       'Seis repositórios pararam, e nenhum achado era acionável. Voltou para relatório por três meses antes de bloquear de novo.',
-    de: 'Security Champion › A varredura que reprovava tudo',
+    capitulo: 'Security Champion › A varredura que reprovava tudo',
   },
   {
-    o_que: 'Versionar o contrato por data.',
+    tentativa: 'Versionar o contrato por data.',
     linha:
       '2024-03-14 não diz se quebra. Trocado por semver no dia em que o terceiro consumidor apareceu sem aviso.',
-    de: 'API Owner › A política de versão',
+    capitulo: 'API Owner › A política de versão',
   },
   {
-    o_que: 'Depreciar avisando no changelog.',
+    tentativa: 'Depreciar avisando no changelog.',
     linha:
       'Ninguém lê changelog de serviço interno. O aviso passou a sair no próprio response, com header e prazo.',
-    de: 'API Owner › Depreciar em seis meses',
+    capitulo: 'API Owner › Depreciar em seis meses',
   },
 ];
 
@@ -224,7 +224,7 @@ export default function Home() {
               pitch, botões e a laje de código são a mesma unidade editorial, e
               o `<main>` tem exatamente TRÊS `<section>`. A quarta seção é o
               footer, que vem do `<Layout>` e mora fora do `<main>`. */}
-          <section className={estilos.hero}>
+          <section>
             <div className={estilos.topo}>
               {/* Camada 1 — a luz, e ela são DOIS focos.
 
@@ -321,9 +321,9 @@ export default function Home() {
           <div className={estilos.bloco}>
             <ul className={estilos.falhas}>
               {FALHAS.map((falha) => (
-                <li key={falha.de}>
-                  <strong>{falha.o_que}</strong> {falha.linha}
-                  <span className={estilos.de}>{falha.de}</span>
+                <li key={falha.capitulo}>
+                  <strong>{falha.tentativa}</strong> {falha.linha}
+                  <span className={estilos.capitulo}>{falha.capitulo}</span>
                 </li>
               ))}
             </ul>

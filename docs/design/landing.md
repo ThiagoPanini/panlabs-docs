@@ -271,6 +271,13 @@ degrau acima quebrava a headline em quatro linhas. Com o bloco do hero tomando o
 container, o título cabe **numa linha só** em 60, e o `5xl` ficaria sem
 consumidor — a variável inerte que este projeto nomeou no Infima para não copiar.
 
+> **Dissenso registrado: o degrau de display do projeto foi decidido duas vezes,
+> em dois mapas seguidos, com respostas diferentes.** O `5xl` nasceu nesta mesma
+> landing e morre nesta mesma landing. Fica escrito porque o que mudou não foi o
+> gosto — foi **a largura de onde o título mora** —, e essa é a única leitura que
+> impede a próxima mudança de largura de virar a terceira resposta em silêncio.
+> O mesmo dissenso está em [`tokens.md`](tokens.md) §4, do lado da escala.
+
 **Os dois botões ficam lado a lado no estreito**, e a regra **não depende de eles
 caberem**: o custo do empilhamento está dentro da folga orçada, então se um dia
 os rótulos crescerem os botões quebram e a laje continua acima da dobra.
@@ -521,8 +528,18 @@ diverge da decisão da âncora**; ela cai em outro endereço porque só existe u
 host.
 
 O carimbo desce de `origem própria integral` para
-**`origem própria (a âncora delega; aqui não há para quem)`**, e é a primeira vez
-que essa procedência tem recibo.
+**`origem própria (verificação)`**, e é a primeira vez que essa procedência tem
+recibo.
+
+> **Correção de forma contra a resolução, e ela protege a lista fechada.** A
+> resolução escreveu o carimbo como
+> `origem própria (a âncora delega; aqui não há para quem)`. Aquilo não é
+> qualificador — é a **fonte**, e a lista de qualificadores de
+> [`principios.md`](principios.md) §5.1 é fechada por decisão, com o caso do
+> `consequência` registrado como o defeito de deixar um em uso fora dela.
+> `verificação` é o qualificador que diz o que de fato aconteceu: **conferir o
+> upstream**, que é literalmente o que os dois `curl` fizeram. A frase da
+> resolução sobrevive inteira — na coluna *Fonte*, que é onde ela sempre coube.
 
 **E ela encolhe por outro lado:** com a figura morta, some a peça mais inventada
 da página. O que resta de origem própria é **composição de partes que já
@@ -596,7 +613,7 @@ do que compram neste slice:
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| `/` é página própria, não redirect para doc | **origem própria (a âncora delega; aqui não há para quem)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) §8 — `docs.devin.ai/` devolve 308 e `devin.ai/` devolve 200; o `panlabs` não tem host irmão |
+| `/` é página própria, não redirect para doc | **origem própria (verificação)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) §8 — a âncora delega, e aqui não há para quem: `docs.devin.ai/` devolve 308 e `devin.ai/` devolve 200; o `panlabs` não tem host irmão |
 | `index.js` e não `index.tsx` | **origem própria (correção)** | o projeto não tem TypeScript, e ligá-lo custaria dependência contra o axioma 2 |
 | `<main>` na landing | herdado | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23), via [`foco.md`](foco.md) §7 |
 | **Quatro seções**, e três `<section>` no `<main>` | **origem própria** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — cinco viraram quatro; nenhuma das sete tem landing com que comparar |
@@ -616,7 +633,7 @@ do que compram neste slice:
 | Laje escura dentro da ilha no modo claro | herdado | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3 — a ilha declara os tokens, o bloco só os lê |
 | **Três** camadas de profundidade | mecanismo emprestado | `mkdocs-material`, com o parallax removido por [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) e a figura por [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) |
 | **A figura morre** | **origem própria** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) §6 — o trilho era literal, e o `panlabs` não tem referente |
-| O glow reancora na laje | **origem própria (reinterpretação)** | a frase *"figura e glow são um objeto só"* cai; a substituta não tem medição atrás |
+| O glow reancora na laje | **origem própria** | a frase *"figura e glow são um objeto só"* cai, e a substituta é **reinterpretação, não medição** — nenhum qualificador da lista fechada a cobre, e é isso que a deixa contestável |
 | Zero `z-index` — ordem por árvore | **origem própria (implementação)** | o projeto não tem escala de z-index, e esta rota não abre uma |
 | Caixa do glow quadrada, um comprimento para os dois focos | **origem própria (implementação)** | dois lados exigiriam um segundo comprimento sem raiz |
 | `--sd-glow` a 30% | **origem própria (correção)** | [#61](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/61) sobre a [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — o publicado era 12%, e o par estava certo sobre o destino |

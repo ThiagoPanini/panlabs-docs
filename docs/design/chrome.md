@@ -346,7 +346,7 @@ Isso é pré-requisito do parágrafo seguinte, não detalhe: o ícone de link ex
 
 **O ícone de link externo sai, e o motivo não é estética.** `Icon/ExternalLink` não está no `getSwizzleConfig` — cai no default `unsafe` — e vem de um sprite injetado. A regra da política responde sem enumerar: **o que só é alcançável por `unsafe` não é trocado**.
 
-**Sem logotipo e sem wordmark estilizado no copyright.** O schema de logo exige um arquivo de imagem, e a marca deste sistema é tipo mais glifo. Consequência limpa: o footer consome **zero** dos 63 ícones.
+**Sem logotipo e sem wordmark estilizado no copyright.** O schema de logo exige um arquivo de imagem, e a marca deste sistema é tipo mais glifo. Consequência limpa: o footer consome **zero** dos 64 ícones.
 
 ### 8.2 As três divergências obrigatórias contra o Infima
 

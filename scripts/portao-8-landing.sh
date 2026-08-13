@@ -40,7 +40,18 @@ set -uo pipefail
 
 MODULO_DA_LANDING='src/pages/index.module.css'
 ROTA_DA_LANDING='src/pages/index.js'
-PADRAO_DE_LITERAL='#[0-9a-fA-F]{3,8}\b|[0-9.]+(px|rem|em|ms|s)\b|cubic-bezier|oklch\(|rgb\(|hsl\('
+PORTAO_1='scripts/portao-1-literais.sh'
+
+# O padrão de literal é LIDO do portão 1, não redigitado. Ele é a sede da regra,
+# e duas cópias de uma regex sem nenhuma marcada como errada é o defeito que o
+# espelho de tokens existe para impedir — a mesma razão que faz o vendorizador de
+# ícones ler o manifesto do fonte em vez de repetir a lista.
+PADRAO_DE_LITERAL=$(sed -n "s/^PADRAO='\(.*\)'\$/\1/p" "$PORTAO_1")
+if [ -z "$PADRAO_DE_LITERAL" ]; then
+  echo "Portão 8 REPROVOU — não achei \`PADRAO=\` em ${PORTAO_1}."
+  echo "A perna de literal lê a regra de lá; se ela mudou de nome, esta linha muda junto."
+  exit 2
+fi
 
 # A varredura cobre DECLARAÇÃO, não prosa: comentário sai antes, com o número de
 # linha preservado. Mesmo mecanismo dos portões 1, 2 e 3.
@@ -136,10 +147,22 @@ quadros=$(css | grep -cE '@keyframes')
 confere '·' 'keyframes no projeto' 4 "$quadros"
 
 # --- zero componente novo -----------------------------------------------------
-# A landing COMPÕE o catálogo; ela não inventa arquivo. Dois arquivos em
-# `src/pages/`, e todo import de componente aponta para arquivo que já existe.
-arquivos_da_rota=$(find src/pages -type f | sort | tr '\n' ' ')
-confere '·' 'arquivos em src/pages' 'src/pages/index.js src/pages/index.module.css ' "$arquivos_da_rota"
+# A landing COMPÕE o catálogo; ela não inventa arquivo. A rota inteira são dois
+# arquivos, e todo import de componente aponta para arquivo que já existe.
+#
+# A comparação é por DIFERENÇA de conjunto e não por string colada: uma lista
+# achatada com separador faria o portão depender de espaço em branco, que é a
+# classe de fragilidade que ele existe para não ter.
+esperados=$(printf '%s\n' "$ROTA_DA_LANDING" "$MODULO_DA_LANDING" | sort)
+encontrados=$(find src/pages -type f | sort)
+confere '·' 'arquivos em src/pages' 2 "$(printf '%s\n' "$encontrados" | grep -c .)"
+
+intrusos=$(comm -13 <(printf '%s\n' "$esperados") <(printf '%s\n' "$encontrados")) || true
+if [ -n "$intrusos" ]; then
+  echo "     REPROVOU — arquivo em src/pages/ que a landing não declara:"
+  printf '     %s\n' "$intrusos"
+  falhas=$((falhas + 1))
+fi
 
 for importado in $(grep -oE "@site/src/components/[A-Za-z]+" "$ROTA_DA_LANDING" | sort -u); do
   alvo="src/components/${importado##*/}.js"
