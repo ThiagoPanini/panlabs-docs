@@ -24,7 +24,8 @@
     "invariantes": "./scripts/invariantes.sh",
     "zeros": "./scripts/cinco-zeros.sh",
     "gerar:api": "node scripts/gerar-api.mjs",
-    "icones": "node scripts/vendorizar-icones.mjs --conferir"
+    "icones": "node scripts/vendorizar-icones.mjs --conferir",
+    "contraste": "node scripts/contraste.mjs --verificar"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

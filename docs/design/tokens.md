@@ -105,10 +105,35 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    computacionalmente independente — é o que `initial-value` sabe expressar.
    As outras sete entregam referência (`var()`, `oklch(from …)`) ou pilha de
    fonte, e `initial-value` não aceita nenhuma das duas.
-   ----------------------------------------------------------------------------- */
 
-@property --sd-brand      { syntax: '<color>';  inherits: true; initial-value: #CF38C9; }
-@property --sd-brand-tint { syntax: '<number>'; inherits: true; initial-value: 0.05; }
+   ---------------------------------------------------------------------------
+   A TIPAGEM `<color>` DE --sd-brand É CARGA ESTRUTURAL, NÃO DECORAÇÃO.
+
+   E o mecanismo é mais estreito do que a leitura fácil sugere. Medido em
+   Chrome 148, arquivo a arquivo:
+
+     · SEM o registro e com marca VÁLIDA, a cadeia
+       `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte
+       igual. Custom property não registrada é token stream, e o texto
+       `oklch(from … )` aninhado é CSS legal — a substituição atravessa;
+     · SEM o registro e com marca INVÁLIDA, a cadeia inteira cai de uma vez:
+       marca, as onze paradas da rampa, os dois acentos, TODA superfície e o
+       rótulo do botão primário viram a cor herdada. Sem aviso, sem erro;
+     · COM o registro e com marca inválida, tudo isso cai para o `initial-value`
+       desta linha e o site continua de pé, numa skin de fábrica.
+
+   Ou seja: o que a tipagem compra não é a cadeia funcionar — é ela **não
+   evaporar inteira** na única edição que a superfície de troca convida a fazer.
+   O raio de dano de uma linha errada é o site inteiro, e este registro é o que
+   o contém.
+
+   Consequência para quem edita: tirar esta linha não é aliviar tipagem. É
+   trocar uma skin de fábrica por uma página sem cor nenhuma no dia em que
+   alguém colar um valor torto.
+   --------------------------------------------------------------------------- */
+
+@property --sd-brand      { syntax: '<color>';  inherits: true; initial-value: #A3489D; }
+@property --sd-brand-tint { syntax: '<number>'; inherits: true; initial-value: 0.075; }
 @property --sd-radius     { syntax: '<length>'; inherits: true; initial-value: 16px; }
 
 /* =============================================================================
@@ -122,17 +147,29 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      de fábrica. As outras sete entregam referência ou pilha de fonte, que
      initial-value não sabe expressar: colagem inválida ali apaga o que a linha
      alimenta, à vista. */
-  --sd-brand:          #CF38C9;
+  --sd-brand:          #A3489D;
   --sd-brand-on-dark:  oklch(from var(--sd-brand) max(l, 0.72) c h);
   --sd-brand-on-light: oklch(from var(--sd-brand) min(l, 0.50) c h);
-  --sd-brand-tint:     0.05;
+  --sd-brand-tint:     0.075;
   --sd-surface-dark:   var(--sd-gray-800);
   --sd-surface-light:  var(--sd-gray-50);
-  --sd-font-body:      'Geist', ui-sans-serif, system-ui, sans-serif;
+  --sd-font-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --sd-font-heading:   var(--sd-font-body);
-  --sd-font-mono:      'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+  --sd-font-mono:      'Paper Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --sd-radius:         16px;
   /* /SKIN */
+
+  /* O `L` do hex da marca é INERTE, e é isso que faz a troca ser cirúrgica: a
+     rampa reescreve `L` em toda parada e consome só `c` e `h`, e as duas travas
+     de acento fazem o mesmo (`max(l, 0.72)` e `min(l, 0.50)`). Quem serena a
+     marca é o CROMA — 0,160 no lugar dos 0,240 de antes.
+
+     A linha 4 existe para segurar o produto `c × tint` em 0,0120, que é a banda
+     de cromaticidade que a medição das quatro rampas pôs na rampa: 0,160 × 0,075
+     é o mesmo 0,0120 de 0,240 × 0,05. Com ela, DEZ das onze paradas saem byte a
+     byte idênticas às da skin anterior e a décima primeira (`gray-600`) difere
+     em 1/255 num canal. A superfície do site inteiro não se mexe; só o acento
+     esfria. Ver docs/design/tokens.md §5. */
 
   /* ---------------------------------------------------------------------------
      A rampa de onze cinzas — tingida pelo matiz da marca
@@ -246,9 +283,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-radius-xs:   calc(var(--sd-radius) * 0.25);  /* código inline, badge, pílula de verbo */
   --sd-radius-full: 999px;                          /* marcador de Step, avatar, pílula */
 
-  /* O fio. Um só, e ele NÃO é a separação do cartão — essa é o anel
-     `0 0 0 1px` embutido na sombra multi-camada. Este aqui é a régua de
-     site: o fio do footer, e o que vier a precisar de um traço de verdade. */
+  /* O fio. Um só, e agora ele é a separação de TODA superfície levantada — o
+     anel `0 0 0 1px` saiu da composição da sombra e virou borda de verdade.
+
+     A troca é decisão de ALCANCE, não de estética: o Infima declara
+     `--ifm-*-border-color` em todo componente, então o adaptador pinta o fio
+     inteiro com o vocabulário que já existe. Anel dentro de `box-shadow`
+     obrigaria a sobrescrever a sombra de cada componente para desenhar uma
+     linha. */
   --sd-border-width: 1px;
 
   /* ---------------------------------------------------------------------------
@@ -329,17 +371,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      como valor porque o Infima a escreve como classe, não como conta. */
   --sd-doc-width: calc(var(--sd-container-width) * 0.75);
 
-  /* A medida do código — o interior do cartão de doc, que é onde o código
-     respira no resto do site: 864 − 2 × 48 = 768. Dentro da página de doc ela
-     não precisa de regra (quem não está na lista de prosa fica com o interior
-     inteiro do cartão); a landing não tem cartão, então ela é o único lugar do
-     projeto que precisa CITAR a medida.
+  /* A MEDIDA DO CÓDIGO morreu aqui, e vale a linha de lápide. A derivação dela
+     era uma frase só — *"o interior do cartão de doc"* —, e o cartão está de
+     saída. Cartão fora, derivação fora: sobraria o número 768 sem raiz, que é a
+     derivação FALSA que este arquivo recusa em voz alta no bloco de foco.
 
-     Ela deriva do cartão e continua não sendo largura nova: é a mesma medida,
-     nomeada. E é por ser derivada do cartão que a GRADE da landing não a usa —
-     lá a largura é o container, porque a grade não é conteúdo de cartão
-     nenhum. Ver docs/design/landing.md §3. */
-  --sd-code-width: calc(var(--sd-doc-width) - 2 * var(--sd-space-12));
+     Os dois consumidores reais — a laje de código da landing e a largura do
+     modal de busca — passam a citar `--sd-prose-width`, e os dois pelo MESMO
+     argumento que já estava escrito: *a medida que o leitor estava lendo quando
+     apertou a tecla*. O argumento não enfraquece; ele fica verdadeiro, porque
+     hoje ele erra por 96px. */
 
   /* A folga lateral do shell, de cada lado. Ela dobra a partir de 997px — o
      mesmo limiar em que a sidebar aparece. O par 32/64 é herdado da âncora; o
@@ -356,10 +397,9 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      saída correta seria fechar o buraco, e fechá-lo aqui custa uma linha em vez
      de uma perna nova de portão.
 
-     A LARGURA não vira token: ela é `--sd-code-width`, citada por nome. O painel
-     abre com a medida do interior do cartão — a mesma que o leitor já estava
-     lendo quando apertou a tecla —, e nomeá-la de novo criaria uma segunda cópia
-     do mesmo número. */
+     A LARGURA não vira token: ela é `--sd-prose-width`, citada por nome. O painel
+     abre com a medida que o leitor já estava lendo quando apertou a tecla, e
+     nomeá-la de novo criaria uma segunda cópia do mesmo número. */
   --sd-busca-height: 60dvh;
 
   /* ---------------------------------------------------------------------------
@@ -382,7 +422,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      dois consumidores — a grade de `card-group` dentro do MDX e a grade da
      landing —, e "uma declaração serve as duas" só é verdade se a declaração
      existir num lugar que as duas citem por nome. A escada de elevação já abriu
-     este precedente: `--sd-shadow-1` também é valor composto, e pelo mesmo
+     este precedente: `--sd-shadow-raised` também é valor composto, e pelo mesmo
      motivo.
      --------------------------------------------------------------------------- */
   --sd-card-min: calc((var(--sd-prose-width) - 2 * var(--sd-space-4)) / 3);
@@ -425,11 +465,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      bifurca por um motivo mecânico: no escuro a página já está perto da 950, e
      um véu leve não se distinguiria dela. No claro, a mesma opacidade
      transformaria a página num buraco preto em vez de empurrá-la para trás. */
-  --sd-surface-page:  var(--sd-gray-950);
-  --sd-surface-card:  var(--sd-surface-dark);
-  --sd-surface-code:  var(--sd-gray-950);
-  --sd-surface-wash:  rgb(from var(--sd-accent) r g b / 12%);
-  --sd-surface-scrim: rgb(from var(--sd-gray-950) r g b / 72%);
+  --sd-surface-page:   var(--sd-gray-950);
+  --sd-surface-raised: var(--sd-surface-dark);
+  --sd-surface-code:   var(--sd-gray-950);
+  --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
+  --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 72%);
 
   /* text — `faint` é a parada 500, o meio matemático da rampa. É a única
      reprovação deliberada de AA do sistema (3,04:1 aqui) e é PROIBIDA para
@@ -453,8 +493,19 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-accent-contrast: var(--sd-text-inverse);
 
   /* shadow — `lip` não mora aqui: realce é sempre luz, e luz não bifurca.
-     Ver o bloco de valor único mais abaixo. */
-  --sd-shadow-ring: var(--sd-border-subtle);
+     Ver o bloco de valor único mais abaixo.
+
+     Sobrou UM papel. O anel `0 0 0 1px` saiu da composição e virou borda de
+     verdade, então o papel que o pintava deixou de existir — a família `border`
+     logo acima é quem pinta o fio agora.
+
+     O ALCANCE, dito com precisão, porque a versão curta engana: onde o Infima
+     declara um `--ifm-*-border-color`, o adaptador pinta o fio de `:root`, sem
+     regra nova. Onde ele NÃO declara, o fio é escrito no componente — uma
+     declaração de uma linha. O que a troca compra é que a alternativa custava
+     mais nos dois casos: anel dentro de `box-shadow` obrigaria a REDECLARAR a
+     sombra inteira de cada componente, porque `box-shadow` não se acrescenta.
+     Uma linha de `border` contra três camadas de sombra repetidas. */
   --sd-shadow-cast: rgb(from var(--sd-gray-950) r g b / 60%);
 
   /* focus */
@@ -488,15 +539,44 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
   /* code — o oitavo papel. Existe na camada 2 porque a paleta de sintaxe
      bifurca por modo, e a camada 2 é o único lugar onde modo diverge.
-     Cinco dos sete caem no hex medido da semente sem uma correção. */
+
+     ---------------------------------------------------------------------
+     O CYAN MORA NO IDENTIFICADOR, e a paleta é `origem própria (medição)`.
+
+     A âncora foi medida e NÃO seguida — a primeira vez no mapa. O
+     `"codeblocks":"system"` do Devin resolve para `github-light-default` +
+     `dark-plus`, e o que a medição revela é que a âncora DECLINA de tematizar
+     código: ela entrega o par padrão da plataforma. Herdar isso seria herdar
+     uma ausência, e herdar uma ausência não é herdar. É a posição mais frágil
+     do projeto, e está escrita como tal em docs/design/principios.md §3.
+
+     As duas razões medidas cortam contra adotá-lo: ele regride os pisos de
+     contraste deste projeto (para 5,87 escuro e 4,55 claro, que encosta em AA)
+     e fica MAIS berrante no claro (croma máx 0,207 contra 0,113).
+
+     A paleta anterior caiu por doutrina, não por gosto: ela era semeada do
+     Neon, e o Neon não é âncora — os três não-âncora doam mecanismo e nunca
+     valor.
+
+     `parameter` é o identificador e leva o cyan; `constant` é o vizinho. Os
+     outros cinco ficam sob teto de croma 0,095, e `string` fica QUENTE de
+     propósito: ela leva a maior fatia dos tokens de qualquer bloco, e sem o
+     contrapeso o código vira monocromático.
+
+     O cyan é SKIN FIXA — camada 2 aqui, e fora da superfície de troca, no
+     precedente dos quatro `--sd-hue-*`. O corporativo redesenha; não re-marca.
+
+     Piso conferível por comando, e não só registrado:
+     `node scripts/contraste.mjs --verificar`.
+     --------------------------------------------------------------------- */
   --sd-code-fg:        var(--sd-text-body);
-  --sd-code-keyword:   #34D59A;
-  --sd-code-string:    #FFED9C;
-  --sd-code-function:  #F7B983;
-  --sd-code-constant:  #94B5F7;
-  --sd-code-parameter: #FF990A;
-  --sd-code-operator:  #C99A6C;
-  --sd-code-comment:   #A0A5AE;
+  --sd-code-parameter: #7FE4E9;   /* oklch(85.9% 0.095 200) — o cyan, o identificador */
+  --sd-code-constant:  #7FD3E4;   /* oklch(81.9% 0.085 212) — o vizinho */
+  --sd-code-keyword:   #95BCE4;   /* oklch(78.1% 0.071 249) */
+  --sd-code-string:    #E9B999;   /* oklch(82.1% 0.070  55) — o contrapeso quente */
+  --sd-code-function:  #DDDAAE;   /* oklch(88.0% 0.058 104) */
+  --sd-code-operator:  #CBC9CF;   /* oklch(83.9% 0.009 301) */
+  --sd-code-comment:   #B0AEB6;   /* oklch(75.5% 0.012 298) */
 }
 
 /* CLARO — legítimo. */
@@ -507,11 +587,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      página ficasse na 50, o cartão teria que ser branco puro para subir, e aí o
      tint da marca sumiria da maior superfície do modo claro. A pastilha de
      código toma o extremo do modo, que aqui é branco. */
-  --sd-surface-page:  var(--sd-gray-100);
-  --sd-surface-card:  var(--sd-surface-light);
-  --sd-surface-code:  oklch(from var(--sd-gray-50) 100% 0 h);
-  --sd-surface-wash:  rgb(from var(--sd-accent) r g b / 12%);
-  --sd-surface-scrim: rgb(from var(--sd-gray-950) r g b / 40%);
+  --sd-surface-page:   var(--sd-gray-100);
+  --sd-surface-raised: var(--sd-surface-light);
+  --sd-surface-code:   oklch(from var(--sd-gray-50) 100% 0 h);
+  --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
+  --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 40%);
 
   /* text */
   --sd-text-strong:  var(--sd-gray-950);
@@ -531,7 +611,6 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-accent-contrast: var(--sd-text-inverse);
 
   /* shadow */
-  --sd-shadow-ring: var(--sd-border-subtle);
   --sd-shadow-cast: rgb(from var(--sd-gray-950) r g b / 8%);
 
   /* focus */
@@ -553,15 +632,19 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-state-warn-edge:    rgb(from var(--sd-state-warn)    r g b / 25%);
   --sd-state-danger-edge:  rgb(from var(--sd-state-danger)  r g b / 25%);
 
-  /* code */
+  /* code — os CINCO papéis cromáticos do claro ficam na mesma luminosidade, L
+     48%. É a propriedade que a paleta anterior tinha e o par medido na âncora
+     não tem, e é ela que segura o piso em 6,29 sobre a pastilha branca. Os dois
+     acromáticos saem da faixa de propósito: `operator` desce para não competir
+     com o identificador, e `comment` sobe para recuar. */
   --sd-code-fg:        var(--sd-text-body);
-  --sd-code-keyword:   #007651;
-  --sd-code-string:    #746302;
-  --sd-code-function:  #8B541C;
-  --sd-code-constant:  #45619D;
-  --sd-code-parameter: #8F5300;
-  --sd-code-operator:  #84592B;
-  --sd-code-comment:   #5F636C;
+  --sd-code-parameter: #006B70;   /* oklch(48.0% 0.082 200) — o cyan, o identificador */
+  --sd-code-constant:  #1C6589;   /* oklch(48.0% 0.090 235) — o vizinho */
+  --sd-code-keyword:   #475C8B;   /* oklch(47.9% 0.081 265) */
+  --sd-code-string:    #82502B;   /* oklch(48.1% 0.085  56) — o contrapeso quente */
+  --sd-code-function:  #60612C;   /* oklch(47.9% 0.074 110) */
+  --sd-code-operator:  #535157;   /* oklch(43.9% 0.010 301) */
+  --sd-code-comment:   #615F66;   /* oklch(49.0% 0.011 299) */
 }
 
 /* -----------------------------------------------------------------------------
@@ -576,27 +659,34 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    6% sobre gray-50 é gray-50), e volta a ser visível dentro da ilha escura sem
    redeclarar nada.
 
-   A escada de elevação também mora aqui: a composição é a mesma nos dois modos,
-   e o modo entra por `ring` e `cast`, que são pares declarados. Os comprimentos
-   inline são a única exceção declarada à regra de que a camada 2 é só cor —
-   box-shadow é valor atômico, e separar geometria de cor exigiria doze tokens de
-   comprimento para compor quatro sombras.
+   A SOMBRA DEIXOU DE SER ESCADA, e os dois que sobraram moram aqui pelo mesmo
+   motivo: a composição é a mesma nos dois modos, e o modo entra por `cast`, que
+   é par declarado. Os comprimentos inline são a única exceção declarada à regra
+   de que a camada 2 é só cor — box-shadow é valor atômico, e separar geometria
+   de cor exigiria seis tokens de comprimento para compor duas sombras.
+
+   Eram quatro degraus numerados com o anel embutido. Sobraram DOIS papéis,
+   nomeados por intenção, porque uma escala de dois não é escala e numeração com
+   buraco é pior que nome — e porque o resto do arquivo já nomeia por intenção.
+
+   A defesa não é mais *"é um sistema"*. É **dois papéis medidos que compartilham
+   dois ingredientes** — `lip` e `cast` —, e isso é menos do que o arquivo
+   prometia. Está escrito porque quem abrir sem contexto vai ler over-engineering
+   e merece a resposta curta.
+
+   `--sd-shadow-sunken` perdeu o anel junto e sobrevive só até o berço do bloco
+   de código sair: ele é o contra-exemplo declarado da elevação, e afundar era
+   relativo ao cartão.
    ----------------------------------------------------------------------------- */
 
 :root {
   --sd-shadow-lip: rgb(from var(--sd-gray-50) r g b / 6%);
 
-  --sd-shadow-1: 0 0 0 1px var(--sd-shadow-ring),
-                 inset 0 1px 0 0 var(--sd-shadow-lip),
-                 0 1px 2px -1px var(--sd-shadow-cast);
-  --sd-shadow-2: 0 0 0 1px var(--sd-shadow-ring),
-                 inset 0 1px 0 0 var(--sd-shadow-lip),
-                 0 6px 16px -4px var(--sd-shadow-cast);
-  --sd-shadow-3: 0 0 0 1px var(--sd-shadow-ring),
-                 inset 0 1px 0 0 var(--sd-shadow-lip),
-                 0 20px 48px -12px var(--sd-shadow-cast);
-  --sd-shadow-sunken: 0 0 0 1px var(--sd-shadow-ring),
-                 inset 0 1px 3px 0 var(--sd-shadow-cast);
+  --sd-shadow-raised: inset 0 1px 0 0 var(--sd-shadow-lip),
+                      0 1px 2px -1px var(--sd-shadow-cast);
+  --sd-shadow-float:  inset 0 1px 0 0 var(--sd-shadow-lip),
+                      0 20px 48px -12px var(--sd-shadow-cast);
+  --sd-shadow-sunken: inset 0 1px 3px 0 var(--sd-shadow-cast);
 }
 
 /* =============================================================================
@@ -730,7 +820,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
   /* --- preenchimento e tinta ---------------------------------------------- */
   --ifm-background-color:         var(--sd-surface-page);
-  --ifm-background-surface-color: var(--sd-surface-card);
+  --ifm-background-surface-color: var(--sd-surface-raised);
   --ifm-hover-overlay:            var(--sd-border-subtle);
   --ifm-color-content:            var(--sd-text-body);
   --ifm-color-content-secondary:  var(--sd-text-muted);
@@ -772,7 +862,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-color-secondary:                     var(--sd-border-strong);
   --ifm-color-secondary-dark:                var(--sd-border-strong);
   --ifm-color-secondary-darker:              var(--sd-border-strong);
-  --ifm-color-secondary-contrast-background: var(--sd-surface-card);
+  --ifm-color-secondary-contrast-background: var(--sd-surface-raised);
   --ifm-color-secondary-contrast-foreground: var(--sd-text-body);
 
   --ifm-color-success:                     var(--sd-state-success);
@@ -806,7 +896,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
          repetem — repetir é honesto, inventar parada não seria.
          (o degrau 600 não é consumido por ninguém e por isso não é atribuído) */
   --ifm-color-emphasis-0:    var(--sd-surface-page);
-  --ifm-color-emphasis-100:  var(--sd-surface-card);
+  --ifm-color-emphasis-100:  var(--sd-surface-raised);
   --ifm-color-emphasis-200:  var(--sd-border-subtle);
   --ifm-color-emphasis-300:  var(--sd-border-default);
   --ifm-color-emphasis-400:  var(--sd-border-strong);
@@ -862,11 +952,19 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-pagination-nav-border-radius: var(--sd-radius-md);
 
   /* --- elevação. Preenche a lacuna que o Infima tem por desenho: ele não
-         redefine sombra no escuro, e as dele somem sobre fundo escuro. ------ */
-  --ifm-global-shadow-lw: var(--sd-shadow-1);
-  --ifm-global-shadow-md: var(--sd-shadow-2);
-  --ifm-global-shadow-tl: var(--sd-shadow-3);
-  --ifm-alert-shadow:      var(--sd-shadow-1);
+         redefine sombra no escuro, e as dele somem sobre fundo escuro.
+
+         `md` e `tl` recebem o MESMO token, e isso não é duplicação nossa: o
+         Infima tem três nomes para o que aqui tem dois papéis, e o adaptador
+         existe para traduzir. O precedente está neste arquivo —
+         --ifm-container-width e -xl recebem os dois o mesmo token.
+         Verificado no Infima: `md` é lida por `.dropdown__menu` e
+         `.navbar-sidebar`, que são chrome flutuante; `tl` só por `.shadow--tl`,
+         que ninguém usa. ---------------------------------------------------- */
+  --ifm-global-shadow-lw: var(--sd-shadow-raised);
+  --ifm-global-shadow-md: var(--sd-shadow-float);
+  --ifm-global-shadow-tl: var(--sd-shadow-float);
+  --ifm-alert-shadow:      var(--sd-shadow-raised);
   --ifm-blockquote-shadow: none;
   --ifm-navbar-shadow:     none;
 
@@ -909,7 +1007,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-navbar-padding-vertical:       var(--sd-space-2);
   --ifm-navbar-item-padding-horizontal: var(--sd-space-3);
   --ifm-navbar-item-padding-vertical:   var(--sd-space-2);
-  --ifm-navbar-search-input-background-color:  var(--sd-surface-card);
+  --ifm-navbar-search-input-background-color:  var(--sd-surface-raised);
   --ifm-navbar-search-input-color:             var(--sd-text-body);
   --ifm-navbar-search-input-placeholder-color: var(--sd-text-faint);
 
@@ -942,10 +1040,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --ifm-pagination-nav-color-hover:        var(--sd-accent);
 
   /* --- cartão, dropdown, abas, badge -------------------------------------- */
-  --ifm-card-background-color:        var(--sd-surface-card);
+  --ifm-card-background-color:        var(--sd-surface-raised);
   --ifm-card-horizontal-spacing:      var(--sd-space-6);
   --ifm-card-vertical-spacing:        var(--sd-space-6);
-  --ifm-dropdown-background-color:    var(--sd-surface-card);
+  --ifm-dropdown-background-color:    var(--sd-surface-raised);
   --ifm-dropdown-link-color:          var(--sd-text-body);
   --ifm-dropdown-hover-background-color: var(--sd-border-subtle);
   --ifm-dropdown-font-weight:         var(--sd-weight-body);
@@ -1035,7 +1133,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    Infima vaza: trocar --ifm-color-primary não move nenhuma delas. Só o seletor
    de cada variante alcança. */
 .alert--primary   { --ifm-alert-background-color-highlight: var(--sd-surface-wash); }
-.alert--secondary { --ifm-alert-background-color-highlight: var(--sd-surface-card); }
+.alert--secondary { --ifm-alert-background-color-highlight: var(--sd-surface-raised); }
 .alert--success   { --ifm-alert-background-color-highlight: var(--sd-state-success-fill); }
 .alert--info      { --ifm-alert-background-color-highlight: var(--sd-state-info-fill); }
 .alert--warning   { --ifm-alert-background-color-highlight: var(--sd-state-warn-fill); }
@@ -1114,11 +1212,15 @@ O corporativo apaga a identidade visual do shinydoc editando o bloco entre `SKIN
 
 Diferente, sim. Quebrado, não.
 
+> **O terceiro mecanismo é o que carrega mais peso, e a leitura fácil dele está errada.** Medido em navegador, arquivo a arquivo: **sem** o registro de `--sd-brand` e com marca **válida**, a cadeia `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte igual — custom property não registrada é token stream, e `oklch(from …)` aninhado é CSS legal. O que o registro compra não é a cadeia funcionar; é ela **não evaporar inteira** com uma colagem inválida. Sem ele, um valor torto na linha 1 apaga marca, as onze paradas da rampa, os dois acentos, toda superfície e o rótulo do botão primário de uma vez, sem aviso e sem erro. Com ele, tudo isso cai no valor de fábrica e o site continua de pé.
+>
+> O raio de dano de uma linha errada é o site inteiro, e é esse raio que o `@property` contém. Quem for tentado a tirar a linha por achá-la cerimônia está tirando a contenção, não a tipagem.
+
 ### A perda das outras sete, escrita
 
 `@property` registra exatamente as linhas cuja entrega é **literal e computacionalmente independente** — é o que `initial-value` sabe expressar. Hoje isso produz três: `--sd-brand`, `--sd-brand-tint`, `--sd-radius`.
 
-As outras sete entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--sd-surface-dark` torna `--sd-surface-card` inválida em tempo de valor computado, e `background-color` cai para `transparent` — **o cartão some**. Com registro, teria degradado para o valor de fábrica.
+As outras sete entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--sd-surface-dark` torna `--sd-surface-raised` inválida em tempo de valor computado, e `background-color` cai para `transparent` — **a superfície levantada some**. Com registro, teria degradado para o valor de fábrica.
 
 A perda é real, está contida em **uma** propriedade — texto, rampa, acento e borda sobrevivem porque nenhum deles deriva das superfícies — e ela falha **à vista**: quem colou vê o cartão sumir.
 
@@ -1148,6 +1250,18 @@ A rampa de onze cinzas é **tingida pelo matiz da marca** — comportamento medi
 **As onze paradas de luminosidade são a média das quatro rampas medidas, não a de uma delas.** Quatro medições do mesmo gerador estimam a intenção dele melhor que uma, e elas concordam entre si dentro de uma banda estreita — o que confirma que **a forma da rampa é geometria herdada, não escolha.**
 
 **Correção que precisa carregar sem rastro da versão perdedora:** as paradas propostas na primeira redação da arquitetura de tokens erram monotonicamente em direção ao escuro, e chegam a seis pontos de luminosidade no degrau mais escuro. O fundo de página inteiro do modo canônico nasceria quase preto puro. **Valem as calibradas, que estão no bloco.**
+
+### O `L` da marca é inerte, e o tint é uma conta
+
+**A rampa reescreve `L` em toda parada e consome só `c` e `h`.** As duas travas de acento fazem o mesmo — `max(l, 0.72)` e `min(l, 0.50)`. Consequência que vale escrita porque contraria a intuição: **pedir uma marca "mais escura" não é uma operação que este sistema saiba fazer.** Dois hexes de mesmo matiz e mesma cromaticidade, separados por sete pontos de luminosidade, produzem rampa e acentos byte a byte idênticos.
+
+**Quem serena a marca é o croma.** E é por isso que `--sd-brand-tint` é a quarta linha do bloco de troca em vez de uma preferência: a rampa é tingida por `c × tint`, então baixar o croma sem compensar apagaria parte do tint — e o tint é `herdado`, medido nos quatro sites. O produto fica travado em **0,0120**, que é a banda de cromaticidade que a medição pôs na rampa.
+
+O efeito é conferível, e foi conferido em navegador contra a skin anterior:
+
+> **Dez das onze paradas saem byte a byte idênticas. A décima primeira, `gray-600`, difere em 1/255 num único canal.**
+
+**A superfície do site inteiro não se mexe; só o acento esfria.** É isso que torna a troca de marca cirúrgica em vez de arriscada — e é a razão de a linha do tint não ser negociável junto com a do hex: mexer numa sem a outra move todas as superfícies do site.
 
 ### AA é propriedade da arquitetura, não verificação por skin
 
@@ -1185,9 +1299,19 @@ A regra que decide: **token que referencia camada 2 bifurca e mora nos dois bloc
 
 **Realce é luz, e luz é o topo da rampa — não "a tinta do modo".** Corrigida a âncora, o par some inteiro: no claro o cartão **é** o topo da rampa, e o topo da rampa sobre si mesmo é identidade matemática. **A aresta iluminada some no claro porque não há nada acima dela na rampa — não porque alguém a desligou.**
 
-A escada de elevação mora junto, pelo mesmo motivo: a composição é a mesma nos dois modos, e o modo entra por `--sd-shadow-ring` e `--sd-shadow-cast`, que **são** pares declarados.
+As sombras moram junto, pelo mesmo motivo: a composição é a mesma nos dois modos, e o modo entra por `--sd-shadow-cast`, que **é** par declarado.
 
-> **Exceção declarada, e é a única do sistema.** A camada 2 é só cor, e as quatro sombras carregam comprimentos inline. `box-shadow` é valor atômico: separar geometria de cor exigiria doze tokens de comprimento para compor quatro sombras. Elas moram no arquivo de tokens, cabem num bloco que se lê inteiro, e a exceção é **declarada** — não descuido.
+> **Exceção declarada, e é a única do sistema.** A camada 2 é só cor, e as sombras carregam comprimentos inline. `box-shadow` é valor atômico: separar geometria de cor exigiria seis tokens de comprimento para compor duas sombras. Elas moram no arquivo de tokens, cabem num bloco que se lê inteiro, e a exceção é **declarada** — não descuido.
+
+### A sombra deixou de ser escada
+
+Eram **quatro degraus numerados**, com um anel `0 0 0 1px` embutido em cada composição. São **dois papéis nomeados por intenção** — `raised` e `float` —, e o anel saiu.
+
+**O anel virou borda de verdade, e a razão é alcance e não estética.** O Infima declara `--ifm-*-border-color` em todo componente, então o adaptador pinta o fio inteiro com o vocabulário que já existe. Anel dentro de `box-shadow` obrigaria a sobrescrever a sombra de cada componente, um por um, só para desenhar uma linha. O `box-sizing` global é `border-box`, então o fio entra no mesmo pixel em que o anel estava — a troca não move geometria.
+
+**Por que nome e não número.** Uma escala de dois não é escala, e numeração com buraco — `1` e `3`, com o `2` morto — é pior de ler que nome. O resto do arquivo já nomeia por intenção; a sombra era o último lugar que numerava.
+
+> **Dissenso registrado, e ele é sobre a defesa da seção inteira.** A profundidade era a demonstração mais visível do sistema, e agora ela levanta um botão e um modal. Quem abrir o arquivo de tokens sem contexto vai ler *over-engineering*, e merece a resposta curta: **a defesa deixou de ser "é um sistema" e passou a ser "são dois papéis medidos que compartilham dois ingredientes"** — `lip` e `cast`. É verdade, e é menos do que o arquivo prometia.
 
 ### O glow mora na camada 3, em regra própria
 
@@ -1259,11 +1383,40 @@ O par 30/36 é herdado; **o ponto onde ele troca, não.** 640 seria um segundo l
 
 ### As fontes
 
-**Geist e Geist Mono, variáveis, OFL, auto-hospedadas em `static/fonts/`, com os `@font-face` no nosso CSS. Zero CDN.** Requisição externa esbarra na CSP do ambiente corporativo alvo, e auto-hospedar custa o mesmo — zero dependência npm —, então não há troca a fazer.
+**Inter e Paper Mono, variáveis, OFL, auto-hospedadas em `static/fonts/`, com os `@font-face` no nosso CSS. Zero CDN.** Requisição externa esbarra na CSP do ambiente corporativo alvo, e auto-hospedar custa o mesmo — zero dependência npm —, então não há troca a fazer.
+
+**É a tipografia da própria âncora**, e isso é `herdado` e não escolha nossa: as três pilhas são parâmetro que ela expõe, e o §2 do [`principios.md`](principios.md) já registrava que tipografia não é delta.
+
+**A versão é fixada, não só o nome.** A Paper Mono está abaixo de 1.0 — OFL não expira, mas a face ainda pode mudar de desenho entre versões, e um nome sem número não diz qual desenho a spec descreve.
+
+| Família | Arquivo | Versão | Licença |
+| --- | --- | --- | --- |
+| Inter · Inter Display | `Inter-Variable.woff2` | **4.001** | OFL 1.1 — The Inter Project Authors |
+| Paper Mono | `PaperMono-Variable.woff2` | **0.310** | OFL 1.1 — The Paper Mono Project Authors, da Paper Design |
+
+**São dois arquivos, e o `OFL.txt` cobre três famílias.** A face da Inter cobre duas: o eixo `opsz` de 14 a 32 é o que o upstream publica separadamente como Inter e Inter Display. A da Inter é **subconjunto** de latin + latin-ext do arquivo publicado, com `cv02` `cv03` `cv04` `cv11` preservadas; a da Paper Mono é cópia byte a byte. As duas modificações estão declaradas no cabeçalho do `OFL.txt`.
+
+> **Dois arquivos, não quinze.** A âncora serve 14 faces de Inter, e essa contagem é subconjunto por script para tráfego global — cirílico, grego, vietnamita. É decisão de multi-tenant; o ambiente corporativo alvo não tem esse problema, e copiar a contagem seria **herdar uma restrição de arquitetura que não é nossa** — o mesmo argumento já escrito para o contrato de partes.
+
+**A escala e a medida de prosa não se mexem junto.** Medido nos arquivos de fonte, a largura média das minúsculas difere em **0,5%** no corpo e **0,8%** no mono contra as famílias anteriores. E a medida de prosa não é alvo de caracteres por linha: é o `max-w-2xl` medido na âncora. Adotar a Inter torna a medida **mais fiel, não menos** — antes o projeto renderizava a medida da âncora com uma fonte que ela não usa.
 
 O `src` começa em `/` e mesmo assim sobrevive ao `baseUrl` em subcaminho: o webpack do Docusaurus registra os diretórios estáticos em `resolve.roots`, resolve o arquivo em build e reemite a URL já prefixada. Não é link absoluto escrito à mão — é resolução de módulo.
 
 **Custo nomeado:** o arquivo é emitido duas vezes — uma pela cópia literal de `static/`, outra pelo webpack com hash de conteúdo. São dois arquivos pequenos, e a alternativa seria cravar o `baseUrl` na folha de estilo.
+
+**Dissenso registrado.** O x-height da Paper Mono é 4% menor que o da mono anterior, então no mesmo `font-size` o código lê um pouco menor; não foi compensado, porque compensar exigiria um degrau de escala só para o mono e a âncora não tem um. E a Inter é a fonte mais usada da web: o projeto acabou de escolher marca própria para **não** parecer a âncora, e aqui escolhe o contrário. A coerência é seguir a âncora; o resultado é menos distintivo.
+
+### As quatro variantes de caractere
+
+```css
+html { font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11'; }
+```
+
+**`herdado` por medição direta** — está verbatim no CSS que a âncora serve, e é boa parte do porquê de o texto dela não parecer Inter default.
+
+Ela é a única linha da tipografia que **não é token**, e mora em `src/css/custom.css` junto dos `@font-face`. O motivo é que ela não é valor: é um interruptor de fonte, e não há nada nela que a camada de raiz saiba expressar. Com uma pilha que não seja a Inter o navegador a ignora em silêncio — é por isso que ela só faz sentido depois da troca de família.
+
+**Perda nomeada:** `cv02`, `cv03` e `cv04` mexem em `a`, `g` e `l` minúsculos, e ninguém avaliou o efeito delas em **pt-BR**. O corpus da âncora é inglês.
 
 ### Renderização de prosa
 
@@ -1293,24 +1446,60 @@ O default do framework de utilitários do alvo **não entra**: é *default* herd
 
 ## 10. Contraste verificado
 
-Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superfícies.
+Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superfícies — a levantada e a página.
+
+> **Esta tabela não é transcrita; ela é conferida.** `node scripts/contraste.mjs` a computa a partir de `src/css/tokens.css`, e `--verificar` lê estas linhas de volta e **compara célula a célula** — reprova se um número divergir, se um piso cair, ou se uma linha for renomeada para escapar da conferência. É o que fecha o defeito descrito logo abaixo, e é o motivo de os números aqui terem duas casas e nenhuma margem de arredondamento negociável.
+>
+> **Nenhum valor de desenho mora no script**: marca, rampa, superfícies, alfas e travas saem do CSS por um avaliador das três operações de derivação, e forma que ele não reconhece o faz morrer em vez de cair num valor velho. Trocar a superfície levantada no bloco de troca move estas células, e a conferência avisa.
 
 | Par | Escuro | Claro |
 | --- | ---: | ---: |
-| `text-strong` sobre cartão / página | 13,54 / 17,87 | 17,87 / 17,10 |
-| `text-body` sobre cartão / página | 9,66 / 12,75 | 9,34 / 8,94 |
-| `text-muted` sobre cartão / página | 5,75 / 7,59 | 7,15 / 6,84 |
-| acento como link, sobre cartão / página | 5,34 / 7,04 | 6,26 / 5,99 |
-| `text-inverse` sobre preenchimento de acento | 7,54 | 6,87 |
-| anel de foco vs cartão / página (SC 1.4.11 pede 3:1) | 5,34 / 7,04 | 6,26 / 5,99 |
-| `text-strong` sobre o wash do item ativo | 15,55 | 13,86 |
-| sintaxe, pior token, sobre a pastilha | 7,77 | 5,66 |
-| ícone de estado sobre o próprio fundo, pior caso | 5,23 | 5,52 |
+| `text-strong` sobre levantada / página | 13,54 / 17,87 | 17,87 / 17,10 |
+| `text-body` sobre levantada / página | 9,66 / 12,75 | 9,34 / 8,94 |
+| `text-muted` sobre levantada / página | 5,75 / 7,59 | 7,12 / 6,81 |
+| acento como link, sobre levantada / página | 5,55 / 7,33 | 5,96 / 5,70 |
+| `text-inverse` sobre preenchimento de acento | 7,85 | 6,54 |
+| anel de foco vs levantada / página (SC 1.4.11 pede 3:1) | 5,55 / 7,33 | 5,96 / 5,70 |
+| anel de foco vs pastilha de código | 7,33 | 6,54 |
+| `text-strong` sobre o wash do item ativo | 15,35 | 14,34 |
+| **sintaxe, pior token, sobre a pastilha** | **8,94** | **6,29** |
+| ícone de estado sobre o próprio fundo, pior caso | 4,96 | 5,45 |
 | corpo sobre fundo de callout, pior caso | 6,47 | 7,98 |
+
+### A divergência com [`foco.md`](foco.md) §6 está fechada, por medição
+
+**O defeito:** as duas tabelas mediam o **mesmo par** — o anel de foco contra a superfície levantada e contra a página — e discordavam em **três das quatro células**. Ele foi achado pelo teste do axioma 6 e ficou aberto desde então, porque adivinhar qual estava certa seria inventar um número medido, e é o axioma 5 que estava em jogo.
+
+**O que fechou:** as duas superfícies foram reescritas de qualquer jeito por causa da marca nova, então as quatro células foram **medidas de novo**, pelo mesmo comando, e as duas tabelas passaram a sair da mesma fonte. As duas concordam célula a célula porque agora é **impossível** discordarem.
+
+O método vale registro, porque ele é o que reproduz o número. Duas escolhas o fixam:
+
+- **o contraste é medido sobre a cor de oito bits**, não sobre a aritmética contínua da conversão OKLCH→sRGB. É o que a tela recebe, e é o que faz `#FAF2F9 sobre #2B262A` dar o mesmo número aqui e em qualquer conferidor de contraste do mundo;
+- **cada preenchimento translúcido é composto sobre o fundo em que ele de fato assenta.** Preenchimento com alfa não tem cor própria: tem a cor do que está atrás. O callout mora dentro do corpo do documento, sobre a superfície levantada; o wash do item ativo mora na sidebar, que fica fora dela, sobre a página. Compor o callout sobre a página em vez da levantada move o pior caso do corpo de 6,47 para 9,10 — a distância entre um par que passa raspando e um que passa com folga.
+
+**As células que não dependem do acento saem idênticas às da tabela anterior**, e é isso que confirma o método contra a medição antiga em vez de substituí-la sem prova. Uma exceção nomeada: a linha do ícone de estado não reproduz — o registro anterior dava 5,23 / 5,52 e a medição dá **4,96 / 5,45**. Não foi possível reconstruir com que par o número antigo saiu, então vale o medido, e ele continua bem acima dos 3:1 que a SC 1.4.11 pede para conteúdo não textual.
+
+### O piso da paleta de sintaxe é critério, não registro
+
+**`node scripts/contraste.mjs --verificar` reprova se o pior token cair abaixo de 8,04 no escuro ou 6,29 no claro, ou se o croma máximo passar de 0,095.**
+
+Hoje ele mede **8,94** no escuro, e a folga tem explicação: os 8,04 são o piso contra a pastilha um degrau acima na rampa, que é onde ela vai parar quando o cartão sair. O piso do comando é o mais apertado dos dois de propósito — ele precisa continuar valendo depois da mudança de superfície, e não reprovar hoje para passar amanhã.
+
+Os três números que convertem *"não muito neon"* de gosto em régua:
+
+| | croma médio | croma máx | pior contraste |
+| --- | ---: | ---: | ---: |
+| semeadura anterior | 0,104 / 0,089 | 0,173 / 0,113 | 7,77 / 5,66 |
+| o par padrão da âncora | 0,075 / 0,115 | 0,112 / 0,207 | 5,87 / 4,55 |
+| **esta paleta** | **0,057 / 0,062** | **0,095 / 0,090** | **8,94 / 6,29** |
+
+*As três linhas foram medidas pelo mesmo comando, e a primeira adjudica um número que estava em disputa:* a resolução que escolheu esta paleta registrou o piso da semeadura anterior como **7,02**, e a tabela deste documento registrava **7,77**. **7,77 é o certo** — quem tinha razão era o registro antigo, e é ele que fica.
+
+Ela é a **menos saturada das três nos dois modos** e a única que bate os dois pisos. *Dissenso registrado:* baixar o croma médio para 0,057 é menos cor do que qualquer uma das duas alternativas — se ao vivo o bloco parecer apagado, o ajuste é subir croma dentro da mesma banda, e a spec já terá afirmado os números. E o teto de 0,095 é **derivado, não medido**: é o teto do par da âncora puxado para baixo por julgamento.
 
 ### A única reprovação, e ela é deliberada
 
-**`--sd-text-faint` reprova: 3,04:1 no escuro e 4,45:1 no claro.**
+**`--sd-text-faint` reprova: 3,04:1 no escuro e 4,45:1 no claro** — sobre a superfície levantada, que é o pior caso dele.
 
 É a parada 500 — o meio matemático da rampa —, então é o pior caso **por construção**, e nenhum ajuste salva.
 
@@ -1319,6 +1508,12 @@ Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superf
 ### A garantia é da arquitetura, não desta skin
 
 **O contraste é propriedade das paradas, não da marca.** A tabela foi rodada com marca violeta e com marca âmbar: idêntica até a segunda casa decimal. A cromaticidade da rampa é pequena demais para mover luminância relativa.
+
+A troca de marca desta skin é a prova disso rodando ao vivo. O acento perdeu um terço de croma, e as linhas que não o citam **não se mexeram**: `text-strong`, `text-body` e o corpo sobre fundo de callout saíram idênticas nas duas colunas, e `text-muted` saiu idêntica no escuro.
+
+**A única exceção é um pixel, e ela mostra a mecânica funcionando em vez de contradizê-la:** `text-muted` no claro caiu de 7,15 / 6,84 para 7,12 / 6,81. Aquele papel é a parada `gray-600` — a **única** das onze que não saiu byte a byte idêntica na troca, e ela difere em 1/255 num canal. Três centésimos de razão de contraste é o tamanho de um pixel de diferença, e é o tamanho certo.
+
+Mexeu, além disso, só o que depende do acento — link, anel de foco, `text-inverse` e o wash —, que é exatamente o conjunto que a arquitetura diz que depende da marca.
 
 E as travas de luminosidade foram testadas nos vinte e quatro matizes do círculo com cromaticidade máxima: **pior caso 5,17:1** nos dois modos. **Qualquer hex que o corporativo cole herda esta tabela**, com folga sobre 4,5:1, sem que ninguém verifique nada.
 
@@ -1334,7 +1529,16 @@ Consequência que vale dita: mover o ângulo de um matiz de estado **não conseg
 | 2 | `transition:`/`animation:` com `ms`, `s` ou `cubic-bezier` cravado | commit | `npm run portao:2` |
 | 6 | As três rotas contra o host real, nos dois locales | implantação | `npm run portao:6 -- <url-base> [rota]` |
 
-Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
+Mais **duas** verificações que não são portão, e rodam junto na CI:
+
+| Comando | O que ele confere |
+| --- | --- |
+| `node scripts/espelho-tokens.mjs --verificar` | o bloco `css` da §3 é `src/css/tokens.css` byte a byte |
+| `npm run contraste` | os pisos da §10, computados do CSS em vez de transcritos |
+
+**As duas são verificação e não portão pela mesma régua**, que é a da [espinha](README.md) §5: portão protege uma **regra de escrita**; verificação confere que **duas cópias da mesma verdade não divergiram**. Aqui as cópias são o número escrito na spec e a cor que o CSS entrega.
+
+**A segunda nasceu de um defeito real, não de zelo.** Duas tabelas desta spec mediam o mesmo par e discordavam em três das quatro células, e a divergência sobreviveu a uma auditoria inteira porque não havia como conferi-la sem refazer a conta à mão. Uma tabela transcrita diverge calada; uma tabela que sai de um comando não tem como.
 
 **Limite conhecido do portão 1, escrito em voz alta:** media query não lê custom property, e o limiar dela é um comprimento — então o prelúdio de `@media` **não tem como** passar pela varredura de literal.
 
@@ -1357,12 +1561,12 @@ Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 | Rampa de onze cinzas tingida pelo matiz da marca | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.2 — medido nos quatro sites |
 | Expressá-la em `oklch(from …)` | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §3 — o alvo calcula fora do CSS; sem build, é a única rota |
 | As onze paradas de luminosidade | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §1 — média das quatro rampas medidas |
-| `--sd-brand-tint` | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §1 — reproduz a banda de cromaticidade medida |
-| Matiz da marca, fúcsia | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §11 — nenhuma medição sustenta matiz de marca |
+| `--sd-brand-tint` | herdado (banda) + **origem própria (conta)** | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §1 fixa a banda; o 0,075 é o que segura `c × tint` em 0,0120 quando o croma cai. Ninguém mediu que a banda *deva* ser constante — a conta é defensável e não é medição |
+| Matiz da marca, magenta serenizado | origem própria | [#68](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/68) — nenhuma medição sustenta matiz de marca; o croma caiu de 0,240 para 0,160 |
 | Travas de luminosidade do acento | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §2a — verificadas em 24 matizes |
 | Três acentos no bloco de troca | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.1 |
-| Tipografia dentro do contrato de troca | delta deliberado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.3 — no alvo é *escape*, não contrato |
-| `--sd-radius` no bloco de troca, e o valor | delta deliberado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §2c, derivado do grid da [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) |
+| Tipografia dentro do contrato de troca | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o carimbo antigo contrariava o [`principios.md`](principios.md) §2, que já dizia que tipografia é parâmetro que a âncora expõe |
+| `--sd-radius` no bloco de troca, e o valor | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — `--sd-radius-md` já entrega 12px, o `rounded-xl` da âncora; a parametrização por `calc()` responde ao axioma 3, não ao §3 |
 | Escada de raio por múltiplo | mecanismo emprestado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §7 — raio paramétrico da Vapi, disciplina do Neon |
 | Escuro em `:root`, claro como override | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §4 — Infima e alvo põem claro em `:root`; axioma 4 |
 | Adaptador de mão única | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2, derivado das armadilhas da [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
@@ -1374,15 +1578,20 @@ Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 | Oito papéis semânticos | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §5.1 abre o oitavo sobre os sete da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §6 |
 | Camada semântica inteira nos dois modos | herdado + origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §5 |
 | Página clara na parada 100 | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §4 — preserva o tint na maior superfície do claro |
+| O papel da superfície levantada troca de nome | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — o nome anterior citava o cartão, que está de saída, e já colidia com a grade de `card-group` e com o cartão-componente. `raised` nomeia o papel: *o que não é a página* |
 | Pastilha de código no extremo do modo | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §4 — Clerk e a anatomia da Perplexity |
 | Borda = tinta a 7% | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §5 — reproduz os dois valores medidos com um mecanismo |
 | `--sd-shadow-lip` como valor único, ancorado no topo da rampa | origem própria | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §2, corrigindo a tinta da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
-| Escada de elevação em quatro degraus, com o anel embutido | mecanismo emprestado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §8 — sombra multi-camada do Clerk |
+| Dois papéis de sombra, nomeados por intenção | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — os consumidores de sombra em `src/`, com o cartão de saída. Uma escala de dois não é escala |
+| O anel embutido vira borda de verdade | **origem própria (verificação)** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o adaptador alcança `--ifm-*-border-color` em todo componente; anel em `box-shadow` exige sobrescrita por componente |
+| `--ifm-global-shadow-md` e `-tl` ao papel flutuante | **origem própria (verificação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — no Infima, `md` é lida por `.dropdown__menu` e `.navbar-sidebar`; `tl` só por uma classe que ninguém usa |
 | `--sd-shadow-cast` como par declarado | herdado | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §2 — derivá-lo sai ajuste de curva com literais mágicos |
 | Segundo seletor do bloco escuro, e a ilha | origem própria | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3 — glow não existe em nenhuma das sete |
 | `--sd-glow` na camada 3, em regra própria | origem própria | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3a |
-| Paleta de sintaxe | herdado (semeadura autorizada) | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §9 — 13 hex Shiki do Neon; 5 de 7 intactos |
-| `comment` deixa de ser idêntico nos dois modos | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §9a — o valor do Neon reprova sobre branco |
+| Paleta de sintaxe, 14 hex | **origem própria (medição)** | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — a âncora foi medida e revelou não-decisão; ver [`principios.md`](principios.md) §5.3. A semeadura anterior vinha do Neon, que não é âncora e não doa valor |
+| O cyan no identificador, e `constant` como vizinho | **origem própria (medição)** | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — pintar o dominante de cyan mataria a distinção de tipo, que é a função da cor no código |
+| O cyan é **skin fixa**, fora da superfície de troca | origem própria | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — precedente dos quatro `--sd-hue-*`: o corporativo redesenha, não re-marca |
+| Teto de croma 0,095 | **origem própria** | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — é o teto do par da âncora puxado para baixo por julgamento, e não uma medida |
 | Shim de config que só referencia token | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
 | Quatro matizes de estado | **lacuna de medição** | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §10 — não medidos em nenhuma das sete |
 | `Livre` dos matizes move ângulo, não tom | origem própria | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §3, corrigindo a redação da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
@@ -1393,15 +1602,17 @@ Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 | Escala de espaço base 4 | **lacuna de medição** | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §7 — não medida em nenhuma das sete |
 | Nomes de tipografia | origem própria | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §1 — nomear é nosso; a gramática de camada é da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) |
 | Degraus `xs…4xl` e os valores | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §6 — medido nos quatro |
-| Degrau do título em 996/997 | delta deliberado | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §4 — par medido, ponto de troca movido pela regra da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) |
-| Geist / Geist Mono auto-hospedadas | delta deliberado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §6 |
+| Degrau do título em 996/997 | **lacuna por restrição** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o par 30/36 é medido; o ponto de troca é o limiar que o Docusaurus não deixa mover sem `unsafe` |
+| Inter / Paper Mono auto-hospedadas, com versão fixada | herdado | [#72](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/72) — é a tipografia da âncora, e o `paperMono` dela é OFL 1.1 da Paper Design, não face própria |
+| As quatro variantes de caractere da Inter | herdado | [#72](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/72) — verbatim no CSS servido pela âncora |
+| Dois arquivos de fonte, não quinze | **origem própria (verificação)** | [#72](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/72) — a contagem da âncora é subconjunto por script para tráfego global |
 | `hyphens: none`, `text-wrap: pretty` | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §6 — pt-BR; nenhuma referência medida nesse eixo |
 | Escala de duração e as duas curvas | herdado | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §1 — medidas nas sete |
 | `--sd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) corrigindo a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
 | Dois níveis de latitude | mecanismo emprestado | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §3 — a distinção é da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11), aqui vira regra |
 | Dimensões do chrome no arquivo de tokens | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §5 — a anatomia é de `chrome.md` |
 | `--sd-type-5xl`, com um consumidor só | herdado (nome) + origem própria (uso) | o nome continua a série `text-xs … text-4xl` do alvo; o consumidor é o título do hero — [`landing.md`](landing.md) §4 |
-| `--sd-code-width` derivada do cartão | **origem própria (implementação)** | a medida já existia como interior do cartão; a landing é o primeiro consumidor que precisa citá-la por nome |
+| A medida do código morre; os dois consumidores citam a de prosa | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — a derivação era o interior do cartão, e sem cartão sobraria um 768 sem raiz |
 | Par de amplitude do glow, no escopo da ilha | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5b — amplitude é par declarado sobre o alfa, não número novo |
 | Regra de elemento no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | ADR 3 — de `tokens.css` não há seletor que alcance uma classe hasheada, e nome de `@keyframes` não sobrevive dentro de custom property ([`motion.md`](motion.md) §6) |
 | Portão de `grep` de literal | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §7 |
@@ -1409,4 +1620,4 @@ Mais a verificação de espelho: `node scripts/espelho-tokens.mjs --verificar`.
 | Aviso do `postcss-calc` sobre cor relativa | **origem própria (achado)** | observado ao rodar o build do slice 1; valor emitido conferido byte a byte |
 | `--sd-surface-scrim`, par declarado | **origem própria** | não há medição de véu nas referências. A opacidade bifurca por motivo mecânico: no escuro a página já está na parada 950, e no claro o mesmo alfa faria buraco em vez de profundidade ([`busca.md`](busca.md) §5.3) |
 | `--sd-busca-height` como token de camada 1 | **origem própria (correção)** | `dvh` não está no padrão do portão 1, e o literal passaria pela varredura — fechar o buraco custa uma linha aqui |
-| A largura do modal de busca **não** vira token | **origem própria (implementação)** | é `--sd-code-width`, o interior do cartão, citado por nome; nomeá-la de novo criaria segunda cópia do mesmo número |
+| A largura do modal de busca **não** vira token | **origem própria (implementação)** | é `--sd-prose-width`, citada por nome; nomeá-la de novo criaria segunda cópia do mesmo número |

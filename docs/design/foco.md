@@ -142,33 +142,30 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 
 | preenchimento por trás do anel | escuro | claro |
 | --- | ---: | ---: |
-| página | 7,04 | 5,82 |
-| cartão | 5,33 | 6,08 |
-| pastilha de código | 7,04 | 6,67 |
-| fundo de callout `info` | 4,35 | 5,21 |
-| fundo de callout `success` | 4,32 | 5,23 |
-| fundo de callout `warn` | 4,34 | 5,23 |
-| fundo de callout `danger` | 4,39 | 5,19 |
-| wash do item ativo de sidebar | 4,48 | 4,91 |
+| página | 7,33 | 5,70 |
+| superfície levantada | 5,55 | 5,96 |
+| pastilha de código | 7,33 | 6,54 |
+| fundo de callout `info` | 3,78 | 5,12 |
+| fundo de callout `success` | **3,72** | 5,11 |
+| fundo de callout `warn` | 3,78 | 5,12 |
+| fundo de callout `danger` | 3,84 | 5,09 |
+| wash do item ativo de sidebar | 6,30 | 4,78 |
 
-**Pior caso 4,32:1 contra os 3:1 que a SC 1.4.11 pede. Folga de 1,44×.**
+**Pior caso 3,72:1 contra os 3:1 que a SC 1.4.11 pede. Folga de 1,24×.**
 
-> **Divergência aberta com [`tokens.md`](tokens.md) §10 — dono: o dono do projeto.** As duas tabelas medem o **mesmo par** (anel de foco contra cartão e contra página) e discordam em três das quatro células:
+> **A folga encolheu, e o custo tem dono.** Ela era de 1,44× e é de 1,24×. A causa é a marca serenizada: o acento perdeu um terço de croma, e as quatro células mais apertadas desta tabela são justamente o anel sobre os preenchimentos de callout no escuro, que são as superfícies mais claras que o anel encontra no modo canônico.
 >
-> | par | aqui | `tokens.md` §10 |
-> | --- | ---: | ---: |
-> | cartão, escuro | 5,33 | 5,34 |
-> | cartão, claro | **6,08** | **6,26** |
-> | página, claro | **5,82** | **5,99** |
-> | página, escuro | 7,04 | 7,04 |
+> **Isso é conta, não descuido**, e continua passando com folga sobre a obrigação — mas é o par a vigiar se a marca esfriar mais. `npm run contraste` reprova abaixo de 3:1, então o dia em que alguém baixar o croma outra vez a CI avisa antes do leitor.
+
+> **A divergência com [`tokens.md`](tokens.md) §10 está fechada, e fechou por medição.** As duas tabelas mediam o **mesmo par** — o anel contra a superfície levantada e contra a página — e discordavam em **três das quatro células**. O defeito foi achado pelo teste de reconstrução ([`README.md`](README.md) §6) e sobreviveu a uma auditoria inteira, porque adivinhar qual estava certa seria **inventar um número medido**.
 >
-> Achado pelo teste de reconstrução ([`README.md`](README.md) §6). Nenhuma das duas foi corrigida aqui, porque **adivinhar qual está certa seria inventar um número medido** — e é o axioma 5 que está em jogo. Uma medição adjudica as duas, e a que sobreviver vira a única.
+> O desempate não escolheu um dos dois lados: **as duas superfícies foram reescritas por causa da marca nova, e as quatro células foram medidas de novo**. As duas tabelas passaram a ser conferidas pelo mesmo comando — `node scripts/contraste.mjs --verificar` —, que lê as dezesseis células daqui e as onze linhas de [`tokens.md`](tokens.md) §10 e compara cada uma com a medição. Elas concordam célula a célula porque divergir passou a reprovar a CI.
 >
-> **Nada nesta seção depende do desempate:** as quatro células passam com folga sobre os 3:1 da SC 1.4.11, e a obrigação é satisfeita por construção — pelas travas de luminosidade do acento, não pelos valores desta tabela.
+> **A lição de forma vale mais que os quatro números:** duas cópias de uma medição divergem caladas, e nenhuma auditoria de leitura pega. A que sobreviveu é a que tem comando atrás.
 
 Três coisas que esta tabela resolve:
 
-- a pastilha de código é a terceira superfície, e não a segunda. No escuro ela reusa o preenchimento da página; no claro é branco puro, que é o melhor caso do modo;
+- a pastilha de código é a terceira superfície, e não a segunda. No escuro ela reusa o preenchimento da página — os dois valores são o mesmo número por isso, e não por coincidência; no claro é branco puro, que é o melhor caso do modo;
 - **a obrigação é satisfeita por construção, não por esta skin.** As travas de luminosidade do acento — piso no escuro, teto no claro — garantem a folga para qualquer marca que o corporativo cole. Não há verificação por skin a fazer, do mesmo jeito que não há para AA de texto;
 - não existe token de cor de foco separado do acento. Abrir um seria abrir um nono papel semântico, que é edição de spec com linha de procedência.
 
@@ -302,9 +299,10 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 | As três exceções, e o `:has()` do bloco de código | medição de upstream | fonte de `theme-common@3.10.2` e `theme-classic@3.10.2` |
 | Espessura do anel | **origem própria com âncora normativa** | SC 2.4.13 — limiar de perímetro |
 | Afastamento do anel | **origem própria** | derivado do requisito do §3.1, não de medição |
-| Cor do anel = acento | delta deliberado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12); o Infima não tem token de foco |
+| Cor do anel = acento | **origem própria com âncora normativa** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o carimbo antigo media distância até o **Infima**, e divergir do Infima não é divergir da âncora; o piso é a SC 1.4.11 |
 | Anel instantâneo | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 |
 | Tabela de dezesseis combinações | origem própria (verificação) | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §6, reproduzindo o modelo da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
+| As dezesseis células saem de um comando | **origem própria (implementação)** | `node scripts/contraste.mjs` — a divergência com [`tokens.md`](tokens.md) §10 sobreviveu a uma auditoria porque as duas cópias eram transcritas |
 | `:active` com os tokens do hover | mecanismo emprestado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.1, sobre o argumento do anel |
 | `(pointer: coarse)` como espelho de `(hover: hover)` | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.3 — o par já é usado pelo `theme-classic` |
 | Piso de alvo | **origem própria com âncora normativa** | SC 2.5.5 |

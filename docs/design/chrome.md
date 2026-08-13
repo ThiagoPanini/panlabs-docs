@@ -52,7 +52,9 @@ Ele envolve **só `.theme-doc-markdown`**, que é `ThemeClassNames` estável e o
 
 Efeito colateral bom, e não planejado: os cartões de paginação ficam com um passo de elevação só, sem cartão dentro de cartão.
 
-**A separação é o anel `0 0 0 1px` embutido na sombra multi-camada — não uma borda.** Ele lê como borda sem *ser* borda, e é o que compra elevação sem abandonar a leitura limpa da âncora. Uma primeira redação do mapa dizia o contrário — *elevação por borda, e o buraco de sombra do Infima deixa de importar* — e foi corrigida: **a lacuna de sombra no escuro continua obrigatória de preencher**, e o adaptador a preenche.
+**A separação é uma borda de verdade, de um pixel, com a tinta que o anel tinha.** Ela era o `0 0 0 1px` embutido na sombra multi-camada até a skin nova, e a troca é decisão de **alcance**: o Infima declara `--ifm-*-border-color` em todo componente, então o adaptador pinta o fio inteiro com o vocabulário que já existe, enquanto anel dentro de `box-shadow` obrigaria a sobrescrever a sombra de cada componente para desenhar uma linha. O `box-sizing` global é `border-box`, então o fio entra no mesmo pixel em que o anel estava.
+
+A leitura não muda, e o que estava escrito em volta continua valendo: **a lacuna de sombra no escuro continua obrigatória de preencher**, e o adaptador a preenche. Duas redações anteriores brigaram sobre este ponto — a primeira do mapa dizia *elevação por borda*, e a correção dizia *anel, não borda*. A terceira volta ao fio, e por um motivo que nenhuma das duas tinha: **alcance**, não estética.
 
 O cartão é **nível de superfície de verdade**, não moldura decorativa: ele é o segundo dos dois preenchimentos do sistema, e não existe um terceiro.
 
@@ -294,7 +296,7 @@ Consequência direta do orçamento `unsafe` zero. Cada linha é perda escrita, n
 | Medida de prosa constante | **delta deliberado** | [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) §1 — a âncora oscila, e a oscilação é efeito colateral |
 | Breakout de código e tabela | **delta deliberado** | [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) §1 — a âncora não tem |
 | Conteúdo dentro de cartão | herdado | o `almond` da âncora |
-| A separação é o anel da sombra, não borda | **delta deliberado (correção)** | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) corrigindo a primeira redação da [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) |
+| A separação é borda de verdade, não anel de sombra | **origem própria (verificação)** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o adaptador alcança `--ifm-*-border-color` em todo componente; anel em `box-shadow` exige sobrescrita por componente |
 | O cartão envolve só o corpo | **lacuna por restrição** | `DocItem/Layout` é `unsafe` |
 | Gutter no `<main>`, `.col` sem preenchimento, TOC com separação de um lado | **origem própria (implementação)** | medido no grid do Infima ao fechar a cadeia; nenhuma resolução previa |
 | As três configurações de coluna | **origem própria (correção)** | medido em `DocItem/Layout@3.10.2`: a classe de 75% não depende de heading |

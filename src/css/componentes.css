@@ -43,9 +43,12 @@ div.theme-code-block {
   /* Camada 3, no escopo do componente. O berço é a mistura das duas superfícies
      que o modo já resolveu: um passo acima da pastilha, um passo abaixo do
      cartão. Nenhum valor novo entra, e ele acompanha a troca de skin sozinho. */
-  --sd-code-berco: color-mix(in oklab, var(--sd-surface-code) 65%, var(--sd-surface-card));
+  --sd-code-berco: color-mix(in oklab, var(--sd-surface-code) 65%, var(--sd-surface-raised));
 
   padding: calc(var(--sd-border-width) * 2);
+  /* O fio que era o anel `0 0 0 1px` dentro de `--sd-shadow-sunken`, agora borda
+     de verdade — o berço é a quarta e última superfície que carregava o anel. */
+  border: var(--sd-border-width) solid var(--sd-border-subtle);
   border-radius: var(--sd-radius-md);
   background: var(--sd-code-berco);
   box-shadow: var(--sd-shadow-sunken);

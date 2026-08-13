@@ -62,7 +62,7 @@ registrada em `themeConfig.prism.additionalLanguages`** — opção pública, de
 
 ## Tokens consumidos
 
-Camada 2: `--sd-surface-code`, `--sd-surface-card`, `--sd-shadow-ring`,
+Camada 2: `--sd-surface-code`, `--sd-surface-raised`, `--sd-border-subtle`,
 `--sd-shadow-cast`, `--sd-text-muted`, e os oito `--sd-code-*` da paleta de
 sintaxe.
 

@@ -58,9 +58,18 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    `unsafe`. Efeito colateral bom — os cartões de paginação ficam com um passo de
    elevação só, sem cartão dentro de cartão.
 
-   A separação é o anel `0 0 0 1px` embutido na sombra multi-camada, **não** uma
-   borda. Ele lê como borda sem ser borda, e é o que compra elevação sem
-   abandonar a leitura limpa da âncora.
+   A separação é uma BORDA de verdade, com a mesma tinta que o anel tinha. Ela
+   era o `0 0 0 1px` embutido na sombra multi-camada até a skin nova, e a troca é
+   decisão de alcance: uma linha de `border` contra a sombra inteira redeclarada,
+   porque `box-shadow` não se acrescenta — se redeclara.
+
+   O FIO MUDA DE PIXEL, e vale dito porque a leitura fácil é a contrária. O anel
+   era `box-shadow` com spread, e spread pinta FORA da caixa. A borda, sob o
+   `box-sizing: border-box` global, come para DENTRO: a aresta externa fica onde
+   estava, e quem encolhe um pixel de cada lado é a área de conteúdo — de 768
+   para 766, com `--sd-doc-width` em 864 e o preenchimento em 48. Nenhuma medida
+   da cadeia de proporções deriva daí, então nada mais se move; mas *"entra no
+   mesmo pixel"* seria falso.
 
    `max-width` e não `width`, e é isso que trava a decisão central. Medido em
    3.10.2: o `DocItem/Layout` aplica a classe de 75% sempre que
@@ -77,9 +86,10 @@ html.docs-doc-page .theme-doc-markdown {
 
   max-width: var(--sd-doc-width);
   padding: var(--sd-doc-preenchimento);
+  border: var(--sd-border-width) solid var(--sd-border-subtle);
   border-radius: var(--sd-radius);
-  background-color: var(--sd-surface-card);
-  box-shadow: var(--sd-shadow-1);
+  background-color: var(--sd-surface-raised);
+  box-shadow: var(--sd-shadow-raised);
 }
 
 html.docs-doc-page .theme-doc-markdown > :first-child {
@@ -457,4 +467,24 @@ html.docs-doc-page .theme-doc-markdown
   .footer__link-separator {
     display: inline;
   }
+}
+
+/* -----------------------------------------------------------------------------
+   O chrome flutuante — as duas superfícies que o adaptador NÃO alcança
+
+   `.dropdown__menu` (o seletor de idioma) e `.navbar-sidebar` (o menu do
+   estreito) leem `--ifm-global-shadow-md`, e nada mais: o Infima não declara
+   `border` nem `--ifm-*-border-color` para nenhuma das duas. Elas carregavam o
+   anel `0 0 0 1px` de dentro da sombra, e o perderam quando ele saiu da
+   composição.
+
+   É aqui que a frase *"o adaptador alcança o fio inteiro"* encontra o limite
+   dela, e por isso o limite está escrito em vez de suposto: onde o Infima não
+   tem variável de borda, o fio custa uma regra. Uma linha por superfície contra
+   a sombra inteira redeclarada — que é a conta que decidiu a troca.
+   ----------------------------------------------------------------------------- */
+
+.dropdown__menu,
+.navbar-sidebar {
+  border: var(--sd-border-width) solid var(--sd-border-subtle);
 }

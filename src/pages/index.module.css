@@ -26,17 +26,25 @@
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   1. As três medidas — e nenhuma delas é nova
+   1. As DUAS medidas — e nenhuma delas é nova
 
-   Prosa em `--sd-prose-width`, código em `--sd-code-width`, grade em
-   `--sd-container-width`. Cada bloco é **a medida mais dois gutters**: com
-   espaço sobrando a medida sai exata; sem espaço, o gutter sobrevive. É isso
-   que faz *"sangrar é o fundo, não o conteúdo"* ser verdade sem media query
-   nenhuma — a laje encolhe sozinha no estreito, como o cartão da doc.
+   Prosa e código em `--sd-prose-width`, grade em `--sd-container-width`. Cada
+   bloco é **a medida mais dois gutters**: com espaço sobrando a medida sai
+   exata; sem espaço, o gutter sobrevive. É isso que faz *"sangrar é o fundo,
+   não o conteúdo"* ser verdade sem media query nenhuma — a laje encolhe sozinha
+   no estreito, como o cartão da doc.
 
-   A grade vai ao container e NÃO aos 768 do interior do cartão: 768 é 864 − 96,
-   derivado de um cartão que a landing não tem. A 768 uma fila de três daria
-   cartões de ~245px; a 1152 dá ~373px.
+   Eram TRÊS. A laje de código tinha medida própria, derivada do interior do
+   cartão de doc, e ela morreu junto com a derivação: o cartão está de saída, e
+   sobraria um 768 sem raiz. A landing perde um degrau de ritmo, e isso está
+   registrado como dissenso em docs/design/landing.md §3 — se ela quiser a laje
+   larga de volta, declara a medida com raiz própria em vez de herdar número
+   órfão.
+
+   A grade continua indo ao container: numa fila de três, a medida de prosa daria
+   cartões de ~213px; o container dá ~373px. A conta se escreve por nome de
+   token de propósito — a medida de prosa se move no slice da geometria, e um
+   número cravado aqui envelheceria calado.
    ----------------------------------------------------------------------------- */
 
 .prosa {
@@ -46,9 +54,12 @@
   padding-inline: var(--sd-gutter);
 }
 
+/* Idêntica a `.prosa` hoje, e as duas continuam separadas de propósito: são dois
+   papéis que por ora compartilham uma medida, não um papel com dois nomes. Se a
+   landing recuperar a laje larga, o que muda é esta regra e só ela. */
 .codigo {
   position: relative;
-  max-width: calc(var(--sd-code-width) + 2 * var(--sd-gutter));
+  max-width: calc(var(--sd-prose-width) + 2 * var(--sd-gutter));
   margin-inline: auto;
   padding-inline: var(--sd-gutter);
 }
@@ -243,7 +254,7 @@
 .acaoPrimaria {
   background-color: var(--sd-accent);
   color: var(--sd-accent-contrast);
-  box-shadow: var(--sd-shadow-1);
+  box-shadow: var(--sd-shadow-raised);
   transition: background-color var(--sd-move-state);
 }
 
