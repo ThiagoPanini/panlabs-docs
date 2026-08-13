@@ -181,7 +181,7 @@ O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não 
 
 **O slice da busca gastou o degrau 5 sem encostar no orçamento**, e é o resultado que a escada existe para produzir: o degrau mais fundo foi para o único lugar onde os degraus acima comprovadamente não alcançam, e o `unsafe` continua intacto.
 
-**O slice da landing não acrescentou uma linha a este ledger, e isso é o resultado esperado.** Uma landing inteira — cinco seções, faixa de espetáculo, quatro camadas e dois movimentos ambientes — sai de uma rota em `src/pages/`, um CSS Module e três `@keyframes` na folha global. Nada disso é customização de componente do tema: `plugin-content-pages` já vem no preset, e uma rota própria não envolve, não substitui e não ejeta nada. O único gancho que a landing usa fora do CSS dela é `data-sd-component`, que é **contrato nosso**, publicado pelo catálogo.
+**O slice da landing não acrescentou uma linha a este ledger, e isso é o resultado esperado.** Uma landing inteira — quatro seções, faixa de espetáculo de dois focos, três camadas de profundidade, um loop ambiente e um reveal por rolagem — sai de uma rota em `src/pages/`, um CSS Module e três `@keyframes` na folha global. Nada disso é customização de componente do tema: `plugin-content-pages` já vem no preset, e uma rota própria não envolve, não substitui e não ejeta nada. O único gancho que a landing usa fora do CSS dela é `data-sd-component`, que é **contrato nosso**, publicado pelo catálogo.
 
 ---
 

@@ -33,7 +33,7 @@ npm ci
 npm start                    # dev — não testa link quebrado nem host
 npm run build && npm run serve
 
-npm run portoes              # portões 1 a 5, cadência de commit
+npm run portoes              # portões 1 a 5 e 8, cadência de commit
 npm run portao:7             # o swizzle --list congelado, cadência de upgrade
 npm run portao:6 -- <url>    # as três rotas contra o host, cadência de implantação
 
@@ -48,7 +48,7 @@ npm run icones               # a bijeção manifesto ↔ static/icons/
 | Caminho | Papel |
 | --- | --- |
 | [`docs/adr/`](docs/adr/) | Os sete ADRs. **Leitura obrigatória antes de escrever código.** |
-| [`docs/design/README.md`](docs/design/README.md) | **A espinha da spec** — ordem de leitura, a régua, o índice, as invariantes e os sete portões. Comece por aqui. |
+| [`docs/design/README.md`](docs/design/README.md) | **A espinha da spec** — ordem de leitura, a régua, o índice, as invariantes e os oito portões. Comece por aqui. |
 | [`docs/design/principios.md`](docs/design/principios.md) | A âncora, os quatro deltas deliberados e as cinco classes de procedência. |
 | [`docs/agents/`](docs/agents/) | Como um agente trabalha neste repo — tracker, domínio, labels, fluxo. |
 | [`docs/research/`](docs/research/) | Índice das sete pesquisas. O material mora em branches `research/*`. |
@@ -56,10 +56,10 @@ npm run icones               # a bijeção manifesto ↔ static/icons/
 | `src/css/custom.css` | As regras de base. Zero literal, e nunca lê `--ifm-*`. |
 | `src/css/chrome.css` | O shell da página de doc — proporções, navbar, sidebar, TOC, footer, estreito. |
 | `src/css/foco.css` | O contrato de estado de entrada. **O único arquivo onde `outline` pode aparecer.** |
-| `src/icons/manifest.js` | **O contrato de ícones** — 63 nomes, 66 tags, teto 64. Os desenhos são skin; os nomes não. |
+| `src/icons/manifest.js` | **O contrato de ícones** — 64 nomes, 68 tags, teto 64 e folga zero. Os desenhos são skin; os nomes não. |
 | `src/theme/` | Componente de tema próprio, registro, e o **único swizzle** do projeto — ver `docs/design/swizzle.md`. |
 | `src/plugins/` | Os dois plugins de caminho: a busca e os artefatos AI-era. Nenhum é dependência npm. |
-| `static/icons/` | Os 63 desenhos vendorizados do Lucide (ISC). Trocáveis. |
+| `static/icons/` | Os 64 desenhos vendorizados do Lucide (ISC). Trocáveis. |
 | `conteudo/` | O conteúdo do Trilho, o produto fictício. Fica fora de `docs/`, que é a documentação *deste* repositório. |
 | `scripts/` | Os portões, o espelho de `tokens.md` e o vendorizador de ícones. |
 

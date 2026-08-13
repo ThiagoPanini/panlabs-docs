@@ -241,9 +241,10 @@ html.docs-doc-page .subtitulo {
    esconde o contêiner com `:empty`. Remover a busca não deixa buraco.
 
    GitHub entra como **palavra**, não como glifo, e é decisão de orçamento: não
-   há marca de terceiro no manifesto de 63, e gastar o único slot livre num
-   logotipo de plataforma seria decidir por acidente o que a #32 deixou reservado
-   sem nome.
+   há marca de terceiro no manifesto, e gastar o slot que sobrava num logotipo de
+   plataforma seria decidir por acidente o que a #32 deixou reservado sem nome.
+   O slot foi para `wrench`, na porta `Ferramentas` da landing, e a folga do teto
+   agora é ZERO — a decisão envelheceu bem.
    ----------------------------------------------------------------------------- */
 
 /* O `Logo` do upstream continua renderizando um link vazio, porque a marca não

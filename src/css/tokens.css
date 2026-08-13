@@ -144,14 +144,22 @@
   --sd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
-     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-5xl)
+     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-6xl)
      para a procedência ficar legível no próprio token.
 
-     O degrau `5xl` nasceu com a landing, e ele NÃO é escala nova: é o próximo
-     nome da mesma escala do alvo, e tem exatamente um consumidor — o título do
-     hero, e só de 997px. Abaixo disso o hero desce para `4xl`, porque a regra da
-     dobra manda no valor: a 375 × 667, um título em 48px estoura o teto da faixa
-     do hero. Ver docs/design/landing.md §4.
+     O degrau de display é `6xl`, e ele NÃO é escala nova: é um nome da mesma
+     escala do alvo, saltando o `5xl`. Um consumidor no site inteiro — o título
+     do hero da landing, e só de 997px. Abaixo disso o hero desce para `4xl`,
+     porque a regra da dobra manda no valor: a 375 × 667, um título de display
+     estoura o teto da faixa do hero. Ver docs/design/landing.md §4.
+
+     O `5xl` SAIU, e a lápide vale a linha. Ele nasceu na mesma landing que o
+     mata, e nos dois casos quem decidiu foi a largura de onde o título mora: em
+     672 o degrau que cabia era 48, e com o bloco do hero tomando o container o
+     título cabe numa linha em 60. Deixá-lo declarado seria variável sem
+     consumidor — o defeito do Infima que este arquivo nomeia para não copiar.
+     Registrado como dissenso em docs/design/landing.md: o degrau de display do
+     projeto foi decidido duas vezes, com respostas diferentes.
      --------------------------------------------------------------------------- */
   --sd-type-xs:    12px;
   --sd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
@@ -161,7 +169,7 @@
   --sd-type-2xl:   24px;
   --sd-type-3xl:   30px;    /* título de página, até 996px */
   --sd-type-4xl:   36px;    /* título de página, de 997px; título do hero até 996px */
-  --sd-type-5xl:   48px;    /* título do hero da landing, de 997px */
+  --sd-type-6xl:   60px;    /* o degrau de display — título do hero da landing, de 997px */
 
   /* Peso — três, nomeados por intenção. Nome de intenção não colide com o
      `semibold: 500` do Infima, que é a mesma palavra sobre outro número. */
@@ -708,28 +716,38 @@
    ============================================================================= */
 
 [data-sd-showcase] {
-  --sd-glow: radial-gradient(circle, rgb(from var(--sd-accent) r g b / 12%), transparent 70%);
+  /* DOIS focos, e o segundo não afrouxa o critério que autoriza a ilha: os dois
+     são luz emitida pelo mesmo mecanismo, num tom diferente.
+
+     O primeiro subiu de 12% para 30%, e quem pagou foi a FIGURA. Enquanto havia
+     desenho embaixo, a luz era o brilho sobre ele; sem desenho ela carrega o
+     hero sozinha, e 12% não carrega. O centro dele reancora na aresta de cima da
+     laje, então a luz nasce ATRÁS do material em vez de flutuar — e isso é
+     reinterpretação, não medição. Vai como dissenso em landing.md.
+
+     O segundo é o cyan, no canto oposto, a 24%. Ele cita `--sd-code-parameter`,
+     que é o tom do identificador na paleta de sintaxe: dentro da ilha a laje é o
+     material, e a segunda luz é a cor do material. Não é hex novo — é a operação
+     1 sobre um token que já existe. */
+  --sd-glow:   radial-gradient(circle, rgb(from var(--sd-accent) r g b / 30%), transparent 70%);
+  --sd-glow-2: radial-gradient(circle, rgb(from var(--sd-code-parameter) r g b / 24%), transparent 70%);
 
   /* A caixa do glow, e ela é QUADRADA: o gradiente é `circle`, e caixa não
      quadrada faz o raio da luz depender de qual lado é maior. Um lado só, e ele
      é a largura do site — a luz tem a medida do conteúdo. Dois lados exigiriam
      um segundo comprimento sem raiz, que é a derivação falsa que este arquivo
-     recusa em voz alta mais acima. */
+     recusa em voz alta mais acima. Um comprimento para os DOIS focos, pelo mesmo
+     motivo: um segundo tamanho seria o segundo número que não tem raiz. */
   --sd-glow-tamanho: var(--sd-container-width);
-
-  /* A tinta da figura do trilho. Derivação de ALFA, então é a operação 1 —
-     `rgb(from …)` sobre UMA cor —, e não `color-mix` com `transparent`, que
-     seria a operação 2 fingida sobre uma coisa que não é token.
-
-     Ela mora aqui e não no CSS Module da landing por consequência do portão 1:
-     cor nasce neste arquivo e em nenhum outro. E ganha de graça a propriedade
-     da ilha — fora dela não resolve. */
-  --sd-trilho-tinta: rgb(from var(--sd-text-strong) r g b / 24%);
 
   /* A amplitude da respiração — PAR DECLARADO sobre o alfa do glow, e não um
      segundo gradiente com outro alfa. São fatores, não cores: a camada
      decorativa multiplica por `opacity` o alfa que o gradiente já entrega, e o
      vale é o único número que a respiração acrescenta ao sistema.
+
+     QUEM RESPIRA É UM DOS DOIS, e isso é o teto de um loop por página lido ao
+     pé da letra: são dois focos e uma respiração. O cyan é luz parada, e o par
+     abaixo nunca o alcança.
 
      Eles moram aqui, no escopo da ilha, pelo mesmo motivo que `--sd-glow`: fora
      dela não resolvem, e a respiração fica confinada por FATO DE ESCOPO em vez

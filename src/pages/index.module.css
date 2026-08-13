@@ -1,9 +1,14 @@
 /* =============================================================================
    shinydoc — a landing
 
-   A segunda ruptura de layout do site. Cinco seções, uma faixa de espetáculo
-   sobre as duas primeiras, quatro camadas de profundidade PARADAS, e o único
-   lugar do projeto onde movimento ambiente é licenciado.
+   A segunda ruptura de layout do site. QUATRO seções, uma faixa de espetáculo
+   sobre a primeira, TRÊS camadas de profundidade PARADAS, e o único lugar do
+   projeto onde movimento ambiente é licenciado.
+
+   A licença é uma LISTA FECHADA DE SEIS, e cada linha é contagem que o portão 8
+   confere — mais a metade negativa: zero `@keyframes` novo, zero componente
+   novo, zero literal aqui, zero `z-index`. Um sétimo efeito é extravagância por
+   definição. Ver `scripts/portao-8-landing.sh`.
 
    Este arquivo NÃO tem valor literal — cor, comprimento, tempo e curva vivem em
    `tokens.css` e chegam aqui por nome. A única exceção é o limiar de media
@@ -26,55 +31,60 @@
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   1. As DUAS medidas — e nenhuma delas é nova
+   1. UMA aresta esquerda, e ainda DUAS medidas
 
-   Prosa e código em `--sd-prose-width`, grade em `--sd-container-width`. Cada
-   bloco é **a medida mais dois gutters**: com espaço sobrando a medida sai
+   A regra cabe numa linha:
+
+     **Todo bloco da landing é o container. A medida de leitura é
+     `max-inline-size` DENTRO do bloco, nunca um segundo bloco centrado.**
+
+   Ela saiu de um defeito que só apareceu medindo: com o hero num bloco centrado
+   de 720 e as seções noutro de 1152, as arestas esquerdas ficam a **216px** uma
+   da outra e a página gagueja de seção para seção. Depois da correção, a 1440
+   de viewport, título, pitch, laje, lista de falhas e grade começam TODOS no
+   mesmo x.
+
+   Nenhuma raiz nova nasceu: as medidas continuam sendo `--sd-container-width` e
+   `--sd-prose-width`, e a segunda deixou de ser bloco para virar teto.
+
+   Cada bloco é **a medida mais dois gutters**: com espaço sobrando a medida sai
    exata; sem espaço, o gutter sobrevive. É isso que faz *"sangrar é o fundo,
-   não o conteúdo"* ser verdade sem media query nenhuma — a laje encolhe sozinha
-   no estreito, como a coluna de conteúdo da doc.
+   não o conteúdo"* ser verdade sem media query nenhuma.
 
-   Eram TRÊS. A laje de código tinha medida própria, derivada do interior do
-   cartão de doc, e ela morreu junto com a derivação: o cartão está de saída, e
-   sobraria um 768 sem raiz. A landing perde um degrau de ritmo, e isso está
-   registrado como dissenso em docs/design/landing.md §3 — se ela quiser a laje
-   larga de volta, declara a medida com raiz própria em vez de herdar número
-   órfão.
-
-   A grade continua indo ao container: numa fila de três, a medida de prosa daria
-   cartões de ~213px; o container dá ~373px. A conta se escreve por nome de
-   token de propósito — a medida de prosa se move no slice da geometria, e um
-   número cravado aqui envelheceria calado.
+   **A laje toma o container**, e é isso que faz dela o argumento em vez de um
+   anexo: ela é o objeto mais largo da página.
    ----------------------------------------------------------------------------- */
 
-.prosa {
+.bloco {
   position: relative;
-  max-width: calc(var(--sd-prose-width) + 2 * var(--sd-gutter));
+
+  /* ARMADILHA DE FALHA SILENCIOSA, medida neste slice: margem `auto` no eixo
+     cruzado de um flex column CANCELA o `stretch`. Enquanto o conteúdo preenche
+     a medida ninguém percebe; com blocos no container contendo prosa mais
+     estreita — que é exatamente esta composição —, o bloco encolhe para o
+     conteúdo e a aresta esquerda foge. `.secao` é flex column e hospeda quatro
+     destes blocos, então esta declaração é o conserto, e ela não é redundância:
+     tirá-la move a aresta esquerda das duas seções de baixo. */
+  inline-size: 100%;
+  max-inline-size: calc(var(--sd-container-width) + 2 * var(--sd-gutter));
   margin-inline: auto;
   padding-inline: var(--sd-gutter);
 }
 
-/* Idêntica a `.prosa` hoje, e as duas continuam separadas de propósito: são dois
-   papéis que por ora compartilham uma medida, não um papel com dois nomes. Se a
-   landing recuperar a laje larga, o que muda é esta regra e só ela. */
-.codigo {
-  position: relative;
-  max-width: calc(var(--sd-prose-width) + 2 * var(--sd-gutter));
-  margin-inline: auto;
-  padding-inline: var(--sd-gutter);
-}
-
-.grade {
-  max-width: calc(var(--sd-container-width) + 2 * var(--sd-gutter));
-  margin-inline: auto;
-  padding-inline: var(--sd-gutter);
+/* A medida de leitura, DENTRO do bloco. Prosa continua tendo medida; o que ela
+   deixou de ter é bloco próprio. O título fica de fora de propósito: ele é o
+   degrau de display e cabe numa linha na medida do container. */
+.pitch,
+.lede,
+.falhas {
+  max-inline-size: var(--sd-prose-width);
 }
 
 /* Os dois componentes do catálogo trazem a margem de bloco que usam dentro do
    MDX, e aqui quem espaça é o `gap` do contêiner. O alcance é o **contrato de
    partes** — `data-sd-component` é publicado —, não a classe hasheada deles. */
-.codigo > [data-sd-component='code-group'],
-.grade > [data-sd-component='card-group'] {
+.bloco > [data-sd-component='code-group'],
+.bloco > [data-sd-component='card-group'] {
   margin-block: 0;
 }
 
@@ -82,19 +92,23 @@
    2. A faixa de espetáculo — a única do site
 
    Ela **sangra e não tem raio**. Faixa escura arredondada flutuando é um
-   cartão, e cartão é a linguagem da página de doc; sangrando e sem raio ela lê
+   cartão, e cartão era a linguagem da página de doc; sangrando e sem raio ela lê
    como região, que é o que ela é.
 
    **No modo escuro a landing é lisa:** a faixa é escura sobre página escura e
    não se vê onde começa. A geometria é a mesma nos dois modos — o modo claro
-   REVELA uma borda que sempre esteve lá. Quem carrega o hero no modo canônico é
-   o glow.
+   REVELA uma borda que sempre esteve lá. Quem carrega o hero no modo canônico
+   são os dois focos.
+
+   **Com o cartão morto, esta é a única região do site que declara os próprios
+   tokens.** O site plano é pré-requisito da ilha, não argumento contra: um
+   elemento vivo num sistema imóvel lê como assinatura; dois é enfeite.
 
    `color` é declarado, e não é redundância: `body` recebeu a tinta do modo lá
    em cima, e herança carrega o valor já computado. Dentro da ilha os tokens
    escuros valem, mas só para quem os LÊ aqui dentro.
 
-   `overflow: clip` porque a caixa do glow é mais larga que a viewport no
+   `overflow: clip` porque a caixa dos focos é mais larga que a viewport no
    estreito. `clip` e não `hidden`: ele não cria contêiner de rolagem, então
    nada aqui dentro passa a poder ser rolado por acidente.
    ----------------------------------------------------------------------------- */
@@ -104,10 +118,9 @@
 
      O ar e o tamanho do título são o par que a REGRA DA DOBRA dimensiona: a
      375 × 667 a borda de cima da laje precisa aparecer acima da dobra, e é a
-     restrição que manda nos dois valores. `--sd-space-8` e não `--sd-space-10`
-     porque a folga precisa cobrir o PIOR CASO de quebra, e não o caso nominal:
-     os dois botões quebrando para duas linhas custam mais que a folga que o
-     degrau maior deixava. A conta inteira está em docs/design/landing.md §4. */
+     restrição que manda nos dois valores. A conta inteira está em
+     docs/design/landing.md §4, e o que a refez foi o `<h2>` que saiu da laje:
+     **nenhum token mudou de valor por causa da dobra.** */
   --sd-hero-ar: var(--sd-space-8);
   --sd-hero-titulo: var(--sd-type-4xl);
 
@@ -118,42 +131,53 @@
 }
 
 /* De 997px o orçamento da dobra não é a restrição que manda, e o hero sobe para
-   o degrau de display da escala. O limiar é o único do projeto. */
+   o degrau de display da escala. O limiar é o único do projeto.
+
+   `6xl` e não o degrau anterior: o `5xl` foi dimensionado para um hero de 672, e
+   com o bloco tomando o container o título cabe numa linha em 60. Ele SAIU da
+   escala em vez de ficar declarado sem consumidor. */
 @media (min-width: 997px) {
   .faixa {
     --sd-hero-ar: var(--sd-space-16);
-    --sd-hero-titulo: var(--sd-type-5xl);
+    --sd-hero-titulo: var(--sd-type-6xl);
   }
 }
 
 /* -----------------------------------------------------------------------------
-   3. As quatro camadas de profundidade — e nenhuma se mexe
+   3. As TRÊS camadas de profundidade — e nenhuma se mexe
 
-   O parallax da referência está proibido verbatim. O que atravessa dela é a
-   profundidade por camadas, parada:
+   Eram quatro. A camada da figura morreu inteira:
 
-     1 · figura   o trilho, sangrando
-     2 · glow     o radial, respirando
-     3 · conteúdo headline, pitch e os dois botões, em 672
-     4 · laje     o código, em 768, sobre tudo
+     1 · luz       dois focos, um deles respirando
+     2 · conteúdo  título, pitch e os dois botões
+     3 · laje      o código, sobre tudo
 
-   **Zero `z-index`.** As camadas 1 e 2 são absolutas e vêm ANTES no DOM; as 3 e
-   4 são `position: relative` e vêm depois. Posicionado pinta em ordem de
-   árvore, então a ordem sai da estrutura em vez de uma escala de números que
-   alguém teria que manter.
+   **Zero `z-index`.** A camada 1 é absoluta e vem ANTES no DOM; as 2 e 3 são
+   `position: relative` e vêm depois. Posicionado pinta em ordem de árvore, então
+   a ordem sai da estrutura em vez de uma escala de números que alguém teria que
+   manter.
+
+   **O `<section>` do hero não tem classe, e isso é resultado e não esquecimento.**
+   Ele existe para dizer que hero e laje são uma unidade só — o `<h2>` que os
+   separava saiu —, e não sobrou nada para ele declarar: quem tem caixa é
+   `.topo`, e quem tem medida é `.bloco`. Uma classe vazia aqui seria a chave de
+   CSS Module que não resolve para regra nenhuma, e essa falha é muda: o React
+   serializa `undefined` sem uma palavra.
+
+   `.topo` é a parte de cima da seção, e a divisão não é cosmética: é ela que dá
+   caixa à camada 1, e a **aresta de baixo dessa caixa é a aresta de cima da
+   laje**. É assim que o glow ancora no material sem um segundo elemento
+   decorativo e sem um comprimento inventado.
    ----------------------------------------------------------------------------- */
 
-.hero {
+.topo {
   position: relative;
   padding-block: var(--sd-hero-ar);
 }
 
-/* As camadas 1 e 2 num contêiner só, porque figura e glow são um objeto só: a
-   luz na linha. Um glow flutuando num fundo qualquer seria enfeite.
-
-   É este contêiner que carrega a ENTRADA da ilha — `--sd-move-showcase`, uma
-   vez, no carregamento, e ela termina sozinha. O que sobe é a luz; nenhum
-   texto, nenhuma borda e nenhuma caixa se mexe. */
+/* Camada 1. É este contêiner que carrega a ENTRADA da ilha —
+   `--sd-move-showcase`, uma vez, no carregamento, e ela termina sozinha. O que
+   sobe é a luz; nenhum texto, nenhuma borda e nenhuma caixa se mexe. */
 .luz {
   position: absolute;
   inset: 0;
@@ -161,22 +185,20 @@
   animation: global(sd-acende) var(--sd-move-showcase) both;
 }
 
-/* Camada 1. A figura preenche a caixa do hero e sangra pelas laterais; o
-   contrato do slot está no fonte de `index.js`. */
-.figura {
+/* A caixa é QUADRADA e tem um comprimento só, porque o gradiente é `circle`:
+   caixa não quadrada faria o raio da luz depender de qual lado é maior. O mesmo
+   comprimento serve aos dois focos — um segundo tamanho seria o segundo número
+   sem raiz que o arquivo de tokens recusa. */
+.foco {
   position: absolute;
-  inset: 0;
-  inline-size: 100%;
-  block-size: 100%;
-  /* Camada 3, declarada no escopo da ilha em `tokens.css` — derivação de alfa é
-     cor, e cor nasce lá. `currentColor` é o que o contrato do slot manda a
-     `<svg>` usar, então trocar a figura não toca em CSS. */
-  color: var(--sd-trilho-tinta);
+  inline-size: var(--sd-glow-tamanho);
+  block-size: var(--sd-glow-tamanho);
 }
 
-/* Camada 2 — UM glow na página inteira, ancorado onde o trilho encontra a laje:
-   o centro dele fica na aresta de baixo do hero, que é a aresta de cima da
-   seção do código.
+/* O magenta, ancorado na aresta de cima da laje: a luz nasce ATRÁS do material
+   em vez de flutuar num fundo qualquer. Esse era o papel da figura, e a laje o
+   herdou — é reinterpretação, não medição, e vai escrita como dissenso em
+   docs/design/landing.md §5.
 
    O gradiente vem de `--sd-glow`, que só existe dentro de `[data-sd-showcase]`.
    Numa página de documentação a variável não resolve para nada — a proibição de
@@ -191,26 +213,29 @@
    `reduce` de `tokens.css`, que alcança este elemento pelo `data-sd-part` — e é
    por isso que ele existe no JSX. Movimento infinito é removido, não encurtado,
    e nenhum componente escreve a media query própria. Ver ADR 3. */
-.glow {
-  position: absolute;
+.focoMagenta {
   inset-block-end: 0;
   inset-inline-start: 50%;
-  inline-size: var(--sd-glow-tamanho);
-  block-size: var(--sd-glow-tamanho);
   translate: -50% 50%;
   background: var(--sd-glow);
   animation: global(sd-respira) var(--sd-move-ambient) infinite;
 }
 
+/* O cyan, no canto oposto, e PARADO. São dois focos e uma respiração: o teto de
+   um loop por página lido ao pé da letra.
+
+   Ele não ganha `data-sd-part`, e isso é o contrato de partes funcionando: parte
+   se publica quando o CSS não alcança a peça de outro jeito, e não há nada que
+   precise alcançar este elemento de fora. Quem a skin repinta é `--sd-glow-2`. */
+.focoCyan {
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  translate: 35% -55%;
+  background: var(--sd-glow-2);
+}
+
 /* -----------------------------------------------------------------------------
-   4. Camada 3 — o conteúdo do hero
-
-   A prosa fica em 672 **inclusive aqui**, e é o que faz a landing ler como o
-   mesmo site em vez de uma página colada na frente.
-
-   Custo declarado: uma headline grande a 672 quebra em duas ou três linhas, e a
-   maioria das landings de documentação deixa o hero respirar mais. Aceito — a
-   medida constante foi comprada pagando por oscilação zero.
+   4. Camada 2 — o conteúdo do hero
    ----------------------------------------------------------------------------- */
 
 .titulo {
@@ -228,9 +253,9 @@
 }
 
 /* Os dois botões ficam LADO A LADO no estreito: eles somam menos que a largura
-   útil a 375px, e empilhar custaria uma linha inteira do orçamento da dobra por
-   nada. `flex-wrap` é a rede: se um dia não couberem, o rótulo está longo — e
-   isso é conserto de conteúdo, não de layout. */
+   útil a 375px. `flex-wrap` é a rede — e ela deixou de ser só rede: o custo do
+   empilhamento cabe na folga orçada, então se um dia os rótulos crescerem os
+   botões quebram e a laje CONTINUA acima da dobra. */
 .acoes {
   display: flex;
   flex-wrap: wrap;
@@ -251,6 +276,10 @@
   line-height: var(--sd-leading-ui);
 }
 
+/* A ÚNICA sombra da landing, e o único elemento levantado dela — item 6 da
+   lista de seis. Num site que perdeu a profundidade do conteúdo, um controle
+   elevado é assinatura; dois seriam a profundidade de volta pela porta dos
+   fundos. */
 .acaoPrimaria {
   background-color: var(--sd-accent);
   color: var(--sd-accent-contrast);
@@ -297,28 +326,33 @@
 }
 
 /* -----------------------------------------------------------------------------
-   5. Camada 4 — a laje de código
+   5. Camada 3 — a laje de código
 
    Ela mantém o gutter, e dentro da ilha renderiza ESCURA mesmo no modo claro —
-   sem uma linha a mais aqui. O bloco de código continua não carregando
-   substrato próprio: ele lê `--sd-surface-code` do lugar onde está, e o lugar
-   declara os tokens do escuro.
+   sem uma linha a mais aqui. O bloco de código continua não carregando substrato
+   próprio: ele lê `--sd-surface-code` do lugar onde está, e o lugar declara os
+   tokens do escuro.
+
+   Ela é um `.bloco` como todos os outros — mesma medida, mesma aresta esquerda —
+   e o que esta regra acrescenta é só o ar de baixo da faixa. O `<h2>` que
+   separava a seção do código do hero saiu, e quem nomeia a laje são as abas do
+   próprio grupo.
    ----------------------------------------------------------------------------- */
 
 .laje {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sd-space-6);
   padding-block-end: var(--sd-space-16);
 }
 
 /* -----------------------------------------------------------------------------
-   6. As seções 3 e 4 — fora da faixa
+   6. As seções 2 e 3 — fora da faixa
 
-   Grade de cartão é oclusão pura, e oclusão atravessa os modos sozinha.
-   Escurecê-las seria escurecer por gosto, que é exatamente a licença que o
-   critério de emissão existe para fechar.
+   Coluna de texto e grade de cartão são oclusão pura, e oclusão atravessa os
+   modos sozinha. Escurecê-las seria escurecer por gosto, que é exatamente a
+   licença que o critério de emissão existe para fechar.
+
+   **O ritmo entre elas é ritmo de FORMA** — coluna contra grade —, e não de
+   grade contra grade. Uma grade a menos foi o que sobrou da morte dos cinco
+   cartões.
    ----------------------------------------------------------------------------- */
 
 .secao {
@@ -342,6 +376,50 @@
   line-height: var(--sd-leading-prose);
 }
 
+/* A lista de falhas — a única coisa da landing que nenhuma documentação copia.
+   Separada por fio e não por cartão: a página é plana, e o que dá ritmo aqui é
+   a régua horizontal, não uma caixa. */
+.falhas {
+  margin-block: 0;
+  padding-inline: 0;
+  list-style: none;
+}
+
+.falhas li {
+  padding-block: var(--sd-space-5);
+  border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
+  color: var(--sd-text-muted);
+  line-height: var(--sd-leading-prose);
+}
+
+.falhas li:last-child {
+  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
+}
+
+.falhas strong {
+  color: var(--sd-text-strong);
+  font-weight: var(--sd-weight-ui);
+}
+
+/* A assinatura do capítulo de origem, e a contagem da porta. Os dois são o mesmo
+   papel visto em dois lugares: um dado curto, em mono, que se lê como etiqueta e
+   não como prosa. */
+.capitulo,
+.conta {
+  display: block;
+  margin-block-start: var(--sd-space-2);
+  color: var(--sd-text-faint);
+  font-family: var(--sd-font-mono);
+  font-size: var(--sd-type-xs);
+  line-height: var(--sd-leading-ui);
+}
+
+/* A contagem respira mais que a assinatura: ela fecha o cartão, e a assinatura
+   fecha um item de lista que já tem fio embaixo. */
+.conta {
+  margin-block-start: var(--sd-space-4);
+}
+
 /* -----------------------------------------------------------------------------
    7. O reveal por rolagem — CSS nativo, zero JavaScript
 
@@ -354,19 +432,18 @@
    O `Ctrl+F` se resolve sozinho, porque a linha do tempo é a posição de
    rolagem: o navegador rolar até o trecho **é** o que o revela.
 
-   **Alcance:** as seções 3 e 4, e os cartões dentro delas. O hero e a laje
-   ficam de fora — `view()` numa peça que já está visível no carregamento começa
-   com a linha do tempo parcialmente percorrida. Regra conferível: revela o que
-   nasce abaixo da dobra.
+   **Alcance:** as seções 2 e 3 — o cabeçalho de cada uma, os itens da lista de
+   falhas e os cartões da grade. O hero e a laje ficam de fora: `view()` numa
+   peça que já está visível no carregamento começa com a linha do tempo
+   parcialmente percorrida. Regra conferível: revela o que nasce abaixo da dobra.
 
    **`entry 0%` a `entry 100%`, e a faixa é a decisão inteira do gesto.** O
    gesto termina no instante em que o elemento está inteiro na tela, e a partir
    dali ele fica. Uma linha do tempo de rolagem é percorrida nos dois sentidos
    por construção, então o que a faixa compra é que o caminho de volta só
    acontece com o elemento já saindo pela aresta de baixo — nunca enquanto ele
-   está sendo lido. É por isso que quem revela é o CARTÃO e não a grade inteira:
-   peça pequena entra inteira depressa, e a grade de cinco no estreito é mais
-   alta que a viewport.
+   está sendo lido. É por isso que quem revela é a PEÇA e não a seção inteira:
+   peça pequena entra inteira depressa.
 
    A ordem das três declarações é obrigatória: o atalho `animation` **rebobina**
    `animation-timeline` e `animation-range` para o default, então as duas vêm
@@ -380,11 +457,15 @@
    produção: a guarda de suporte some, e num navegador sem
    `animation-timeline` o reveal degrada para um fade de carregamento em vez de
    ficar visível e parado. Medido no CSS emitido.
+
+   **Uma regra, uma declaração de `animation-timeline` no projeto inteiro.** É o
+   item 4 da lista de seis, e o portão 8 conta.
    ----------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .revela > header,
+    .revela .falhas li,
     .revela [data-sd-component='card'] {
       animation: global(sd-revela) var(--sd-move-reveal) both;
       animation-timeline: view();
