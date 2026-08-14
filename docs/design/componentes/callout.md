@@ -40,7 +40,7 @@ pelo registro `Admonition/Types` — degrau 3, zero linha de upstream copiada. O
 `Admonition/Layout` **não é ejetado**: seria degrau 5, e o degrau 3 alcança.
 
 **Alvo medido**, do `docs.devin.ai` a 1512, em
-[`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11.
+`research/paridade-devin` §11.
 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
@@ -152,7 +152,7 @@ texto ao lado, e anunciá-lo seria repetição.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em [`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Anatomia horizontal, sem barra nem faixa de título | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — DOM medido em produção |
 | Admonition nativa em vez de componente JSX | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — `Admonition/Types` é `safe` |
 | `Admonition/Types` e não `Admonition/Layout` | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), reconciliando com a escada da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) — degrau 3 alcança |

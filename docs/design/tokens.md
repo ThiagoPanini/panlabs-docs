@@ -1758,6 +1758,14 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 
 **As duas são verificação e não portão pela mesma régua**, que é a da [espinha](README.md) §5: portão protege uma **regra de escrita**; verificação confere que **duas cópias da mesma verdade não divergiram**. Aqui as cópias são o número escrito na spec e a cor que o CSS entrega.
 
+E **um relatório**, que também roda na CI e não é nenhum dos dois:
+
+| Comando | O que ele imprime |
+| --- | --- |
+| `npm run paridade` | a distância entre o site construído e as tabelas de alvo da §12 e da §13 |
+
+**Ele não é verificação porque o alvo e o site não são duas cópias de uma verdade** — a §12 e a §13 dizem onde se quer chegar, e a distância até lá é o que se quer ler. Por isso ele imprime e **nunca reprova**: é o único passo com `continue-on-error` da CI.
+
 **A segunda nasceu de um defeito real, não de zelo.** Duas tabelas desta spec mediam o mesmo par e discordavam em três das quatro células, e a divergência sobreviveu a uma auditoria inteira porque não havia como conferi-la sem refazer a conta à mão. Uma tabela transcrita diverge calada; uma tabela que sai de um comando não tem como.
 
 **Limite conhecido do portão 1, escrito em voz alta:** media query não lê custom property, e o limiar dela é um comprimento — então o prelúdio de `@media` **não tem como** passar pela varredura de literal.
@@ -1776,7 +1784,7 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 
 Este documento é a sede do valor **que temos**. Esta seção e a próxima publicam o valor **que se quer**: os dois lados do mesmo número, e o comparador de `npm run paridade` mede a distância entre eles.
 
-Os valores são medição de primeira mão do `docs.devin.ai`, registrada em [`../research/paridade-devin.md`](../research/paridade-devin.md) §3. Eles são resolvidos em **sRGB**, porque é o que o navegador entrega quando se pede a cor computada de um elemento pintado — a folha autora em `oklch()`, e comparar a forma autoral com o hex da âncora nunca fecharia.
+Os valores são medição de primeira mão do `docs.devin.ai`, registrada em `research/paridade-devin` §3. Eles são resolvidos em **sRGB**, porque é o que o navegador entrega quando se pede a cor computada de um elemento pintado — a folha autora em `oklch()`, e comparar a forma autoral com o hex da âncora nunca fecharia.
 
 | Papel | Claro | Escuro | Tolerância |
 | --- | --- | --- | --- |
@@ -1793,7 +1801,7 @@ Os valores são medição de primeira mão do `docs.devin.ai`, registrada em [`.
 
 ## 13. Alvo medido — a escala de tipo da âncora
 
-Medida na mesma sessão, em [`../research/paridade-devin.md`](../research/paridade-devin.md) §5, a 1512. As famílias já batem dos dois lados — Inter variável e paperMono variável, auto-hospedadas —, então o que sobra é tamanho, entrelinha e peso.
+Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias já batem dos dois lados — Inter variável e paperMono variável, auto-hospedadas —, então o que sobra é tamanho, entrelinha e peso.
 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
@@ -1818,7 +1826,7 @@ Medida na mesma sessão, em [`../research/paridade-devin.md`](../research/parida
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **A paleta-alvo do §12 e a escala-alvo do §13** | **medido em referência** | medição de primeira mão da âncora em [`../research/paridade-devin.md`](../research/paridade-devin.md) §3 e §5 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **A paleta-alvo do §12 e a escala-alvo do §13** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §3 e §5 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | **O acento sem linha de alvo** | **delta deliberado** | a cor de marca diverge da âncora por decisão registrada; publicar o azul dela mandaria desfazer a decisão |
 | **Alvo comparado em sRGB, não em OKLCH** | **origem própria (implementação)** | é a forma que o navegador entrega ao pedir cor computada; a folha autora em `oklch()` e as duas formas nunca fechariam por string |
 | Indireção raiz → semântica | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) §1.1 — o token de papel apontando para a raiz injetada, no alvo |

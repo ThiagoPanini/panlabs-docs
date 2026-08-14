@@ -1,5 +1,7 @@
 # `expandable`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, na anatomia, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 O aninhamento de um campo de API: um objeto que tem propriedades, dentro de um
@@ -29,6 +31,15 @@ O caret vem **antes** do rótulo, ao contrário do accordion: aqui ele não fech
 uma moldura, abre uma linha.
 
 **Estado não vira atributo.** `[open]` já está no DOM porque o elemento é nativo.
+
+
+**Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Raio | `12px` | exato |
+
+A altura de 43,5 fechado não tem sonda: o espécime do catálogo renderiza **aberto**, e medir aberto contra alvo fechado seria comparar dois estados.
 
 ## Variantes
 
@@ -95,6 +106,7 @@ O anel de foco e o piso de alvo de toque são universais e moram em
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido da anatomia** | **medido em referência** | medição de primeira mão da âncora, em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Componente do zero, sobre `<details>` | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4); [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Nível 1 aberto, 2+ fechado | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6), ratificado pela [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §7.3 |
 | Busca na página em `<details>` fechado | herdado | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — comportamento de especificação (WHATWG, `beforematch`/find-in-page revelando `<details>` fechado): Chrome desde a versão 97 (jan/2022), Firefox desde a 139 (mai/2025), Safari desde a 26.2 (Interop 2025). As três engines convergem hoje; nenhum `keydown` nosso está envolvido |

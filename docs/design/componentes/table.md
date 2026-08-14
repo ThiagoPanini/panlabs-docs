@@ -39,7 +39,7 @@ O invólucro devolve as duas coisas: a rolagem sai do `<table>` e vai para uma
 região nomeada e alcançável por Tab, e o `<table>` volta a ser `display: table`.
 
 **Alvo medido**, do `docs.devin.ai` a 1512, em
-[`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11.
+`research/paridade-devin` §11.
 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
@@ -101,7 +101,7 @@ mora em [`foco.md`](../foco.md).
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em [`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Markdown puro, mais invólucro e `tabular-nums` | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — *"só estilo + invólucro de rolagem"* |
 | O invólucro é o único ARIA construído do catálogo | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Registrado pela chave `table`, não por tag | **origem própria (implementação)** | o autor escreve Markdown; a correção precisa alcançar toda tabela |

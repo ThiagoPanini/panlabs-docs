@@ -52,7 +52,7 @@ O rótulo da aba é o título da cerca; na falta dele, a linguagem; na falta das
 duas, a posição. **Nunca vazio** — aba sem nome é aba que não se clica de novo.
 
 **Alvo medido**, do `docs.devin.ai` a 1512, em
-[`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11.
+`research/paridade-devin` §11.
 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
@@ -129,7 +129,7 @@ contrato de estado de entrada mora em [`foco.md`](../foco.md).
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em [`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Compõe `Tabs` em vez de swizzlar | herdado | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §3 |
 | **Ele fica no catálogo** | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) e [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — a âncora usa `CodeGroup` cinco vezes, e o critério de corte é uso zero; o *"resolve com `Tabs`"* nunca foi contado, e 52 dos 105 `Tab` medidos lá embrulham `Frame` |
 | Abas e não dropdown | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) — a forma é função da contagem; [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 transforma isso em regra de contrato |

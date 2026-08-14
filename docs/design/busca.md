@@ -273,7 +273,7 @@ A regra não afrouxou aqui. Ela diz que **comportamento à mão obriga a spec a 
 
 ## 10. Alvo medido — o controle e o painel da âncora
 
-A queixa do dono foi que *"a busca não segue o modelo"*. Esta tabela transforma isso em números conferíveis: os valores medidos no `docs.devin.ai`, em [`../research/paridade-devin.md`](../research/paridade-devin.md) §7, a 1512.
+A queixa do dono foi que *"a busca não segue o modelo"*. Esta tabela transforma isso em números conferíveis: os valores medidos no `docs.devin.ai`, em `research/paridade-devin` §7, a 1512.
 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
@@ -294,7 +294,7 @@ O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes 
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido do §10** | **medido em referência** | medição de primeira mão da âncora em [`../research/paridade-devin.md`](../research/paridade-devin.md) §7 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O alvo medido do §10** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §7 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | **O painel sondado com o modal aberto** | **origem própria (implementação)** | `<dialog>` fechado não tem caixa; sem abrir, a sonda devolveria ausência e não medida |
 | Índice local, sem serviço externo | origem própria | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) — vive no [ADR 6](../adr/0006-busca-local-sem-servico-externo.md) |
 | Dado global em vez de JSON no `outDir` | **origem própria (verificação)** | rota ausente devolve 200 com o shell da SPA; o `fetch().json()` estoura em parse |

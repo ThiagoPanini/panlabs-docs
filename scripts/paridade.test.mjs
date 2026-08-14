@@ -16,7 +16,7 @@
  *
  * Roda com `npm test`. Cadência: commit.
  *
- * Procedência: docs/design/principios.md §6 · docs/research/paridade-devin.md.
+ * Procedência: docs/design/principios.md §6 · research/paridade-devin.
  */
 
 import {test} from 'node:test';
@@ -262,6 +262,54 @@ test('a lista sai em ordem de documento e de publicação, não de medição', (
   const ordem = comparar(alvos, medidas).map((d) => d.sonda);
 
   assert.deepEqual(ordem, ['busca.painel.largura', 'chrome.sidebar.left', 'chrome.prosa.largura']);
+});
+
+test('duas tabelas no MESMO documento não saem intercaladas', () => {
+  /* `tokens.md` publica a paleta e a escala de tipo. As duas compartilham o
+     documento e cada uma reinicia a ordem em zero — sem a seção na chave, a
+     lista sai alternando uma linha de cada. */
+  const doc = [
+    '## 12. Alvo medido — paleta',
+    '',
+    '| Papel | Alvo | Tolerância |',
+    '| --- | --- | --- |',
+    '| Fundo da página | `#fcfcfc` | exato |',
+    '| Fundo do navbar | `#fcfcfc` | exato |',
+    '',
+    '## 13. Alvo medido — tipo',
+    '',
+    '| Sonda | Alvo | Tolerância |',
+    '| --- | --- | --- |',
+    '| `h1` tamanho | `36px` | exato |',
+    '| `h1` entrelinha | `40px` | exato |',
+    '',
+  ].join('\n');
+
+  const paleta = lerAlvos('docs/design/tokens.md', doc, {
+    secao: '## 12. Alvo medido',
+    colunas: ['alvo'],
+    linhas: [
+      ['Fundo da página', ['paleta.pagina']],
+      ['Fundo do navbar', ['paleta.navbar']],
+    ],
+  });
+  const tipo = lerAlvos('docs/design/tokens.md', doc, {
+    secao: '## 13. Alvo medido',
+    colunas: ['alvo'],
+    linhas: [
+      ['`h1` tamanho', ['tipo.h1.tamanho']],
+      ['`h1` entrelinha', ['tipo.h1.entrelinha']],
+    ],
+  });
+
+  const ordem = comparar([...paleta.alvos, ...tipo.alvos], {
+    'paleta.pagina': '#000000',
+    'paleta.navbar': '#000000',
+    'tipo.h1.tamanho': '48px',
+    'tipo.h1.entrelinha': '53px',
+  }).map((d) => d.sonda);
+
+  assert.deepEqual(ordem, ['paleta.pagina', 'paleta.navbar', 'tipo.h1.tamanho', 'tipo.h1.entrelinha']);
 });
 
 test('a ordem não depende da ordem das chaves medidas', () => {

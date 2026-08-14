@@ -22,7 +22,7 @@
  *
  * A régua está em `scripts/paridade.test.mjs`.
  *
- * Procedência: docs/research/paridade-devin.md · docs/design/principios.md §6.
+ * Procedência: research/paridade-devin · docs/design/principios.md §6.
  */
 
 /* A spec escreve número como a prosa pt-BR escreve: vírgula decimal e menos
@@ -164,7 +164,7 @@ export function lerAlvos(documento, texto, declaracao) {
         );
         return;
       }
-      alvos.push({sonda: sondas[i], rotulo, documento, coluna, ordem, valor, tolerancia, publicado});
+      alvos.push({sonda: sondas[i], rotulo, documento, secao: secao ?? '', coluna, ordem, valor, tolerancia, publicado});
     });
   });
 
@@ -213,6 +213,7 @@ export function comparar(alvos, medidas) {
       sonda: alvo.sonda,
       rotulo: alvo.rotulo,
       documento: alvo.documento,
+      secao: alvo.secao,
       coluna: alvo.coluna,
       ordem: alvo.ordem,
       alvo: alvo.publicado,
@@ -240,6 +241,7 @@ export function comparar(alvos, medidas) {
       sonda,
       rotulo: sonda,
       documento: FIM,
+      secao: '',
       coluna: '',
       ordem: 0,
       tipo: 'sem-alvo',
@@ -249,9 +251,16 @@ export function comparar(alvos, medidas) {
     });
   }
 
+  /* A seção entra na chave porque um documento publica mais de uma tabela de
+     alvo — `tokens.md` publica a paleta e a escala de tipo. Sem ela, as duas
+     compartilham o `documento` e cada uma reinicia a `ordem` em zero, e o
+     resultado é a paleta e o tipo saírem intercalados linha a linha. */
   return diferencas.sort(
     (a, b) =>
-      a.documento.localeCompare(b.documento) || a.ordem - b.ordem || a.sonda.localeCompare(b.sonda),
+      a.documento.localeCompare(b.documento) ||
+      a.secao.localeCompare(b.secao) ||
+      a.ordem - b.ordem ||
+      a.sonda.localeCompare(b.sonda),
   );
 }
 

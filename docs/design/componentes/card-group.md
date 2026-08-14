@@ -1,5 +1,7 @@
 # `card-group`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, na anatomia, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 Arruma [`card`](card.md) numa grade. **Sem contagem de colunas** — nem prop, nem
@@ -59,6 +61,15 @@ O primeiro caso é o comportamento medido da âncora — três cartões num cont
 de cinco faixas leem como três cartões largos, não como três cartões apertados à
 esquerda. O segundo é a **fila incompleta**, e é dele que a regra abaixo fala.
 
+
+**Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Vão entre colunas | `16px` | exato |
+
+O vão de linha da âncora é **zero**, e o de coluna é 16. A sonda cobra o de coluna, que é o que separa dois cartões lado a lado.
+
 ## Variantes
 
 **Não há, e a ausência é o resultado.** A âncora carrega a contagem de colunas
@@ -116,6 +127,7 @@ cheia.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido da anatomia** | **medido em referência** | medição de primeira mão da âncora, em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Colapso direto para uma coluna, sem passo intermediário | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — medido na âncora |
 | O espaçamento entre cartões e o limiar de três colunas | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — medidos |
 | `auto-fit` no lugar da container query | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — medido: a âncora usa `repeat(var(--cols), minmax(0,1fr))` com `--cols` do autor, não `auto-fit`; o teto de 4 é limite de produto (*"supports one to four columns"*), não reflow de grid. Ver [`landing.md`](../landing.md) §Procedência |

@@ -53,7 +53,7 @@ O ícone é o **único elemento do catálogo pintado com a cor de marca** — é
 detalhe que mais define a aparência do componente na medição.
 
 **Alvo medido**, do `docs.devin.ai` a 1512, em
-[`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11.
+`research/paridade-devin` §11.
 `npm run paridade` mede o cartão construído contra estas linhas.
 
 | Sonda | Alvo | Tolerância |
@@ -139,7 +139,7 @@ O ícone é decorativo e sai da árvore de acessibilidade: o nome acessível do 
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em [`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Cartão do zero | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — `DocCard` é dirigido por metadado |
 | `title` · `icon` · `href`, e nada mais | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — superfície mínima medida |
 | Ícone na cor de marca | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — *"o detalhe que mais define a aparência do card"* |
