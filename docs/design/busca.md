@@ -43,7 +43,7 @@ As chaves são curtas porque cada uma se repete cinquenta e duas vezes por local
 
 ### 2.2 A fonte é o MDX
 
-Não o HTML renderizado — o que dispensa `cheerio` e é o que fará **as 6 páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 46 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição.
+Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 6 páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 46 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição.
 
 O que sai antes de indexar, e por quê:
 

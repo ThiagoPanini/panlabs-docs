@@ -73,9 +73,21 @@ const separador = (url) => `--- [Document source](${url}) ---`;
  * @param {{corpo: string, descricao: string, permalink: string}} pagina
  */
 function comSubtitulo({corpo, descricao, permalink}) {
+  // A carga também é conferida, e não só a âncora. O override de `h1` já
+  // estoura sem `description` — mas ele é swizzle, e swizzle sai. Se saísse, o
+  // `.md` passaria a emitir uma citação vazia: um `>` solto, sem erro e sem
+  // aviso, que é o modo de falhar que esta função existe para não ter.
+  if (!descricao?.trim()) {
+    throw new Error(
+      `Página sem \`description\`: ${permalink}\n` +
+        'O subtítulo do `.md` servido sai desse campo, e ele é obrigatório em ' +
+        'toda página. Ver docs/design/informacao.md §9.2.',
+    );
+  }
+
   const linhas = corpo.split('\n');
-  const titulo = linhas.findIndex((linha) => linha.trim() !== '');
-  if (titulo === -1 || !linhas[titulo].startsWith('# ')) {
+  const indiceDoTitulo = linhas.findIndex((linha) => linha.trim() !== '');
+  if (indiceDoTitulo === -1 || !linhas[indiceDoTitulo].startsWith('# ')) {
     throw new Error(
       `Página que não abre com \`# título\`: ${permalink}\n` +
         'O `.md` servido emite o subtítulo como citação abaixo do `h1`, e a ' +
@@ -83,11 +95,12 @@ function comSubtitulo({corpo, descricao, permalink}) {
         'Ver docs/design/informacao.md §9.2.',
     );
   }
+
   return [
-    ...linhas.slice(0, titulo + 1),
+    ...linhas.slice(0, indiceDoTitulo + 1),
     '',
     `> ${descricao}`,
-    ...linhas.slice(titulo + 1),
+    ...linhas.slice(indiceDoTitulo + 1),
   ].join('\n');
 }
 
