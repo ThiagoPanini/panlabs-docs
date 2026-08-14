@@ -4,7 +4,7 @@
 
 A espinha. Ela é escrita **por último** porque indexa o que existe — um índice redigido antes dos documentos indexa a intenção, e a intenção é a coisa que envelhece calada.
 
-**Isto é o entregável.** O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.* Tudo neste diretório existe para satisfazer essa frase, e o **§6** é onde ela foi cobrada de verdade — com o protocolo, o resultado, e os quatro erros de fato que ele encontrou.
+**Isto é o entregável.** O axioma 6 diz: *um agente que só tem a spec — sem a conversa, sem as referências — constrói o site e o resultado é reconhecivelmente o que foi decidido.* Tudo neste diretório existe para satisfazer essa frase, e o **§6** é onde ela foi cobrada de verdade — **duas vezes**, com o protocolo, os dois resultados lado a lado, e a lista de onde a spec precisou ser reinterpretada em cada um.
 
 ---
 
@@ -240,7 +240,9 @@ Mais a metade negativa, na mesma varredura: **zero `@keyframes` novo** (quatro n
 
 ## 6. O axioma 6, exercido
 
-**Rodou.** Deixa de ser promessa nesta linha, e o resultado — inclusive o que ele desmentiu — está no §6.4.
+**Rodou duas vezes.** Deixa de ser promessa nesta linha; o segundo resultado — contra a spec reescrita inteira, e com a faixa de tabs dentro do recorte — está no §6.4, e o primeiro fica ao lado dele no §6.6.
+
+**A segunda rodada não é repetição.** A primeira mediu a spec do Trilho; esta mede uma spec **reescrita de cabo a rabo**, em que trinta arquivos mudaram e a superfície mais nova do projeto — a faixa de tabs — nunca tinha sido cobrada por ninguém que não a tivesse desenhado. Um teste que só roda uma vez mede a redação daquele dia.
 
 ### 6.1 Por que ele não pode ser rodado por quem escreveu a spec
 
@@ -256,10 +258,12 @@ Por isso ele custa uma **sessão de agente limpa**, e foi assim que rodou: um sa
 | --- | --- |
 | **O que o agente recebe** | `docs/design/` e `docs/adr/`, e nada mais |
 | **O que ele não recebe** | as issues, os branches `research/*`, o `conteudo/`, e qualquer arquivo de `src/` |
-| **O que ele constrói** | um Docusaurus vazio, e sobre ele a **camada de tokens inteira** mais **a página de documentação** — chrome, sidebar, TOC, footer — em pt-BR |
+| **O que ele constrói** | um Docusaurus vazio, e sobre ele a **camada de tokens inteira**, **a página de documentação** — chrome, sidebar, TOC, footer — e, desde a segunda rodada, **a faixa de tabs**, em pt-BR |
 | **Quanto tempo** | uma sessão; se não couber, o recorte é a camada de tokens sozinha |
 
 O recorte não é economia: `tokens.css` mais o chrome é o menor pedaço que atravessa **os três** — a sede única de valor, o adaptador do Infima e a escada de swizzle. Quem reconstrói isso lendo o documento provou o que interessa; quem tropeça mostra exatamente onde.
+
+**O recorte cresceu de propósito na segunda rodada.** A faixa de tabs é a única superfície do projeto cujas peças **se destroem em silêncio se qualquer uma faltar**: sem o token de altura a segunda linha pinta sobre o conteúdo, sem o escopo de media query o drawer infla, sem o espaçador a linha não abre, sem o gradiente ela não sangra. Nenhum desses quatro modos de falhar produz erro de build. É o melhor teste de prosa que este esforço tem para oferecer, e o §6.5 é o que ele devolveu.
 
 ### 6.3 Como se julga
 
@@ -271,30 +275,99 @@ O critério é **reconhecível**, não idêntico. Três perguntas, e a terceira 
 
 A terceira é a única que gera trabalho. As duas primeiras dizem *passou* ou *não passou*; a terceira devolve a lista de linhas a escrever.
 
-### 6.4 O resultado
+### 6.4 O resultado da segunda rodada
+
+| | |
+| --- | --- |
+| **Commit da spec** | `f83b7b3` |
+| **URL pública no ar naquele commit** | <https://panlabs-tech.github.io/shinydoc-docusaurus/> |
+| **Recorte** | o do §6.2 com a faixa de tabs dentro — camada de tokens, página de documentação **e** a segunda linha do topo, em pt-BR |
+| **O que o agente recebeu** | `docs/design/` e `docs/adr/`, 39 arquivos. Nada mais |
+
+**O build passou nos dois locales**, com 32 páginas, sem link quebrado, e sem uma dependência npm além das que o preset escreve. Os portões 1, 2 e 3 passaram sobre o que ele escreveu.
+
+#### O veredito, em três linhas
+
+- **camada de tokens: sim, e sem decisão nenhuma.** O bloco de [`tokens.md`](tokens.md) §3 é o arquivo, não a descrição dele — 1248 linhas copiadas, zero escolhas;
+- **chrome estrutural: sim, e desta vez com medição.** A cadeia de proporções reproduziu **os números da tabela de [`chrome.md`](chrome.md) §1.1 sem erro** — 1471 de viewport dando 1151 / 863,3 / 263,8 / 720, e 1472 e 1920 dando 1152 / 864 / 264 / 720. A faixa monta em `y=64`, o `<nav>` fecha em 112, o ritmo vertical mede 48/16, e a eyebrow por subtração devolve exatamente o nome da categoria;
+- **acabamento: não, e o padrão é o mesmo da primeira rodada.** Dezoito pontos exigiram decisão, e em oito deles o próprio agente marcou a confiança como **baixa**.
+
+#### O padrão não mudou, e é isso que o torna achado
+
+**A spec é impecável onde descreve mecanismo de upstream e derivação declarada, e é muda onde precisa de um valor de acabamento que ninguém mediu.** A primeira rodada disse isso; a segunda, contra uma spec inteiramente reescrita, disse de novo. Duas amostras independentes com o mesmo resultado deixam de ser observação e viram propriedade do documento.
+
+A saída continua **não sendo medir mais**. É que **valor não medido também precisa de endereço** — nem que seja um bloco `Livre` com dono e um default cravado. Silêncio é a terceira categoria que a régua do §1 diz não existir, e ela continua existindo.
+
+#### As reinterpretações que mais custam, na segunda rodada
+
+| # | O que a spec não respondeu | Onde | Consequência |
+| ---: | --- | --- | --- |
+| 1 | O mapeamento *token type* do Prism → os sete papéis `--sd-code-*` | [`tokens.md`](tokens.md) §7 | **é a mesma da primeira rodada, e continua aberta.** A spec dá a forma do shim e os sete papéis, e nunca diz qual tipo cai em qual — decide a cor de metade dos caracteres de todo bloco de código |
+| 2 | As **duas cores** da parada dura do gradiente da faixa | [`chrome.md`](chrome.md) §3.1 | o mecanismo é inequívoco e nenhuma das duas cores é nomeada. Ele deduziu que precisam diferir pelo argumento inverso — se fossem iguais, `background-color` bastaria — e a segunda foi aposta |
+| 3 | A tipografia dos dois degraus da sidebar | [`chrome.md`](chrome.md) §4.1 e §4.2 | a spec **afirma que existem dois degraus** e não diz quais valores os separam |
+| 4 | Onde moram as folhas de CSS e em que ordem entram no build | — | **é a outra sobrevivente da primeira rodada.** Elas continuam aparecendo só por *basename*, dentro de comentários |
+| 5 | O consumidor das sete entrelinhas e do `--sd-tracking-tight` | [`tokens.md`](tokens.md) §8 | declarados, e nenhum documento nomeia quem os lê. E *"título"*, no alcance do tracking, não é definido |
+| 6 | A lista de superfícies do `:active` | [`foco.md`](foco.md) §7 | *"mesmos valores do hover, superfície por superfície"* sem a lista das superfícies |
+
+Mais doze de menor alcance, entre elas o fio abaixo do navbar, o corpo do rótulo de paginação, a distância entre os links do rodapé e os três descritores da máscara de ícone — **os quatro marcados como chute pelo próprio agente**.
+
+#### Seis contradições e becos, e quatro são acionáveis
+
+| # | O que ele achou | Estado |
+| ---: | --- | --- |
+| 1 | **A caixa invisível não é escopada ao limiar, e o §9 diz que ela não vale lá.** Medido: a 950 de viewport a coluna trava em 864 e sobram **86px mortos à direita** | **aberto** — ou o bloco entra no `@media (min-width: 997px)`, ou o §9 diz que ele vale nos dois lados e por quê. Como está, [`chrome.md`](chrome.md) §2 e §9 não podem estar certos juntos |
+| 2 | **O preenchimento horizontal do rodapé é incompatível com o alinhamento à coluna de doc.** O `<main>` recua `gutter − 16`; o rodapé recua `gutter`, e os dois nunca alinham | **aberto** — o comentário do adaptador nomeia o sintoma e o atribui ao `.container` não zerado; ele mediu com o container já zerado e os 16px continuam |
+| 3 | **§8.3 diz *"uma declaração"* e são duas** — início e fim, porque o Infima aplica o preenchimento nos dois lados | **aberto**, e é de redação |
+| 4 | **`.markdown > h1` não casa com nada**, porque o loader de MDX envolve o título num `<header>` | **aberto** — o repo não escreve essa regra (o subtítulo vem do override de `h1`), mas a spec cita *"o defeito do `<header>`"* em [`chrome.md`](chrome.md) §2 **sem dizer o que é**, e ele caiu nele. A explicação vale uma linha |
+| 5 | **Ponteiro errado:** [`informacao.md`](informacao.md) §4 mandava ler a tabela das três configurações de coluna em `chrome.md` §1.5; ela está em §2.1 | **corrigido** neste commit |
+| 6 | **O segundo zero afirma *"exatamente a que o `create-docusaurus classic` escreve"***, e o template de hoje escreveria uma a mais — `@docusaurus/faster` | **aberto** — conferido que o pacote existe na 3.10.2, a mesma versão daqui; o scaffold **não** foi reproduzido. O zero cobrado é *nenhuma dependência nova*, e esse continua de pé: o que envelheceu foi a justificativa, não a propriedade |
+
+#### As duas ausências que são do sandbox, e não da spec
+
+As faces Inter e Paper Mono exigem rede e não existiam ali — as pilhas caíram na fonte de sistema, que é o que a última parada delas prevê. E os 60 SVG do Lucide vêm de um vendorizador com rede; ele desenhou seis à mão. **Nenhuma das duas conta como buraco de spec**, e vão escritas para não parecerem fidelidade.
+
+> **Um achado lateral que ele deixou de passagem, e que é buraco de verdade:** a spec não fixa `font-display` nem os descritores das faces variáveis.
+
+### 6.5 A faixa de tabs, cobrada em separado — e a spec subestimava o próprio aviso
+
+**As quatro peças montam a partir da prosa. E as quatro sozinhas não bastam.**
+
+O que saiu sem uma decisão: a peça 1 inteira — ela já vem pronta no bloco espelhado de [`tokens.md`](tokens.md) §3, com a soma dentro do `@media` e o par de seletores que desarma a armadilha de especificidade — e a peça 3, com a altura mínima na marca e o alinhamento do cluster da direita.
+
+**A mais difícil de inferir foi a do gradiente**, e não pelo mecanismo: *parada dura de `linear-gradient` no próprio `.navbar`* é inequívoco. É que **uma parada dura precisa de duas cores, e a spec não nomeia nenhuma.**
+
+**E há uma quinta peça, que a spec não conta.** Num flex que quebra, o `align-content` default reparte a folga entre as duas linhas e a faixa deixa de cair em `y=64`. Ele precisou acrescentá-la — e ao escrevê-la sobre o seletor de item em vez do de link, atingiu **também o espaçador**: o espaçador foi de altura 0 para 48, a faixa desceu para `y=112` e passou a pintar sobre o conteúdo da página. **Sem erro de build, sem aviso.** A correção é uma letra de seletor, e o defeito só apareceu medindo em navegador.
+
+Isso confirma a afirmação do §6.2 por experimento, e **num sentido pior do que ela escreve**: a quinta peça também destrói em silêncio, e a spec não a conta entre as que destroem. A peça 3 resolve o **encolhimento** da linha 1; ela não resolve a **distribuição das linhas** do flex que quebra. São dois defeitos com o mesmo sintoma, e a spec descreve um só.
+
+**O que reproduziu a medição de [`chrome.md`](chrome.md) §3.3 verbatim:** três tabs numa linha, altura 48, começando em `y=64`; `<nav>` de 112; cinco pontos varridos na altura da faixa, os cinco dentro do `<nav>`; abaixo do limiar o `<nav>` volta a 64 com zero tabs visíveis; e o drawer a 390 com cabeçalho em 64 e lista em `viewport − 64`. **O escopo por media query da peça 1 segurou.**
+
+### 6.6 A primeira rodada, no commit `fa5eec4`
+
+**Ela não se apaga.** O que ela achou continua sendo o registro do que a spec do Trilho era, e as cinco reinterpretações que ela nomeou são o material de comparação que torna a segunda rodada legível.
 
 | | |
 | --- | --- |
 | **Commit da spec** | `fa5eec4` |
 | **URL pública no ar naquele commit** | <https://panlabs-tech.github.io/shinydoc-docusaurus/> |
-| **Recorte** | o do §6.2, inteiro — camada de tokens **e** página de documentação, em pt-BR |
+| **Recorte** | o do §6.2 **sem a faixa de tabs**, que ainda não existia — camada de tokens e página de documentação, em pt-BR |
 | **O que o agente recebeu** | `docs/design/` e `docs/adr/`. Nada mais |
 
 **O build passou nos dois locales, sem link quebrado**, com as sete dependências de produção e as duas de desenvolvimento que o `create-docusaurus classic` escreve — o segundo dos cinco zeros se sustentou sem ser dito. Os portões 2 e 3 passaram sobre o que ele escreveu.
 
-#### O veredito, em três linhas
+#### O veredito daquela rodada, em três linhas
 
-- **camada de tokens: sim, sem ressalva.** Zero decisões — ver §6.5;
+- **camada de tokens: sim, sem ressalva.** Zero decisões — ver §6.7;
 - **chrome estrutural: sim, com ressalvas nomeáveis** — a cadeia de proporções, o cartão, a medida de prosa, a hierarquia de sidebar e o footer saíram do documento;
 - **acabamento: não.** Onze valores foram chute, e dois deles mudam a tela de forma imediatamente visível.
 
-#### O padrão, que é o achado de verdade
+#### O padrão, dito ali pela primeira vez
 
 **A spec é impecável onde descreve mecanismo de upstream e derivação declarada, e é muda onde precisa de um valor de acabamento que ninguém mediu.** Isso é o axioma 5 funcionando e cobrando o preço dele.
 
 A saída **não é medir mais**. É que valor não medido também precisa de endereço — nem que seja um bloco `Livre` com dono e um default cravado. Hoje esses onze valores não são `Livre` nem obrigatórios: são a **terceira categoria que a régua do §1 diz não existir** — silêncio.
 
-#### As reinterpretações que mais custam
+#### As cinco reinterpretações que ela nomeou
 
 | # | O que a spec não respondeu | Onde | Consequência |
 | ---: | --- | --- | --- |
@@ -304,7 +377,28 @@ A saída **não é medir mais**. É que valor não medido também precisa de end
 | 4 | A lista de elementos de prosa | `chrome.md` §1.4 | a lista de quem **escapa** está deliberadamente não escrita; a de quem **fica**, que é a que se implementa, também não estava |
 | 5 | Onde moram `chrome.css` e `custom.css`, e como as folhas entram no build | — | os dois só apareciam por *basename*, dentro de comentários |
 
-#### Quatro erros de fato, e os três primeiros já corrigidos
+#### As cinco, conferidas uma a uma contra a spec reescrita
+
+**Três mudaram de assunto, e não por terem sido respondidas.** Elas morreram com o cartão:
+
+| # | O que era | Por que não é mais pergunta |
+| ---: | --- | --- |
+| 2 | qual degrau de elevação o cartão de doc usa | **não há cartão.** A página é plana, e os degraus que embutiam o anel deixaram de ter esse consumidor — ver [`chrome.md`](chrome.md) §2 |
+| 3 | a folga entre cartão e TOC | **não há cartão**, e a separação do TOC passou a ser elo declarado da cadeia de proporções |
+| 4 | a lista de elementos de prosa | **a lista morreu**, e com ela a superfície que produzia o defeito do `<header>`. Hoje são dois seletores no lugar de onze — [`swizzle.md`](swizzle.md) §3, degrau 1 |
+
+**Pergunta que some porque o objeto sumiu não conta como pergunta respondida**, e a distinção importa: se o cartão voltasse, as três voltariam com ele, exatamente como estavam.
+
+**Duas continuam valendo, e a segunda rodada as encontrou de novo sozinha** — sem ver esta tabela, sem ver o repositório, e contra documentos reescritos:
+
+| # | O que era | Estado |
+| ---: | --- | --- |
+| 1 | o mapeamento do Prism para os sete papéis | **aberta, e agora com paleta nova.** A paleta trocou inteira entre as duas rodadas e a lacuna não se moveu, porque ela nunca foi sobre *quais cores* — é sobre **qual tipo de token recebe qual papel** |
+| 5 | o endereço das folhas de CSS no build | **aberta.** Continuam aparecendo só por *basename*, dentro de comentários. Ele reconstruiu a lista e a ordem por dedução, e acertou a lista |
+
+**Duas rodadas independentes achando as mesmas duas lacunas é o resultado mais forte deste teste inteiro.** Uma reinterpretação achada uma vez pode ser azar do leitor; achada duas vezes, por agentes diferentes, contra redações diferentes, é buraco no documento.
+
+#### Os quatro erros de fato que ela achou
 
 | Erro | Estado |
 | --- | --- |
@@ -317,7 +411,7 @@ A saída **não é medir mais**. É que valor não medido também precisa de end
 
 O tamanho do ícone de sidebar o agente marcou como **chute** — e acertou o valor exato, `--sd-space-4` com `--sd-space-2` de afastamento. Ele raciocinou até a resposta certa **porque a spec o obrigou a apostar**, não porque ela respondeu. Um acerto obtido assim conta como buraco, não como cobertura: a próxima aposta cai do outro lado.
 
-### 6.5 O que a spec acertou, e por que isso também é resultado
+### 6.7 O que a spec acertou, e por que isso também é resultado
 
 O **bloco espelhado de [`tokens.md`](tokens.md) §3 é o arquivo, não uma descrição dele.** A camada de tokens inteira foi reconstruída com **zero decisões**, e o espelho confere byte a byte.
 

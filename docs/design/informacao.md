@@ -156,7 +156,7 @@ O CSS de sidebar cobre as duas formas. O marcador é o `className` do manifesto,
 
 Não é estilo. É a regra que produz as configurações de TOC que provam a medida constante da coluna.
 
-**Correção de premissa, medida em 3.10.2 e mantida:** a classe de 75% é aplicada sempre que `hide_table_of_contents` não está no front matter, **independentemente de haver heading**. O que depende de heading é a coluna do TOC. A tabela completa está em [`chrome.md`](chrome.md) §1.5.
+**Correção de premissa, medida em 3.10.2 e mantida:** a classe de 75% é aplicada sempre que `hide_table_of_contents` não está no front matter, **independentemente de haver heading**. O que depende de heading é a coluna do TOC. A tabela completa está em [`chrome.md`](chrome.md) §2.1.
 
 ### 4.1 A exceção é uma só, e é nomeada
 
