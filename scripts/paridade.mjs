@@ -541,7 +541,13 @@ const SONDAR = (lista) => `(() => {
     return null;
   };
   const px = (n) => (Math.round(n * 100) / 100) + 'px';
-  const saida = {};
+  /* O tema medido volta junto com as medidas. Trocar de modo por atributo só é
+     confiável DEPOIS da hidratação — antes dela o script de tema do Docusaurus
+     reafirma o seu por cima, e o sintoma é cruel: parte dos tokens muda e parte
+     não, então a leitura parece plausível e está errada. Devolver o tema
+     observado faz um modo que não pegou virar erro em vez de número errado com
+     cara de certo. */
+  const saida = {__tema: document.documentElement.getAttribute('data-theme')};
   for (const {sonda, seletor, medida} of lista) {
     let el = null;
     try { el = document.querySelector(seletor); } catch { el = null; }
@@ -588,7 +594,17 @@ async function medir() {
           await dormir(ESPERA.modal);
         }
 
-        Object.assign(medidas, JSON.parse(await avaliar(sessao, SONDAR(doCenario))));
+        const {__tema: temaMedido, ...doNavegador} = JSON.parse(
+          await avaliar(sessao, SONDAR(doCenario)),
+        );
+        if (temaMedido !== cenario.tema) {
+          throw new Error(
+            `${nome}: pedi o tema "${cenario.tema}" e a página mediu "${temaMedido}". ` +
+              'A hidratação reafirmou o tema por cima — aumente `ESPERA.hidratacao`. ' +
+              'Medir no modo errado devolveria número errado com cara de certo.',
+          );
+        }
+        Object.assign(medidas, doNavegador);
       }
     } finally {
       sessao.fechar();
