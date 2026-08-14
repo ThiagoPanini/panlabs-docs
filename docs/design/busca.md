@@ -123,7 +123,9 @@ Ela roda **nos dois lados** — no índice, uma vez na montagem, e na consulta, 
 
 ### 3.2 A régua de máquina
 
-Os oito portões cobrem CSS, conteúdo e a landing por **varredura**. Ordenação de resultado não é varrível: ou existe um caso que a exercita, ou *"escada determinística"* fica sendo afirmação de prosa.
+Os **sete** portões cobrem CSS e conteúdo por **varredura**. Ordenação de resultado não é varrível: ou existe um caso que a exercita, ou *"escada determinística"* fica sendo afirmação de prosa.
+
+> **Correção de contagem.** Esta linha dizia *"os oito portões cobrem CSS, conteúdo e a landing"*. **São sete**, e o terceiro assunto saiu junto com o oitavo: o portão 8 contava as seis unicidades da landing, e morreu com a página em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). O argumento não muda de forma — o que é varrível continua sendo varrido, e ordenação continua não sendo.
 
 Por isso a lógica pura mora em `src/theme/SearchBar/escada.mjs`, separada do JSX, e `scripts/busca.test.mjs` a cobra com `node --test` — o runner do **próprio runtime**, zero dependência nova. Roda com `npm test`, cadência de commit.
 

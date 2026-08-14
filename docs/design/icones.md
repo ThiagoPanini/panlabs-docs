@@ -10,7 +10,7 @@ O manifesto, os dois renderizadores, a marca e o teto duro.
 >
 > Ícone **dentro** de componente do catálogo é outra conta, e ela é prop — ver a tabela de compensação óptica do §4.
 
-Documento transversal, ao lado de [`motion.md`](motion.md), [`foco.md`](foco.md) e [`swizzle.md`](swizzle.md): a sidebar é o consumidor principal, e o catálogo de conteúdo e a landing leem o mesmo manifesto. **A marca deixou de ser consumidora** — ver §3.
+Documento transversal, ao lado de [`motion.md`](motion.md), [`foco.md`](foco.md) e [`swizzle.md`](swizzle.md): a sidebar é o consumidor principal, e o catálogo de conteúdo lê o mesmo manifesto. **A marca deixou de ser consumidora** — ver §3. **A landing era a terceira, e saiu inteira** — ver §5.
 
 Tudo aqui é obrigatório. Não há bloco `Livre`: os **desenhos** são skin e se trocam inteiros, mas o manifesto é contrato e não tem latitude interna.
 
@@ -87,7 +87,7 @@ A parte elegante: o estado ativo já pinta o texto, e a máscara é pintada com 
 
 **A marca fica só com a palavra**, e nenhum desenho assume o lugar de `train-track`.
 
-O argumento é o mesmo que matou a figura da landing, **com força maior**: a marca aparece em **toda página** e a landing em uma. Ela fica **monocromática**, em `--sd-text-strong` — tingir uma palavra de acento no canto superior esquerdo é o enfeite que a régua recusa, e é o tipo de decisão que se justifica sozinha uma vez e se paga em todas as rotas.
+O argumento é o mesmo que matou a figura da landing, **com força maior**: a marca aparece em **toda página**, e a landing aparecia em uma. Ela fica **monocromática**, em `--sd-text-strong` — tingir uma palavra de acento no canto superior esquerdo é o enfeite que a régua recusa, e é o tipo de decisão que se justifica sozinha uma vez e se paga em todas as rotas. O argumento sobreviveu à página que o produziu: a landing saiu depois ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e a marca continua sem glifo, porque o que decide aqui é *em quantas rotas o enfeite se paga*, e a resposta para a marca continua sendo *todas*.
 
 **A tipografia da palavra não mudou**, e é isso que torna a decisão barata: `--sd-text-strong` já era a tinta dela. O que saiu foi o glifo, que era a única coisa aqui a consumir `--sd-accent`.
 
@@ -135,7 +135,9 @@ As nove são `package`, `puzzle`, `bot`, `server`, `layers`, `workflow`, `cloud`
 
 > **Correção de aritmética contra a resolução deste ticket.** Ela dizia *"sete reusam entrada de autoria com segunda tag, dois reempregam órfão de navegação"*, o que fecha em nove pares e não em onze. Contado contra a árvore: **oito** entradas de autoria ganham a segunda tag, **dois** órfãos de navegação são reempregados, e **um** — `package` — já carregava as duas. Oito mais dois mais um são os onze.
 
-> **A tag de autoria deixou de significar *"o MDX do autor"* e passou a significar *"o nome escrito como string"*.** A landing escreve `<Card icon="book-open">`, que é a **mesma superfície** de autoria do MDX — mesmo componente, mesma prop, mesma falha alta se o nome não existir. Dizer *MDX* era descrever o único consumidor que existia, não a regra; a regra é a superfície.
+> **A tag de autoria deixou de significar *"o MDX do autor"* e passou a significar *"o nome escrito como string"*.** A landing escrevia `<Card icon="book-open">`, que é a **mesma superfície** de autoria do MDX — mesmo componente, mesma prop, mesma falha alta se o nome não existir. Dizer *MDX* era descrever o único consumidor que existia, não a regra; a regra é a superfície.
+>
+> **A landing saiu ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e a definição fica.** Ela foi o caso que expôs a diferença entre *superfície* e *consumidor*, e é exatamente por isso que reverter a definição junto com a página seria o erro: voltar a dizer *MDX* recriaria a redação estreita que já se mostrou errada uma vez, e o próximo `<Card>` escrito fora de `.mdx` a quebraria de novo. **Hoje o MDX é o único consumidor outra vez, e a regra continua sendo a superfície.**
 
 **O teto é 64. Teto, não meta — e a folga voltou a quatro.** Ele foi alcançado no mapa do `mint`, com `wrench` no último slot; a árvore do `panlabs` cortou **quatro** desenhos e a folga voltou. O 65º ícone continua sendo troca; o 61º voltou a ser revisão de design.
 
@@ -211,11 +213,11 @@ Os onze pares seção→ícone, **verbatim**:
 
 **As três tabs de navbar continuam sem ícone**: a regra é *um slot por nó de topo da **sidebar***, e o navbar já carrega tabs, busca, locale e GitHub sem folga para enfeite.
 
-#### As três portas da landing têm ícone, e não são navegação
+#### As três portas da landing tinham ícone, e a régua que elas produziram fica
 
-A tab no navbar continua sem glifo. **O cartão de porta da landing tem**, e a distinção é de superfície, não de inconsistência: a porta é um `<Card icon="…">`, escrito como string, contado na tag de **autoria**. A tag de navegação é 1:1 com os onze pares seção→ícone, e o vendorizador cobra essa igualdade — abrir a lista de navegação para a landing quebraria o único lugar onde a aritmética de ícone é conferida por máquina.
+A tab no navbar continua sem glifo. **O cartão de porta da landing tinha**, e a distinção era de superfície, não de inconsistência: a porta era um `<Card icon="…">`, escrito como string, contado na tag de **autoria**. A tag de navegação é 1:1 com os onze pares seção→ícone, e o vendorizador cobra essa igualdade — abrir a lista de navegação para a landing teria quebrado o único lugar onde a aritmética de ícone é conferida por máquina.
 
-As portas eram declaradas *"sem ícone, e é ritmo, não esquecimento"*. Elas ganham glifo por decisão, sob uma regra:
+As portas eram declaradas *"sem ícone, e é ritmo, não esquecimento"*. Elas ganharam glifo por decisão, sob uma regra:
 
 > **A porta não pode repetir o glifo de nenhuma das categorias que ela abre.**
 
@@ -229,7 +231,13 @@ Sem ela, o cartão e um quarto da aba leem a mesma hierarquia, e o leitor não s
 
 > **A violação registrada no commit anterior morreu com a árvore, como estava previsto.** `book-open` era o glifo de `Documentação › Guias`, uma categoria dentro da tab que a porta `Jornadas` abre. Nos **onze pares** acima ele não é glifo de categoria nenhuma, e a regra volta a valer sem exceção. A colisão foi consequência da ordem escolhida, ficou dita antes de acontecer, e fechou no ticket que a spec disse que fecharia.
 
-**`wrench` é o único ponto de todo o esforço em que o teto compra alguma coisa.** Na porta `Ferramentas`, todo glifo adequado do acervo — `package`, `puzzle`, `bot`, `server` — é uma das quatro famílias que aquela aba abre, e a regra acima os elimina um a um. Não havia reuso disponível; havia o slot livre.
+**`wrench` foi o único ponto de todo o esforço em que o teto comprou alguma coisa.** Na porta `Ferramentas`, todo glifo adequado do acervo — `package`, `puzzle`, `bot`, `server` — é uma das quatro famílias que aquela aba abre, e a regra acima os eliminava um a um. Não havia reuso disponível; havia o slot livre.
+
+> **Correção de fato: as três portas não existem mais, e nenhum dos três desenhos sai do manifesto.** A landing foi removida em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e com ela os três `<Card icon="…">` que davam consumidor nomeado a `book-open`, `terminal` e `wrench`. **A aritmética não se move:** os três já eram contados na tag de **autoria** — `terminal` e `wrench` em *Objetos*, `book-open` em *Conceitos* —, e autoria é *vocabulário do autor*, não *uso hoje*. **69 tags sobre 60 arquivos continua sendo o número**, e a bijeção que o vendorizador cobra continua fechada nos três lados.
+>
+> **O que se perde é mais estreito, e é `wrench`.** Ele foi o único desenho do acervo comprado **por causa de um consumidor concreto** — a porta `Ferramentas` —, e esse consumidor deixou de existir. Ele não vira órfão de manifesto; ele vira **vocabulário de autoria como os outros 39**, e passa a valer o que qualquer um deles vale: está lá para quando alguém escrever `icon="wrench"`. Se o próximo corte de teto precisar de um slot, **é aqui que a régua manda olhar primeiro** — *sobrevive quem é neutro de domínio ou nomeia o cenário fixado*, e `wrench` nomeava a porta, não o cenário.
+>
+> **A regra da porta fica escrita e sem sujeito.** *A porta não pode repetir o glifo de nenhuma das categorias que ela abre* não tem hoje a que se aplicar. Fica porque ela não é regra de landing: é a regra de qualquer cartão que abra uma aba inteira, e o dia em que um índice de nível alto quiser esse cartão é o dia em que reescrevê-la do zero custaria o mesmo raciocínio outra vez — inclusive a colisão de `book-open`, que já foi paga uma vez.
 
 **O registro é sóbrio, não ilustrativo.** O ícone marca posição; não narra a seção. É o registro que combina com um sistema onde tudo é imóvel e a assinatura mora no ritmo da página, não no enfeite.
 
@@ -362,9 +370,10 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | `shield-check` citado e nunca existente | **origem própria (correção)** | varrido contra o manifesto: o nome nunca esteve lá |
 | O exemplo de autoria usava um nome tagueado só como navegação | **origem própria (correção)** | `icon="rocket"` no §6 contra a tag dele à época |
 | O candidato de reabertura de `circle-check` evaporou | **origem própria (consequência)** | o painel deixou de ter resposta HTTP de sucesso quando o contrato deixou de falar HTTP |
-| A tag de autoria é *nome escrito como string*, não *MDX* | **origem própria (correção)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — a landing usa `<Card icon="…">`, a mesma superfície; a redação antiga descrevia o único consumidor, não a regra |
-| Ícone nas três portas da landing, sob a regra de não repetir glifo de categoria | **origem própria** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — nada medido; a regra existe para o cartão não ler como a aba |
+| A tag de autoria é *nome escrito como string*, não *MDX* | **origem própria (correção)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — a landing usava `<Card icon="…">`, a mesma superfície; a redação antiga descrevia o único consumidor, não a regra. A definição **não volta atrás** com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94): reverter para *MDX* recriaria a redação que já se mostrou estreita uma vez |
+| Ícone nas três portas da landing, sob a regra de não repetir glifo de categoria | **origem própria (consequência)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) decidiu, [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) **removeu o sujeito** — as portas saíram com a página. A regra fica escrita e sem consumidor: ela vale para qualquer cartão que abra uma aba inteira, e o raciocínio já foi pago, inclusive a colisão de `book-open` |
 | `wrench` como o único desenho novo | **origem própria (implementação)** | descoberto aplicando a regra da porta: em `Ferramentas` todo reuso adequado já é uma das quatro famílias que a aba abre |
+| **`wrench` perdeu o consumidor que o comprou, e fica no manifesto** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a porta `Ferramentas` era o único uso concreto dele; a tag de **autoria** já era a que ele carregava, então 69 sobre 60 e a bijeção não se movem. É o primeiro nome a olhar no próximo corte de teto: ele nomeava a porta, não o cenário |
 | `circle-check` fora | **delta deliberado** | consequência da variante morta na [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), pela regra de *sem consumidor* |
 | Os onze pares seção→ícone | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — `code-xml` e `activity` reempregados, os outros nove reusando entrada de autoria |
 | **O registro sóbrio em vez do ilustrativo** | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — as quatro Mintlify (mesmo CSS) não convergem: três renderizam glifo preenchido (Font Awesome `regular`/`solid` v7.2.0), uma usa contorno (Tabler `outline`). A âncora mistura registro do mesmo jeito que mistura família (§2) — a mistura é acidente dela, não assinatura a herdar |

@@ -21,9 +21,11 @@ Tudo aqui é obrigatório, salvo bloco marcado `Livre`.
 | `--sd-move-state` | muda em lugar: cor, borda, sombra, opacidade | sim |
 | `--sd-move-enter` | aparece: o modal de busca | sim |
 | `--sd-move-expand` | muda de tamanho: `<details>`, sidebar em tela estreita | sim |
-| `--sd-move-showcase` | entrada da ilha de espetáculo | sim |
-| `--sd-move-reveal` | reveal por rolagem, só na landing | **não** — dirigido por rolagem |
-| `--sd-move-ambient` | respiração do glow, só na ilha | **não** — infinito |
+| `--sd-move-showcase` | entrada da ilha de espetáculo — **sem consumidor**, ver §5 | sim |
+| `--sd-move-reveal` | reveal por rolagem — **sem consumidor**, ver §5 | **não** — dirigido por rolagem |
+| `--sd-move-ambient` | respiração do glow — **sem consumidor**, ver §5 | **não** — infinito |
+
+> **Três dos seis não têm consumidor hoje, e continuam declarados.** A ilha de espetáculo saiu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)), levando os três `@keyframes` que os consumiam. **O vocabulário continua sendo seis**, e é o **portão 2** que o define assim: ele reprova toda duração ou curva cravada e manda usar um destes nomes. Um vocabulário de três deixaria a próxima faixa que precisasse de um movimento longo sem nome para pedir — e o que ela escreveria é o número cravado que o portão existe para impedir. **Órfão com motivo escrito é decisão registrada; órfão sem motivo é o defeito do Infima que este projeto nomeia para não copiar.** O motivo está escrito aqui, no §5 e ao lado das três linhas em `tokens.css`.
 
 Cada um é um **token completo** — duração mais easing —, e o componente consome por nome:
 
@@ -53,7 +55,7 @@ As curvas próprias de uma das referências medidas **não entram**: dela se tom
 | `--sd-move-state` | link, item de sidebar, aba, cartão, botão de cópia, borda |
 | `--sd-move-expand` | os componentes com `<details>`, e a sidebar em tela estreita |
 | `--sd-move-enter` | **só** o modal de busca |
-| `--sd-move-showcase` · `--sd-move-reveal` · `--sd-move-ambient` | **só** landing e ilha — ver §5 |
+| `--sd-move-showcase` · `--sd-move-reveal` · `--sd-move-ambient` | **nada** — a licença está suspensa; ver §5 |
 
 **Tudo o mais é instantâneo por omissão, não por proibição escrita.** Silêncio é obrigação nesta spec; só a liberdade se marca.
 
@@ -76,7 +78,9 @@ A implementação inteira redefine as **três paradas de duração** dentro de `
 
 **A escala vai ao menor valor perceptível, e não a zero.** Transição de duração zero é onde código que espera `transitionend` trava, e o Docusaurus tem o dele: o `useCollapsible` do `theme-common` anima altura em JavaScript. Os dois valores — o normal e o reduzido — moram em [`tokens.md`](tokens.md).
 
-**As duas exceções são removidas, não encurtadas.** Encurtar uma animação infinita produz estroboscópio, que é o oposto exato do que `reduce` pede; e animação dirigida por rolagem não tem duração para encurtar. As duas somem inteiras — o reveal por não entrar no `@media (prefers-reduced-motion: no-preference)` que o envolve, a respiração por `animation: none` no bloco `reduce`.
+**As duas exceções são removidas, não encurtadas.** Encurtar uma animação infinita produz estroboscópio, que é o oposto exato do que `reduce` pede; e animação dirigida por rolagem não tem duração para encurtar. **A classificação é do movimento, não da superfície**, e é por isso que ela sobrevive ao consumidor: os dois que se classificam assim são os do §5, e nenhum tem consumidor hoje.
+
+> **As duas rotas de remoção estão descritas e nenhuma está montada.** Enquanto a ilha existiu, o reveal sumia por **não entrar** no `@media (prefers-reduced-motion: no-preference)` que o envolvia — a regra morava no CSS Module da página —, e a respiração saía por um `animation: none` no bloco `reduce` do arquivo de tokens. As duas caíram com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)), e **o arquivo de tokens voltou a ter zero declaração `animation:`**. Ficam escritas, aqui e no comentário do próprio bloco `reduce`, porque são as duas formas conhecidas de remover em vez de encurtar: **a de dentro da guarda positiva e a do `animation: none` com gancho `data-sd-part`.** Quem trouxer o próximo loop ambiente escolhe entre elas, não redescobre as duas.
 
 **Nenhum componente escreve `@media (prefers-reduced-motion)` próprio, para sempre.** A seção `## Motion / reduced-motion` de um arquivo de componente **só nomeia o movimento**. Se um componente precisar dizer qualquer coisa além de *"herda"*, o desenho está errado.
 
@@ -86,7 +90,9 @@ A implementação inteira redefine as **três paradas de duração** dentro de `
 
 **Troca de tema: instantânea.** Proibição explícita de `transition` em `background-color` ou `color` no `:root` e no `body`.
 
-O argumento é do projeto, não genérico. A ilha de espetáculo é **inerte na troca de tema** — os tokens dela não mudam. Uma transição global de cor faria a faixa parecer **congelada** enquanto o site inteiro esmaece em volta, e a costura dela com o navbar já é a aresta mais visível do site no modo claro. Somado ao custo de repintar o documento inteiro no único momento em que a animação toca cada pixel da página.
+O argumento é do projeto, não genérico, e ele tinha **duas metades**. A primeira era a ilha de espetáculo: **inerte na troca de tema** — os tokens dela não mudavam —, e uma transição global de cor a faria parecer **congelada** enquanto o site inteiro esmaecia em volta, sendo a costura dela com o navbar a aresta mais visível do site no modo claro. A segunda é o custo de repintar o documento inteiro no único momento em que a animação toca cada pixel da página.
+
+> **Correção de fato: a primeira metade perdeu o sujeito, e a proibição fica de pé pela segunda.** A ilha saiu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)), e não há mais faixa que possa parecer congelada. O custo de repinte não depende de ilha nenhuma e sustenta a regra sozinho — e quem a torna revisável é a linha verificada logo abaixo, não a faixa que já não existe. A metade morta fica escrita porque ela explica por que a regra nasceu **mais forte** do que a metade sobrevivente justificaria sozinha: quem for reabrir a proibição precisa saber que está reabrindo meia decisão, não a inteira.
 
 *Verificado na implementação:* nem o Infima nem o `theme-classic` declaram transição de cor em `html`, `body` ou `:root`. A regra é **não introduzir uma**, e o portão do §6 não a pega — porque a violação seria uma transição legítima em token, no lugar errado. Esta linha é o que a torna revisável.
 
@@ -100,47 +106,51 @@ O argumento é do projeto, não genérico. A ilha de espetáculo é **inerte na 
 
 ---
 
-## 5. Landing e ilha — onde o "wow" é licenciado
+## 5. Landing e ilha — a licença suspensa
 
-A fronteira da licença **não é a landing: é a ilha**. `--sd-move-showcase` e `--sd-move-ambient` só têm consumidor dentro dela; `--sd-move-reveal` é o único que pertence à *rota* landing em vez da ilha, por morar no CSS Module dela.
+**A licença do *"wow"* existiu, foi exercida uma vez e hoje está suspensa.** A fronteira dela nunca foi a landing: era a **ilha** — a região marcada por `[data-sd-showcase]`, hero mais laje de código, uma no site inteiro. `--sd-move-showcase` e `--sd-move-ambient` só tinham consumidor dentro dela; `--sd-move-reveal` era o único que pertencia à *rota* landing em vez da ilha, por morar no CSS Module dela.
 
-O desenho inteiro da rota está em [`landing.md`](landing.md) §7.
+**A ilha saiu com a página, em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94).** Saíram juntos os **cinco tokens de brilho** da camada 3 — os dois gradientes, a caixa da luz e o par de amplitude da respiração —, o `[data-sd-showcase]` que os escopava, a regra do bloco `reduce` que desligava a respiração, os três `@keyframes` da folha global e o CSS Module que os consumia.
 
-> **Correção de fato, medida ao implementar a landing.** A redação original dizia que `--sd-move-showcase` e `--sd-move-ambient` eram *"camada 3, declarados dentro do escopo da ilha, exatamente como `--sd-glow`"*. **Não são, e não podiam ser:** os seis movimentos são camada 1 e moram no bloco de vocabulário — é isso que faz reduced-motion alcançar todos de uma vez pela escala de duração, e é isso que o portão do §7 pressupõe. O que de fato é camada 3 no escopo da ilha são `--sd-glow`, o **par de amplitude** da respiração e o **loop inteiro**, que virou token pelo motivo do parágrafo seguinte. O confinamento continua sendo fato de escopo; só que o que está confinado é o consumo, não o vocabulário.
+**O que não saiu foram os três movimentos.** `--sd-move-showcase`, `--sd-move-reveal` e `--sd-move-ambient` continuam declarados na camada 1, sem consumidor e com o motivo escrito ao lado: **o vocabulário é fechado em seis, e quem o fecha é o portão 2** (§7). Ele reprova toda duração ou curva cravada e manda usar um destes nomes — cortar três deixaria o portão apontando para um vocabulário que não cobre movimento longo, movimento dirigido por rolagem nem loop infinito, e a próxima superfície que precisasse de um deles escreveria o número cravado que o portão existe para impedir. É a mesma leitura da rampa de cinza: **escala se declara inteira, e buraco no meio custa mais que a parada a mais.**
 
-**A respiração é desligada por uma regra no bloco `reduce`, e o elemento é alcançado por `data-sd-part`.** É a única regra de elemento do arquivo de tokens fora do adaptador, e ela existe porque `animation: none` **não tem como ser entregue por token** — ver a correção do §6. A classe do módulo é hasheada e a camada de token não a conhece; o contrato de partes é o gancho que sobra. A promessa de *nenhum componente escreve a própria media query* continua literal: quem escreve é a camada de token.
+> **Suspensa não é revogada, e a diferença é conferível.** Nada aqui virou proibição: a lista do §4 é a do que **nunca** anima, e nenhum dos três entrou nela. O que a licença perdeu foi o único lugar onde podia ser exercida. Reabri-la é ter ilha outra vez — uma região marcada por atributo, que apareça em **uma** rota e não em toda página —, e as regras abaixo são o preço já pago dessa reabertura. Elas ficam escritas e sem sujeito, e é assim que devem ser lidas.
+
+> **Correção de fato, medida ao implementar a landing, e ela sobrevive à página.** A redação original dizia que `--sd-move-showcase` e `--sd-move-ambient` eram *"camada 3, declarados dentro do escopo da ilha, exatamente como `--sd-glow`"*. **Não eram, e não podiam ser:** os seis movimentos são camada 1 e moram no bloco de vocabulário — é isso que faz reduced-motion alcançar todos de uma vez pela escala de duração, e é isso que o portão do §7 pressupõe. O que de fato era camada 3 no escopo da ilha eram `--sd-glow`, o **par de amplitude** da respiração e o **loop inteiro**. **É esta correção que explica por que os três movimentos sobreviveram à remoção e os `--sd-glow*` não:** o que estava confinado à ilha era o consumo, não o vocabulário, e a remoção levou exatamente o que era dela.
 
 ### A entrada da ilha
 
-`--sd-move-showcase` é a **entrada da ilha**, e o consumidor dele é a camada decorativa do hero: a luz sobe uma vez, no carregamento, e termina. Nenhum texto, nenhuma borda e nenhuma caixa se mexe — a mesma regra da respiração, aplicada a um movimento que acaba.
+`--sd-move-showcase` era a **entrada da ilha**, e o consumidor dele era a camada decorativa do hero: a luz subia uma vez, no carregamento, e terminava. Nenhum texto, nenhuma borda e nenhuma caixa se mexia — a mesma regra da respiração, aplicada a um movimento que acaba.
 
-Ele **encurta** sob reduced-motion em vez de sumir, e sem uma linha a mais: compõe da escala, como os outros três que terminam sozinhos.
+Ele **encurta** sob reduced-motion em vez de sumir, e sem uma linha a mais: compõe da escala, como os outros três que terminam sozinhos. Isso continua valendo sem consumidor — é propriedade do token, não da regra que o consumia.
 
 ### Reveal por rolagem
 
-**Por `animation-timeline: view()`, que é CSS nativo — não por `IntersectionObserver`.** Isso gasta menos: zero JavaScript, zero dependência.
+**Por `animation-timeline: view()`, que é CSS nativo — não por `IntersectionObserver`.** Isso gastava menos: zero JavaScript, zero dependência.
 
-**Guarda dupla, e as duas falham para o lado seguro:** `@supports (animation-timeline: view())` e `@media (prefers-reduced-motion: no-preference)`. Fora de qualquer uma das duas, o conteúdo é **visível e estático** — nunca invisível. É essa propriedade que elimina o modo de falha que existe de verdade na rota com observador: elemento em opacidade zero que nunca é revelado.
+**Guarda dupla, e as duas falhavam para o lado seguro:** `@supports (animation-timeline: view())` e `@media (prefers-reduced-motion: no-preference)`. Fora de qualquer uma das duas, o conteúdo ficava **visível e estático** — nunca invisível. É essa propriedade que elimina o modo de falha que existe de verdade na rota com observador: elemento em opacidade zero que nunca é revelado.
 
-> **A ordem do aninhamento é obrigatória: `@media` por fora, `@supports` por dentro.** Achado de build, medido no CSS emitido do slice da landing. Invertido, o `postcss-sort-media-queries` — que o preset de minificação do Docusaurus roda antes de todo o resto — iça o `@media` para a raiz e **o `@supports` que estava em volta some**. A guarda de suporte desaparece só no build de produção, e o reveal degrada para um fade de carregamento em vez de ficar visível e parado.
+> **A ordem do aninhamento é obrigatória: `@media` por fora, `@supports` por dentro.** Achado de build, medido no CSS emitido do slice da landing. Invertido, o `postcss-sort-media-queries` — que o preset de minificação do Docusaurus roda antes de todo o resto — iça o `@media` para a raiz e **o `@supports` que estava em volta some**. A guarda de suporte desaparece só no build de produção, e o reveal degrada para um fade de carregamento em vez de ficar visível e parado. **O achado é do minificador, não da página:** ele vale para qualquer aninhamento dessas duas regras no projeto, e é por isso que fica depois de o reveal sair.
 
-O `Ctrl+F` se resolve sozinho, porque a linha do tempo é a posição de rolagem — o navegador rolar até o trecho *é* o que o revela.
+O `Ctrl+F` se resolvia sozinho, porque a linha do tempo é a posição de rolagem — o navegador rolar até o trecho *é* o que o revela.
 
-**Confinamento por escopo físico:** a regra mora no CSS Module da própria landing. Página de documentação não tem como alcançá-la. É fato de escopo, não regra a lembrar.
+**Confinamento por escopo físico:** a regra morava no CSS Module da própria rota. Página de documentação não tinha como alcançá-la. Era fato de escopo, não regra a lembrar — e é a forma que a reabertura deve repetir.
 
 **Um gesto por elemento:** revela ao entrar e fica. Sem re-esconder ao rolar de volta, sem parallax, sem elemento que se mexe enquanto está sendo lido.
 
 ### A respiração do glow
 
-Um elemento vivo num sistema imóvel lê como intenção; o mesmo elemento num site que já anima em toda parte some no ruído. **A imobilidade das listas dos §2 e §4 é o pré-requisito desta decisão, não um argumento contra ela.**
+Um elemento vivo num sistema imóvel lê como intenção; o mesmo elemento num site que já anima em toda parte some no ruído. **A imobilidade das listas dos §2 e §4 era o pré-requisito desta decisão, não um argumento contra ela** — e ela ficou mais imóvel ainda, porque hoje não há o elemento vivo.
 
-*"Com parcimônia"* não sobrevive como advérbio, então vira regra conferível lendo o CSS:
+*"Com parcimônia"* não sobrevive como advérbio, então virou regra conferível lendo o CSS. As cinco ficam como cláusula da licença suspensa:
 
-- **Um por página, e só dentro da ilha.** Fora dela o token do glow não resolve — fato de escopo outra vez.
-- **O que respira é a luz, nunca a matéria.** A camada animada é decorativa, atrás do conteúdo, `pointer-events: none`. Nenhum texto, nenhuma borda e nenhuma caixa se mexe.
+- **Um por página, e só dentro da ilha.** Fora dela o token do glow não resolvia — fato de escopo outra vez.
+- **O que respira é a luz, nunca a matéria.** A camada animada era decorativa, atrás do conteúdo, `pointer-events: none`. Nenhum texto, nenhuma borda e nenhuma caixa se mexia.
 - **Só `opacity` e `transform`.** Nada de animar `filter` ou `blur`, que repintam em vez de compor.
-- **Respiração, não pulso.** A amplitude é par declarado sobre o alfa do glow, não número novo.
-- **O período é o único loop ambiente medido na amostra inteira.**
+- **Respiração, não pulso.** A amplitude era par declarado sobre o alfa do glow, não número novo.
+- **O período é o único loop ambiente medido na amostra inteira**, e ele continua sendo o valor de `--sd-move-ambient` — a medição não expira com o consumidor.
+
+> **O gancho da reabertura está escolhido, e é `data-sd-part`.** Enquanto a ilha existiu, a respiração era desligada por uma regra no bloco `reduce` que alcançava o elemento por esse atributo — a única regra de elemento do arquivo de tokens fora do adaptador. Ela existia porque `animation: none` **não tem como ser entregue por token** (ver a correção do §6): a classe do módulo é hasheada, a camada de token não a conhece, e o contrato de partes é o gancho que sobra. A regra saiu com a página; **o comentário no bloco `reduce` de `tokens.css` guarda o endereço**, e a promessa de *nenhum componente escreve a própria media query* segue literal — quem escreveria é a camada de token.
 
 ---
 
@@ -165,11 +175,13 @@ CSS Modules manglam o nome do `@keyframes` que o módulo **define**; um keyframe
 >
 > Ela resolve os dois de uma vez: o nome chega inteiro ao CSS emitido, e o minificador passa a enxergar a referência.
 >
+> O exemplo é o que foi de fato medido, e `sd-revela` **não existe mais** — ele saiu com a landing em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). A linha fica verbatim porque a correção é sobre os **dois plugins**, não sobre o keyframe: o próximo módulo que referenciar um keyframe global cai nos mesmos dois mecanismos, e reescrever o exemplo com um nome vivo trocaria uma medição por uma paráfrase.
+>
 > **Consequência que fecha uma porta:** nome de `@keyframes` **não viaja dentro de custom property**. Nenhum dos dois plugins varre valor de custom property, então o keyframe volta a ser apagado; e se não fosse, `postcss-reduce-idents` renomearia o `@keyframes` sem renomear o token. É por isso que a respiração do glow é desligada por uma **regra** no bloco `reduce`, e não por um token que valha `none`.
 
-Com `global(…)`, a landing usa os keyframes globais e a regra não conflita com o confinamento do §5.
+Com `global(…)`, um CSS Module referencia os keyframes globais sem conflitar com o confinamento do §5 — era assim que a landing consumia os três dela.
 
-Sobram pouquíssimos, porque o vocabulário é transição: o modal de busca, a entrada da ilha, o reveal e a respiração.
+Sobram pouquíssimos, porque o vocabulário é transição. **Hoje sobra um: a entrada do modal de busca.** Eram quatro — os outros três eram a entrada da ilha, o reveal e a respiração, e saíram com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) porque só o CSS Module dela os consumia. **Um deles não ficou apenas órfão, ficou quebrado:** a respiração lia o par de amplitude declarado no escopo da ilha, e esse par saiu junto — mantê-la seria um `@keyframes` animando para opacidade indefinida.
 
 > **Terceiro mecanismo, medido no slice 7, e ele fecha a porta de `@starting-style`.** O minificador **descarta o bloco `@starting-style` inteiro** — o aviso de build é `Invalid property name`, e o CSS emitido não tem uma ocorrência da regra. Quem dependia dele para o estado de partida perde a transição de entrada **só no site publicado**.
 >
@@ -177,7 +189,7 @@ Sobram pouquíssimos, porque o vocabulário é transição: o modal de busca, a 
 >
 > **Consequência para o vocabulário: entrada a partir de `display: none` é `@keyframes`, não `@starting-style`.** A saída continua sendo transição — ela não precisa de estado de partida, e `allow-discrete` já a cobre.
 >
-> Nota de conferência: `sd-busca-abre` e `sd-acende` são byte a byte iguais — `from { opacity: 0 }` —, e o `postcss-merge-idents` funde as duas num `@keyframes` só no bundle. Isso é correto e não é colisão: o que separa os dois movimentos é o **token**, que carrega duração e curva, e não o nome do keyframe.
+> Nota de conferência: `sd-busca-abre` e `sd-acende` eram byte a byte iguais — `from { opacity: 0 }` —, e o `postcss-merge-idents` fundia as duas num `@keyframes` só no bundle. Isso era correto e não era colisão: o que separa dois movimentos é o **token**, que carrega duração e curva, e não o nome do keyframe. `sd-acende` saiu com a landing e a fusão deixou de acontecer; **a leitura fica porque ela é a que autoriza declarar dois keyframes idênticos sem chamar isso de duplicação** — e é a primeira coisa que alguém questiona ao ver o CSS emitido.
 
 `interpolate-size: allow-keywords` é declaração de `:root` e mora junto do vocabulário, não dentro do componente que a consome — é ela que habilita `<details>` a transicionar para altura automática, e serve todos os componentes de `<details>` de uma vez.
 
@@ -193,7 +205,7 @@ Sobram pouquíssimos, porque o vocabulário é transição: o modal de busca, a 
 
 A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não é mais estrito por acaso: o bloco de vocabulário sobrevive porque ele declara **tokens**, não declarações `transition:` ou `animation:`. *"Fora do bloco de vocabulário"* e *"em toda parte"* coincidem por construção.
 
-> **Emenda, do slice da landing.** O arquivo de tokens passou a ter **uma** declaração `animation:` — o `animation: none` que remove a respiração do glow no bloco `reduce` (§3). Ela passa no portão porque `none` não é duração nem curva, e a coincidência acima continua valendo pelo que ela de fato afirma: **o que o portão cobra é valor cravado, e o arquivo de tokens não crava nenhum fora dos tokens**. A regra não afrouxou; a frase é que era mais estreita que a regra.
+> **Emenda, do slice da landing — e a contra-emenda que a [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) trouxe.** O arquivo de tokens passou a ter **uma** declaração `animation:`, o `animation: none` que removia a respiração do glow no bloco `reduce` (§3), e ela passava no portão porque `none` não é duração nem curva. **Com a landing fora, o arquivo voltou a ter zero declarações `animation:`** — e a frase estreita voltaria a coincidir com a regra por acidente. Os dois estados ficam registrados porque o que a emenda estabeleceu não foi um número: **o que o portão cobra é valor cravado, e o arquivo de tokens não crava nenhum fora dos tokens**. No dia em que o loop ambiente voltar, a declaração volta com ele e o portão continua verde, sem emenda nova.
 
 ---
 
@@ -220,20 +232,21 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | `--sd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) corrigindo a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
 | Hover sob `@media (hover: hover)` | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — feature já em uso no Infima |
 | Estado nunca anima geometria | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §3, sobre a assinatura da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
-| Troca de tema instantânea | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 — consequência da ilha inerte da [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) |
+| Troca de tema instantânea | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 — consequência da ilha inerte da [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13). **A ilha saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; a decisão fica pela outra metade do argumento, o custo de repintar o documento inteiro |
 | Nenhuma transição de cor no upstream | **origem própria (verificação)** | varredura de `html`, `body` e `:root` no Infima e no theme-classic, ao implementar o slice 1 |
 | `scroll-behavior: auto` declarado | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — `grep` contra o CSS do Infima e do `theme-classic`: zero declarações de `scroll-behavior`. A âncora não decide o ponto; herdar uma ausência não é herdar |
 | Anel de foco instantâneo | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4, entregue ao contrato de foco da [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) |
-| Reveal por `animation-timeline: view()` | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a — decisão do dono do projeto; não medido em nenhuma das sete |
-| Guarda dupla que falha para visível e parado | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a |
-| Respiração do glow, e as regras de parcimônia | herdado (período) + origem própria (uso) | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5b |
+| Reveal por `animation-timeline: view()` | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a — decisão do dono do projeto; não medido em nenhuma das sete. **Sem consumidor desde [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**: a regra morava no CSS Module da landing |
+| Guarda dupla que falha para visível e parado | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a — **sem consumidor desde [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; a forma fica descrita como cláusula da licença suspensa |
+| Respiração do glow, e as regras de parcimônia | herdado (período) + origem própria (uso) | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5b — **o uso saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; o período medido continua sendo o valor de `--sd-move-ambient`, porque medição não expira com o consumidor |
 | `@keyframes` na folha global | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — CSS Modules manglam o nome |
 | Portão de varredura de motion | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
 | Os seis movimentos são camada 1, e o que é camada 3 é o consumo | **origem própria (correção)** | a redação do §5 dava dois deles como camada 3; medido ao implementar a landing |
 | `global(…)` para referenciar keyframe global de dentro de módulo | **origem própria (correção)** | medido no CSS emitido do slice da landing; a regra original dava a referência como livre |
 | `@media` por fora, `@supports` por dentro na guarda dupla | **origem própria (implementação)** | o `postcss-sort-media-queries` do preset de minificação destrói o aninhamento inverso |
-| Respiração desligada por regra no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | nome de keyframe não sobrevive dentro de custom property, e a classe do módulo é hasheada |
-| Entrada da ilha como consumidor de `--sd-move-showcase` | **origem própria (implementação)** | o movimento estava licenciado e sem consumidor; variável inerte é o defeito do Infima que não se copia |
+| Respiração desligada por regra no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | nome de keyframe não sobrevive dentro de custom property, e a classe do módulo é hasheada. **A regra saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; o gancho continua escolhido, e o comentário do bloco `reduce` guarda o endereço |
+| Entrada da ilha como consumidor de `--sd-move-showcase` | **origem própria (implementação)** | o movimento estava licenciado e sem consumidor, e a entrada da ilha o gastou. **Revertida por [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**: o consumidor saiu e o movimento voltou a ser órfão — desta vez com motivo escrito, que é a linha abaixo |
+| **Os três movimentos ficam declarados sem consumidor** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — o vocabulário é fechado em seis e é o **portão 2** que o define assim; cortar três deixaria sem nome o movimento longo, o dirigido por rolagem e o loop, e a próxima superfície escreveria o valor cravado que o portão existe para impedir. Órfão **com** motivo escrito é o que a régua do projeto admite; sem motivo é o defeito do Infima |
 | Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna de alcance** | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
 | A curva da seta do `summary` deixa de ser perda | **origem própria (correção)** | a exceção 2 do adaptador substitui o valor inteiro, não só a duração |
 | `@starting-style` não sobrevive ao minificador | **origem própria (medição)** | o bloco é descartado com `Invalid property name`; zero ocorrências no CSS emitido, nos dois locales |

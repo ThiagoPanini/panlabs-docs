@@ -77,13 +77,19 @@ const NAVEGACAO = [
 ];
 
 /**
- * Autoria · 40 — o vocabulário escrito como STRING: o MDX do autor e as três
- * portas da landing, que usam a mesma superfície `<Card icon="…">`.
+ * Autoria · 40 — o vocabulário escrito como STRING: o MDX do autor, por
+ * `<Card icon="…">`.
+ *
+ * **Eram duas superfícies.** A segunda eram as três portas da landing, que
+ * usavam a mesma `<Card icon="…">`, e saíram com a página na issue #94. A
+ * definição da tag NÃO reverte com elas: `autoria` é *"o nome escrito como
+ * string"*, e não *"o MDX do autor"* — a correção que a estabeleceu vale por si.
  *
  * **Nove entradas carregam a segunda tag `navegacao` e moram aqui.** Foram
- * escolhidas pela regra da porta lida ao contrário: a categoria fica com o
- * glifo que nomeia o que ela guarda, e a porta da landing fica com um que
- * nenhuma das categorias dela usa.
+ * escolhidas pela regra da porta lida ao contrário: a categoria ficava com o
+ * glifo que nomeia o que ela guarda, e a porta ficava com um que nenhuma das
+ * categorias dela usava. A regra fica sem sujeito, e a escolha que ela produziu
+ * fica — desfazê-la seria remexer no manifesto sem medição que o peça.
  * @type {Entrada[]}
  */
 const AUTORIA = [
@@ -100,8 +106,11 @@ const AUTORIA = [
   // Objetos · 16
   {nome: 'file-text', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'folder', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'terminal', papeis: ['autoria'], onde: 'vocabulário do autor · landing › porta Procedimentos'},
-  {nome: 'wrench', papeis: ['autoria'], onde: 'vocabulário do autor · landing › porta Ferramentas'},
+  // Era também a porta `Procedimentos` da landing, que saiu na #94.
+  {nome: 'terminal', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  // Comprado pela porta `Ferramentas` da landing, que saiu na #94. Continua no
+  // vocabulário do autor, e hoje é o único nome de ferramenta do manifesto.
+  {nome: 'wrench', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'database', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'server', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Servidores MCP · vocabulário do autor'},
   {nome: 'cloud', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Infraestrutura · vocabulário do autor'},
@@ -131,10 +140,10 @@ const AUTORIA = [
   {nome: 'bot', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Skills · vocabulário do autor'},
   {nome: 'webhook', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'bell', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  // A porta `Jornadas` da landing. Ela deixou de violar a regra da porta no
-  // mesmo commit em que a árvore mudou: nos onze pares abaixo, `book-open` não é
-  // glifo de categoria nenhuma.
-  {nome: 'book-open', papeis: ['autoria'], onde: 'vocabulário do autor · landing › porta Jornadas'},
+  // Era a porta `Jornadas` da landing, que saiu na #94. Ela deixou de violar a
+  // regra da porta no mesmo commit em que a árvore mudou: nos onze pares abaixo,
+  // `book-open` não é glifo de categoria nenhuma — e isso continua verdade.
+  {nome: 'book-open', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'repeat', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'undo-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
 ];

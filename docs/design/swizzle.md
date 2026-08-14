@@ -169,7 +169,9 @@ referência gerada precisar de linguagem fora do que `additionalLanguages` cobre
 
 O degrau 4 continua vazio, e agora por um motivo mais forte que antes: não é que a faixa não foi comprada — é que **ela não custa isto**.
 
-**Continua vazio depois do slice da landing, e ali ele teve a segunda chance de ser gasto.** Um footer com variante para a landing — outra tinta, outra anatomia, ou a faixa escura descendo até o fim da página — sairia por envolver `Footer`, que é `safe` nas duas ações. Não foi comprado: **o footer da landing é o mesmo da doc, sem variante**, e o motivo está em [`landing.md`](landing.md) §5 — ilha que aparece em toda página deixa de ser ilha.
+**Continuou vazio depois do slice da landing, e ali ele teve a segunda chance de ser gasto.** Um footer com variante para aquela rota — outra tinta, outra anatomia, ou a faixa escura descendo até o fim da página — sairia por envolver `Footer`, que é `safe` nas duas ações. Não foi comprado: **o footer da landing era o mesmo da doc, sem variante**, e o motivo estava escrito na spec dela — ilha que aparece em toda página deixa de ser ilha.
+
+> **A página saiu, e o degrau continua vazio.** A [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) removeu a landing, e a remoção **não estornou nada** a este ledger: o degrau que não foi gasto não tinha o que devolver. O parágrafo acima fica, no passado, porque a chance foi real e a recusa foi decisão — apagá-lo trocaria uma escolha registrada por silêncio, que é exatamente o que a §4 deste documento existe para impedir.
 
 ### Degrau 5 — `--eject`
 
@@ -199,7 +201,9 @@ O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não 
 
 **O slice da árvore REMOVEU uma linha e não acrescentou nenhuma**, o que é o resultado mais raro que este ledger já produziu: 46 páginas autorais, três instâncias novas, um manifesto de ícones reescrito e uma marca trocada saíram sem custar um degrau. A árvore é config e conteúdo; a marca desceu de degrau em vez de subir; e o `docItemComponent` da segunda instância é a mesma opção pública que a primeira já usava.
 
-**O slice da landing não acrescentou uma linha a este ledger, e isso é o resultado esperado.** Uma landing inteira — quatro seções, faixa de espetáculo de dois focos, três camadas de profundidade, um loop ambiente e um reveal por rolagem — sai de uma rota em `src/pages/`, um CSS Module e três `@keyframes` na folha global. Nada disso é customização de componente do tema: `plugin-content-pages` já vem no preset, e uma rota própria não envolve, não substitui e não ejeta nada. O único gancho que a landing usa fora do CSS dela é `data-sd-component`, que é **contrato nosso**, publicado pelo catálogo.
+**O slice da landing não acrescentou uma linha a este ledger, e isso era o resultado esperado.** Uma landing inteira — quatro seções, faixa de espetáculo de dois focos, três camadas de profundidade, um loop ambiente e um reveal por rolagem — saía de uma rota em `src/pages/`, um CSS Module e três `@keyframes` na folha global. Nada disso é customização de componente do tema: `plugin-content-pages` já vem no preset, e uma rota própria não envolve, não substitui e não ejeta nada. O único gancho que ela usava fora do CSS dela era `data-sd-component`, que é **contrato nosso**, publicado pelo catálogo.
+
+**E o slice que a removeu custou o mesmo: zero.** A [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) apagou a rota, o CSS Module e três `@keyframes`, trocou `src/pages/index.js` por um salto para a primeira doc, e o `swizzle --list` congelado não mudou uma linha. A simetria é o parágrafo acima lido pelo outro lado: **o que não custou degrau para nascer não cobra degrau para morrer.** Esta é a leitura mais barata que o ledger já produziu de uma reversão inteira.
 
 ---
 

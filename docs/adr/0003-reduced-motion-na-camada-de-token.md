@@ -1,12 +1,20 @@
 # ADR 3 — Reduced-motion é propriedade da camada de token
 
-**Status:** aceito · slice 1 · 2026-08-07 · **com errata** · 2026-08-13
+**Status:** aceito · slice 1 · 2026-08-07 · **com duas erratas** · 2026-08-13, 2026-08-14
 
 > ### Errata — *"uma das cinco exceções do adaptador"* passou a ser uma das quatro
 >
 > **A decisão não muda**, e a consequência que carrega o número continua verdadeira no que ela afirma: `--docusaurus-details-transition` **é** alcançada por seletor estrutural com escopo, e nem a duração nem a curva dela ficam de fora. Ela é a **exceção 2**, e não foi ela que saiu.
 >
 > A lista do adaptador caiu de cinco para quatro na [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) — a de `--docusaurus-tag-list-border` saiu por não ter superfície viva. A lista fechada vive em [`docs/design/tokens.md`](../design/tokens.md) §7, e é lá que ela se confere membro a membro.
+
+> ### Errata — a regra (d) ficou sem exemplo vivo
+>
+> **A decisão não muda, e a regra continua escrita como está.** O que mudou é que os **dois** movimentos que a demonstravam deixaram de existir: o *reveal* por rolagem e a respiração do glow eram consumidos só pelo CSS Module da landing, e a página saiu na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94).
+>
+> Onde o documento diz que *"as duas somem inteiras — o reveal por não entrar no `@media (prefers-reduced-motion: no-preference)` que o envolve, e a respiração do glow por `animation: none` no bloco `reduce`"*, leia-se **o mecanismo, não o inventário**. Os dois caminhos continuam sendo os caminhos certos, e o bloco `reduce` de `src/css/tokens.css` guarda o comentário que os descreve para quem trouxer o próximo movimento infinito.
+>
+> **Nada do que este ADR proíbe ficou permitido.** Nenhum componente escreve `@media (prefers-reduced-motion)` próprio, e essa metade da decisão nunca dependeu de haver um movimento a desligar — ela é mais fácil de cumprir hoje, não menos.
 
 ## Contexto
 

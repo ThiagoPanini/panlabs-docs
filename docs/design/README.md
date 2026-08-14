@@ -49,16 +49,16 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 4. [`chrome.md`](chrome.md) — o shell da página de doc.
 5. Os transversais, em qualquer ordem: [`foco.md`](foco.md), [`motion.md`](motion.md), [`icones.md`](icones.md), [`swizzle.md`](swizzle.md).
 6. [`componentes/`](componentes/) — o catálogo fechado de dezessete.
-7. As duas rupturas de layout: [`referencia.md`](referencia.md) e [`landing.md`](landing.md).
+7. [`referencia.md`](referencia.md) — a ruptura de layout do site. **Era uma das duas**; a outra era a landing, e ela saiu.
 8. [`busca.md`](busca.md) — a única superfície de interação que o projeto autora.
 
 ---
 
 ## 3. O índice — uma linha por documento
 
-**Trinta arquivos.**
+**Vinte e nove arquivos.**
 
-> *Correção de contagem, registrada duas vezes.* A resolução do slice 7 dizia *"trinta arquivos"*; eram trinta e um, e o trigésimo primeiro é [`busca.md`](busca.md). **Voltaram a ser trinta** quando `componentes/verb-badge.md` saiu com o catálogo — e a segunda correção não desfaz a primeira: o motivo de `busca.md` ter arquivo próprio continua de pé. Ele ganhou arquivo próprio em vez de virar seção de [`chrome.md`](chrome.md) por um motivo estrutural, não por tamanho: `chrome.md` abre dizendo que **chrome não se autora, se entorta**, e que tudo nele é degrau 0 ou 1 da escada. A busca é degrau 5, com JS autorado e ARIA descrita em prosa — ela **contradiz a premissa do documento** que a hospedaria. Enfiá-la lá teria custado a frase de abertura de `chrome.md`, que é uma das mais úteis da spec.
+> *Correção de contagem, registrada três vezes.* A resolução do slice 7 dizia *"trinta arquivos"*; eram trinta e um, e o trigésimo primeiro é [`busca.md`](busca.md). **Voltaram a ser trinta** quando `componentes/verb-badge.md` saiu com o catálogo. **São vinte e nove** desde que `landing.md` saiu com a página que ele especificava ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) — onze na raiz e dezoito no catálogo, contados e não redigitados. E nenhuma das correções desfaz a anterior: o motivo de `busca.md` ter arquivo próprio continua de pé. Ele ganhou arquivo próprio em vez de virar seção de [`chrome.md`](chrome.md) por um motivo estrutural, não por tamanho: `chrome.md` abre dizendo que **chrome não se autora, se entorta**, e que tudo nele é degrau 0 ou 1 da escada. A busca é degrau 5, com JS autorado e ARIA descrita em prosa — ela **contradiz a premissa do documento** que a hospedaria. Enfiá-la lá teria custado a frase de abertura de `chrome.md`, que é uma das mais úteis da spec.
 
 ### 3.1 Os transversais e as superfícies
 
@@ -72,8 +72,7 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | [`motion.md`](motion.md) | as duas durações, as duas curvas, os seis movimentos nomeados e o reduced-motion resolvido na camada de token |
 | [`icones.md`](icones.md) | o manifesto de 60 nomes com teto de 64 e folga quatro, os dois renderizadores, a marca sem glifo e os onze pares seção→ícone |
 | [`swizzle.md`](swizzle.md) | o ledger vivo, os três significados de `src/theme/`, as perdas nomeadas e a disciplina de registro |
-| [`referencia.md`](referencia.md) | a primeira ruptura de layout — o contrato de assinatura, o gerador de fragmento e as três colunas |
-| [`landing.md`](landing.md) | a segunda ruptura — quatro seções, a faixa de espetáculo de dois focos, as três camadas e a lista fechada de seis |
+| [`referencia.md`](referencia.md) | a ruptura de layout — o contrato de assinatura, o gerador de fragmento e as três colunas |
 | [`busca.md`](busca.md) | o índice local, a escada de pontuação, o modal `<dialog>` e o ARIA por citação do APG |
 
 ### 3.2 O catálogo — dezoito arquivos
@@ -129,11 +128,11 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#58](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/58) as folhas, e o contrato que substitui o OpenAPI | [`referencia.md`](referencia.md) e [`informacao.md`](informacao.md) §3, via #82 e #81 |
 | [#59](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/59) as treze fixtures reatribuídas | [`informacao.md`](informacao.md) §7 — **onze**, e a correção está lá com o motivo |
 | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) o catálogo de dezoito sob o `mint` | os dezessete de [`componentes/`](componentes/), mais [`tokens.md`](tokens.md), [`chrome.md`](chrome.md), [`swizzle.md`](swizzle.md) e [`principios.md`](principios.md) |
-| [#61](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/61) a landing: impactante sem destoar | [`landing.md`](landing.md) inteiro, e o **portão 8** que a cobra |
+| [#61](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/61) a landing: impactante sem destoar | **revertida** por [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a página saiu, e com ela `landing.md` e o portão 8. O endereço da resolução hoje é esta linha: ela foi implementada, medida e removida por decisão de escopo, não por defeito |
 | [#68](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/68) a cor de marca | [`tokens.md`](tokens.md) — a rampa e os sete papéis |
 | [#70](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/70) o manifesto de ícones sob a árvore nova | [`icones.md`](icones.md), via #81 — o manifesto de 60 e os onze pares seção→ícone |
 | [#72](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/72) a pilha de fonte | [`tokens.md`](tokens.md) §4 |
-| [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) o segundo tom: onde o cyan mora | [`tokens.md`](tokens.md), [`landing.md`](landing.md), e [`principios.md`](principios.md) §5.3 |
+| [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) o segundo tom: onde o cyan mora | [`tokens.md`](tokens.md) e [`principios.md`](principios.md) §5.3 — o terceiro endereço era `landing.md`, e saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) |
 
 **Quatro aterrissaram sem carimbo próprio, e isso é achado da auditoria, não defeito.** As [#52](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/52), [#53](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/53), [#58](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/58) e [#70](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/70) não aparecem citadas por número em nenhum arquivo de `docs/design/` — o que a tabela de procedência do documento cita é o **ticket de implementação** que as consumiu (#77 a #83). É a mesma mecânica que a nota acima descreve para os de pesquisa, um degrau adiante: a resolução chega à spec através de quem a implementou.
 
@@ -158,7 +157,7 @@ Ela fica. O mapa [#30](https://github.com/panlabs-tech/shinydoc-docusaurus/issue
 | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) âncora e deltas | [`principios.md`](principios.md) §1, §3 e §5 |
 | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) arquitetura de tokens | [`tokens.md`](tokens.md) §1 a §3, [ADR 1](../adr/0001-doutrina-de-css.md) |
 | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) direção de arte | [`tokens.md`](tokens.md) — a rampa, os sete papéis, os oito `--sd-code-*` |
-| [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) glow e profundidade no claro | [`tokens.md`](tokens.md) §8, [`landing.md`](landing.md) §6 |
+| [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) glow e profundidade no claro | [`tokens.md`](tokens.md) §8 — a metade do glow saiu com a ilha em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94); a profundidade no claro continua onde estava |
 | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) estratégia de swizzle | [ADR 2](../adr/0002-politica-de-swizzle.md) e [`swizzle.md`](swizzle.md) inteiro |
 | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) inventário de componentes | os dezessete de [`componentes/`](componentes/) |
 | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) IA e o produto fictício | [`informacao.md`](informacao.md) §1 a §8 |
@@ -168,9 +167,9 @@ Ela fica. O mapa [#30](https://github.com/panlabs-tech/shinydoc-docusaurus/issue
 | [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) as três escolhas divergentes | [`chrome.md`](chrome.md) §1, e os dois deltas em [`principios.md`](principios.md) §3 |
 | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) orçamento de ícones | [`icones.md`](icones.md) |
 | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) contrato de foco | [`foco.md`](foco.md), [ADR 4](../adr/0004-contrato-de-estado-de-entrada.md) |
-| [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) estrutura da landing | [`landing.md`](landing.md) |
+| [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) estrutura da landing | **revertida** por [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), junto com a #61 — a raiz virou um salto para a primeira doc, e a estrutura que esta resolução decidiu deixou de ter sujeito |
 | [#27](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/27) anatomia do footer | [`chrome.md`](chrome.md) §6 |
-| [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) tela pequena | [`chrome.md`](chrome.md) §7, [`landing.md`](landing.md) §7, [`referencia.md`](referencia.md) |
+| [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) tela pequena | [`chrome.md`](chrome.md) §7 e [`referencia.md`](referencia.md) — o terceiro endereço era `landing.md` §7, e saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) |
 | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) tipografia e `@property` | [`tokens.md`](tokens.md) §4 e §5 |
 | [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) os pares seção→ícone | [`icones.md`](icones.md) §3 e §5 — **onze** sob a árvore do `panlabs` |
 | [#33](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/33) `trailingSlash` | [ADR 7](../adr/0007-trailingslash-false.md) |
@@ -181,7 +180,7 @@ Ela fica. O mapa [#30](https://github.com/panlabs-tech/shinydoc-docusaurus/issue
 
 ---
 
-## 5. Os oito portões
+## 5. Os sete portões
 
 Três cadências: **commit**, **upgrade** e **implantação**.
 
@@ -194,7 +193,6 @@ Três cadências: **commit**, **upgrade** e **implantação**.
 | 5 | A referência gerada é a projeção do contrato — regenera e diffa | commit | `npm run portao:5` |
 | 6 | As três rotas contra o host real, nos dois locales | **implantação** | `npm run portao:6 -- <url-base> [rota]` |
 | 7 | O `swizzle --list` congelado, e `src/theme/` conferido contra ele | **upgrade** | `npm run portao:7` |
-| 8 | Os seis efeitos da landing, em contagem exata, mais a metade negativa | commit | `npm run portao:8` |
 
 Mais **quatro** verificações que **não são portão** e rodam junto:
 
@@ -215,30 +213,17 @@ E **um relatório**, que não é portão nem verificação:
 >
 > *Dissenso registrado:* é mais uma coisa rodando na CI de todo commit, num projeto que já cobra sete portões e três verificações. Aceito porque o custo é de milissegundos e porque a alternativa — deixar a spec afirmar números que ninguém consegue reproduzir — é o que produziu o defeito.
 
-### 5.1 O oitavo, e o que ele protege que nenhum dos sete protegia
+### 5.1 O oitavo saiu com a página que ele cobrava
 
-**Ele é irmão do portão 1** — mesma forma de script, mesma remoção de comentário antes da varredura, mesma saída de contagem. E é a régua desta seção que o classifica como portão e não como verificação: **ele protege uma regra de escrita**, e ela cabe numa frase — *a landing pode ter isto, e nada mais*.
+**Havia um portão 8**, e a regra de escrita que ele protegia cabia numa frase: *a landing pode ter isto, e nada mais*. *"Impacto sem extravagância"* não sobrevive como adjetivo, porque adjetivo não passa por revisão — então virava **seis contagens exatas**: uma faixa `data-sd-showcase` no site, dois `radial-gradient` **dentro da regra da ilha** e não em qualquer lugar, um `infinite` em todo o CSS, uma declaração de `animation-timeline`, um consumidor de `--sd-type-6xl`, uma sombra de conteúdo na própria página. Mais a metade negativa, na mesma varredura: zero `@keyframes` novo, zero componente novo, zero literal no CSS Module dela, zero `z-index`. Um sétimo item era extravagância por definição.
 
-*"Impacto sem extravagância"* não sobrevive como adjetivo, porque adjetivo não passa por revisão. Ele vira **seis contagens**:
+**A página saiu em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e o portão saiu com ela.** Não foi o portão que envelheceu — foi o sujeito dele que deixou de existir. Um portão que conta efeitos numa rota removida passa verde todos os dias sem poder reprovar nada, e linha verde que não consegue ficar vermelha é a pior linha de uma CI: ela ensina a confiar no que não está sendo conferido. A raiz virou um salto para a primeira doc, e o que ela renderiza agora não tem efeito nenhum a licenciar.
 
-| # | O que a landing pode ter de único | Contagem |
-| ---: | --- | ---: |
-| 1 | a faixa escura sangrada | **1** `data-sd-showcase` no site |
-| 2 | dois focos de luz | **2** `radial-gradient`, os dois na regra da ilha |
-| 3 | um loop ambiente | **1** `infinite` em todo o CSS |
-| 4 | um reveal por rolagem | **1** declaração de `animation-timeline` |
-| 5 | um degrau de tipo acima do site | **1** consumidor de `--sd-type-6xl` |
-| 6 | uma sombra de conteúdo | **1** consumidor de `--sd-shadow-raised` **na landing** |
+> *Dissenso registrado, e ele sobrevive à remoção.* O portão 8 foi aceito sendo o oitavo num projeto que já tinha sete, e protegendo **uma página**. Essa objeção não é o que o matou — o que o matou foi o sujeito. Se a faixa de espetáculo voltar, o argumento que o criou volta inteiro, e o parágrafo acima é a especificação dele: seis contagens e quatro zeros, sem uma linha de prosa a reconstruir.
 
-Mais a metade negativa, na mesma varredura: **zero `@keyframes` novo** (quatro no projeto, e a landing consome três sem definir nenhum), **zero componente novo**, **zero literal** no CSS Module dela, **zero `z-index`**. **Um sétimo item é extravagância por definição.**
+> **Uma correção de fato que a remoção promove a consequência.** A linha 6 do portão foi escrita como *"1 consumidor de `--sd-shadow-raised`"*, site inteiro; **eram dois** — o botão primário da landing e o painel da referência gerada —, e [`tokens.md`](tokens.md) §6 já dizia isso por escrito. Com a landing fora, **é um**: o painel. O token continua declarado porque continua consumido, e essa é a diferença entre ele e `--sd-type-6xl`, que saiu.
 
-**A linha 2 não é contagem cega, e a diferença importa.** Contar dois `radial-gradient` em algum lugar deixaria passar um gradiente idêntico declarado em `:root`, que acenderia o site inteiro. O portão lê o **seletor do bloco** em que cada gradiente cai, e reprova qualquer um fora de `[data-sd-showcase]`.
-
-> **Correção de fato contra a resolução que pediu este portão.** A linha 6 foi escrita como *"1 consumidor de `--sd-shadow-raised`"*, site inteiro. **São dois** — o botão primário da landing e o painel da referência gerada —, e [`tokens.md`](tokens.md) §6 já dizia isso por escrito. A contagem que se sustenta é a da landing, e é a que o portão cobra. A régua não afrouxou: ela passou a dizer o que mede.
-
-> *Dissenso registrado:* é o oitavo portão num projeto que já tinha sete, e ele protege **uma página**. A alternativa — deixar a lista como prosa em [`landing.md`](landing.md) — foi recusada porque uma lista de contagens que ninguém conta é adjetivo com tabela.
-
-> **São sete, e eram seis até o slice 7.** A resolução do slice 7 chamava o portão do `swizzle --list` de *portão 5*; o número já estava gasto pelo portão do gerador da API, citado pelo [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) **pelo número**. Renumerar um portão commitado para satisfazer um número escrito antes de ele existir quebraria a citação. Ele é o 7. Ver [`swizzle.md`](swizzle.md) §5. **Hoje são oito**, e o mesmo argumento vale ao contrário: o 8 é o próximo número livre, e não o número que a lista *pareceria* querer.
+> **São sete de novo, e eram seis até o slice 7.** A resolução do slice 7 chamava o portão do `swizzle --list` de *portão 5*; o número já estava gasto pelo portão do gerador da API, citado pelo [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) **pelo número**. Renumerar um portão commitado para satisfazer um número escrito antes de ele existir quebraria a citação. Ele é o 7. Ver [`swizzle.md`](swizzle.md) §5. **O mesmo argumento governa a saída do 8: o número não é reaproveitado.** O próximo portão a nascer é o 9, não o 8 vago — a numeração é identidade, não posição numa fila, e é a citação por número que a torna assim.
 >
 > Consequência menor, dita para não envelhecer calada: a frase do [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) que chama o portão 5 de *"o único do conjunto que não é `grep`"* passou a ter companhia — o portão 7 é da mesma família, regenera e diffa.
 
@@ -466,8 +451,8 @@ Cinco categorias, varridas no fecho:
 
 | O que se procura | Como | Resultado |
 | --- | --- | --- |
-| **Token sem consumidor** | todo `--sd-*` de `tokens.css` contra `var(--sd-*)` em `src/`, `scripts/`, `conteudo/` e na raiz | **3 de 136**, os três com o motivo escrito ao lado da definição |
-| **Classe de procedência sem membro** | `delta deliberado` e `lacuna de medição`, varridas nas tabelas dos trinta arquivos | delta: **zero membros**, e é resultado (§3 de [`principios.md`](principios.md)). Medição: **zero membros** — os oito foram medidos nesta reescrita (ver abaixo) |
+| **Token sem consumidor** | todo `--sd-*` de `tokens.css` contra `var(--sd-*)` em `src/`, `scripts/`, `conteudo/` e na raiz | **7 de 130**, os sete com o motivo escrito ao lado da definição |
+| **Classe de procedência sem membro** | `delta deliberado` e `lacuna de medição`, varridas nas tabelas dos vinte e nove arquivos | delta: **zero membros**, e é resultado (§3 de [`principios.md`](principios.md)). Medição: **zero membros** — os oito foram medidos nesta reescrita (ver abaixo) |
 | **SVG não referenciado** | `npm run icones` — bijeção manifesto ↔ `static/icons/` | zero: 60 desenhos, 69 tags, nenhum arquivo a mais |
 | **Doc de componente sem componente** | os dezessete de [`componentes/`](componentes/) contra o registro de `MDXComponents` e `src/components/` | zero |
 | **Entrada de ledger sem assunto** | cada linha de [`swizzle.md`](swizzle.md) §3 contra o que existe em `src/` | **uma achada e removida** |
@@ -475,9 +460,13 @@ Cinco categorias, varridas no fecho:
 
 **O que a varredura procura é órfão SEM MOTIVO, e não órfão.** A diferença não é conveniência de redação: `--sd-state-danger-edge` já era órfão antes desta reescrita, e a justificativa dele — *família de quatro não tem buraco no meio* — está escrita no próprio bloco de [`tokens.md`](tokens.md) §3 desde o slice que o criou, e foi aceita ali. Uma varredura que reprovasse órfão puro reprovaria uma decisão que o projeto já tomou por escrito, e portão que reprova o que funciona é portão que alguém desliga.
 
-**Os três têm uma linha cada.** `--sd-gray-200` é parada de uma rampa declarada inteira, e rampa com buraco no meio é pior de ler do que a parada a mais — quem re-marca precisa da geometria completa para julgar o que a marca dele produz em cada degrau; `--sd-state-danger-edge` é o mesmo argumento, na família de quatro; `--sd-toc-width` **nomeia um elo da cadeia de proporções** de [`chrome.md`](chrome.md) §1 sem ser quem o pinta — quem o pinta é o grid 75/25 do upstream, numa classe hasheada que custaria `unsafe` para alcançar. Ele é o valor **contra o qual** se mede o que o grid entrega.
+**Os sete têm uma linha cada.** `--sd-gray-200` é parada de uma rampa declarada inteira, e rampa com buraco no meio é pior de ler do que a parada a mais — quem re-marca precisa da geometria completa para julgar o que a marca dele produz em cada degrau; `--sd-state-danger-edge` é o mesmo argumento, na família de quatro; `--sd-toc-width` **nomeia um elo da cadeia de proporções** de [`chrome.md`](chrome.md) §1 sem ser quem o pinta — quem o pinta é o grid 75/25 do upstream, numa classe hasheada que custaria `unsafe` para alcançar. Ele é o valor **contra o qual** se mede o que o grid entrega.
 
-**A `lacuna de medição` tinha oito membros, e a #83 mediu os oito contra a âncora** — Chrome headless contra `mintlify.com/docs` e as sete referências, mais fonte primária (WHATWG, Chrome/Firefox/Safari) onde a pergunta era de plataforma e não de âncora. Os quatro matizes de estado ([`tokens.md`](tokens.md)) e a busca em `<details>` fechado ([`componentes/expandable.md`](componentes/expandable.md)) mediram para `herdado`. A base da escala de espaço ([`tokens.md`](tokens.md)), a espessura de foco ([`foco.md`](foco.md)), o registro do glifo de sidebar ([`icones.md`](icones.md)), o colapso da grade ([`landing.md`](landing.md) e [`componentes/card-group.md`](componentes/card-group.md)) e o `scroll-behavior` ([`motion.md`](motion.md)) mediram para `origem própria (medição)` — a âncora não decide o ponto, decide diferente do que sustentamos, ou não faz o que se supunha. **Esvaziar exigiu medir oito coisas, não reescrever oito linhas** — e o axioma 5 é exatamente a regra que proíbe fechar a classe sem medir. Ela era a única das cinco que só se esvaziava por trabalho de fora do documento; agora esvaziou, e [`principios.md`](principios.md) §5.3 registra o antes e o depois lado a lado, pelo mesmo motivo que o axioma 6 preserva o resultado da primeira rodada.
+> **Eram três de 136, e a remoção da landing os levou a sete de 130.** Os quatro que entraram são todos consumidores que a página levou consigo, e nenhum deles é órfão sem motivo. `--sd-move-showcase`, `--sd-move-reveal` e `--sd-move-ambient` são metade do **vocabulário fechado** que o portão 2 cobra: ele reprova toda duração ou curva cravada e manda usar um dos seis nomes, e tirar três deixaria a próxima faixa sem nome para pedir — escrevendo o número que o portão existe para impedir. `--sd-accent-contrast` é papel semântico da camada 2, e a camada 2 declara a mesma lista nos dois modos: um papel que sai de um bloco e não do outro é o buraco visível que essa simetria existe para denunciar.
+>
+> E um token **saiu** em vez de ficar, na mesma varredura: `--sd-type-6xl`, o degrau de display. A diferença não é de tamanho, é de argumento — os sete que ficam são elo de família (rampa, escala de movimento, par de modo) ou medida de referência, e um degrau de display não é elo de nada: ele já saltava o `5xl` por não haver o que preencher no meio. Sem o hero não sobra motivo, e mantê-lo repetiria o defeito que matou o `5xl`. Ver [`tokens.md`](tokens.md) §8.
+
+**A `lacuna de medição` tinha oito membros, e a #83 mediu os oito contra a âncora** — Chrome headless contra `mintlify.com/docs` e as sete referências, mais fonte primária (WHATWG, Chrome/Firefox/Safari) onde a pergunta era de plataforma e não de âncora. Os quatro matizes de estado ([`tokens.md`](tokens.md)) e a busca em `<details>` fechado ([`componentes/expandable.md`](componentes/expandable.md)) mediram para `herdado`. A base da escala de espaço ([`tokens.md`](tokens.md)), a espessura de foco ([`foco.md`](foco.md)), o registro do glifo de sidebar ([`icones.md`](icones.md)), o colapso da grade ([`componentes/card-group.md`](componentes/card-group.md); o segundo endereço era `landing.md`, e saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e o `scroll-behavior` ([`motion.md`](motion.md)) mediram para `origem própria (medição)` — a âncora não decide o ponto, decide diferente do que sustentamos, ou não faz o que se supunha. **Esvaziar exigiu medir oito coisas, não reescrever oito linhas** — e o axioma 5 é exatamente a regra que proíbe fechar a classe sem medir. Ela era a única das cinco que só se esvaziava por trabalho de fora do documento; agora esvaziou, e [`principios.md`](principios.md) §5.3 registra o antes e o depois lado a lado, pelo mesmo motivo que o axioma 6 preserva o resultado da primeira rodada.
 
 **A entrada de ledger sem assunto era `.navbar__brand:empty`.** Ela escondia o link vazio que o upstream renderiza quando não há `navbar.title` — e o `title` voltou com a marca sem glifo. O próprio `chrome.css` já dizia, em comentário, que a declaração não existia mais; o ledger é que não tinha sido lido contra o arquivo. **É a morte exata que esta varredura existe para pegar**: nenhum build reclamaria de uma linha de tabela descrevendo CSS que ninguém escreve.
 

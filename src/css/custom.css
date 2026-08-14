@@ -79,12 +79,16 @@ html {
    `text-wrap: pretty` no corpo e `balance` em título matam órfã sem custar nada.
 
    Nada de `transition` em `background-color` ou `color` aqui nem em `:root`: a
-   troca de tema é instantânea. Uma transição global de cor faria a ilha de
-   espetáculo — que é inerte na troca — parecer congelada enquanto o site inteiro
-   esmaece em volta, além de repintar o documento no único momento em que a
+   troca de tema é instantânea. O motivo que basta sozinho é o repinte — uma
+   transição global de cor repinta o documento no único momento em que a
    animação toca cada pixel da página. Verificado: nem o Infima nem o
    theme-classic declaram transição de cor em `html`, `body` ou `:root`, então a
    regra é não introduzir uma.
+
+   O segundo motivo perdeu o sujeito com a landing (issue #94), e fica anotado
+   porque volta com ela: uma região inerte na troca de tema — a ilha de
+   espetáculo era a única — pareceria congelada enquanto o site inteiro esmaece
+   em volta.
    ----------------------------------------------------------------------------- */
 
 body {
@@ -123,12 +127,22 @@ samp {
    CSS Modules manglam o nome do `@keyframes` que o módulo **define**, e um
    keyframe definido num módulo é inalcançável de fora dele. A falha é
    silenciosa: não anima e não avisa. Um módulo pode **referenciar** keyframe
-   global sem problema, então a landing usa estes três e o confinamento dela
-   continua intacto — o que mora no módulo dela é a REGRA, não o desenho do
-   movimento.
+   global sem problema, e é por isso que eles moram aqui: o que mora no módulo
+   que consome é a REGRA, não o desenho do movimento, e o confinamento continua
+   intacto.
 
-   São três, e são os três movimentos que a ilha e a landing licenciam. O quarto
-   — a entrada do modal de busca — nasce no slice da busca.
+   É UM, e é a entrada do modal de busca. Eram quatro: os outros três — a
+   entrada da ilha, a respiração do glow e o reveal por rolagem — saíram com a
+   landing (issue #94), porque eram consumidos só pelo CSS Module dela.
+
+   A respiração não ficou órfã, ficou QUEBRADA: ela lia `--sd-glow-vale` e
+   `--sd-glow-crista`, e esses dois saíram junto com a regra `[data-sd-showcase]`
+   da camada 3. Mantê-la seria um `@keyframes` animando para `opacity`
+   indefinido. Os tokens de movimento que as nomeavam — `--sd-move-showcase`,
+   `--sd-move-reveal`, `--sd-move-ambient` — continuam declarados em
+   `tokens.css`, e o motivo está escrito ao lado deles: o vocabulário de motion é
+   fechado por portão, e um keyframe é implementação, enquanto o token é
+   vocabulário.
 
    Nenhum deles crava duração ou curva: quem as escolhe é a regra que os
    consome, por nome de movimento. E nenhum anima `filter` ou `blur`, que
@@ -148,38 +162,6 @@ samp {
    Os dois mecanismos, com o nome de cada plugin, estão em
    docs/design/motion.md §6 — aqui ficam as regras, não a demonstração.
    ----------------------------------------------------------------------------- */
-
-/* A entrada da ilha — `--sd-move-showcase`. A luz sobe uma vez, no
-   carregamento, e termina. Só `opacity`, e só sobre a camada decorativa:
-   nenhum texto, nenhuma borda e nenhuma caixa se mexe. */
-@keyframes sd-acende {
-  from {
-    opacity: 0;
-  }
-}
-
-/* A respiração do glow — `--sd-move-ambient`, infinita. A amplitude é o par
-   declarado no escopo da ilha, e não um número escrito aqui: fora de
-   `[data-sd-showcase]` estas duas variáveis não resolvem. */
-@keyframes sd-respira {
-  from,
-  to {
-    opacity: var(--sd-glow-vale);
-  }
-
-  50% {
-    opacity: var(--sd-glow-crista);
-  }
-}
-
-/* O reveal por rolagem — `--sd-move-reveal`, dirigido pela posição de rolagem.
-   O deslocamento é um degrau da escala de espaço, não um valor de movimento. */
-@keyframes sd-revela {
-  from {
-    opacity: 0;
-    transform: translateY(var(--sd-space-4));
-  }
-}
 
 /* A entrada do modal de busca — `--sd-move-enter`.
 

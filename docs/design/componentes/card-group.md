@@ -7,8 +7,19 @@
 Arruma [`card`](card.md) numa grade. **Sem contagem de colunas** — nem prop, nem
 media query, nem container query: a contagem de cartões faz o trabalho sozinha.
 
-Uma declaração serve **a landing e o MDX**. Não são duas grades parecidas que
-precisam ser mantidas juntas; é a mesma.
+Uma declaração, e hoje **um consumidor só: o MDX**. Não são duas grades
+parecidas que precisam ser mantidas juntas; é a mesma — e ela deixou de ter uma
+segunda superfície a servir.
+
+> **Correção de fato.** A frase era *"uma declaração serve **a landing e o
+> MDX**"*, e a landing saiu em
+> [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94).
+> **Metade do motivo morreu, e fica escrito qual metade:** o argumento de *duas
+> grades parecidas mantidas juntas* perdeu o segundo caso, e com ele a razão de
+> a declaração ser compartilhada. A outra metade continua inteira — a grade não
+> tem contagem de colunas, e isso é decisão do componente, não de quem o
+> consome. O token não se move por causa disto; o motivo dele é que ele passou
+> a ser outro, e a `## Procedência` diz qual.
 
 **O nome fica `CardGroup`, e a âncora hoje chama isto de `Columns`.** Ela
 deprecou o nome antigo em favor do novo, e o shinydoc **não segue** — por razão
@@ -37,9 +48,12 @@ gap: var(--sd-space-4);
 grid-template-columns: var(--sd-card-grid);
 ```
 
-**A lista de faixas mora em [`tokens.md`](../tokens.md), não aqui**, e é isso que
-torna literal a frase *uma declaração serve a landing e o MDX*: as duas citam o
-mesmo nome em vez de repetir a mesma lista. Ela é
+**A lista de faixas mora em [`tokens.md`](../tokens.md), não aqui.** Ela era o
+que tornava literal a frase *uma declaração serve a landing e o MDX* — as duas
+superfícies citavam o mesmo nome em vez de repetir a mesma lista. Com uma
+superfície só, **o token fica pelo argumento que restou**: ele é valor composto,
+e valor composto mora na camada 1 pelo precedente da escada de elevação, não pelo
+número de quem o cita. Ela é
 `repeat(auto-fit, minmax(min(var(--sd-card-min), 100%), 1fr))`, e `--sd-card-min`
 é **derivado do limiar da âncora a três colunas**.
 
@@ -130,9 +144,10 @@ cheia.
 | **O alvo medido da anatomia** | **medido em referência** | medição de primeira mão da âncora, em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Colapso direto para uma coluna, sem passo intermediário | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — medido na âncora |
 | O espaçamento entre cartões e o limiar de três colunas | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — medidos |
-| `auto-fit` no lugar da container query | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — medido: a âncora usa `repeat(var(--cols), minmax(0,1fr))` com `--cols` do autor, não `auto-fit`; o teto de 4 é limite de produto (*"supports one to four columns"*), não reflow de grid. Ver [`landing.md`](../landing.md) §Procedência |
+| `auto-fit` no lugar da container query | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — medido: a âncora usa `repeat(var(--cols), minmax(0,1fr))` com `--cols` do autor, não `auto-fit`; o teto de 4 é limite de produto (*"supports one to four columns"*), não reflow de grid. A medição tinha um segundo endereço em `landing.md`, e ele saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — esta linha passa a ser o único |
 | A fila incompleta fica incompleta | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — a âncora não trata a última fila |
 | `--sd-card-min` na camada 1 | origem própria | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) — o piso é derivado e compartilhado |
-| A lista de faixas também na camada 1, como `--sd-card-grid` | **origem própria (implementação)** | *"uma declaração serve a landing e o MDX"* só é conferível se a declaração morar num lugar que as duas citem; o precedente é a escada de elevação, que é valor composto pelo mesmo motivo |
+| A lista de faixas também na camada 1, como `--sd-card-grid` | **origem própria (implementação)** | o motivo era *"uma declaração serve a landing e o MDX"*, só conferível se a declaração morar num lugar que as duas citem. **Metade dele caiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**: sobrou um consumidor. O token fica pela metade que restou — o precedente é a escada de elevação, que é valor composto e mora na camada 1 pelo mesmo motivo |
+| **O motivo do `--sd-card-grid` perdeu metade, e o token fica** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — *duas superfícies citando um nome* virou *uma*; a justificativa que sobrevive é *valor composto na camada 1*, e ela sozinha já bastava. Registrado em vez de reescrito calado, porque a próxima superfície que quiser a mesma grade precisa saber que o argumento do compartilhamento está vago |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
 | O nome `CardGroup` fica, com a âncora já em `Columns` | **origem própria** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — `Columns` é nomeado pela contagem de colunas que este componente recusa ter; adotar o nome sem a prop publicaria um contrato que a implementação não honra |
