@@ -1,5 +1,13 @@
 /**
- * `param-field` e `response-field` — os dois campos da Referência da API.
+ * `param-field` e `response-field` — **parâmetro de função** e **campo de
+ * retorno**, os dois campos da referência de biblioteca.
+ *
+ * **Os dois sobreviveram à troca de contrato por nunca terem sido HTTP.** O
+ * vocabulário deles é nome, tipo, obrigatoriedade, valor padrão e descrição — as
+ * mesmas cinco informações de um argumento de função e de um campo devolvido —, e
+ * a medição confirma a leitura: o `ParamField` da âncora usa **só `body=`**,
+ * nunca `query`, `path` ou `header`. Quem era HTTP era o `VerbBadge`, e ele saiu
+ * do catálogo.
  *
  * Um componente interno com uma prop de espécie, e não duas anatomias
  * paralelas: duplicar a anatomia inteira para ganhar duas props é como se
@@ -14,8 +22,9 @@
  *
  * Duas coisas que a âncora decidiu e nós herdamos: só `required` se marca — a
  * ausência é o sinal de opcional, e marcar as duas divide por dois a saliência
- * do que importa —, e `deprecated` é tachado mais texto apagado, **sem abrir cor
- * nova**, para não dividir o âmbar com `PUT` na mesma página.
+ * do que importa —, e o chip dele é **vermelho, com a palavra por extenso**.
+ * `deprecated` continua tachado mais texto apagado, **sem cor**, por razão nova:
+ * o vermelho passou a ser do chip de obrigatório.
  *
  * Procedência: docs/design/componentes/param-field.md · response-field.md.
  */
@@ -37,9 +46,12 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
         <code>{name}</code>
         {/* `meta` é a única parte publicada do catálogo que a régua estreita
             NÃO obriga: ela é o único `<span>` do cabeçalho, e a skin a
-            alcançaria por `> span`. Ela fica porque a rota da Referência da API
-            a nomeia verbatim no contrato, e despublicar depois quebra quem já
-            dependeu — o que a régua também diz. */}
+            alcançaria por `> span`. Ela fica porque a rota gerada a nomeia
+            verbatim no contrato de partes dela, e despublicar depois quebra quem
+            já dependeu — o que a régua também diz. A condição é CONFERIDA, e não
+            afirmada: o portão 5 casa esta linha com as páginas geradas de tipo e
+            função — a do módulo não tem parâmetro nem retorno —, e reprova se o
+            ramo gerado deixar de consumir o campo. */}
         <span className={estilos.fieldMeta} data-sd-part="meta">
           {type}
           {padrao === undefined ? null : (

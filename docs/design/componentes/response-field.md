@@ -2,13 +2,20 @@
 
 ## Papel
 
-Um **campo de resposta** — o que a API devolve. Mesma informação que
+Um **campo de retorno** — o que a chamada devolve. Mesma informação que
 [`param-field`](param-field.md) vista do outro lado da chamada, e por isso mesma
-anatomia.
+anatomia. Nas páginas de **tipo** ele descreve os atributos da instância, que é o
+mesmo papel visto de outro ângulo: o que se lê de volta.
 
 Ele é **recursivo**: um campo de objeto contém outros campos, que contêm outros.
-A medição encontrou aninhamento de até quatro níveis, e quatro é o teto do
-sistema.
+O teto do sistema é **quatro níveis**, e a dona dele é
+`Procedimentos › Infraestrutura › O output de um módulo` — escrita à mão no
+acervo, com exatamente quatro.
+
+**Um campo cujo tipo é outra entrada do contrato não aninha — ele linka.** É o
+que dispensou o reset de profundidade que a contagem precisava quando o contrato
+tinha `$ref`: não existe expansão embutida cujo orçamento dependa de onde ela foi
+referenciada. Ver [`referencia.md`](../referencia.md) §5.3.
 
 ## Anatomia
 
@@ -39,25 +46,25 @@ irmãos.
 
 As mesmas de [`param-field`](param-field.md): o default e `deprecated`.
 
-**Nada de obrigatoriedade tem leitura aqui.** Um campo de resposta não é
-obrigatório nem opcional — ou a API o devolve, ou não. O componente aceita a
-prop porque a implementação é compartilhada, e o gabarito de página de endpoint
-não a usa nesta espécie.
+**Nada de obrigatoriedade tem leitura aqui.** Um campo de retorno não é
+obrigatório nem opcional — ou a chamada o devolve, ou não. O componente aceita a
+prop porque a implementação é compartilhada, e o gerador nunca a emite nesta
+espécie.
 
 ## Autoria em MDX
 
 ```mdx
-<ResponseField name="id" type="string">
-O identificador da cobrança, com prefixo `cob_`.
+<ResponseField name="caminho" type="Path">
+O arquivo escrito, ou o que teria sido escrito sob `diff=True`.
 </ResponseField>
 
-<ResponseField name="eventos" type="array de object">
-O histórico imutável do que aconteceu.
+<ResponseField name="recusas" type="list[dict]">
+As recusas encontradas. Vazia quando a esteira passa.
 
-<Expandable title="objeto evento">
+<Expandable title="list[dict]">
 
-<ResponseField name="tipo" type="string">
-O nome do evento, como `cobranca.paga`.
+<ResponseField name="ponteiro" type="str">
+O nó ofensor, em caminho pontilhado.
 </ResponseField>
 
 </Expandable>
@@ -87,7 +94,7 @@ Sem foco próprio: o campo é texto. O contrato de estado de entrada mora em
 [`foco.md`](../foco.md).
 
 **Ele nunca alimentou playground, e isso deixou de ser assimetria**: a edição de
-valores da Referência da API mora no painel da rota, então nem este nem
+valores da referência gerada mora no painel da rota, então nem este nem
 [`param-field`](param-field.md) carregam estado.
 
 ## Procedência
@@ -95,7 +102,9 @@ valores da Referência da API mora no painel da rota, então nem este nem
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | Componente do zero, recursivo | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — *"`ResponseField` é recursivo"* |
-| Teto de quatro níveis de aninhamento | delta deliberado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §5 — três é o limite medido; a fixture do conteúdo precisa de quatro |
+| **`ResponseField` descreve campo de retorno** | herdado | ele nunca foi HTTP: as cinco informações valem para o que uma chamada devolve e para o atributo de um tipo |
+| **Teto de quatro níveis, com dona nova** | **origem própria (correção)** | a dona era `cobranca.pagamento.cartao.verificacoes`, do domínio morto; é `Infraestrutura › O output de um módulo`. O carimbo era `delta deliberado` **até esta linha** — a varredura que zerou a lista de deltas em [`principios.md`](../principios.md) §3 não o alcançou, e o documento afirmava lista vazia enquanto esta linha ainda a carregava |
+| **Tipo que é outra entrada linka, não aninha** | **origem própria (consequência)** | o reset de profundidade do `$ref` saiu sem deixar buraco — ver [`referencia.md`](../referencia.md) §5.3 |
 | Recursão sem JavaScript | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) e [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Implementação compartilhada com `param-field` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, nota de implementação |
 | Sem campo editável | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §4 |

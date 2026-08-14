@@ -26,7 +26,9 @@ O que isso compra: quem implementa não precisa julgar. Uma régua de julgamento
 
 ### 2.1 Antes de escrever qualquer código
 
-Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura de referência: são restrição sobre o que se pode construir depois, e um agente que descobre a política de swizzle no quinto slice já gastou degraus que não podia.
+Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura de referência: são restrição sobre o que se pode construir depois, e um agente que descobre a política de swizzle no quinto slice já gastou degraus que não podia.
+
+**O 5 lê-se pelo 8.** Ele foi **superado**, e continua na lista porque a imutabilidade dos ADRs é o que preserva o registro de *"decidimos OpenAPI uma vez, e por quê"*. O que decide hoje é o 8.
 
 | # | ADR | Por que ele vem antes |
 | ---: | --- | --- |
@@ -34,9 +36,10 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | 2 | [Política de swizzle](../adr/0002-politica-de-swizzle.md) | a escada de seis degraus e o orçamento `unsafe` zero |
 | 3 | [Reduced-motion na camada de token](../adr/0003-reduced-motion-na-camada-de-token.md) | movimento novo entra no vocabulário antes de ter consumidor |
 | 4 | [Contrato de estado de entrada](../adr/0004-contrato-de-estado-de-entrada.md) | foco, press e piso de alvo são um mecanismo só |
-| 5 | [A Referência da API é gerada de contrato](../adr/0005-referencia-da-api-gerada-de-contrato.md) | quem edita a página gerada edita a saída em vez da fonte |
+| 5 | [A Referência da API é gerada de contrato OpenAPI](../adr/0005-referencia-da-api-gerada-de-contrato.md) | **superado pelo 8** — fica pelo registro de por que OpenAPI foi escolhido uma vez |
 | 6 | [A busca é índice local, sem serviço externo](../adr/0006-busca-local-sem-servico-externo.md) | é o único que descreve uma superfície **removível** |
 | 7 | [`trailingSlash: false`](../adr/0007-trailingslash-false.md) | seis coisas derivam a URL dele; descobrir tarde custa caro |
+| 8 | [A referência de biblioteca é gerada de contrato de assinatura](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) | quem edita a página gerada edita a saída em vez da fonte |
 
 ### 2.2 Depois, a spec
 
@@ -46,7 +49,7 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 4. [`chrome.md`](chrome.md) — o shell da página de doc.
 5. Os transversais, em qualquer ordem: [`foco.md`](foco.md), [`motion.md`](motion.md), [`icones.md`](icones.md), [`swizzle.md`](swizzle.md).
 6. [`componentes/`](componentes/) — o catálogo fechado de dezessete.
-7. As duas rupturas de layout: [`api-reference.md`](api-reference.md) e [`landing.md`](landing.md).
+7. As duas rupturas de layout: [`referencia.md`](referencia.md) e [`landing.md`](landing.md).
 8. [`busca.md`](busca.md) — a única superfície de interação que o projeto autora.
 
 ---
@@ -69,7 +72,7 @@ Os **sete ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | [`motion.md`](motion.md) | as duas durações, as duas curvas, os seis movimentos nomeados e o reduced-motion resolvido na camada de token |
 | [`icones.md`](icones.md) | o manifesto de 60 nomes com teto de 64 e folga quatro, os dois renderizadores, a marca sem glifo e os onze pares seção→ícone |
 | [`swizzle.md`](swizzle.md) | o ledger vivo, os três significados de `src/theme/`, as perdas nomeadas e a disciplina de registro |
-| [`api-reference.md`](api-reference.md) | a primeira ruptura de layout — o contrato, o gerador e as três colunas |
+| [`referencia.md`](referencia.md) | a primeira ruptura de layout — o contrato de assinatura, o gerador de fragmento e as três colunas |
 | [`landing.md`](landing.md) | a segunda ruptura — quatro seções, a faixa de espetáculo de dois focos, as três camadas e a lista fechada de seis |
 | [`busca.md`](busca.md) | o índice local, a escada de pontuação, o modal `<dialog>` e o ARIA por citação do APG |
 
@@ -117,7 +120,7 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) sistema visual medido *(pesquisa)* | [`tokens.md`](tokens.md), via #11 e #12 |
 | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) inventário de componentes *(pesquisa)* | [`componentes/`](componentes/), via #15 |
 | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) tema, Infima e a fronteira do swizzle *(pesquisa)* | [ADR 2](../adr/0002-politica-de-swizzle.md), [`swizzle.md`](swizzle.md), via #14 |
-| [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) API Reference sem sair do vanilla *(pesquisa)* | [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md), [`api-reference.md`](api-reference.md), via #18 |
+| [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) API Reference sem sair do vanilla *(pesquisa)* | [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md), [`referencia.md`](referencia.md), via #18 e #82 |
 | [#7](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/7) busca, i18n e versionamento *(pesquisa)* | [`busca.md`](busca.md), [`informacao.md`](informacao.md) §5 e §8, via #19 e #16 |
 | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) recursos AI-era *(pesquisa)* | [`informacao.md`](informacao.md) §9, [ADR 7](../adr/0007-trailingslash-false.md), via #33 |
 | [#9](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/9) forma da própria spec | **este arquivo**, mais o gabarito de [`componentes/README.md`](componentes/README.md) |
@@ -129,14 +132,14 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) inventário de componentes | os dezessete de [`componentes/`](componentes/) |
 | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) IA e o produto fictício | [`informacao.md`](informacao.md) §1 a §8 |
 | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) vocabulário de motion | [`motion.md`](motion.md), [ADR 3](../adr/0003-reduced-motion-na-camada-de-token.md) |
-| [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) rota do API Reference | [`api-reference.md`](api-reference.md), [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) |
+| [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) rota do API Reference | [`referencia.md`](referencia.md), [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) — superado pelo [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) |
 | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) rota da busca | [`busca.md`](busca.md), [ADR 6](../adr/0006-busca-local-sem-servico-externo.md) |
 | [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) as três escolhas divergentes | [`chrome.md`](chrome.md) §1, e os dois deltas em [`principios.md`](principios.md) §3 |
 | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) orçamento de ícones | [`icones.md`](icones.md) |
 | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) contrato de foco | [`foco.md`](foco.md), [ADR 4](../adr/0004-contrato-de-estado-de-entrada.md) |
 | [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) estrutura da landing | [`landing.md`](landing.md) |
 | [#27](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/27) anatomia do footer | [`chrome.md`](chrome.md) §6 |
-| [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) tela pequena | [`chrome.md`](chrome.md) §7, [`landing.md`](landing.md) §7, [`api-reference.md`](api-reference.md) |
+| [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) tela pequena | [`chrome.md`](chrome.md) §7, [`landing.md`](landing.md) §7, [`referencia.md`](referencia.md) |
 | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) tipografia e `@property` | [`tokens.md`](tokens.md) §4 e §5 |
 | [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) os pares seção→ícone | [`icones.md`](icones.md) §3 e §5 — **onze** sob a árvore do `panlabs` |
 | [#33](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/33) `trailingSlash` | [ADR 7](../adr/0007-trailingslash-false.md) |
@@ -157,7 +160,7 @@ Três cadências: **commit**, **upgrade** e **implantação**.
 | 2 | `transition:`/`animation:` com tempo ou curva cravada | commit | `npm run portao:2` |
 | 3 | `outline` fora de `src/css/foco.css` | commit | `npm run portao:3` |
 | 4 | Volume, tipo de página, regra de heading e cobertura de locale do conteúdo | commit | `npm run portao:4` |
-| 5 | A referência gerada está declarada pendente, e nada a antecipou pela metade | commit | `npm run portao:5` |
+| 5 | A referência gerada é a projeção do contrato — regenera e diffa | commit | `npm run portao:5` |
 | 6 | As três rotas contra o host real, nos dois locales | **implantação** | `npm run portao:6 -- <url-base> [rota]` |
 | 7 | O `swizzle --list` congelado, e `src/theme/` conferido contra ele | **upgrade** | `npm run portao:7` |
 | 8 | Os seis efeitos da landing, em contagem exata, mais a metade negativa | commit | `npm run portao:8` |
@@ -192,7 +195,7 @@ Mais a metade negativa, na mesma varredura: **zero `@keyframes` novo** (quatro n
 
 **A linha 2 não é contagem cega, e a diferença importa.** Contar dois `radial-gradient` em algum lugar deixaria passar um gradiente idêntico declarado em `:root`, que acenderia o site inteiro. O portão lê o **seletor do bloco** em que cada gradiente cai, e reprova qualquer um fora de `[data-sd-showcase]`.
 
-> **Correção de fato contra a resolução que pediu este portão.** A linha 6 foi escrita como *"1 consumidor de `--sd-shadow-raised`"*, site inteiro. **São dois** — o botão primário da landing e o painel da Referência da API —, e [`tokens.md`](tokens.md) §6 já dizia isso por escrito. A contagem que se sustenta é a da landing, e é a que o portão cobra. A régua não afrouxou: ela passou a dizer o que mede.
+> **Correção de fato contra a resolução que pediu este portão.** A linha 6 foi escrita como *"1 consumidor de `--sd-shadow-raised`"*, site inteiro. **São dois** — o botão primário da landing e o painel da referência gerada —, e [`tokens.md`](tokens.md) §6 já dizia isso por escrito. A contagem que se sustenta é a da landing, e é a que o portão cobra. A régua não afrouxou: ela passou a dizer o que mede.
 
 > *Dissenso registrado:* é o oitavo portão num projeto que já tinha sete, e ele protege **uma página**. A alternativa — deixar a lista como prosa em [`landing.md`](landing.md) — foi recusada porque uma lista de contagens que ninguém conta é adjetivo com tabela.
 
@@ -311,7 +314,7 @@ Não são metas: são propriedades que o repositório mantém, e cada uma é con
 
 A resolução do slice 7 escreveu *"um único JS de interação no projeto inteiro"*. **Varrido ao pé da letra, isso é falso**, e a varredura o mostrou: além do `SearchBar`, dois arquivos casam com uma régua ampla de comportamento —
 
-- **`src/theme/ApiDocItem/Painel.js`**, que guarda estado e ouve `onChange`. É o *"único degrau de interatividade confinado a um painel"* que [`api-reference.md`](api-reference.md) §1 declara desde o slice 5;
+- **`src/theme/ApiDocItem/Painel.js`**, que guarda estado e ouve `onChange`. É o *"único degrau de interatividade confinado a um painel"* que [`referencia.md`](referencia.md) §4.1 declara desde o slice 5;
 - **`src/theme/NavbarItem/Marca.js`**, que **repassa** o `onClick` que o painel de tela estreita lhe entrega — ele não autora handler nenhum.
 
 A régua correta não é *"tem `useState`?"*, e o vocabulário de domínio já a tinha escrito: **zero `keydown` escrito no projeto**. O que obriga a spec a descrever tecla, foco, anúncio de leitor de tela e ARIA em prosa — que é o custo que o axioma 6 cobra — é **autorar modelo de interação**. Um campo controlado não obriga nada disso: quem trata digitação, foco e cursor é o navegador, e o React só espelha o valor.

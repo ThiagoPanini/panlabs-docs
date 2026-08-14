@@ -116,7 +116,7 @@ html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pa
 
 O `.pagination-nav` entra pelo mesmo motivo que o `<article>`: ele é **irmão** dele e não filho, então sem a segunda linha a paginação mediria a coluna inteira enquanto o texto acima dela mede a prosa.
 
-**O ancestral não é gosto de especificidade.** A Referência da API tem layout próprio, com o `<article>` dela dentro de uma `.row` cujo filho **não é `.col`**. Sem o escopo, a paginação daquela página encolheria para a prosa e sairia do prumo com a coluna de texto que ela fecha. Conferido: na página de API a paginação mede a grade inteira, e o `<article>` continua com a largura que a aritmética do painel lhe dá.
+**O ancestral não é gosto de especificidade.** A referência gerada tem layout próprio, com o `<article>` dela dentro de uma `.row` cujo filho **não é `.col`**. Sem o escopo, a paginação daquela página encolheria para a prosa e sairia do prumo com a coluna de texto que ela fecha. Conferido: na página gerada a paginação mede a grade inteira, e o `<article>` continua com a largura que a aritmética do painel lhe dá.
 
 ### 2.1 As três configurações de coluna, e a que nenhuma página usa
 
@@ -429,7 +429,7 @@ Consequência direta do orçamento `unsafe` zero. Cada linha é perda escrita, n
 | Gutter, e o ponto onde ele troca | herdado (par) + origem própria (limiar) | — |
 | **O cartão morre** | herdado | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) — zero elevação em conteúdo, em seis páginas medidas |
 | **A caixa invisível em dois seletores** | **origem própria (implementação)** | [#54](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/54) — uma lista de onze crescia a cada componente novo |
-| **O escopo por `.col` na caixa invisível** | **origem própria (implementação)** | sem ele a paginação da Referência da API sai do prumo com a prosa dela |
+| **O escopo por `.col` na caixa invisível** | **origem própria (implementação)** | sem ele a paginação da referência gerada sai do prumo com a prosa dela |
 | **O breakout morre** | herdado | a âncora tem uma largura só |
 | Medida de prosa constante | **delta deliberado** | a âncora oscila, e a oscilação é efeito colateral |
 | As três configurações de coluna | **origem própria (correção)** | medido em `DocItem/Layout@3.10.2`: a classe de 75% não depende de heading |

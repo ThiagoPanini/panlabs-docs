@@ -1,5 +1,10 @@
 // @ts-check
 
+// O ramo gerado de `Biblioteca C`, emitido por `scripts/gerar-referencia.mjs`.
+// É o ÚNICO import de um arquivo de sidebar deste projeto, e ele existe para que
+// as duas posses não se misturem — ver o bloco abaixo.
+import referencia from './sidebars-referencia.js';
+
 /**
  * A sidebar da tab `Ferramentas` — instância `ferramentas`.
  *
@@ -16,18 +21,20 @@
  * topo, ausente na folha*) é que não tinha leitura num terceiro nível — não o
  * teto.
  *
- * **O ramo gerado não está aqui, e a sidebar é válida sem ele.** As 6 páginas de
- * referência de `Biblioteca C` chegam no ticket seguinte, junto com o fragmento
- * que as declara; `Bibliotecas` vai de 7 para 13 e a aba de 15 para 21. É assim
- * que os dois tickets ficam verdes: uma sidebar apontando para página inexistente
- * quebraria o build.
+ * **O ramo gerado chega por IMPORT, e a árvore continua escrita à mão aqui.** As
+ * 6 páginas de referência de `Biblioteca C` saem do contrato de assinatura, e o
+ * gerador emite um **fragmento** — uma lista de ids — em vez da sidebar inteira
+ * da instância. `Bibliotecas` fecha em 13 e a aba em 21. É a única forma de as
+ * duas posses conviverem: as quinze folhas autorais são nossas e o gerador não as
+ * conhece; as seis geradas são dele e editá-las à mão seria a segunda fonte de
+ * verdade que o gerador existe para impedir.
  *
- * **A instância declara `docItemComponent` e as folhas daqui não mudam de
+ * **A instância declara `docItemComponent` e as folhas autorais não mudam de
  * layout.** O `ApiDocItem` comuta por página pelo front matter `api_exemplos`, e
- * delega para `@theme/DocItem` quando o campo falta — hoje nenhuma folha o
- * declara.
+ * delega para `@theme/DocItem` quando o campo falta — as seis geradas o declaram,
+ * as quinze autorais não.
  *
- * Procedência: docs/design/informacao.md · docs/design/icones.md.
+ * Procedência: docs/design/informacao.md · docs/design/icones.md · docs/adr/0008.
  *
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
  */
@@ -56,6 +63,9 @@ const sidebars = {
             'bibliotecas/biblioteca-c/instalacao-e-configuracao',
             'bibliotecas/biblioteca-c/tratamento-de-erros',
             'bibliotecas/biblioteca-c/changelog',
+            // O ramo gerado, espalhado como irmão das autorais. Sem categoria
+            // própria: um nó a mais aqui seria o nível 4, e o teto é 3.
+            ...referencia,
           ],
         },
       ],

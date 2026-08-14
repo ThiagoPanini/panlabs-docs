@@ -47,7 +47,7 @@ Não o HTML renderizado — o que dispensa `cheerio` e é o que fará **as pági
 
 O que sai antes de indexar, e por quê:
 
-- **front matter**, que carrega o `api_exemplos` das páginas geradas — um blob JSON que sozinho estouraria o teto;
+- **front matter**, que carrega o `api_exemplos` das páginas geradas — um blob JSON com a assinatura, os argumentos editáveis e o snippet, que sozinho estouraria o teto;
 - **`import`/`export` do topo**, e só do topo. Páginas de SDK e de biblioteca têm `import` e `from` na primeira coluna **dentro de bloco cercado**, porque é o que um exemplo de Python mostra; uma varredura global comeria o exemplo;
 - **bloco cercado inteiro.** Uma consulta que casasse dentro de um `curl` devolveria a página com um trecho ilegível, e o realce cairia no meio de uma string JSON;
 - **marcação** — tag JSX, marcador de admonition, linha de tabela, sintaxe de link. Sobra prosa.

@@ -10,17 +10,20 @@
  * **O comutador.** `frontMatter.api_exemplos` decide o layout inteiro, não só o
  * painel:
  *
- *   · ausente  → delega para `@theme/DocItem`, sem tocar em mais nada. Cartão
- *                864 + TOC 288 — idêntica a qualquer página de doc. É o ramo
- *                que `Referência da API › Introdução › Autenticação` exercita:
- *                o painel direito fica inalcançável, não vazio.
- *   · presente → layout próprio: prosa 672 + painel 448, SEM cartão. A
- *                aritmética é exata — 672 + 32 (`--sd-space-8`) + 448
+ *   · ausente  → delega para `@theme/DocItem`, sem tocar em mais nada. Coluna
+ *                864 + TOC 288 — idêntica a qualquer página de doc. É o ramo que
+ *                `Ferramentas › Bibliotecas › Biblioteca C › Instalação e
+ *                configuração` exercita: o painel direito fica **inalcançável,
+ *                não vazio**, e a fixture é irmã de sidebar das seis geradas.
+ *   · presente → layout próprio: prosa 720 + painel 400. A aritmética é exata —
+ *                720 + 32 (`--sd-space-8`) + 400
  *                (`calc(--sd-container-width - --sd-prose-width - --sd-space-8)`)
- *                = 1152 = `--sd-container-width`. Não sobra pixel para os 96px
- *                de preenchimento do cartão, e por isso não existe cartão nesta
- *                página — é a décima perda nomeada da rota, e ela é aritmética,
- *                não gosto. Ver docs/design/api-reference.md.
+ *                = 1152 = `--sd-container-width`. O que a soma decide hoje é que
+ *                **não sobra coluna para o TOC**: é a décima perda nomeada da
+ *                rota, e ela é aritmética, não gosto. (Ela já explicou a ausência
+ *                do cartão; esse argumento caiu duas vezes — nenhuma página do
+ *                site tem cartão, e a página de endpoint deixou de existir.)
+ *                Ver docs/design/referencia.md §1.
  *
  * Front matter em vez de marcador solto no corpo do MDX: um marcador obrigaria
  * o painel a ser irmão de grid dos parágrafos, o que quebra `position: sticky`
@@ -52,8 +55,15 @@ import estilos from './estilos.module.css';
 
 /**
  * O corpo — título sintético mais o MDX. A mesma lógica de
- * `@theme/DocItem/Content`, sem a classe `.theme-doc-markdown`: aplicá-la
- * traria de volta o cartão que esta página deliberadamente não tem.
+ * `@theme/DocItem/Content`, sem a classe `.theme-doc-markdown`.
+ *
+ * **A razão de recusá-la mudou, e a nova é mais fraca — de propósito.** Era *ela
+ * carrega o cartão*; a geometria `mint` matou o cartão, e o que a classe carrega
+ * hoje é a normalização de margem do primeiro e do último filho, que esta prosa
+ * já declara sozinha em `estilos.module.css`. Aplicá-la seria acrescentar uma
+ * classe sem consumidor novo. É por isso que o escopo do isento de alvo de toque
+ * em `foco.css` foi para `.markdown`, que é a classe que as DUAS prosas do site
+ * carregam.
  */
 function Prosa({children}) {
   const {metadata, frontMatter, contentTitle} = useDoc();
@@ -99,7 +109,7 @@ function LayoutComPainel({MDXComponent}) {
               altura do irmão mais alto (a prosa) e "sticky" pareceria
               travado desde o topo, porque a própria caixa já preenche a
               rolagem inteira. É o erro nº 1 de quem reconstrói este layout,
-              e fica registrado aqui e em docs/design/api-reference.md. */}
+              e fica registrado aqui e em docs/design/referencia.md. */}
           <aside className={estilos.colunaPainel}>
             <Painel exemplos={frontMatter.api_exemplos} />
           </aside>

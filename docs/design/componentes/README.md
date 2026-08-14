@@ -52,7 +52,7 @@ ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 >
 > Onze dos dezessete publicam **zero** partes. A única entrada que a régua não
 > obrigaria e que fica assim mesmo é a meta de [`param-field`](param-field.md),
-> porque a rota da Referência da API a nomeia verbatim no contrato dela.
+> porque a rota da referência gerada a nomeia verbatim no contrato dela.
 
 **O contrato tem um consumidor que não é um dos dezessete, e ele vale registrado.**
 A landing usa `data-sd-part="glow"` na camada decorativa do hero, e
@@ -81,8 +81,8 @@ dois passou a saber em que modo está.
 > ainda carrega sombra está em [`tokens.md`](../tokens.md) §6.
 >
 > **Uma superfície do corpo sobrevive com sombra, e ela não é do catálogo:** o
-> painel da Referência da API, que é componente de tema e tem dono próprio em
-> [`api-reference.md`](../api-reference.md). O CSS dele o declara *"a única
+> painel da referência gerada, que é componente de tema e tem dono próprio em
+> [`referencia.md`](../referencia.md). O CSS dele o declara *"a única
 > superfície elevada desta página, e agora a única do corpo de qualquer página"*
 > — a afirmação daqui é sobre **os dezessete**, e é por isso que ela é varredura de
 > duas pastas e não do repositório.
@@ -157,9 +157,9 @@ medição nova, não gosto.
 
 | Fora | Motivo |
 | --- | --- |
-| Layout de duas colunas pareadas | a medida de prosa não comporta duas colunas de texto; o layout de três colunas da Referência da API tem rota própria |
+| Layout de duas colunas pareadas | a medida de prosa não comporta duas colunas de texto; o layout de três colunas da referência gerada tem rota própria |
 | Seletor de SDK por página | é rota e arquitetura de informação, não componente |
-| Componente gerado de contrato | já é ADR pela rota da Referência da API |
+| Componente gerado de contrato | já é ADR pela rota da referência gerada |
 | **Mídia binária** — vídeo e screenshot | três razões independentes, e nenhuma depende de o produto documentado ser inventado: sem CDN o asset entra no repositório, captura de UI de terceiro apodrece sozinha, e **raster não herda `currentColor`**. O contrato de vídeo da âncora fica **medido e não exercido** — ver [`frame.md`](frame.md) |
 
 E **uma variante** morreu junto: `check` foi fundida em [`tip`](callout.md), por

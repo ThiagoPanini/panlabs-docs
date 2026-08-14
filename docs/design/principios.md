@@ -86,7 +86,7 @@ Existe uma terceira categoria, e confundi-la com delta seria dar crédito de esc
 
 > **Divergência por restrição** é onde o shinydoc não faz o que a âncora faz porque o Docusaurus não permite sem `unsafe`.
 
-O breadcrumb reestruturado, o footer dentro da coluna de prosa, a proporção conteúdo/painel da Referência da API — os três são isso. Eles têm classe própria na tabela de procedência (`lacuna por restrição`, §5) e estão inventariados em [`chrome.md`](chrome.md) §8 e [`swizzle.md`](swizzle.md) §4.
+O breadcrumb reestruturado, o footer dentro da coluna de prosa, a proporção conteúdo/painel da referência gerada — os três são isso. Eles têm classe própria na tabela de procedência (`lacuna por restrição`, §5) e estão inventariados em [`chrome.md`](chrome.md) §8 e [`swizzle.md`](swizzle.md) §4.
 
 **O limiar único de media query entrou nesta categoria, e saiu do §7.** Ele estava registrado ali como valor medido e descartado, com argumento de **custo** — *"dois limiares no mesmo eixo custam mais que a fidelidade compra"*. Não é custo: o Docusaurus decide sidebar e TOC de desktop em 996/997, em CSS hasheado com `!important` e em JS dentro de componente `unsafe`, e não há rota que mova isso sem swizzle proibido. Os 1024px da âncora não foram pesados contra os nossos — eles **não são alcançáveis**. Descarte por preferência e impossibilidade se registram diferente.
 

@@ -1,0 +1,29 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.pt-BR.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: padrao.python
+description: Os passos que a casa usa num repositório Python — teste, tipo, formato e varredura, nesta ordem.
+api_exemplos: {"assinatura":"padrao.python(versao: str = \"3.12\", *, cobertura: bool = True) -> list[Passo]","parametros":[{"nome":"versao","exemplo":"3.12"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import padrao\n\npassos = padrao.python(versao=\"{{versao}}\", cobertura=True)"}}
+---
+
+# padrao.python
+
+**Função** · `panlabs.esteira.padrao.python`
+
+Devolve a lista de passos já montada, com as ações fixadas por sha. Comece por ela e acrescente o que for específico do repositório; montar a lista do zero é como se herda o workflow de outro time por cópia.
+
+A função é pura: chamá-la duas vezes devolve duas listas equivalentes, e nenhuma delas está presa a uma esteira.
+
+## Parâmetros
+
+<ParamField name="versao" type="str" default="&quot;3.12&quot;">
+A versão do Python instalada no runner. Aceita qualquer versão que a ação de setup conheça.
+</ParamField>
+
+<ParamField name="cobertura" type="bool" default="True">
+Acrescenta o passo de cobertura depois do teste. Desligue em repositório sem meta de cobertura acordada.
+</ParamField>
+
+## Retorno
+
+Os passos, na ordem de execução, prontos para entrar num trabalho. Os campos estão na página do tipo: [`Passo`](./passo.mdx)

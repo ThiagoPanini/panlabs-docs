@@ -2,7 +2,7 @@
 
 O ledger vivo, as perdas nomeadas e a disciplina de registro.
 
-**Este documento é para quem faz o upgrade do Docusaurus.** Ele não descreve aparência: descreve o que precisa ser reconciliado e por quê. É por isso que ele não mora em [`chrome.md`](chrome.md) — o ledger atravessa chrome, componentes de conteúdo e Referência da API, e quem o lê não deveria ter que abrir um documento de design para achar a lista.
+**Este documento é para quem faz o upgrade do Docusaurus.** Ele não descreve aparência: descreve o que precisa ser reconciliado e por quê. É por isso que ele não mora em [`chrome.md`](chrome.md) — o ledger atravessa chrome, componentes de conteúdo e a referência gerada, e quem o lê não deveria ter que abrir um documento de design para achar a lista.
 
 A **política** — a escada de seis degraus, o orçamento `unsafe` zero, a escotilha por ADR novo — mora no [ADR 2](../adr/0002-politica-de-swizzle.md), porque sobrevive à troca de skin. Este documento **cita** e nunca repete.
 
@@ -54,7 +54,7 @@ src/theme/Admonition/Types.js            registro            (degrau 3)
 src/theme/SearchBar/                     SWIZZLE, --eject    (degrau 5)
 ```
 
-**São nove arquivos, e eram dez.** `NavbarItem/Marca.js` saiu inteiro.
+**São dez arquivos.** Foram dez, caíram para nove quando `NavbarItem/Marca.js` saiu inteiro, e voltaram a dez com `ApiDocItem/placeholder.mjs` — o marcador de argumento editável do painel, que o gerador **também** lê. Ele é submódulo de um componente que já tem endereço, a mesma linha em que `SearchBar/escada.mjs` cai, e o portão 7 o casa por ela.
 
 O `SearchBar` entrou no slice 7 e é o **primeiro e único** swizzle do repositório. Ele tem uma propriedade que nenhum outro degrau 5 teria: ver §3.
 
@@ -106,8 +106,8 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | `themeConfig.navbar.items` | as três tabs, o slot de busca, o locale, o GitHub | idem |
 | `navbar.items[]` do tipo `html` | **o espaçador que abre a faixa de tabs** — base 100%, altura 0. Escolhido em vez de dar `flex-basis: 100%` à marca porque não acopla a faixa à existência de uma marca | não há classe estável num nó que o tema não renderiza; o item é o que cria o nó |
 | `themeConfig.footer` | os links, o copyright, a forma plana | idem |
-| `docItemComponent: '@theme/ApiDocItem'` | substitui o layout inteiro da página de API | classe não troca componente de rota |
-| `themeConfig.prism.additionalLanguages: ['bash']` | registra `bash` para o snippet de cURL do painel da Referência da API | `bash` não está no bundle padrão do `prism-react-renderer`; sem o registro o bloco sai sem realce e ninguém avisa |
+| `docItemComponent: '@theme/ApiDocItem'` | substitui o layout inteiro da página gerada | classe não troca componente de rota |
+| `themeConfig.prism.additionalLanguages: ['bash']` | registra `bash` para as cercas de shell do acervo — **o consumidor mudou de dono e ficou maior**: ele era o snippet de cURL do painel, e o painel tem uma linguagem só | `bash` não está no bundle padrão do `prism-react-renderer`; sem o registro o bloco sai sem realce e ninguém avisa. `python`, a linguagem do painel, **está** no bundle |
 | `themeConfig.prism.theme` | paleta de sintaxe que só referencia token | `--prism-background-color` é injetada em estilo **inline**, e nenhum seletor vence estilo inline |
 | `localeConfigs[*].label` | o rótulo curto do seletor de idioma | o default vem de `Intl.DisplayNames`, em código |
 
@@ -127,7 +127,7 @@ Ela dizia: *acrescenta o tipo `custom-marca`; a marca precisa de `currentColor`,
 
 O que sai junto:
 
-- `src/theme/NavbarItem/Marca.js` — **um arquivo a menos em `src/theme/`**, e o portão 7 passa com nove;
+- `src/theme/NavbarItem/Marca.js` — **um arquivo a menos em `src/theme/`**, e o portão 7 passou a nove (hoje são dez, com `ApiDocItem/placeholder.mjs`);
 - a chave `custom-marca` do registro, que era a única nossa. O objeto voltou a ser idêntico ao do upstream;
 - a declaração `.navbar__brand:empty` de `chrome.css`, que escondia o link vazio que o upstream renderizava sem `title`. Ele não é mais vazio.
 
@@ -157,7 +157,7 @@ Fatorá-lo para um arquivo ao lado seria trocar quinze linhas por uma linha nova
 na perna 2 do portão. **E ele passa com um arquivo a MENOS**, pela §3.1.
 
 **Pré-autorizados e ainda não exercidos:** `prism-include-languages`, se a
-Referência da API precisar de linguagem fora do que `additionalLanguages` cobre.
+referência gerada precisar de linguagem fora do que `additionalLanguages` cobre.
 
 ### Degrau 4 — `--wrap`
 
@@ -192,7 +192,7 @@ Pré-autorizados e ainda não exercidos: os ícones de chrome que são `safe` na
 
 ### `unsafe`
 
-**Zero, e desde o slice 7 isso deixou de ser afirmação: é saída de portão.** O portão 7 (§5) percorre `src/theme/`, casa cada arquivo com o `swizzle --list` congelado, e reprova se algum deles cair sobre um componente cuja ação de `eject` não seja `Safe`. A varredura de hoje: **220 componentes no artefato, 9 arquivos em `src/theme/` com endereço, zero `unsafe`.**
+**Zero, e desde o slice 7 isso deixou de ser afirmação: é saída de portão.** O portão 7 (§5) percorre `src/theme/`, casa cada arquivo com o `swizzle --list` congelado, e reprova se algum deles cair sobre um componente cuja ação de `eject` não seja `Safe`. A varredura de hoje: **220 componentes no artefato, 10 arquivos em `src/theme/` com endereço, zero `unsafe`.**
 
 O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não gastou. Os dois `unsafe` que ele encostou continuam de pé: o `Admonition` raiz, que despacha por tipo para o registro sem saber que o destino é nosso, e o `Tabs`, que é consumido como está e repaginado só por CSS.
 
@@ -285,7 +285,7 @@ Dois efeitos colaterais da correção, ambos consequência de a saída completa 
 - o CLI imprime **três** tabelas, não uma — a de componentes e duas de legenda (as ações e os níveis de segurança). A truncagem escondia as duas, e sem filtro as sete linhas de legenda entrariam no artefato como se fossem componentes. O parser agora para na primeira borda de fechamento;
 - a explicação que a primeira versão registrava — *"duas execuções concorrentes por `npx` disputam o cache"* — **estava errada**, e foi substituída pela causa medida. `npx` mudava o ponto do corte, não a existência dele.
 
-> **Por que o portão é 7 e não 5.** A resolução do slice o chamava de *portão 5*, e o número já estava gasto: o slice da Referência da API o deu ao portão do gerador, e o [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) o cita pelo número. Renumerar um portão commitado, citado por ADR, por script e por `package.json`, para satisfazer um número escrito antes de ele existir, é churn que quebra uma citação.
+> **Por que o portão é 7 e não 5.** A resolução do slice o chamava de *portão 5*, e o número já estava gasto: o slice da referência gerada o deu ao portão do gerador, e o [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) o cita pelo número. Renumerar um portão commitado, citado por ADR, por script e por `package.json`, para satisfazer um número escrito antes de ele existir, é churn que quebra uma citação.
 >
 > **Consequência de aritmética, dita em voz alta: o projeto tem SETE portões, não seis.** E a frase do ADR 5 que chama o portão 5 de *"o único do conjunto que não é `grep`"* passa a ter uma companhia — o portão 7 é da mesma família: regenera e diffa.
 
