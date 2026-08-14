@@ -142,18 +142,18 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 
 | preenchimento por trás do anel | escuro | claro |
 | --- | ---: | ---: |
-| página | 7,33 | 5,70 |
-| superfície levantada | 5,55 | 5,96 |
-| pastilha de código | 6,58 | 6,54 |
-| fundo de callout `info` | 3,78 | 5,14 |
-| fundo de callout `success` | **3,72** | 5,11 |
-| fundo de callout `warn` | 3,80 | 5,10 |
-| fundo de callout `danger` | 3,84 | 5,09 |
-| wash do item ativo de sidebar | 6,30 | 4,78 |
+| página | 7,00 | 6,28 |
+| superfície levantada | 7,00 | 6,45 |
+| pastilha de código | 6,62 | 6,45 |
+| fundo de callout `info` | 4,90 | 5,52 |
+| fundo de callout `success` | **4,81** | 5,53 |
+| fundo de callout `warn` | 4,89 | 5,51 |
+| fundo de callout `danger` | 4,99 | 5,47 |
+| wash do item ativo de sidebar | 5,88 | 5,27 |
 
-**Pior caso 3,72:1 contra os 3:1 que a SC 1.4.11 pede. Folga de 1,24×.**
+**Pior caso 4,81:1 contra os 3:1 que a SC 1.4.11 pede. Folga de 1,60×.**
 
-> **A folga encolheu, e o custo tem dono.** Ela era de 1,44× e é de 1,24×. A causa é a marca serenizada: o acento perdeu um terço de croma, e as quatro células mais apertadas desta tabela são justamente o anel sobre os preenchimentos de callout no escuro, que são as superfícies mais claras que o anel encontra no modo canônico.
+> **A folga encolheu antes, e agora abriu de novo — duas causas diferentes.** Ela foi de 1,44× para 1,24× quando a marca serenizou o croma do acento (histórico, ver abaixo); a issue #95 não mexeu no acento, mas trocou a superfície levantada no escuro — que passou a ser a própria página, mais escura que o cartão antigo — e é contra ela que o preenchimento de callout é composto. Um fundo mais escuro empurra o par para cima: 1,60× hoje.
 >
 > **Isso é conta, não descuido**, e continua passando com folga sobre a obrigação — mas é o par a vigiar se a marca esfriar mais. `npm run contraste` reprova abaixo de 3:1, então o dia em que alguém baixar o croma outra vez a CI avisa antes do leitor.
 

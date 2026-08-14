@@ -36,7 +36,7 @@ Herança calada é herança que **não vira linha de spec**. Ela existe, ela dec
 | **Densidade de UI** | o valor mais unânime da amostra inteira. Quatro sistemas, um número |
 | **Tipografia** | não é delta: é **parâmetro que a própria âncora expõe**. Trocar a pilha de fonte é re-marcar, não redesenhar — por isso ela está na superfície de troca |
 | **Escala de espaço** | base 4, múltiplos de 8. Consenso de indústria antes de ser consenso da amostra |
-| **Forma da rampa de cinzas** | as onze paradas de luminosidade são a média das quatro rampas Mintlify medidas. A **forma** é herdada; o **matiz** é da marca |
+| **Rampa de cinzas, forma e matiz** | as onze paradas são hex medidos direto na âncora (Devin). Até a [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95) só a forma era herdada — média das quatro rampas Mintlify medidas — e o matiz vinha da marca; hoje a rampa inteira é herdada e não lê `--sd-brand` |
 
 **Herdado calado ainda é herdado**, e continua carimbado na tabela de procedência de cada documento. O que "calado" significa é que não há seção de justificativa — a fonte é a medição, e a medição está no ticket.
 

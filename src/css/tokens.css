@@ -65,9 +65,8 @@
    alguém colar um valor torto.
    --------------------------------------------------------------------------- */
 
-@property --sd-brand      { syntax: '<color>';  inherits: true; initial-value: #A3489D; }
-@property --sd-brand-tint { syntax: '<number>'; inherits: true; initial-value: 0.075; }
-@property --sd-radius     { syntax: '<length>'; inherits: true; initial-value: 16px; }
+@property --sd-brand  { syntax: '<color>';  inherits: true; initial-value: #8156C0; }
+@property --sd-radius { syntax: '<length>'; inherits: true; initial-value: 16px; }
 
 /* =============================================================================
    CAMADA 1 — raiz
@@ -75,62 +74,70 @@
 
 :root {
   /* SKIN — o que o corporativo edita para re-marcar. Nada além disto.
-     Tipadas com @property: --sd-brand, --sd-brand-tint, --sd-radius.
-     São as três linhas cuja entrega é literal — colagem inválida nelas cai no valor
-     de fábrica. As outras sete entregam referência ou pilha de fonte, que
+     Tipadas com @property: --sd-brand, --sd-radius.
+     São as duas linhas cuja entrega é literal — colagem inválida nelas cai no valor
+     de fábrica. As outras três entregam referência ou pilha de fonte, que
      initial-value não sabe expressar: colagem inválida ali apaga o que a linha
      alimenta, à vista. */
-  --sd-brand:          #A3489D;
+  --sd-brand:          #8156C0;
   --sd-brand-on-dark:  oklch(from var(--sd-brand) max(l, 0.72) c h);
   --sd-brand-on-light: oklch(from var(--sd-brand) min(l, 0.50) c h);
-  --sd-brand-tint:     0.075;
-  --sd-surface-dark:   var(--sd-gray-800);
-  --sd-surface-light:  var(--sd-gray-50);
   --sd-font-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --sd-font-heading:   var(--sd-font-body);
   --sd-font-mono:      'Paper Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --sd-radius:         16px;
   /* /SKIN */
 
-  /* O `L` do hex da marca é INERTE, e é isso que faz a troca ser cirúrgica: a
-     rampa reescreve `L` em toda parada e consome só `c` e `h`, e as duas travas
-     de acento fazem o mesmo (`max(l, 0.72)` e `min(l, 0.50)`). Quem serena a
-     marca é o CROMA — 0,160 no lugar dos 0,240 de antes.
+  /* O `L` do hex da marca é INERTE: as duas travas de acento reescrevem `L` e
+     consomem só `c` e `h` (`max(l, 0.72)` e `min(l, 0.50)`). Dois hexes do
+     mesmo matiz e cromaticidade produzem os dois acentos byte a byte
+     idênticos — só o ÂNGULO do matiz importa.
 
-     A linha 4 existe para segurar o produto `c × tint` em 0,0120, que é a banda
-     de cromaticidade que a medição das quatro rampas pôs na rampa: 0,160 × 0,075
-     é o mesmo 0,0120 de 0,240 × 0,05. Com ela, DEZ das onze paradas saem byte a
-     byte idênticas às da skin anterior e a décima primeira (`gray-600`) difere
-     em 1/255 num canal. A superfície do site inteiro não se mexe; só o acento
-     esfria. Ver docs/design/tokens.md §5. */
+     A rampa NÃO lê `--sd-brand` mais. Issue #95: a tinta que ela herdava da
+     marca era mecanismo copiado de onde ele não se aplica — a âncora não
+     pinta superfície com a rampa tingida, pinta com um cinza neutro à parte
+     (ver o bloco `--sd-neutral-*`, abaixo). `--sd-brand-tint` e o pin
+     `c × tint = 0,0120` que o mantinham não têm mais o que travar, e saíram
+     do sistema. Ver docs/design/tokens.md §5. */
 
   /* ---------------------------------------------------------------------------
-     A rampa de onze cinzas — tingida pelo matiz da marca
+     Cinza neutro puro — o chão, fora da rampa
 
-     Uma cor entra, um sistema inteiro de superfícies sai. As onze paradas de
-     luminosidade são a média das quatro rampas Mintlify medidas: a FORMA da
-     rampa é geometria herdada, o MATIZ é da marca.
+     A superfície de página, nos dois modos, e a elevada no claro não são
+     parada de rampa nenhuma: são cinza neutro medido direto na âncora
+     (issue #95). A elevada no escuro não tem literal próprio aqui — ela
+     referencia a própria página, porque a âncora eleva cartão por borda, não
+     por fundo (ver o bloco escuro, mais abaixo).
+     --------------------------------------------------------------------------- */
+  --sd-neutral-page-dark:    #141414;
+  --sd-neutral-page-light:   #FCFCFC;
+  --sd-neutral-raised-light: #FFFFFF;
 
-     Marca acromática produz rampa neutra sem regra especial: cromaticidade zero
-     entra em `c`, cinza puro sai.
+  /* ---------------------------------------------------------------------------
+     A rampa de onze cinzas — medida na âncora, fria, e não deriva de nada
+
+     Até a issue #95, as onze paradas eram tingidas pelo matiz da marca. Agora
+     valem os hex medidos na âncora, fixos qualquer que seja `--sd-brand`: a
+     FORMA da rampa continua geometria herdada, só que por valor copiado em
+     vez de fórmula reaplicada — trocar a marca não move mais nenhum neutro do
+     sistema.
 
      A rampa é declarada INTEIRA, e hoje a 200 é a única parada sem consumidor.
      Isso vai escrito pelo mesmo argumento que sustenta a família de `-edge` mais
      abaixo: uma rampa de onze com um buraco no meio é pior de ler do que a
-     parada a mais, e quem re-marca precisa da geometria completa para julgar o
-     que a marca dele produz em cada degrau. Parada é geometria, não consumidor.
+     parada a mais. Parada é geometria, não consumidor.
      --------------------------------------------------------------------------- */
-  --sd-gray-50:  oklch(from var(--sd-brand) 97%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-100: oklch(from var(--sd-brand) 95.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-200: oklch(from var(--sd-brand) 91%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-300: oklch(from var(--sd-brand) 86%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-400: oklch(from var(--sd-brand) 71%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-500: oklch(from var(--sd-brand) 55%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-600: oklch(from var(--sd-brand) 44%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-700: oklch(from var(--sd-brand) 37.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-800: oklch(from var(--sd-brand) 27.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-900: oklch(from var(--sd-brand) 21.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-950: oklch(from var(--sd-brand) 15.5% calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-50:  #F4F6FA;
+  --sd-gray-100: #EFF1F5;
+  --sd-gray-200: #DFE2E6;
+  --sd-gray-300: #CFD1D5;
+  --sd-gray-400: #A0A2A6;
+  --sd-gray-500: #717377;
+  --sd-gray-600: #515357;
+  --sd-gray-700: #404246;
+  --sd-gray-800: #26292D;
+  --sd-gray-900: #181A1E;
+  --sd-gray-950: #0B0D11;
 
   /* ---------------------------------------------------------------------------
      Matizes de estado — camada 1, fora do bloco de troca.
@@ -523,8 +530,8 @@
      Dissenso registrado: a 900 é o degrau imediatamente acima na rampa, e é a
      única derivação honesta disponível — NÃO é uma medida. O berço que morreu
      era anatomia medida da âncora. */
-  --sd-surface-page:   var(--sd-gray-950);
-  --sd-surface-raised: var(--sd-surface-dark);
+  --sd-surface-page:   var(--sd-neutral-page-dark);
+  --sd-surface-raised: var(--sd-surface-page);
   --sd-surface-code:   var(--sd-gray-900);
   --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
   --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 72%);
@@ -646,7 +653,7 @@
   --sd-code-string:    #E9B999;   /* oklch(82.1% 0.070  55) — o contrapeso quente */
   --sd-code-function:  #DDDAAE;   /* oklch(88.0% 0.058 104) */
   --sd-code-operator:  #CBC9CF;   /* oklch(83.9% 0.009 301) */
-  --sd-code-comment:   #B0AEB6;   /* oklch(75.5% 0.012 298) */
+  --sd-code-comment:   #B2B0B8;   /* oklch(76.0% 0.012 298) — reto p/ #181A1E (issue #95) */
 }
 
 /* CLARO — legítimo. */
@@ -661,8 +668,8 @@
      Aqui a superfície do código JÁ estava acima da página, e é o escuro que veio
      ao encontro dela. A assimetria — igual à página no escuro, acima dela no
      claro — era o que o cartão escondia. */
-  --sd-surface-page:   var(--sd-gray-100);
-  --sd-surface-raised: var(--sd-surface-light);
+  --sd-surface-page:   var(--sd-neutral-page-light);
+  --sd-surface-raised: var(--sd-neutral-raised-light);
   --sd-surface-code:   oklch(from var(--sd-gray-50) 100% 0 h);
   --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
   --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 40%);
