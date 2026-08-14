@@ -138,6 +138,13 @@ jobs:
       # por diferença de pixel criaria atrito onde o dono pediu leitura. O que ele
       # compra é que a deriva fique escrita no log em vez de descoberta semanas
       # depois. É o único passo não-bloqueante deste arquivo.
+      #
+      # O Chrome é o que a imagem do runner já traz — `/usr/bin/google-chrome`,
+      # que o script procura antes do cache do puppeteer/playwright. Nenhuma
+      # action nova entra por aqui, e nenhuma dependência npm: o axioma 2 vale
+      # também para o instrumento. Se a imagem deixar de trazê-lo, o passo falha
+      # com a mensagem de como apontar (`CHROME=`) e, por ser não-bloqueante,
+      # aparece como aviso em vez de travar o merge.
       - name: Paridade com a âncora (relatório, não reprova)
         continue-on-error: true
         run: npm run paridade
