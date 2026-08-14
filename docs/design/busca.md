@@ -39,11 +39,11 @@ A fronteira é `setGlobalData`, e ela é estreita de propósito: o plugin não s
 | `x` | índice da aba |
 | `f` | presente só quando a página é fallback pt-BR sob o locale EN |
 
-As chaves são curtas porque cada uma se repete setenta e três vezes por locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
+As chaves são curtas porque cada uma se repete cinquenta e duas vezes por locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
 
 ### 2.2 A fonte é o MDX
 
-Não o HTML renderizado — o que dispensa `cheerio` e é o que fará **as páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 46 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e é por isso que o índice não precisa saber que o ramo gerado chegou.
+Não o HTML renderizado — o que dispensa `cheerio` e é o que fará **as 6 páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 46 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição.
 
 O que sai antes de indexar, e por quê:
 
@@ -229,7 +229,7 @@ O que a citação obriga:
 | `role="listbox"` / `role="option"` | lista e itens | com `aria-selected` no ativo |
 | `role="status"` | fora da tela | a contagem de resultados, anunciada |
 
-`aria-activedescendant` é o pino que sustenta o §5: **o foco nunca sai do campo**, então não há foco a gerir. É também por isso que a opção não é parada de tabulação — um `tabindex` nela transformaria setenta e três resultados em setenta e três paradas de Tab. Ver [`foco.md`](foco.md) §4.
+`aria-activedescendant` é o pino que sustenta o §5: **o foco nunca sai do campo**, então não há foco a gerir. É também por isso que a opção não é parada de tabulação — um `tabindex` nela transformaria cinquenta e dois resultados em cinquenta e duas paradas de Tab. Ver [`foco.md`](foco.md) §4.
 
 **Desvio nomeado do padrão:** o APG descreve `Escape` limpando o campo antes de fechar. Aqui `Escape` **fecha o modal**, porque é o `<dialog>` quem o trata e reescrever esse comportamento seria escrever de novo o que o navegador já faz — em troca de uma diferença que o leitor não pediu.
 

@@ -456,7 +456,9 @@ A forma é a do export do Devin, a única das três referências medidas que res
 O primeiro parágrafo da página…
 ```
 
-**A âncora é o `h1`, e a falta dele estoura o build.** Uma citação no topo do arquivo já significa outra coisa aqui — é o ponteiro de volta do §9.3. Sem `h1` entre os dois, os blocos se fundiriam num só e o subtítulo viraria segunda linha do ponteiro, calado. A guarda não é hipotética por sorte: as 52 páginas abrem com `# `, e é a mensagem de erro que mantém isso verdadeiro no dia em que uma não abrir.
+**A âncora é o `h1`, e a falta dele estoura o build.** Uma citação no topo do arquivo já significa outra coisa aqui — é o ponteiro de volta do §9.3. Sem `h1` entre os dois, os blocos se fundiriam num só e o subtítulo viraria segunda linha do ponteiro, calado. A guarda não é hipotética por sorte: as 73 páginas dos dois locales abrem com `# `, e é a mensagem de erro que mantém isso verdadeiro no dia em que uma não abrir.
+
+**E a âncora é a primeira linha com texto, não a primeira que casa `# `.** A diferença só aparece num caso, e ele é silencioso: uma página que abrisse com bloco cercado teria um `# comentário` de shell casando a mesma marca, e a citação entraria no meio do código — sem erro, sem aviso, e visível apenas para quem abrisse o `.md` servido. É o mesmo modo de falhar que a remoção de `import` *do topo* evita no §9.1, pela mesma razão: marca de Markdown dentro de cerca não é marca de Markdown.
 
 **O `llms-full.txt` não recebe a citação**, porque lá a description já entra como `> Summary:` acima do separador (§9.5). Duas cópias do mesmo campo no mesmo documento seriam ruído para o parser — e é a mesma regra de fonte única que faz o rótulo da seção sair do navbar em vez de uma opção do plugin.
 

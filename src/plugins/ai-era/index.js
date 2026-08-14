@@ -58,6 +58,14 @@ const separador = (url) => `--- [Document source](${url}) ---`;
  * `h1` para separá-los, os dois blocos se fundiriam num só e o subtítulo viraria
  * segunda linha do ponteiro, calado.
  *
+ * **A busca é na PRIMEIRA linha com texto, e não pela primeira que casa.** A
+ * diferença aparece no dia em que uma página abrir com bloco cercado:
+ * `# comentário` de shell casaria a mesma marca, e a citação entraria no meio do
+ * código — sem erro, sem aviso, e visível só para quem abrisse o `.md`. Como
+ * `paginasDe` já tirou o front matter e o `import` do topo, a primeira linha com
+ * texto é o `h1` do autor em todas as 73 páginas, e exigir isso troca a
+ * inserção errada por uma mensagem.
+ *
  * O `llms-full.txt` NÃO passa por aqui: lá a descrição já entra como
  * `> Summary:` acima do separador de documento, que é a forma do Neon. Duas
  * cópias do mesmo campo no mesmo documento seriam ruído para o parser.
@@ -66,12 +74,13 @@ const separador = (url) => `--- [Document source](${url}) ---`;
  */
 function comSubtitulo({corpo, descricao, permalink}) {
   const linhas = corpo.split('\n');
-  const titulo = linhas.findIndex((linha) => linha.startsWith('# '));
-  if (titulo === -1) {
+  const titulo = linhas.findIndex((linha) => linha.trim() !== '');
+  if (titulo === -1 || !linhas[titulo].startsWith('# ')) {
     throw new Error(
-      `Página sem \`# título\` no corpo: ${permalink}\n` +
-        'O `.md` servido emite o subtítulo como citação abaixo do `h1`, e sem o ' +
-        '`h1` não há onde ancorá-la. Ver docs/design/informacao.md §9.2.',
+      `Página que não abre com \`# título\`: ${permalink}\n` +
+        'O `.md` servido emite o subtítulo como citação abaixo do `h1`, e a ' +
+        'âncora é a primeira linha com texto do corpo. ' +
+        'Ver docs/design/informacao.md §9.2.',
     );
   }
   return [
