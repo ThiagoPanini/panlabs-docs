@@ -143,7 +143,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   /* SKIN — o que o corporativo edita para re-marcar. Nada além disto.
      Tipadas com @property: --sd-brand, --sd-radius.
      São as duas linhas cuja entrega é literal — colagem inválida nelas cai no valor
-     de fábrica. As outras três entregam referência ou pilha de fonte, que
+     de fábrica. As outras cinco entregam referência ou pilha de fonte, que
      initial-value não sabe expressar: colagem inválida ali apaga o que a linha
      alimenta, à vista. */
   --sd-brand:          #8156C0;
@@ -1383,11 +1383,11 @@ Diferente, sim. Quebrado, não.
 >
 > O raio de dano de uma linha errada é o site inteiro, e é esse raio que o `@property` contém. Quem for tentado a tirar a linha por achá-la cerimônia está tirando a contenção, não a tipagem.
 
-### A perda das outras quatro, escrita
+### A perda das outras cinco, escrita
 
 `@property` registra exatamente as linhas cuja entrega é **literal e computacionalmente independente** — é o que `initial-value` sabe expressar. Hoje isso produz duas: `--sd-brand`, `--sd-radius`.
 
-As outras quatro entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--sd-brand-on-dark` torna `--sd-accent` inválido em tempo de valor computado no modo escuro — link, anel de foco, texto-inverso e todo consumidor de `--sd-accent` perdem cor ao mesmo tempo. Com registro, teria degradado para o valor de fábrica.
+As outras cinco entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--sd-brand-on-dark` torna `--sd-accent` inválido em tempo de valor computado no modo escuro — link, anel de foco, texto-inverso e todo consumidor de `--sd-accent` perdem cor ao mesmo tempo. Com registro, teria degradado para o valor de fábrica.
 
 A perda é real, está contida em **uma** propriedade — rampa, texto, borda e as duas superfícies sobrevivem porque nenhuma delas deriva do acento — e ela falha **à vista**: quem colou vê link, anel de foco e botão primário perderem cor ao mesmo tempo.
 
@@ -1790,7 +1790,7 @@ E **um relatório**, que também roda na CI e não é nenhum dos dois:
 
 **Segundo limite, e ele foi fechado em vez de explorado.** O padrão do portão 1 é `px|rem|em|ms|s`; `dvh` **não está nele**. A altura máxima do modal de busca é `60dvh`, e escrevê-la inline num CSS Module passaria pela varredura. **Passar por buraco de varredura é a única forma de literal que este projeto não admite** — a saída correta seria fechar o buraco, e fechá-lo custa uma linha aqui em vez de uma perna nova de portão. Por isso `--sd-busca-height` é token, e o portão 1 continua com o padrão que sempre teve.
 
-**Achado da implementação:** o `postcss-calc`, que roda na minificação, **não entende sintaxe de cor relativa** e emite aviso ao encontrar `calc(c * var(--sd-brand-tint))` e `calc(l + 0.06)`. Ele **não toca no valor** — verificado byte a byte no CSS emitido, a rampa e os acentos saem intactos. O aviso é ruído, não defeito, e está registrado aqui para ninguém "consertar" a rampa por causa dele.
+**Achado da implementação:** o `postcss-calc`, que roda na minificação, **não entende sintaxe de cor relativa** e emite aviso ao encontrar `calc(l + 0.06)` e `calc(l - 0.06)`, os dois acentos-hover. Ele **não toca no valor** — verificado byte a byte no CSS emitido, os acentos saem intactos. O aviso é ruído, não defeito, e está registrado aqui para ninguém "consertar" o acento por causa dele. Até a issue #95 ele também disparava em `calc(c * var(--sd-brand-tint))`, na rampa; a rampa é hex fixo agora e não passa mais por `calc()` nenhum, então essa metade do aviso morreu junto.
 
 ---
 

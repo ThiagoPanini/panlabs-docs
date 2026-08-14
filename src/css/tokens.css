@@ -76,7 +76,7 @@
   /* SKIN — o que o corporativo edita para re-marcar. Nada além disto.
      Tipadas com @property: --sd-brand, --sd-radius.
      São as duas linhas cuja entrega é literal — colagem inválida nelas cai no valor
-     de fábrica. As outras três entregam referência ou pilha de fonte, que
+     de fábrica. As outras cinco entregam referência ou pilha de fonte, que
      initial-value não sabe expressar: colagem inválida ali apaga o que a linha
      alimenta, à vista. */
   --sd-brand:          #8156C0;
