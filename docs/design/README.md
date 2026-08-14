@@ -199,7 +199,15 @@ Mais **quatro** verificações que **não são portão** e rodam junto:
 - `node scripts/espelho-tokens.mjs --verificar` — o bloco `css` de `tokens.md` é `src/css/tokens.css` byte a byte;
 - `npm run contraste` — as tabelas de contraste de [`tokens.md`](tokens.md) §10 e [`foco.md`](foco.md) §6, computadas do CSS e **comparadas célula a célula** com o que os dois documentos publicam;
 - `npm run icones` — a bijeção manifesto ↔ `static/icons/`;
-- `npm test` — a régua do algoritmo da busca, em `node --test`. Os portões são varredura, e ordenação de resultado não é varrível.
+- `npm test` — as três réguas de `node --test`: o algoritmo da busca, o contrato de assinatura e a comparação de paridade. Os portões são varredura, e nenhum dos três é varrível.
+
+E **um relatório**, que não é portão nem verificação:
+
+- `npm run paridade` — mede o site construído contra as tabelas de alvo publicadas em [`tokens.md`](tokens.md) §12 e §13, [`chrome.md`](chrome.md) §11 e §12, [`busca.md`](busca.md) §10 e a `## Anatomia` de quatro componentes, e imprime o que não fecha.
+
+> **Por que ele é uma terceira categoria.** A régua desta seção diz que portão protege uma **regra de escrita** e verificação confere que **duas cópias da mesma verdade não divergiram**. A paridade não é nenhum dos dois: o alvo e o site **não são duas cópias de uma verdade** — o alvo é onde se quer chegar, e a distância até ele é justamente o que se quer ler. Um portão aqui reprovaria o projeto por não ter terminado.
+>
+> É o único passo com `continue-on-error` de [`ci.yml`](../../.github/workflows/ci.yml). O juiz declarado da paridade é a avaliação visual humana sobre o produto final; o relatório existe para que a deriva fique **escrita** em vez de descoberta semanas depois, que foi exatamente como *"ficou aquém"* apareceu da primeira vez.
 
 > **Eram três, e a quarta nasceu de um defeito que a leitura não pegava.** As duas tabelas de contraste mediam o **mesmo par** e discordavam em três das quatro células, e a divergência sobreviveu a uma auditoria inteira — porque conferi-la exigia refazer a conta à mão, e ninguém refaz. Ela entra como verificação e não como portão pela régua desta seção: ela não protege uma regra de escrita, ela confere que duas cópias da mesma verdade não divergiram.
 >
@@ -219,7 +227,7 @@ Mais **quatro** verificações que **não são portão** e rodam junto:
 >
 > Consequência menor, dita para não envelhecer calada: a frase do [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) que chama o portão 5 de *"o único do conjunto que não é `grep`"* passou a ter companhia — o portão 7 é da mesma família, regenera e diffa.
 
-**Onde cada um roda.** Os de commit, mais as quatro verificações, estão em `.github/workflows/ci.yml`. O 6 está em `.github/workflows/deploy.yml`, depois da publicação, porque ele é o único que depende de alguém fora do repositório. O 7 tem cadência de upgrade e roda na CI de todo commit mesmo assim: não existe gatilho barato para *"houve um upgrade"*, e um portão que depende de alguém lembrar de rodá-lo é um portão que não roda.
+**Onde cada um roda.** Os de commit, mais as quatro verificações e o relatório de paridade, estão em `.github/workflows/ci.yml`. O 6 está em `.github/workflows/deploy.yml`, depois da publicação, porque ele é o único que depende de alguém fora do repositório. O 7 tem cadência de upgrade e roda na CI de todo commit mesmo assim: não existe gatilho barato para *"houve um upgrade"*, e um portão que depende de alguém lembrar de rodá-lo é um portão que não roda.
 
 ---
 

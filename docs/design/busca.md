@@ -2,7 +2,7 @@
 
 O índice, o gatilho, o modal e a única superfície de interação que este projeto autora.
 
-**Nenhum valor numérico aparece neste documento**, salvo os pesos da escada de pontuação do §3 — que não são comprimento, cor, tempo nem curva, e sim a ordem de uma lista. Todo comprimento mora em [`tokens.md`](tokens.md) e é citado aqui por nome de token.
+**Nenhum valor numérico aparece neste documento**, salvo dois lugares. Os pesos da escada de pontuação do §3 não são comprimento, cor, tempo nem curva, e sim a ordem de uma lista. E o §10 publica o **alvo medido na âncora** — ali os números são evidência de medição de outro sistema, não fonte deste: eles dizem o que se quer atingir, e quem os edita está afirmando que a âncora mudou. Todo comprimento que **temos** mora em [`tokens.md`](tokens.md) e é citado aqui por nome de token.
 
 A **decisão** — índice local, sem serviço externo, com o motivo jurídico e de rede e a nota de migração — mora no [ADR 6](../adr/0006-busca-local-sem-servico-externo.md). Este documento **cita** e nunca repete.
 
@@ -273,10 +273,31 @@ A regra não afrouxou aqui. Ela diz que **comportamento à mão obriga a spec a 
 
 ---
 
+## 10. Alvo medido — o controle e o painel da âncora
+
+A queixa do dono foi que *"a busca não segue o modelo"*. Esta tabela transforma isso em números conferíveis: os valores medidos no `docs.devin.ai`, em `research/paridade-devin` §7, a 1512.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Caixa do controle largura | `300,75px` | ±1 |
+| Caixa do controle altura | `36px` | ±1 |
+| Raio do controle | `12px` | exato |
+| Painel largura | `640px` | ±1 |
+| Painel topo | `54px` | ±1 |
+| Painel raio | `20px` | exato |
+
+O que a tabela **não** cobra, e por quê: a âncora põe o controle **centralizado** na primeira linha do navbar e nós o pomos à direita, mas posição não é comprimento e o comparador mede a caixa, não o eixo. A dica de tecla da âncora é **texto puro** onde a nossa é uma pílula `<kbd>`; isso é presença de elemento, e entra quando o ticket que a mata for executado. E a linha de resultado da âncora é compacta contra a nossa — ela só pode ser sondada com o painel aberto **e com consulta digitada**, que é um cenário a mais do que este instrumento monta hoje.
+
+O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes de medir, porque `<dialog>` fechado não tem caixa.
+
+---
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido do §10** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §7 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O painel sondado com o modal aberto** | **origem própria (implementação)** | `<dialog>` fechado não tem caixa; sem abrir, a sonda devolveria ausência e não medida |
 | Índice local, sem serviço externo | origem própria | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) — vive no [ADR 6](../adr/0006-busca-local-sem-servico-externo.md) |
 | Dado global em vez de JSON no `outDir` | **origem própria (verificação)** | rota ausente devolve 200 com o shell da SPA; o `fetch().json()` estoura em parse |
 | `allContentLoaded` em vez de `contentLoaded` | **origem própria (correção)** | medido em `server/plugins/actions.js@3.10.2` — os dois ganchos recebem o mesmo objeto de ações, e só um enxerga as outras instâncias |

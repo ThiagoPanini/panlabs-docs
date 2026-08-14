@@ -1,5 +1,7 @@
 # `steps`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, na anatomia, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 A sequência numerada — o que se faz primeiro, depois, depois. É o terceiro
@@ -34,6 +36,15 @@ termina não aponta para lugar nenhum.
 **O contador é declarado, não herdado.** O passo é uma grade de duas colunas, e
 um `<li>` que deixa de ser item de lista deixa de incrementar o contador
 implícito — o número sumiria em silêncio. Um contador nomeado fecha essa falha.
+
+
+**Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Margem de topo | `40px` | exato |
+
+O marcador de 28×28 e o conector de 1px da âncora não têm sonda: os dois são pseudo-elemento, e `querySelector` não os alcança. Ficam para a avaliação visual.
 
 ## Variantes
 
@@ -100,6 +111,7 @@ acessibilidade — a posição do item já é anunciada pela lista.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido da anatomia** | **medido em referência** | medição de primeira mão da âncora, em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Componente do zero | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — ausente no Docusaurus |
 | `Steps` sem props, `Step` só com `title` | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — superfície mínima medida |
 | Ícone substitui o número | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §8 |

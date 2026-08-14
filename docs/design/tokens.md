@@ -1769,6 +1769,14 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 
 **As duas são verificação e não portão pela mesma régua**, que é a da [espinha](README.md) §5: portão protege uma **regra de escrita**; verificação confere que **duas cópias da mesma verdade não divergiram**. Aqui as cópias são o número escrito na spec e a cor que o CSS entrega.
 
+E **um relatório**, que também roda na CI e não é nenhum dos dois:
+
+| Comando | O que ele imprime |
+| --- | --- |
+| `npm run paridade` | a distância entre o site construído e as tabelas de alvo da §12 e da §13 |
+
+**Ele não é verificação porque o alvo e o site não são duas cópias de uma verdade** — a §12 e a §13 dizem onde se quer chegar, e a distância até lá é o que se quer ler. Por isso ele imprime e **nunca reprova**: é o único passo com `continue-on-error` da CI.
+
 **A segunda nasceu de um defeito real, não de zelo.** Duas tabelas desta spec mediam o mesmo par e discordavam em três das quatro células, e a divergência sobreviveu a uma auditoria inteira porque não havia como conferi-la sem refazer a conta à mão. Uma tabela transcrita diverge calada; uma tabela que sai de um comando não tem como.
 
 **Limite conhecido do portão 1, escrito em voz alta:** media query não lê custom property, e o limiar dela é um comprimento — então o prelúdio de `@media` **não tem como** passar pela varredura de literal.
@@ -1783,10 +1791,55 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 
 ---
 
+## 12. Alvo medido — a paleta da âncora
+
+Este documento é a sede do valor **que temos**. Esta seção e a próxima publicam o valor **que se quer**: os dois lados do mesmo número, e o comparador de `npm run paridade` mede a distância entre eles.
+
+Os valores são medição de primeira mão do `docs.devin.ai`, registrada em `research/paridade-devin` §3. Eles são resolvidos em **sRGB**, porque é o que o navegador entrega quando se pede a cor computada de um elemento pintado — a folha autora em `oklch()`, e comparar a forma autoral com o hex da âncora nunca fecharia.
+
+| Papel | Claro | Escuro | Tolerância |
+| --- | --- | --- | --- |
+| Fundo da página | `#fcfcfc` | `#141414` | exato |
+| Fundo do navbar | `#fcfcfc` | `#141414` | exato |
+| Texto forte | `#181a1e` | `#dfe2e6` | exato |
+| Texto corpo | `#404246` | `#a0a2a6` | exato |
+
+**O chão da página não vem da rampa, e é aqui que está o defeito de origem.** A âncora tinge a rampa de onze cinzas com o matiz da marca, mas **não pinta a página com ela** — o fundo é token separado, cinza neutro puro. Nós herdamos o mecanismo certo e o aplicamos numa superfície onde a âncora não o aplica; com marca magenta, o chão inteiro do site ficou magenta. A linha *Fundo da página* desta tabela é a que cobra a correção.
+
+**O acento não tem linha.** A cor de marca é divergência declarada da âncora — violeta, e não o azul dela. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa, e o comparador passaria a reprovar a decisão em vez da deriva.
+
+---
+
+## 13. Alvo medido — a escala de tipo da âncora
+
+Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias já batem dos dois lados — Inter variável e paperMono variável, auto-hospedadas —, então o que sobra é tamanho, entrelinha e peso.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| `h1` tamanho | `36px` | exato |
+| `h1` entrelinha | `40px` | exato |
+| `h1` peso | `600` | exato |
+| `h2` tamanho | `24px` | exato |
+| `h2` entrelinha | `32px` | exato |
+| Prosa tamanho | `16px` | exato |
+| Prosa entrelinha | `28px` | exato |
+| Item de sidebar tamanho | `14px` | exato |
+| Item de sidebar entrelinha | `24px` | exato |
+| Item de sidebar peso | `400` | exato |
+| Item de TOC tamanho | `14px` | exato |
+| Aba do navbar tamanho | `14px` | exato |
+
+**O `h1` e o `h2` convergem com a escala que este documento já declara.** A escala de tokens diz 36 e 24; o que hoje renderiza 48 e 32 são as regras `.markdown` do Infima, que vencem os tokens por especificidade. A correção não briga com a âncora — ela faz o site passar a obedecer o próprio documento, e o alvo da âncora confirma o número.
+
+---
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **A paleta-alvo do §12 e a escala-alvo do §13** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §3 e §5 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O acento sem linha de alvo** | **delta deliberado** | a cor de marca diverge da âncora por decisão registrada; publicar o azul dela mandaria desfazer a decisão |
+| **Alvo comparado em sRGB, não em OKLCH** | **origem própria (implementação)** | é a forma que o navegador entrega ao pedir cor computada; a folha autora em `oklch()` e as duas formas nunca fechariam por string |
 | Indireção raiz → semântica | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) §1.1 — o token de papel apontando para a raiz injetada, no alvo |
 | Token de componente no escopo do componente | mecanismo emprestado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) §1.4 — `.alert` do Infima redeclara sete tokens globais |
 | Rampa de onze cinzas tingida pelo matiz da marca | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.2 — medido nos quatro sites |

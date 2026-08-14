@@ -1,5 +1,7 @@
 # `callout`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, dentro de `## Anatomia`, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 Destaca, dentro do fluxo da prosa, o que o leitor **não pediu mas precisa** — a
@@ -36,6 +38,17 @@ O DOM **não é um `.alert` do Infima**. Ele nasce do nosso componente, alcança
 pelo registro `Admonition/Types` — degrau 3, zero linha de upstream copiada. O
 `Admonition` raiz, que é `unsafe`, continua intocado e só despacha por tipo.
 `Admonition/Layout` **não é ejetado**: seria degrau 5, e o degrau 3 alcança.
+
+**Alvo medido**, do `docs.devin.ai` a 1512, em
+`research/paridade-devin` §11.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Raio | `16px` | exato |
+| Corpo tamanho | `14px` | exato |
+
+Na âncora o corpo é menor que a prosa em volta, e é isso que a segunda linha
+cobra: o aviso lê como aparte, não como continuação do texto.
 
 ## Variantes
 
@@ -139,6 +152,7 @@ texto ao lado, e anunciá-lo seria repetição.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Anatomia horizontal, sem barra nem faixa de título | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — DOM medido em produção |
 | Admonition nativa em vez de componente JSX | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — `Admonition/Types` é `safe` |
 | `Admonition/Types` e não `Admonition/Layout` | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), reconciliando com a escada da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) — degrau 3 alcança |

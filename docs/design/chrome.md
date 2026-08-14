@@ -4,7 +4,7 @@ O shell da página de documentação: proporções, navbar com faixa de tabs, si
 
 **Nenhum valor numérico nasce neste documento.** Todos os comprimentos moram em [`tokens.md`](tokens.md) e são citados aqui **por nome de token**. Os outros números que aparecem são identificadores — número de ADR, de issue e de portão — ou o limiar de media query, que é o único comprimento que a linguagem não sabe ler de custom property.
 
-> **O §1 cita valor, e é o único que cita.** A cadeia de proporções aparece uma vez com o número ao lado do nome do token, porque ela é a única coisa deste documento que **ou fecha na tela, ou não fecha** — e uma cadeia sem número não é conferível. Ali os números são **evidência de medição**, não fonte: quem os edita edita `tokens.md`, e este documento passa a estar errado.
+> **Três parágrafos citam valor, e são os únicos.** O §1 traz a cadeia de proporções com o número ao lado do nome do token, porque ela é a única coisa deste documento que **ou fecha na tela, ou não fecha** — e uma cadeia sem número não é conferível. Ali os números são **evidência de medição**, não fonte: quem os edita edita `tokens.md`, e este documento passa a estar errado. O §11 e o §12 trazem o **alvo medido na âncora**, que é a outra ponta: ali os números não descrevem o que temos, e sim o que se quer atingir. Eles vêm de `research/paridade-devin`, não de `tokens.css`, e quem os edita está afirmando que a âncora mudou.
 
 Chrome não se autora: se **entorta**. Tudo neste documento é degrau 0 (variável do Infima), degrau 1 (classe estável) ou degrau 2 (opção pública) da escada do [ADR 2](../adr/0002-politica-de-swizzle.md), **com duas exceções de degrau 3** — a marca, que está em [`icones.md`](icones.md), e o subtítulo do §6. As duas estão no ledger de [`swizzle.md`](swizzle.md). O orçamento `unsafe` continua em zero.
 
@@ -417,10 +417,73 @@ Consequência direta do orçamento `unsafe` zero. Cada linha é perda escrita, n
 
 ---
 
+## 11. Alvo medido — o chrome da âncora, em números
+
+A âncora deste projeto é o `docs.devin.ai`, e a spec declara **zero delta deliberado** contra ela. Até aqui a distância era prosa — *"a coluna do TOC dá 288 contra os 304 da âncora"* — e prosa não reprova nada, o que é exatamente por que *"ficou aquém"* só apareceu semanas depois, no olho do dono.
+
+Esta tabela é o alvo. `npm run paridade` mede o site **construído** contra ela e imprime a lista do que não fecha.
+
+Os números **não nascem aqui**: são medição de primeira mão da âncora, registrada em `research/paridade-devin` §4. Editá-los é afirmar que a âncora mudou — não que nós mudamos. A largura de referência é **1512**, que é onde a âncora foi medida por inteiro.
+
+A tolerância é parte do alvo, e não um detalhe do script: `exato` é para o que só tem dois estados — uma borda existe ou não existe, um raio é o que a folha diz. `±1` é para o que atravessa arredondamento de subpixel e zoom de layout.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Sidebar `left` | `52px` | ±1 |
+| Sidebar largura | `288px` | ±1 |
+| Sidebar `border-right` | `0px` | exato |
+| Coluna de texto | `720,81px` | ±1 |
+| Caixa do TOC | `304px` | ±1 |
+| TOC `border-left` | `0px` | exato |
+| Navbar altura | `112px` | ±1 |
+| Margem direita | `52px` | ±1 |
+| A 1920, margem esquerda | `256px` | ±1 |
+| A 1920, margem direita | `256px` | ±1 |
+| TOC visível a 1100 | `não` | exato |
+| Sidebar visível a 1010 | `não` | exato |
+| Item de sidebar altura | `36px` | ±1 |
+| Item de sidebar raio | `12px` | exato |
+| Item de sidebar recuo | `16px` | exato |
+| TOC grudado em | `152px` | ±1 |
+
+Três linhas merecem leitura, porque não são medida direta:
+
+**As duas margens a 1920** não foram medidas na âncora nessa largura — elas são **derivadas** da regra do wrapper que foi medida: `max-width: 1472px`, `margin-inline: auto`, `padding-inline: 32px`. A 1920 sobram `(1920 − 1472) ÷ 2 = 224` de cada lado, mais os 32 de padding. Que as duas sejam **iguais** é o alvo de verdade; o valor absoluto é consequência. É a correção principal da issue-pai: hoje a sidebar cola em `x = 0` e toda a folga vai para a direita.
+
+**Os dois limiares são sondados fora do número redondo.** A âncora esconde o TOC abaixo de 1280 e a sidebar abaixo de 1024; nós escondemos os dois abaixo de 997. Medir *em* 1280 e *em* 1024 pegaria os dois lados de acordo e não diria nada — 1100 e 1010 caem dentro da faixa onde âncora e produto discordam, e é lá que a sonda tem trabalho.
+
+**O acento não tem linha aqui, nem em [`tokens.md`](tokens.md).** A cor de marca é divergência declarada: violeta, e não o azul da âncora. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa.
+
+**A caixa do TOC é a coluna, não a lista.** A âncora publica 304 para a caixa e 264 para a lista visível, e a nossa lista **já dá os 264 dela** — o §1.2 diz isso em prosa há tempo. A sonda desta tabela mede a **coluna**, que é onde a dívida de 16px mora; medir a lista contra o alvo da caixa acusaria 40px de dívida onde há 16, e a linha contradiria o próprio §1.2.
+
+---
+
+## 12. Alvo medido — o cabeçalho do artigo
+
+A âncora abre a página com três faixas e **sem banda cinza**: sobrancelha, título e subtítulo, planos sobre o fundo. Os valores são de `research/paridade-devin` §6, a 1512.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Sobrancelha tamanho | `14px` | exato |
+| Sobrancelha peso | `600` | exato |
+| Subtítulo tamanho | `18px` | exato |
+| Subtítulo entrelinha | `28px` | exato |
+
+**O título não tem linha aqui.** Ele é o `h1`, e o `h1` já tem alvo na escala de tipo de [`tokens.md`](tokens.md) §13. Publicá-lo nos dois lugares criaria duas verdades sobre o mesmo número — que é o defeito que este instrumento inteiro existe para não repetir.
+
+**A sonda da sobrancelha mede o link, não o `<nav>`.** O invólucro herda 14px do chrome e passaria no alvo enquanto o texto que o leitor vê renderiza 12,8. Sonda em elemento errado é a pior falha possível num instrumento de medição: ela não erra o número, ela erra de cara verde.
+
+O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha, 10 até o `h1`, 8 até o subtítulo, 32 até o conteúdo — **não tem linha**: são cinco distâncias entre irmãos, e a sonda deste instrumento lê um elemento de cada vez. Fica para a avaliação visual, declarado aqui para não passar por esquecimento.
+
+---
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido do §11** | **medido em referência** | as três medições de primeira mão da âncora, em `research/paridade-devin` §4 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **As margens a 1920 do §11** | **derivado** | a regra do wrapper medida a 1512 (`max-width 1472`, `margin-inline auto`, `padding-inline 32`), estendida à largura maior |
+| **Os limiares sondados a 1100 e 1010** | **origem própria (implementação)** | o número redondo põe âncora e produto de acordo e não mede nada; a sonda tem que cair dentro da faixa onde discordam |
 | Container, coluna, TOC, prosa | herdado + derivado | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50), [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) |
 | **O congelamento em 1472** | **origem própria (correção)** | o *"shell total"* ignorava o preenchimento do `<main>`; medido em navegador, o ponto é exato |
 | **A separação do TOC em `--sd-space-6`** | **origem própria** | escolhida para a lista cair em 264, que é o número medido |
