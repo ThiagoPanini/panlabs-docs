@@ -38,6 +38,25 @@
 # não roda em commit, então uma rota morta aqui só aparece no dia do deploy.
 # Este default já apontou para `/docs/comece-aqui/ambientes` depois de `/docs`
 # deixar de existir, e quem pegou foi revisão e não execução.
+#
+# E aconteceu de novo, do outro lado: o default daqui foi atualizado com a
+# árvore do `panlabs`, mas o ARGUMENTO do locale EN em `deploy.yml` continuou
+# apontando para `/en/docs/comece-aqui/ambientes`, que devolve 404 desde que a
+# árvore mudou. O portão do segundo locale estava quebrado e ninguém sabia,
+# porque a cadeia inteira — o portão, a rota e o host — só se encontra depois
+# do deploy.
+#
+# São DUAS rotas, e elas moram em dois arquivos porque a rota é argumento deste
+# script — o que o torna reusável, e o que espalha a lista. A lista fica aqui,
+# que é onde quem mexe na árvore vem parar:
+#
+#   pt-BR   /procedimentos/ambiente/indice          ← o default abaixo
+#   en      /en/ferramentas/bibliotecas/indice      ← argumento em deploy.yml
+#
+# A rota do EN não é escolha de gosto: `Ferramentas` é a única aba traduzida
+# (`informacao.md` §8), e apontar para outra mediria a rota de FALLBACK em
+# português em vez da rota traduzida. Mudou a árvore? Confira as duas linhas
+# acima, e depois `.github/workflows/deploy.yml`.
 
 set -uo pipefail
 

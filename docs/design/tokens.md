@@ -180,6 +180,12 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
      Marca acromática produz rampa neutra sem regra especial: cromaticidade zero
      entra em `c`, cinza puro sai.
+
+     A rampa é declarada INTEIRA, e hoje a 200 é a única parada sem consumidor.
+     Isso vai escrito pelo mesmo argumento que sustenta a família de `-edge` mais
+     abaixo: uma rampa de onze com um buraco no meio é pior de ler do que a
+     parada a mais, e quem re-marca precisa da geometria completa para julgar o
+     que a marca dele produz em cada degrau. Parada é geometria, não consumidor.
      --------------------------------------------------------------------------- */
   --sd-gray-50:  oklch(from var(--sd-brand) 97%   calc(c * var(--sd-brand-tint)) h);
   --sd-gray-100: oklch(from var(--sd-brand) 95.5% calc(c * var(--sd-brand-tint)) h);
@@ -202,12 +208,17 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      ângulo. Editar aqui é redesenhar, não re-marcar.
 
      São literais porque não há raiz no sistema de onde derivar um verde a partir
-     de uma marca fúcsia, e porque a medição das sete referências declarou lacuna
-     em cor semântica de callout.
+     de uma marca fúcsia.
+
+     Medidos contra a âncora (issue #83): ícone dos callouts `Note`/`Warning`/
+     `Tip`/`Danger` em mintlify.com/docs, convertido de sRGB para o H de OKLCH.
+     `success` (151,3°) e `danger` (26,9°) já batiam com o ângulo anterior a
+     menos de 1,5° — ficaram como estavam. `info` (265,6°) e `warn` (61,9°)
+     divergiam ~20°; os dois passam a ser o ângulo medido.
      --------------------------------------------------------------------------- */
-  --sd-hue-info:    245;
+  --sd-hue-info:    266;
   --sd-hue-success: 150;
-  --sd-hue-warn:     80;
+  --sd-hue-warn:     62;
   --sd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
@@ -372,12 +383,22 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      derivar por coincidência de número é a derivação FALSA que o bloco de foco
      recusa em voz alta trinta linhas acima. A procedência honesta é a mesma dos
      outros comprimentos deste bloco: medida na âncora.
+
+     `--sd-toc-width` não tem consumidor, e o motivo vai escrito em vez de ficar
+     por conta de quem varrer. A coluna do TOC recebe o quarto restante do grid
+     75/25 do upstream, que vive numa classe hasheada de CSS Module — alcançá-la
+     custaria `unsafe` em DocItem/Layout, e a perda está registrada em
+     chrome.css §4. O token existe porque a cadeia de proporções de
+     docs/design/chrome.md §1 cita este elo pelo nome, e um elo sem nome é elo
+     que ninguém confere: ele é o valor CONTRA o qual se mede o que o grid
+     entrega, não o valor que o grid lê. Removê-lo quebraria a cadeia; ligá-lo
+     custaria o zero de `unsafe`.
      --------------------------------------------------------------------------- */
   --sd-container-width: 1152px;  /* as DUAS variáveis de container do Infima recebem este */
   --sd-sidebar-width:    288px;
   --sd-navbar-height:     64px;  /* a LINHA 1 do topo, não o topo inteiro */
   --sd-tabs-height:       48px;
-  --sd-toc-width:        288px;
+  --sd-toc-width:        288px;  /* nomeia o elo; quem o pinta é o grid do upstream */
   --sd-prose-width:      720px;
 
   /* O recuo do subtítulo sob o título. LITERAL pelo mesmo motivo da altura da
@@ -1797,13 +1818,13 @@ Mais **duas** verificações que não são portão, e rodam junto na CI:
 | O cyan é **skin fixa**, fora da superfície de troca | origem própria | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — precedente dos quatro `--sd-hue-*`: o corporativo redesenha, não re-marca |
 | Teto de croma 0,095 | **origem própria** | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — é o teto do par da âncora puxado para baixo por julgamento, e não uma medida |
 | Shim de config que só referencia token | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
-| Quatro matizes de estado | **lacuna de medição** | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §10 — não medidos em nenhuma das sete |
+| Quatro matizes de estado | **herdado** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — ícone dos callouts `Note`/`Warning`/`Tip`/`Danger` medido em mintlify.com/docs (Chrome headless, `getComputedStyle`), sRGB convertido para H de OKLCH. `success` e `danger` já batiam com o ângulo anterior a menos de 1,5°; `info` e `warn` divergiam ~20° e passaram a ser o ângulo medido |
 | `Livre` dos matizes move ângulo, não tom | origem própria | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §3, corrigindo a redação da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
 | Fórmula de preenchimento de callout | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — medida na Perplexity |
 | Fórmula de **aresta** de callout, e ela mora na camada 2 | herdado (fórmula) + **origem própria (implementação)** (a casa) | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) trava 30%/25%; o alfa bifurca por modo, e camada 2 é o único lugar onde modo diverge |
 | `--sd-card-min` derivado da medida de prosa | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — o limiar `@2xl` da âncora a três colunas; 42rem e a medida de prosa são o mesmo `max-w-2xl` |
 | `secondary` deixa de ser "o que a `note` consome" | **origem própria (correção)** | o callout ganhou DOM próprio no slice do catálogo, e `note` é a variante azul — quem é neutro é `info` ([#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15)) |
-| Escala de espaço base 4 | **lacuna de medição** | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §7 — não medida em nenhuma das sete |
+| Escala de espaço base 4 | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — `--spacing: .25rem` medido idêntico nas sete, inclusive as três que não são Mintlify. Não é decisão da âncora: é o default do Tailwind CSS v4, que as sete rodam por baixo. Convergência de ferramenta, não de sistema de design — por isso não sobe a `herdado` |
 | Nomes de tipografia | origem própria | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §1 — nomear é nosso; a gramática de camada é da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) |
 | Degraus `xs…4xl` e os valores | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §6 — medido nos quatro |
 | Degrau do título em 996/997 | **lacuna por restrição** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o par 30/36 é medido; o ponto de troca é o limiar que o Docusaurus não deixa mover sem `unsafe` |

@@ -145,9 +145,9 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 | página | 7,33 | 5,70 |
 | superfície levantada | 5,55 | 5,96 |
 | pastilha de código | 6,58 | 6,54 |
-| fundo de callout `info` | 3,78 | 5,12 |
+| fundo de callout `info` | 3,78 | 5,14 |
 | fundo de callout `success` | **3,72** | 5,11 |
-| fundo de callout `warn` | 3,78 | 5,12 |
+| fundo de callout `warn` | 3,80 | 5,10 |
 | fundo de callout `danger` | 3,84 | 5,09 |
 | wash do item ativo de sidebar | 6,30 | 4,78 |
 
@@ -345,4 +345,4 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 | Skip link | herdado, mais uma linha de forma | WCAG G1 já implementado pelo upstream |
 | Comentário fora da varredura dos portões | **origem própria (implementação)** | o portão cobra declaração, e reprovar por prosa ensinaria a escrever comentário pobre |
 | Sidebar de tela estreita sem armadilha de foco | **lacuna por restrição** | `unsafe`; o fonte marca o ponto como workaround temporário |
-| Espessura e afastamento das referências | **lacuna de medição** | as sete não foram medidas em foco; reabre se alguém medir |
+| Espessura e afastamento das referências | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — a âncora usa `outline: 1px auto <cor de marca>; outline-offset: 1px`, idêntico em cinco sites Mintlify; as três não-Mintlify usam 2-3px `solid`. O 1px medido **não cobre** o piso da SC 2.4.13 que já governa a linha "Espessura do anel" desta mesma tabela — o valor foi medido e não adotado, não deixado por medir |

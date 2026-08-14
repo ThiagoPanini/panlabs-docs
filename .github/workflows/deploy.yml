@@ -89,5 +89,9 @@ jobs:
       - name: Portão 6 — as três rotas, pt-BR
         run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}"
 
+      # A rota do EN é de `Ferramentas`, e não é escolha de gosto: é a única aba
+      # traduzida (`informacao.md` §8). As outras duas existem sob `/en/` como
+      # fallback em português, e apontar o portão para uma delas mediria a
+      # rota de fallback em vez da rota traduzida.
       - name: Portão 6 — as três rotas, en
-        run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}" /en/docs/comece-aqui/ambientes
+        run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}" /en/ferramentas/bibliotecas/indice

@@ -113,6 +113,12 @@
 
      Marca acromática produz rampa neutra sem regra especial: cromaticidade zero
      entra em `c`, cinza puro sai.
+
+     A rampa é declarada INTEIRA, e hoje a 200 é a única parada sem consumidor.
+     Isso vai escrito pelo mesmo argumento que sustenta a família de `-edge` mais
+     abaixo: uma rampa de onze com um buraco no meio é pior de ler do que a
+     parada a mais, e quem re-marca precisa da geometria completa para julgar o
+     que a marca dele produz em cada degrau. Parada é geometria, não consumidor.
      --------------------------------------------------------------------------- */
   --sd-gray-50:  oklch(from var(--sd-brand) 97%   calc(c * var(--sd-brand-tint)) h);
   --sd-gray-100: oklch(from var(--sd-brand) 95.5% calc(c * var(--sd-brand-tint)) h);
@@ -135,12 +141,17 @@
      ângulo. Editar aqui é redesenhar, não re-marcar.
 
      São literais porque não há raiz no sistema de onde derivar um verde a partir
-     de uma marca fúcsia, e porque a medição das sete referências declarou lacuna
-     em cor semântica de callout.
+     de uma marca fúcsia.
+
+     Medidos contra a âncora (issue #83): ícone dos callouts `Note`/`Warning`/
+     `Tip`/`Danger` em mintlify.com/docs, convertido de sRGB para o H de OKLCH.
+     `success` (151,3°) e `danger` (26,9°) já batiam com o ângulo anterior a
+     menos de 1,5° — ficaram como estavam. `info` (265,6°) e `warn` (61,9°)
+     divergiam ~20°; os dois passam a ser o ângulo medido.
      --------------------------------------------------------------------------- */
-  --sd-hue-info:    245;
+  --sd-hue-info:    266;
   --sd-hue-success: 150;
-  --sd-hue-warn:     80;
+  --sd-hue-warn:     62;
   --sd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
@@ -305,12 +316,22 @@
      derivar por coincidência de número é a derivação FALSA que o bloco de foco
      recusa em voz alta trinta linhas acima. A procedência honesta é a mesma dos
      outros comprimentos deste bloco: medida na âncora.
+
+     `--sd-toc-width` não tem consumidor, e o motivo vai escrito em vez de ficar
+     por conta de quem varrer. A coluna do TOC recebe o quarto restante do grid
+     75/25 do upstream, que vive numa classe hasheada de CSS Module — alcançá-la
+     custaria `unsafe` em DocItem/Layout, e a perda está registrada em
+     chrome.css §4. O token existe porque a cadeia de proporções de
+     docs/design/chrome.md §1 cita este elo pelo nome, e um elo sem nome é elo
+     que ninguém confere: ele é o valor CONTRA o qual se mede o que o grid
+     entrega, não o valor que o grid lê. Removê-lo quebraria a cadeia; ligá-lo
+     custaria o zero de `unsafe`.
      --------------------------------------------------------------------------- */
   --sd-container-width: 1152px;  /* as DUAS variáveis de container do Infima recebem este */
   --sd-sidebar-width:    288px;
   --sd-navbar-height:     64px;  /* a LINHA 1 do topo, não o topo inteiro */
   --sd-tabs-height:       48px;
-  --sd-toc-width:        288px;
+  --sd-toc-width:        288px;  /* nomeia o elo; quem o pinta é o grid do upstream */
   --sd-prose-width:      720px;
 
   /* O recuo do subtítulo sob o título. LITERAL pelo mesmo motivo da altura da

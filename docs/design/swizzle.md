@@ -93,7 +93,6 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | `.menu__link--active` | falso-negrito no item ativo | não há variável de peso por estado |
 | `.footer`, `.footer__links`, `.footer__link-item`, `.footer__link-separator`, `.container`, `.text--center` | a linha única, o fio, o alinhamento à coluna de doc, o comportamento no estreito | as sete variáveis de footer do Infima não alcançam anatomia |
 | `.footer__link-item > svg` | esconde o ícone de link externo | `Icon/ExternalLink` é `unsafe` e vem de sprite — ver §4 |
-| `.navbar__brand:empty` | esconde o link vazio que o upstream renderiza sem `navbar.title` | não há opção para não renderizar |
 | `.theme-back-to-top-button`, `.theme-doc-card-container`, `.theme-code-block button` | corrige os três `transition: all` que animam o anel de foco | a variável de transição do Infima controla duração, não a lista de propriedades |
 | `.hash-link`, `.theme-code-block button` sob `(pointer: coarse)` | torna visível o que o upstream esconde atrás de hover | idem |
 | `a[href='#__docusaurus_skipToContent_fallback']` | dá ao skip link a forma do sistema | a classe do módulo é manglada; o `href` é estável porque o id é constante exportada |
@@ -116,7 +115,7 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
 | `MDXComponents` | registra os treze componentes com tag própria (catorze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais **duas** chaves de elemento: `table` e `h1` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
-| `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description` | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: 61 de 61 páginas escrevem o próprio `# Título`, e nenhuma escreve dois |
+| `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description` | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: **73 de 73** páginas escrevem exatamente um `# Título` — 52 em pt-BR e 21 em EN, contadas fora dos blocos cercados, porque comentário de shell abre com a mesma marca |
 | `Admonition/Types` | substitui a anatomia vertical do Infima pela horizontal medida, nas quatro variantes de callout | não há variável nem classe que reoriente o eixo da admonition. O degrau 5 (`Admonition/Layout`) alcançaria, mas o 3 alcança **antes**: o arquivo é um objeto, e nada obriga as entradas dele a apontarem para o layout do upstream |
 
 ### 3.1 A entrada aposentada — `NavbarItem/ComponentTypes`

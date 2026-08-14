@@ -632,7 +632,7 @@ do que compram neste slice:
 | **Todo bloco é o container; a medida de leitura é teto dentro dele** | **origem própria (medição)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) §3 — dois blocos centrados põem as arestas a 216px uma da outra |
 | `inline-size: 100%` no bloco | **origem própria (implementação)** | margem `auto` no eixo cruzado de um flex column cancela o `stretch`; medido, as arestas espalham em quatro valores |
 | Bloco = medida + dois gutters | **origem própria (implementação)** | resolve o estreito por construção |
-| Colapso da grade por `auto-fit` | herdado + **lacuna de medição** | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — a âncora para em 4 colunas |
+| Colapso da grade por `auto-fit` | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — medido em mintlify.com/docs/components/cards: a âncora não usa `auto-fit`. É `repeat(var(--cols), minmax(0,1fr))`, `--cols` escrito pelo autor via prop, sem refluxo por espaço ou por quantidade de card — o teto de 4 é limite de produto documentado em prosa (*"supports one to four columns"*), não comportamento de grid. `auto-fit` de verdade é nosso, não herdado |
 | Faixa de espetáculo cobrindo a seção 1 | **origem própria** | [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) §3 — glow não existe em nenhuma das sete |
 | Faixa sangra, sem raio; navbar fora | herdado | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3 |
 | Laje escura dentro da ilha no modo claro | herdado | [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) §3 — a ilha declara os tokens, o bloco só os lê |

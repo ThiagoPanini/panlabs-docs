@@ -39,11 +39,11 @@ A fronteira é `setGlobalData`, e ela é estreita de propósito: o plugin não s
 | `x` | índice da aba |
 | `f` | presente só quando a página é fallback pt-BR sob o locale EN |
 
-As chaves são curtas porque cada uma se repete setenta e três vezes por locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
+As chaves são curtas porque cada uma se repete cinquenta e duas vezes por locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
 
 ### 2.2 A fonte é o MDX
 
-Não o HTML renderizado — o que dispensa `cheerio` e é o que fará **as páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 46 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e é por isso que o índice não precisa saber que o ramo gerado chegou.
+Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 6 páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 46 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição.
 
 O que sai antes de indexar, e por quê:
 
@@ -60,11 +60,24 @@ Os headings viram `s`; o resto vira `b`, cortado no começo.
 
 O motivo é mecânico: o índice viaja no bundle principal de **toda página do site**. Um índice que cresce sem limite vira lentidão difusa que ninguém atribui à busca — e o dia em que alguém atribuir, a causa já terá anos.
 
-*Medido nesta implementação:* **24 894 bytes** para 46 páginas, no locale EN. A folga é de 62%.
+*Medido nesta implementação*, com a árvore fechada e o ramo gerado dentro:
 
-> **A medição anterior era 35 612 bytes para 73 páginas, e ela caiu com a árvore.** O número desceu mais que a contagem de páginas porque as trinta páginas geradas de endpoint eram as maiores do índice — corpo de referência é denso e repetitivo. A folga que sobra **não é convite**: o ramo gerado de `Biblioteca C` volta a consumi-la.
+| Locale | Registros | Bytes | Folga sob os 64 KB |
+| --- | ---: | ---: | ---: |
+| `pt-BR` | 52 | 27 616 | 58% |
+| `en` | 52 | 27 645 | 58% |
 
-**A varredura também confere a aritmética do locale de graça:** dos 46 registros do índice EN, **31 carregam a marca de fallback**, que é exatamente a contagem que [`informacao.md`](informacao.md) §8 declara. Duas superfícies independentes chegando ao mesmo número é a forma mais barata de conferência que este projeto tem.
+Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 21 páginas traduzidas ficam mais curtas em inglês, e as 31 de fallback entram em português com a marca `f` — os 29 bytes de diferença são o que sobra dessa troca.
+
+> **A medição do EN só vale no build de TODOS os locales, e a armadilha custa 156 bytes.** Medir com `docusaurus build --locale en` sozinho dá **27 489** — 156 a menos, e o erro é sistemático: sem o pt-BR no mesmo passe, o EN vira o único locale, o `baseUrl` perde o segmento `/en/`, e **os 52 permalinks encurtam três caracteres cada**. 52 × 3 = 156. O índice medido assim é de um site que não se publica.
+>
+> O pt-BR não denuncia a armadilha, e é isso que a torna cara: ele é o locale default, nunca carrega prefixo, e dá **o mesmo número pelos dois métodos**. Quem confere um locale só e vê o número bater conclui que o método está validado. **Meça sempre com `npm run build`**, e leia o `globalData.json` que ele deixa — ele é do último locale do passe, que é o EN.
+
+> **A folga encolheu de 62% para 58%, e o motivo é o previsto.** A medição anterior era 24 894 bytes para 46 páginas, e o parágrafo que a registrava dizia que *"o ramo gerado de `Biblioteca C` volta a consumi-la"*. Ele voltou: 46 + 6 = 52 páginas, +2 751 bytes, **459 bytes por página gerada** — quase o dobro da média de uma página autoral, porque corpo de referência é denso e repetitivo. A medição antes daquela era 35 612 bytes para as 73 páginas do Trilho.
+>
+> **A régua para a próxima vez está nesses 459 bytes.** A folga atual comporta cerca de 82 páginas geradas a mais; comporta menos se elas forem maiores. Quem acrescentar um segundo ramo gerado mede antes, não depois — o teto não avisa, ele reprova o build.
+
+**A varredura também confere a aritmética do locale de graça:** dos 52 registros do índice EN, **31 carregam a marca de fallback**, que é exatamente a contagem que [`informacao.md`](informacao.md) §8 declara. Duas superfícies independentes chegando ao mesmo número é a forma mais barata de conferência que este projeto tem.
 
 ### 2.4 O que fica de fora
 
@@ -72,7 +85,7 @@ O motivo é mecânico: o índice viaja no bundle principal de **toda página do 
 
 ### 2.5 As páginas de fallback entram, marcadas
 
-As 29 páginas sem contraparte em inglês ([`informacao.md`](informacao.md) §8) são servidas em português sob `/en/`. Elas **entram no índice**, com `f`.
+As 31 páginas sem contraparte em inglês ([`informacao.md`](informacao.md) §8) são servidas em português sob `/en/`. Elas **entram no índice**, com `f`.
 
 Escondê-las faria a busca em EN devolver menos do que o site tem, e o leitor chegaria nelas por link e não pela busca — que é pior que o português.
 
@@ -117,6 +130,23 @@ Por isso a lógica pura mora em `src/theme/SearchBar/escada.mjs`, separada do JS
 O que ele trava: a propriedade de potências de dois, a ordem entre os sete degraus, o `E` entre os termos, os dois desempates, a ausência de teto, e o recorte do realce sobre texto acentuado.
 
 > **Ele já se pagou.** A primeira redação deste documento afirmava que o degrau 64 era *"prefixo do título"*. O teste reprovou: o degrau casa começo de **palavra**, em qualquer posição. A tabela acima é o que o código faz, e não o que eu achei que ele fizesse.
+
+### 3.3 O que o corpus novo expôs
+
+Os 17 casos da régua passam sobre índices sintéticos. Sobre o corpus real eles não dizem nada — então a árvore fechada foi exercitada com uma varredura de fora do teste: **buscar cada uma das 52 páginas pelo próprio título, e conferir se ela vem em primeiro**. Duas não vêm.
+
+| Consulta | O que vem em 1º | Onde a própria página cai |
+| --- | --- | --- |
+| `Biblioteca B` | `Bibliotecas`, 128 pontos | 3ª, também com 128 |
+| `Esteira` | `Esteiras`, 64 pontos | 3ª, também com 64 |
+
+**Os dois são empate, não erro de ordem** — a escada põe as candidatas no mesmo degrau e o desempate de sidebar decide. E os dois nascem da mesma cegueira: **a escada não distingue casar a palavra inteira de casar o começo dela.** `esteira` casa `Esteiras` e `Esteira` no mesmo degrau 64; `b` casa `Bibliotecas`, `Biblioteca A` e `Biblioteca B` no mesmo 64.
+
+É caso que o Trilho não produzia. Ele veio de duas coisas desta árvore: títulos que diferem por um sufixo de uma letra (`Biblioteca A`/`B`/`C`) e o vocabulário repetitivo do ramo gerado (`Esteira`, `Esteira.gerar`, `Esteira.trabalho`).
+
+**A correção óbvia foi medida e recusada.** Um oitavo degrau no topo — *título, palavra inteira*, valendo 128 — resolve `Biblioteca B` com folga: 256 contra os 192 de `Biblioteca A` e os 128 de `Bibliotecas`. Mas ele quebra `Esteira` de um jeito pior. `Esteiras` é o único título que casa `esteira` **por prefixo**; os outros **cinco** casam a palavra inteira, e o índice cairia de primeiro para **sexto** — atrás de duas folhas de procedimento e de três da referência gerada. Quem digita `esteira` deixaria de achar o índice de esteiras para achar uma classe. E `Esteira` continuaria não vindo em primeiro, porque o empate entre os cinco volta a ser desfeito pela aba. **O degrau custa o caso comum e não compra o caso raro** — é trocar um resultado ruim por dois.
+
+**Fica como perda nomeada, e a nomeação é o produto.** Um leitor que digita o título exato de uma página pode encontrá-la em terceiro, quando o título dela é um prefixo do título de outra. A saída de verdade não é degrau: é peso por especificidade — título curto valendo mais que título longo, ou casamento exato do título inteiro como critério. Nenhum dos dois cabe em *potências de dois com degraus fixos*, e comprar qualquer um deles é redesenhar a escada, não ajustá-la.
 
 ---
 
@@ -203,7 +233,7 @@ O que a citação obriga:
 | `role="listbox"` / `role="option"` | lista e itens | com `aria-selected` no ativo |
 | `role="status"` | fora da tela | a contagem de resultados, anunciada |
 
-`aria-activedescendant` é o pino que sustenta o §5: **o foco nunca sai do campo**, então não há foco a gerir. É também por isso que a opção não é parada de tabulação — um `tabindex` nela transformaria setenta e três resultados em setenta e três paradas de Tab. Ver [`foco.md`](foco.md) §4.
+`aria-activedescendant` é o pino que sustenta o §5: **o foco nunca sai do campo**, então não há foco a gerir. É também por isso que a opção não é parada de tabulação — um `tabindex` nela transformaria cinquenta e dois resultados em cinquenta e duas paradas de Tab. Ver [`foco.md`](foco.md) §4.
 
 **Desvio nomeado do padrão:** o APG descreve `Escape` limpando o campo antes de fechar. Aqui `Escape` **fecha o modal**, porque é o `<dialog>` quem o trata e reescrever esse comportamento seria escrever de novo o que o navegador já faz — em troca de uma diferença que o leitor não pediu.
 
@@ -257,6 +287,8 @@ A regra não afrouxou aqui. Ela diz que **comportamento à mão obriga a spec a 
 | O degrau alto é começo de PALAVRA, não do campo | **origem própria (correção)** | a régua de máquina reprovou a primeira redação deste documento |
 | Sem teto de resultados | herdado | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) — teto seria truncamento silencioso |
 | A régua de máquina em `node --test` | **origem própria (implementação)** | os portões são varredura, e ordenação não é varrível |
+| A folga de 58% sob o teto | **origem própria (medição)** | 27 616 B em pt-BR e 27 645 B em EN, no `globalData` do build de **todos** os locales — o build de um locale só encurta o permalink do EN em 156 B |
+| O empate entre índice e folha fica como perda nomeada | **origem própria (medição)** | as 52 páginas buscadas pelo próprio título; duas não vêm em primeiro, e o oitavo degrau que resolveria uma delas quebra a outra |
 | Fallback entra marcado, detectado por caminho | herdado | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) §6 |
 | Botão e não campo | herdado | medido nas quatro referências |
 | Um limiar só, o do Infima | herdado | [`chrome.md`](chrome.md) §1.6 |

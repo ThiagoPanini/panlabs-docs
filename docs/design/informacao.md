@@ -156,7 +156,7 @@ O CSS de sidebar cobre as duas formas. O marcador é o `className` do manifesto,
 
 Não é estilo. É a regra que produz as configurações de TOC que provam a medida constante da coluna.
 
-**Correção de premissa, medida em 3.10.2 e mantida:** a classe de 75% é aplicada sempre que `hide_table_of_contents` não está no front matter, **independentemente de haver heading**. O que depende de heading é a coluna do TOC. A tabela completa está em [`chrome.md`](chrome.md) §1.5.
+**Correção de premissa, medida em 3.10.2 e mantida:** a classe de 75% é aplicada sempre que `hide_table_of_contents` não está no front matter, **independentemente de haver heading**. O que depende de heading é a coluna do TOC. A tabela completa está em [`chrome.md`](chrome.md) §2.1.
 
 ### 4.1 A exceção é uma só, e é nomeada
 
@@ -436,17 +436,39 @@ Três decisões mecânicas, e as três estão no ADR 7:
 
 **Perda aceita e nomeada:** em `docusaurus start` as rotas `.md` não existem e devolvem **200 com o shell da SPA** — não 404. É recurso de build, e quem o verifica é o portão 6 rota 2, contra o host real.
 
-O corpo servido é o MDX **quase cru**: front matter fora, `import`/`export` do topo fora por regex, e nada mais. **Não é preciso transformador de AST** — o estado da arte serve MDX quase cru, e a tag `<ParamField>` que sobra diz à máquina exatamente o que ela é.
+O corpo servido é o MDX **quase cru**: front matter fora, `import`/`export` do topo fora por regex, o subtítulo de volta, e nada mais. **Não é preciso transformador de AST** — o estado da arte serve MDX quase cru, e a tag `<ParamField>` que sobra diz à máquina exatamente o que ela é.
 
 > *Do topo* não é detalhe de redação. Uma varredura global comeria um `import` de exemplo dentro de bloco cercado, o `.md` sairia com o código mutilado, e o build passaria. Hoje nenhum arquivo de `conteudo/` importa nada — a remoção é o que mantém a promessa verdadeira quando alguém esquecer.
 
-### 9.2 O ponteiro de volta
+### 9.2 O subtítulo, como citação abaixo do `h1`
+
+**Tirar o front matter tira o subtítulo junto**, e é a única informação que o corte perde. Na tela ele está lá — o override de `h1` o pinta a partir do `description` ([`chrome.md`](chrome.md) §6). No `llms.txt` ele está lá, em cada linha de listagem. Sem uma decisão, ele existiria em todo lugar menos no formato feito para máquina, que é o avesso do que estes três artefatos existem para fazer.
+
+A forma é a do export do Devin, a única das três referências medidas que resolve o caso: **citação imediatamente abaixo do `h1`**, na mesma posição em que a tela a mostra.
+
+```
+> [Índice para máquinas](https://…/llms.txt) · [Página](https://…/procedimentos/acessos/rotacionar-uma-chave)
+
+# Rotacionar uma chave
+
+> Trocar uma chave em uso sem derrubar quem a lê, com janela…
+
+O primeiro parágrafo da página…
+```
+
+**A âncora é o `h1`, e a falta dele estoura o build.** Uma citação no topo do arquivo já significa outra coisa aqui — é o ponteiro de volta do §9.3. Sem `h1` entre os dois, os blocos se fundiriam num só e o subtítulo viraria segunda linha do ponteiro, calado. A guarda não é hipotética por sorte: as 73 páginas dos dois locales abrem com `# `, e é a mensagem de erro que mantém isso verdadeiro no dia em que uma não abrir.
+
+**E a âncora é a primeira linha com texto, não a primeira que casa `# `.** A diferença só aparece num caso, e ele é silencioso: uma página que abrisse com bloco cercado teria um `# comentário` de shell casando a mesma marca, e a citação entraria no meio do código — sem erro, sem aviso, e visível apenas para quem abrisse o `.md` servido. É o mesmo modo de falhar que a remoção de `import` *do topo* evita no §9.1, pela mesma razão: marca de Markdown dentro de cerca não é marca de Markdown.
+
+**O `llms-full.txt` não recebe a citação**, porque lá a description já entra como `> Summary:` acima do separador (§9.5). Duas cópias do mesmo campo no mesmo documento seriam ruído para o parser — e é a mesma regra de fonte única que faz o rótulo da seção sair do navbar em vez de uma opção do plugin.
+
+### 9.3 O ponteiro de volta
 
 **Cada `.md` abre com uma linha apontando para o `llms.txt` e para a própria página.** É o que transforma arquivos soltos em grafo navegável: quem chega num `.md` por link direto descobre que existe uma lista, e a máquina que o lê acha o resto do site.
 
 Sem ele, os arquivos são becos sem saída.
 
-### 9.3 `llms.txt` — a lista de links
+### 9.4 `llms.txt` — a lista de links
 
 Título, tagline, preâmbulo global, e uma seção `##` por tab com um item por página: rótulo, URL do `.md`, e a description.
 
@@ -454,7 +476,7 @@ Título, tagline, preâmbulo global, e uma seção `##` por tab com um item por 
 
 **`## Optional` não é usada.** Ela tem significado especial na spec do llms.txt — *pode ser pulada se o contexto for curto* — e nenhuma das três referências medidas a usa.
 
-### 9.4 `llms-full.txt` — na forma do Neon
+### 9.5 `llms-full.txt` — na forma do Neon
 
 A mesma abertura, e depois o conteúdo inteiro, documento a documento:
 
@@ -470,7 +492,7 @@ A mesma abertura, e depois o conteúdo inteiro, documento a documento:
 
 **É a única das três formas medidas que é inequívoca para máquina.** O separador carrega a URL de origem, então o parser não precisa inferir onde um documento termina nem de onde ele veio.
 
-### 9.5 O preâmbulo global sai em pt-BR nos dois locales
+### 9.6 O preâmbulo global sai em pt-BR nos dois locales
 
 Ele diz o que a máquina tem em mãos: quantas páginas, por qual eixo estão divididas, que toda página é servida como Markdown, e que **o `panlabs` é ficção**. A última linha não é modéstia — sem ela, um assistente responde sobre as bibliotecas do acervo como se elas existissem. Ela também diz que **a empresa nunca é nomeada**, porque um leitor de máquina que tentasse deduzi-la produziria exatamente a atribuição falsa que o §1.1 existe para evitar.
 
@@ -478,7 +500,7 @@ Ele diz o que a máquina tem em mãos: quantas páginas, por qual eixo estão di
 
 A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles` + `translateContent` no plugin põem a prosa em `i18n/<locale>/sd-ai-era/`.
 
-### 9.6 O `Content-Type` do host, e o segundo link do footer
+### 9.7 O `Content-Type` do host, e o segundo link do footer
 
 **O portão 6 rota 2 vive aqui:** `GET <base>/<qualquer>.md` precisa devolver `200 text/markdown` com disposição diferente de `attachment`. As três rotas rodam nos **dois locales** — o `.md` é escrito por locale, num `outDir` diferente, e o baseUrl do EN carrega o prefixo. É exatamente onde a concatenação erraria sem ninguém ver.
 
@@ -537,6 +559,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | `permalink + '.md'`, `allContentLoaded`, `outDir` | herdado | [ADR 7](../adr/0007-trailingslash-false.md) — os três verificados no fonte da 3.10.2 |
 | `import`/`export` removidos só do TOPO | **origem própria (implementação)** | uma varredura global comeria exemplo dentro de bloco cercado |
 | A forma do `llms-full.txt` | **mecanismo emprestado** | o Neon; é a única das três medidas inequívoca para máquina |
+| O subtítulo como citação abaixo do `h1` | **mecanismo emprestado** | o Devin; é a única das três medidas que resolve o campo que o corte de front matter perde |
 | `## Optional` fora | herdado | significado especial na spec, e nenhuma referência a usa |
 | Ponteiro de volta em cada `.md` | herdado | é o que faz grafo em vez de arquivo solto |
 | O rótulo da seção vem do navbar | **origem própria (correção)** | `translateThemeConfig` roda antes de `allContentLoaded` |
