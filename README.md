@@ -17,12 +17,14 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 | 3 | [O catálogo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36) — os componentes de conteúdo | feito |
 | 4 | [O conteúdo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/37) — as páginas autorais e o EN parcial | feito |
 | 5 | [A referência gerada](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/38) — contrato, gerador e três colunas | feito |
-| 6 | [A landing](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/39) — a ilha de espetáculo | feito |
+| 6 | [A landing](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/39) — a ilha de espetáculo | feito, e a página **removida depois** ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) |
 | 7 | [Busca e artefatos AI-era](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/40) — e o fechamento da spec | feito |
 
-**O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. **A referência gerada está no ar**, sobre um contrato de assinatura de função, tipo e módulo: `Ferramentas` fecha em 21. Falta o fecho da spec.
+**O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita — e depois removida —, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. **A referência gerada está no ar**, sobre um contrato de assinatura de função, tipo e módulo: `Ferramentas` fecha em 21. Falta o fecho da spec.
 
-**46 páginas autorais mais 6 geradas em três abas** — 52 no total —, mais 21 traduções, landing, busca, artefatos AI-era e dois locales. A spec são trinta arquivos mais oito ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
+**46 páginas autorais mais 6 geradas em três abas** — 52 no total —, mais 21 traduções, busca, artefatos AI-era e dois locales. A rota `/` não é página: ela **redireciona** para `/jornadas/api-owner/indice`, o primeiro destino declarado em `sidebars-jornadas.js`. A spec são vinte e nove arquivos mais oito ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
+
+> **Correção de contagem.** A landing saiu ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e levou junto o portão que só ela ativava: **eram oito portões, são sete**, e a spec caiu de **trinta arquivos para vinte e nove**. O número 8 **não se reaproveita** — o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração dos sete que ficam.
 
 **O axioma 6 foi cobrado, e não só declarado.** O [§6 da espinha](docs/design/README.md) registra o teste de reconstrução: uma sessão de agente limpa, com `docs/design/` e `docs/adr/` e nada mais, reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. **O build passou nos dois locales.**
 
@@ -35,7 +37,7 @@ npm ci
 npm start                    # dev — não testa link quebrado nem host
 npm run build && npm run serve
 
-npm run portoes              # portões 1 a 5 e 8, cadência de commit
+npm run portoes              # portões 1 a 5, cadência de commit
 npm run portao:7             # o swizzle --list congelado, cadência de upgrade
 npm run portao:6 -- <url>    # as três rotas contra o host, cadência de implantação
 
@@ -50,7 +52,7 @@ npm run icones               # a bijeção manifesto ↔ static/icons/
 | Caminho | Papel |
 | --- | --- |
 | [`docs/adr/`](docs/adr/) | Os oito ADRs. **Leitura obrigatória antes de escrever código.** |
-| [`docs/design/README.md`](docs/design/README.md) | **A espinha da spec** — ordem de leitura, a régua, o índice, as invariantes e os oito portões. Comece por aqui. |
+| [`docs/design/README.md`](docs/design/README.md) | **A espinha da spec** — ordem de leitura, a régua, o índice, as invariantes e os sete portões. Comece por aqui. |
 | [`docs/design/principios.md`](docs/design/principios.md) | A âncora, o carimbo de delta deliberado vazio e as cinco classes de procedência. |
 | [`docs/agents/`](docs/agents/) | Como um agente trabalha neste repo — tracker, domínio, labels, fluxo. |
 | [`docs/research/`](docs/research/) | Índice das sete pesquisas. O material mora em branches `research/*`. |
@@ -63,7 +65,7 @@ npm run icones               # a bijeção manifesto ↔ static/icons/
 | `src/plugins/` | Os dois plugins de caminho: a busca e os artefatos AI-era. Nenhum é dependência npm. |
 | `static/icons/` | Os 60 desenhos vendorizados do Lucide (ISC). Trocáveis. |
 | `conteudo/` | O acervo `panlabs`, o conteúdo fictício — `jornadas/`, `procedimentos/`, `ferramentas/`. Fica fora de `docs/`, que é a documentação *deste* repositório. |
-| `scripts/` | Os oito portões, o espelho de `tokens.md` e o vendorizador de ícones. |
+| `scripts/` | Os sete portões, o espelho de `tokens.md` e o vendorizador de ícones. |
 
 ## Restrições travadas
 

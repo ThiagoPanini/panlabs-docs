@@ -54,15 +54,26 @@ ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 > obrigaria e que fica assim mesmo é a meta de [`param-field`](param-field.md),
 > porque a rota da referência gerada a nomeia verbatim no contrato dela.
 
-**O contrato tem um consumidor que não é um dos dezessete, e ele vale registrado.**
-A landing usa `data-sd-part="glow"` na camada decorativa do hero, e
-`data-sd-component` para alcançar `card` e `card-group` dentro do JSX dela — ver
-[`landing.md`](../landing.md) §7. Não é exceção à régua: é a régua aplicada fora
-do MDX. O `glow` existe porque o bloco `reduce` de `tokens.css` precisa alcançar
-um elemento cuja classe é de CSS Module e portanto **hasheada** — que é
+**O contrato teve um consumidor que não era um dos dezessete, e ele vale
+registrado depois de morto.** A landing usava `data-sd-part="glow"` na camada
+decorativa do hero, e `data-sd-component` para alcançar `card` e `card-group`
+dentro do JSX dela. Não era exceção à régua: era a régua aplicada fora do MDX. O
+`glow` existia porque o bloco `reduce` de `tokens.css` precisava alcançar um
+elemento cuja classe é de CSS Module e portanto **hasheada** — que é
 literalmente *o CSS não alcança por tipo de elemento*. E os dois
 `data-sd-component` já eram publicados: quem os lê de fora lê contrato, não
 implementação.
+
+> **Correção de fato.** A landing saiu em
+> [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e com ela
+> a camada decorativa, o `glow` e o bloco `reduce` que o alcançava. **O contrato
+> voltou a ter exatamente os dezessete consumidores**, e a régua perdeu o único
+> exemplo vivo de aplicação fora do MDX. O que sobrevive é o **precedente**, e é
+> por isso que o parágrafo fica: quando o CSS não alcança porque a classe é
+> hasheada por um módulo, `data-sd-part` é o gancho certo, e publicá-lo não abre
+> exceção nenhuma. Nada foi despublicado por esta remoção — o `glow` nunca
+> esteve na tabela dos dezessete, e despublicar é o movimento que a régua acima
+> proíbe.
 
 **5. Nenhum componente conhece modo de cor.** As duas exceções declaradas são
 [`code-block`](code-block.md) e [`frame`](frame.md), e só elas. Consequência
@@ -216,6 +227,7 @@ queria:
 | Sem válvula de escape | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §1 — veto do dono do projeto |
 | Zero JS de interação | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Contrato de partes estreito | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| **O consumidor de fora do catálogo morreu, e o precedente fica** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — o `data-sd-part="glow"` da landing era a única aplicação da régua fora do MDX; nada foi despublicado, porque ele nunca esteve na tabela dos dezessete |
 | Nenhum componente conhece modo de cor | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §7 |
 | Os treze cortados | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) |
 | Toda a superfície de swizzle são dois registros de degrau 3 | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) pré-autorizou; [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) corrigiu a rota do callout e do `code-block` |

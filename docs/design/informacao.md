@@ -228,7 +228,9 @@ São, respectivamente, `alert alert--warning` e `badge badge--secondary` — **c
 
 São dez, todos **convenção de conteúdo e zero layout**: sem front matter de tipo, sem classe CSS por tipo, sem componente próprio.
 
-> **O site inteiro tem exatamente duas rupturas de layout:** o ramo gerado de `Biblioteca C` e a landing. **Nenhuma terceira nasce de um tipo.**
+> **O site inteiro tem exatamente uma ruptura de layout:** o ramo gerado de `Biblioteca C`. **Nenhuma segunda nasce de um tipo.**
+>
+> *Correção de contagem.* **Eram duas**; a outra era a landing, e ela saiu em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). O número caiu por subtração de página, e não por afrouxamento: o que a frase proíbe continua sendo que um **tipo** produza layout próprio, e nenhum dos dez produz. A raiz não recompõe o par — ela é um salto para o índice da primeira jornada, e salto não tem layout a romper.
 
 ### 6.1 Os dez gabaritos
 
@@ -565,3 +567,6 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | O rótulo da seção vem do navbar | **origem própria (correção)** | `translateThemeConfig` roda antes de `allContentLoaded` |
 | O preâmbulo em pt-BR nos dois locales | **origem própria** | a mesma regra do §8; a rota de tradução do plugin fica registrada e não comprada |
 | `pathname://` no link do footer | herdado | escotilha pública do Docusaurus para arquivo que não é rota — degrau 2 |
+| **Uma ruptura de layout, e não duas** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a landing saiu; sobra o ramo gerado de `Biblioteca C`, e a proibição de o tipo romper layout não muda |
+| **A raiz é um salto, não uma página** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — sem landing, a raiz leva ao índice da primeira jornada, que é o primeiro destino declarado em `sidebars-jornadas.js`. *Dissenso registrado:* o destino podia ser o **capítulo 1** em vez do índice da categoria, e o argumento a favor é que o leitor chega ao conteúdo um clique antes. Vence o índice porque ele é o décimo tipo de página e é o destino do rótulo da categoria — mandar a raiz para o capítulo 1 pularia a abertura da jornada, que é a página escrita para ser lida primeiro |
+| **O redirecionamento da raiz é `meta refresh` mais `<Redirect>`, não 308** | **lacuna por restrição** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a âncora responde **308** na raiz; o host é o GitHub Pages, que não emite redirecionamento de servidor configurável. A divergência é de host, não de desenho |

@@ -15,6 +15,18 @@
     "message": "default",
     "description": "Rótulo do valor default de um campo de API"
   },
+  "shinydoc.raiz.titulo": {
+    "message": "Documentation",
+    "description": "Título da rota raiz, que redireciona para a primeira doc"
+  },
+  "shinydoc.raiz.aviso": {
+    "message": "This page takes you to the documentation.",
+    "description": "Aviso da rota raiz quando o redirecionamento não acontece sozinho"
+  },
+  "shinydoc.raiz.link": {
+    "message": "Open the documentation",
+    "description": "Link manual para o destino da rota raiz"
+  },
   "theme.ErrorPageContent.title": {
     "message": "This page crashed.",
     "description": "The title of the fallback page when the page crashed"

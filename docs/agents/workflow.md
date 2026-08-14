@@ -16,7 +16,9 @@ A construção do site Docusaurus é trabalho **posterior ao mapa**, disparado p
 
 ## Portões
 
-São **seis**, todos de custo zero em dependência, e cada um nasce no slice que cria a superfície que ele protege — nenhum é bolado no fim. Os que já existem:
+São **sete**, todos de custo zero em dependência, e cada um nasce no slice que cria a superfície que ele protege — nenhum é bolado no fim. Os que já existem:
+
+> **Correção de contagem, registrada duas vezes.** A redação original dizia **seis**, e já estava vencida quando o slice 6 fechou: viraram **oito** com o portão 8, o da landing. **São sete** desde que a landing saiu ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e levou o portão que só ela ativava. A segunda correção não desfaz a primeira — o seis nunca descreveu o repo com a landing dentro. E o número 8 **não se reaproveita**: os sete que ficam vão de 1 a 7, e nenhum é renumerado, porque o ADR 5 cita o portão 5 pelo número.
 
 | # | Portão | Comando | Cadência |
 | ---: | --- | --- | --- |
@@ -25,7 +27,7 @@ São **seis**, todos de custo zero em dependência, e cada um nasce no slice que
 | 3 | `outline` fora do arquivo de foco | `npm run portao:3` | commit |
 | 6 | três `curl` contra a URL pública — rota, `.md` e forma com barra | `npm run portao:6` | implantação |
 
-Os outros quatro nascem depois e rodam na mesma CI: 4 (contagem de conteúdo), 5 (a referência gerada — regenera e diffa), 7 (`swizzle --list` congelado) e 8 (a lista fechada de seis efeitos da landing).
+Os outros três nasceram depois e rodam na mesma CI: 4 (contagem de conteúdo), 5 (a referência gerada — regenera e diffa) e 7 (`swizzle --list` congelado). **Havia um quarto**, o 8 — a lista fechada de seis efeitos da landing —, e ele morreu com a página que cobrava.
 
 Duas verificações **não** são portão e rodam junto no CI: o espelho de `tokens.md` (`node scripts/espelho-tokens.mjs --verificar`) e a bijeção do manifesto de ícones (`npm run icones`). Elas não protegem uma regra de escrita — conferem que duas cópias da mesma verdade não divergiram.
 

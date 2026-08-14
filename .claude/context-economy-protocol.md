@@ -21,7 +21,7 @@ Peça exatamente isto, e diga o teto em linhas:
 1. **Arquivos relevantes** — path + uma linha de por que importa.
 2. **O vizinho mais próximo, verbatim** — o arquivo que o código novo vai espelhar (o componente irmão, a regra CSS irmã, a página irmã, o teste irmão), embutido no digest. Ele carrega o código a copiar; assim não custa uma segunda leitura sua.
 3. **O padrão a espelhar** — a convenção que o vizinho demonstra.
-4. **Os portões e ADR que a área ativa** — quais dos oito reprovam esta mudança, e o que cada um cobra.
+4. **Os portões e ADR que a área ativa** — quais dos sete reprovam esta mudança, e o que cada um cobra.
 5. **Os seams de teste** — `scripts/busca.test.mjs` e `scripts/assinatura.test.mjs` são as duas únicas réguas de `node --test`; o resto do repo é cobrado por varredura.
 
 ## 3. O digest é o orçamento de leitura
@@ -30,7 +30,7 @@ O vizinho que veio embutido você **não relê** — clona dele. Dos demais, só
 
 **Não leia arquivo com `cat`, `sed` ou `head`.** É a maior categoria de `Bash` deste repo (12,8k tokens por sessão) e passa por fora do orçamento — o digest não a vê e a trava de `Read` não a pega. Para localizar, `grep -n` e leia a fatia; para ler, `Read` com `offset`/`limit`.
 
-`docs/design/tokens.md` tem 1829 linhas e `docs/design/landing.md` tem 666. Nenhum dos dois se lê inteiro. Vá pela seção que a tabela do `CLAUDE.md` aponta.
+`docs/design/tokens.md` passa de 1800 linhas e `docs/design/informacao.md` passa de 550. Nenhum dos dois se lê inteiro. Vá pela seção que a tabela do `CLAUDE.md` aponta.
 
 ## 4. Issue enxuta
 
@@ -44,9 +44,11 @@ Sem `--comments` salvo necessidade real, sem issues irmãs, sem varrer o mapa. O
 
 ## 5. Direto ao portão que reprova
 
-O digest já é o plano — não redija plano em prosa antes de editar. Identifique qual dos oito portões cobra a mudança e rode **só ele** durante o trabalho (`npm run portao:N`, ~0,4s cada). A bateria inteira fica para o fim.
+O digest já é o plano — não redija plano em prosa antes de editar. Identifique qual dos sete portões cobra a mudança e rode **só ele** durante o trabalho (`npm run portao:N`, 0,6–0,7s cada, medidos). A bateria inteira fica para o fim.
 
-**`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4, 5 e 8. A CI roda também o portão 7, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build` e `npm run zeros`. Verde local no bundle não é verde na CI.
+**`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4 e 5 (~2,5s). A CI roda também o portão 7, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build` e `npm run zeros`. Verde local no bundle não é verde na CI.
+
+> **Correção de contagem.** **Eram oito portões, são sete** — o 8 morreu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)). O número **não se reaproveita**: os que ficam vão de 1 a 7 e nenhum é renumerado, porque o ADR 5 cita o portão 5 pelo número.
 
 ## 6. Narre comprimido
 

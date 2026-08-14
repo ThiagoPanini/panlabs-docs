@@ -78,7 +78,9 @@ Esta seção dizia o contrário até o mapa do `mint`: *"quatro dimensões, e s�
 
 **E agora ele está fechado, não só vazio.** Havia um candidato nomeado — o catálogo de componentes, se ele mantivesse `CodeGroup` onde a âncora resolve com `Tabs`. Ele não produziu membro: a âncora **tem** `CodeGroup` e o usa cinco vezes, e o critério de corte deste projeto é uso **zero**. O *"a âncora resolve com `Tabs`"* que sustentava a aposta nunca tinha sido contado — dos 105 `Tab` medidos lá, 52 embrulham imagem e não código.
 
-**Dos tickets que restam, nenhum pode produzir um membro.** A landing não tem âncora com que divergir — a raiz da âncora responde 308 e a porta de entrada dela mora no host irmão —, e cor de marca e ícone são **skin**, o mesmo argumento que já vale para tipografia.
+**Dos tickets que restam, nenhum pode produzir um membro.** Cor de marca e ícone são **skin**, o mesmo argumento que já vale para tipografia — e skin não diverge, se troca.
+
+> **O segundo pilar deste fecho mudou de forma, e ficou mais firme.** Ele dizia que *"a landing não tem âncora com que divergir — a raiz da âncora responde 308 e a porta de entrada dela mora no host irmão"*. A landing saiu na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) e a raiz passou a fazer **o que a âncora faz**: levar à primeira doc. O que era ausência de âncora virou convergência com ela, e o argumento não depende mais de um ticket que deixou de existir. O que resta é diferença de **mecanismo** — a âncora responde 308 do servidor, e o GitHub Pages não emite redirecionamento configurável, então aqui a raiz é uma página com `meta http-equiv="refresh"` mais o roteador do núcleo. Diferença imposta pela plataforma é `lacuna por restrição` (§3.1), nunca delta: ninguém escolheu isto.
 
 ### 3.1 Divergência por restrição não é delta
 
@@ -155,6 +157,8 @@ As classes são cinco e continuam cinco. O que os documentos acrescentam é **qu
 
 `origem própria` é a que um revisor deve atacar primeiro, e a spec a carimba de propósito para facilitar o ataque. Uma spec que escondesse a fragilidade sob prosa confiante seria mais agradável de ler e impossível de auditar.
 
+> **Reavaliada quando a landing saiu, e ela NÃO esvaziou.** A pergunta é obrigatória porque a página removida na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) carregava a procedência mais frágil do sistema, e uma classe que perdesse todos os membros teria de ser declarada vazia em vez de ficar pendurada — é o que o §3 faz com `delta deliberado` e o §5.3 com `lacuna de medição`. Medido por varredura das tabelas de procedência de `docs/design/` e `docs/adr/`: `landing.md` levou **45** linhas consigo, e restam **374**. Ela continua sendo, de longe, a classe mais populosa do projeto — o que é o resultado esperado, e não um alívio: `origem própria` é o carimbo do que ninguém mediu, e um sistema que o usa 374 vezes tem 374 lugares por onde ser contestado.
+
 ### 5.3 Herdar uma ausência não é herdar
 
 **A regra, e ela é a posição mais frágil deste projeto:**
@@ -175,15 +179,15 @@ Duas coisas mais saíram da mesma medição, e as duas cortam contra adotar o pa
 
 ## 6. A assinatura visual, numa frase
 
-> **Uma documentação `mint` fiel, entregue inteira por uma arquitetura de token que a âncora não tem, e uma única faixa de espetáculo onde a luz é emitida em vez de ocluída.**
+> **Uma documentação `mint` fiel, entregue inteira por uma arquitetura de token que a âncora não tem.**
 
-**A frase anterior tinha três orações e duas morreram.** Ela dizia *"cartão escuro elevado por anel de sombra sobre página mais escura, tipografia sóbria em coluna de medida constante, e uma única faixa de espetáculo"*. O anel deixou de existir — ele virou borda de verdade, e a profundidade virou herança medida, não divergência. A medida constante deixa de ser divergência porque a âncora foi remedida e o número dela é o nosso; o valor exato e o recarimbo viajam com a reescrita de [`chrome.md`](chrome.md), como todo o resto da tabela do §3. A terceira oração é a única que continua sendo nossa.
+**A frase tinha três orações, e as três morreram** — a última na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). A redação original dizia *"cartão escuro elevado por anel de sombra sobre página mais escura, tipografia sóbria em coluna de medida constante, e uma única faixa de espetáculo"*. O anel deixou de existir — ele virou borda de verdade, e a profundidade virou herança medida, não divergência. A medida constante deixou de ser divergência porque a âncora foi remedida e o número dela é o nosso. **E a faixa de espetáculo saiu com a landing**, que era a única região do site a hospedá-la.
 
-O que mudou de fundo é que a faixa **deixou de ser exceção num sistema de cartões elevados** e passou a ser a única coisa do site que não sai da âncora.
+**A consequência é grande o bastante para ser dita em voz alta: a assinatura visual deste projeto não é mais visual.** O que resta da frase é a arquitetura de token — e ela não aparece numa captura de tela. Um leitor que abra o site publicado ao lado da âncora vê fidelidade, não assinatura; a diferença mora em como o sistema é construído, não em como ele se parece. Isso é coerente com o que o projeto entrega — estrutura e customização visual para transplante —, mas é uma perda real, e chamá-la de simplificação seria maquiagem.
 
-Tudo o mais é consequência. A raridade da faixa é o que a torna assinatura em vez de enfeite: ela é **uma** região do site inteiro — hero mais laje de código, na landing —, marcada por `[data-sd-showcase]`, e o critério que autoriza um elemento a entrar nela é **emissão**. Como tudo mais no sistema é oclusão, o critério admite ela e mais nada.
+**O que morreu junto com a faixa, e vale nomear porque é o que precisaria voltar:** `[data-sd-showcase]` como marca de região, o critério de **emissão** que autorizava um elemento a entrar nela, os dois focos de luz e a respiração de um deles, e o degrau de display que só o hero consumia. A regra de direção única continua verdadeira e continua sem sujeito: **não existe ilha clara**, porque emissão precisa de escuridão.
 
-Não existe ilha clara: emissão precisa de escuridão, então o mecanismo tem uma direção só.
+> *Dissenso registrado.* A decisão de remover a landing foi de escopo — *"seguir fielmente a doc da âncora"*, com a discussão sobre voltar a ter uma **adiada explicitamente**. Não foi a faixa que se mostrou errada; foi a página que a hospedava que saiu de escopo. Se ela voltar, esta seção volta a ter três orações, e o parágrafo acima é a lista do que precisa ser reconstruído.
 
 ---
 
@@ -199,7 +203,7 @@ Cada linha aqui é uma coisa que a medição entregou e que a spec **não** usou
 | **A mistura de famílias de ícone da âncora** | é acidente dela, não desenho. O manifesto é de família única, contorno e geometria consistentes |
 | **O par padrão de realce de código da âncora** | ela declina de tematizar código, então não há decisão para herdar — ver §5.3. E as duas medidas cortam contra: ele **regride** os pisos de contraste deste projeto e fica **mais berrante** no claro |
 | **As seis partes por componente que o Mintlify publica** | ele é multi-tenant e o cliente **não pode tocar no React dele**. O transplante corporativo é dono do arquivo — copiar aquela superfície seria herdar uma restrição de arquitetura que não é a nossa |
-| **Alternância de faixas escuro/claro na landing** | exige a **ilha clara**, descartada por escrito. E a alternância sumiria inteira no modo escuro, que é o canônico: o ritmo existiria só no modo secundário |
+| **Alternância de faixas escuro/claro** *(medida quando havia landing)* | exige a **ilha clara**, descartada por escrito. E a alternância sumiria inteira no modo escuro, que é o canônico: o ritmo existiria só no modo secundário. Hoje o descarte é duplo — a página que a hospedaria saiu na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) |
 | **`Content-Disposition: inline` como exigência literal do portão 6** | as referências mandam o cabeçalho; o GitHub Pages não manda nenhum. Ausente **não é** `attachment` — pela RFC 6266 a disposição default é inline. Exigir o literal reprovaria um host onde o recurso funciona, e portão que reprova o que funciona é portão que alguém desliga |
 | **DocSearch, do próprio ecossistema Docusaurus** | três conversas corporativas — dependência, egresso de rede e conteúdo indexado fora do perímetro. A terceira não tem argumento técnico que a mova. Ver [ADR 6](../adr/0006-busca-local-sem-servico-externo.md) |
 | **Ranqueamento estatístico na busca** (TF-IDF, BM25) | a escada de degraus é **explicável em prosa e conferível por teste**; um score estatístico não é nenhum dos dois. Numa base de dois mil documentos essa recusa se inverte |
@@ -222,4 +226,8 @@ Cada linha aqui é uma coisa que a medição entregou e que a spec **não** usou
 | As cinco classes de procedência | herdado | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) — consolidadas aqui, num lugar só |
 | Os qualificadores estreitam em vez de abrir uma sexta | **origem própria (implementação)** | os cinco nasceram do uso, nos slices 1 a 6; o de `consequência` só foi para a lista na [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) |
 | A assinatura numa frase | origem própria | síntese; não medida |
+| **A assinatura perdeu a metade visível** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a faixa de espetáculo era a única região a hospedá-la, e saiu com a landing |
+| **A raiz redireciona para a primeira doc** | herdado | a raiz da âncora não serve página: ela leva à primeira doc, medido em [#92](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/92) |
+| **O redirecionamento é por página e roteador, não por servidor** | **lacuna por restrição** | o GitHub Pages não emite redirecionamento configurável; a âncora responde 308. Host medido no [ADR 7](../adr/0007-trailingslash-false.md) |
+| **`origem própria` foi reavaliada e não esvaziou** | **origem própria (verificação)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — varredura das tabelas de `docs/design/` e `docs/adr/`: 45 linhas saíram com `landing.md`, 374 restam |
 | A tabela do que foi medido e descartado | **origem própria** | descarte anônimo é indistinguível de descuido |

@@ -155,22 +155,28 @@
   --sd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
-     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-6xl)
+     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-4xl)
      para a procedência ficar legível no próprio token.
 
-     O degrau de display é `6xl`, e ele NÃO é escala nova: é um nome da mesma
-     escala do alvo, saltando o `5xl`. Um consumidor no site inteiro — o título
-     do hero da landing, e só de 997px. Abaixo disso o hero desce para `4xl`,
-     porque a regra da dobra manda no valor: a 375 × 667, um título de display
-     estoura o teto da faixa do hero. Ver docs/design/landing.md §4.
-
-     O `5xl` SAIU, e a lápide vale a linha. Ele nasceu na mesma landing que o
-     mata, e nos dois casos quem decidiu foi a largura de onde o título mora: em
-     672 o degrau que cabia era 48, e com o bloco do hero tomando o container o
-     título cabe numa linha em 60. Deixá-lo declarado seria variável sem
+     NÃO HÁ DEGRAU DE DISPLAY, e a escala termina no `4xl`. Ela já terminou no
+     `4xl` uma vez: o `5xl` saiu quando o título do hero passou a caber numa
+     linha em 60, e a lápide dele dizia que deixá-lo declarado seria variável sem
      consumidor — o defeito do Infima que este arquivo nomeia para não copiar.
-     Registrado como dissenso em docs/design/landing.md: o degrau de display do
-     projeto foi decidido duas vezes, com respostas diferentes.
+
+     O `6xl` SAIU AGORA, pela mesma régua e pelo motivo inverso: ele tinha um
+     consumidor no site inteiro — o título do hero da landing, de 997px —, e a
+     landing saiu. Ver docs/design/README.md §5.1 e a issue #94.
+
+     A régua que decide isto está em docs/design/README.md, no fecho da
+     varredura: o que se remove é órfão SEM MOTIVO, não órfão. `--sd-gray-200`
+     fica porque é parada de uma rampa declarada inteira, e rampa com buraco é
+     pior de ler; `--sd-toc-width` fica porque nomeia um elo da cadeia de
+     proporções. Um degrau de display não é elo de nada — ele já saltava o `5xl`
+     por não ter o que preencher no meio —, então sem o hero não sobra motivo, e
+     manter o `6xl` repetiria exatamente o defeito que matou o `5xl`.
+
+     Consequência declarada: o degrau de display do projeto foi decidido três
+     vezes, com três respostas — 48, 60, e nenhum.
      --------------------------------------------------------------------------- */
   --sd-type-xs:    12px;
   --sd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
@@ -179,8 +185,7 @@
   --sd-type-xl:    20px;
   --sd-type-2xl:   24px;
   --sd-type-3xl:   30px;    /* título de página, até 996px */
-  --sd-type-4xl:   36px;    /* título de página, de 997px; título do hero até 996px */
-  --sd-type-6xl:   60px;    /* o degrau de display — título do hero da landing, de 997px */
+  --sd-type-4xl:   36px;    /* título de página, de 997px — o topo da escala */
 
   /* Peso — três, nomeados por intenção. Nome de intenção não colide com o
      `semibold: 500` do Infima, que é a mesma palavra sobre outro número. */
@@ -274,7 +279,18 @@
      Os quatro primeiros terminam sozinhos e ENCURTAM sob reduced-motion.
      Os dois últimos não terminam sozinhos — `reveal` é dirigido por rolagem,
      `ambient` é infinito — e são REMOVIDOS, não encurtados; quem os consome
-     acrescenta timeline / `infinite`, e o bloco `reduce` os desliga. */
+     acrescenta timeline / `infinite`.
+
+     OS TRÊS ÚLTIMOS ESTÃO SEM CONSUMIDOR desde que a landing saiu (issue #94), e
+     ficam declarados de propósito. O motivo é o que a régua de órfãos pede — e
+     não é o mesmo do `--sd-type-6xl`, que saiu no mesmo movimento. O vocabulário
+     de motion é FECHADO por portão: `scripts/portao-2-motion.sh` reprova toda
+     duração ou curva cravada e manda usar um destes seis nomes. Remover três
+     deixaria o portão apontando para um vocabulário que não cobre `showcase`,
+     `reveal` nem `ambient` — e a próxima faixa que precisasse de um deles
+     escreveria o número cravado que o portão existe para impedir. É uma escala
+     declarada inteira, como a rampa de cinza, e o buraco no meio custa mais do
+     que a parada a mais. */
   --sd-move-state:    var(--sd-dur-1) var(--sd-ease-settle);
   --sd-move-enter:    var(--sd-dur-1) var(--sd-ease-settle);
   --sd-move-expand:   var(--sd-dur-2) var(--sd-ease-inout);
@@ -463,12 +479,18 @@
    aparece num e não no outro é um buraco visível.
    ============================================================================= */
 
-/* ESCURO — canônico. O segundo seletor é a ilha de espetáculo: ela carrega o
-   próprio substrato porque glow é emissão, e emissão só é legível contra
-   escuridão. É um seletor a mais no bloco que já existe, não um bloco novo —
-   e é isso que faz a ilha ser inerte na troca de tema. */
-:root,
-[data-sd-showcase] {
+/* ESCURO — canônico.
+
+   O bloco teve um SEGUNDO seletor, `[data-sd-showcase]`, e ele saiu com a
+   landing (issue #94). A ilha de espetáculo carregava o próprio substrato
+   porque glow é emissão, e emissão só é legível contra escuridão; ela era um
+   seletor a mais neste bloco, e não um bloco novo, e é isso que a fazia inerte
+   na troca de tema. Sem a faixa não há o que manter escuro fora do modo.
+
+   Se ela voltar, o seletor volta AQUI e não num bloco próprio — e
+   `scripts/contraste.mjs` casa este seletor em início de linha, então voltar
+   com ele exige acertar o casamento lá junto. */
+:root {
   color-scheme: dark;
 
   /* surface — `scrim` é o véu do `::backdrop` do modal de busca, e ele é o
@@ -510,7 +532,15 @@
   --sd-border-default: rgb(from var(--sd-text-strong) r g b / 12%);
   --sd-border-strong:  rgb(from var(--sd-text-strong) r g b / 20%);
 
-  /* accent */
+  /* accent.
+
+     `contrast` está SEM CONSUMIDOR desde que a landing saiu (issue #94) — o
+     único era o texto do botão primário dela. Fica declarado, e o motivo é o
+     mesmo que mantém `--sd-gray-200`: papel semântico é família declarada
+     inteira. Os dois blocos de modo declaram a MESMA lista, na mesma ordem, e
+     papel que aparece num e não no outro é buraco visível; tirar o par do
+     accent deixaria a camada 2 sem resposta para *que cor vai o texto sobre o
+     accent*, e o próximo botão a nascer escreveria a cor à mão. */
   --sd-accent:          var(--sd-brand-on-dark);
   --sd-accent-hover:    oklch(from var(--sd-accent) calc(l + 0.06) c h);
   --sd-accent-contrast: var(--sd-text-inverse);
@@ -730,60 +760,24 @@
 }
 
 /* =============================================================================
-   CAMADA 3 — escopo da ilha, e SÓ dela.
+   CAMADA 3 — VAZIA, e a ausência tem endereço.
 
-   Regra SEPARADA de propósito: entrar no bloco `:root, [data-sd-showcase]`
-   acima poria --sd-glow em :root, e o glow vazaria para o site inteiro.
+   Havia aqui uma regra `[data-sd-showcase]` com os cinco tokens de brilho da
+   ilha de espetáculo: os dois gradientes (`--sd-glow` e `--sd-glow-2`), a caixa
+   quadrada da luz (`--sd-glow-tamanho`) e o par de amplitude da respiração
+   (`--sd-glow-vale` e `--sd-glow-crista`). Ela era SEPARADA de propósito:
+   entrar no bloco escuro acima poria --sd-glow em :root, e o glow vazaria para
+   o site inteiro. A confinação não era regra que alguém precisava lembrar — era
+   fato de escopo.
 
-   Consequência: numa página de documentação `var(--sd-glow)` não resolve para
-   nada. A confinação deixa de ser regra que alguém precisa lembrar e vira fato
-   de escopo.
+   Saiu inteira com a landing, na issue #94. A camada 3 é declarada no escopo do
+   próprio componente e nunca em :root, e hoje nenhum componente do projeto
+   declara token próprio: a única ilha que havia era esta.
+
+   Este cabeçalho fica porque a camada é uma das três, e a regra de referência
+   do §1 de docs/design/tokens.md se lê pelas três. Camada sem membro é
+   diferente de camada que não existe.
    ============================================================================= */
-
-[data-sd-showcase] {
-  /* DOIS focos, e o segundo não afrouxa o critério que autoriza a ilha: os dois
-     são luz emitida pelo mesmo mecanismo, num tom diferente.
-
-     O primeiro subiu de 12% para 30%, e quem pagou foi a FIGURA. Enquanto havia
-     desenho embaixo, a luz era o brilho sobre ele; sem desenho ela carrega o
-     hero sozinha, e 12% não carrega. O centro dele reancora na aresta de cima da
-     laje, então a luz nasce ATRÁS do material em vez de flutuar — e isso é
-     reinterpretação, não medição. Vai como dissenso em landing.md.
-
-     O segundo é o cyan, no canto oposto, a 24%. Ele cita `--sd-code-parameter`,
-     que é o tom do identificador na paleta de sintaxe: dentro da ilha a laje é o
-     material, e a segunda luz é a cor do material. Não é hex novo — é a operação
-     1 sobre um token que já existe. */
-  --sd-glow:   radial-gradient(circle, rgb(from var(--sd-accent) r g b / 30%), transparent 70%);
-  --sd-glow-2: radial-gradient(circle, rgb(from var(--sd-code-parameter) r g b / 24%), transparent 70%);
-
-  /* A caixa do glow, e ela é QUADRADA: o gradiente é `circle`, e caixa não
-     quadrada faz o raio da luz depender de qual lado é maior. Um lado só, e ele
-     é a largura do site — a luz tem a medida do conteúdo. Dois lados exigiriam
-     um segundo comprimento sem raiz, que é a derivação falsa que este arquivo
-     recusa em voz alta mais acima. Um comprimento para os DOIS focos, pelo mesmo
-     motivo: um segundo tamanho seria o segundo número que não tem raiz. */
-  --sd-glow-tamanho: var(--sd-container-width);
-
-  /* A amplitude da respiração — PAR DECLARADO sobre o alfa do glow, e não um
-     segundo gradiente com outro alfa. São fatores, não cores: a camada
-     decorativa multiplica por `opacity` o alfa que o gradiente já entrega, e o
-     vale é o único número que a respiração acrescenta ao sistema.
-
-     QUEM RESPIRA É UM DOS DOIS, e isso é o teto de um loop por página lido ao
-     pé da letra: são dois focos e uma respiração. O cyan é luz parada, e o par
-     abaixo nunca o alcança.
-
-     Eles moram aqui, no escopo da ilha, pelo mesmo motivo que `--sd-glow`: fora
-     dela não resolvem, e a respiração fica confinada por FATO DE ESCOPO em vez
-     de por regra que alguém precisa lembrar.
-
-     A crista é 1 — o glow como o token o entrega. Uma crista acima de 1 seria
-     um alfa que o gradiente não declara, ou seja o segundo valor que este par
-     existe para não ter. */
-  --sd-glow-vale:   0.62;
-  --sd-glow-crista: 1;
-}
 
 /* =============================================================================
    Reduced-motion — propriedade da CAMADA DE TOKEN, não dos componentes.
@@ -807,28 +801,26 @@
     --sd-dur-3: 1ms;
   }
 
-  /* Os dois que NÃO terminam sozinhos são removidos, não encurtados.
+  /* Os dois que NÃO terminam sozinhos seriam removidos aqui, não encurtados — e
+     hoje não há nenhum dos dois no site.
 
-     A respiração do glow sai por aqui: encurtá-la para 1ms produziria
-     estroboscópio, que é o oposto exato do que `reduce` pede.
+     Havia uma regra `[data-sd-showcase] [data-sd-part='glow'] { animation:
+     none; }`, e ela saiu com a landing (issue #94). A respiração do glow saía
+     por aqui porque encurtá-la para 1ms produziria estroboscópio, que é o oposto
+     exato do que `reduce` pede. Era a única regra de ELEMENTO do arquivo fora do
+     adaptador, e existia porque `animation: none` não tem como ser entregue por
+     token: o nome do `@keyframes` precisa aparecer LITERALMENTE numa declaração
+     `animation` para sobreviver ao minificador (ver a nota em `custom.css`).
 
-     Esta é a única regra de ELEMENTO do arquivo fora do adaptador, e ela existe
-     porque `animation: none` não tem como ser entregue por token. O nome do
-     `@keyframes` precisa aparecer LITERALMENTE numa declaração `animation` para
-     sobreviver ao minificador (ver a nota em `custom.css`), então a respiração
-     não pode viajar dentro de uma custom property — e sem isso o bloco `reduce`
-     não alcançaria uma classe de CSS Module hasheada.
+     O reveal nunca apareceu aqui, e por outro motivo: a regra dele morava dentro
+     de `@media (prefers-reduced-motion: no-preference)`, no CSS Module da
+     própria página, e simplesmente não entrava. Ver ADR 3 — a errata dele
+     registra que os dois exemplos vivos da regra (d) saíram juntos.
 
-     O gancho é `data-sd-part`, que é contrato publicado do projeto, e o par de
-     seletores dá (0,2,0) contra a (0,1,0) da classe do módulo: vence sem
-     `!important` e sem depender de ordem de carga.
-
-     O reveal não aparece aqui porque ele some pelo outro lado: a regra dele
-     mora dentro de `@media (prefers-reduced-motion: no-preference)`, no CSS
-     Module da landing, e simplesmente não entra. Ver ADR 3. */
-  [data-sd-showcase] [data-sd-part='glow'] {
-    animation: none;
-  }
+     Se um loop ambiente voltar, ele volta por aqui, com `data-sd-part` como
+     gancho: é contrato publicado do projeto, e o par de seletores dá (0,2,0)
+     contra a (0,1,0) da classe do módulo — vence sem `!important` e sem depender
+     de ordem de carga. */
 }
 
 /* =============================================================================
