@@ -127,9 +127,9 @@ samp {
    CSS Modules manglam o nome do `@keyframes` que o módulo **define**, e um
    keyframe definido num módulo é inalcançável de fora dele. A falha é
    silenciosa: não anima e não avisa. Um módulo pode **referenciar** keyframe
-   global sem problema, então a landing usa estes três e o confinamento dela
-   continua intacto — o que mora no módulo dela é a REGRA, não o desenho do
-   movimento.
+   global sem problema, e é por isso que eles moram aqui: o que mora no módulo
+   que consome é a REGRA, não o desenho do movimento, e o confinamento continua
+   intacto.
 
    É UM, e é a entrada do modal de busca. Eram quatro: os outros três — a
    entrada da ilha, a respiração do glow e o reveal por rolagem — saíram com a

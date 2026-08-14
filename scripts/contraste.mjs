@@ -145,8 +145,15 @@ const css = readFileSync(CSS, 'utf8');
    A âncora é a primeira declaração do bloco, que é o que o define: um bloco de
    modo é o que declara `color-scheme`. */
 function recorte(padraoDeAbertura, primeiraDeclaracao) {
+  /* Os dois parâmetros têm contratos DIFERENTES, e a assimetria é declarada
+     para não virar armadilha: `padraoDeAbertura` chega como regex já escapada
+     — os seletores trazem `[`, `]` e `'` —, e `primeiraDeclaracao` chega como
+     texto literal, escapado aqui. O motivo é o próximo uso: uma declaração de
+     âncora pode trazer `rgb(from …)` ou um ponto, e interpolá-la crua casaria
+     errado calada. */
+  const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const alvo = primeiraDeclaracao
-    ? `^${padraoDeAbertura} \\{\\n  ${primeiraDeclaracao}$`
+    ? `^${padraoDeAbertura} \\{\\n  ${literal(primeiraDeclaracao)}$`
     : `^${padraoDeAbertura} \\{$`;
   const abre = css.search(new RegExp(alvo, 'm'));
   if (abre === -1) throw new Error(`bloco não encontrado em ${CSS}: ${padraoDeAbertura}`);

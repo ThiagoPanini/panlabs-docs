@@ -47,8 +47,20 @@ import Layout from '@theme/Layout';
 
 /**
  * O primeiro destino declarado na primeira sidebar — `sidebars-jornadas.js`, o
- * `link` da categoria `API Owner`. A ordem é declarada lá e em lugar nenhum
- * mais; esta constante é a segunda leitura dela, e é a única do projeto.
+ * `link` da categoria `API Owner`. **A ordem é declarada lá e em lugar nenhum
+ * mais**, e esta constante é uma leitura dela, não uma segunda fonte.
+ *
+ * Há uma terceira citação da mesma rota, e ela não é cópia desta:
+ * `scripts/portao-4-conteudo.sh` a soletra para cobrar o TIPO da página
+ * (`indice-de-jornada`), que é outra pergunta. Mudar a ordem da sidebar exige
+ * acertar esta linha; mudar o tipo da página exige acertar a de lá.
+ *
+ * **Lacuna nomeada, porque nenhum portão casa as duas.** O build reprova se
+ * este destino deixar de existir — é o `<Link>` abaixo que compra essa
+ * verificação —, mas não reprova se ele deixar de ser o **primeiro**: trocar o
+ * `link` da categoria em `sidebars-jornadas.js` sem trocar esta linha reaponta
+ * a raiz em silêncio, com a CI verde. O portão 6 confere três rotas contra o
+ * host publicado e a raiz não é uma delas.
  */
 const DESTINO = '/jornadas/api-owner/indice';
 

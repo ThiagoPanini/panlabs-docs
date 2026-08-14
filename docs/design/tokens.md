@@ -455,11 +455,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      saída. Cartão fora, derivação fora: sobraria o número 768 sem raiz, que é a
      derivação FALSA que este arquivo recusa em voz alta no bloco de foco.
 
-     Os dois consumidores reais — a laje de código da landing e a largura do
-     modal de busca — passam a citar `--sd-prose-width`, e os dois pelo MESMO
+     Os consumidores reais passam a citar `--sd-prose-width`, pelo MESMO
      argumento que já estava escrito: *a medida que o leitor estava lendo quando
      apertou a tecla*. O argumento não enfraquece; ele fica verdadeiro, porque
-     hoje ele erra por 96px. */
+     hoje ele erra por 96px.
+
+     Eram DOIS na redação original — a largura do modal de busca e a laje de
+     código da landing. A segunda saiu com a página na issue #94; quem cita o
+     token hoje é `chrome.css`, o `SearchBar` e o `ApiDocItem`. */
 
   /* A folga lateral do shell, de cada lado. Ela dobra a partir de 997px — o
      mesmo limiar em que a sidebar aparece. O par 16/32 é herdado da âncora; o
@@ -488,7 +491,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-busca-height: 60dvh;
 
   /* ---------------------------------------------------------------------------
-     Grade de cartões — camada 1, e UMA declaração serve a landing e o MDX.
+     Grade de cartões — camada 1, e a declaração serve o MDX.
+
+     A frase que justificava a posição era *"UMA declaração serve a landing e o
+     MDX"*, e ela perdeu metade na issue #94: sobra o `card-group` do MDX. Ver a
+     lápide da lista de faixas mais abaixo, e `componentes/card-group.md`.
 
      O piso de faixa da grade de `card-group`, derivado do limiar da âncora A
      TRÊS COLUNAS: o `Columns` dela colapsa em 42rem, com gap de 16. Descontados
@@ -507,12 +514,18 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Com este piso, a contagem de cartões faz o trabalho sozinha — zero media
      query, zero container query, zero prop de colunas.
 
-     A LISTA DE FAIXAS mora aqui junto, e não só o piso. O motivo é que ela tem
-     dois consumidores — a grade de `card-group` dentro do MDX e a grade da
-     landing —, e "uma declaração serve as duas" só é verdade se a declaração
-     existir num lugar que as duas citem por nome. A escada de elevação já abriu
-     este precedente: `--sd-shadow-raised` também é valor composto, e pelo mesmo
-     motivo.
+     A LISTA DE FAIXAS mora aqui junto, e não só o piso. O motivo tinha dois
+     consumidores — a grade de `card-group` dentro do MDX e a grade da landing
+     —, e "uma declaração serve as duas" só era verdade se a declaração
+     existisse num lugar que as duas citassem por nome. A escada de elevação
+     abriu o precedente: `--sd-shadow-raised` também é valor composto, e pelo
+     mesmo motivo.
+
+     A GRADE DA LANDING SAIU na issue #94, e a lista fica onde está. O argumento
+     que a trouxe para cá perdeu metade, mas o que sobra basta: ela continua
+     sendo valor composto, e valor composto citado por nome é o que impede a
+     próxima grade de recompor a lista à mão. O mesmo vale para
+     `--sd-shadow-raised`, que perdeu um dos dois consumidores no mesmo commit.
      --------------------------------------------------------------------------- */
   --sd-card-colapso: 672px;   /* o `max-w-2xl` em que o `Columns` da âncora colapsa */
   --sd-card-min: calc((var(--sd-card-colapso) - 2 * var(--sd-space-4)) / 3);
@@ -810,8 +823,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
    Sobraram DOIS papéis, e nenhum deles é consumido por conteúdo. `float` é o
    chrome flutuante — dropdown, gaveta, modal de busca, botão de voltar ao topo.
-   `raised` NÃO flutua: os dois consumidores dele são o painel da Referência da
-   API e o botão primário da landing, que são superfície levantada e controle.
+   `raised` NÃO flutua: o consumidor dele é o painel da Referência da API, que é
+   superfície levantada. Eram DOIS — o segundo era o botão primário da landing,
+   e saiu com a página na issue #94. O token fica porque continua consumido, e é
+   essa a diferença entre ele e `--sd-type-6xl`, que saiu na mesma remoção.
    A profundidade saiu do CONTEÚDO, não do site — a #50 mediu zero componente de
    conteúdo com sombra em seis páginas da âncora, e o único portador de sombra
    medido lá é um chip de 24px no hover de heading.

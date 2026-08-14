@@ -106,6 +106,7 @@ const AUTORIA = [
   // Objetos · 16
   {nome: 'file-text', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'folder', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  // Era também a porta `Procedimentos` da landing, que saiu na #94.
   {nome: 'terminal', papeis: ['autoria'], onde: 'vocabulário do autor'},
   // Comprado pela porta `Ferramentas` da landing, que saiu na #94. Continua no
   // vocabulário do autor, e hoje é o único nome de ferramenta do manifesto.
