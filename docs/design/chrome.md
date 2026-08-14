@@ -4,7 +4,7 @@ O shell da página de documentação: proporções, navbar com faixa de tabs, si
 
 **Nenhum valor numérico nasce neste documento.** Todos os comprimentos moram em [`tokens.md`](tokens.md) e são citados aqui **por nome de token**. Os outros números que aparecem são identificadores — número de ADR, de issue e de portão — ou o limiar de media query, que é o único comprimento que a linguagem não sabe ler de custom property.
 
-> **O §1 cita valor, e é o único que cita.** A cadeia de proporções aparece uma vez com o número ao lado do nome do token, porque ela é a única coisa deste documento que **ou fecha na tela, ou não fecha** — e uma cadeia sem número não é conferível. Ali os números são **evidência de medição**, não fonte: quem os edita edita `tokens.md`, e este documento passa a estar errado.
+> **Dois parágrafos citam valor, e são os únicos.** O §1 traz a cadeia de proporções com o número ao lado do nome do token, porque ela é a única coisa deste documento que **ou fecha na tela, ou não fecha** — e uma cadeia sem número não é conferível. Ali os números são **evidência de medição**, não fonte: quem os edita edita `tokens.md`, e este documento passa a estar errado. O §11 traz o **alvo medido na âncora**, que é a outra ponta: ali os números não descrevem o que temos, e sim o que se quer atingir. Eles vêm de [`../research/paridade-devin.md`](../research/paridade-devin.md), não de `tokens.css`, e quem os edita está afirmando que a âncora mudou.
 
 Chrome não se autora: se **entorta**. Tudo neste documento é degrau 0 (variável do Infima), degrau 1 (classe estável) ou degrau 2 (opção pública) da escada do [ADR 2](../adr/0002-politica-de-swizzle.md), **com duas exceções de degrau 3** — a marca, que está em [`icones.md`](icones.md), e o subtítulo do §6. As duas estão no ledger de [`swizzle.md`](swizzle.md). O orçamento `unsafe` continua em zero.
 
@@ -415,10 +415,51 @@ Consequência direta do orçamento `unsafe` zero. Cada linha é perda escrita, n
 
 ---
 
+## 11. Alvo medido — o chrome da âncora, em números
+
+A âncora deste projeto é o `docs.devin.ai`, e a spec declara **zero delta deliberado** contra ela. Até aqui a distância era prosa — *"a coluna do TOC dá 288 contra os 304 da âncora"* — e prosa não reprova nada, o que é exatamente por que *"ficou aquém"* só apareceu semanas depois, no olho do dono.
+
+Esta tabela é o alvo. `npm run paridade` mede o site **construído** contra ela e imprime a lista do que não fecha.
+
+Os números **não nascem aqui**: são medição de primeira mão da âncora, registrada em [`../research/paridade-devin.md`](../research/paridade-devin.md) §4. Editá-los é afirmar que a âncora mudou — não que nós mudamos. A largura de referência é **1512**, que é onde a âncora foi medida por inteiro.
+
+A tolerância é parte do alvo, e não um detalhe do script: `exato` é para o que só tem dois estados — uma borda existe ou não existe, um raio é o que a folha diz. `±1` é para o que atravessa arredondamento de subpixel e zoom de layout.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Sidebar `left` | `52px` | ±1 |
+| Sidebar largura | `288px` | ±1 |
+| Sidebar `border-right` | `0px` | exato |
+| Coluna de texto | `720,81px` | ±1 |
+| Caixa do TOC | `304px` | ±1 |
+| TOC `border-left` | `0px` | exato |
+| Navbar altura | `112px` | ±1 |
+| Margem direita | `52px` | ±1 |
+| A 1920, margem esquerda | `256px` | ±1 |
+| A 1920, margem direita | `256px` | ±1 |
+| TOC visível a 1100 | `nao` | exato |
+| Sidebar visível a 1010 | `nao` | exato |
+| Sobrancelha tamanho | `14px` | exato |
+| Item de sidebar altura | `36px` | ±1 |
+| Item de sidebar raio | `12px` | exato |
+
+Três linhas merecem leitura, porque não são medida direta:
+
+**As duas margens a 1920** não foram medidas na âncora nessa largura — elas são **derivadas** da regra do wrapper que foi medida: `max-width: 1472px`, `margin-inline: auto`, `padding-inline: 32px`. A 1920 sobram `(1920 − 1472) ÷ 2 = 224` de cada lado, mais os 32 de padding. Que as duas sejam **iguais** é o alvo de verdade; o valor absoluto é consequência. É a correção principal da issue-pai: hoje a sidebar cola em `x = 0` e toda a folga vai para a direita.
+
+**Os dois limiares são sondados fora do número redondo.** A âncora esconde o TOC abaixo de 1280 e a sidebar abaixo de 1024; nós escondemos os dois abaixo de 997. Medir *em* 1280 e *em* 1024 pegaria os dois lados de acordo e não diria nada — 1100 e 1010 caem dentro da faixa onde âncora e produto discordam, e é lá que a sonda tem trabalho.
+
+**O acento não tem linha aqui, nem em [`tokens.md`](tokens.md).** A cor de marca é divergência declarada: violeta, e não o azul da âncora. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa.
+
+---
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido do §11** | **medido em referência** | as três medições de primeira mão da âncora, em [`../research/paridade-devin.md`](../research/paridade-devin.md) §4 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **As margens a 1920 do §11** | **derivado** | a regra do wrapper medida a 1512 (`max-width 1472`, `margin-inline auto`, `padding-inline 32`), estendida à largura maior |
+| **Os limiares sondados a 1100 e 1010** | **origem própria (implementação)** | o número redondo põe âncora e produto de acordo e não mede nada; a sonda tem que cair dentro da faixa onde discordam |
 | Container, coluna, TOC, prosa | herdado + derivado | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50), [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) |
 | **O congelamento em 1472** | **origem própria (correção)** | o *"shell total"* ignorava o preenchimento do `<main>`; medido em navegador, o ponto é exato |
 | **A separação do TOC em `--sd-space-6`** | **origem própria** | escolhida para a lista cair em 264, que é o número medido |

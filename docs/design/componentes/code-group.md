@@ -1,5 +1,7 @@
 # `code-group`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, dentro de `## Anatomia`, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 O mesmo trecho em várias linguagens, numa caixa de abas. É o que resolve a página
@@ -48,6 +50,16 @@ têm contrato próprio: o [`tabs`](tabs.md) e o [`code-block`](code-block.md).
 
 O rótulo da aba é o título da cerca; na falta dele, a linguagem; na falta das
 duas, a posição. **Nunca vazio** — aba sem nome é aba que não se clica de novo.
+
+**Alvo medido**, do `docs.devin.ai` a 1512, em
+[`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Raio | `16px` | exato |
+
+A casca da âncora tem raio de fora e a superfície de código tem outro, menor,
+por dentro. A sonda cobra o de fora, que é o que encosta na prosa.
 
 ## Variantes
 
@@ -117,6 +129,7 @@ contrato de estado de entrada mora em [`foco.md`](../foco.md).
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em [`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Compõe `Tabs` em vez de swizzlar | herdado | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §3 |
 | **Ele fica no catálogo** | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) e [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — a âncora usa `CodeGroup` cinco vezes, e o critério de corte é uso zero; o *"resolve com `Tabs`"* nunca foi contado, e 52 dos 105 `Tab` medidos lá embrulham `Frame` |
 | Abas e não dropdown | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) — a forma é função da contagem; [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 transforma isso em regra de contrato |

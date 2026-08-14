@@ -1,5 +1,7 @@
 # `card`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, dentro de `## Anatomia`, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 Um **destino**, com ícone, título e uma linha de resumo. É o componente de maior
@@ -49,6 +51,19 @@ move."*
 
 O ícone é o **único elemento do catálogo pintado com a cor de marca** — é o
 detalhe que mais define a aparência do componente na medição.
+
+**Alvo medido**, do `docs.devin.ai` a 1512, em
+[`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11.
+`npm run paridade` mede o cartão construído contra estas linhas.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Raio | `16px` | exato |
+| Borda | `1px` | exato |
+
+O hover da âncora **muda só a cor da borda** — sem anel, sem sombra, sem
+elevação, sem trocar o fundo. Isso é estado, e não caixa: não há sonda para ele
+aqui, e a verificação fica na avaliação visual.
 
 ## Variantes
 
@@ -124,6 +139,7 @@ O ícone é decorativo e sai da árvore de acessibilidade: o nome acessível do 
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em [`../../research/paridade-devin.md`](../../research/paridade-devin.md) §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | Cartão do zero | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — `DocCard` é dirigido por metadado |
 | `title` · `icon` · `href`, e nada mais | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — superfície mínima medida |
 | Ícone na cor de marca | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — *"o detalhe que mais define a aparência do card"* |

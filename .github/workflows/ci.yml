@@ -128,3 +128,16 @@ jobs:
       # origem. Sem `build/` ele só olharia `src/`, que é metade da resposta.
       - name: Os cinco zeros
         run: npm run zeros
+
+      # A paridade contra a âncora, como RELATÓRIO e não como portão. Ela imprime
+      # a distância até o `docs.devin.ai` — os alvos vivem nas tabelas da spec e o
+      # comparador mede o site construído, por isso roda depois do build.
+      #
+      # `continue-on-error` é a decisão, não um descuido: o juiz declarado da
+      # paridade é a avaliação visual humana sobre o produto final, e travar merge
+      # por diferença de pixel criaria atrito onde o dono pediu leitura. O que ele
+      # compra é que a deriva fique escrita no log em vez de descoberta semanas
+      # depois. É o único passo não-bloqueante deste arquivo.
+      - name: Paridade com a âncora (relatório, não reprova)
+        continue-on-error: true
+        run: npm run paridade
