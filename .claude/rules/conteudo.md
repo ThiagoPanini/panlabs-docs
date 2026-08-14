@@ -1,0 +1,44 @@
+---
+paths:
+  - "conteudo/**/*.md"
+  - "conteudo/**/*.mdx"
+  - "i18n/**/*.md"
+  - "i18n/**/*.mdx"
+  - "i18n/**/*.json"
+---
+
+# Conteúdo — o que é contado, e por quem
+
+O portão 4 (`npm run portao:4`) transforma em varredura os critérios da arquitetura de informação, porque são todos **contagens**, e contagem escrita em documento é contagem que envelhece calada. Uma página a mais não quebra build nenhum; só faz a spec passar a mentir.
+
+## As contagens travadas
+
+| Aba | Páginas |
+| --- | --- |
+| `conteudo/jornadas/` | 12 |
+| `conteudo/procedimentos/` | 19 |
+| `conteudo/ferramentas/` | 21 |
+
+Mais o ramo gerado, somado por fora — **52 no site**. Acrescentar ou remover página **exige acertar o portão 4 junto**. São treze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
+
+## Proibição por localização
+
+O portão 4 tem uma classe de cobrança que não é só teto — é *"aqui não entra"*. `<Steps>` fora de `Jornadas` e `<CardGroup>` fora dos dois índices têm teto **zero**. Antes de usar um componente de autoria, confira o tipo de página em `docs/design/informacao.md` § 6. Tipos de página.
+
+## A regra de heading
+
+É decisão de layout disfarçada de conteúdo, e o portão a cobra: `docs/design/informacao.md` § 4. A regra de heading.
+
+## Locale
+
+**Só `Ferramentas` é traduzida** — 21 folhas, cobertura cobrada pelo portão 4. As outras duas abas existem só em pt-BR, e isso é decisão, não pendência: `docs/design/informacao.md` § 8. Locale.
+
+Tradução mora em `i18n/en/docusaurus-plugin-content-docs-ferramentas/current/`, espelhando a árvore de `conteudo/ferramentas/`. Rótulo de UI vai em `i18n/en/docusaurus-theme-classic/`.
+
+## Voz
+
+**`você` + imperativo. Zero primeira pessoa, sem exceção** — no site inteiro, nos dois locales. O acervo é pessoal pelo que escolhe documentar, não pela gramática.
+
+## Link quebrado
+
+`onBrokenLinks: 'throw'` só dispara em `npm run build`. `docusaurus start` devolve 200 com o shell da SPA para qualquer rota — ele nunca vai te avisar.
