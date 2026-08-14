@@ -4,7 +4,7 @@
    Camada 3: tudo aqui deriva de token de camada 1 e 2, declarado no escopo do
    próprio componente, nunca em `:root`. Zero token novo — a aritmética do
    painel é `calc()` sobre tokens que já existem, não uma quarta dimensão de
-   chrome. Ver docs/design/tokens.md §1 e docs/design/api-reference.md.
+   chrome. Ver docs/design/tokens.md §1 e docs/design/referencia.md.
 
    NENHUMA declaração `outline` neste arquivo — o portão 3 reprova outline
    fora de `src/css/foco.css`, e não precisa de exceção aqui: `:focus-visible`
@@ -71,9 +71,11 @@
 }
 
 /* -----------------------------------------------------------------------------
-   A prosa. Sem `.theme-doc-markdown`: aplicar essa classe traria de volta o
-   cartão que esta página não tem onde pôr. `.markdown` (Infima) continua —
-   é só a tipografia base, espaço entre heading, parágrafo e lista.
+   A prosa. Sem `.theme-doc-markdown` — e a razão mudou: ela era o cartão, o
+   cartão morreu na geometria `mint`, e o que a classe carrega hoje é a
+   normalização de margem que as duas regras abaixo já declaram. `.markdown`
+   (Infima) continua, e é ela que importa: é a tipografia base, e é o escopo do
+   link inline isento do piso de alvo de toque em `foco.css`.
    ----------------------------------------------------------------------------- */
 .prosa {
   min-width: 0;
@@ -110,20 +112,22 @@
   box-shadow: var(--sd-shadow-raised);
 }
 
+/* O cabeçalho — a ASSINATURA. Ele era `display: flex` para pôr a pílula de
+   verbo ao lado do caminho; sem verbo sobrou um filho só, e a assinatura é uma
+   linha longa que precisa quebrar dentro da coluna do painel em vez de alinhar
+   ao centro de um irmão que não existe mais. */
 .painelCabecalho {
-  display: flex;
-  align-items: center;
-  gap: var(--sd-space-2);
   margin: 0;
   font-family: var(--sd-font-mono);
   font-size: var(--sd-type-sm);
   color: var(--sd-text-body);
+  overflow-wrap: anywhere;
 }
 
 /* -----------------------------------------------------------------------------
-   A fileira de parâmetros editáveis — só existe quando a operação tem
-   parâmetro de caminho ou de consulta. `<label>` mais `<input type="text">`
-   nativos: zero tecla própria, zero foco programático, zero ARIA a escrever.
+   A fileira de argumentos editáveis — só existe quando a entrada tem parâmetro
+   escalar com exemplo. `<label>` mais `<input type="text">` nativos: zero tecla
+   própria, zero foco programático, zero ARIA a escrever.
    ----------------------------------------------------------------------------- */
 .painelParametros {
   display: flex;
@@ -160,7 +164,10 @@
   font-size: var(--sd-type-sm);
 }
 
-.painelAbasLinguagem,
-.painelRespostas {
-  min-width: 0;
-}
+/* As duas classes de aba saíram daqui junto com as abas.
+   `.painelAbasLinguagem` existia porque o painel oferecia cURL, Python e
+   JavaScript; `.painelRespostas`, porque uma operação HTTP tinha um corpo por
+   status. O contrato de assinatura não tem nem uma coisa nem outra — o snippet
+   é um só, e o que a chamada devolve e levanta são as seções `Retorno` e `Erros`
+   da prosa. CSS sem consumidor é a mesma classe de defeito das variáveis inertes
+   do Infima, e sai no mesmo commit que o consumidor. */

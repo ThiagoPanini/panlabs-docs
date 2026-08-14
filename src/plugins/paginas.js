@@ -8,8 +8,8 @@
  * de fallback moram aqui, e cada plugin consome o resultado.
  *
  * **A fonte é o MDX, não o HTML renderizado.** É o que dispensa `cheerio` e o
- * que faz as 24 páginas geradas da Referência entrarem pelo mesmo caminho das
- * 43 autorais: uma página gerada é um `.mdx` em disco como qualquer outra.
+ * que faz as 6 páginas geradas da referência entrarem pelo mesmo caminho das
+ * 46 autorais: uma página gerada é um `.mdx` em disco como qualquer outra.
  *
  * **A porta é `allContentLoaded`.** `contentLoaded` só enxerga o conteúdo do
  * PRÓPRIO plugin, e estes dois não têm conteúdo nenhum — eles leem o das três

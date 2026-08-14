@@ -432,9 +432,11 @@ a.card:active {
    duas coisas, e marcar as duas dobra os chips e divide por dois a saliência do
    que importa.
 
-   O chip de obrigatório NÃO usa cor de estado, e é decisão: âmbar já é `PUT` e
-   vermelho já é `DELETE` na mesma página de referência. Sendo o único chip do
-   campo, a saliência vem de ser o único.
+   O chip de obrigatório é VERMELHO, e o carimbo é `herdado`: a âncora pinta o
+   chip de vermelho, com a palavra escrita por extenso em vez de asterisco. O que
+   segurava a versão neutra era o verbo — âmbar era `PUT` e vermelho era `DELETE`
+   na mesma página —, e o verbo morreu com o contrato HTTP. Sem ele, os dois
+   matizes ficaram livres, e a medição decide.
    ----------------------------------------------------------------------------- */
 
 .field {
@@ -480,8 +482,8 @@ a.card:active {
 .fieldMeta strong {
   border-radius: var(--sd-radius-xs);
   padding-inline: var(--sd-space-1);
-  background-color: var(--sd-border-subtle);
-  color: var(--sd-text-strong);
+  background-color: var(--sd-state-danger-fill);
+  color: var(--sd-state-danger);
   font-weight: var(--sd-weight-ui);
 }
 
@@ -494,8 +496,11 @@ a.card:active {
   margin-block-start: var(--sd-space-2);
 }
 
-/* `deprecated` é tachado mais texto apagado, e SEM abrir cor nova — senão ele
-   dividiria o âmbar com `PUT` na mesma página. */
+/* `deprecated` continua tachado mais texto apagado, e SEM cor — a conclusão não
+   mudou, a justificativa foi substituída. Ela era *não dividir o âmbar com
+   `PUT`*; hoje é que o vermelho passou a ser do chip de obrigatório, e um
+   segundo significado sobre o mesmo matiz, na mesma linha do mesmo campo, é
+   ambiguidade. */
 .fieldDeprecated > .fieldHead > code {
   color: var(--sd-text-muted);
   text-decoration: line-through;

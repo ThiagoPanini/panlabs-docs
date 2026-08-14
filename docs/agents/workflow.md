@@ -25,7 +25,7 @@ São **seis**, todos de custo zero em dependência, e cada um nasce no slice que
 | 3 | `outline` fora do arquivo de foco | `npm run portao:3` | commit |
 | 6 | três `curl` contra a URL pública — rota, `.md` e forma com barra | `npm run portao:6` | implantação |
 
-Os portões 4 (gerador da Referência da API) e 5 (`swizzle --list` congelado) nascem nos slices 5 e 7.
+Os outros quatro nascem depois e rodam na mesma CI: 4 (contagem de conteúdo), 5 (a referência gerada — regenera e diffa), 7 (`swizzle --list` congelado) e 8 (a lista fechada de seis efeitos da landing).
 
 Duas verificações **não** são portão e rodam junto no CI: o espelho de `tokens.md` (`node scripts/espelho-tokens.mjs --verificar`) e a bijeção do manifesto de ícones (`npm run icones`). Elas não protegem uma regra de escrita — conferem que duas cópias da mesma verdade não divergiram.
 

@@ -22,7 +22,7 @@
 # locale, que é a única sobrevivente da versão anterior deste portão — ela não é
 # acréscimo, é a linha que não foi jogada fora com o resto.
 #
-#    1. o volume por aba e por categoria     12 · 19 · 15 autorais, 15 em EN
+#    1. o volume por aba e por categoria     12 · 19 · 21, e 52 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
 #    3. a regra de heading                    com UMA exceção nomeada
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
@@ -34,8 +34,16 @@
 #    9. o marcador de tradução                31 páginas, e nenhuma tradução
 #   10. `description`                         em 100% das páginas
 #   11. as onze fixtures                      por caminho nomeado
-#   12. os dez tipos têm instância            `Referência de API` pendente
-#   13. a cobertura de locale                 15 em EN, e só `Ferramentas`
+#   12. os dez tipos têm instância            e nenhum fica pendente
+#   13. a cobertura de locale                 21 em EN, e só `Ferramentas`
+#
+# **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
+# ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
+# ausência era DECLARADA aqui — declarar a pendência é o que impede uma lista de
+# dez de virar lista de nove sem ninguém notar. Agora ele tem seis, e o que este
+# portão passa a cobrar é o contrário: que as seis existam, e que continuem sendo
+# `.mdx` gerado em vez de `.md` escrito à mão. O portão 5 é quem confere que elas
+# são a projeção do contrato; aqui elas são CONTAGEM, que é o assunto deste.
 #
 # **O tipo mora AQUI, e não no conteúdo.** `informacao.md` §6 trava que tipo de
 # página é convenção de conteúdo e ZERO layout — sem front matter `type:`, sem
@@ -65,6 +73,13 @@ PROCEDIMENTOS='conteudo/procedimentos'
 FERRAMENTAS='conteudo/ferramentas'
 EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 
+# O ramo gerado, nos dois locales. Ele é contado à parte de toda contagem de
+# autoral: `.mdx` é o sinal greppável de *gerado, não editar*, e ele é o que
+# separa as duas posses sem uma lista de exceção a manter.
+GERADO_PT='conteudo/ferramentas/bibliotecas/biblioteca-c/referencia'
+GERADO_EN="${EN}/bibliotecas/biblioteca-c/referencia"
+GERADAS=6
+
 # A única página que pode ficar abaixo do piso de heading sem que um gabarito o
 # autorize. Ver informacao.md §4.1.
 EXCECAO_DE_HEADING='procedimentos/ambiente/indice'
@@ -79,9 +94,9 @@ reprova() {
 # `chave=valor` separados por espaço, lidos com `${par%%=*}` / `${par##*=}` —
 # o repo não tem bash 4 garantido, então nada de array associativo.
 #
-# `Ferramentas` conta 15 e não 21: as **6 páginas geradas** de `Biblioteca C`
-# são do ticket seguinte, e uma sidebar sem o ramo gerado é válida. Quando elas
-# chegarem, `bibliotecas` vai a 13 e a aba a 21.
+# **Estas contagens são de AUTORAL**, e continuam em 15 para `Ferramentas`: a
+# função conta `.md`, e o ramo gerado é `.mdx`. A soma das duas — 21 folhas na
+# aba e 52 no site — é cobrada logo abaixo, com o número gerado somado por fora.
 VOLUME_JORNADAS='api-owner=7 security-champion=5'
 VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=4 infraestrutura=4 acessos=4 diagnostico=4'
 VOLUME_FERRAMENTAS='bibliotecas=7 modulos-terraform=3 skills=3 servidores-mcp=2'
@@ -141,12 +156,12 @@ ferramentas/servidores-mcp/servidor-de-catalogo-mcp:sdk
 FIM
 )
 
-# Os dez tipos, e onde cada um tem instância. `referencia-de-api` é o único sem
-# nenhuma, e a ausência é DECLARADA: as 6 páginas geradas de `Biblioteca C`
-# chegam no ticket seguinte. Declarar a pendência aqui é o que impede a lista de
-# dez virar lista de nove sem ninguém notar.
+# Os dez tipos, e onde cada um tem instância. **Nenhum fica pendente.** O
+# décimo, `referencia-de-api`, é o único que não aparece no manifesto acima: o
+# gabarito dele é *a saída do gerador*, e a instância dele é contada do disco —
+# declará-lo no manifesto seria escrever à mão o que o contrato decide.
 DEZ_TIPOS='quickstart conceitual guia sdk referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
-TIPO_PENDENTE='referencia-de-api'
+TIPO_GERADO='referencia-de-api'
 
 # As onze fixtures, por caminho nomeado. Cada caso difícil tem exatamente uma
 # página dona — a spec aponta para o artefato em vez de descrever a hipótese, e
@@ -231,8 +246,23 @@ volume_da_aba "$FERRAMENTAS" 15 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferra
 autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
 [ "$autorais" = 46 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 46"
 
-echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${total_ferramentas} = ${autorais} autorais"
-echo "   (Ferramentas fecha em 21 quando o ramo gerado de Biblioteca C chegar)"
+# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 13, `Ferramentas`
+# em 21 e o site em 52 — os três números que a spec publica.
+geradas=$(find "$GERADO_PT" -name '*.mdx' 2>/dev/null | wc -l)
+[ "$geradas" = "$GERADAS" ] ||
+  reprova "o ramo gerado tem ${geradas} páginas, esperado ${GERADAS}"
+
+bibliotecas=$(( $(find "${FERRAMENTAS}/bibliotecas" -name '*.md' | wc -l) + geradas ))
+[ "$bibliotecas" = 13 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 13"
+
+folhas_ferramentas=$((total_ferramentas + geradas))
+[ "$folhas_ferramentas" = 21 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 21"
+
+total=$((autorais + geradas))
+[ "$total" = 52 ] || reprova "o site tem ${total} páginas, esperado 52"
+
+echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${folhas_ferramentas} = ${total}"
+echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
 echo
 
 # --- 2. o tipo, e o orçamento estrutural dele ---------------------------------
@@ -342,10 +372,23 @@ echo "   ${sem_toc} sem coluna de TOC · ${com_toc} com"
 # zero pelo orçamento dela, e orçamento não é exceção.
 #
 # O que esta contagem cobra é que as DUAS configurações de coluna que este
-# acervo produz existam no artefato. A terceira, `hide_table_of_contents`, chega
-# com o ramo gerado.
+# acervo produz existam no artefato.
+#
+# **A terceira NÃO chegou com o ramo gerado, e a linha anterior errava ao
+# prometê-la.** Ela dizia que `hide_table_of_contents` viria com as páginas
+# geradas; ele não vem, e não vir é decisão escrita: o campo seria segunda fonte
+# de verdade para algo que o `ApiDocItem` já decide sozinho — ele simplesmente
+# nunca renderiza `@theme/TOC` na perna do painel. As geradas ficam sem TOC por
+# COMPONENTE, não por front matter, e é a varredura logo abaixo — deste portão,
+# não do 5 — que cobra que nenhuma delas declare o campo.
 [ "$sem_toc" -ge 1 ] || reprova "nenhuma página sem coluna de TOC"
 [ "$com_toc" -ge 1 ] || reprova "nenhuma página monta coluna de TOC"
+
+geradas_com_campo=$(grep -Rl '^hide_table_of_contents:' "$GERADO_PT" "$GERADO_EN" 2>/dev/null) || true
+if [ -n "$geradas_com_campo" ]; then
+  reprova "página gerada declarando \`hide_table_of_contents\` — o componente já decide:"
+  echo "$geradas_com_campo" | sed 's/^/    /'
+fi
 echo
 
 # --- 4. `<Steps>` fora de `Jornadas` ------------------------------------------
@@ -492,13 +535,13 @@ if [ -n "$sem_marcador" ]; then
   echo "$sem_marcador" | sed 's/^/    /'
 fi
 
-com_marcador_demais=$(grep -Rl '<Untranslated />' --include='*.md' "$FERRAMENTAS") || true
+com_marcador_demais=$(grep -Rl '<Untranslated />' --include='*.md' --include='*.mdx' "$FERRAMENTAS") || true
 if [ -n "$com_marcador_demais" ]; then
   reprova "\`Ferramentas\` nasce traduzida — o marcador não se aplica:"
   echo "$com_marcador_demais" | sed 's/^/    /'
 fi
 
-com_marcador_en=$(grep -Rl '<Untranslated />' --include='*.md' "$EN" 2>/dev/null) || true
+com_marcador_en=$(grep -Rl '<Untranslated />' --include='*.md' --include='*.mdx' "$EN" 2>/dev/null) || true
 if [ -n "$com_marcador_en" ]; then
   reprova "tradução COM \`<Untranslated />\` — a página traduzida não o carrega:"
   echo "$com_marcador_en" | sed 's/^/    /'
@@ -515,12 +558,12 @@ echo
 # falta — o registro de `MDXComponents` lança. O portão o cobra mesmo assim
 # porque build quebrado diz *uma* página, e a varredura diz TODAS de uma vez.
 echo "10  \`description\` em toda página"
-sem_description=$(grep -RL '^description: ' --include='*.md' "$CONTEUDO" "$EN" 2>/dev/null) || true
+sem_description=$(grep -RL '^description: ' --include='*.md' --include='*.mdx' "$CONTEUDO" "$EN" 2>/dev/null) || true
 if [ -n "$sem_description" ]; then
   reprova "página sem \`description\` no front matter:"
   echo "$sem_description" | sed 's/^/    /'
 else
-  todas=$(find "$CONTEUDO" "$EN" -name '*.md' 2>/dev/null | wc -l)
+  todas=$(find "$CONTEUDO" "$EN" \( -name '*.md' -o -name '*.mdx' \) 2>/dev/null | wc -l)
   echo "   ${todas} de ${todas} páginas com \`description\` — o subtítulo tem fonte única"
 fi
 echo
@@ -556,21 +599,35 @@ echo
 echo "12  os dez tipos têm instância"
 for tipo in $DEZ_TIPOS; do
   n=$(printf '%s\n' "$TIPOS" | grep -c ":${tipo}$" || true)
-  if [ "$tipo" = "$TIPO_PENDENTE" ]; then
+  if [ "$tipo" = "$TIPO_GERADO" ]; then
+    # A instância do décimo tipo é contada do DISCO, e ela é `.mdx`. Uma linha
+    # dele no manifesto seria página escrita à mão sob o gabarito *a saída do
+    # gerador*, que é a incoerência que esta spec já adjudicou uma vez.
     [ "$n" = 0 ] ||
-      reprova "\`${tipo}\` está declarado pendente e tem ${n} instância(s) — atualize a pendência"
+      reprova "\`${tipo}\` aparece ${n} vez(es) no manifesto, e o gabarito dele é a saída do gerador"
+    [ "$geradas" -ge 1 ] ||
+      reprova "o tipo \`${tipo}\` não tem nenhuma instância no artefato"
     continue
   fi
   [ "$n" -ge 1 ] || reprova "o tipo \`${tipo}\` não tem nenhuma instância no artefato"
 done
-echo "   nove dos dez com instância; \`${TIPO_PENDENTE}\` pendente do ramo gerado de Biblioteca C"
+echo "   os dez com instância — \`${TIPO_GERADO}\` com as ${geradas} do ramo gerado, e nenhum pendente"
 echo
 
 # --- 13. a cobertura de locale ------------------------------------------------
 echo "13  cobertura de locale — só \`Ferramentas\`"
 traduzidas=$(find "$EN" -name '*.md' 2>/dev/null | wc -l)
 [ "$traduzidas" = "$total_ferramentas" ] ||
-  reprova "EN: ${traduzidas} páginas, esperado ${total_ferramentas} (uma por folha de Ferramentas)"
+  reprova "EN: ${traduzidas} páginas autorais, esperado ${total_ferramentas} (uma por folha autoral de Ferramentas)"
+
+# O ramo gerado é BIJEÇÃO, e não tradução: o gerador escreve os dois locales do
+# par de contratos, então uma página em EN a menos significa gerador rodado pela
+# metade — não fallback silencioso.
+geradas_en=$(find "$GERADO_EN" -name '*.mdx' 2>/dev/null | wc -l)
+[ "$geradas_en" = "$geradas" ] ||
+  reprova "EN: ${geradas_en} páginas geradas, e o pt-BR tem ${geradas} — o gerador escreve os dois"
+traduzidas=$((traduzidas + geradas_en))
+[ "$traduzidas" = 21 ] || reprova "EN: ${traduzidas} páginas, esperado 21"
 
 for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
   n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)

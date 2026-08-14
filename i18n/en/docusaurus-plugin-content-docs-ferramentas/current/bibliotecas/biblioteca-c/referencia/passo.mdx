@@ -1,0 +1,59 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.en.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: Passo
+description: One step of a job — either a command it runs, or a third-party action pinned to a sha.
+api_exemplos: {"assinatura":"Passo(nome: str, *, roda: str | None = None, usa: str | None = None, comentario: str | None = None)","parametros":[{"nome":"nome","exemplo":"testar"},{"nome":"roda","exemplo":"pytest -q"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Passo\n\npasso = Passo(nome=\"{{nome}}\", roda=\"{{roda}}\")"}}
+---
+
+# Passo
+
+**Type** · `panlabs.esteira.Passo`
+
+The smallest block of the pipeline. A step does one of two things: it runs a command, or it uses an action. Declaring both on the same step is the mistake generation refuses before writing any YAML.
+
+A third-party action goes in pinned to a sha, never to a tag — the tag gets rewritten under you, and `comentario` is where the readable version lives.
+
+## Parameters
+
+<ParamField name="nome" type="str" required>
+The step label in the Actions log. Without it the output is a list of commands with no context.
+</ParamField>
+
+<ParamField name="roda" type="str | None" default="None">
+The shell command. Mutually exclusive with `usa`.
+</ParamField>
+
+<ParamField name="usa" type="str | None" default="None">
+The third-party action, pinned to a sha. Mutually exclusive with `roda`.
+</ParamField>
+
+<ParamField name="comentario" type="str | None" default="None">
+The readable version of the action, written next to the sha in the generated YAML. It is what keeps the sha auditable without reopening the tag door.
+</ParamField>
+
+## Attributes
+
+The constructed step, ready to go into a job.
+
+<ResponseField name="nome" type="str">
+The label given at construction time.
+</ResponseField>
+
+<ResponseField name="roda" type="str | None">
+The command, when the step is a shell step.
+</ResponseField>
+
+<ResponseField name="usa" type="str | None">
+The action reference, when the step is an action step.
+</ResponseField>
+
+<ResponseField name="acao" type="str | None" deprecated>
+The former name of `usa`. It still reads the same value and goes away in 5.0.
+</ResponseField>
+
+## Errors
+
+| Error | When |
+| --- | --- |
+| `ReferenciaNaoFixada` | `usa` carries a tag or a branch instead of the sha. |

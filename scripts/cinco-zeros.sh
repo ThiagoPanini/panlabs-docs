@@ -138,7 +138,7 @@ n_donos="$(printf '%s' "$donos" | grep -c . || true)"
 if [ "$n_donos" = "1" ] && [ "$donos" = 'src/theme/SearchBar/index.js' ]; then
   echo "   um: src/theme/SearchBar/index.js — e ele mora no chrome."
   # A nuance vai IMPRESSA, não escondida. `ApiDocItem/Painel.js` guarda estado e
-  # ouve `onChange` — é o degrau de interatividade que `api-reference.md` §1 já
+  # ouve `onChange` — é o degrau de interatividade que `referencia.md` §4.1 já
   # declara. Ele não autora modelo: não escuta tecla, não move foco, não escreve
   # ARIA. Deixá-lo fora da contagem sem dizer que ele existe seria o tipo de
   # afirmação limpa que esconde um fato.

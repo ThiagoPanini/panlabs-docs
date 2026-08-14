@@ -1,0 +1,353 @@
+{
+  "contrato": "assinatura",
+  "versao": 1,
+  "biblioteca": {
+    "modulo": "panlabs.esteira"
+  },
+  "rotulos": {
+    "modulo": "Módulo",
+    "tipo": "Tipo",
+    "funcao": "Função",
+    "parametros": "Parâmetros",
+    "atributos": "Atributos",
+    "retorno": "Retorno",
+    "semRetorno": "Não devolve valor.",
+    "erros": "Erros",
+    "exportacoes": "Exportações",
+    "colunaErro": "Erro",
+    "colunaQuando": "Quando",
+    "colunaNome": "Nome",
+    "colunaEspecie": "Espécie",
+    "colunaResumo": "O que é",
+    "veja": "Os campos estão na página do tipo:"
+  },
+  "entradas": [
+    {
+      "id": "panlabs-esteira",
+      "especie": "modulo",
+      "titulo": "panlabs.esteira",
+      "qualificado": "panlabs.esteira",
+      "assinatura": "from panlabs.esteira import Esteira, padrao",
+      "resumo": "A superfície pública do módulo que descreve esteiras em Python — os dois tipos, as duas funções de esteira e a família de padrões da casa.",
+      "descricao": "Descreva a esteira em Python e emita o YAML de GitHub Actions a partir dela. O módulo expõe dois tipos e três funções, e nada além disso é contrato: qualquer nome com underscore à frente muda entre versões menores sem aviso.\n\nA ordem de uso é a mesma da lista de exportações — construa a esteira, acrescente os trabalhos, gere. O snippet ao lado é essa sequência inteira.",
+      "exporta": ["esteira", "passo", "esteira-trabalho", "esteira-gerar", "padrao-python"],
+      "fluxo": ["esteira", "esteira-trabalho", "esteira-gerar"],
+      "parametros": [],
+      "retorno": null,
+      "erros": []
+    },
+    {
+      "id": "esteira",
+      "especie": "tipo",
+      "titulo": "Esteira",
+      "qualificado": "panlabs.esteira.Esteira",
+      "assinatura": "Esteira(nome: str, em: list[str], *, permissoes: dict[str, str] | None = None)",
+      "resumo": "A esteira inteira, como objeto — o nome do workflow, os eventos que o disparam e as permissões do token.",
+      "descricao": "O objeto que representa um workflow. Construí-lo não escreve nada em disco: o YAML só existe depois de `gerar`.\n\nO nome é o que aparece na interface do Actions, e ele também vira o nome do arquivo — dois workflows com o mesmo nome no mesmo repositório se sobrescrevem sem aviso.",
+      "chamada": "Esteira",
+      "resultado": "esteira",
+      "parametros": [
+        {
+          "nome": "nome",
+          "tipo": "str",
+          "obrigatorio": true,
+          "descricao": "O nome do workflow. Vira também o nome do arquivo, em minúsculas e com hífen no lugar do espaço.",
+          "exemplo": "verificar"
+        },
+        {
+          "nome": "em",
+          "tipo": "list[str]",
+          "obrigatorio": true,
+          "descricao": "Os eventos que disparam a esteira. Aceita os nomes do próprio Actions, sem tradução.",
+          "exemplo": ["pull_request"]
+        },
+        {
+          "nome": "permissoes",
+          "tipo": "dict[str, str] | None",
+          "padrao": "None",
+          "descricao": "As permissões do token do workflow. Ausente, a esteira herda o default do repositório — que costuma ser mais amplo do que o trabalho precisa.",
+          "exemplo": {"contents": "read", "id-token": "write"},
+          "campos": [
+            {
+              "nome": "contents",
+              "tipo": "str",
+              "descricao": "Leitura do repositório. `read` basta para qualquer esteira que não escreva commit."
+            },
+            {
+              "nome": "id-token",
+              "tipo": "str",
+              "descricao": "Emissão do token OIDC. `write` é o que permite assumir papel na AWS sem chave de longa duração."
+            }
+          ]
+        }
+      ],
+      "retorno": {
+        "tipo": "Esteira",
+        "descricao": "O objeto construído, com os trabalhos acumulados até aqui.",
+        "campos": [
+          {
+            "nome": "nome",
+            "tipo": "str",
+            "descricao": "O nome recebido na construção, sem normalização."
+          },
+          {
+            "nome": "trabalhos",
+            "tipo": "list[dict]",
+            "descricao": "Os trabalhos acrescentados por `trabalho`, na ordem em que entraram.",
+            "campos": [
+              {
+                "nome": "nome",
+                "tipo": "str",
+                "descricao": "O identificador do trabalho dentro do workflow."
+              },
+              {
+                "nome": "passos",
+                "tipo": "list[Passo]",
+                "entrada": "passo",
+                "descricao": "Os passos do trabalho, na ordem de execução."
+              }
+            ]
+          }
+        ]
+      },
+      "erros": []
+    },
+    {
+      "id": "passo",
+      "especie": "tipo",
+      "titulo": "Passo",
+      "qualificado": "panlabs.esteira.Passo",
+      "assinatura": "Passo(nome: str, *, roda: str | None = None, usa: str | None = None, comentario: str | None = None)",
+      "resumo": "Um passo de um trabalho — ou um comando que roda, ou uma ação de terceiro fixada por sha.",
+      "descricao": "O menor bloco da esteira. Um passo faz uma de duas coisas: roda um comando, ou usa uma ação. Declarar as duas no mesmo passo é o erro que a geração recusa antes de escrever qualquer YAML.\n\nAção de terceiro entra fixada por sha, nunca por tag — a tag é reescrita debaixo de você, e o `comentario` é onde a versão legível fica.",
+      "chamada": "Passo",
+      "resultado": "passo",
+      "parametros": [
+        {
+          "nome": "nome",
+          "tipo": "str",
+          "obrigatorio": true,
+          "descricao": "O rótulo do passo no log do Actions. Sem ele a saída vira uma lista de comandos sem contexto.",
+          "exemplo": "testar"
+        },
+        {
+          "nome": "roda",
+          "tipo": "str | None",
+          "padrao": "None",
+          "descricao": "O comando de shell. Exclusivo com `usa`.",
+          "exemplo": "pytest -q"
+        },
+        {
+          "nome": "usa",
+          "tipo": "str | None",
+          "padrao": "None",
+          "descricao": "A ação de terceiro, fixada por sha. Exclusivo com `roda`."
+        },
+        {
+          "nome": "comentario",
+          "tipo": "str | None",
+          "padrao": "None",
+          "descricao": "A versão legível da ação, escrita ao lado do sha no YAML gerado. É o que mantém o sha auditável sem reabrir a porta da tag."
+        }
+      ],
+      "retorno": {
+        "tipo": "Passo",
+        "descricao": "O passo construído, pronto para entrar num trabalho.",
+        "campos": [
+          {
+            "nome": "nome",
+            "tipo": "str",
+            "descricao": "O rótulo recebido na construção."
+          },
+          {
+            "nome": "roda",
+            "tipo": "str | None",
+            "descricao": "O comando, quando o passo é de shell."
+          },
+          {
+            "nome": "usa",
+            "tipo": "str | None",
+            "descricao": "A referência da ação, quando o passo é de ação."
+          },
+          {
+            "nome": "acao",
+            "tipo": "str | None",
+            "deprecated": true,
+            "descricao": "O nome anterior de `usa`. Continua lendo o mesmo valor e sai na 5.0."
+          }
+        ]
+      },
+      "erros": [
+        {
+          "nome": "ReferenciaNaoFixada",
+          "quando": "`usa` traz tag ou branch no lugar do sha."
+        }
+      ]
+    },
+    {
+      "id": "esteira-trabalho",
+      "especie": "funcao",
+      "titulo": "Esteira.trabalho",
+      "qualificado": "panlabs.esteira.Esteira.trabalho",
+      "assinatura": "Esteira.trabalho(nome: str, passos: list[Passo], *, precisa: list[str] = []) -> None",
+      "resumo": "Acrescenta um trabalho à esteira, com os passos dele e as dependências que ele espera.",
+      "descricao": "Acumula no objeto e não devolve nada — a esteira é construída por chamadas sucessivas, e o que fecha a construção é `gerar`.\n\nA ordem das chamadas é a ordem em que os trabalhos aparecem no YAML. Ela não decide a ordem de execução: quem decide é `precisa`.",
+      "chamada": "esteira.trabalho",
+      "receptor": "esteira",
+      "resultado": null,
+      "parametros": [
+        {
+          "nome": "nome",
+          "tipo": "str",
+          "obrigatorio": true,
+          "descricao": "O identificador do trabalho. É por ele que outro trabalho o cita em `precisa`.",
+          "exemplo": "verificar"
+        },
+        {
+          "nome": "passos",
+          "tipo": "list[Passo]",
+          "entrada": "passo",
+          "obrigatorio": true,
+          "descricao": "Os passos, na ordem de execução. `padrao.python` devolve a lista que a casa usa.",
+          "exemploCodigo": "padrao.python(versao=\"3.12\")"
+        },
+        {
+          "nome": "precisa",
+          "tipo": "list[str]",
+          "padrao": "[]",
+          "descricao": "Os trabalhos que precisam terminar antes deste. Vazio, o trabalho corre em paralelo com os irmãos.",
+          "exemplo": []
+        }
+      ],
+      "retorno": null,
+      "erros": [
+        {
+          "nome": "PassoSemNome",
+          "quando": "Algum item de `passos` chega sem `nome`."
+        },
+        {
+          "nome": "TrabalhoDuplicado",
+          "quando": "Já existe um trabalho com esse `nome` na esteira."
+        }
+      ]
+    },
+    {
+      "id": "esteira-gerar",
+      "especie": "funcao",
+      "titulo": "Esteira.gerar",
+      "qualificado": "panlabs.esteira.Esteira.gerar",
+      "assinatura": "Esteira.gerar(destino: Path | str, *, diff: bool = False) -> Geracao",
+      "resumo": "Valida a esteira inteira e escreve o YAML — ou devolve as recusas sem escrever nada.",
+      "descricao": "Valida antes de escrever, e nunca emite saída parcial: ou o YAML descreve a esteira completa, ou não há YAML. Um workflow que roda faltando um passo passa, e passar sem verificar é pior que não rodar.\n\nCom `diff=True` nada é escrito. É o modo que a esteira de verificação usa para reprovar quando o YAML commitado deixa de ser o que o Python produz.",
+      "chamada": "esteira.gerar",
+      "receptor": "esteira",
+      "resultado": "geracao",
+      "parametros": [
+        {
+          "nome": "destino",
+          "tipo": "Path | str",
+          "obrigatorio": true,
+          "descricao": "O diretório onde o YAML é escrito. O nome do arquivo sai do nome da esteira.",
+          "exemplo": ".github/workflows"
+        },
+        {
+          "nome": "diff",
+          "tipo": "bool",
+          "padrao": "False",
+          "descricao": "Compara com o que está em disco e não escreve. É o modo de conferência.",
+          "exemplo": false
+        }
+      ],
+      "retorno": {
+        "tipo": "Geracao",
+        "descricao": "O resultado da geração. Com `diff=True` ele traz o veredito sem ter tocado no disco.",
+        "campos": [
+          {
+            "nome": "caminho",
+            "tipo": "Path",
+            "descricao": "O arquivo escrito, ou o que teria sido escrito sob `diff=True`."
+          },
+          {
+            "nome": "mudou",
+            "tipo": "bool",
+            "descricao": "Verdadeiro quando o YAML gerado difere do que estava em disco."
+          },
+          {
+            "nome": "recusas",
+            "tipo": "list[dict]",
+            "descricao": "As recusas encontradas. Vazia quando a esteira passa — e quando não está vazia, nada foi escrito.",
+            "campos": [
+              {
+                "nome": "recusa",
+                "tipo": "str",
+                "descricao": "O nome da recusa, da lista fechada."
+              },
+              {
+                "nome": "ponteiro",
+                "tipo": "str",
+                "descricao": "O nó ofensor, em caminho pontilhado — `trabalhos.verificar.passos[2].uses`."
+              },
+              {
+                "nome": "detalhe",
+                "tipo": "str",
+                "descricao": "A frase que descreve o que está errado naquele nó."
+              }
+            ]
+          }
+        ]
+      },
+      "erros": [
+        {
+          "nome": "PassoSemNome",
+          "quando": "Um passo chegou sem `nome`."
+        },
+        {
+          "nome": "ReferenciaNaoFixada",
+          "quando": "Uma ação de terceiro está referenciada por tag."
+        },
+        {
+          "nome": "SegredoInline",
+          "quando": "Um valor com aparência de segredo entraria literal no YAML."
+        },
+        {
+          "nome": "PermissaoAmpla",
+          "quando": "As permissões do trabalho resolvem para `write-all`."
+        }
+      ]
+    },
+    {
+      "id": "padrao-python",
+      "especie": "funcao",
+      "titulo": "padrao.python",
+      "qualificado": "panlabs.esteira.padrao.python",
+      "assinatura": "padrao.python(versao: str = \"3.12\", *, cobertura: bool = True) -> list[Passo]",
+      "resumo": "Os passos que a casa usa num repositório Python — teste, tipo, formato e varredura, nesta ordem.",
+      "descricao": "Devolve a lista de passos já montada, com as ações fixadas por sha. Comece por ela e acrescente o que for específico do repositório; montar a lista do zero é como se herda o workflow de outro time por cópia.\n\nA função é pura: chamá-la duas vezes devolve duas listas equivalentes, e nenhuma delas está presa a uma esteira.",
+      "chamada": "padrao.python",
+      "resultado": "passos",
+      "parametros": [
+        {
+          "nome": "versao",
+          "tipo": "str",
+          "padrao": "\"3.12\"",
+          "descricao": "A versão do Python instalada no runner. Aceita qualquer versão que a ação de setup conheça.",
+          "exemplo": "3.12"
+        },
+        {
+          "nome": "cobertura",
+          "tipo": "bool",
+          "padrao": "True",
+          "descricao": "Acrescenta o passo de cobertura depois do teste. Desligue em repositório sem meta de cobertura acordada.",
+          "exemplo": true
+        }
+      ],
+      "retorno": {
+        "tipo": "list[Passo]",
+        "entrada": "passo",
+        "descricao": "Os passos, na ordem de execução, prontos para entrar num trabalho.",
+        "campos": []
+      },
+      "erros": []
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.en.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: Esteira.trabalho
+description: Adds a job to the pipeline, with its steps and the dependencies it waits on.
+api_exemplos: {"assinatura":"Esteira.trabalho(nome: str, passos: list[Passo], *, precisa: list[str] = []) -> None","parametros":[{"nome":"nome","exemplo":"verificar"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Esteira, padrao\n\nesteira = Esteira(nome=\"verificar\", em=[\"pull_request\"], permissoes={\"contents\": \"read\", \"id-token\": \"write\"})\nesteira.trabalho(nome=\"{{nome}}\", passos=padrao.python(versao=\"3.12\"), precisa=[])"}}
+---
+
+# Esteira.trabalho
+
+**Function** · `panlabs.esteira.Esteira.trabalho`
+
+It accumulates on the object and returns nothing — the pipeline is built by successive calls, and what closes the build is `gerar`.
+
+The call order is the order the jobs appear in the YAML. It does not decide execution order: `precisa` does.
+
+## Parameters
+
+<ParamField name="nome" type="str" required>
+The job identifier. It is how another job names this one in `precisa`.
+</ParamField>
+
+<ParamField name="passos" type="list[Passo]" required>
+The steps, in execution order. `padrao.python` returns the list the house uses.
+
+The fields live on the type's own page: [`Passo`](./passo.mdx)
+</ParamField>
+
+<ParamField name="precisa" type="list[str]" default="[]">
+The jobs that must finish before this one. Empty, the job runs in parallel with its siblings.
+</ParamField>
+
+## Returns
+
+Returns no value.
+
+## Errors
+
+| Error | When |
+| --- | --- |
+| `PassoSemNome` | Some item of `passos` arrives without a `nome`. |
+| `TrabalhoDuplicado` | A job with that `nome` is already on the pipeline. |

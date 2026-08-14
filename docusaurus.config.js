@@ -192,9 +192,8 @@ const config = {
         // **A instância inteira o declara, e as 15 folhas autorais dela não
         // mudam de layout.** O `ApiDocItem` comuta POR PÁGINA pelo front matter
         // `api_exemplos` e delega para `@theme/DocItem` quando o campo falta —
-        // verificado no código, não deduzido. Hoje nenhuma folha o declara: o
-        // ramo gerado de `Biblioteca C` chega no ticket seguinte, e é ele que
-        // acende a outra perna do comutador.
+        // verificado no código, não deduzido. Quem acende a outra perna são as
+        // **6 páginas geradas** de `Biblioteca C`, e só elas.
         docItemComponent: '@theme/ApiDocItem',
       }),
     ],

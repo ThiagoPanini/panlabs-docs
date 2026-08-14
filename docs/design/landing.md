@@ -1,7 +1,7 @@
 # Landing
 
 A segunda das duas rupturas de layout do site — a primeira é a
-[Referência da API](api-reference.md). **Quatro seções**, **uma** faixa de
+[a referência gerada](referencia.md). **Quatro seções**, **uma** faixa de
 espetáculo, **três** camadas de profundidade paradas, e a única licença de "wow"
 do projeto.
 
@@ -499,7 +499,7 @@ bloco** em que cada gradiente cai.
 
 > **Correção de fato contra a resolução, e ela é sobre a linha 6.** Ela foi
 > escrita como *"1 consumidor de `--sd-shadow-raised`"*, site inteiro. **São
-> dois** — o botão primário da landing e o painel da Referência da API —, e
+> dois** — o botão primário da landing e o painel da referência gerada —, e
 > [`tokens.md`](tokens.md) §6 já dizia isso por escrito. A contagem que se
 > sustenta é **na landing**, e é a que o portão cobra.
 
@@ -661,6 +661,6 @@ do que compram neste slice:
 | `--sd-type-6xl` como degrau de display, e o `5xl` sai | herdado (nome) + **origem própria (correção)** | o nome continua a série do alvo; o `5xl` foi dimensionado para um hero de 672 e ficaria sem consumidor |
 | Botões lado a lado no estreito | origem própria | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §3 |
 | **O portão 8 e a lista de seis** | **origem própria** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) §7 — irmão do portão 1; protege uma regra de escrita |
-| A contagem 6 é **na landing** | **origem própria (correção)** | medido: `--sd-shadow-raised` tem dois consumidores no site, e o segundo é o painel da Referência da API |
+| A contagem 6 é **na landing** | **origem própria (correção)** | medido: `--sd-shadow-raised` tem dois consumidores no site, e o segundo é o painel da referência gerada |
 | Ícone e contagem nas três portas | **origem própria** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — ver [`icones.md`](icones.md) §5 |
 | As oito recusas | origem própria | [#26](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/26) §8, mais as duas novas |

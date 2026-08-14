@@ -328,7 +328,7 @@
      Ele é o único ponto onde a faixa de tabs vira número, e mora aqui porque
      tem DOIS consumidores fora do adaptador — o `--ifm-navbar-height`, que
      propaga para os nove pontos do theme-classic que grudam, e o painel da
-     Referência da API, que gruda por conta própria num CSS Module.
+     referência gerada, que gruda por conta própria num CSS Module.
 
      O escopo por media query é OBRIGATÓRIO, e é a armadilha mais cara desta
      faixa: `.navbar-sidebar__brand` e `.navbar-sidebar__items` leem o mesmo
@@ -530,10 +530,14 @@
      escrito no escopo do componente, o callout passaria a saber em que modo
      está, que é exatamente o que o catálogo fechou.
 
-     A família é declarada inteira, como a de `-fill`. `danger` não tem consumidor
-     no catálogo — a pílula de verbo usa preenchimento e texto, não aresta —, e
-     uma família de quatro com um buraco no meio é pior de ler do que a quarta
-     linha. */
+     A família é declarada inteira, como a de `-fill`. `danger-edge` não tem
+     consumidor — o chip de obrigatório do campo usa preenchimento e texto, não
+     aresta —, e uma família de quatro com um buraco no meio é pior de ler do que
+     a quarta linha.
+
+     A justificativa trocou de dono junto com o vermelho: ela nomeava a pílula de
+     verbo, que morreu com o contrato HTTP. O consumidor de `danger` no catálogo
+     hoje é o chip, e ele usa as mesmas duas linhas de sempre. */
   --sd-state-info-edge:    rgb(from var(--sd-state-info)    r g b / 30%);
   --sd-state-success-edge: rgb(from var(--sd-state-success) r g b / 30%);
   --sd-state-warn-edge:    rgb(from var(--sd-state-warn)    r g b / 30%);

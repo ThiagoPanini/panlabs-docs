@@ -1,6 +1,29 @@
 # ADR 5 — A Referência da API é gerada de contrato OpenAPI
 
-**Status:** aceito · slice 5 · 2026-08-07
+**Status:** **superado** pelo [ADR 8](0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) · aceito · slice 5 · 2026-08-07
+
+> ### Superado — a decisão sobreviveu, a premissa não
+>
+> **Leia como registro histórico.** O que decide hoje é o
+> [ADR 8](0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md).
+>
+> **O que sobreviveu, e está no ar:** gerar a referência de um contrato, com dois
+> arquivos monolíngues congruentes, JSON puro e zero dependência de parser;
+> validador com lista fechada de recusas, cada uma apontando o JSON Pointer do nó
+> ofensor; saída `.mdx` commitada e não editável à mão; o painel comutado por
+> front matter; e o portão 5 como regeneração mais `git diff --exit-code`.
+>
+> **O que morreu:** a premissa inteira. Não há API de pagamentos, não há serviço
+> HTTP, não há OpenAPI 3.1, não há `paths` nem `components`, não há
+> `scripts/gerar-api.mjs` nem `sidebars-api.js`, e o `VerbBadge` saiu do catálogo
+> por não ter sobrado verbo para pintar. O contrato passou a descrever
+> **assinatura de função, tipo e módulo**.
+>
+> **Por que superado e não editado.** Os ADRs deste repo são numerados e
+> **imutáveis** (`README.md`). Um documento cuja premissa e cujo **título** são
+> falsos não é o mesmo documento — e a imutabilidade existe exatamente para
+> preservar o registro de *"decidimos OpenAPI uma vez, e por quê"*. O conteúdo
+> abaixo fica intacto.
 
 ## Contexto
 

@@ -16,13 +16,13 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 | 2 | [A página de documentação](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/35) — chrome, ícones, árvore | feito |
 | 3 | [O catálogo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36) — os componentes de conteúdo | feito |
 | 4 | [O conteúdo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/37) — as páginas autorais e o EN parcial | feito |
-| 5 | [A Referência da API](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/38) — contrato, gerador e três colunas | feito |
+| 5 | [A referência gerada](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/38) — contrato, gerador e três colunas | feito |
 | 6 | [A landing](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/39) — a ilha de espetáculo | feito |
 | 7 | [Busca e artefatos AI-era](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/40) — e o fechamento da spec | feito |
 
-**O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. Falta a referência gerada de contrato de assinatura, e com ela `Ferramentas` fecha em 21.
+**O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. **A referência gerada está no ar**, sobre um contrato de assinatura de função, tipo e módulo: `Ferramentas` fecha em 21. Falta o fecho da spec.
 
-**46 páginas autorais em três abas**, mais 15 traduções, landing, busca, artefatos AI-era e dois locales. A spec são trinta arquivos mais sete ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
+**46 páginas autorais mais 6 geradas em três abas** — 52 no total —, mais 21 traduções, landing, busca, artefatos AI-era e dois locales. A spec são trinta arquivos mais oito ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
 
 **O axioma 6 foi cobrado, e não só declarado.** O [§6 da espinha](docs/design/README.md) registra o teste de reconstrução: uma sessão de agente limpa, com `docs/design/` e `docs/adr/` e nada mais, reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. **O build passou nos dois locales.**
 
@@ -49,7 +49,7 @@ npm run icones               # a bijeção manifesto ↔ static/icons/
 
 | Caminho | Papel |
 | --- | --- |
-| [`docs/adr/`](docs/adr/) | Os sete ADRs. **Leitura obrigatória antes de escrever código.** |
+| [`docs/adr/`](docs/adr/) | Os oito ADRs. **Leitura obrigatória antes de escrever código.** |
 | [`docs/design/README.md`](docs/design/README.md) | **A espinha da spec** — ordem de leitura, a régua, o índice, as invariantes e os oito portões. Comece por aqui. |
 | [`docs/design/principios.md`](docs/design/principios.md) | A âncora, o carimbo de delta deliberado vazio e as cinco classes de procedência. |
 | [`docs/agents/`](docs/agents/) | Como um agente trabalha neste repo — tracker, domínio, labels, fluxo. |

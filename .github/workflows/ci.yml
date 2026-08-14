@@ -44,18 +44,19 @@ jobs:
         run: npm run portao:3
 
       # Portão 4 — volume, tipo de página, regra de heading e cobertura de
-      # locale em conteudo/documentacao e conteudo/receitas.
+      # locale nas três abas de `conteudo/`, mais o ramo gerado somado por fora.
       - name: Portão 4 — conteúdo
         run: npm run portao:4
 
-      # Portão 5 — regenera a Referência da API a partir dos contratos e
-      # reprova em `git diff --exit-code`. O gerador é determinístico, e
-      # divergência contra o que está commitado significa contrato editado sem
-      # regenerar, ou página gerada editada à mão. Ver ADR 5.
+      # Portão 5 — regenera a referência de biblioteca a partir do par de
+      # contratos de assinatura e reprova em `git diff`. O gerador é
+      # determinístico, e divergência contra o que está commitado significa
+      # contrato editado sem regenerar, ou página gerada editada à mão.
+      # Ver ADR 8, que supera o ADR 5.
       #
-      # (O ADR 5 o chama de *o único portão que não é `grep`*. Desde o slice 7
+      # (O ADR 5 o chamava de *o único portão que não é `grep`*. Desde o slice 7
       # são dois: o portão 7 é da mesma família — regenera e diffa.)
-      - name: Portão 5 — API
+      - name: Portão 5 — a referência gerada
         run: npm run portao:5
 
       # Portão 7 — a superfície de swizzle congelada, e `src/theme/` conferido
@@ -79,11 +80,12 @@ jobs:
       - name: Portão 8 — a landing
         run: npm run portao:8
 
-      # A régua do algoritmo da busca — `node --test`, do próprio runtime, sem
-      # dependência nova. Os portões são varredura, e ordenação de resultado não
-      # é varrível: ou existe um caso que a exercita, ou "escada determinística"
-      # fica sendo afirmação de prosa.
-      - name: Régua da busca
+      # As duas réguas de máquina — `node --test`, do próprio runtime, sem
+      # dependência nova. A da busca existe porque ordenação de resultado não é
+      # varrível; a do validador de contrato, porque um validador que aceitasse
+      # tudo passaria no portão 5 todos os dias. Lista fechada sem caso que a
+      # exercite é prosa.
+      - name: As duas réguas — busca e contrato
         run: npm test
 
       # A bijeção manifesto ↔ `static/icons/`. Não é portão: não precisa de rede

@@ -57,7 +57,7 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 ### 2.1 `Ferramentas` declara `docItemComponent`, e as folhas dela não mudam de layout
 
-**Verificado no código, não deduzido:** o `ApiDocItem` comuta **por página** pelo front matter `api_exemplos` e delega para `@theme/DocItem` quando o campo falta. A instância inteira pode declará-lo sem que nenhuma folha autoral mude de layout — e hoje nenhuma o declara, porque o ramo gerado de `Biblioteca C` é o ticket seguinte.
+**Verificado no código, não deduzido:** o `ApiDocItem` comuta **por página** pelo front matter `api_exemplos` e delega para `@theme/DocItem` quando o campo falta. A instância inteira o declara sem que nenhuma folha autoral mude de layout — as **15 autorais** não carregam o campo, e quem acende a outra perna são as **6 geradas** de `Biblioteca C`, e só elas.
 
 É a segunda instância do projeto a usar a opção, e ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle. Ver [ADR 2](../adr/0002-politica-de-swizzle.md).
 
@@ -93,9 +93,9 @@ Jornadas              Procedimentos        Ferramentas
 | `Ferramentas` | 4 | **21** (15 autorais + 6 geradas) | **21** |
 | | **11** | **52** | **21** |
 
-**Este artefato entrega 46 autorais e 15 traduções.** As **6 páginas geradas** de `Biblioteca C` são do ticket seguinte, junto com o fragmento de sidebar que as declara — **uma sidebar sem o ramo gerado é válida**, e é assim que os dois ficam verdes: uma sidebar apontando para página inexistente quebra o build.
+**A árvore está fechada: 46 autorais mais 6 geradas, e o EN em 21.** O ramo gerado de `Biblioteca C` chegou pelo contrato de assinatura, e com ele `Bibliotecas` fecha em 13, `Ferramentas` em 21 e o site em **52**. O portão 4 cobra os quatro números.
 
-> **Correção de aritmética contra a resolução.** Ela pedia *"46 páginas autorais em pt-BR e 21 em EN"*. Os dois números não podem valer juntos: as 6 geradas estão **fora** do 46 e **dentro** do 21. Contado contra a árvore, este artefato entrega **46 autorais em pt-BR e 15 em EN**, e o EN fecha em 21 no mesmo commit em que `Ferramentas` fecha em 21.
+> **Correção de aritmética contra a resolução, e ela continua valendo lida ao contrário.** A resolução pedia *"46 páginas autorais em pt-BR e 21 em EN"*, e os dois números não podiam valer juntos: as 6 geradas estão **fora** do 46 e **dentro** do 21. Elas chegaram no mesmo commit nos dois locales, então hoje o pt-BR tem 52 e o EN tem 21 — e a diferença é exatamente as 31 páginas de `Jornadas` e `Procedimentos`, que não se traduzem.
 
 **A contagem desigual das jornadas é de propósito** — `API Owner` com 6 capítulos e `Security Champion` com 4. Arco de papel não tem comprimento fixo, e duas jornadas com o mesmo número leem como formulário preenchido duas vezes.
 
@@ -136,9 +136,9 @@ Três fatos verificados na fonte sustentam o modelo:
 | escrito | `Jornadas` inteira — 2 índices e 10 capítulos | este ticket |
 | escrito | `Procedimentos` inteira — 5 índices e 14 folhas | este ticket |
 | escrito | as **15 folhas autorais** de `Ferramentas`, nos dois locales | este ticket |
-| falta | as **6 páginas geradas** de `Biblioteca C` e o fragmento de sidebar | ticket seguinte |
+| escrito | as **6 páginas geradas** de `Biblioteca C` e o fragmento de sidebar | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) |
 
-**O ramo gerado não é escrito à mão.** Ele sai de um contrato de assinatura de função, tipo e módulo, e o gerador emite também o fragmento de sidebar que `sidebars-ferramentas.js` importa — escrevê-lo à mão seria exatamente a segunda fonte de verdade que o gerador existe para impedir. Ver [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md), que o ticket seguinte supera.
+**O ramo gerado não é escrito à mão.** Ele sai de um contrato de assinatura de função, tipo e módulo, e o gerador emite também o fragmento de sidebar que `sidebars-ferramentas.js` importa — escrevê-lo à mão seria exatamente a segunda fonte de verdade que o gerador existe para impedir. Ver [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md), que supera o [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md).
 
 **Os onze pares seção→ícone estão inteiros no manifesto e no CSS**, e o vendorizador confere que os três lugares onde eles vivem — manifesto, `className` de sidebar e regra de máscara — concordam.
 
@@ -176,7 +176,7 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 
 | # | O que confere |
 | ---: | --- |
-| 1 | o volume por aba e por categoria — 12 · 19 · 15 autorais |
+| 1 | o volume por aba e por categoria — 12 · 19 · 21, e **52** no total |
 | 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
 | 3 | a regra de heading, com a exceção nomeada acima como **única** |
 | 4 | **`<Steps>` ausente em toda `Jornadas`** |
@@ -187,7 +187,7 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 | 9 | o marcador de tradução em **31** páginas, e em nenhuma tradução |
 | 10 | **`description` presente em 100%** das páginas |
 | 11 | **as onze fixtures existem**, por caminho nomeado |
-| 12 | **os dez tipos têm instância** — `Referência de API` declarada pendente |
+| 12 | **os dez tipos têm instância** — e nenhum fica pendente |
 
 As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>` citado dentro de um trecho de código contariam.
 
@@ -263,7 +263,7 @@ São dez, todos **convenção de conteúdo e zero layout**: sem front matter de 
 | Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | 2 |
 | Troubleshooting | 800-1200 | 1 tabela de sintomas · 3-8 `##` | 3 |
 | Changelog | — | 6-8 entradas em `<Update>` | 1 |
-| Referência de API | — | a saída do gerador | **0 — pendente** |
+| Referência de API | — | a saída do gerador | **6 — geradas** |
 | *índice de jornada* | 250-400 | ver §6.4 | 2 |
 | *capítulo de jornada* | 180-1800 | 3-6 `##` · 2 blocos · 1 `:::` · prosa antes do 1º `##` · **sem `<Steps>`** | 10 |
 | *índice de categoria* | piso do tipo da seção | + um índice das folhas | 8 |
@@ -272,7 +272,7 @@ São dez, todos **convenção de conteúdo e zero layout**: sem front matter de 
 
 > **Correção de contagem contra a resolução.** Ela dizia *"Guia — doze folhas de `Procedimentos` e `Ferramentas`"*. Contado contra a árvore fechada: `Procedimentos` tem 14 folhas, das quais 2 são `Catálogo`, 2 `Conceitual` e 2 `Troubleshooting`, sobrando **8** guias; `Ferramentas` tem 11 folhas, das quais 3 SDK, 1 Quickstart, 1 Conceitual, 1 Changelog e 2 Receita, sobrando **3**. São **onze**, não doze.
 
-**Nove dos dez tipos têm instância neste artefato.** O décimo, `Referência de API`, é o único gerado, e ele está **declarado pendente no próprio portão** — que reprova se alguém lhe der uma instância à mão antes de o gerador chegar. Declarar a pendência é o que impede a lista de dez virar lista de nove sem ninguém notar.
+**Os dez tipos têm instância neste artefato**, e o décimo é o único gerado. O portão 4 passou a cobrar a pendência **pelo avesso**: as seis existem, e nenhuma delas pode aparecer no manifesto de tipo — uma linha ali seria página escrita à mão sob o gabarito *a saída do gerador*, que é a incoerência que o §6.1 já adjudicou uma vez.
 
 ### 6.3 O índice de categoria é uma forma, não um tipo
 
@@ -379,8 +379,8 @@ A fronteira é **audiência do artefato**, e não infra pública contra corporat
 
 | Traduzido para EN | Só pt-BR |
 | --- | --- |
-| `Ferramentas` — **15** autorais, e 21 quando o ramo gerado chegar | `Jornadas` 12 · `Procedimentos` 19 |
-| **15** | **31** |
+| `Ferramentas` — **21**: 15 autorais e 6 geradas | `Jornadas` 12 · `Procedimentos` 19 |
+| **21** | **31** |
 
 **31 páginas carregam o marcador de fallback.** *(Correção de aritmética: a contagem anterior dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes.)*
 
@@ -499,13 +499,13 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | O cenário fecha em três strings | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — GitHub Actions, AWS e Python; o resto cai delas somadas às categorias |
 | O custo de gabarito sobe sem convenção conhecida | **origem própria (consequência)** | o gênero público do domínio anterior era o que segurava a coerência; sem ele, quem segura é o gabarito |
 | Três tabs, três instâncias | origem própria | `routeBasePath` e versionamento são por instância |
-| `Ferramentas` declara `docItemComponent` | **origem própria (verificação)** | conferido no código: o `ApiDocItem` comuta por página e delega quando `api_exemplos` falta |
+| `Ferramentas` declara `docItemComponent` | **origem própria (verificação)** | conferido no código: o `ApiDocItem` comuta por página e delega quando `api_exemplos` falta; só as 6 geradas o declaram |
 | Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) §árvore |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |
 | Categoria clicável | origem própria | três fatos verificados na fonte |
 | `collapsed: false` | herdado | a âncora mostra a árvore aberta |
-| **46 autorais e 15 em EN, e não 21** | **origem própria (correção)** | a resolução contava as 6 geradas fora do pt-BR e dentro do EN; os dois números não fecham juntos |
+| **46 autorais mais 6 geradas, e 21 em EN** | **origem própria (correção)** | a resolução contava as 6 geradas fora do pt-BR e dentro do EN; com o ramo no ar o pt-BR fecha em 52 e o EN em 21 |
 | **Onze guias, e não doze** | **origem própria (correção)** | contado contra a árvore fechada: 8 em `Procedimentos` e 3 em `Ferramentas` |
 | Os três retipos de `Biblioteca C` | **origem própria (correção)** | `Referência de API` tem por gabarito *a saída do gerador*, e as três são escritas à mão |
 | O décimo tipo, e o gabarito dele | herdado | [#57](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/57) — o gabarito encoda a condição que salva o tipo com mais precisão que prosa |
@@ -531,7 +531,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | O portão 4 e o `onBrokenAnchors: 'throw'` | **origem própria (implementação)** | os critérios deste documento são contagens, e a tabela de sintomas traz âncoras intra-página |
 | O manifesto de tipo mora no portão, não no conteúdo | **origem própria (implementação)** | o §6 proíbe `type:` no front matter; um manifesto de build não toca página nem CSS |
 | A coluna de estrutura obriga, a de palavras é indicativa | **origem própria** | *palavra é proxy ruim*, e este documento leva a frase a sério |
-| `Referência de API` declarada pendente no portão | **origem própria (implementação)** | declarar a pendência é o que impede a lista de dez virar lista de nove sem ninguém notar |
+| `Referência de API` cobrada pelo avesso no portão | **origem própria (implementação)** | a pendência fechou; o que resta cobrar é que as seis existam e que nenhuma entre no manifesto de tipo |
 | O footer cai para dois links | **origem própria (consequência)** | `Status` e `Suporte` exigiriam nomear a empresa ou o desenvolvedor |
 | Este documento é dono dos artefatos AI-era | origem própria | os três são artefato de conteúdo, e é a arquitetura de informação quem sabe qual é a árvore |
 | `permalink + '.md'`, `allContentLoaded`, `outDir` | herdado | [ADR 7](../adr/0007-trailingslash-false.md) — os três verificados no fonte da 3.10.2 |

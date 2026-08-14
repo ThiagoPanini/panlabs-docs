@@ -109,7 +109,7 @@ O inventário de focáveis do site é fechado:
 | `[role='tab']` | as abas do Docusaurus — tabindex móvel, só a aba ativa é parada |
 | `<pre tabindex='0'>` | região de rolagem do bloco de código |
 | `[role='region'][tabindex='0']` | invólucro de tabela larga |
-| `<input type='text'>` | painel da Referência da API e o campo da busca — os únicos campos do site |
+| `<input type='text'>` | painel da referência gerada e o campo da busca — os únicos campos do site |
 | `<dialog>` | o modal de busca, e ele **não é parada de tabulação**: `showModal()` põe o elemento na camada superior e tranca o Tab dentro dele |
 
 **O `[role='option']` da busca não entra nesta lista, e a ausência é a decisão.** A opção ativa é apontada por `aria-activedescendant`, então o foco **nunca sai do campo** — é o que o padrão *Combobox With List Autocomplete* do APG compra, e é por isso que o modal de busca não escreve uma linha de gestão de foco. Um `tabindex` na opção transformaria uma lista de setenta e três resultados em setenta e três paradas de Tab.
@@ -207,6 +207,8 @@ Achado de escopo: a âncora de heading ser `:global` faz este conserto custar um
 **Lista de exceções, não lista de alvos**, pelo mesmo critério do §2: lista de alvos falha em silêncio, e falha só para quem tem o dedo grande ou a mão trêmula.
 
 **A exceção é uma só: link inline dentro da prosa.** A própria SC 2.5.8 o isenta, e alargá-lo quebraria o ritmo vertical da coluna de texto.
+
+**O escopo dela é `.markdown`, e não `.theme-doc-markdown`** — correção de fato, e ela só apareceu quando a referência gerada entrou no ar. O site tem **duas** prosas: o `DocItem/Content` do upstream escreve as duas classes juntas, e o `ApiDocItem` escreve só `markdown`, porque recusa a outra desde que ela era o cartão. Escopada pela classe de cartão, a exceção isentava a página de doc e deixava o link da página gerada com o piso de alvo inteiro, quebrando o ritmo da coluna em tela de toque. `.markdown` é a classe que de fato significa *prosa*, e ela cobre as duas.
 
 **Dissenso registrado.** O piso é a SC 2.5.5, que é AAA. O piso AA é a SC 2.5.8, e nele **nada no site mudaria** — o item de sidebar do Infima já passa. Escolher o piso AA seria escrever uma regra que não faz nada. O piso AAA muda a densidade da gaveta de sidebar no estreito, e esse é o custo, aceito porque a gaveta rola e é operada com o polegar.
 
@@ -336,6 +338,7 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 | `(pointer: coarse)` como espelho de `(hover: hover)` | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.3 — o par já é usado pelo `theme-classic` |
 | Piso de alvo | **origem própria com âncora normativa** | SC 2.5.5 |
 | `inline` ignora altura mínima, e o rodapé vira `inline-flex` | **origem própria (implementação)** | medido ao escrever o CSS do estreito |
+| **O escopo do link isento é `.markdown`** | **origem própria (correção)** | o site tem duas prosas desde a referência gerada, e só uma delas carrega `.theme-doc-markdown` |
 | Neutralizar o hover do framework pelo adaptador | **origem própria (correção)** | varredura desta implementação: o Infima tem zero `(hover: hover)`, contra o que a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) supunha |
 | Ordem de tabulação | herdado | correta como o Docusaurus entrega |
 | **A divergência entre ordem de foco e leitura visual** | **lacuna por restrição** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medida com a faixa montada; o `Navbar/Content` emite dois blocos e a faixa distribui um deles em duas linhas |

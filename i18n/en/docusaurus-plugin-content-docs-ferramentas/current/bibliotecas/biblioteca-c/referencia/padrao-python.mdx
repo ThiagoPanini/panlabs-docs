@@ -1,0 +1,29 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.en.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: padrao.python
+description: The steps the house uses on a Python repository — test, types, format and scan, in that order.
+api_exemplos: {"assinatura":"padrao.python(versao: str = \"3.12\", *, cobertura: bool = True) -> list[Passo]","parametros":[{"nome":"versao","exemplo":"3.12"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import padrao\n\npassos = padrao.python(versao=\"{{versao}}\", cobertura=True)"}}
+---
+
+# padrao.python
+
+**Function** · `panlabs.esteira.padrao.python`
+
+Returns the step list already assembled, with the actions pinned to shas. Start from it and add whatever is specific to the repository; assembling the list from scratch is how a workflow gets inherited from another team by copy.
+
+The function is pure: calling it twice returns two equivalent lists, and neither is bound to a pipeline.
+
+## Parameters
+
+<ParamField name="versao" type="str" default="&quot;3.12&quot;">
+The Python version installed on the runner. Takes any version the setup action knows about.
+</ParamField>
+
+<ParamField name="cobertura" type="bool" default="True">
+Adds the coverage step after the test step. Turn it off on a repository with no agreed coverage target.
+</ParamField>
+
+## Returns
+
+The steps, in execution order, ready to go into a job. The fields live on the type's own page: [`Passo`](./passo.mdx)
