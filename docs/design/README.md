@@ -1,6 +1,6 @@
 # A spec de design
 
-> **Descreve fielmente o site no ar, e deixa de ser a verdade da decisão a partir de agora.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) já travou decisões que desmancham parte dela — a página de doc perde o cartão, e o Trilho dá lugar a um acervo pessoal de aprendizado. Por decisão do mapa, `docs/design/` e `docs/adr/` só são reescritos na fase de implementação, slice a slice. Este aviso é de uma linha de propósito: a invariante 2 exige a declaração de literais nas 20 primeiras linhas, e o preâmbulo não tem folga.
+> **Volta a descrever o site no ar, e volta a ser a verdade da decisão.** O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) desmanchou a spec anterior — o cartão morreu, e o Trilho deu lugar ao acervo pessoal `panlabs` —, e a reescrita fechou slice a slice, cada superfície com o seu documento na mesma sentada. O aviso que ficava aqui dizia que a spec havia deixado de mandar; ele saiu porque deixou de ser verdade. Este preâmbulo é curto de propósito: a invariante 2 exige a declaração de literais nas 20 primeiras linhas, e ele não tem folga.
 
 A espinha. Ela é escrita **por último** porque indexa o que existe — um índice redigido antes dos documentos indexa a intenção, e a intenção é a coisa que envelhece calada.
 
@@ -43,7 +43,7 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 
 ### 2.2 Depois, a spec
 
-1. [`principios.md`](principios.md) — **a âncora, os quatro deltas, as cinco classes de procedência.** Ele diz de onde os valores vêm e o que pode ser contestado. Sem ele, o resto parece arbitrário.
+1. [`principios.md`](principios.md) — **a âncora, o carimbo de delta vazio, as cinco classes de procedência.** Ele diz de onde os valores vêm e o que pode ser contestado. Sem ele, o resto parece arbitrário.
 2. [`tokens.md`](tokens.md) — **a sede única de valor.** Quem lê só um documento, lê este.
 3. [`informacao.md`](informacao.md) — a árvore, os tipos de página, as fixtures, o locale, os artefatos AI-era.
 4. [`chrome.md`](chrome.md) — o shell da página de doc.
@@ -64,7 +64,7 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 
 | Documento | O que ele decide |
 | --- | --- |
-| [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, os quatro deltas deliberados, a régua de coerência e as cinco classes de procedência |
+| [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, a varredura que esvaziou o carimbo de delta, a régua de coerência e as cinco classes de procedência |
 | [`tokens.md`](tokens.md) | as três camadas, a superfície de troca, a rampa, a tipografia, o espaço, a elevação, o adaptador do Infima e as suas quatro exceções |
 | [`informacao.md`](informacao.md) | o acervo, as três tabs, a árvore, os dez tipos de página, os orçamentos, as onze fixtures, a regra de locale e os artefatos AI-era |
 | [`chrome.md`](chrome.md) | a cadeia de proporções, navbar, sidebar, TOC, breadcrumb, paginação, footer e o comportamento no estreito |
@@ -94,7 +94,7 @@ Quatro são de forma e se cobram por `grep`. A quinta é de conteúdo e é a ún
 | 2 | **Zero número fora de `tokens.md`** — cor, comprimento, tempo e curva só existem lá | varredura, e o portão 1 no código |
 | 3 | **`## Procedência` sem linha órfã** — toda tabela de procedência tem decisão, classe e fonte em toda linha | varredura |
 | 4 | **Todo bloco `Livre` nomeia o dono** — latitude sem dono é buraco | varredura |
-| 5 | **Completude** — todo item de *"O que este ticket entrega para quem vem depois"* das 27 resoluções tem endereço num arquivo | leitura cruzada |
+| 5 | **Completude** — todo item de *"O que este ticket entrega para quem vem depois"* das 16 resoluções tem endereço num arquivo | leitura cruzada |
 
 **A quinta é a que importa mais, e é a mais cara.** As quatro de forma passariam com a tipografia inteiramente ausente: um documento que não existe não tem seção vazia, não tem número solto e não tem procedência órfã. Só a completude enxerga ausência.
 
@@ -110,9 +110,40 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 
 ### 4.2 A quinta invariante, auditada
 
-**Vinte e sete tickets, e cada um tem endereço.** A tabela abaixo é a auditoria: onde a saída de cada resolução do mapa aterrissou.
+**Dezesseis resoluções, e cada uma tem endereço.** A tabela abaixo é a auditoria do mapa [#49](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49): onde a saída de cada uma aterrissou nesta spec.
 
-**Sete deles são de pesquisa, e o endereço deles é diferente** — os [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) a [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) não carregam a seção *"O que este ticket entrega para quem vem depois"*, porque a convenção é de ticket de **decisão**. O que eles entregam é medição, e ela chega à spec **através** do ticket de decisão que a consumiu.
+> **A auditoria anterior está no §4.3, e ela não se apaga.** Ela cobria as vinte e sete resoluções do mapa [#30](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/30), que produziu a spec do Trilho. Aquele endereçamento continua verdadeiro para os arquivos que sobreviveram — o que mudou foi o mapa que manda, não o resultado do trabalho antigo.
+
+**Três delas são de pesquisa, e o endereço delas é diferente** — a [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50), a [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) e a [#52](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/52) não carregam a seção *"O que este ticket entrega para quem vem depois"*, porque a convenção é de ticket de **decisão**. O que elas entregam é medição, e ela chega à spec **através** da resolução de decisão que a consumiu.
+
+| Resolução | Onde ela aterrissou |
+| --- | --- |
+| [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) o Devin remedido, no tema `mint` *(pesquisa)* | [`tokens.md`](tokens.md), [`chrome.md`](chrome.md), [`componentes/README.md`](componentes/README.md) e [`componentes/card.md`](componentes/card.md), via #54 e #56 |
+| [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) a faixa de tabs de largura total, e o `unsafe` *(pesquisa)* | [`chrome.md`](chrome.md) §3, [`swizzle.md`](swizzle.md), [`foco.md`](foco.md), [ADR 2](../adr/0002-politica-de-swizzle.md) |
+| [#52](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/52) o `<header>` fora da lista de prosa *(pesquisa)* | [`chrome.md`](chrome.md) §1.4 e [`swizzle.md`](swizzle.md) §3 — **aterrissou como morte**: a lista de onze elementos de prosa saiu, e o defeito que ela produzia saiu com ela |
+| [#53](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/53) a narrativa: o dev, a empresa, o nome | [`informacao.md`](informacao.md) §1 — o acervo, e as três regras que valem em toda página |
+| [#54](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/54) a geometria `mint`, elo por elo | [`chrome.md`](chrome.md) §1, e o limiar único em [`tokens.md`](tokens.md) |
+| [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) ainda são quatro deltas? | [`principios.md`](principios.md) §3 — **zero**, e o recarimbo em [`tokens.md`](tokens.md), [`foco.md`](foco.md) e [`componentes/code-group.md`](componentes/code-group.md) |
+| [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) o sistema de tokens quando o cartão sai | [`tokens.md`](tokens.md), [`chrome.md`](chrome.md) §2, [`componentes/code-block.md`](componentes/code-block.md), [`componentes/frame.md`](componentes/frame.md) |
+| [#57](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/57) `Jornadas`, e o décimo tipo de página | [`informacao.md`](informacao.md) §6 — os dez tipos, com o gabarito de cada um |
+| [#58](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/58) as folhas, e o contrato que substitui o OpenAPI | [`referencia.md`](referencia.md) e [`informacao.md`](informacao.md) §3, via #82 e #81 |
+| [#59](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/59) as treze fixtures reatribuídas | [`informacao.md`](informacao.md) §7 — **onze**, e a correção está lá com o motivo |
+| [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) o catálogo de dezoito sob o `mint` | os dezessete de [`componentes/`](componentes/), mais [`tokens.md`](tokens.md), [`chrome.md`](chrome.md), [`swizzle.md`](swizzle.md) e [`principios.md`](principios.md) |
+| [#61](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/61) a landing: impactante sem destoar | [`landing.md`](landing.md) inteiro, e o **portão 8** que a cobra |
+| [#68](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/68) a cor de marca | [`tokens.md`](tokens.md) — a rampa e os sete papéis |
+| [#70](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/70) o manifesto de ícones sob a árvore nova | [`icones.md`](icones.md), via #81 — o manifesto de 60 e os onze pares seção→ícone |
+| [#72](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/72) a pilha de fonte | [`tokens.md`](tokens.md) §4 |
+| [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) o segundo tom: onde o cyan mora | [`tokens.md`](tokens.md), [`landing.md`](landing.md), e [`principios.md`](principios.md) §5.3 |
+
+**Quatro aterrissaram sem carimbo próprio, e isso é achado da auditoria, não defeito.** As [#52](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/52), [#53](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/53), [#58](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/58) e [#70](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/70) não aparecem citadas por número em nenhum arquivo de `docs/design/` — o que a tabela de procedência do documento cita é o **ticket de implementação** que as consumiu (#77 a #83). É a mesma mecânica que a nota acima descreve para os de pesquisa, um degrau adiante: a resolução chega à spec através de quem a implementou.
+
+**A conferência foi por varredura, e vale registrar o método**, porque ele é reproduzível e a leitura não é: `grep -rl "issues/<n>)" docs/` para cada uma das dezesseis, e depois a leitura só das que voltaram vazias. Doze voltaram com endereço direto; quatro exigiram achar onde a decisão está escrita sem o número. **Nenhuma voltou sem lugar nenhum** — que é o resultado que esta invariante existe para produzir, e o único que ela não conseguiria fabricar.
+
+**O que esta invariante enxerga e as outras quatro não:** ausência. Um documento que nunca foi escrito passa nas quatro de forma sem uma reclamação.
+
+### 4.3 A auditoria anterior, do mapa que produziu a spec do Trilho
+
+Ela fica. O mapa [#30](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/30) fechou vinte e sete resoluções, e o endereço de cada uma continua sendo o endereço delas nos arquivos que sobreviveram à reescrita. Apagá-la faria a spec parecer ter nascido do segundo mapa.
 
 | Resolução | Onde ela aterrissou |
 | --- | --- |
@@ -144,9 +175,9 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 | [#32](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/32) os pares seção→ícone | [`icones.md`](icones.md) §3 e §5 — **onze** sob a árvore do `panlabs` |
 | [#33](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/33) `trailingSlash` | [ADR 7](../adr/0007-trailingslash-false.md) |
 
-**E os itens de entrega cruzada foram conferidos um a um, não no atacado.** Vinte itens concretos e nomeáveis — `--sd-glow` pronto para a landing, o modal como único consumidor de `--sd-move-enter`, `circle-check` saindo do manifesto, `--sd-shadow-lip` a 0% no claro, `applyTrailingSlash` não importado, a entrelinha que não desce, `Icon/ExternalLink` como `unsafe` de sprite, o teto de um loop por página, a sidebar estreita sem armadilha de foco — **todos os vinte têm endereço**.
+**Sete daquelas eram de pesquisa** — as [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) a [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) —, e o endereço delas seguia a mesma regra: a medição chega à spec através do ticket de decisão que a consumiu.
 
-**O que esta invariante enxerga e as outras quatro não:** ausência. Um documento que nunca foi escrito passa nas quatro de forma sem uma reclamação.
+**E os itens de entrega cruzada foram conferidos um a um, não no atacado.** Vinte itens concretos e nomeáveis — `--sd-glow` pronto para a landing, o modal como único consumidor de `--sd-move-enter`, `circle-check` saindo do manifesto, `--sd-shadow-lip` a 0% no claro, `applyTrailingSlash` não importado, a entrelinha que não desce, `Icon/ExternalLink` como `unsafe` de sprite, o teto de um loop por página, a sidebar estreita sem armadilha de foco — **todos os vinte tinham endereço** na spec daquele mapa.
 
 ---
 
@@ -305,18 +336,42 @@ Não são metas: são propriedades que o repositório mantém, e cada uma é con
 | **Zero swizzle `unsafe`** | portão 7, perna 2 — todo arquivo de `src/theme/` casa com um componente `Safe` do `swizzle --list` | 220 componentes no artefato, 10 arquivos com endereço |
 | **Zero dependência npm nova** | a lista de `package.json` é exatamente a que o `create-docusaurus classic` escreve | 7 de produção, 2 de desenvolvimento |
 | **Zero serviço externo** | nada em `src/` chama a rede, e nada no HTML publicado carrega recurso de outra origem | zero e zero |
-| **Zero JS de interação no catálogo** | o *substrato nativo* de [`../agents/domain.md`](../agents/domain.md) | 13 arquivos, zero handler e zero estado |
+| **Zero JS de interação no catálogo** | o *substrato nativo* de [`../agents/domain.md`](../agents/domain.md) | 12 arquivos, zero handler e zero estado |
 | **Um único autor de modelo de interação no projeto inteiro** | escuta de DOM e tecla | um: `src/theme/SearchBar/index.js` |
 
 `npm run zeros` roda os cinco. A varredura **remove comentário antes de olhar**, pelo mesmo motivo dos portões 1, 2 e 3: ela cobra código, não prosa — e o comentário de `Accordion.js` que explica *"um `<div onClick>` seria pixel a pixel idêntico"* é a documentação do zero que ele reprovaria.
 
 ### 7.1 O quinto zero precisou de precisão, e a imprecisão era real
 
-A resolução do slice 7 escreveu *"um único JS de interação no projeto inteiro"*. **Varrido ao pé da letra, isso é falso**, e a varredura o mostrou: além do `SearchBar`, dois arquivos casam com uma régua ampla de comportamento —
+A resolução do slice 7 escreveu *"um único JS de interação no projeto inteiro"*. **Varrido ao pé da letra, isso é falso**, e a varredura o mostrou: além do `SearchBar`, dois arquivos casavam com uma régua ampla de comportamento —
 
 - **`src/theme/ApiDocItem/Painel.js`**, que guarda estado e ouve `onChange`. É o *"único degrau de interatividade confinado a um painel"* que [`referencia.md`](referencia.md) §4.1 declara desde o slice 5;
-- **`src/theme/NavbarItem/Marca.js`**, que **repassa** o `onClick` que o painel de tela estreita lhe entrega — ele não autora handler nenhum.
+- **`src/theme/NavbarItem/Marca.js`**, que **repassava** o `onClick` que o painel de tela estreita lhe entregava — ele não autorava handler nenhum.
 
 A régua correta não é *"tem `useState`?"*, e o vocabulário de domínio já a tinha escrito: **zero `keydown` escrito no projeto**. O que obriga a spec a descrever tecla, foco, anúncio de leitor de tela e ARIA em prosa — que é o custo que o axioma 6 cobra — é **autorar modelo de interação**. Um campo controlado não obriga nada disso: quem trata digitação, foco e cursor é o navegador, e o React só espelha o valor.
 
-Por isso o zero é **escuta de DOM e tecla**, e por isso o resultado da varredura **imprime as duas outras superfícies em vez de escondê-las**. Uma afirmação limpa que esconde um fato é pior que uma afirmação com nota de rodapé.
+Por isso o zero é **escuta de DOM e tecla**, e por isso o resultado da varredura **imprime as outras superfícies em vez de escondê-las**. Uma afirmação limpa que esconde um fato é pior que uma afirmação com nota de rodapé.
+
+> **Hoje a régua ampla pega uma superfície, e não duas.** `Marca.js` saiu com a marca sem glifo ([`icones.md`](icones.md) §3), e a saída está no ledger ([`swizzle.md`](swizzle.md) §3): o componente de tema que desenhava o par glifo+palavra deixou de ter assunto, e o arquivo foi removido. Sobra `Painel.js`, e `npm run zeros` continua imprimindo-o sob *"com estado ou campo controlado, sem autorar modelo"*. **A precisão do quinto zero sobreviveu à morte do caso que a motivou** — o que mudou foi a contagem, não a régua, e é assim que se sabe que ela era régua e não desculpa.
+
+---
+
+## 8. A varredura de mortes
+
+**A reescrita matou mais do que criou, e nenhuma das mortes quebra o build.** Um token sem consumidor não quebra nada. Um SVG não referenciado não quebra nada. Um documento de componente que sobreviveu ao componente não quebra nada, e uma linha de ledger sem assunto sobrevive a qualquer CI verde. Por isso a varredura é **parte do aceite**, e não cortesia de fim de esforço.
+
+Cinco categorias, varridas no fecho:
+
+| O que se procura | Como | Resultado |
+| --- | --- | --- |
+| **Token sem consumidor** | todo `--sd-*` de `tokens.css` contra `var(--sd-*)` em `src/`, `scripts/`, `conteudo/` e na raiz | **3 de 136**, os três com o motivo escrito ao lado da definição |
+| **SVG não referenciado** | `npm run icones` — bijeção manifesto ↔ `static/icons/` | zero: 60 desenhos, 69 tags, nenhum arquivo a mais |
+| **Doc de componente sem componente** | os dezessete de [`componentes/`](componentes/) contra o registro de `MDXComponents` e `src/components/` | zero |
+| **Entrada de ledger sem assunto** | cada linha de [`swizzle.md`](swizzle.md) §3 contra o que existe em `src/` | **uma achada e removida** |
+| **Exceção de adaptador sem superfície** | as quatro de [`tokens.md`](tokens.md) §7 contra o HTML publicado | zero — a quinta já tinha saído, com dissenso registrado |
+
+**Os três tokens sem consumidor não são descuido, e cada um tem uma linha.** `--sd-gray-200` é parada de uma rampa declarada inteira, e rampa com buraco no meio é pior de ler do que a parada a mais; `--sd-state-danger-edge` é o mesmo argumento, na família de quatro; `--sd-toc-width` **nomeia um elo da cadeia de proporções** de [`chrome.md`](chrome.md) §1 sem ser quem o pinta — quem o pinta é o grid 75/25 do upstream, numa classe hasheada que custaria `unsafe` para alcançar. Ele é o valor **contra o qual** se mede o que o grid entrega.
+
+**A entrada de ledger sem assunto era `.navbar__brand:empty`.** Ela escondia o link vazio que o upstream renderiza quando não há `navbar.title` — e o `title` voltou com a marca sem glifo. O próprio `chrome.css` já dizia, em comentário, que a declaração não existia mais; o ledger é que não tinha sido lido contra o arquivo. **É a morte exata que esta varredura existe para pegar**: nenhum build reclamaria de uma linha de tabela descrevendo CSS que ninguém escreve.
+
+> **A varredura também corrigiu um número que envelheceu calado.** O ledger justificava o override de `h1` dizendo *"61 de 61 páginas escrevem o próprio `# Título`"*. São **73** — 52 em pt-BR e 21 em EN —, e a condição continua valendo em todas. A contagem certa exige ignorar blocos cercados, porque comentário de shell abre com a mesma marca: contada crua, a varredura acusa 35 páginas com dois títulos e nenhuma delas tem.

@@ -41,6 +41,48 @@ import {paginasDe, rotulosDasAbas} from '../paginas';
 const separador = (url) => `--- [Document source](${url}) ---`;
 
 /**
+ * O corpo com o subtítulo emitido como citação abaixo do `h1`.
+ *
+ * O corpo servido é o MDX **sem front matter**, e o subtítulo mora no
+ * `description` — então o `.md` sairia sem ele, enquanto a tela o pinta logo
+ * abaixo do título (`@theme/MDXComponents`, o override de `h1`) e o `llms.txt`
+ * o carrega em cada linha de listagem. Perder a informação só no formato lido
+ * por máquina é o avesso do que os três artefatos existem para fazer.
+ *
+ * A forma é a do export do Devin, a única das três referências medidas que
+ * resolve o caso: citação imediatamente abaixo do `h1`, na mesma posição em que
+ * a tela a mostra. Adotar é herdar uma convenção que já circula entre parsers.
+ *
+ * **A âncora é o `h1`, e a falta dele estoura.** Uma citação no topo do
+ * arquivo já significa outra coisa aqui — é o ponteiro de volta ao índice. Sem
+ * `h1` para separá-los, os dois blocos se fundiriam num só e o subtítulo viraria
+ * segunda linha do ponteiro, calado.
+ *
+ * O `llms-full.txt` NÃO passa por aqui: lá a descrição já entra como
+ * `> Summary:` acima do separador de documento, que é a forma do Neon. Duas
+ * cópias do mesmo campo no mesmo documento seriam ruído para o parser.
+ *
+ * @param {{corpo: string, descricao: string, permalink: string}} pagina
+ */
+function comSubtitulo({corpo, descricao, permalink}) {
+  const linhas = corpo.split('\n');
+  const titulo = linhas.findIndex((linha) => linha.startsWith('# '));
+  if (titulo === -1) {
+    throw new Error(
+      `Página sem \`# título\` no corpo: ${permalink}\n` +
+        'O `.md` servido emite o subtítulo como citação abaixo do `h1`, e sem o ' +
+        '`h1` não há onde ancorá-la. Ver docs/design/informacao.md §9.2.',
+    );
+  }
+  return [
+    ...linhas.slice(0, titulo + 1),
+    '',
+    `> ${descricao}`,
+    ...linhas.slice(titulo + 1),
+  ].join('\n');
+}
+
+/**
  * @param {import('@docusaurus/types').LoadContext} context
  * @param {{abas: string[]}} options
  * @returns {import('@docusaurus/types').Plugin}
@@ -85,7 +127,7 @@ export default function pluginAiEra(context, options) {
         paginas.map((pagina) =>
           escrever(
             `${pagina.permalink.slice(baseUrl.length)}.md`,
-            `> [Índice para máquinas](${urlDoIndice}) · [Página](${absoluta(pagina.permalink)})\n\n${pagina.corpo.trim()}\n`,
+            `> [Índice para máquinas](${urlDoIndice}) · [Página](${absoluta(pagina.permalink)})\n\n${comSubtitulo(pagina).trim()}\n`,
           ),
         ),
       );
