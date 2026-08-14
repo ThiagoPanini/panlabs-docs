@@ -132,9 +132,8 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    alguém colar um valor torto.
    --------------------------------------------------------------------------- */
 
-@property --sd-brand      { syntax: '<color>';  inherits: true; initial-value: #A3489D; }
-@property --sd-brand-tint { syntax: '<number>'; inherits: true; initial-value: 0.075; }
-@property --sd-radius     { syntax: '<length>'; inherits: true; initial-value: 16px; }
+@property --sd-brand  { syntax: '<color>';  inherits: true; initial-value: #8156C0; }
+@property --sd-radius { syntax: '<length>'; inherits: true; initial-value: 16px; }
 
 /* =============================================================================
    CAMADA 1 — raiz
@@ -142,62 +141,70 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
 :root {
   /* SKIN — o que o corporativo edita para re-marcar. Nada além disto.
-     Tipadas com @property: --sd-brand, --sd-brand-tint, --sd-radius.
-     São as três linhas cuja entrega é literal — colagem inválida nelas cai no valor
-     de fábrica. As outras sete entregam referência ou pilha de fonte, que
+     Tipadas com @property: --sd-brand, --sd-radius.
+     São as duas linhas cuja entrega é literal — colagem inválida nelas cai no valor
+     de fábrica. As outras cinco entregam referência ou pilha de fonte, que
      initial-value não sabe expressar: colagem inválida ali apaga o que a linha
      alimenta, à vista. */
-  --sd-brand:          #A3489D;
+  --sd-brand:          #8156C0;
   --sd-brand-on-dark:  oklch(from var(--sd-brand) max(l, 0.72) c h);
   --sd-brand-on-light: oklch(from var(--sd-brand) min(l, 0.50) c h);
-  --sd-brand-tint:     0.075;
-  --sd-surface-dark:   var(--sd-gray-800);
-  --sd-surface-light:  var(--sd-gray-50);
   --sd-font-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --sd-font-heading:   var(--sd-font-body);
   --sd-font-mono:      'Paper Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --sd-radius:         16px;
   /* /SKIN */
 
-  /* O `L` do hex da marca é INERTE, e é isso que faz a troca ser cirúrgica: a
-     rampa reescreve `L` em toda parada e consome só `c` e `h`, e as duas travas
-     de acento fazem o mesmo (`max(l, 0.72)` e `min(l, 0.50)`). Quem serena a
-     marca é o CROMA — 0,160 no lugar dos 0,240 de antes.
+  /* O `L` do hex da marca é INERTE: as duas travas de acento reescrevem `L` e
+     consomem só `c` e `h` (`max(l, 0.72)` e `min(l, 0.50)`). Dois hexes do
+     mesmo matiz e cromaticidade produzem os dois acentos byte a byte
+     idênticos — só o ÂNGULO do matiz importa.
 
-     A linha 4 existe para segurar o produto `c × tint` em 0,0120, que é a banda
-     de cromaticidade que a medição das quatro rampas pôs na rampa: 0,160 × 0,075
-     é o mesmo 0,0120 de 0,240 × 0,05. Com ela, DEZ das onze paradas saem byte a
-     byte idênticas às da skin anterior e a décima primeira (`gray-600`) difere
-     em 1/255 num canal. A superfície do site inteiro não se mexe; só o acento
-     esfria. Ver docs/design/tokens.md §5. */
+     A rampa NÃO lê `--sd-brand` mais. Issue #95: a tinta que ela herdava da
+     marca era mecanismo copiado de onde ele não se aplica — a âncora não
+     pinta superfície com a rampa tingida, pinta com um cinza neutro à parte
+     (ver o bloco `--sd-neutral-*`, abaixo). `--sd-brand-tint` e o pin
+     `c × tint = 0,0120` que o mantinham não têm mais o que travar, e saíram
+     do sistema. Ver docs/design/tokens.md §5. */
 
   /* ---------------------------------------------------------------------------
-     A rampa de onze cinzas — tingida pelo matiz da marca
+     Cinza neutro puro — o chão, fora da rampa
 
-     Uma cor entra, um sistema inteiro de superfícies sai. As onze paradas de
-     luminosidade são a média das quatro rampas Mintlify medidas: a FORMA da
-     rampa é geometria herdada, o MATIZ é da marca.
+     A superfície de página, nos dois modos, e a elevada no claro não são
+     parada de rampa nenhuma: são cinza neutro medido direto na âncora
+     (issue #95). A elevada no escuro não tem literal próprio aqui — ela
+     referencia a própria página, porque a âncora eleva cartão por borda, não
+     por fundo (ver o bloco escuro, mais abaixo).
+     --------------------------------------------------------------------------- */
+  --sd-neutral-page-dark:    #141414;
+  --sd-neutral-page-light:   #FCFCFC;
+  --sd-neutral-raised-light: #FFFFFF;
 
-     Marca acromática produz rampa neutra sem regra especial: cromaticidade zero
-     entra em `c`, cinza puro sai.
+  /* ---------------------------------------------------------------------------
+     A rampa de onze cinzas — medida na âncora, fria, e não deriva de nada
+
+     Até a issue #95, as onze paradas eram tingidas pelo matiz da marca. Agora
+     valem os hex medidos na âncora, fixos qualquer que seja `--sd-brand`: a
+     FORMA da rampa continua geometria herdada, só que por valor copiado em
+     vez de fórmula reaplicada — trocar a marca não move mais nenhum neutro do
+     sistema.
 
      A rampa é declarada INTEIRA, e hoje a 200 é a única parada sem consumidor.
      Isso vai escrito pelo mesmo argumento que sustenta a família de `-edge` mais
      abaixo: uma rampa de onze com um buraco no meio é pior de ler do que a
-     parada a mais, e quem re-marca precisa da geometria completa para julgar o
-     que a marca dele produz em cada degrau. Parada é geometria, não consumidor.
+     parada a mais. Parada é geometria, não consumidor.
      --------------------------------------------------------------------------- */
-  --sd-gray-50:  oklch(from var(--sd-brand) 97%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-100: oklch(from var(--sd-brand) 95.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-200: oklch(from var(--sd-brand) 91%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-300: oklch(from var(--sd-brand) 86%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-400: oklch(from var(--sd-brand) 71%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-500: oklch(from var(--sd-brand) 55%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-600: oklch(from var(--sd-brand) 44%   calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-700: oklch(from var(--sd-brand) 37.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-800: oklch(from var(--sd-brand) 27.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-900: oklch(from var(--sd-brand) 21.5% calc(c * var(--sd-brand-tint)) h);
-  --sd-gray-950: oklch(from var(--sd-brand) 15.5% calc(c * var(--sd-brand-tint)) h);
+  --sd-gray-50:  #F4F6FA;
+  --sd-gray-100: #EFF1F5;
+  --sd-gray-200: #DFE2E6;
+  --sd-gray-300: #CFD1D5;
+  --sd-gray-400: #A0A2A6;
+  --sd-gray-500: #717377;
+  --sd-gray-600: #515357;
+  --sd-gray-700: #404246;
+  --sd-gray-800: #26292D;
+  --sd-gray-900: #181A1E;
+  --sd-gray-950: #0B0D11;
 
   /* ---------------------------------------------------------------------------
      Matizes de estado — camada 1, fora do bloco de troca.
@@ -590,8 +597,8 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Dissenso registrado: a 900 é o degrau imediatamente acima na rampa, e é a
      única derivação honesta disponível — NÃO é uma medida. O berço que morreu
      era anatomia medida da âncora. */
-  --sd-surface-page:   var(--sd-gray-950);
-  --sd-surface-raised: var(--sd-surface-dark);
+  --sd-surface-page:   var(--sd-neutral-page-dark);
+  --sd-surface-raised: var(--sd-surface-page);
   --sd-surface-code:   var(--sd-gray-900);
   --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
   --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 72%);
@@ -713,7 +720,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-code-string:    #E9B999;   /* oklch(82.1% 0.070  55) — o contrapeso quente */
   --sd-code-function:  #DDDAAE;   /* oklch(88.0% 0.058 104) */
   --sd-code-operator:  #CBC9CF;   /* oklch(83.9% 0.009 301) */
-  --sd-code-comment:   #B0AEB6;   /* oklch(75.5% 0.012 298) */
+  --sd-code-comment:   #B2B0B8;   /* oklch(76.0% 0.012 298) — reto p/ #181A1E (issue #95) */
 }
 
 /* CLARO — legítimo. */
@@ -728,8 +735,8 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Aqui a superfície do código JÁ estava acima da página, e é o escuro que veio
      ao encontro dela. A assimetria — igual à página no escuro, acima dela no
      claro — era o que o cartão escondia. */
-  --sd-surface-page:   var(--sd-gray-100);
-  --sd-surface-raised: var(--sd-surface-light);
+  --sd-surface-page:   var(--sd-neutral-page-light);
+  --sd-surface-raised: var(--sd-neutral-raised-light);
   --sd-surface-code:   oklch(from var(--sd-gray-50) 100% 0 h);
   --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
   --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 40%);
@@ -1349,45 +1356,42 @@ details[class] {
 
 ## 4. Troca de skin
 
-**São dez linhas. Nada além disto.**
+**São sete linhas. Nada além disto.**
 
 O corporativo apaga a identidade visual do shinydoc editando o bloco entre `SKIN` e `/SKIN`, e sobra a arquitetura. Isso é o desenho, não um efeito colateral: o produto é a arquitetura de tokens, e uma superfície de troca que protegesse a forma do shinydoc estaria protegendo a demonstração contra o produto.
 
 | Linha | O que ela move |
 | --- | --- |
-| `--sd-brand` | **Tudo.** É o hex do manual de marca, colado direto — sem converter para canais decimais. Dele saem a rampa de onze cinzas inteira, os dois acentos, as duas superfícies e a cor de link. |
+| `--sd-brand` | Os dois acentos e a cor de link. É o hex do manual de marca, colado direto — sem converter para canais decimais. Desde a issue #95 ela **não** move mais a rampa nem as duas superfícies: essas saíram da família da marca. |
 | `--sd-brand-on-dark` | O acento no escuro. Vem com a trava de luminosidade que garante AA; mexer aqui é assumir a verificação de contraste no lugar da arquitetura. |
 | `--sd-brand-on-light` | O mesmo, no claro. |
-| `--sd-brand-tint` | Quanto a marca tinge a rampa de cinzas. Zero produz rampa neutra. |
-| `--sd-surface-dark` | O cartão no escuro. Vem apontando para uma parada da rampa, e aceita um hex colado por cima. |
-| `--sd-surface-light` | O cartão no claro. |
 | `--sd-font-body` | A pilha do corpo e de todo texto de UI. |
 | `--sd-font-heading` | A pilha dos títulos. Vem igual à do corpo. |
 | `--sd-font-mono` | A pilha do código, inline e em bloco. |
 | `--sd-radius` | A base da escada de forma. **Um número entra, a escada sai:** os outros quatro raios são múltiplos dele, então os cantos do site inteiro se re-formam sem incoerência possível. |
 
-**A proteção não é travar valor; é a troca ser segura por construção.** Quatro mecanismos, todos já na arquitetura:
+**A proteção não é travar valor; é a troca ser segura por construção.** Três mecanismos, todos já na arquitetura:
 
-- a rampa **deriva** da marca, então nenhuma superfície sai da família;
+- a rampa e as duas superfícies **não leem** a marca — nenhuma pode sair de uma família da qual não faz mais parte (issue #95);
 - o raio é base de escala, e os demais são múltiplos;
-- as três raízes literais são **tipadas** com `@property`, e colagem inválida nelas cai no valor de fábrica;
+- as duas raízes literais são **tipadas** com `@property`, e colagem inválida nelas cai no valor de fábrica;
 - os dois acentos vêm derivados do canônico, então não se acaba com três cores de marca desconexas por acidente.
 
 Diferente, sim. Quebrado, não.
 
-> **O terceiro mecanismo é o que carrega mais peso, e a leitura fácil dele está errada.** Medido em navegador, arquivo a arquivo: **sem** o registro de `--sd-brand` e com marca **válida**, a cadeia `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte igual — custom property não registrada é token stream, e `oklch(from …)` aninhado é CSS legal. O que o registro compra não é a cadeia funcionar; é ela **não evaporar inteira** com uma colagem inválida. Sem ele, um valor torto na linha 1 apaga marca, as onze paradas da rampa, os dois acentos, toda superfície e o rótulo do botão primário de uma vez, sem aviso e sem erro. Com ele, tudo isso cai no valor de fábrica e o site continua de pé.
+> **O terceiro mecanismo é o que carrega mais peso, e a leitura fácil dele está errada.** Medido em navegador, arquivo a arquivo: **sem** o registro de `--sd-brand` e com marca **válida**, a cadeia `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte igual — custom property não registrada é token stream, e `oklch(from …)` aninhado é CSS legal. O que o registro compra não é a cadeia funcionar; é ela **não evaporar inteira** com uma colagem inválida. Sem ele, um valor torto na linha 1 apaga marca, os dois acentos, a cor de link e o rótulo do botão primário de uma vez, sem aviso e sem erro. Com ele, tudo isso cai no valor de fábrica e o site continua de pé. A rampa e as duas superfícies não estão nessa lista — não dependem da linha 1 para existir.
 >
 > O raio de dano de uma linha errada é o site inteiro, e é esse raio que o `@property` contém. Quem for tentado a tirar a linha por achá-la cerimônia está tirando a contenção, não a tipagem.
 
-### A perda das outras sete, escrita
+### A perda das outras cinco, escrita
 
-`@property` registra exatamente as linhas cuja entrega é **literal e computacionalmente independente** — é o que `initial-value` sabe expressar. Hoje isso produz três: `--sd-brand`, `--sd-brand-tint`, `--sd-radius`.
+`@property` registra exatamente as linhas cuja entrega é **literal e computacionalmente independente** — é o que `initial-value` sabe expressar. Hoje isso produz duas: `--sd-brand`, `--sd-radius`.
 
-As outras sete entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--sd-surface-dark` torna `--sd-surface-raised` inválida em tempo de valor computado, e `background-color` cai para `transparent` — **a superfície levantada some**. Com registro, teria degradado para o valor de fábrica.
+As outras cinco entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--sd-brand-on-dark` torna `--sd-accent` inválido em tempo de valor computado no modo escuro — link, anel de foco, texto-inverso e todo consumidor de `--sd-accent` perdem cor ao mesmo tempo. Com registro, teria degradado para o valor de fábrica.
 
-A perda é real, está contida em **uma** propriedade — texto, rampa, acento e borda sobrevivem porque nenhum deles deriva das superfícies — e ela falha **à vista**: quem colou vê o cartão sumir.
+A perda é real, está contida em **uma** propriedade — rampa, texto, borda e as duas superfícies sobrevivem porque nenhuma delas deriva do acento — e ela falha **à vista**: quem colou vê link, anel de foco e botão primário perderem cor ao mesmo tempo.
 
-Tipar as duas superfícies com o hex resolvido protegeria de verdade, e foi recusado: seria a única forma de literal derivado entrar no arquivo de tokens, e ele sairia da família no instante em que o corporativo colasse outra marca — um hex ameixa congelado sob uma marca azul.
+Tipar os dois acentos com o hex resolvido protegeria de verdade, e foi recusado: seria a única forma de literal derivado entrar no arquivo de tokens, e ele sairia da família no instante em que o corporativo colasse outra marca — um roxo congelado sob uma marca azul. É o mesmo argumento que, até a issue #95, valia para as duas superfícies — e é exatamente por ele não valer mais para elas (a rampa não deriva da marca, então não há mais família da qual sair) que `--sd-surface-dark` e `--sd-surface-light` saíram do bloco de troca.
 
 ### Redesenhar não é re-marcar
 
@@ -1395,7 +1399,7 @@ A latitude tem **dois níveis nomeados**:
 
 | Nível | Onde | Garantia | Precisa ler a spec? |
 | --- | --- | --- | --- |
-| **Re-marcar** | as dez linhas do bloco de troca | segura por construção | não |
+| **Re-marcar** | as sete linhas do bloco de troca | segura por construção | não |
 | **Redesenhar** | token de camada 1 **fora** do bloco que carregue marcador `Livre` | a do marcador, que nomeia o que se move e o que não | sim |
 
 > **Livre — skin corporativa (redesenho).** A **escala de duração e o vocabulário de easing**. Nenhum manual de marca corporativo especifica duração; quem edita ali está redesenhando.
@@ -1404,27 +1408,24 @@ A latitude tem **dois níveis nomeados**:
 
 ---
 
-## 5. A rampa, e por que ela deriva
+## 5. A rampa, e por que ela é medida — não mais derivada
 
-Uma cor entra, um sistema inteiro de superfícies sai.
+Uma cor entra, um sistema inteiro de superfícies sai — essa frase valia até a issue #95, e ainda vale para o acento. Para a rampa e para as duas superfícies, ela parou de valer.
 
-A rampa de onze cinzas é **tingida pelo matiz da marca** — comportamento medido nos quatro sites do alvo, onde um puxa violeta, outro azul, outro verde. E a prova de que é sistemático, não acaso: o quarto, cuja marca é acromática, recebe cinza **puro**. Aqui isso não é caso especial nem regra a mais: cromaticidade zero entra em `c`, rampa neutra sai.
+**O diagnóstico, registrado para não se repetir:** a rampa de onze cinzas nasceu **tingida pelo matiz da marca** — comportamento medido nos quatro sites do alvo à época (`research/devin-mint`, issue #50), onde um puxa violeta, outro azul, outro verde, e o quarto, de marca acromática, recebia cinza puro. O mecanismo estava certo. **O erro era de uma camada acima:** a âncora não pinta a *superfície de página* com essa rampa tingida — ela usa um cinza neutro puro, à parte, que não deriva de marca nenhuma (`--color-background-dark: rgb(20 20 20)` → `#141414`, medido direto). Herdamos o mecanismo certo e o aplicamos numa superfície em que a âncora não o aplica. Com marca magenta, o chão inteiro do site ficava magenta.
 
-**As onze paradas de luminosidade são a média das quatro rampas medidas, não a de uma delas.** Quatro medições do mesmo gerador estimam a intenção dele melhor que uma, e elas concordam entre si dentro de uma banda estreita — o que confirma que **a forma da rampa é geometria herdada, não escolha.**
+A issue #95 fecha os dois lados do erro:
 
-**Correção que precisa carregar sem rastro da versão perdedora:** as paradas propostas na primeira redação da arquitetura de tokens erram monotonicamente em direção ao escuro, e chegam a seis pontos de luminosidade no degrau mais escuro. O fundo de página inteiro do modo canônico nasceria quase preto puro. **Valem as calibradas, que estão no bloco.**
+1. **A rampa deixa de tingir.** As onze paradas passam a ser os hex medidos direto na âncora — frios, não neutros, e fixos qualquer que seja `--sd-brand`. `--sd-brand-tint` e o pin que travava `c × tint` em 0,0120 saíram do sistema: não há mais produto para travar.
+2. **A superfície de página ganha token próprio.** `--sd-neutral-page-dark` / `--sd-neutral-page-light`, cinza neutro puro, fora da rampa — porque na âncora também está fora dela. A elevada no claro segue o mesmo caminho, um degrau acima (`--sd-neutral-raised-light`); a elevada no escuro não precisa de literal — ela referencia a própria página, porque a âncora eleva cartão por borda, não por fundo (§6, abaixo).
 
-### O `L` da marca é inerte, e o tint é uma conta
+**A forma da rampa continua sendo geometria herdada — só que agora por valor copiado, não por fórmula reaplicada.** Trocar `--sd-brand` não move mais nenhum neutro do sistema: nem fundo, nem borda, nem superfície, nem texto — só os dois acentos e a cor de link.
 
-**A rampa reescreve `L` em toda parada e consome só `c` e `h`.** As duas travas de acento fazem o mesmo — `max(l, 0.72)` e `min(l, 0.50)`. Consequência que vale escrita porque contraria a intuição: **pedir uma marca "mais escura" não é uma operação que este sistema saiba fazer.** Dois hexes de mesmo matiz e mesma cromaticidade, separados por sete pontos de luminosidade, produzem rampa e acentos byte a byte idênticos.
+### O `L` da marca é inerte
 
-**Quem serena a marca é o croma.** E é por isso que `--sd-brand-tint` é a quarta linha do bloco de troca em vez de uma preferência: a rampa é tingida por `c × tint`, então baixar o croma sem compensar apagaria parte do tint — e o tint é `herdado`, medido nos quatro sites. O produto fica travado em **0,0120**, que é a banda de cromaticidade que a medição pôs na rampa.
+**As duas travas de acento reescrevem `L` e consomem só `c` e `h`** — `max(l, 0.72)` e `min(l, 0.50)`. Consequência que vale escrita porque contraria a intuição: **pedir uma marca "mais escura" não é uma operação que este sistema saiba fazer.** Dois hexes de mesmo matiz e mesma cromaticidade, separados por sete pontos de luminosidade, produzem os dois acentos byte a byte idênticos.
 
-O efeito é conferível, e foi conferido em navegador contra a skin anterior:
-
-> **Dez das onze paradas saem byte a byte idênticas. A décima primeira, `gray-600`, difere em 1/255 num único canal.**
-
-**A superfície do site inteiro não se mexe; só o acento esfria.** É isso que torna a troca de marca cirúrgica em vez de arriscada — e é a razão de a linha do tint não ser negociável junto com a do hex: mexer numa sem a outra move todas as superfícies do site.
+**A superfície do site inteiro não se mexe nunca; só o acento esfria ou esquenta.** É isso que torna a troca de marca cirúrgica em vez de arriscada — e, desde a issue #95, é verdade por construção: a rampa e as duas superfícies simplesmente não leem `--sd-brand`.
 
 ### AA é propriedade da arquitetura, não verificação por skin
 
@@ -1450,7 +1451,7 @@ Aquilo se sustentava enquanto havia cartão: o bloco de código vivia sobre o ca
 
 Ela sobe para `--sd-gray-900`, e a regra passa a ser: **a superfície do código é um passo acima da página nos dois modos.** No claro ela já era — a pastilha toma o extremo do modo, que é branco —, então a assimetria (igual à página no escuro, acima dela no claro) desaparece por o escuro vir ao encontro do claro.
 
-Medido, contra a página: **1,113:1** no escuro e **1,147:1** no claro. A célula do escuro era **1,000:1**.
+Medido, contra a página: **1,057:1** no escuro e **1,026:1** no claro — recalculado na issue #95, quando a página deixou de ser parada de rampa e passou a ter token próprio. A célula do escuro era **1,000:1** antes de a [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) subir o código um degrau.
 
 > **Dissenso registrado, herdado da [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56).** A parada 900 é o degrau imediatamente acima na rampa — a **única derivação honesta disponível**, e não uma medida. O que morre no lugar dela era anatomia medida da âncora. Se ao vivo o bloco ficar pesado no escuro, o ajuste é uma linha, e é o tipo de coisa que só se julga com a implementação montada.
 
@@ -1677,17 +1678,19 @@ Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superf
 
 | Par | Escuro | Claro |
 | --- | ---: | ---: |
-| `text-strong` sobre levantada / página | 13,54 / 17,87 | 17,87 / 17,10 |
-| `text-body` sobre levantada / página | 9,66 / 12,75 | 9,34 / 8,94 |
-| `text-muted` sobre levantada / página | 5,75 / 7,59 | 7,12 / 6,81 |
-| acento como link, sobre levantada / página | 5,55 / 7,33 | 5,96 / 5,70 |
-| `text-inverse` sobre preenchimento de acento | 7,85 | 6,54 |
-| anel de foco vs levantada / página (SC 1.4.11 pede 3:1) | 5,55 / 7,33 | 5,96 / 5,70 |
-| anel de foco vs pastilha de código | 6,58 | 6,54 |
-| `text-strong` sobre o wash do item ativo | 15,35 | 14,34 |
-| **sintaxe, pior token, sobre a pastilha** | **8,04** | **6,29** |
-| ícone de estado sobre o próprio fundo, pior caso | 4,96 | 5,45 |
-| corpo sobre fundo de callout, pior caso | 6,47 | 7,98 |
+| `text-strong` sobre levantada / página | 17,03 / 17,03 | 19,45 / 18,95 |
+| `text-body` sobre levantada / página | 12,05 / 12,05 | 10,07 / 9,81 |
+| `text-muted` sobre levantada / página | 7,21 / 7,21 | 7,71 / 7,51 |
+| acento como link, sobre levantada / página | 7,00 / 7,00 | 6,45 / 6,28 |
+| `text-inverse` sobre preenchimento de acento | 7,98 | 6,45 |
+| anel de foco vs levantada / página (SC 1.4.11 pede 3:1) | 7,00 / 7,00 | 6,45 / 6,28 |
+| anel de foco vs pastilha de código | 6,62 | 6,45 |
+| `text-strong` sobre o wash do item ativo | 14,30 | 15,91 |
+| **sintaxe, pior token, sobre a pastilha** | **8,13** | **6,29** |
+| ícone de estado sobre o próprio fundo, pior caso | 6,33 | 5,98 |
+| corpo sobre fundo de callout, pior caso | 8,28 | 8,54 |
+
+**No escuro, toda linha "levantada / página" sai com as duas células idênticas** — não é arredondamento nem duplicação por engano: desde a issue #95, `--sd-surface-raised` referencia `--sd-surface-page` no modo canônico, então as duas colunas medem a mesma superfície duas vezes. No claro elas divergem por um hex (`#FFFFFF` contra `#FCFCFC`), que é distância pequena demais para separar as duas casas decimais na maioria das linhas.
 
 ### A divergência com [`foco.md`](foco.md) §6 está fechada, por medição
 
@@ -1698,15 +1701,15 @@ Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superf
 O método vale registro, porque ele é o que reproduz o número. Duas escolhas o fixam:
 
 - **o contraste é medido sobre a cor de oito bits**, não sobre a aritmética contínua da conversão OKLCH→sRGB. É o que a tela recebe, e é o que faz `#FAF2F9 sobre #2B262A` dar o mesmo número aqui e em qualquer conferidor de contraste do mundo;
-- **cada preenchimento translúcido é composto sobre o fundo em que ele de fato assenta.** Preenchimento com alfa não tem cor própria: tem a cor do que está atrás. O callout mora dentro do corpo do documento, sobre a superfície levantada; o wash do item ativo mora na sidebar, que fica fora dela, sobre a página. Compor o callout sobre a página em vez da levantada move o pior caso do corpo de 6,47 para 9,10 — a distância entre um par que passa raspando e um que passa com folga.
+- **cada preenchimento translúcido é composto sobre o fundo em que ele de fato assenta.** Preenchimento com alfa não tem cor própria: tem a cor do que está atrás. O callout mora dentro do corpo do documento, sobre a superfície levantada; o wash do item ativo mora na sidebar, que fica fora dela, sobre a página. Medido antes da issue #95, quando levantada e página ainda eram cores diferentes nos dois modos: compor o callout sobre a página em vez da levantada movia o pior caso do corpo de 6,47 para 9,10 — a distância entre um par que passa raspando e um que passa com folga. Hoje, no escuro, as duas superfícies **são** a mesma cor — a composição errada deixou de ter como se distinguir ali —, e no claro a diferença encolheu para um hex quase idêntico. O pior caso atual é **8,28 / 8,54** (tabela acima).
 
-**As células que não dependem do acento saem idênticas às da tabela anterior**, e é isso que confirma o método contra a medição antiga em vez de substituí-la sem prova. Uma exceção nomeada: a linha do ícone de estado não reproduz — o registro anterior dava 5,23 / 5,52 e a medição dá **4,96 / 5,45**. Não foi possível reconstruir com que par o número antigo saiu, então vale o medido, e ele continua bem acima dos 3:1 que a SC 1.4.11 pede para conteúdo não textual.
+**As células que não dependem do acento saem idênticas às da tabela anterior**, e é isso que confirma o método contra a medição antiga em vez de substituí-la sem prova. Uma exceção nomeada: a linha do ícone de estado não reproduz — o registro anterior dava 5,23 / 5,52 e a medição, na época, deu **4,96 / 5,45**. Não foi possível reconstruir com que par o número antigo saiu, então valeu o medido. Os dois números são de antes da issue #95; com a página nova, a medição atual dá **6,33 / 5,98** (tabela acima), e continua bem acima dos 3:1 que a SC 1.4.11 pede para conteúdo não textual.
 
 ### O piso da paleta de sintaxe é critério, não registro
 
 **`node scripts/contraste.mjs --verificar` reprova se o pior token cair abaixo de 8,03 no escuro ou 6,29 no claro, ou se o croma máximo passar de 0,095.**
 
-Hoje ele mede **8,04** no escuro — e a distância até o piso é de **um centésimo**, que é o mais apertado que este número já esteve.
+Hoje ele mede **8,13** no escuro, com **dez centésimos** de folga até o piso. A issue #95 trocou `--sd-gray-900`, que é a pastilha do escuro, e o token mais apertado dos sete — `comment` — foi remedido de `#B0AEB6` para `#B2B0B8` para não cruzar o piso; os outros seis toleraram a pastilha nova sem ajuste. Antes de #95 ele media **8,04**, e a distância até o piso era de **um centésimo**, que foi o mais apertado que este número já esteve.
 
 **O piso do escuro desceu de 8,04 para 8,03, e a descida é aritmética, não afrouxamento.** O 8,04 foi escrito como **previsão**, quando a pastilha ainda era a cor da página e a medição dava 8,94: o número gravado era o da pastilha *"um degrau acima na rampa, que é onde ela vai parar quando o cartão sair"*. O cartão saiu, a pastilha subiu, e **a previsão acertou a segunda casa decimal** — a medição dá 8,0364, que se publica como 8,04 e é, no float, três milésimos menor que o piso previsto.
 
@@ -1720,7 +1723,7 @@ Os três números que convertem *"não muito neon"* de gosto em régua:
 | --- | ---: | ---: | ---: |
 | semeadura anterior | 0,104 / 0,089 | 0,173 / 0,113 | 7,77 / 5,66 |
 | o par padrão da âncora | 0,075 / 0,115 | 0,112 / 0,207 | 5,87 / 4,55 |
-| **esta paleta** | **0,057 / 0,062** | **0,095 / 0,090** | **8,04 / 6,29** |
+| **esta paleta** | **0,057 / 0,062** | **0,095 / 0,090** | **8,13 / 6,29** |
 
 *A coluna de contraste desta tabela deixou de ser comparável coluna a coluna no escuro, e isso fica dito em vez de escondido:* as duas primeiras linhas foram medidas sobre a pastilha **antiga**, que era a cor da página, e só a terceira foi remedida sobre a nova. A coluna do claro continua comparável, porque a pastilha clara não se mexeu. Remedir as outras duas exigiria as duas paletas inteiras, que não moram neste repositório — e a comparação que a tabela existe para fazer é de **croma**, onde as três linhas continuam saindo do mesmo método.
 
@@ -1730,7 +1733,7 @@ Ela é a **menos saturada das três nos dois modos** e a única que bate os dois
 
 ### A única reprovação, e ela é deliberada
 
-**`--sd-text-faint` reprova: 3,04:1 no escuro e 4,45:1 no claro** — sobre a superfície levantada, que é o pior caso dele.
+**`--sd-text-faint` reprova: 3,88:1 no escuro — levantada e página empatam, porque são a mesma cor — e 4,63:1 no claro**, sobre a página, que é o pior caso ali. Antes da issue #95 o pior caso nos dois modos vinha da levantada; a levantada clara é hoje branco puro (`#FFFFFF`), mais clara que a página (`#FCFCFC`), e a ordem se inverteu.
 
 É a parada 500 — o meio matemático da rampa —, então é o pior caso **por construção**, e nenhum ajuste salva.
 
@@ -1738,9 +1741,9 @@ Ela é a **menos saturada das três nos dois modos** e a única que bate os dois
 
 ### A garantia é da arquitetura, não desta skin
 
-**O contraste é propriedade das paradas, não da marca.** A tabela foi rodada com marca violeta e com marca âmbar: idêntica até a segunda casa decimal. A cromaticidade da rampa é pequena demais para mover luminância relativa.
+**O contraste é propriedade das paradas, não da marca.** Desde a issue #95 isso não é mais um efeito medido — é garantia de construção: a rampa e as duas superfícies não leem `--sd-brand`, então não existe troca de marca capaz de mover uma célula desta tabela. Antes de #95 a garantia era empírica, não estrutural, e o parágrafo abaixo registra essa medição — histórica, mas ainda o motivo de a garantia ter sido escrita como regra em vez de ficar como coincidência.
 
-A troca de marca desta skin é a prova disso rodando ao vivo. O acento perdeu um terço de croma, e as linhas que não o citam **não se mexeram**: `text-strong`, `text-body` e o corpo sobre fundo de callout saíram idênticas nas duas colunas, e `text-muted` saiu idêntica no escuro.
+A troca de marca desta skin, medida à época em que a rampa ainda tingia, é a prova disso rodando ao vivo. O acento perdeu um terço de croma, e as linhas que não o citam **não se mexeram**: `text-strong`, `text-body` e o corpo sobre fundo de callout saíram idênticas nas duas colunas, e `text-muted` saiu idêntica no escuro.
 
 **A única exceção é um pixel, e ela mostra a mecânica funcionando em vez de contradizê-la:** `text-muted` no claro caiu de 7,15 / 6,84 para 7,12 / 6,81. Aquele papel é a parada `gray-600` — a **única** das onze que não saiu byte a byte idêntica na troca, e ela difere em 1/255 num canal. Três centésimos de razão de contraste é o tamanho de um pixel de diferença, e é o tamanho certo.
 
@@ -1787,7 +1790,7 @@ E **um relatório**, que também roda na CI e não é nenhum dos dois:
 
 **Segundo limite, e ele foi fechado em vez de explorado.** O padrão do portão 1 é `px|rem|em|ms|s`; `dvh` **não está nele**. A altura máxima do modal de busca é `60dvh`, e escrevê-la inline num CSS Module passaria pela varredura. **Passar por buraco de varredura é a única forma de literal que este projeto não admite** — a saída correta seria fechar o buraco, e fechá-lo custa uma linha aqui em vez de uma perna nova de portão. Por isso `--sd-busca-height` é token, e o portão 1 continua com o padrão que sempre teve.
 
-**Achado da implementação:** o `postcss-calc`, que roda na minificação, **não entende sintaxe de cor relativa** e emite aviso ao encontrar `calc(c * var(--sd-brand-tint))` e `calc(l + 0.06)`. Ele **não toca no valor** — verificado byte a byte no CSS emitido, a rampa e os acentos saem intactos. O aviso é ruído, não defeito, e está registrado aqui para ninguém "consertar" a rampa por causa dele.
+**Achado da implementação:** o `postcss-calc`, que roda na minificação, **não entende sintaxe de cor relativa** e emite aviso ao encontrar `calc(l + 0.06)` e `calc(l - 0.06)`, os dois acentos-hover. Ele **não toca no valor** — verificado byte a byte no CSS emitido, os acentos saem intactos. O aviso é ruído, não defeito, e está registrado aqui para ninguém "consertar" o acento por causa dele. Até a issue #95 ele também disparava em `calc(c * var(--sd-brand-tint))`, na rampa; a rampa é hex fixo agora e não passa mais por `calc()` nenhum, então essa metade do aviso morreu junto.
 
 ---
 
@@ -1804,7 +1807,7 @@ Os valores são medição de primeira mão do `docs.devin.ai`, registrada em `re
 | Texto forte | `#181a1e` | `#dfe2e6` | exato |
 | Texto corpo | `#404246` | `#a0a2a6` | exato |
 
-**O chão da página não vem da rampa, e é aqui que está o defeito de origem.** A âncora tinge a rampa de onze cinzas com o matiz da marca, mas **não pinta a página com ela** — o fundo é token separado, cinza neutro puro. Nós herdamos o mecanismo certo e o aplicamos numa superfície onde a âncora não o aplica; com marca magenta, o chão inteiro do site ficou magenta. A linha *Fundo da página* desta tabela é a que cobra a correção.
+**O chão da página não vem da rampa, e ali estava o defeito de origem.** A âncora tinge a rampa de onze cinzas com o matiz da marca, mas **não pinta a página com ela** — o fundo é token separado, cinza neutro puro. Herdávamos o mecanismo certo e o aplicávamos numa superfície onde a âncora não o aplica; com marca magenta, o chão inteiro do site ficava magenta. A linha *Fundo da página* desta tabela foi a que cobrou a correção — fechada na issue #95: `--sd-surface-page` ganhou token próprio (`--sd-neutral-page-dark` / `-light`) e a rampa parou de tingir. Ver §5, acima.
 
 **O acento não tem linha.** A cor de marca é divergência declarada da âncora — violeta, e não o azul dela. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa, e o comparador passaria a reprovar a decisão em vez da deriva.
 
@@ -1842,11 +1845,10 @@ Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias 
 | **Alvo comparado em sRGB, não em OKLCH** | **origem própria (implementação)** | é a forma que o navegador entrega ao pedir cor computada; a folha autora em `oklch()` e as duas formas nunca fechariam por string |
 | Indireção raiz → semântica | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) §1.1 — o token de papel apontando para a raiz injetada, no alvo |
 | Token de componente no escopo do componente | mecanismo emprestado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) §1.4 — `.alert` do Infima redeclara sete tokens globais |
-| Rampa de onze cinzas tingida pelo matiz da marca | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.2 — medido nos quatro sites |
-| Expressá-la em `oklch(from …)` | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §3 — o alvo calcula fora do CSS; sem build, é a única rota |
-| As onze paradas de luminosidade | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §1 — média das quatro rampas medidas |
-| `--sd-brand-tint` | herdado (banda) + **origem própria (conta)** | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §1 fixa a banda; o 0,075 é o que segura `c × tint` em 0,0120 quando o croma cai. Ninguém mediu que a banda *deva* ser constante — a conta é defensável e não é medição |
-| Matiz da marca, magenta serenizado | origem própria | [#68](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/68) — nenhuma medição sustenta matiz de marca; o croma caiu de 0,240 para 0,160 |
+| Rampa de onze cinzas, hex fixo, fora da marca | herdado | `research/paridade-devin` §3.1 — [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95), medida direto na âncora (Devin), e escrita como hex — não mais como `oklch(from …)`, porque não deriva de nada em tempo de navegador. Substitui a rampa tingida pelo matiz da marca ([#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.2, medida nos quatro sites do alvo anterior, expressa em `oklch(from …)` por [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §3) — o mecanismo de tingir estava certo, a camada em que ele pintava é que não: ver [`tokens.md`](tokens.md) §5 |
+| `--sd-neutral-page-dark` / `-light` e `--sd-neutral-raised-light` | herdado | `research/paridade-devin` §3.1 — [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95): `#141414` / `#fcfcfc` / `#ffffff`, medidos direto na âncora. Papel novo — antes a página era a própria parada `gray-950` (escuro) / `gray-100` (claro) |
+| `--sd-brand-tint` sai do sistema | **origem própria (consequência)** | [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95) — a rampa desacoplou da marca; não sobrou produto `c × tint` para travar. Substitui a procedência anterior (banda herdada de [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §1 + a conta que a travava em 0,0120) |
+| Matiz da marca, violeta (h≈300) | origem própria | [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95) — escolhido por eliminação, não por gosto: os quatro matizes de estado são intocáveis, o ciano é skin fixa da sintaxe, o azul é da âncora, e o magenta anterior foi recusado pelo dono do produto ([#68](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/68), croma 0,240→0,160 — o croma 0,160 se mantém, só o ângulo mudou) |
 | Travas de luminosidade do acento | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §2a — verificadas em 24 matizes |
 | Três acentos no bloco de troca | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.1 |
 | Tipografia dentro do contrato de troca | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o carimbo antigo contrariava o [`principios.md`](principios.md) §2, que já dizia que tipografia é parâmetro que a âncora expõe |

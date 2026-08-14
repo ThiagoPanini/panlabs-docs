@@ -205,9 +205,8 @@ function canal(txt, origem, dono, bloco) {
   const t = txt.trim();
   if (t in herdado) return herdado[t];
 
-  /* Raiz numérica citada por nome — hoje só `--sd-brand-tint` e os quatro
-     `--sd-hue-*`. Resolvê-la aqui é o que impede este arquivo de guardar uma
-     segunda cópia do tint. */
+  /* Raiz numérica citada por nome — hoje só os quatro `--sd-hue-*`. Resolvê-la
+     aqui é o que impede este arquivo de guardar uma segunda cópia do ângulo. */
   const referencia = t.match(/^var\((--sd-[a-z0-9-]+)\)$/);
   if (referencia) return numero(declaracao(referencia[1], bloco), referencia[1]);
 
