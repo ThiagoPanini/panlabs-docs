@@ -69,6 +69,10 @@ O motivo é mecânico: o índice viaja no bundle principal de **toda página do 
 
 Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 21 páginas traduzidas ficam mais curtas em inglês, e as 31 de fallback entram em português com a marca `f` — os 29 bytes de diferença são o que sobra dessa troca.
 
+> **A medição do EN só vale no build de TODOS os locales, e a armadilha custa 156 bytes.** Medir com `docusaurus build --locale en` sozinho dá **27 489** — 156 a menos, e o erro é sistemático: sem o pt-BR no mesmo passe, o EN vira o único locale, o `baseUrl` perde o segmento `/en/`, e **os 52 permalinks encurtam três caracteres cada**. 52 × 3 = 156. O índice medido assim é de um site que não se publica.
+>
+> O pt-BR não denuncia a armadilha, e é isso que a torna cara: ele é o locale default, nunca carrega prefixo, e dá **o mesmo número pelos dois métodos**. Quem confere um locale só e vê o número bater conclui que o método está validado. **Meça sempre com `npm run build`**, e leia o `globalData.json` que ele deixa — ele é do último locale do passe, que é o EN.
+
 > **A folga encolheu de 62% para 58%, e o motivo é o previsto.** A medição anterior era 24 894 bytes para 46 páginas, e o parágrafo que a registrava dizia que *"o ramo gerado de `Biblioteca C` volta a consumi-la"*. Ele voltou: 46 + 6 = 52 páginas, +2 751 bytes, **459 bytes por página gerada** — quase o dobro da média de uma página autoral, porque corpo de referência é denso e repetitivo. A medição antes daquela era 35 612 bytes para as 73 páginas do Trilho.
 >
 > **A régua para a próxima vez está nesses 459 bytes.** A folga atual comporta cerca de 82 páginas geradas a mais; comporta menos se elas forem maiores. Quem acrescentar um segundo ramo gerado mede antes, não depois — o teto não avisa, ele reprova o build.
@@ -283,7 +287,7 @@ A regra não afrouxou aqui. Ela diz que **comportamento à mão obriga a spec a 
 | O degrau alto é começo de PALAVRA, não do campo | **origem própria (correção)** | a régua de máquina reprovou a primeira redação deste documento |
 | Sem teto de resultados | herdado | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) — teto seria truncamento silencioso |
 | A régua de máquina em `node --test` | **origem própria (implementação)** | os portões são varredura, e ordenação não é varrível |
-| A folga de 58% sob o teto | **origem própria (medição)** | 27 616 B em pt-BR e 27 645 B em EN, medidos no `globalData` do build de cada locale |
+| A folga de 58% sob o teto | **origem própria (medição)** | 27 616 B em pt-BR e 27 645 B em EN, no `globalData` do build de **todos** os locales — o build de um locale só encurta o permalink do EN em 156 B |
 | O empate entre índice e folha fica como perda nomeada | **origem própria (medição)** | as 52 páginas buscadas pelo próprio título; duas não vêm em primeiro, e o oitavo degrau que resolveria uma delas quebra a outra |
 | Fallback entra marcado, detectado por caminho | herdado | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) §6 |
 | Botão e não campo | herdado | medido nas quatro referências |

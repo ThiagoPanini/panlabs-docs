@@ -94,7 +94,7 @@ Quatro são de forma e se cobram por `grep`. A quinta é de conteúdo e é a ún
 | 2 | **Zero número fora de `tokens.md`** — cor, comprimento, tempo e curva só existem lá | varredura, e o portão 1 no código |
 | 3 | **`## Procedência` sem linha órfã** — toda tabela de procedência tem decisão, classe e fonte em toda linha | varredura |
 | 4 | **Todo bloco `Livre` nomeia o dono** — latitude sem dono é buraco | varredura |
-| 5 | **Completude** — todo item de *"O que este ticket entrega para quem vem depois"* das 16 resoluções tem endereço num arquivo | leitura cruzada |
+| 5 | **Completude** — todo item de *"O que este ticket entrega para quem vem depois"*, nas resoluções **de cada mapa que produziu esta spec**, tem endereço num arquivo | leitura cruzada |
 
 **A quinta é a que importa mais, e é a mais cara.** As quatro de forma passariam com a tipografia inteiramente ausente: um documento que não existe não tem seção vazia, não tem número solto e não tem procedência órfã. Só a completude enxerga ausência.
 
@@ -459,12 +459,17 @@ Cinco categorias, varridas no fecho:
 | O que se procura | Como | Resultado |
 | --- | --- | --- |
 | **Token sem consumidor** | todo `--sd-*` de `tokens.css` contra `var(--sd-*)` em `src/`, `scripts/`, `conteudo/` e na raiz | **3 de 136**, os três com o motivo escrito ao lado da definição |
+| **Classe de procedência sem membro** | `delta deliberado` e `lacuna de medição`, varridas nas tabelas dos trinta arquivos | delta: **zero membros**, e é resultado (§3 de [`principios.md`](principios.md)). Medição: **oito**, e nenhum deles é desta reescrita |
 | **SVG não referenciado** | `npm run icones` — bijeção manifesto ↔ `static/icons/` | zero: 60 desenhos, 69 tags, nenhum arquivo a mais |
 | **Doc de componente sem componente** | os dezessete de [`componentes/`](componentes/) contra o registro de `MDXComponents` e `src/components/` | zero |
 | **Entrada de ledger sem assunto** | cada linha de [`swizzle.md`](swizzle.md) §3 contra o que existe em `src/` | **uma achada e removida** |
 | **Exceção de adaptador sem superfície** | as quatro de [`tokens.md`](tokens.md) §7 contra o HTML publicado | zero — a quinta já tinha saído, com dissenso registrado |
 
-**Os três tokens sem consumidor não são descuido, e cada um tem uma linha.** `--sd-gray-200` é parada de uma rampa declarada inteira, e rampa com buraco no meio é pior de ler do que a parada a mais; `--sd-state-danger-edge` é o mesmo argumento, na família de quatro; `--sd-toc-width` **nomeia um elo da cadeia de proporções** de [`chrome.md`](chrome.md) §1 sem ser quem o pinta — quem o pinta é o grid 75/25 do upstream, numa classe hasheada que custaria `unsafe` para alcançar. Ele é o valor **contra o qual** se mede o que o grid entrega.
+**O que a varredura procura é órfão SEM MOTIVO, e não órfão.** A diferença não é conveniência de redação: `--sd-state-danger-edge` já era órfão antes desta reescrita, e a justificativa dele — *família de quatro não tem buraco no meio* — está escrita no próprio bloco de [`tokens.md`](tokens.md) §3 desde o slice que o criou, e foi aceita ali. Uma varredura que reprovasse órfão puro reprovaria uma decisão que o projeto já tomou por escrito, e portão que reprova o que funciona é portão que alguém desliga.
+
+**Os três têm uma linha cada.** `--sd-gray-200` é parada de uma rampa declarada inteira, e rampa com buraco no meio é pior de ler do que a parada a mais — quem re-marca precisa da geometria completa para julgar o que a marca dele produz em cada degrau; `--sd-state-danger-edge` é o mesmo argumento, na família de quatro; `--sd-toc-width` **nomeia um elo da cadeia de proporções** de [`chrome.md`](chrome.md) §1 sem ser quem o pinta — quem o pinta é o grid 75/25 do upstream, numa classe hasheada que custaria `unsafe` para alcançar. Ele é o valor **contra o qual** se mede o que o grid entrega.
+
+**A `lacuna de medição` tem oito membros, e nenhum deles é desta reescrita.** Eles são os quatro matizes de estado e a base da escala de espaço ([`tokens.md`](tokens.md)), a espessura de foco das referências ([`foco.md`](foco.md)), o registro do glifo de sidebar ([`icones.md`](icones.md)), o colapso da grade por `auto-fit` ([`landing.md`](landing.md) e [`componentes/card-group.md`](componentes/card-group.md)), o `scroll-behavior` ([`motion.md`](motion.md)) e a busca na página em `<details>` fechado ([`componentes/expandable.md`](componentes/expandable.md)). **Esvaziá-la é medir oito coisas, não reescrever oito linhas** — e o axioma 5 é exatamente a regra que proíbe fechar a classe sem medir. Ela é a única das cinco que se esvazia por trabalho de fora do documento, e é por isso que ela continua cheia enquanto `delta deliberado` esvaziou por varredura.
 
 **A entrada de ledger sem assunto era `.navbar__brand:empty`.** Ela escondia o link vazio que o upstream renderiza quando não há `navbar.title` — e o `title` voltou com a marca sem glifo. O próprio `chrome.css` já dizia, em comentário, que a declaração não existia mais; o ledger é que não tinha sido lido contra o arquivo. **É a morte exata que esta varredura existe para pegar**: nenhum build reclamaria de uma linha de tabela descrevendo CSS que ninguém escreve.
 
