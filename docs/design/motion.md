@@ -92,7 +92,7 @@ O argumento é do projeto, não genérico. A ilha de espetáculo é **inerte na 
 
 **Troca de rota: nada.** O leitor clicou para chegar; qualquer fade atrasa exatamente o conteúdo pedido — e envolver `Root`/`Layout` gastaria degrau da escada do [ADR 2](../adr/0002-politica-de-swizzle.md) para comprar atraso.
 
-**Rolagem: salta, não desliza.** `scroll-behavior: auto` **declarado explicitamente**, não herdado. Âncora de TOC numa página longa com rolagem suave é a viagem mais desorientadora do site. Declarado em vez de herdado porque a medição **não cobriu este ponto no Infima**: é lacuna de medição, e herdar em silêncio é o modo de falhar.
+**Rolagem: salta, não desliza.** `scroll-behavior: auto` **declarado explicitamente**, não herdado. Âncora de TOC numa página longa com rolagem suave é a viagem mais desorientadora do site. Declarado em vez de herdado porque a medição mostrou que **nem o Infima nem o `theme-classic` declaram `scroll-behavior` em lugar nenhum** — não é que a âncora decidiu `auto`; ela não decide nada, e herdar uma ausência não é herdar (ver [`principios.md`](principios.md) §5.3).
 
 **Anel de foco: instantâneo.** Anel que esmaece é anel que não está lá quando a tecla é pressionada. Consequência que fecha uma porta para o contrato de foco: o anel **não** entra na sombra multi-camada como camada animada, porque a sombra do cartão transiciona em `--sd-move-state` e o anel não pode transicionar.
 
@@ -222,7 +222,7 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Estado nunca anima geometria | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §3, sobre a assinatura da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
 | Troca de tema instantânea | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 — consequência da ilha inerte da [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13) |
 | Nenhuma transição de cor no upstream | **origem própria (verificação)** | varredura de `html`, `body` e `:root` no Infima e no theme-classic, ao implementar o slice 1 |
-| `scroll-behavior: auto` declarado | **lacuna de medição** | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 — não medido no Infima |
+| `scroll-behavior: auto` declarado | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — `grep` contra o CSS do Infima e do `theme-classic`: zero declarações de `scroll-behavior`. A âncora não decide o ponto; herdar uma ausência não é herdar |
 | Anel de foco instantâneo | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4, entregue ao contrato de foco da [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) |
 | Reveal por `animation-timeline: view()` | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a — decisão do dono do projeto; não medido em nenhuma das sete |
 | Guarda dupla que falha para visível e parado | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a |

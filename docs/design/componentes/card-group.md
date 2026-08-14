@@ -118,7 +118,7 @@ cheia.
 | --- | --- | --- |
 | Colapso direto para uma coluna, sem passo intermediário | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — medido na âncora |
 | O espaçamento entre cartões e o limiar de três colunas | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — medidos |
-| `auto-fit` no lugar da container query | **lacuna de medição** | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) — a âncora para em quatro colunas e **nunca julgou este ponto**; reabre se alguém medir uma grade de cinco |
+| `auto-fit` no lugar da container query | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — medido: a âncora usa `repeat(var(--cols), minmax(0,1fr))` com `--cols` do autor, não `auto-fit`; o teto de 4 é limite de produto (*"supports one to four columns"*), não reflow de grid. Ver [`landing.md`](../landing.md) §Procedência |
 | A fila incompleta fica incompleta | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — a âncora não trata a última fila |
 | `--sd-card-min` na camada 1 | origem própria | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) — o piso é derivado e compartilhado |
 | A lista de faixas também na camada 1, como `--sd-card-grid` | **origem própria (implementação)** | *"uma declaração serve a landing e o MDX"* só é conferível se a declaração morar num lugar que as duas citem; o precedente é a escada de elevação, que é valor composto pelo mesmo motivo |

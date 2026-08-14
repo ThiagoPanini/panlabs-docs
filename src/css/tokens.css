@@ -141,12 +141,17 @@
      ângulo. Editar aqui é redesenhar, não re-marcar.
 
      São literais porque não há raiz no sistema de onde derivar um verde a partir
-     de uma marca fúcsia, e porque a medição das sete referências declarou lacuna
-     em cor semântica de callout.
+     de uma marca fúcsia.
+
+     Medidos contra a âncora (issue #83): ícone dos callouts `Note`/`Warning`/
+     `Tip`/`Danger` em mintlify.com/docs, convertido de sRGB para o H de OKLCH.
+     `success` (151,3°) e `danger` (26,9°) já batiam com o ângulo anterior a
+     menos de 1,5° — ficaram como estavam. `info` (265,6°) e `warn` (61,9°)
+     divergiam ~20°; os dois passam a ser o ângulo medido.
      --------------------------------------------------------------------------- */
-  --sd-hue-info:    245;
+  --sd-hue-info:    266;
   --sd-hue-success: 150;
-  --sd-hue-warn:     80;
+  --sd-hue-warn:     62;
   --sd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
