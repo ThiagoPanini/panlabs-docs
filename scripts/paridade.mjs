@@ -89,7 +89,10 @@ const ROTAS = {
   prosa: '/procedimentos/acessos/rotacionar-uma-chave',
   codigo: '/ferramentas/bibliotecas/biblioteca-b',
   tabela: '/ferramentas/bibliotecas/indice',
-  cartao: '/',
+  /* O cartão morava na landing. A landing morreu e a raiz virou salto para a
+     primeira doc, então a rota do cartão é a página que ainda o renderiza —
+     sondar `/` daria `sem-medida` para sempre. */
+  cartao: '/ferramentas/bibliotecas/biblioteca-c/visao-geral',
   passos: '/procedimentos/acessos/assumir-um-papel-na-aws',
   api: '/ferramentas/bibliotecas/biblioteca-c/referencia/esteira-gerar',
 };
