@@ -132,14 +132,35 @@ const css = readFileSync(CSS, 'utf8');
 
 /* Os dois blocos de modo, do seletor até a chave que o fecha. O seletor é casado
    em início de linha: o cabeçalho do arquivo CITA os dois em prosa, e uma busca
-   crua acharia o comentário primeiro. */
-function recorte(padraoDeAbertura) {
-  const abre = css.search(new RegExp(`^${padraoDeAbertura} \\{$`, 'm'));
+   crua acharia o comentário primeiro.
+
+   O escuro precisa de uma SEGUNDA âncora, e a necessidade nasceu quando a ilha
+   de espetáculo saiu (issue #94). O bloco abria com `:root,\n[data-sd-showcase]`
+   e esse par era único no arquivo. Hoje ele abre com `:root`, e há QUATRO blocos
+   assim — a camada 1, este, o da sombra e o adaptador. Casar só o seletor
+   recortaria o primeiro deles e passaria a medir a camada errada EM SILÊNCIO:
+   `declaracao()` cai no `?? buscar(css)` e acha o token em qualquer lugar do
+   arquivo, então o erro sairia como número plausível em vez de exceção.
+
+   A âncora é a primeira declaração do bloco, que é o que o define: um bloco de
+   modo é o que declara `color-scheme`. */
+function recorte(padraoDeAbertura, primeiraDeclaracao) {
+  /* Os dois parâmetros têm contratos DIFERENTES, e a assimetria é declarada
+     para não virar armadilha: `padraoDeAbertura` chega como regex já escapada
+     — os seletores trazem `[`, `]` e `'` —, e `primeiraDeclaracao` chega como
+     texto literal, escapado aqui. O motivo é o próximo uso: uma declaração de
+     âncora pode trazer `rgb(from …)` ou um ponto, e interpolá-la crua casaria
+     errado calada. */
+  const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const alvo = primeiraDeclaracao
+    ? `^${padraoDeAbertura} \\{\\n  ${literal(primeiraDeclaracao)}$`
+    : `^${padraoDeAbertura} \\{$`;
+  const abre = css.search(new RegExp(alvo, 'm'));
   if (abre === -1) throw new Error(`bloco não encontrado em ${CSS}: ${padraoDeAbertura}`);
   return css.slice(abre, css.indexOf('\n}', abre));
 }
 
-const ESCURO = recorte(':root,\\n\\[data-sd-showcase\\]');
+const ESCURO = recorte(':root', 'color-scheme: dark;');
 const CLARO = recorte(":root\\[data-theme='light'\\]");
 
 /* A declaração vale a do bloco do modo; se ela não estiver lá, vale a da raiz.

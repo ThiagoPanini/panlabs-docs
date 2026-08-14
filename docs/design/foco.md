@@ -238,7 +238,9 @@ O Docusaurus entrega mais do que se supunha: ele é o **primeiro filho** do layo
 
 O `:focus` do upstream **fica**. Ele controla posição, não indicador, e o link só é alcançável por Tab — `:focus` e `:focus-visible` coincidem nele.
 
-**Uma regra de conteúdo sai daqui:** a landing renderiza `<main>`. O alvo preferido é `main:first-of-type`; página de doc tem um pelo layout, página em `src/pages/` só tem se alguém escrever. Sem ele o skip link cai na reserva, que é o invólucro inteiro do layout — funciona, mas o marco de página fica errado.
+**Uma regra de conteúdo sai daqui:** a **rota raiz** renderiza `<main>`. O alvo preferido é `main:first-of-type`; página de doc tem um pelo layout, página em `src/pages/` só tem se alguém escrever. Sem ele o skip link cai na reserva, que é o invólucro inteiro do layout — funciona, mas o marco de página fica errado.
+
+> **Correção de sujeito, não de regra.** A frase dizia *"a landing renderiza `<main>`"*, e a landing saiu em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). A regra sobreviveu à página porque ela nunca foi sobre a página: ela é sobre **`src/pages/`**, e sobrou exatamente uma rota ali — a raiz, que é um salto para a primeira doc. O `<main>` dela está escrito **por causa desta linha**, e o comentário de cabeçalho de `src/pages/index.js` cita esta seção para que a próxima reescrita da raiz não o remova por parecer supérfluo.
 
 **Um segundo skip link não entra.** *"Pular para a navegação"* só serve quando a navegação vem depois do conteúdo; aqui ela vem antes. Um link a mais no topo custa uma parada de Tab a todo mundo e não resolve nada.
 
@@ -343,6 +345,7 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 | Ordem de tabulação | herdado | correta como o Docusaurus entrega |
 | **A divergência entre ordem de foco e leitura visual** | **lacuna por restrição** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medida com a faixa montada; o `Navbar/Content` emite dois blocos e a faixa distribui um deles em duas linhas |
 | Skip link | herdado, mais uma linha de forma | WCAG G1 já implementado pelo upstream |
+| **O `<main>` obrigatório é da rota raiz, não da landing** | **origem própria (correção)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a regra é sobre `src/pages/`, e a raiz é a única rota que sobrou ali; o sujeito trocou, a obrigação não |
 | Comentário fora da varredura dos portões | **origem própria (implementação)** | o portão cobra declaração, e reprovar por prosa ensinaria a escrever comentário pobre |
 | Sidebar de tela estreita sem armadilha de foco | **lacuna por restrição** | `unsafe`; o fonte marca o ponto como workaround temporário |
 | Espessura e afastamento das referências | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — a âncora usa `outline: 1px auto <cor de marca>; outline-offset: 1px`, idêntico em cinco sites Mintlify; as três não-Mintlify usam 2-3px `solid`. O 1px medido **não cobre** o piso da SC 2.4.13 que já governa a linha "Espessura do anel" desta mesma tabela — o valor foi medido e não adotado, não deixado por medir |

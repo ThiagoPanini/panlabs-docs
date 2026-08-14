@@ -370,7 +370,9 @@ A correção é uma declaração, e ela **soma o gutter**. E há uma segunda met
 
 **O fio, porém, é de ponta a ponta** — ele mora no `<footer>`, fora do preenchimento.
 
-A classe de página de doc vem do `DocRoot`, então isto vale para as **três** instâncias. Na landing a classe não existe e o footer centra na viewport junto com o conteúdo de lá.
+A classe de página de doc vem do `DocRoot`, então isto vale para as **três** instâncias — e hoje elas são o site inteiro. A única rota que não é doc é a **raiz**, e ela não é página: é um salto para o índice da primeira jornada, montado com `noFooter`. O rodapé nem chega a existir ali, então não há segundo alinhamento a descrever.
+
+> **Correção de fato.** Esta linha dizia *"na landing a classe não existe e o footer centra na viewport junto com o conteúdo de lá"*. A landing saiu em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e com ela a única rota fora de `DocRoot` que renderizava rodapé. A regra de alinhamento não mudou nem afrouxou — ela perdeu a exceção que precisava ser dita.
 
 **Perda nomeada:** com a sidebar recolhida pelo leitor, o layout troca para a largura escondida e o footer não acompanha. O estado mora em classe de CSS Module hasheada.
 
@@ -455,7 +457,7 @@ Consequência direta do orçamento `unsafe` zero. Cada linha é perda escrita, n
 | **O TOC móvel sai** | **delta deliberado** | o único lugar onde *"mais perto da âncora"* remove navegação; declaração, não omissão |
 | Footer em uma linha, fio superior, muito ar | herdado | a única medição que existe do rodapé da âncora |
 | A linha quebra e não empilha no estreito | **delta deliberado** | contra o comportamento entregue pelo Infima |
-| Conteúdo do footer alinhado à coluna de doc | **origem própria** | não medido; deriva da medida constante |
+| Conteúdo do footer alinhado à coluna de doc | **origem própria** | não medido; deriva da medida constante. A exceção *"na landing, não"* caiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94): a raiz monta com `noFooter` e o alinhamento passou a valer no site inteiro |
 | Os links do footer, e a regra que os escolheu | **origem própria** | regra é *só o que não está em outro lugar* |
 | `target` declarado nos links externos | **origem própria (correção)** | o `<Link>` injeta `target="_blank"` sozinho |
 | Ícone de link externo escondido | origem própria | consequência de `Icon/ExternalLink` ser `unsafe` e vir de sprite |

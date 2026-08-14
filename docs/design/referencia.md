@@ -1,11 +1,19 @@
 # A referência gerada
 
-A primeira das duas rupturas de layout do site — a outra é a landing. **Seis
+A **única** ruptura de layout do site. **Seis
 páginas**, geradas de um contrato de **assinatura de função, tipo e módulo** (ver
 [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md)
 para a decisão de arquitetura; este documento é o desenho), um componente de
 tema próprio (`ApiDocItem`, ver [`swizzle.md`](swizzle.md)), e um único degrau de
 interatividade confinado a um painel.
+
+> **Correção de contagem.** Esta abertura dizia *"a primeira das duas rupturas de
+> layout do site — a outra é a landing"*. **É uma.** A landing saiu em
+> [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e esta
+> deixou de ser a primeira de um par para ser a única. Nada do que vem abaixo
+> muda: a ruptura continua saindo de `docItemComponent`, que é opção pública, e
+> continua sendo a exceção que [`informacao.md`](informacao.md) §6 autoriza por
+> nome.
 
 **Nenhum valor numérico nasce aqui sem citar `tokens.md`.** Os comprimentos
 moram lá; este documento faz contas com eles.

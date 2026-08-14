@@ -8,7 +8,7 @@ Medido em 33 sessões, no instante da primeira edição: **mediana de 186k token
 
 - **Delegue o reconhecimento a um subagente `Explore`** e trate o digest como orçamento de leitura. Exceção: a tarefa nomeia o arquivo **e** cabe numa função — diga que é o caso e siga.
 - **Não leia arquivo com `cat`/`sed`/`head`.** Passa por fora do orçamento. Localize com `grep -n`, leia com `Read` + `offset`/`limit`.
-- **Vá pela seção**, não pelo arquivo. `docs/design/tokens.md` tem 1829 linhas; `landing.md`, 666; `informacao.md`, 544. Nenhum se lê inteiro — a tabela abaixo existe para isso.
+- **Vá pela seção**, não pelo arquivo. `docs/design/tokens.md` passa de 1800 linhas; `informacao.md`, de 550; `docs/design/README.md`, de 450. Nenhum se lê inteiro — a tabela abaixo existe para isso.
 - **Issue enxuta:** `gh issue view N --json title,body,labels`. Sem `--comments` salvo necessidade, sem varrer o mapa.
 
 Numa implementação, `.claude/context-economy-protocol.md` entra no contexto com o detalhe.
@@ -20,7 +20,7 @@ Numa implementação, `.claude/context-economy-protocol.md` entra no contexto co
 | vocabulário, axiomas, o que é o projeto | `docs/agents/domain.md` § Vocabulário, § Axiomas |
 | como o trabalho anda aqui; o que é portão | `docs/agents/workflow.md` § Do problema à execução, § Portões |
 | issue, sub-issue, dependência, label | `docs/agents/issue-tracker.md` § Convenções, § Wayfinding operations |
-| índice da spec, os oito portões, as invariantes | `docs/design/README.md` § 3. O índice, § 5. Os oito portões |
+| índice da spec, os sete portões, as invariantes | `docs/design/README.md` § 3. O índice, § 5. Os sete portões |
 | árvore, abas, tipo de página, heading, locale | `docs/design/informacao.md` § 3. A árvore, § 6. Tipos de página, § 8. Locale |
 | cor, medida, tempo, curva, rampa, contraste | `docs/design/tokens.md` § 1. As três camadas, § 10. Contraste verificado |
 | navbar, sidebar, TOC, footer, tela estreita | `docs/design/chrome.md` § 3. Navbar, § 4. Sidebar, § 9. Tela estreita |
@@ -28,7 +28,6 @@ Numa implementação, `.claude/context-economy-protocol.md` entra no contexto co
 | swizzle — a escada, o ledger, o que o muda | `docs/design/swizzle.md` § 3. O ledger, § 6. O que muda o ledger |
 | foco, `outline`, skip link | `docs/design/foco.md` § 3. O mecanismo é `outline` |
 | o que anima, o que nunca anima, reduced-motion | `docs/design/motion.md` § 2. O que anima, § 4. O que nunca anima |
-| landing — seções, dobra, os seis efeitos | `docs/design/landing.md` § 2. As quatro seções, § 7. O motion licenciado |
 | busca — índice, pontuação, modal | `docs/design/busca.md` § 2. O índice, § 3. A escada de pontuação |
 | referência gerada, contrato de assinatura | `docs/design/referencia.md` § 5. O gerador e o contrato |
 | âncora visual, classes de procedência | `docs/design/principios.md` § 5. As cinco classes de procedência |
@@ -38,7 +37,8 @@ O método de achar dentro de um arquivo: as seções são numeradas e o título 
 
 ## Pegadinhas — verificadas nesta máquina
 
-- **`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4, 5 e 8 (~2,4s). A CI roda também o **portão 7**, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build` e `npm run zeros`. Verde no bundle não é verde na CI — antes de propor merge, rode a lista da CI, em `.github/workflows/ci.yml`.
+- **`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4 e 5 (~2,5s medidos aqui). A CI roda também o **portão 7**, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build` e `npm run zeros`. Verde no bundle não é verde na CI — antes de propor merge, rode a lista da CI, em `.github/workflows/ci.yml`.
+- **Eram oito portões; são sete.** O portão 8 morreu com a landing (#94), e o **número não se reaproveita**: o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração. `ls scripts/portao-*.sh` devolve 7, de 1 a 7, e o 8 fica vago.
 - **`npm run portao:6` falha sozinho, e não é quebra.** Ele exige `<url-base>`: confere as três rotas contra o site publicado, e só roda no `deploy.yml`, depois do deploy.
 - **Editou `src/css/tokens.css`? Rode `node scripts/espelho-tokens.mjs --sincronizar`.** O bloco `css` de `docs/design/tokens.md` é espelho byte a byte do arquivo, e a CI reprova a divergência.
 - **Editou `contratos/*.json`? Rode `npm run gerar:referencia`.** O portão 5 regenera e reprova em `git diff`. A página gerada nunca se edita à mão.
