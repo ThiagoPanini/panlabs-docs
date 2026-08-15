@@ -156,6 +156,8 @@ Os 17 casos da régua passam sobre índices sintéticos. Sobre o corpus real ele
 
 Um `<input>` no navbar que não aceita digitação é um controle que mente sobre o que faz. O botão diz *isto abre outra coisa*, que é o que acontece.
 
+**A [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) veste esse botão de campo — anel, raio maior, caixa do tamanho da âncora, atalho sem pílula — e não é uma segunda opinião sobre o parágrafo acima.** Honestidade aqui é sobre o contrato, não sobre a pele: um `<button>` continua anunciado "botão" por leitor de tela e continua ativando em Enter/Espaço, qualquer que seja a cor da borda. O que a #98 muda de fato é onde ele mora — centralizado na primeira linha do navbar, não mais à direita — e isso só pôde entrar depois que o chão do navbar assentou, na [#96](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/96).
+
 | Faixa | O que o botão mostra |
 | --- | --- |
 | de 997px | ícone + rótulo + tecla |
@@ -177,9 +179,12 @@ Consequência que vale escrita: **zero `z-index` no arquivo**. O elemento entra 
 
 | Dimensão | Valor | De onde sai |
 | --- | --- | --- |
-| Largura | `--sd-prose-width` | é **a medida que o leitor estava lendo** quando apertou a tecla |
+| Largura | `--sd-busca-panel-width` | a âncora, centralizada, `640px` — ver §10 |
 | Altura máxima | `--sd-busca-height` | a única medida do projeto relativa à viewport |
+| Deslocamento do topo | `--sd-busca-panel-top` | a âncora, `54px` — ver §10 |
 | Ancoragem | topo, `margin-inline: auto` | um modal centrado verticalmente **pula** quando a lista cresce, e ela cresce a cada tecla |
+
+> **Correção — a largura parou de citar `--sd-prose-width` por nome, na [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98).** Até ali o painel abria com a medida que o leitor estava lendo, e citar a largura de prosa por nome evitava uma segunda cópia do mesmo número — coincidência de propósito, tratada como parentesco. A âncora mede o painel fixo em 640px, e 640 não é 720: continuar citando `--sd-prose-width` teria virado a derivação falsa que este projeto recusa por escrito. `--sd-busca-panel-width` é o número, sozinho, em `tokens.css`. A propriedade antiga — um transplante que mudasse a coluna de prosa também movia o painel de busca de graça — morreu junto, e vale registrado para quem for portar a régua adiante.
 
 A entrada usa `--sd-move-enter`, cujo único consumidor no projeto é este modal ([`motion.md`](motion.md) §2).
 
@@ -194,11 +199,13 @@ A primeira redação deste documento descrevia as duas pontas como uma transiç�
 
 `allow-discrete` continua sendo o que faz a **saída** rodar sobre `display`, que o `<dialog>` alterna.
 
-### 5.1 O realce, por peso e não por fundo
+### 5.1 O realce — peso e acento, e o que resolveu a briga
 
-A linha ativa já é uma superfície de estado — `--sd-surface-wash`, que é o acento a 12%. Um `<mark>` tingido poria **acento sobre acento no mesmo pixel**: duas ênfases brigando, e a de baixo perdendo.
+Até a [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) o `<mark>` mudava só o peso. A linha ativa já era uma superfície de estado — `--sd-surface-wash`, o acento a 12% — e um `<mark>` tingido poria **acento sobre acento no mesmo pixel**: duas ênfases brigando, e a de baixo perdendo. Era por isso que esta seção recusava cor.
 
-O elemento continua sendo `<mark>`, porque é ele que carrega o significado. O que o CSS troca é a tinta pelo peso.
+**A âncora colore o termo em acento além de engrossar, e a #98 adota — mudando o outro lado da equação, não este.** A linha ativa deixou de ser `--sd-surface-wash` e passou a `--sd-border-default`, o texto forte a 12%: mesma força de mancha, cor neutra em vez de acento. As duas ênfases não brigam mais porque só uma continua sendo acento — a troca em `.opcao[aria-selected]`, não no `<mark>`, é o que compra a cor nova sem repetir o problema que a versão anterior evitava calando-a.
+
+O elemento continua sendo `<mark>`, porque é ele que carrega o significado. O que o CSS troca agora é a tinta e o peso, os dois.
 
 **O recorte é sobre o texto original, com as faixas mapeadas do normalizado.** `normalize('NFD')` decompõe acento em dois pontos de código; cortar pelo índice normalizado devolveria letra sem acento na tela, e o realce apagaria o til de `informação` na frente do leitor. Quando a conta de deslocamento não fecha, a função devolve zero faixas — perde-se ênfase, nunca uma letra.
 
@@ -206,7 +213,7 @@ O elemento continua sendo `<mark>`, porque é ele que carrega o significado. O q
 
 `search` e `x` já estão no manifesto ([`icones.md`](icones.md)), com o papel `sistema`. O teto de 64 não se move.
 
-**As teclas do rodapé são caracteres dentro de `<kbd>`** — `↑`, `↓`, `↵`, `esc`. Três setas desenhadas custariam três slots e estourariam o teto; `↑` já é a seta. O rodapé some abaixo do limiar: quem está no toque não tem tecla, e a linha viraria ruído ocupando a altura que a lista quer.
+**As teclas do rodapé são caracteres soltos** — `↑`, `↓`, `↵`, `esc` — e desde a [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) nem dentro de `<kbd>`: a pílula de teclado saiu, e sobrou o glifo puro, herdando cor e tamanho do próprio rodapé. Três setas desenhadas custariam três slots e estourariam o teto; `↑` já é a seta. O rodapé some abaixo do limiar: quem está no toque não tem tecla, e a linha viraria ruído ocupando a altura que a lista quer.
 
 ### 5.3 O token novo
 
@@ -270,6 +277,7 @@ A regra não afrouxou aqui. Ela diz que **comportamento à mão obriga a spec a 
 | 3 | **O índice não vê o texto que os componentes geram** | a fonte é o MDX; o que o catálogo renderiza a partir de props não está lá |
 | 4 | **Clique no `::backdrop` não fecha** | o `<dialog>` não faz sozinho, e a detecção por alvo de clique conta o preenchimento do painel como o painel. `Escape` e o × cobrem |
 | 5 | **A escala não escala** | dezenas de páginas é onde a troca é boa; a nota de migração do ADR 6 é o que fica escrito para a outra ordem de grandeza |
+| 6 | **Sem assistente de IA — nem no navbar, nem no campo, nem na lista** | a âncora o oferece nos três lugares; perguntado se o quinto zero deveria abrir para acomodá-lo, o dono respondeu **"não entram"** — [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98). O cabeçalho de grupo que rotulava a linha de IA sai junto, sem custo à parte: sem a linha, não sobra o que rotular |
 
 ---
 
@@ -286,7 +294,7 @@ A queixa do dono foi que *"a busca não segue o modelo"*. Esta tabela transforma
 | Painel topo | `54px` | ±1 |
 | Painel raio | `20px` | exato |
 
-O que a tabela **não** cobra, e por quê: a âncora põe o controle **centralizado** na primeira linha do navbar e nós o pomos à direita, mas posição não é comprimento e o comparador mede a caixa, não o eixo. A dica de tecla da âncora é **texto puro** onde a nossa é uma pílula `<kbd>`; isso é presença de elemento, e entra quando o ticket que a mata for executado. E a linha de resultado da âncora é compacta contra a nossa — ela só pode ser sondada com o painel aberto **e com consulta digitada**, que é um cenário a mais do que este instrumento monta hoje.
+**Três coisas ficavam fora da tabela, e a [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) fechou duas.** A âncora põe o controle **centralizado** na primeira linha do navbar — a #98 fez o mesmo, mas o comparador **continua** sem enxergar isso: ele mede a caixa, não o eixo, e posição não é comprimento. A dica de tecla da âncora era **texto puro** contra a nossa pílula `<kbd>`; isso era presença de elemento, e a #98 foi o ticket que a mata — matou. Fica de fora ainda a linha de resultado: ela só pode ser sondada com o painel aberto **e com consulta digitada**, um cenário a mais do que este instrumento monta hoje. A #98 compactou a linha mesmo sem sonda — altura por padding reduzido, raio em `--sd-radius-md` (12px, contra os 14 que a âncora mede — ver Procedência, `origem própria (implementação)`) — avaliada visualmente, não por régua.
 
 O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes de medir, porque `<dialog>` fechado não tem caixa.
 
@@ -312,6 +320,16 @@ O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes 
 | A régua de máquina em `node --test` | **origem própria (implementação)** | os portões são varredura, e ordenação não é varrível |
 | A folga de 58% sob o teto | **origem própria (medição)** | 27 616 B em pt-BR e 27 645 B em EN, no `globalData` do build de **todos** os locales — o build de um locale só encurta o permalink do EN em 156 B |
 | O empate entre índice e folha fica como perda nomeada | **origem própria (medição)** | as 52 páginas buscadas pelo próprio título; duas não vêm em primeiro, e o oitavo degrau que resolveria uma delas quebra a outra |
+| A geometria do §10, implementada — `--sd-busca-panel-width`, `--sd-busca-panel-top`, `--sd-radius-lg`, e o raio do controle reancorado em `--sd-radius-md` | herdado | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §7.1/§7.2 |
+| O fundo do painel troca `--sd-surface-raised` por `--sd-surface-page` | herdado | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §7.2, "fundo igual à página"; sem efeito no escuro (os dois papéis já coincidem, `tokens.css`), visível no claro |
+| O controle centralizado na linha 1 do navbar | herdado | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §7.1; dependia do chão do navbar assentado, [#96](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/96) |
+| A pílula `<kbd>` do atalho do gatilho vira texto puro | herdado | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §7.1, resolve a lacuna que este documento já registrava no §10 |
+| As teclas do rodapé perdem o `<kbd>` e viram glifo solto | herdado | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §7.2 |
+| O `<mark>` ganha cor de acento, além do peso | herdado | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §7.2 |
+| A linha selecionada troca `--sd-surface-wash` por `--sd-border-default` (neutro) | **origem própria (implementação)** | descoberto ao implementar [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98): sem a troca, o acento do `<mark>` cai sobre acento na linha ativa — ver §5.1 |
+| O raio da linha de resultado fica em `--sd-radius-md` (12px), não nos 14px que a âncora mede | **origem própria (implementação)** | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §7.2 mede 14px, mas nada na medição sustenta abrir um quinto degrau de raio só por 2px não sondados (§10); a decisão de reusar `--sd-radius-md` saiu de escrever o CSS, não de régua. **Não é `delta deliberado`** — `principios.md` §3 fecha essa classe em zero membros, sem novos tickets que a reabram |
+| Sem assistente de IA — navbar, campo e lista | **lacuna por restrição** | [#98](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/98) — `research/paridade-devin` §13; a restrição é o quinto zero (uma única JS de interação). Se ela ainda cabe nesta classe ou pede qualificador próprio segue **aberto** — o §13 da pesquisa já registrava a mesma dúvida, e `principios.md` §5.1 é onde ela se resolve, se resolver |
+| O cabeçalho de grupo da linha de IA some | **origem própria (consequência)** | cai da linha acima: sem a linha de IA, não sobra o que o cabeçalho rotule |
 | Fallback entra marcado, detectado por caminho | herdado | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) §6 |
 | Botão e não campo | herdado | medido nas quatro referências |
 | Um limiar só, o do Infima | herdado | [`chrome.md`](chrome.md) §1.6 |
