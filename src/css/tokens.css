@@ -1101,13 +1101,16 @@
 
   /* --- régua, citação e tabela ------------------------------------------- */
   --ifm-hr-background-color:      var(--sd-border-default);
-  --ifm-blockquote-color:         var(--sd-text-muted);
+  --ifm-hr-margin-vertical:       var(--sd-space-12);
+  --ifm-blockquote-color:         var(--sd-text-body);
   --ifm-blockquote-border-color:  var(--sd-border-strong);
+  --ifm-blockquote-border-left-width: calc(var(--sd-border-width) * 4);
+  --ifm-blockquote-padding-horizontal: var(--sd-space-6);
   --ifm-blockquote-font-size:     var(--sd-type-base);
   --ifm-table-border-color:       var(--sd-border-subtle);
   --ifm-table-background:         transparent;
   --ifm-table-head-background:    transparent;
-  --ifm-table-stripe-background:  var(--sd-border-subtle);
+  --ifm-table-stripe-background:  transparent;
   --ifm-table-cell-color:         var(--sd-text-body);
   --ifm-table-head-color:         var(--sd-text-strong);
   --ifm-table-head-font-weight:   var(--sd-weight-ui);

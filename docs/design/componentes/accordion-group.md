@@ -1,5 +1,7 @@
 # `accordion-group`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, dentro de `## Anatomia`, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 Empilha [`accordion`](accordion.md) para que uma sequência de perguntas leia como
@@ -20,11 +22,23 @@ a noção de conjunto é nossa.
 **Zero partes publicadas.** O grupo não tem anatomia interna: ele é uma pilha, e
 os filhos são o outro componente.
 
-A pilha é uma coluna com espaçamento próprio, e ela **zera a margem de bloco de
-cada sanfona** — sem isso a margem do filho somaria ao espaçamento do pai e a
-pilha ficaria mais frouxa do que uma sanfona solta. A regra de contexto usa
-`:where()`, que não soma especificidade: o degrau que separa o nosso CSS da skin
-corporativa fica de pé mesmo num seletor que fala de dois componentes.
+O grupo é a moldura — borda 1px, raio 12 — e **achata os filhos**: dentro dele,
+cada [`accordion`](accordion.md) perde borda, raio e margem próprios, e vira
+uma linha só, separada da vizinha por um fio (`border-bottom`, na última
+linha não). A regra de contexto usa `:where()`, que não soma especificidade: o
+degrau que separa o nosso CSS da skin corporativa fica de pé mesmo num seletor
+que fala de dois componentes.
+
+**Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
+Sem espécime publicado no catálogo de conteúdo, `npm run paridade` ainda não
+mede este componente.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Raio do grupo | `12px` | avaliação visual |
+| Borda do grupo | `1px` | avaliação visual |
+| Filhos achatados | sem borda, raio nem margem próprios | avaliação visual |
+| Separador entre filhos | `border-bottom` `1px`, ausente no último | avaliação visual |
 
 ## Variantes
 
@@ -49,13 +63,14 @@ Não. Crie outra, com a mesma `referencia_externa`.
 
 ## Tokens consumidos
 
-Camada 1: `--sd-space-2`, `--sd-space-6`.
+Camada 2: `--sd-border-default`, `--sd-border-subtle`.
 
-Nenhum token de cor: o grupo não pinta nada.
+Camada 1: `--sd-space-6`, `--sd-border-width`, `--sd-radius-md`.
 
 ## Light e dark
 
-**Não se aplica.** O grupo não consome cor nenhuma.
+**Não se aplica.** A borda do grupo e o separador entre filhos consomem token
+semântico (`--sd-border-default`, `--sd-border-subtle`) e não conhecem modo.
 
 ## Motion / reduced-motion
 
@@ -76,3 +91,4 @@ de estado de entrada mora em [`foco.md`](../foco.md).
 | Sempre sem props | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — superfície mínima medida |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
 | `:where()` na regra de contexto | **origem própria (implementação)** | preserva o degrau de especificidade que a [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 desenhou |
+| Grupo como moldura (raio 12, borda 1px), filhos achatados e separados por fio | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11. Substitui o desenho anterior (pilha solta por `gap`, cada sanfona com borda própria), que não tinha medição atrás |

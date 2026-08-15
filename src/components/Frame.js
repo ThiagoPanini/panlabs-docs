@@ -9,7 +9,9 @@
  *
  * Isso encolhe o componente: o fundo quadriculado da âncora existe para
  * enquadrar imagem com transparência, e sem screenshot ele perde a razão de ser.
- * Sobra o palco tingido mais a legenda.
+ * Sobra o palco tingido — sem legenda: o alvo não renderiza `figcaption`, e
+ * `research/paridade-devin` §11 mede isso contra o mesmo `mint` do Devin que
+ * pediu o palco tingido.
  *
  * E cria a segunda das **duas** exceções do catálogo à regra de que nenhum
  * componente conhece modo de cor: o palco declara `color`, e o diagrama que
@@ -23,11 +25,10 @@
 import React from 'react';
 import estilos from './catalogo.module.css';
 
-export default function Frame({caption, children}) {
+export default function Frame({children}) {
   return (
     <figure className={estilos.frame} data-sd-component="frame">
       <div className={estilos.frameStage}>{children}</div>
-      {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );
 }
