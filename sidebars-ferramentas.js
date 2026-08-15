@@ -15,16 +15,19 @@ import referencia from './sidebars-referencia.js';
  *
  * **O único lugar do site que usa o nível 3.** O teto de profundidade subiu de 2
  * para 3, e ele é usado onde uma ferramenta tem mais de uma página —
- * `Bibliotecas › Biblioteca C`, que é a que carrega a referência gerada. A regra
- * de ícone foi reescrita junto, e é ela que torna o nível 3 legível: **ícone só
- * no nó de topo da sidebar**. A formulação antiga (*obrigatório na categoria de
- * topo, ausente na folha*) é que não tinha leitura num terceiro nível — não o
- * teto.
+ * `Bibliotecas › Biblioteca C`, que é a que carrega a referência gerada.
+ *
+ * **A regra de ícone é a da issue #97: toda folha, nenhum cabeçalho de grupo.**
+ * `Biblioteca C` não recebe `className` — ela é cabeçalho, não folha, e a regra
+ * não faz exceção por nível. As folhas dela — as três autorais e as seis
+ * geradas — herdam `sidebar-icone--bibliotecas`, a família da categoria de
+ * topo que as contém.
  *
  * **O ramo gerado chega por IMPORT, e a árvore continua escrita à mão aqui.** As
  * 6 páginas de referência de `Biblioteca C` saem do contrato de assinatura, e o
- * gerador emite um **fragmento** — uma lista de ids — em vez da sidebar inteira
- * da instância. `Bibliotecas` fecha em 13 e a aba em 21. É a única forma de as
+ * gerador emite um **fragmento** — uma lista de itens de folha, com o mesmo
+ * `className` que as três autorais vizinhas — em vez da sidebar inteira da
+ * instância. `Bibliotecas` fecha em 13 e a aba em 21. É a única forma de as
  * duas posses conviverem: as quinze folhas autorais são nossas e o gerador não as
  * conhece; as seis geradas são dele e editá-las à mão seria a segunda fonte de
  * verdade que o gerador existe para impedir.
@@ -43,15 +46,14 @@ const sidebars = {
     {
       type: 'category',
       label: 'Bibliotecas',
-      className: 'sidebar-icone sidebar-icone--bibliotecas',
       collapsed: false,
       link: {type: 'doc', id: 'bibliotecas/indice'},
       items: [
-        'bibliotecas/biblioteca-a',
-        'bibliotecas/biblioteca-b',
+        {type: 'doc', id: 'bibliotecas/biblioteca-a', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+        {type: 'doc', id: 'bibliotecas/biblioteca-b', className: 'sidebar-icone sidebar-icone--bibliotecas'},
         {
-          // O NÍVEL 3, e o único do site. Sem ícone: a regra é *só no nó de topo
-          // da sidebar*, e este nó é de segundo nível.
+          // O NÍVEL 3, e o único do site. Sem ícone: é cabeçalho de grupo, não
+          // folha — a mesma regra que já excluía o nó de topo antes da #97.
           type: 'category',
           label: 'Biblioteca C',
           collapsed: false,
@@ -60,9 +62,9 @@ const sidebars = {
             // A fixture de painel direito vazio: a folha autoral desta
             // instância passa pela perna do comutador que delega, e a coluna do
             // painel nem chega a existir nela.
-            'bibliotecas/biblioteca-c/instalacao-e-configuracao',
-            'bibliotecas/biblioteca-c/tratamento-de-erros',
-            'bibliotecas/biblioteca-c/changelog',
+            {type: 'doc', id: 'bibliotecas/biblioteca-c/instalacao-e-configuracao', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+            {type: 'doc', id: 'bibliotecas/biblioteca-c/tratamento-de-erros', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+            {type: 'doc', id: 'bibliotecas/biblioteca-c/changelog', className: 'sidebar-icone sidebar-icone--bibliotecas'},
             // O ramo gerado, espalhado como irmão das autorais. Sem categoria
             // própria: um nó a mais aqui seria o nível 4, e o teto é 3.
             ...referencia,
@@ -73,31 +75,33 @@ const sidebars = {
     {
       type: 'category',
       label: 'Módulos Terraform',
-      className: 'sidebar-icone sidebar-icone--modulos-terraform',
       collapsed: false,
       link: {type: 'doc', id: 'modulos-terraform/indice'},
-      items: ['modulos-terraform/modulo-de-bucket', 'modulos-terraform/modulo-de-papel-iam'],
+      items: [
+        {type: 'doc', id: 'modulos-terraform/modulo-de-bucket', className: 'sidebar-icone sidebar-icone--modulos-terraform'},
+        {type: 'doc', id: 'modulos-terraform/modulo-de-papel-iam', className: 'sidebar-icone sidebar-icone--modulos-terraform'},
+      ],
     },
     {
       type: 'category',
       label: 'Skills',
-      className: 'sidebar-icone sidebar-icone--skills',
       collapsed: false,
       link: {type: 'doc', id: 'skills/indice'},
       items: [
         // A fixture de prosa mínima e código máximo — o tipo `Receita`, relocado
         // para cá quando a aba própria dele morreu.
-        'skills/scaffold-de-esteira',
-        'skills/rotacao-de-segredo',
+        {type: 'doc', id: 'skills/scaffold-de-esteira', className: 'sidebar-icone sidebar-icone--skills'},
+        {type: 'doc', id: 'skills/rotacao-de-segredo', className: 'sidebar-icone sidebar-icone--skills'},
       ],
     },
     {
       type: 'category',
       label: 'Servidores MCP',
-      className: 'sidebar-icone sidebar-icone--servidores-mcp',
       collapsed: false,
       link: {type: 'doc', id: 'servidores-mcp/indice'},
-      items: ['servidores-mcp/servidor-de-catalogo-mcp'],
+      items: [
+        {type: 'doc', id: 'servidores-mcp/servidor-de-catalogo-mcp', className: 'sidebar-icone sidebar-icone--servidores-mcp'},
+      ],
     },
   ],
 };

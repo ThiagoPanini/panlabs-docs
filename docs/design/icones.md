@@ -211,6 +211,8 @@ Os onze pares seção→ícone, **verbatim**:
 
 **`Biblioteca C` não recebe ícone.** Ela é o único nó de segundo nível do site, e a regra foi reescrita para caber nele: **ícone só no nó de topo da sidebar**. A formulação antiga — *obrigatório na categoria de topo, ausente na folha* — é que não tinha leitura no nível 3, não o teto de profundidade; ver §8.
 
+> **Correção de fato — #97.** A regra acima é a de antes da #97. A âncora marca a **folha**, não o topo, e a #97 reescreveu de novo: **ícone em toda folha, nenhum em cabeçalho de grupo** — ver §8. `Biblioteca C` continua sem ícone, mas por outro motivo agora: ela é cabeçalho de grupo, não porque more no nível 2. As folhas dela — as três autorais e as seis geradas de `docs/design/referencia.md` §5 — ganham ícone pela primeira vez, herdando `--bibliotecas`, a família da categoria de topo que as contém.
+
 **As três tabs de navbar continuam sem ícone**: a regra é *um slot por nó de topo da **sidebar***, e o navbar já carrega tabs, busca, locale e GitHub sem folga para enfeite.
 
 #### As três portas da landing tinham ícone, e a régua que elas produziram fica
@@ -323,7 +325,7 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 
 | Superfície | Regra |
 | --- | --- |
-| **Sidebar** | **obrigatório** no nó de topo, **ausente** em todo o resto — folha e nó intermediário. Ícone em toda folha vira ruído e destrói a hierarquia que o ícone de seção constrói |
+| **Sidebar** | **obrigatório** em toda folha, **ausente** em todo cabeçalho de grupo — categoria de qualquer nível. Até a issue #97 valia o inverso — obrigatório no topo, ausente na folha —, divergência da âncora que a issue fechou |
 | **`Card`** | opcional, mas ícone **XOR** imagem — nunca os dois |
 | **`Callout` tipado** | **fixo por variante; o autor não sobrescreve.** Os tipados da âncora não aceitam prop nenhuma |
 | **`Steps`** | opcional; o default é o número do passo. Ícone **substitui** o número, não o acompanha |
@@ -333,6 +335,8 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 | **Footer** | **sem ícone** — consome zero slots |
 
 **A regra da sidebar foi reescrita, e é ela que destravou o nível 3.** A formulação antiga — *obrigatório na categoria de topo, ausente na folha* — não tinha leitura num terceiro nível: o nó do meio não é nem topo nem folha. A nova é *só no nó de topo*, e ela **decide o caso intermediário por construção**, em vez de proibi-lo. O teto de profundidade não era o problema; a redação era. Ver [`informacao.md`](informacao.md).
+
+> **Correção de fato — #97.** A regra descrita acima já não vale: a paridade com a âncora pede o inverso, e a redação atual é *toda folha tem ícone, nenhum cabeçalho de grupo tem* (tabela do §8, acima). O argumento sobre o nível 3 continua valendo — a regra nova também decide `Biblioteca C` por construção, só que pela ponta oposta: ela é cabeçalho de grupo, não folha, em qualquer nível em que estivesse.
 
 ---
 
@@ -367,6 +371,7 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | **A rota da marca é `navbar.title` no `.navbar__brand` nativo** | **origem própria (medição)** | a resolução a declarava *provável e não medida*; medida no artefato publicado, nos dois modos |
 | **Os três renderizadores viram dois** | **origem própria (consequência)** | o §3(c) perdeu o assunto quando a marca perdeu o glifo |
 | **A regra de ícone vira *só no nó de topo da sidebar*** | **origem própria (correção)** | a formulação antiga não tinha leitura no nível 3, e era ela — não o teto de profundidade — que impedia `Biblioteca C` |
+| **A regra de ícone vira *toda folha, nenhum cabeçalho de grupo*** | **origem própria (correção)** | [#97](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/97) — a linha acima marcava o nó de topo e divergia da âncora; fechada contra `docs.devin.ai` |
 | `shield-check` citado e nunca existente | **origem própria (correção)** | varrido contra o manifesto: o nome nunca esteve lá |
 | O exemplo de autoria usava um nome tagueado só como navegação | **origem própria (correção)** | `icon="rocket"` no §6 contra a tag dele à época |
 | O candidato de reabertura de `circle-check` evaporou | **origem própria (consequência)** | o painel deixou de ter resposta HTTP de sucesso quando o contrato deixou de falar HTTP |

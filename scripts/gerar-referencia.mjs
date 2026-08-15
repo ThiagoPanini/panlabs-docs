@@ -376,7 +376,8 @@ function escreverLocale(locale, contrato) {
   return escritos.size;
 }
 
-/** O fragmento — uma lista de ids, e nada além. Quem monta a árvore é a sidebar da aba. */
+/** O fragmento — uma lista de itens de folha, e nada além. Quem monta a árvore é
+ * a sidebar da aba. */
 function escreverFragmento(contrato) {
   const linhas = [
     '// @ts-check',
@@ -388,18 +389,28 @@ function escreverFragmento(contrato) {
     ' * GERADO por scripts/gerar-referencia.mjs. Não edite à mão: o portão 5 regenera',
     ' * e reprova em `git diff --exit-code`.',
     ' *',
-    ' * Ele é uma LISTA DE IDS e nada além. A árvore da aba é escrita à mão em',
-    ' * `sidebars-ferramentas.js`, que importa esta lista e a espalha dentro de',
-    ' * `Biblioteca C` — no nível 3, que é o teto de profundidade. Emitir a árvore',
-    ' * inteira daria ao gerador a posse das quinze folhas autorais da aba, que ele',
-    ' * não conhece.',
+    ' * Ele é uma LISTA DE ITENS DE FOLHA e nada além. A árvore da aba é escrita à',
+    ' * mão em `sidebars-ferramentas.js`, que importa esta lista e a espalha dentro',
+    ' * de `Biblioteca C` — no nível 3, que é o teto de profundidade. Emitir a',
+    ' * árvore inteira daria ao gerador a posse das quinze folhas autorais da aba,',
+    ' * que ele não conhece.',
     ' *',
-    ' * Procedência: docs/design/referencia.md §5 · docs/adr/0008.',
+    ' * Issue #97: cada item carrega `className: \'sidebar-icone sidebar-icone--' +
+      'bibliotecas\'` — a mesma família das três folhas autorais vizinhas de',
+    ' * `Biblioteca C`. A regra é *toda folha tem ícone*, sem exceção para folha',
+    ' * gerada; o gerador precisa saber o slug da família porque o contrato de',
+    ' * assinatura não carrega posição na sidebar.',
     ' *',
-    ' * @type {string[]}',
+    ' * Procedência: docs/design/referencia.md §5 · docs/design/icones.md §8 ·',
+    ' * docs/adr/0008.',
+    ' *',
+    ' * @type {import(\'@docusaurus/plugin-content-docs\').SidebarItemConfig[]}',
     ' */',
     'const referencia = [',
-    ...contrato.entradas.map((entrada) => `  '${PREFIXO}/${entrada.id}',`),
+    ...contrato.entradas.map(
+      (entrada) =>
+        `  {type: 'doc', id: '${PREFIXO}/${entrada.id}', className: 'sidebar-icone sidebar-icone--bibliotecas'},`,
+    ),
     '];',
     '',
     'export default referencia;',

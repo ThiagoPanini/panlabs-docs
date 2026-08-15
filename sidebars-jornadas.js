@@ -29,9 +29,11 @@
  * lista tenha um item por capítulo, e é essa lista que carrega o traço do tipo.
  *
  * O `className` é o degrau 1 da escada do ADR 2 — `className` em `sidebars*.js`
- * é contrato público do schema de item de sidebar. Ele carrega o ícone por
+ * é contrato público do schema de item de sidebar. Issue #97: ele passou da
+ * categoria para a FOLHA — cada item de `items` carrega o ícone da família por
  * `mask-image` em `::before`; as regras estão em `src/css/chrome.css` e os onze
- * pares em `src/icons/manifest.js`.
+ * pares em `src/icons/manifest.js`. A categoria não leva mais `className`: a
+ * âncora não marca cabeçalho de grupo.
  *
  * Procedência: docs/design/informacao.md · docs/design/icones.md.
  *
@@ -42,28 +44,26 @@ const sidebars = {
     {
       type: 'category',
       label: 'API Owner',
-      className: 'sidebar-icone sidebar-icone--api-owner',
       collapsed: false,
       link: {type: 'doc', id: 'api-owner/indice'},
       items: [
         // A fixture de página muito longa, e o lado comprido do par que prova
         // comprimento desigual entre irmãos.
-        'api-owner/o-contrato-que-nao-existia',
+        {type: 'doc', id: 'api-owner/o-contrato-que-nao-existia', className: 'sidebar-icone sidebar-icone--api-owner'},
         // O lado curto do mesmo par — ~180 palavras contra ~1800.
-        'api-owner/o-que-o-contrato-nao-cobre',
+        {type: 'doc', id: 'api-owner/o-que-o-contrato-nao-cobre', className: 'sidebar-icone sidebar-icone--api-owner'},
         // A fixture de fallback silencioso de locale:
         // `/en/jornadas/api-owner/a-politica-de-versao` serve o texto em pt-BR.
-        'api-owner/a-politica-de-versao',
+        {type: 'doc', id: 'api-owner/a-politica-de-versao', className: 'sidebar-icone sidebar-icone--api-owner'},
         // A fixture de saída literal de terminal.
-        'api-owner/o-schema-que-mudou-sem-aviso',
-        'api-owner/depreciar-em-seis-meses',
-        'api-owner/o-consumidor-invisivel',
+        {type: 'doc', id: 'api-owner/o-schema-que-mudou-sem-aviso', className: 'sidebar-icone sidebar-icone--api-owner'},
+        {type: 'doc', id: 'api-owner/depreciar-em-seis-meses', className: 'sidebar-icone sidebar-icone--api-owner'},
+        {type: 'doc', id: 'api-owner/o-consumidor-invisivel', className: 'sidebar-icone sidebar-icone--api-owner'},
       ],
     },
     {
       type: 'category',
       label: 'Security Champion',
-      className: 'sidebar-icone sidebar-icone--security-champion',
       collapsed: false,
       // O índice desta jornada é a fixture de prosa pura: nenhum componente do
       // catálogo além do `<Untranslated />`, que é o que o décimo tipo é por
@@ -71,10 +71,10 @@ const sidebars = {
       link: {type: 'doc', id: 'security-champion/indice'},
       items: [
         // O item de sidebar mais largo do site — 30 caracteres.
-        'security-champion/a-varredura-que-reprovava-tudo',
-        'security-champion/o-segredo-no-commit',
-        'security-champion/a-excecao-que-virou-regra',
-        'security-champion/o-inventario-de-imagens',
+        {type: 'doc', id: 'security-champion/a-varredura-que-reprovava-tudo', className: 'sidebar-icone sidebar-icone--security-champion'},
+        {type: 'doc', id: 'security-champion/o-segredo-no-commit', className: 'sidebar-icone sidebar-icone--security-champion'},
+        {type: 'doc', id: 'security-champion/a-excecao-que-virou-regra', className: 'sidebar-icone sidebar-icone--security-champion'},
+        {type: 'doc', id: 'security-champion/o-inventario-de-imagens', className: 'sidebar-icone sidebar-icone--security-champion'},
       ],
     },
   ],

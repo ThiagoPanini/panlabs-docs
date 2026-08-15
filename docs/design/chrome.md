@@ -241,9 +241,9 @@ Um transplante corporativo que remova a busca não deixa buraco no navbar: o `Se
 
 Largura `--sd-sidebar-width`, e **nada aqui custa swizzle**.
 
-**O número é medido, não default.** *Dissenso registrado:* ele aperta aninhamento profundo, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. O teto de profundidade 2 é o que o segura — se a árvore ganhar um terceiro nível, este número reabre.
+**O número é medido, não default.** *Dissenso registrado:* ele aperta aninhamento profundo, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. O teto de profundidade — 3, com o nível 3 usado uma vez, em `Ferramentas › Bibliotecas › Biblioteca C` (ver [`informacao.md`](informacao.md) §3.1) — é o que o segura; aprofundar mais reabre este número.
 
-### 4.1 Ícone por categoria de topo
+### 4.1 Ícone por folha
 
 `className` no arquivo de sidebar, mais `::before` com `mask-image` e `currentColor`. O `className` é **contrato público do schema de item de sidebar**, e é ele que produz a assinatura visual mais reconhecível do alvo — sem uma linha de swizzle.
 
@@ -254,19 +254,25 @@ Duas propriedades caem de graça e valem escrita:
 
 O `::before` mora no **link**, não no `<li>`, para herdar a cor dele.
 
-**A regra cobre duas formas, e a segunda foi medida no artefato.** O Docusaurus **normaliza categoria sem filhos para link**: o `<li>` conserva o `className`, mas o rótulo deixa de ser envolvido pelo bloco colapsável. Com um seletor só, uma seção perderia o ícone e a tipografia de topo no dia em que a última folha dela saísse — e a falha seria **muda**.
+**A regra é *toda folha tem ícone, nenhum cabeçalho de grupo tem* — issue #97, o inverso do que valia até ela.** Até aqui o `className` do manifesto marcava a categoria de topo, e a folha ficava muda; a âncora faz o oposto (ver [`icones.md`](icones.md) §8). A folha nunca ganha o `<button class="menu__caret">` que a categoria tem — não tem filho para colapsar —, então ela nunca é envolvida pelo bloco colapsável que obrigava a categoria a cobrir duas formas de DOM (categoria real, e categoria sem filhos normalizada para link). Um seletor só basta numa folha.
 
-Por isso o marcador do rótulo de seção é o **`className` do manifesto**, e não o número de nível.
+O marcador continua sendo o **`className` do manifesto**, e não o número de nível: uma folha em `Biblioteca C` (nível 3) herda a família da categoria de topo que a contém (`--bibliotecas`), não uma família própria do nível 3 — o ícone é da **seção**, não do degrau.
 
 O alinhamento não é coincidência: o preenchimento horizontal do item de menu foi escolhido para que, somado ao preenchimento que o `DocSidebar` põe na lista, o ícone caia **na mesma vertical do preenchimento do navbar**.
 
-Os onze pares seção→ícone estão em [`icones.md`](icones.md), verbatim.
+Os onze pares seção→ícone estão em [`icones.md`](icones.md), verbatim; a regra de obrigatoriedade está no §8 de lá.
 
-### 4.2 Hierarquia e item ativo
+### 4.2 Hierarquia, recuo e item ativo
 
-A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sidebar-item-link-level-<n>`, que são `ThemeClassNames`. Como o teto de profundidade é 2, existem **exatamente dois degraus a desenhar**.
+A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sidebar-item-link-level-<n>`, que são `ThemeClassNames`. O teto de profundidade é 3 (ver [`informacao.md`](informacao.md) §3.1), e existem **três degraus a desenhar** — o terceiro só aparece em `Ferramentas › Bibliotecas › Biblioteca C`.
 
-**O item ativo ganha falso-negrito por `text-shadow`, não por `font-weight`.** Trocar o peso reflui o texto e faz o item **pular de largura** no instante em que o leitor navega.
+**O recuo por nível mora inteiro no link, não na lista — issue #97.** Até aqui o Docusaurus somava dois mecanismos: a lista aninhada (`.menu__list` dentro de `.menu__list`) ganhava `padding-left` por nível, e o próprio link tinha o seu — a soma dos dois é que produzia o degrau visual. A âncora não divide assim, e copiar o resultado sem copiar a decisão produz recuo que parece certo no nível 2 e se desfaz no nível 3, ou em qualquer nível que a árvore ganhe depois. A #97 zera o `padding-left` da lista aninhada e escreve o recuo inteiro no link, por nível, com `--sd-space-4` (16px) por degrau — o mesmo total que a soma antiga já dava; a issue move o mecanismo, não a métrica.
+
+**O item ativo é uma pílula preenchida, largura cheia, no acento a 12% — issue #97.** `--ifm-menu-color-background-active` já era esse preenchimento antes da issue; o que faltava era o raio (a base do Infima crava 0,25rem) e a folha ganhar ícone — sem ícone na folha, o item ativo pintava só o texto na cor de acento, nunca um glifo junto. Sem barra lateral, sem borda, sem sombra: a âncora não usa nenhuma das três no ativo, e este projeto nunca desenhou nenhuma aqui.
+
+**O item ativo ganha falso-negrito por `text-shadow`, não por `font-weight`.** Trocar o peso reflui o texto e faz o item **pular de largura** no instante em que o leitor navega — a mesma técnica de sempre, e agora a única fonte de ênfase textual da sidebar: peso e entrelinha são uniformes entre cabeçalho de grupo e folha (400 · 24px, ver [`tokens.md`](tokens.md) §13), e o degrau que antes separava os dois visualmente saiu junto com o ícone de cabeçalho.
+
+**O respiro entre grupos não mudou na #97, e é lacuna nomeada, não folga silenciosa.** A issue pede que ele bata com o da âncora, mas nenhum documento desta spec publica o número — nem esta tabela, nem `tokens.md` §13 — e inventar um aqui seria exatamente o que o axioma 5 proíbe: procedência de medição, não de decisão de quem implementa. O que fica em pé é o `margin-top: 0,25rem` que o Infima já cravava entre categorias antes desta issue, inalterado. Fechar este critério pede uma medição de primeira mão contra a âncora — o mesmo processo que produziu a tabela do §11 —, e fica pendente para quem fizer essa medição.
 
 ### 4.3 O divisor sai, a barra de rolagem se esconde, o topo desvanece — três queixas da issue-pai, três respostas puramente CSS
 

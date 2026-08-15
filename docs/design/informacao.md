@@ -107,6 +107,8 @@ O teto anterior era 2, e o argumento forte dele não era medição — era a **r
 
 **A regra foi reescrita para *ícone só no nó de topo da sidebar*.** Ela decide o caso intermediário por construção, em vez de proibi-lo — e com isso o teto de 2 perdeu a razão de existir. Ver [`icones.md`](icones.md) §8.
 
+> **Correção de fato — #97.** A regra citada acima é a de antes da #97, e ela não vale mais: a âncora marca a FOLHA, não o nó de topo, e a redação passou a ser *ícone em toda folha, nenhum em cabeçalho de grupo* (ver [`icones.md`](icones.md) §8). O raciocínio deste parágrafo continua de pé, só que pela ponta oposta — é *folha contra cabeçalho de grupo* que decide o nó do meio por construção agora, não mais *topo contra o resto*. `Biblioteca C` é cabeçalho de grupo em qualquer nível em que aparecesse, e as folhas dela são folha em qualquer nível em que aparecessem: as duas formulações resolvem o nível 3 pelo mesmo motivo estrutural, sem depender de qual delas está em vigor.
+
 **O nível 3 é usado uma vez, e o portão 4 cobra que seja uma.** Um teto que se declara e não se confere é um teto que sobe sozinho.
 
 ### 3.2 A categoria é clicável e aponta para o índice
