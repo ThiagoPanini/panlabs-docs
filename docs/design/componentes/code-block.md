@@ -1,5 +1,7 @@
 # `code-block`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, dentro de `## Anatomia`, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 O bloco de código — a cerca de Markdown. Ele é onipresente na documentação, e é
@@ -63,6 +65,22 @@ nomeou.
 > derivação honesta disponível, e **não uma medida**. Se ao vivo o bloco ficar
 > pesado no escuro, o ajuste é uma linha no arquivo de tokens.
 
+**Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Raio, sozinho | `16px` | avaliação visual |
+| Raio, dentro de [`code-group`](code-group.md) | `14px` | avaliação visual |
+| Botões (copiar, quebrar) | absolutos, `top:12px right:16px` | avaliação visual |
+
+**Sozinho, o bloco tem raio 16 e fio próprio — o mesmo par de qualquer objeto
+preenchido do catálogo.** Dentro de um `code-group`, os dois mudam de dono: a
+casca já tem fio e raio 16, e o bloco por dentro perde a borda própria e
+estreita o raio para `16px` menos duas larguras de fio — 2px adiantado em
+relação à casca, para revelar a moldura em vez de encostar nela. O seletor que
+faz a distinção é `[data-sd-component="code-group"] div.theme-code-block`, em
+`componentes.css`.
+
 ## Variantes
 
 **Não há.** A cerca aceita linguagem e título, e mais nada é provisionado —
@@ -89,7 +107,7 @@ registrada em `themeConfig.prism.additionalLanguages`** — opção pública, de
 Camada 2: `--sd-surface-code`, `--sd-border-subtle`, `--sd-text-muted`, e os oito
 `--sd-code-*` da paleta de sintaxe.
 
-Camada 1: `--sd-border-width`, `--sd-radius-md`, `--sd-type-sm`,
+Camada 1: `--sd-border-width`, `--sd-radius`, `--sd-type-sm`,
 `--sd-weight-ui`, `--sd-leading-code`.
 
 **Camada 3: nenhum.** Este componente declarava `--sd-code-berco`, a tinta da
@@ -146,3 +164,4 @@ toque ele some sem erro, sem aviso e sem sintoma para quem testa no desktop.
 | Shim de config que só referencia token | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
 | `--prism-background-color` só é alcançável pelo shim | **origem própria (correção)** | medido no fonte da versão em uso — estilo inline vence folha de estilo |
 | Botão de copiar visível sob ponteiro grosso | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.2 |
+| Raio 16 sozinho, 14 dentro do grupo | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--sd-radius-md` (12px) nos dois contextos, sem distinguir |

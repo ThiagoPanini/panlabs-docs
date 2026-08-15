@@ -46,7 +46,10 @@ região nomeada e alcançável por Tab, e o `<table>` volta a ser `display: tabl
 | Corpo tamanho | `14px` | exato |
 
 A âncora não tem zebra e alinha o cabeçalho à esquerda; as duas coisas são
-presença de regra, não medida, e ficam para a avaliação visual.
+presença de regra, não medida, e ficam para a avaliação visual — mas as duas
+têm regra escrita: `--ifm-table-stripe-background: transparent` para a
+primeira, `.table > table th { text-align: left }` para a segunda, contra o
+`<th>` centralizado que o UA stylesheet aplica por default.
 
 ## Variantes
 
@@ -107,3 +110,4 @@ mora em [`foco.md`](../foco.md).
 | Registrado pela chave `table`, não por tag | **origem própria (implementação)** | o autor escreve Markdown; a correção precisa alcançar toda tabela |
 | `display: block` do framework tira a semântica de tabela | **origem própria (medição)** | verificado no fonte do Infima ao implementar este slice |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Sem zebra, cabeçalho à esquerda | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a prosa da Anatomia já citava as duas, mas nem `--ifm-table-stripe-background` nem `text-align` do `<th>` as implementavam — achado rodando `npm run paridade` contra o build deste slice, que revelou a zebra (o alinhamento não tem sonda) |

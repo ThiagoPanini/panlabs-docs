@@ -23,8 +23,9 @@ Idêntica à de [`param-field`](param-field.md), com uma diferença: o valor de
 `data-sd-component`.
 
 ```html
-<div data-sd-component="response-field">
+<div id="campo-response-field-…">
   <p>
+    <a href="#campo-response-field-…" data-sd-part="ancora">#</a>
     <code>…</code>
     <span data-sd-part="meta">…</span>
   </p>
@@ -32,7 +33,8 @@ Idêntica à de [`param-field`](param-field.md), com uma diferença: o valor de
 </div>
 ```
 
-**Uma parte publicada**, a mesma e pelo mesmo motivo.
+**Uma parte publicada, e a âncora de linha que não é**, a mesma distinção e
+pelo mesmo motivo de [`param-field`](param-field.md) § Anatomia.
 
 **A recursão não custa JavaScript.** Ela é o autor escrevendo um campo dentro de
 um [`expandable`](expandable.md) dentro de outro campo, e o `<details>` nativo é
@@ -74,10 +76,10 @@ O nó ofensor, em caminho pontilhado.
 ## Tokens consumidos
 
 Os mesmos de [`param-field`](param-field.md) — camada 2: `--sd-border-subtle`,
-`--sd-text-body`, `--sd-text-muted`, `--sd-text-strong`; camada 1:
-`--sd-space-1`, `--sd-space-2`, `--sd-space-4`, `--sd-border-width`,
-`--sd-radius-xs`, `--sd-type-xs`, `--sd-type-sm`, `--sd-font-mono`,
-`--sd-weight-ui`.
+`--sd-text-body`, `--sd-text-muted`, `--sd-text-strong`, `--sd-accent`; camada 1:
+`--sd-space-1`, `--sd-space-2`, `--sd-space-4`, `--sd-space-6`, `--sd-space-10`,
+`--sd-border-width`, `--sd-radius-xs`, `--sd-radius-sm`, `--sd-type-xs`,
+`--sd-type-sm`, `--sd-font-mono`, `--sd-weight-ui`.
 
 ## Light e dark
 
@@ -109,3 +111,4 @@ valores da referência gerada mora no painel da rota, então nem este nem
 | Implementação compartilhada com `param-field` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, nota de implementação |
 | Sem campo editável | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §4 |
 | Uma parte publicada | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, sobre a régua da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| **Divisor, acento no nome, chip neutro e âncora de linha** | — | as quatro linhas de [`param-field`](param-field.md) § Procedência valem aqui verbatim — implementação compartilhada, mesma decisão |

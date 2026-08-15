@@ -86,9 +86,11 @@
   margin-block: var(--sd-space-6);
   padding: var(--sd-space-4);
   border: var(--sd-border-width) solid var(--sd-callout-edge);
-  border-radius: var(--sd-radius-md);
+  border-radius: var(--sd-radius);
   background-color: var(--sd-callout-fill);
   color: var(--sd-text-body);
+  font-size: var(--sd-type-sm);
+  line-height: var(--sd-leading-ui);
 }
 
 /* Filho DIRETO: um ícone que o autor escreva dentro do corpo não é alcançado.
@@ -166,7 +168,8 @@
 
 .cardGroup {
   display: grid;
-  gap: var(--sd-space-4);
+  column-gap: var(--sd-space-4);
+  row-gap: 0;
   grid-template-columns: var(--sd-card-grid);
   margin-block: var(--sd-space-6);
 }
@@ -240,7 +243,7 @@ a.card:active {
 
   counter-reset: passo;
   list-style: none;
-  margin-block: var(--sd-space-6);
+  margin-block: var(--sd-space-10) var(--sd-space-6);
   padding-inline-start: 0;
 }
 
@@ -261,6 +264,19 @@ a.card:active {
   inset-block: var(--sd-step-marker) 0;
   inset-inline-start: calc(var(--sd-step-marker) / 2);
   border-inline-start: var(--sd-border-width) solid var(--sd-border-default);
+}
+
+/* O último passo não aponta para lugar nenhum, mas o fio continua existindo
+   por um trecho — ele desvanece em gradiente em vez de cortar abrupto. Um
+   `background`, não `border-inline-start`: borda não aceita gradiente. */
+.step:last-child::before {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--sd-step-marker);
+  inset-inline-start: calc(var(--sd-step-marker) / 2);
+  inline-size: var(--sd-border-width);
+  block-size: var(--sd-space-6);
+  background: linear-gradient(to bottom, var(--sd-border-default), transparent);
 }
 
 .step:last-child {
@@ -310,24 +326,29 @@ a.card:active {
    ----------------------------------------------------------------------------- */
 
 .accordionGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sd-space-2);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-md);
   margin-block: var(--sd-space-6);
 }
 
 .accordion {
   margin-block: var(--sd-space-4);
   border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-md);
+  border-radius: var(--sd-radius);
 }
 
-/* `:where()` não soma especificidade, então esta regra EMPATA com `.accordion` —
-   e empate é resolvido por ordem. Ela vem depois de propósito. Sem a margem
-   zerada, a sanfona dentro do grupo somaria a margem dela ao `gap` e a pilha
-   ficaria mais frouxa do que uma sanfona solta. */
+/* `:where()` não soma especificidade, então estas regras EMPATAM com
+   `.accordion` — e empate é resolvido por ordem. Vêm depois de propósito: o
+   grupo é a moldura, e a sanfona dentro dele vira só uma linha — sem borda,
+   raio nem margem próprios, separada da vizinha por um fio. */
 .accordionGroup :where(.accordion) {
   margin-block: 0;
+  border: none;
+  border-radius: 0;
+}
+
+.accordionGroup :where(.accordion:not(:last-child)) {
+  border-bottom: var(--sd-border-width) solid var(--sd-border-subtle);
 }
 
 .accordionSummary,
@@ -357,6 +378,16 @@ a.card:active {
   content: '';
   flex: none;
   mask: url('/icons/chevron-right.svg') center / contain no-repeat;
+}
+
+/* Sem transição: o alvo troca de glifo (▶ fechado → ▼ aberto) em vez de girar
+   o mesmo desenho. `chevron-right` continua um desenho, dois estados
+   (`icones.md` §4, compartilhado com o caret de sidebar) — bifurcar o ícone
+   custaria um segundo arquivo vendorizado para uma diferença que some no
+   resultado final. O salto sem giro chega ao mesmo pixel final sem a
+   animação de rotação. O caret do expandable, que o alvo não cobra, mantém o
+   giro. */
+.expandableSummary::before {
   transition: rotate var(--sd-move-expand);
 }
 
@@ -368,6 +399,12 @@ a.card:active {
 .accordionSummary {
   padding: var(--sd-space-3) var(--sd-space-4);
   color: var(--sd-text-strong);
+}
+
+@media (hover: hover) {
+  .accordionSummary:hover {
+    background-color: var(--sd-border-subtle);
+  }
 }
 
 .accordionSummary::after {
@@ -394,6 +431,7 @@ a.card:active {
 .expandable {
   margin-block: var(--sd-space-3);
   border-inline-start: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-md);
   padding-inline-start: var(--sd-space-4);
 }
 
@@ -439,9 +477,19 @@ a.card:active {
    matizes ficaram livres, e a medição decide.
    ----------------------------------------------------------------------------- */
 
+/* `border-block-END`, e não `-start`: o divisor fica ENTRE linhas, nunca
+   antes da primeira nem depois da última — `:last-child` zera o próprio, e
+   não sobra fio acima do primeiro campo porque não há `-start` a desenhar.
+   Medido na âncora (`research/paridade-devin` §10, citado pela #99): sem
+   fundo, sem zebra. */
 .field {
-  border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
+  position: relative;
+  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
   padding-block: var(--sd-space-4);
+}
+
+.field:last-child {
+  border-block-end: none;
 }
 
 .fieldHead {
@@ -452,13 +500,52 @@ a.card:active {
   margin-block: 0;
 }
 
+/* No acento, e não em `--sd-text-strong` — medido na âncora (§10, #99): o
+   nome do campo é a única coisa da linha pintada com a cor de marca. */
 .fieldHead > code {
   border: 0;
   padding: 0;
   background: none;
-  color: var(--sd-text-strong);
+  color: var(--sd-accent);
   font-size: var(--sd-type-sm);
   font-weight: var(--sd-weight-ui);
+}
+
+/* A âncora de linha — invisível até o hover ou o foco do campo, e só a
+   partir de 997px: abaixo disso o vão à esquerda do texto não sobra (mesmo
+   limiar único do projeto, `chrome.md` §1.6; a segunda perna do portão 1
+   reprova qualquer outro). */
+.fieldAncora {
+  display: none;
+  color: var(--sd-text-muted);
+  text-decoration: none;
+  opacity: 0;
+}
+
+.fieldAncora:focus-visible {
+  opacity: 1;
+}
+
+@media (min-width: 997px) {
+  .fieldAncora {
+    position: absolute;
+    top: var(--sd-space-1);
+    /* `--sd-space-10` (40) — a mesma respiração que o topo do conteúdo já usa
+       abaixo do topo grudado, não um literal novo; bate com o vão medido na
+       âncora (§10, #99). */
+    left: calc(-1 * var(--sd-space-10));
+    display: grid;
+    place-items: center;
+    inline-size: var(--sd-space-6);
+    block-size: var(--sd-space-6);
+    border-radius: var(--sd-radius-sm);
+  }
+}
+
+@media (min-width: 997px) and (hover: hover) {
+  .field:hover .fieldAncora {
+    opacity: 1;
+  }
 }
 
 .fieldMeta {
@@ -477,6 +564,16 @@ a.card:active {
   background: none;
   color: var(--sd-text-body);
   font-size: inherit;
+}
+
+/* O marcador neutro — tipo e padrão. Mesma forma do chip de obrigatório
+   (raio, preenchimento), tinta neutra em vez de perigo: medido na âncora
+   (§10, #99), que distingue as duas famílias só pela cor. */
+.fieldChip {
+  border-radius: var(--sd-radius-xs);
+  padding-inline: var(--sd-space-1);
+  background-color: var(--sd-border-subtle);
+  color: var(--sd-text-muted);
 }
 
 .fieldMeta strong {
@@ -562,25 +659,40 @@ a.card:active {
 }
 
 .frameStage {
+  position: relative;
   display: flex;
   justify-content: center;
-  padding: var(--sd-space-6);
+  padding: var(--sd-space-2);
   border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-md);
+  border-radius: var(--sd-radius);
   background-color: var(--sd-surface-raised);
   color: var(--sd-text-body);
+  overflow: hidden;
+}
+
+/* A grade de pontos do alvo: `radial-gradient` repetido em vez de SVG em
+   data-URI — mesmo resultado, zero asset. A máscara vertical a desvanece de
+   cima para baixo, e `pointer-events: none` a tira do caminho do conteúdo. */
+.frameStage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(
+    circle,
+    var(--sd-border-default) var(--sd-border-width),
+    transparent var(--sd-border-width)
+  );
+  background-size: var(--sd-space-4) var(--sd-space-4);
+  mask-image: linear-gradient(to bottom, black, transparent);
+  pointer-events: none;
 }
 
 .frameStage :is(img, svg) {
+  position: relative;
   max-inline-size: 100%;
   block-size: auto;
-}
-
-.frame > figcaption {
-  margin-block-start: var(--sd-space-2);
-  color: var(--sd-text-muted);
-  font-size: var(--sd-type-sm);
-  text-align: center;
+  border-radius: var(--sd-radius-md);
 }
 
 /* -----------------------------------------------------------------------------
@@ -607,12 +719,23 @@ a.card:active {
   line-height: var(--sd-leading-ui);
 }
 
+/* O UA stylesheet centraliza `<th>` por default — nem o Infima nem o adaptador
+   de tokens escrevem `text-align`, então sem esta regra o cabeçalho sai
+   centralizado. `td` já nasce à esquerda, e não precisa da regra. */
+.table > table th {
+  text-align: left;
+}
+
 /* -----------------------------------------------------------------------------
    code-group
    ----------------------------------------------------------------------------- */
 
 .codeGroup {
   margin-block: var(--sd-space-6);
+  padding: calc(var(--sd-border-width) * 2);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius);
+  background-color: var(--sd-surface-raised);
 }
 
 /* -----------------------------------------------------------------------------

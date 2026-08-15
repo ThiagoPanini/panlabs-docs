@@ -282,6 +282,14 @@ A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sid
 
 **O desvanecimento de topo é `mask-image`, puro CSS.** A máscara é relativa à CAIXA que rola, não ao conteúdo dentro dela — funciona em qualquer posição de scroll, sem listener de JS.
 
+### 4.3 O divisor sai, a barra de rolagem se esconde, o topo desvanece — três queixas da issue-pai, três respostas puramente CSS
+
+**O divisor vertical entre sidebar e conteúdo não era pedido de ninguém.** `DocRoot/Layout/Sidebar` (hasheada) declara `border-right: 1px solid var(--ifm-toc-border-color)` — vazamento do substrato nativo. Não se toca a classe hasheada: `ThemeClassNames.docs.docSidebarContainer` está no MESMO elemento, e uma borda declarada nela tem a mesma especificidade e carrega depois no cascade. `--ifm-toc-border-color` não se zera no adaptador, porque a mesma variável também pinta o contorno do botão de recolher a sidebar (`DocSidebar/Desktop/CollapseButton`) — apagar os dois juntos removeria peça que ninguém pediu que saísse.
+
+**A barra de rolagem fica transparente em repouso e tingida no hover.** O elemento que rola não é `.theme-doc-sidebar-container` — é o `<nav class="menu thin-scrollbar">` dentro dele; `theme-doc-sidebar-menu` é o `<ul>` filho, estático. `scrollbar-color` (Firefox) e os pseudo-elementos `::-webkit-scrollbar-*` que `.thin-scrollbar` do Infima já declara (WebKit) citam os mesmos tokens, para não haver segunda paleta de barra de rolagem no projeto. `scrollbar-gutter: stable` reserva o espaço sempre, para a lista não pular de largura quando a barra aparece — o mesmo defeito de salto que o falso-negrito acima evita, mesma resposta.
+
+**O desvanecimento de topo é `mask-image`, puro CSS.** A máscara é relativa à CAIXA que rola, não ao conteúdo dentro dela — funciona em qualquer posição de scroll, sem listener de JS.
+
 ---
 
 ## 5. TOC

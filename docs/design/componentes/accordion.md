@@ -1,5 +1,7 @@
 # `accordion`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, dentro de `## Anatomia`, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
 Dobra um trecho atrás de um título. É o componente mais usado de uma das
@@ -35,6 +37,28 @@ rotacionado quando aberto.
 **Estado não vira atributo.** `[open]` já está no DOM porque o elemento é nativo,
 e duplicá-lo num `data-sd-state` criaria duas fontes de verdade.
 
+**Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
+Sem espécime publicado no catálogo de conteúdo, `npm run paridade` ainda não
+mede este componente — a tabela é o alvo para quando um exemplo entrar.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Raio | `16px` | avaliação visual |
+| Marcador | glifo trocado, ▶ fechado → ▼ aberto | avaliação visual |
+| Fundo, aberto vs. fechado | idêntico | avaliação visual |
+
+**Fundo aberto e fechado são idênticos** — nenhuma regra desta folha muda o
+fundo em `[open]`. **Hover no sumário muda só o fundo**, para
+`--sd-border-subtle` — o mesmo papel que sidebar e dropdown já usam para hover.
+
+**O marcador continua a girar o mesmo SVG do caret de sidebar, e não ganha um
+segundo arquivo.** `chevron-right` é um desenho, dois estados
+([`icones.md`](../icones.md) §4). O alvo mede `troca de glifo, não rotação`;
+a resposta aqui foi tirar a transição, não o desenho — sem giro visível, o
+salto entre os dois estados finais chega ao mesmo pixel que uma troca de
+glifo produziria, e bifurcar o ícone custaria um segundo arquivo vendorizado
+por uma diferença que some no resultado.
+
 ## Variantes
 
 **Não há.** O accordion tem quatro props e nenhuma delas troca desenho: `title`
@@ -65,10 +89,11 @@ Um accordion pode nascer aberto.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-text-strong`, `--sd-text-muted`.
+Camada 2: `--sd-border-default`, `--sd-border-subtle`, `--sd-text-strong`,
+`--sd-text-muted`.
 
 Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-4`, `--sd-border-width`,
-`--sd-radius-md`, `--sd-type-sm`, `--sd-weight-ui`, `--sd-weight-body`,
+`--sd-radius`, `--sd-type-sm`, `--sd-weight-ui`, `--sd-weight-body`,
 `--sd-leading-ui`, `--sd-move-expand`.
 
 ## Light e dark
@@ -119,3 +144,6 @@ acessibilidade.
 | Animação por `::details-content` | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17), consumida pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Caret por máscara em vez de segundo `<svg>` | **origem própria (implementação)** | dois SVG irmãos quebrariam o alcance por tipo e obrigariam a publicar mais uma parte |
 | Duas partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Raio 16, e fundo idêntico aberto/fechado | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 |
+| Hover no sumário, com `--sd-border-subtle` | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 |
+| Marcador sem transição de rotação, e não um segundo glifo | **delta deliberado** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — o alvo mede troca de glifo; `chevron-right` é um desenho, dois estados, partilhado com a sidebar ([`icones.md`](../icones.md) §4), e bifurcar o ícone não se paga para uma diferença que some no pixel final |

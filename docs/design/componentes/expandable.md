@@ -77,7 +77,8 @@ De 1 a 12.
 Camada 2: `--sd-accent`, `--sd-border-default`.
 
 Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-4`, `--sd-border-width`,
-`--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`, `--sd-move-expand`.
+`--sd-radius-md`, `--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`,
+`--sd-move-expand`.
 
 ## Light e dark
 
@@ -113,3 +114,4 @@ O anel de foco e o piso de alvo de toque são universais e moram em
 | Âncora de URL abre os ancestrais | herdado | comportamento de especificação, registrado pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Fio à esquerda em vez de moldura | **origem própria (implementação)** | moldura a cada nível é moldura dentro de moldura, até quatro níveis. *A redação anterior dizia "cartão dentro de cartão"; `cartão` passou a significar só o componente* |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Raio 12 no fio à esquerda | **origem própria (correção)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — a sonda `expandable.raio` mede contra o alvo desde a [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93), mas a regra nunca declarou `border-radius`; ficava em `0px` computado |

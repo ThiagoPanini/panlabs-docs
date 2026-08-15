@@ -423,6 +423,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-toc-width:        304px;  /* bate com a âncora — §11 de chrome.md */
   --sd-prose-width:      720px;
 
+  /* A prosa da página de referência é MAIS ESTREITA que a prosa comum — a
+     âncora troca a coluna do TOC (304) por um trilho de amostras bem mais
+     largo, e reduz o texto para abrir espaço. Medido em
+     `research/paridade-devin` §10 (576,81, arredondado), citado pela #99.
+     O trilho continua sendo o RESTO da conta — ver `referencia.md` §1 —, e
+     não um segundo literal: só a prosa é `origem própria`. */
+  --sd-api-prosa-width:  577px;
+
   /* `--sd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
      própria — é consequência do congelamento abaixo perder o termo do
      gutter. As DUAS medições de margem simétrica da âncora (§11: 52px a
@@ -516,8 +524,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      volta no estreito. */
   --sd-gutter: var(--sd-space-4);
 
-  /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7, e o
-     único do projeto medido contra a viewport.
+  /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7.
 
      Ele está aqui, e não inline no CSS Module, porque a alternativa seria
      escrever `60dvh` num arquivo que não é este. `dvh` não está no padrão do
@@ -530,6 +537,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      abre com a medida que o leitor já estava lendo quando apertou a tecla, e
      nomeá-la de novo criaria uma segunda cópia do mesmo número. */
   --sd-busca-height: 60dvh;
+
+  /* O TERCEIRO token medido contra a viewport, não o único — a nota acima
+     mentia por omissão assim que este entrou. Mesmo buraco de portão 1, mesma
+     saída: `100vh` cravado em `estilos.module.css` (#99, painel da
+     referência) passaria a varredura calada, porque `vh` também não está no
+     padrão `px|rem|em|ms|s`. `dvh`, e não `vh`, pela mesma razão do token
+     acima — nunca pior, e a diferença só aparece em navegador móvel, onde
+     esta rota não monta o trilho (`--sd-api-prosa-width` some abaixo de
+     997px). */
+  --sd-viewport-altura: 100dvh;
 
   /* ---------------------------------------------------------------------------
      Grade de cartões — camada 1, e a declaração serve o MDX.
@@ -1168,13 +1185,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
   /* --- régua, citação e tabela ------------------------------------------- */
   --ifm-hr-background-color:      var(--sd-border-default);
-  --ifm-blockquote-color:         var(--sd-text-muted);
+  --ifm-hr-margin-vertical:       var(--sd-space-12);
+  --ifm-blockquote-color:         var(--sd-text-body);
   --ifm-blockquote-border-color:  var(--sd-border-strong);
+  --ifm-blockquote-border-left-width: calc(var(--sd-border-width) * 4);
+  --ifm-blockquote-padding-horizontal: var(--sd-space-6);
   --ifm-blockquote-font-size:     var(--sd-type-base);
   --ifm-table-border-color:       var(--sd-border-subtle);
   --ifm-table-background:         transparent;
   --ifm-table-head-background:    transparent;
-  --ifm-table-stripe-background:  var(--sd-border-subtle);
+  --ifm-table-stripe-background:  transparent;
   --ifm-table-cell-color:         var(--sd-text-body);
   --ifm-table-head-color:         var(--sd-text-strong);
   --ifm-table-head-font-weight:   var(--sd-weight-ui);
@@ -1878,11 +1898,30 @@ Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias 
 
 ---
 
+## 14. Alvo medido — citação e régua
+
+Medido em `research/paridade-devin` §11, junto dos componentes — citação (`<blockquote>`) e régua (`<hr>`) são elemento nativo de Markdown, não entram no catálogo de [`componentes/`](componentes/README.md), e por isso o alvo mora aqui.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Citação, borda esquerda | `4px` | avaliação visual |
+| Citação, recuo (`padding-left`) | `24px` | avaliação visual |
+| Citação, cor do texto | igual ao corpo, não esmaecida | avaliação visual |
+| Régua, margem vertical | `48px` | avaliação visual |
+
+**Três das quatro corrigidas; uma fica gap declarado.** A citação herdava o default do Infima — borda de `2px` sem recuo próprio, texto em `--sd-text-muted` — e a régua herdava a margem vertical do Infima, metade do alvo. As três fecham nesta mudança, por `--ifm-blockquote-border-left-width`, `--ifm-blockquote-padding-horizontal`, `--ifm-blockquote-color` e `--ifm-hr-margin-vertical`.
+
+**A margem vertical da citação (medida em `25,6px`) fica de fora.** Não tem correspondente exato na escala de espaço deste projeto (base `4`), e o degrau mais próximo, `24px`, já é o valor do recuo horizontal — usar o mesmo número nos dois eixos empataria duas medidas que a âncora mede diferentes. Sem sonda automática para nenhum dos dois elementos ainda.
+
+---
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | **A paleta-alvo do §12 e a escala-alvo do §13** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §3 e §5 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O alvo de citação e régua do §14** | **medido em referência** | `research/paridade-devin` §11 — [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) |
+| Margem vertical da citação fora do alvo publicado | **lacuna de medição** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `25,6px` não tem correspondente na escala de espaço base 4; reabre se a escala ganhar um degrau que bata |
 | **O acento sem linha de alvo** | **delta deliberado** | a cor de marca diverge da âncora por decisão registrada; publicar o azul dela mandaria desfazer a decisão |
 | **Alvo comparado em sRGB, não em OKLCH** | **origem própria (implementação)** | é a forma que o navegador entrega ao pedir cor computada; a folha autora em `oklch()` e as duas formas nunca fechariam por string |
 | Indireção raiz → semântica | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) §1.1 — o token de papel apontando para a raiz injetada, no alvo |

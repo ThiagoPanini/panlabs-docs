@@ -15,10 +15,12 @@
  *                `Ferramentas › Bibliotecas › Biblioteca C › Instalação e
  *                configuração` exercita: o painel direito fica **inalcançável,
  *                não vazio**, e a fixture é irmã de sidebar das seis geradas.
- *   · presente → layout próprio: prosa 720 + painel 400. A aritmética é exata —
- *                720 + 32 (`--sd-space-8`) + 400
- *                (`calc(--sd-container-width - --sd-prose-width - --sd-space-8)`)
- *                = 1152 = `--sd-container-width`. O que a soma decide hoje é que
+ *   · presente → layout próprio: prosa 577 + trilho 511 — mais estreita que a
+ *                prosa comum (720), de propósito: a página gerada troca a coluna
+ *                do TOC por um trilho bem mais largo. A aritmética é exata —
+ *                577 (`--sd-api-prosa-width`) + 32 (`--sd-space-8`) + 511
+ *                (`calc(--sd-container-width - --sd-api-prosa-width - --sd-space-8)`)
+ *                = 1120 = `--sd-container-width`. O que a soma decide hoje é que
  *                **não sobra coluna para o TOC**: é a décima perda nomeada da
  *                rota, e ela é aritmética, não gosto. (Ela já explicou a ausência
  *                do cartão; esse argumento caiu duas vezes — nenhuma página do

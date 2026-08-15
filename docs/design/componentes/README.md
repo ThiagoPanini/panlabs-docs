@@ -46,7 +46,7 @@ ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 > **um seletor de tipo de elemento sobre os filhos diretos é ambíguo hoje** — dois
 > `<span>` irmãos dentro do mesmo `<summary>`, ou um `<p>` de título no meio dos
 > `<p>` que o autor escreve. Quando o tipo já separa — `> div` sendo o único
-> `<div>`, `> svg`, `<summary>`, `<figcaption>`, `<code>`, `<table>` — **não
+> `<div>`, `> svg`, `<summary>`, `<code>`, `<table>` — **não
 > ganha**. Publicar depois é aditivo; despublicar quebra quem já dependia, e é
 > por isso que a dúvida se resolve para o lado de não publicar.
 >
@@ -113,7 +113,7 @@ dois passou a saber em que modo está.
 | [`tabs`](tabs.md) | alterna conteúdo irmão, com a escolha na URL | global | Docusaurus como está — **só CSS** |
 | [`code-block`](code-block.md) | a cerca de Markdown, repaginada | — (é a cerca) | **CSS + `themeConfig.prism`** |
 | [`code-group`](code-group.md) | o mesmo trecho em várias linguagens | global | compõe `Tabs` |
-| [`frame`](frame.md) | enquadra um diagrama e o legenda | global | do zero |
+| [`frame`](frame.md) | enquadra um diagrama | global | do zero |
 | [`param-field`](param-field.md) | um parâmetro de requisição | global | do zero |
 | [`response-field`](response-field.md) | um campo de resposta, recursivo | global | do zero |
 | [`expandable`](expandable.md) | o aninhamento de um campo | global | `<details>` nativo |
@@ -230,6 +230,7 @@ queria:
 | **O consumidor de fora do catálogo morreu, e o precedente fica** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — o `data-sd-part="glow"` da landing era a única aplicação da régua fora do MDX; nada foi despublicado, porque ele nunca esteve na tabela dos dezessete |
 | Nenhum componente conhece modo de cor | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §7 |
 | Os treze cortados | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) |
+| **Nove nomes ausentes da âncora por busca de tag** — dica flutuante, distintivo, `danger`, colunas autorais, componente de diagrama, trecho, fórmula, faixa, playground de API | **origem própria** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 buscou a tag nos `.md` da âncora mais sondagem no DOM renderizado; não achou nenhum. Classificação por metodologia distinta da linha acima (aquela é uso zero em produção, medido pela #4); decidir se cada um fica ou sai do catálogo continua fora de escopo — aqui só a classificação fecha |
 | Toda a superfície de swizzle são dois registros de degrau 3 | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) pré-autorizou; [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) corrigiu a rota do callout e do `code-block` |
 | O gabarito de nove seções | herdado | [#9](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/9) §4 |
 | Inicial maiúscula na autoria | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6), ratificado pela [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §1 |

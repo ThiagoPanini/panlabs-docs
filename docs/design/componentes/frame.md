@@ -1,8 +1,10 @@
 # `frame`
 
+> **Nenhum valor numérico nasce neste documento.** Os comprimentos que o componente consome moram em [`../tokens.md`](../tokens.md) e são citados por nome de token. Os números do bloco *Alvo medido*, dentro de `## Anatomia`, são **evidência de medição da âncora** — dizem o que se quer atingir, não o que temos, e quem os edita está afirmando que a âncora mudou.
+
 ## Papel
 
-Enquadra um **diagrama** e o legenda.
+Enquadra um **diagrama**.
 
 A decisão de conteúdo vem antes da de anatomia, e ela é o que torna este
 componente possível: **não entra mídia binária, nem vídeo nem screenshot.** O que
@@ -21,7 +23,7 @@ substituem não dependem de o assunto ser inventado:
 
 Isso **encolhe** o componente. O fundo quadriculado da âncora existe para
 enquadrar imagem com transparência; enquadrando diagrama, essa camada perde a
-razão de ser e sobra palco mais legenda.
+razão de ser e sobra só o palco.
 
 > **Divergência de fonte, e ela fica registrada como divergência.** O
 > quadriculado aparece na medição de `mintlify.com/docs` e **não** aparece na do
@@ -37,18 +39,30 @@ razão de ser e sobra palco mais legenda.
 > pesa num arquivo de vídeo. Isto está escrito para ninguém remediar a ausência
 > por intuição: reabrir exige derrubar os três, não notar que falta.
 
+> **Mermaid é a outra rota de diagrama, e ela também fica medida e não
+> exercida — por um motivo diferente e mais duro.** `research/paridade-devin`
+> §11 mede a cerca ` ```mermaid ` da âncora: **sem moldura nenhuma**, SVG cru
+> na largura da coluna. Este site não tem como reproduzir a medição — não
+> existe `@docusaurus/theme-mermaid` instalado, nem `markdown.mermaid: true`
+> na config, e os dois são pré-condição para a cerca renderizar. Instalar o
+> plugin seria dependência npm nova — o **zero 2** de `scripts/cinco-zeros.sh`
+> (*"zero dependência npm nova"*), e `npm run zeros` reprova isso por axioma.
+> **`lacuna por restrição`, não omissão** — o alvo "sem moldura" seria trivial
+> de cumprir (é o comportamento default de qualquer SVG cru); o que falta é o
+> mecanismo que o entregaria. Reabre se o zero 2 se mover.
+
 ## Anatomia
 
 ```html
 <figure data-sd-component="frame">
   <div>…o diagrama…</div>            <!-- único div filho de figure -->
-  <figcaption>…</figcaption>         <!-- alcançável por tipo -->
 </figure>
 ```
 
-**Zero partes publicadas.** `<figure>`, `<figcaption>` e o único `<div>` filho
-alcançam todos por tipo de elemento — é o componente que melhor exemplifica por
-que o contrato é estreito.
+**Zero partes publicadas.** `<figure>` e o único `<div>` filho alcançam por
+tipo de elemento — é o componente que melhor exemplifica por que o contrato é
+estreito. **Sem `<figcaption>`** — o alvo não renderiza legenda, e o
+componente não tem mais prop para autor nenhuma.
 
 O palco centra o desenho, **declara a tinta** que ele herda e é **tingido**: ele
 consome `--sd-surface-raised`, com fio e sem sombra.
@@ -64,15 +78,49 @@ tingido, não o fundo da página.
 Medido: o palco contra a página dá **1,320:1** no escuro e **1,045:1** no claro.
 Antes eram **1,000:1** nos dois modos — a mesma cor, duas vezes.
 
+**Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
+Sem espécime publicado no catálogo de conteúdo, `npm run paridade` ainda não
+mede este componente.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Preenchimento do palco | `8px` | avaliação visual |
+| Raio do palco | `16px` | avaliação visual |
+| Raio da mídia interna | `12px` | avaliação visual |
+| Camada de grade de pontos | presente, desvanecendo em gradiente vertical | avaliação visual |
+| Botão de expandir | **não implementado** — ver nota abaixo | — |
+
+**A grade de pontos é fato novo, e não é o quadriculado que a nota abaixo
+descarta** — são duas camadas diferentes. O quadriculado indicaria
+transparência de imagem; a grade de pontos é textura decorativa por trás do
+diagrama, presente na âncora independente de haver ou não transparência.
+Implementada com `radial-gradient` repetido mais `mask-image` em gradiente
+vertical — mesmo resultado do SVG em data-URI da âncora, sem gastar um
+arquivo.
+
+**O botão de expandir fica de fora.** A rota convencional — `onClick` mais
+`useState` para abrir um zoom — cai direto na régua ampla do **zero 4**
+(*"zero JS de interação no catálogo"*, `scripts/cinco-zeros.sh`), que
+proíbe exatamente esse par no código de `src/components/`. Uma rota nativa
+por `<details>`, como accordion e expandable já fazem sem handler nenhum, não
+esbarraria no zero 4 nem no zero 5 — mas "expandir" ali significa abrir
+conteúdo **abaixo**, empurrando o layout, e não um zoom em camada por cima do
+que já está na tela: são semânticas diferentes, e forçar uma na forma da
+outra seria inventar um padrão de interação sem precedente no catálogo para
+um botão que nenhuma sonda mede. Fica de fora por desproporção de escopo, não
+porque o mecanismo nativo seja tecnicamente inalcançável — e o ticket dá esse
+corte por nome (*"se o volume do trabalho exigir um corte em algum lugar, é
+aqui que ele sai"*).
+
 ## Variantes
 
-**Não há.** Uma prop, `caption`, e ela é opcional — moldura sem legenda continua
-sendo moldura.
+**Não há.** Zero props — a moldura não recebe nada do autor além do que
+desenha dentro dela.
 
 ## Autoria em MDX
 
 ```mdx
-<Frame caption="O ciclo de vida de uma cobrança em Pix, do POST à liquidação.">
+<Frame>
 <svg viewBox="0 0 520 88" role="img" aria-label="Fluxo em três estados">
   …traçado com stroke="currentColor"…
 </svg>
@@ -81,11 +129,14 @@ sendo moldura.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-surface-raised`, `--sd-text-body`,
-`--sd-text-muted`.
+Camada 2: `--sd-border-default`, `--sd-surface-raised`, `--sd-text-body`.
 
-Camada 1: `--sd-space-2`, `--sd-space-6`, `--sd-border-width`,
-`--sd-radius-md`, `--sd-type-sm`.
+Camada 1: `--sd-space-2`, `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
+`--sd-radius`, `--sd-radius-md`.
+
+`--sd-radius` dá a moldura do palco; `--sd-radius-md`, um degrau abaixo, dá a
+da mídia por dentro — o mesmo par que separa casca e código em
+[`code-group`](code-group.md).
 
 ## Light e dark
 
@@ -121,12 +172,10 @@ estado.
 
 Sem foco próprio: não há elemento focável.
 
-`<figure>` e `<figcaption>` são a associação semântica entre desenho e legenda, e
-é por isso que o componente usa os dois em vez de dois `<div>`.
-
-**O nome acessível do diagrama é responsabilidade do desenho, não da moldura.** A
-legenda descreve; ela não substitui `role="img"` mais rótulo no SVG. O contrato
-de estado de entrada mora em [`foco.md`](../foco.md).
+**O nome acessível do diagrama é responsabilidade inteira do desenho.** Sem
+`<figcaption>`, `role="img"` mais rótulo no `<svg>` é a única rota — não uma
+principal com a legenda como reforço, e sim a única que existe. O contrato de
+estado de entrada mora em [`foco.md`](../foco.md).
 
 ## Procedência
 
@@ -140,3 +189,9 @@ de estado de entrada mora em [`foco.md`](../foco.md).
 | Diagrama é SVG com `currentColor`, um arquivo para os dois modos | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §7 — exceção criada pela decisão acima |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
 | **Como o diagrama chega ao MDX** — SVG inline, nunca `<img>` | **origem própria (consequência)** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — `<img src="…svg">` não herda `currentColor`, então a rota de asset registrado é incompatível com a regra que o componente já carregava. A lacuna existia por ninguém ter ligado as duas pontas |
+| Preenchimento 8, raio 16 no palco, raio 12 na mídia interna | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--sd-space-6` e `--sd-radius-md` nos dois níveis, sem distinguir |
+| Grade de pontos, desvanecida em gradiente vertical | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11. Camada nova, independente da linha "sem fundo quadriculado" acima: quadriculado indicaria transparência de imagem, a grade é textura decorativa por trás do diagrama |
+| `radial-gradient` mais `mask-image` no lugar do SVG em data-URI da âncora | **origem própria (implementação)** | mesmo resultado visual, zero asset novo — o axioma 2 vale para decoração tanto quanto para dependência |
+| Sem `<figcaption>`, e a prop `caption` saiu do componente | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; zero uso em `conteudo/` no momento da remoção, então nenhuma página perdeu texto |
+| Botão de expandir | **lacuna por restrição** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 mede um botão de zoom; implementá-lo pede JS de interação, e os zeros 4 e 5 de `cinco-zeros.sh` travam essa superfície ([`principios.md`](../principios.md) §5.1 define a classe) |
+| Mermaid sem moldura, medido e não exercido | **lacuna por restrição** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; o site não tem `@docusaurus/theme-mermaid` nem `markdown.mermaid`, e instalar o plugin é dependência nova, zero 2 de `cinco-zeros.sh` |
