@@ -524,8 +524,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      volta no estreito. */
   --sd-gutter: var(--sd-space-4);
 
-  /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7, e o
-     único do projeto medido contra a viewport.
+  /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7.
 
      Ele está aqui, e não inline no CSS Module, porque a alternativa seria
      escrever `60dvh` num arquivo que não é este. `dvh` não está no padrão do
@@ -538,6 +537,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      abre com a medida que o leitor já estava lendo quando apertou a tecla, e
      nomeá-la de novo criaria uma segunda cópia do mesmo número. */
   --sd-busca-height: 60dvh;
+
+  /* O TERCEIRO token medido contra a viewport, não o único — a nota acima
+     mentia por omissão assim que este entrou. Mesmo buraco de portão 1, mesma
+     saída: `100vh` cravado em `estilos.module.css` (#99, painel da
+     referência) passaria a varredura calada, porque `vh` também não está no
+     padrão `px|rem|em|ms|s`. `dvh`, e não `vh`, pela mesma razão do token
+     acima — nunca pior, e a diferença só aparece em navegador móvel, onde
+     esta rota não monta o trilho (`--sd-api-prosa-width` some abaixo de
+     997px). */
+  --sd-viewport-altura: 100dvh;
 
   /* ---------------------------------------------------------------------------
      Grade de cartões — camada 1, e a declaração serve o MDX.

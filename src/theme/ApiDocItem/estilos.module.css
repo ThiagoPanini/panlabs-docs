@@ -76,7 +76,7 @@
        transbordo mudo para painel comprido. `--sd-space-10` (40) é a mesma
        respiração que o topo do conteúdo já usa abaixo do topo grudado — não é
        um literal novo, é o mesmo token por baixo por simetria. */
-    max-height: calc(100vh - var(--sd-topo-grudado) - var(--sd-space-10));
+    max-height: calc(var(--sd-viewport-altura) - var(--sd-topo-grudado) - var(--sd-space-10));
     overflow-y: auto;
   }
 }
