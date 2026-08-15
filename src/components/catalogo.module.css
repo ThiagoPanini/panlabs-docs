@@ -477,9 +477,19 @@ a.card:active {
    matizes ficaram livres, e a medição decide.
    ----------------------------------------------------------------------------- */
 
+/* `border-block-END`, e não `-start`: o divisor fica ENTRE linhas, nunca
+   antes da primeira nem depois da última — `:last-child` zera o próprio, e
+   não sobra fio acima do primeiro campo porque não há `-start` a desenhar.
+   Medido na âncora (`research/paridade-devin` §10, citado pela #99): sem
+   fundo, sem zebra. */
 .field {
-  border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
+  position: relative;
+  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
   padding-block: var(--sd-space-4);
+}
+
+.field:last-child {
+  border-block-end: none;
 }
 
 .fieldHead {
@@ -490,13 +500,52 @@ a.card:active {
   margin-block: 0;
 }
 
+/* No acento, e não em `--sd-text-strong` — medido na âncora (§10, #99): o
+   nome do campo é a única coisa da linha pintada com a cor de marca. */
 .fieldHead > code {
   border: 0;
   padding: 0;
   background: none;
-  color: var(--sd-text-strong);
+  color: var(--sd-accent);
   font-size: var(--sd-type-sm);
   font-weight: var(--sd-weight-ui);
+}
+
+/* A âncora de linha — invisível até o hover ou o foco do campo, e só a
+   partir de 997px: abaixo disso o vão à esquerda do texto não sobra (mesmo
+   limiar único do projeto, `chrome.md` §1.6; a segunda perna do portão 1
+   reprova qualquer outro). */
+.fieldAncora {
+  display: none;
+  color: var(--sd-text-muted);
+  text-decoration: none;
+  opacity: 0;
+}
+
+.fieldAncora:focus-visible {
+  opacity: 1;
+}
+
+@media (min-width: 997px) {
+  .fieldAncora {
+    position: absolute;
+    top: var(--sd-space-1);
+    /* `--sd-space-10` (40) — a mesma respiração que o topo do conteúdo já usa
+       abaixo do topo grudado, não um literal novo; bate com o vão medido na
+       âncora (§10, #99). */
+    left: calc(-1 * var(--sd-space-10));
+    display: grid;
+    place-items: center;
+    inline-size: var(--sd-space-6);
+    block-size: var(--sd-space-6);
+    border-radius: var(--sd-radius-sm);
+  }
+}
+
+@media (min-width: 997px) and (hover: hover) {
+  .field:hover .fieldAncora {
+    opacity: 1;
+  }
 }
 
 .fieldMeta {
@@ -515,6 +564,16 @@ a.card:active {
   background: none;
   color: var(--sd-text-body);
   font-size: inherit;
+}
+
+/* O marcador neutro — tipo e padrão. Mesma forma do chip de obrigatório
+   (raio, preenchimento), tinta neutra em vez de perigo: medido na âncora
+   (§10, #99), que distingue as duas famílias só pela cor. */
+.fieldChip {
+  border-radius: var(--sd-radius-xs);
+  padding-inline: var(--sd-space-1);
+  background-color: var(--sd-border-subtle);
+  color: var(--sd-text-muted);
 }
 
 .fieldMeta strong {

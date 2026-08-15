@@ -45,17 +45,21 @@
   }
 
   .colunaProsa {
-    flex: 0 0 var(--sd-prose-width);
+    /* MAIS ESTREITA que a prosa comum (`--sd-prose-width`, 720) — a página de
+       referência troca a coluna do TOC por um trilho de amostras bem mais
+       largo, e a prosa cede espaço para ele. Medido, `origem própria`; ver
+       `referencia.md` §1 e `tokens.md`. */
+    flex: 0 0 var(--sd-api-prosa-width);
   }
 
-  /* A aritmética do comutador: 720 (prosa) + 32 (--sd-space-8, o gutter desta
-     grade) + 400 = 1152 (--sd-container-width). O painel não é um número
-     escolhido — é o resto da conta, e `calc()` deriva em vez de repetir. Foi
-     essa derivação que fez a geometria `mint` chegar aqui sem uma linha de
-     ajuste: a prosa subiu de 672 para 720 e o painel desceu de 448 para 400,
-     sozinho. */
+  /* A aritmética do comutador: 577 (prosa da API) + 32 (--sd-space-8, o
+     gutter desta grade) + 511 = 1120 (--sd-container-width). O trilho não é
+     um número escolhido — é o resto da conta, e `calc()` deriva em vez de
+     repetir, pelo mesmo motivo do §1 de `referencia.md`: um literal cravado
+     quebraria calado no dia em que `--sd-container-width` ou
+     `--sd-api-prosa-width` mudassem de novo. */
   .colunaPainel {
-    flex: 0 0 calc(var(--sd-container-width) - var(--sd-prose-width) - var(--sd-space-8));
+    flex: 0 0 calc(var(--sd-container-width) - var(--sd-api-prosa-width) - var(--sd-space-8));
     /* O erro nº 1 de quem reconstrói este layout: sem `align-self: start`,
        o item de flex estica para a altura do irmão mais alto (a prosa), e
        `position: sticky` parece travado desde o topo — a caixa já preenche
@@ -67,6 +71,13 @@
        com a faixa de tabs montada, `--sd-navbar-height` mediria só a primeira
        das duas linhas e o painel deslizaria por baixo da faixa. */
     top: var(--sd-topo-grudado);
+    /* O trilho é FIXO com altura declarada, como na âncora — sem teto ele
+       cresce com o conteúdo e o "sticky" vira decoração para painel curto e
+       transbordo mudo para painel comprido. `--sd-space-10` (40) é a mesma
+       respiração que o topo do conteúdo já usa abaixo do topo grudado — não é
+       um literal novo, é o mesmo token por baixo por simetria. */
+    max-height: calc(var(--sd-viewport-altura) - var(--sd-topo-grudado) - var(--sd-space-10));
+    overflow-y: auto;
   }
 }
 
@@ -115,9 +126,17 @@
 /* O cabeçalho — a ASSINATURA. Ele era `display: flex` para pôr a pílula de
    verbo ao lado do caminho; sem verbo sobrou um filho só, e a assinatura é uma
    linha longa que precisa quebrar dentro da coluna do painel em vez de alinhar
-   ao centro de um irmão que não existe mais. */
+   ao centro de um irmão que não existe mais.
+
+   O fio embaixo é a chrome de cabeçalho da âncora, portada sem o segundo
+   literal de preenchimento que ela tem: o card lá é preenchimento fino +
+   cabeçalho com o próprio preenchimento; aqui é um `--sd-space-6` só, e o fio
+   é o que separa a linha do que vem depois dentro dele — a simplificação já
+   registrada na nota do `.painel`, acima. */
 .painelCabecalho {
   margin: 0;
+  padding-block-end: var(--sd-space-4);
+  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
   font-family: var(--sd-font-mono);
   font-size: var(--sd-type-sm);
   color: var(--sd-text-body);
