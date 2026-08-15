@@ -27,14 +27,28 @@ refeita contra a cadeia nova.
 
 ## 1. A aritmética decide o layout, não o gosto
 
+> **Correção de fato — #96.** Este bloco publicava `720 + 32 + 400 = 1152`, e
+> o container mudou de dono sem esta página vir junto: a #96 derrubou
+> `--sd-container-width` de 1152 para 1120 (`tokens.md` §1), e o resto da
+> conta — o painel — dá **368**, não 400. O texto original fica pela mesma
+> regra do resto da spec; a conta abaixo é a que fecha hoje.
+
+> **Correção de fato — #99.** A prosa da página gerada **deixou de ser**
+> `--sd-prose-width` (a mesma da página comum): §10 de
+> `research/paridade-devin` mede a âncora com uma prosa mais estreita e um
+> trilho bem mais largo do que o TOC nesta rota especificamente, e a #99
+> porta essa proporção. `--sd-api-prosa-width` (577, medido, `origem
+> própria`) substitui `--sd-prose-width` **só aqui**; o painel continua sendo
+> o resto da conta, agora sobre a base nova.
+
 ```
-720 (--sd-prose-width) + 32 (--sd-space-8) + 400 = 1152 (--sd-container-width)
+577 (--sd-api-prosa-width) + 32 (--sd-space-8) + 511 = 1120 (--sd-container-width)
 ```
 
 O painel não é uma largura escolhida — é o resto da conta:
 
 ```
-400 = calc(var(--sd-container-width) - var(--sd-prose-width) - var(--sd-space-8))
+511 = calc(var(--sd-container-width) - var(--sd-api-prosa-width) - var(--sd-space-8))
 ```
 
 `--sd-space-8` aqui é o gutter **entre as duas colunas desta grade**, não o
@@ -341,6 +355,38 @@ superado, e um documento inteiro da spec foi reescrito.
 
 ---
 
+## 8. Alvo medido — a moldura e o painel, contra a âncora
+
+A âncora deste projeto é o `docs.devin.ai`, e a spec declara **zero delta
+deliberado** contra ela — o mesmo padrão de [`chrome.md`](chrome.md) §11.
+`npm run paridade` mede o site **construído** contra esta tabela e imprime a
+lista do que não fecha; é relatório, não portão (`continue-on-error` na CI).
+
+Os números **não nascem aqui**: são medição de primeira mão da âncora,
+registrada em `research/paridade-devin` §10. Editá-los é afirmar que a âncora
+mudou, não que este projeto mudou. A largura de referência é **1512**, a
+mesma dos demais alvos do site.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Coluna de texto | `576,81px` | ±1 |
+| Trilho | `448px` | ±1 |
+| Trilho grudado em | `152px` | ±1 |
+| Painel raio | `16px` | exato |
+
+**As duas larguras não fecham no pixel, e é esperado.** A âncora mede
+576,81 + 448; este projeto publica `--sd-api-prosa-width` (577, arredondado)
+e deriva o trilho do que sobra do próprio container (511, §1) — a mesma
+lógica que já divergia em 720/400 contra a prosa comum antes desta issue.
+`±1` cobre o arredondamento; a diferença de dezenas entre 448 e 511 é
+divergência **deliberada**, não erro de medição — publicada aqui para não
+esconder a distância atrás de uma tolerância larga demais para significar
+algo.
+
+**`Trilho grudado em` reusa o número da `TOC grudado em`** de
+[`chrome.md`](chrome.md) §11: os dois grudam sob o mesmo topo fixo, e é o
+mesmo fato medido na âncora, não uma coincidência tratada como derivação.
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
@@ -367,3 +413,9 @@ superado, e um documento inteiro da spec foi reescrito.
 | A décima perda, desta rota | origem própria | issue #38 — consequência aritmética do §1, não do orçamento `unsafe` |
 | **O que segura a décima perda mudou de argumento** | **origem própria (correção)** | não é o gerador emitir duas seções — ele emite até quatro; é cada página documentar uma entrada |
 | **O dissenso da opção rejeitada** | origem própria | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) — ela custava menos e preservava o `VerbBadge` inteiro |
+| **A aritmética do §1 corrigida para o container de 1120** | **origem própria (correção)** | a #96 derrubou `--sd-container-width` de 1152 para 1120 e este documento não veio junto; o painel real já dava 368, não 400 |
+| **`--sd-api-prosa-width` (577) substitui `--sd-prose-width` só na página gerada** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — medido em `research/paridade-devin` §10: a âncora usa prosa mais estreita e trilho mais largo nesta rota especificamente |
+| O trilho continua sendo o resto da conta, nunca um segundo literal | herdado (mecanismo) | mesmo argumento do §1 original — um `448` cravado quebraria calado no dia em que o container mudasse de novo |
+| **O painel ganha altura declarada e rolagem própria** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — sem teto o trilho cresce com o conteúdo e "sticky" vira decoração; `max-height` reusa `--sd-topo-grudado` e `--sd-space-10`, nenhum literal novo |
+| **O fio sob o cabeçalho do painel** | **origem própria (mecanismo emprestado)** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a chrome de cabeçalho da âncora portada sem o segundo nível de preenchimento que ela tem, pela mesma simplificação já registrada em `estilos.module.css` |
+| A seção "Alvo medido" (§8) | origem própria | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — mesmo padrão de [`chrome.md`](chrome.md) §11; números de `research/paridade-devin` §10 |

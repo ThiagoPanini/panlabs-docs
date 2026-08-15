@@ -15,6 +15,10 @@
     "message": "default",
     "description": "Rótulo do valor default de um campo de API"
   },
+  "shinydoc.campo.ancora": {
+    "message": "Link to {nome}",
+    "description": "Nome acessível da âncora de linha de um campo de API"
+  },
   "shinydoc.raiz.titulo": {
     "message": "Documentation",
     "description": "Título da rota raiz, que redireciona para a primeira doc"

@@ -356,6 +356,14 @@
   --sd-toc-width:        304px;  /* bate com a âncora — §11 de chrome.md */
   --sd-prose-width:      720px;
 
+  /* A prosa da página de referência é MAIS ESTREITA que a prosa comum — a
+     âncora troca a coluna do TOC (304) por um trilho de amostras bem mais
+     largo, e reduz o texto para abrir espaço. Medido em
+     `research/paridade-devin` §10 (576,81, arredondado), citado pela #99.
+     O trilho continua sendo o RESTO da conta — ver `referencia.md` §1 —, e
+     não um segundo literal: só a prosa é `origem própria`. */
+  --sd-api-prosa-width:  577px;
+
   /* `--sd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
      própria — é consequência do congelamento abaixo perder o termo do
      gutter. As DUAS medições de margem simétrica da âncora (§11: 52px a

@@ -31,18 +31,47 @@
 
 import React from 'react';
 import clsx from 'clsx';
-import Translate from '@docusaurus/Translate';
+import Translate, {translate} from '@docusaurus/Translate';
 import estilos from './catalogo.module.css';
 
+// Só identificador de código como entrada — minúsculo e ASCII por contrato do
+// gerador (`scripts/lib/assinatura.mjs`). Sem normalização de acento: não há
+// acento a normalizar.
+function slugificar(nome) {
+  return nome.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 function Campo({especie, name, type, required, deprecated, padrao, children}) {
+  const id = `campo-${especie}-${slugificar(name)}`;
+
   return (
     <div
+      id={id}
       // Classe de módulo para o nosso CSS (0,1,0); `data-sd-variant` para a
       // skin (0,2,0). Nosso CSS nunca lê `data-sd-*`.
       className={clsx(estilos.field, deprecated && estilos.fieldDeprecated)}
       data-sd-component={especie}
       data-sd-variant={deprecated ? 'deprecated' : undefined}>
       <p className={estilos.fieldHead}>
+        {/* A âncora de linha, no vão esquerdo — mesma ideia do `.hash-link` de
+            heading (Infima), implementação própria porque aqui não há
+            `remark-plugin` gerando o link: é um campo, não um heading. Parte
+            publicada (`data-sd-part="ancora"`) para o fallback de toque em
+            `foco.css` alcançar sem depender do hash de CSS Module. */}
+        <a
+          href={`#${id}`}
+          className={estilos.fieldAncora}
+          data-sd-part="ancora"
+          aria-label={translate(
+            {
+              id: 'shinydoc.campo.ancora',
+              message: 'Link para {nome}',
+              description: 'Nome acessível da âncora de linha de um campo de API',
+            },
+            {nome: name},
+          )}>
+          #
+        </a>
         <code>{name}</code>
         {/* `meta` é a única parte publicada do catálogo que a régua estreita
             NÃO obriga: ela é o único `<span>` do cabeçalho, e a skin a
@@ -53,14 +82,14 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
             função — a do módulo não tem parâmetro nem retorno —, e reprova se o
             ramo gerado deixar de consumir o campo. */}
         <span className={estilos.fieldMeta} data-sd-part="meta">
-          {type}
+          <span className={estilos.fieldChip}>{type}</span>
           {padrao === undefined ? null : (
-            <>
+            <span className={estilos.fieldChip}>
               <Translate id="shinydoc.campo.padrao" description="Rótulo do valor default de um campo de API">
                 padrão
               </Translate>{' '}
               <code>{padrao}</code>
-            </>
+            </span>
           )}
           {required ? (
             <strong>

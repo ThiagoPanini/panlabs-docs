@@ -213,6 +213,28 @@ const SONDAS = [
   {sonda: 'tabela.tamanho', cenario: 'tabela@1512/escuro', seletor: '[data-sd-component="table"] td', medida: 'estilo:font-size'},
   {sonda: 'passos.margem-topo', cenario: 'passos@1512/escuro', seletor: '[data-sd-component="steps"]', medida: 'estilo:margin-top'},
   {sonda: 'expandable.raio', cenario: 'api@1512/escuro', seletor: '[data-sd-component="expandable"]', medida: 'estilo:border-radius'},
+  // --- a moldura e o painel da página gerada (#99) -----------------------
+  /* `article` é o único da rota `api`: sem TOC e sem admonition nesta
+     fixture, o seletor por tipo não colide com nada — mesmo raciocínio de
+     `article h1` acima. `aside` JÁ colide — `.theme-doc-sidebar-container` da
+     sidebar do site TAMBÉM é `<aside>` e vem antes no DOM, então
+     `document.querySelector('aside')` mediria a sidebar (288px, o
+     `--sd-sidebar-width`) e não o trilho. `:has()` escopa para o `<aside>`
+     que contém o painel — sem depender do hash de CSS Module. */
+  {sonda: 'api.prosa.largura', cenario: 'api@1512/escuro', seletor: 'article', medida: 'caixa:width'},
+  {
+    sonda: 'api.painel.largura',
+    cenario: 'api@1512/escuro',
+    seletor: 'aside:has([data-sd-component="api-painel"])',
+    medida: 'caixa:width',
+  },
+  {
+    sonda: 'api.painel.topo',
+    cenario: 'api@1512/escuro',
+    seletor: 'aside:has([data-sd-component="api-painel"])',
+    medida: 'estilo:top',
+  },
+  {sonda: 'api.painel.raio', cenario: 'api@1512/escuro', seletor: '[data-sd-component="api-painel"]', medida: 'estilo:border-radius'},
   {sonda: 'grupo-cartoes.vao', cenario: 'cartao@1512/escuro', seletor: '[data-sd-component="card-group"]', medida: 'estilo:column-gap'},
   /* Accordion, Tabs, Frame e Mermaid não têm sonda porque **não são
      renderizados em página nenhuma** do site construído. Publicar alvo para
@@ -297,6 +319,17 @@ const ALVOS = {
       ['Painel largura', ['busca.painel.largura']],
       ['Painel topo', ['busca.painel.topo']],
       ['Painel raio', ['busca.painel.raio']],
+    ],
+  },
+  'docs/design/referencia.md#alvo': {
+    arquivo: 'docs/design/referencia.md',
+    secao: '## 8. Alvo medido',
+    colunas: ['alvo'],
+    linhas: [
+      ['Coluna de texto', ['api.prosa.largura']],
+      ['Trilho', ['api.painel.largura']],
+      ['Trilho grudado em', ['api.painel.topo']],
+      ['Painel raio', ['api.painel.raio']],
     ],
   },
   'docs/design/componentes/card.md': {

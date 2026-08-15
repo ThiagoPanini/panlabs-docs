@@ -15,11 +15,12 @@ usa **só `body=`**, nunca `query`, `path` ou `header`. Quem era HTTP era o
 ## Anatomia
 
 ```html
-<div data-sd-component="param-field">
+<div id="campo-param-field-…">
   <p>
+    <a href="#campo-param-field-…" data-sd-part="ancora">#</a>
     <code>…</code>                          <!-- alcançável por tipo -->
     <span data-sd-part="meta">
-      tipo · padrão <code>…</code>
+      <span>tipo</span> · <span>padrão <code>…</code></span>
       <strong>obrigatório</strong>          <!-- alcançável por tipo -->
     </span>
   </p>
@@ -27,8 +28,16 @@ usa **só `body=`**, nunca `query`, `path` ou `header`. Quem era HTTP era o
 </div>
 ```
 
-**Uma parte publicada.** O nome é `<code>` e o chip é `<strong>` dentro da meta —
-os dois alcançam por tipo.
+**Uma parte publicada, e uma segunda que não conta como publicada pelo mesmo
+contrato.** O nome é `<code>` e o chip é `<strong>` dentro da meta — os dois
+alcançam por tipo. A âncora de linha (`#99`) também nomeia `data-sd-part`,
+mas por outro motivo: ela não é conferida pelo portão 5 — nenhuma página
+gerada depende dela —, é só o hook estável que `foco.css` usa para o
+fallback de toque sem custar o hash do CSS Module, a mesma razão do
+`.hash-link` de heading. O `id` do campo é o `name` normalizado
+(`campo-<espécie>-<slug>`), sem garantia de unicidade entre campos do mesmo
+nome em profundidades diferentes — risco aceito, não medido, porque o
+conteúdo mockado não o exercitou.
 
 **A meta é a única entrada do catálogo que a régua estreita não obrigaria**, e
 ela fica assim mesmo: `> span` a alcançaria hoje, mas a rota da referência gerada
@@ -107,15 +116,21 @@ Leitura do repositório. `read` basta para quem não escreve commit.
 ## Tokens consumidos
 
 Camada 2: `--sd-border-subtle`, `--sd-text-body`, `--sd-text-muted`,
-`--sd-text-strong`, `--sd-state-danger`, `--sd-state-danger-fill`.
+`--sd-text-strong`, `--sd-accent`, `--sd-state-danger`, `--sd-state-danger-fill`.
 
-Camada 1: `--sd-space-1`, `--sd-space-2`, `--sd-space-4`, `--sd-border-width`,
-`--sd-radius-xs`, `--sd-type-xs`, `--sd-type-sm`, `--sd-font-mono`,
-`--sd-weight-ui`.
+Camada 1: `--sd-space-1`, `--sd-space-2`, `--sd-space-4`, `--sd-space-6`,
+`--sd-space-10`, `--sd-border-width`, `--sd-radius-xs`, `--sd-radius-sm`,
+`--sd-type-xs`, `--sd-type-sm`, `--sd-font-mono`, `--sd-weight-ui`.
 
 **Os dois `-danger` entraram com o chip vermelho**, e são o único par de estado
 que o catálogo consome fora do callout. `--sd-state-danger-edge` continua **sem
 consumidor**: o chip é preenchimento e texto, não aresta.
+
+**A âncora de linha (`#99`) não abre token novo.** `--sd-space-10` é o mesmo
+que já espaça o topo do conteúdo abaixo do topo grudado — reusado aqui pela
+mesma distância, não uma coincidência de número tratada como derivação.
+`--sd-radius-sm` é o raio que a tabela de escala já nomeia para "botão, campo,
+aba, chip" (`tokens.md` §1); a âncora de 24×24 entra nessa família.
 
 ## Light e dark
 
@@ -154,3 +169,7 @@ O contrato de estado de entrada mora em [`foco.md`](../foco.md).
 | Implementação compartilhada com `response-field` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, nota de implementação |
 | Sem campo editável | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §4 — a interatividade fica no painel da rota |
 | Uma parte publicada | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, sobre a régua da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| **Divisor vira `border-block-end`, e a última linha não tem** | **origem própria (correção)** | medido na âncora ([#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99)) — a implementação anterior desenhava `border-block-start` em toda linha, o que também riscava acima da primeira; a forma nova não risca nem antes da primeira nem depois da última |
+| **Nome do campo no acento** | **herdado (medição)** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a âncora pinta o nome com a cor de marca; era `--sd-text-strong` |
+| **Tipo e padrão viram chip neutro, como o de obrigatório** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a âncora distingue as três famílias (tipo/padrão, obrigatório) só pela cor do mesmo chip; a tinta neutra reusa `--sd-border-subtle`/`--sd-text-muted`, sem cor nova |
+| **Âncora de linha, no vão esquerdo a partir do limiar único do projeto** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — mesma ideia do `.hash-link` de heading, implementação própria porque o campo não é heading; abaixo de 997 não sobra vão à esquerda para revelar |

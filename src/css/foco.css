@@ -231,6 +231,17 @@ a[href='#__docusaurus_skipToContent_fallback'] {
     opacity: 1;
   }
 
+  /* A terceira âncora que morreria em silêncio no toque, mesma família das
+     duas acima — a âncora de linha do campo de API (Campo.js, #99). A parte
+     publicada (`data-sd-part="ancora"`) alcança sem custar o hash do CSS
+     Module, pelo mesmo motivo do `.hash-link`: se fosse hasheada, o conserto
+     custaria uma decisão cara. Continua atrás do limiar de 997px de
+     `catalogo.module.css` — abaixo dele o elemento nem monta com posição
+     própria. */
+  [data-sd-part='ancora'] {
+    opacity: 1;
+  }
+
   /* O piso de alvo. **Lista de exceções, não lista de alvos** — mesma forma e
      mesmo motivo da regra de foco: lista de alvos falha em silêncio, e falha só
      para quem tem o dedo grande ou a mão trêmula.
