@@ -426,7 +426,14 @@ html.docs-doc-page .subtitulo {
      cair na mesma vertical do preenchimento da sidebar — ver `chrome.css`
      §3 — e essa conta só volta a fechar se os DOIS lados tiverem o mesmo
      inset esquerdo. */
+  /* `position: relative` entrou na #98 — é o container que a busca centraliza
+     contra (`SearchBar/estilos.module.css`), via `position: absolute` no
+     próprio gatilho. Sem isto o navegador subiria a busca de containing block
+     até achar um ancestral posicionado — provavelmente o `.navbar` (sticky), e
+     aí ela centralizaria no VIEWPORT, não na coluna que este bloco acabou de
+     assentar. */
   .navbar__inner {
+    position: relative;
     max-width: var(--sd-congelamento);
     margin-inline: auto;
   }

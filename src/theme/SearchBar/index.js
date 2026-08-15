@@ -269,25 +269,24 @@ export default function SearchBar() {
               )}
         </p>
 
-        {/* As teclas são CARACTERES dentro de `<kbd>`, não ícones. Três setas
-            desenhadas custariam três slots e estourariam o teto de 64 do
-            manifesto — e `↑` já é a seta. */}
+        {/* As teclas são CARACTERES SOLTOS desde a #98 — nem ícone, nem
+            elemento de teclado. Três setas desenhadas custariam três slots e
+            estourariam o teto de 64 do manifesto — e `↑` já é a seta. */}
         <footer className={estilos.rodape}>
           <span>
-            <kbd>↑</kbd>
-            <kbd>↓</kbd>{' '}
+            ↑↓{' '}
             <Translate id="shinydoc.busca.tecla.navegar" description="Legenda das setas no rodapé do modal">
               navegar
             </Translate>
           </span>
           <span>
-            <kbd>↵</kbd>{' '}
+            ↵{' '}
             <Translate id="shinydoc.busca.tecla.abrir" description="Legenda do Enter no rodapé do modal">
               abrir
             </Translate>
           </span>
           <span>
-            <kbd>esc</kbd>{' '}
+            esc{' '}
             <Translate id="shinydoc.busca.tecla.fechar" description="Legenda do Esc no rodapé do modal">
               fechar
             </Translate>
@@ -299,12 +298,12 @@ export default function SearchBar() {
 }
 
 /**
- * O realce, por PESO e não por fundo.
+ * O realce — peso e, desde a #98, tinta de acento.
  *
- * `<mark>` tingido poria acento sobre acento na linha ativa, que já é uma
- * superfície de estado — duas ênfases brigando no mesmo pixel. O elemento
- * continua sendo `<mark>` porque é ele que carrega o significado; o que o CSS
- * troca é a tinta pelo peso.
+ * A linha ativa deixou de ser `--sd-surface-wash` (ver `estilos.module.css`,
+ * `.opcao[aria-selected]`), então o `<mark>` pode colorir sem cair acento
+ * sobre acento no mesmo pixel. O elemento continua sendo `<mark>` porque é
+ * ele que carrega o significado; o que o CSS troca agora é a tinta e o peso.
  *
  * Quem sabe ONDE cortar é `escada.mjs`, que devolve faixas já mapeadas para o
  * texto original. Aqui só se monta o JSX.

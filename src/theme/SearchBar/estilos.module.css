@@ -1,50 +1,70 @@
 /* =============================================================================
    `SearchBar` — o botão do navbar e o modal.
 
-   Camada 3: tudo aqui deriva de token de camada 1 e 2. Os dois tokens novos do
-   slice moram em `tokens.css` — `--sd-surface-scrim`, papel `surface` com par
-   declarado, e `--sd-busca-height`, a única medida do projeto relativa à
-   viewport. A LARGURA do painel não é token novo: é `--sd-prose-width`, citada
-   por nome. O painel abre com a medida que o leitor estava lendo quando apertou
-   a tecla — e desde que a medida do código morreu, essa frase é literalmente
-   verdadeira em vez de errar por 96px.
+   Camada 3: tudo aqui deriva de token de camada 1 e 2. Os tokens novos do
+   componente moram em `tokens.css`, junto de `--sd-busca-height` —
+   `--sd-surface-scrim` (papel `surface`, par declarado) e, desde a #98, quatro
+   medidas de consumidor único: `--sd-busca-panel-width`, `--sd-busca-panel-top`,
+   `--sd-busca-controle-width` e `--sd-busca-controle-height`. NENHUM decorre da
+   escala de espaço — são medição da âncora, e derivar por coincidência de
+   número é a derivação falsa que este projeto recusa por escrito.
+
+   **A LARGURA do painel deixou de ser `--sd-prose-width` citada por nome — essa
+   frase morreu na #98.** Era verdade enquanto o painel abria com a medida que o
+   leitor estava lendo; a âncora mede 640px fixo, centralizado, e 640 não é
+   720 — citar `--sd-prose-width` teria virado coincidência de número, não
+   parentesco. `--sd-busca-panel-width` é a medida nova, sozinha.
 
    NENHUMA declaração `outline` neste arquivo — o portão 3 reprova outline fora
    de `src/css/foco.css`, e não há exceção a pedir: `:focus-visible` já é
    universal e o botão, o campo e o × o herdam de graça.
 
-   Procedência: docs/design/busca.md.
+   Procedência: docs/design/busca.md · docs/research/paridade-devin.md §7 (issue #98).
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   O gatilho — BOTÃO, não campo.
+   O gatilho — BOTÃO, não campo. A #98 muda a LEITURA, não o elemento.
 
    A âncora e três das quatro referências abrem um modal; um `<input>` no navbar
    que não aceita digitação é um controle que mente sobre o que faz. O botão diz
-   *isto abre outra coisa*, que é o que de fato acontece.
+   *isto abre outra coisa*, que é o que de fato acontece — isso não mudou.
+
+   O que a #98 muda é só a pele: acima de 997px ele agora LÊ como campo — anel,
+   raio maior, caixa do tamanho da âncora, centralizado na linha 1 — sem deixar
+   de SER botão. Honestidade é sobre o contrato com teclado e leitor de tela,
+   não sobre pixel; um `<button>` pintado de campo continua anunciado como
+   "botão", continua ativando em Enter/Espaço, e é exatamente por isso que ele
+   pode se vestir de campo sem mentir o que o parágrafo acima recusa.
 
    Um limiar só, o do Infima: acima de 997 o botão carrega ícone, rótulo e
-   tecla; abaixo, ícone puro. Abaixo do limiar o navbar já está no aperto
-   máximo — é onde a sidebar virou gaveta e o hambúrguer apareceu.
-   ----------------------------------------------------------------------------- */
+   tecla, centralizado; abaixo, ícone puro, no lugar de sempre — a centralização
+   é junto com o resto do vestido, e abaixo do limiar não há vestido nenhum.
+   Abaixo do limiar o navbar já está no aperto máximo — é onde a sidebar virou
+   gaveta e o hambúrguer apareceu. */
 .botao {
   display: inline-flex;
   align-items: center;
   gap: var(--sd-space-2);
   padding: var(--sd-space-1) var(--sd-space-2);
-  border: none;
-  border-radius: var(--sd-radius-sm);
-  background: transparent;
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius-md);
+  background: var(--sd-surface-page);
   color: var(--sd-text-muted);
   font: inherit;
   font-size: var(--sd-type-sm);
   cursor: pointer;
-  transition: color var(--sd-move-state), background-color var(--sd-move-state);
+  transition: color var(--sd-move-state), border-color var(--sd-move-state);
 }
 
-.botao:hover {
-  color: var(--sd-text-strong);
-  background: var(--sd-surface-wash);
+/* O anel muda no hover — a âncora reforça o mesmo anel, não pinta fundo. Sob
+   `(hover: hover)` porque o contrato de estado de entrada (ADR 4) não admite
+   hover fora dela: sem a guarda, o toque prende o estado até o dedo tocar em
+   outro lugar. */
+@media (hover: hover) {
+  .botao:hover {
+    color: var(--sd-text-strong);
+    border-color: var(--sd-border-strong);
+  }
 }
 
 .rotulo,
@@ -52,15 +72,18 @@
   display: none;
 }
 
-/* O `<kbd>` do gatilho: uma pastilha, não uma tecla desenhada. Ela é anúncio de
-   atalho, e o rodapé do modal é que é legenda de tecla. */
+/* O atalho, TEXTO PURO — a pílula de `<kbd>` morreu na #98. Sem fundo, sem
+   borda, sem raio, sem padding, sem sombra: só cor e peso. O elemento continua
+   `<kbd>` — semântica de tecla, não caixa de tecla — e `margin-inline-start:
+   auto` o empurra para o fim da caixa fixa, deixando ícone e rótulo agrupados
+   no início, como um campo de verdade organiza afordância à esquerda e atalho
+   à direita. */
 .atalho {
-  padding: 0 var(--sd-space-1);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-xs);
+  margin-inline-start: auto;
   color: var(--sd-text-faint);
   font-family: var(--sd-font-mono);
   font-size: var(--sd-type-xs);
+  font-weight: var(--sd-weight-heading);
   line-height: var(--sd-leading-ui);
 }
 
@@ -68,6 +91,29 @@
   .rotulo,
   .atalho {
     display: inline;
+  }
+
+  /* Centralizado na linha 1 do navbar, não mais à direita — o pedido central
+     da #98. `position: absolute` tira o gatilho do fluxo de
+     `.navbar__items--right` (os itens que sobram ali só se reacomodam) e
+     centraliza contra `.navbar__inner`, que é o container que já centraliza
+     sidebar + conteúdo + TOC (`chrome.css` §1) — não o viewport. `top: 50%`
+     sozinho erraria o eixo vertical: `.navbar__inner` cobre as DUAS linhas do
+     navbar quando a faixa de tabs está montada, e centralizar contra a altura
+     inteira poria o gatilho entre as linhas em vez de dentro da primeira. O
+     deslocamento certo é a folga entre a linha 1 e a caixa do gatilho, dividida
+     ao meio — medido depois de escrito: sem ele o gatilho cola no topo da
+     linha 1 em vez de repousar no centro dela, junto dos vizinhos.
+     `position: relative` em `.navbar__inner` mora em `chrome.css`, porque esse
+     elemento não é deste componente. */
+  .botao {
+    position: absolute;
+    inset-block-start: calc((var(--sd-navbar-height) - var(--sd-busca-controle-height)) / 2);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    inline-size: var(--sd-busca-controle-width);
+    block-size: var(--sd-busca-controle-height);
+    padding-inline: var(--sd-space-3);
   }
 }
 
@@ -84,16 +130,20 @@
    `margin-inline: auto` deixa o painel parado enquanto o conteúdo muda.
    ----------------------------------------------------------------------------- */
 .modal {
-  inline-size: min(var(--sd-prose-width), calc(100% - 2 * var(--sd-gutter)));
+  inline-size: min(var(--sd-busca-panel-width), calc(100% - 2 * var(--sd-gutter)));
   max-block-size: var(--sd-busca-height);
-  margin-block: var(--sd-space-16) auto;
+  margin-block: var(--sd-busca-panel-top) auto;
   margin-inline: auto;
   padding: 0;
   /* A borda do `<dialog>` que o agente de usuário desenha é substituída, não
      removida: o fio aqui é o mesmo que era o anel embutido na sombra. */
   border: var(--sd-border-width) solid var(--sd-border-subtle);
-  border-radius: var(--sd-radius);
-  background: var(--sd-surface-raised);
+  border-radius: var(--sd-radius-lg);
+  /* Fundo igual à PÁGINA desde a #98 — era `--sd-surface-raised` (o cartão
+     levantado). A âncora não separa o painel por superfície, só pelo anel
+     acima; no escuro os dois tokens já coincidem, no claro este é o que muda
+     o painel de branco puro para o branco levemente cinza da página. */
+  background: var(--sd-surface-page);
   color: var(--sd-text-body);
   box-shadow: var(--sd-shadow-float);
   overflow: hidden;
@@ -139,14 +189,23 @@
 }
 
 /* -----------------------------------------------------------------------------
-   O campo
+   O campo — CAIXA INTERNA desde a #98, não mais um fio no rodapé da linha.
+
+   `margin` em vez de fio único: a caixa flutua dentro do padding do painel,
+   com o fundo do painel visível ao redor dela — é o que lê como "campo dentro
+   do painel" em vez de "linha de topo do painel". O raio reusa `--sd-radius`
+   base (16px): é o mesmo valor que a âncora mede para esta caixa, e a
+   coincidência com o raio antigo do PAINEL é isso mesmo — coincidência, não
+   parentesco; o painel se moveu para `--sd-radius-lg` e deixou o valor livre.
    ----------------------------------------------------------------------------- */
 .campo {
   display: flex;
   align-items: center;
   gap: var(--sd-space-3);
-  padding: var(--sd-space-4) var(--sd-space-5);
-  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
+  margin: var(--sd-space-3) var(--sd-space-4);
+  padding: var(--sd-space-3) var(--sd-space-4);
+  border: var(--sd-border-width) solid var(--sd-border-default);
+  border-radius: var(--sd-radius);
   color: var(--sd-text-faint);
 }
 
@@ -195,20 +254,29 @@
   list-style: none;
 }
 
+/* A âncora mede h50/raio14 contra o nosso h86/raio8 — compacto é o pedido da
+   #98. O raio reusa `--sd-radius-md` (12px) em vez de um quinto degrau só para
+   os 2px que faltam até 14: a diferença não é sondada (§10 do busca.md — o
+   comparador não monta o cenário de painel aberto + consulta digitada) e não
+   seria vista fora de régua. Ver Procedência, `delta deliberado`. */
 .opcao {
   display: grid;
   grid-template-columns: 1fr auto auto;
   gap: 0 var(--sd-space-2);
   align-items: baseline;
-  padding: var(--sd-space-2) var(--sd-space-3);
-  border-radius: var(--sd-radius-sm);
+  padding: var(--sd-space-1) var(--sd-space-3);
+  border-radius: var(--sd-radius-md);
   cursor: pointer;
 }
 
 /* O estado ativo NÃO vira atributo — `aria-selected` já carrega a informação, e
-   o contrato de partes é estreito por decisão. */
+   o contrato de partes é estreito por decisão.
+
+   O fundo é NEUTRO desde a #98 — `--sd-border-default` (texto forte a 12%),
+   não `--sd-surface-wash` (acento a 12%). A troca é a metade que torna o
+   `<mark>` colorido seguro: ver o comentário dele, abaixo, e a Procedência. */
 .opcao[aria-selected='true'] {
-  background: var(--sd-surface-wash);
+  background: var(--sd-border-default);
 }
 
 .titulo {
@@ -242,15 +310,15 @@
   overflow: hidden;
 }
 
-/* O realce é por PESO, e o fundo fica explicitamente em `none`.
-
-   A linha ativa já é uma superfície de estado (`--sd-surface-wash`, que é o
-   acento a 12%). Um `<mark>` tingido poria acento sobre acento no mesmo pixel —
-   duas ênfases brigando, e a de baixo perdendo. O elemento continua sendo
-   `<mark>` porque é ele que carrega o significado; o que troca é a tinta. */
+/* O realce ganhou TINTA na #98 — a âncora colore em acento além de engrossar,
+   e o fundo continua `none`: dois acentos no mesmo pixel só brigam se os dois
+   forem FUNDO. A linha ativa parou de ser `--sd-surface-wash` bem por isto
+   (ver `.opcao[aria-selected]`, acima) — o fundo dela é neutro agora, então o
+   `<mark>` acentuado nunca cai sobre acento. O elemento continua sendo `<mark>`
+   porque é ele que carrega o significado. */
 .opcao mark {
   background: none;
-  color: var(--sd-text-strong);
+  color: var(--sd-accent);
   font-weight: var(--sd-weight-heading);
 }
 
@@ -273,10 +341,13 @@
 }
 
 /* -----------------------------------------------------------------------------
-   O rodapé — legendas de tecla em CARACTERE, nunca em ícone.
+   O rodapé — legendas de tecla em CARACTERE solto, nunca em ícone nem em
+   elemento de teclado.
 
    Três setas desenhadas custariam três slots do manifesto e estourariam o teto
-   de 64. `↑`, `↓`, `↵` e `esc` já são glifos da fonte.
+   de 64. `↑`, `↓`, `↵` e `esc` já são glifos da fonte — a #98 tira a pastilha
+   `<kbd>` que os envolvia, e não sobra CSS de caixa para eles: são texto do
+   próprio `<span>`, herdando `color`/`font-size` daqui.
    ----------------------------------------------------------------------------- */
 .rodape {
   display: flex;
@@ -285,17 +356,6 @@
   border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
   color: var(--sd-text-faint);
   font-size: var(--sd-type-xs);
-}
-
-.rodape kbd {
-  padding: 0 var(--sd-space-1);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-xs);
-  background: transparent;
-  box-shadow: none;
-  color: inherit;
-  font-family: var(--sd-font-mono);
-  font-size: inherit;
 }
 
 /* Abaixo do limiar o rodapé sai: quem está no toque não tem tecla, e a linha

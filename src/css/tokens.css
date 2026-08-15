@@ -242,7 +242,8 @@
      Um número entra, a escada sai: trocar --sd-radius re-forma o site inteiro
      sem incoerência possível.
      --------------------------------------------------------------------------- */
-  --sd-radius-md:   calc(var(--sd-radius) * 0.75);  /* bloco de código, callout, imagem, frame */
+  --sd-radius-lg:   calc(var(--sd-radius) * 1.25);  /* painel da busca */
+  --sd-radius-md:   calc(var(--sd-radius) * 0.75);  /* bloco de código, callout, imagem, frame, controle e linha de resultado da busca */
   --sd-radius-sm:   calc(var(--sd-radius) * 0.5);   /* botão, campo, aba, chip */
   --sd-radius-xs:   calc(var(--sd-radius) * 0.25);  /* código inline, badge, pílula de verbo */
   --sd-radius-full: 999px;                          /* marcador de Step, avatar, pílula */
@@ -466,10 +467,21 @@
      saída correta seria fechar o buraco, e fechá-lo aqui custa uma linha em vez
      de uma perna nova de portão.
 
-     A LARGURA não vira token: ela é `--sd-prose-width`, citada por nome. O painel
-     abre com a medida que o leitor já estava lendo quando apertou a tecla, e
-     nomeá-la de novo criaria uma segunda cópia do mesmo número. */
+     **Correção — a nota abaixo sobre a largura morreu na #98.** Ela dizia que a
+     largura não virava token porque era `--sd-prose-width`, citada por nome: o
+     painel abria com a medida que o leitor já estava lendo. A #98 mede a âncora
+     centralizada em `640px` — um número que não coincide com `--sd-prose-width`
+     (720px), então citar por nome pararia de ser "o mesmo número" e viraria
+     derivação falsa. Os quatro tokens abaixo saem daí: nenhum deriva da escala
+     de espaço pelo mesmo motivo que `--sd-tabs-height` não deriva dela — a
+     medida da âncora não tem relação com a escala, e coincidir por acidente é a
+     derivação que este arquivo já recusa por escrito (ver a Forma, acima). Todos
+     de consumidor único, como este. Procedência: docs/design/busca.md §10. */
   --sd-busca-height: 60dvh;
+  --sd-busca-panel-width:      640px;
+  --sd-busca-panel-top:        54px;
+  --sd-busca-controle-width:   300.75px;
+  --sd-busca-controle-height:  36px;
 
   /* O TERCEIRO token medido contra a viewport, não o único — a nota acima
      mentia por omissão assim que este entrou. Mesmo buraco de portão 1, mesma
