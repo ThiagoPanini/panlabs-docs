@@ -57,9 +57,20 @@ duas, a posição. **Nunca vazio** — aba sem nome é aba que não se clica de 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
 | Raio | `16px` | exato |
+| Preenchimento da casca | duas larguras de fio | avaliação visual |
+| Indicador da aba ativa | pílula sob a aba, não sublinhado | avaliação visual |
 
 A casca da âncora tem raio de fora e a superfície de código tem outro, menor,
-por dentro. A sonda cobra o de fora, que é o que encosta na prosa.
+por dentro — o de dentro está documentado em
+[`code-block.md`](code-block.md). A sonda cobra o de fora, que é o que
+encosta na prosa.
+
+**A casca ganha fio, raio e fundo próprios — o grupo deixou de ser só
+margem.** `--sd-surface-raised`, o mesmo papel que o dropdown e a busca usam
+para uma superfície que não é a página. A régua de abas por dentro troca o
+sublinhado da aba de conteúdo por uma pílula sob a aba ativa, para que as
+duas famílias de aba não se confundam quando aparecem juntas — o escopo é
+`[data-sd-component="code-group"]`, em `componentes.css`.
 
 ## Variantes
 
@@ -104,15 +115,19 @@ separa bloco de bloco dentro de um componente.
 
 ## Tokens consumidos
 
-Camada 1: `--sd-space-6`.
+Camada 2: `--sd-border-default`, `--sd-surface-raised`, `--sd-accent`.
 
-Todo o resto é dos dois componentes que ele compõe: [`tabs`](tabs.md) para a
-régua de abas, [`code-block`](code-block.md) para a moldura de código.
+Camada 1: `--sd-space-1`, `--sd-space-6`, `--sd-border-width`, `--sd-radius`,
+`--sd-radius-sm`, `--sd-radius-full`.
+
+O resto da régua de abas e da moldura de código é dos dois componentes que ele
+compõe: [`tabs`](tabs.md) e [`code-block`](code-block.md).
 
 ## Light e dark
 
-**Não se aplica.** O grupo não consome cor nenhuma; quem conhece modo é o
-[`code-block`](code-block.md), e o que ele conhece está escrito lá.
+**Não se aplica.** A casca e o indicador de aba ativa consomem token
+semântico (`--sd-surface-raised`, `--sd-border-default`, `--sd-accent`) e não
+conhecem modo.
 
 ## Motion / reduced-motion
 
@@ -139,3 +154,5 @@ contrato de estado de entrada mora em [`foco.md`](../foco.md).
 | O título sai da moldura e vira rótulo de aba | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — anatomia medida |
 | Rótulo nunca vazio, com dois fallbacks | **origem própria (implementação)** | aba sem nome não é reclicável |
 | Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Casca com fio, raio e fundo próprios | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a versão anterior só tinha margem, sem medição atrás |
+| Indicador de aba ativa em pílula, escopado ao grupo | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 distingue o indicador do grupo do sublinhado da aba de conteúdo |

@@ -53,7 +53,15 @@
 
 div.theme-code-block {
   border: var(--sd-border-width) solid var(--sd-border-subtle);
-  border-radius: var(--sd-radius-md);
+  border-radius: var(--sd-radius);
+}
+
+/* Dentro de um `code-group`, a casca já tem fio e raio — o bloco por dentro
+   perde os dois próprios e herda um raio menor, 2px adiantado em relação ao
+   da casca, para revelar a moldura em volta em vez de encostar nela. */
+[data-sd-component="code-group"] div.theme-code-block {
+  border: none;
+  border-radius: calc(var(--sd-radius) - var(--sd-border-width) * 2);
 }
 
 /* O título da cerca fica dentro do objeto, na mesma tinta, e o fio que o separa
@@ -90,7 +98,7 @@ li.tabs__item {
   border-block-end: calc(var(--sd-border-width) * 2) solid transparent;
   margin-block-end: calc(var(--sd-border-width) * -1);
   padding: var(--sd-space-2) var(--sd-space-3);
-  color: var(--sd-text-muted);
+  color: var(--sd-text-strong);
   font-size: var(--sd-type-sm);
   line-height: var(--sd-leading-ui);
   transition:
@@ -100,15 +108,46 @@ li.tabs__item {
 
 li.tabs__item[aria-selected='true'] {
   border-block-end-color: var(--sd-accent);
-  color: var(--sd-text-strong);
+  color: var(--sd-accent);
 }
 
-/* O hover do Infima pinta um fundo. Aqui ele só revela a tinta do texto: a aba
-   é uma régua, e fundo numa régua a engorda. Sob `(hover: hover)`, como todo
-   hover do site. */
+/* O hover do Infima pinta um fundo E troca a cor do texto. Aqui a aba inativa
+   só ganha um fio — a cor do texto já está no tom forte em repouso, e não
+   muda de novo no hover. `:not([aria-selected])` impede o fio de sobrepor o
+   sublinhado da aba ativa quando o mouse passa por cima dela. */
 @media (hover: hover) {
-  li.tabs__item:hover {
+  li.tabs__item:hover:not([aria-selected='true']) {
     background-color: transparent;
-    color: var(--sd-text-strong);
+    border-block-end-color: var(--sd-border-default);
   }
+}
+
+/* -----------------------------------------------------------------------------
+   tabs dentro de code-group — pílula em vez de sublinhado
+
+   `[data-sd-component="code-group"]` é o mesmo escopo que distingue as duas
+   famílias de aba na medição: a régua de conteúdo sublinha, o grupo de código
+   marca com uma pílula sob a aba ativa. As regras daqui vencem as de cima por
+   especificidade (o atributo soma um seletor) sem depender de ordem de carga.
+   ----------------------------------------------------------------------------- */
+
+[data-sd-component="code-group"] ul.tabs {
+  border-block-end: none;
+}
+
+[data-sd-component="code-group"] li.tabs__item {
+  position: relative;
+  border-block-end: none;
+  margin-block-end: 0;
+  border-radius: var(--sd-radius-sm);
+}
+
+[data-sd-component="code-group"] li.tabs__item[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: calc(var(--sd-space-1) * -1);
+  block-size: calc(var(--sd-border-width) * 2);
+  background-color: var(--sd-accent);
+  border-radius: var(--sd-radius-full);
 }

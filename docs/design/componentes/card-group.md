@@ -82,7 +82,7 @@ esquerda. O segundo é a **fila incompleta**, e é dele que a regra abaixo fala.
 | --- | --- | --- |
 | Vão entre colunas | `16px` | exato |
 
-O vão de linha da âncora é **zero**, e o de coluna é 16. A sonda cobra o de coluna, que é o que separa dois cartões lado a lado.
+O vão de linha da âncora é **zero**, e o de coluna é 16. A sonda cobra o de coluna, que é o que separa dois cartões lado a lado. **O de linha ficava em 16 também** — `gap` em vez de `column-gap`/`row-gap` separados, sem sonda que pegasse a divergência porque a sonda só mede coluna. Achado ao revisar o componente durante a [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100), não pela sonda.
 
 ## Variantes
 
@@ -146,6 +146,7 @@ cheia.
 | O espaçamento entre cartões e o limiar de três colunas | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — medidos |
 | `auto-fit` no lugar da container query | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — medido: a âncora usa `repeat(var(--cols), minmax(0,1fr))` com `--cols` do autor, não `auto-fit`; o teto de 4 é limite de produto (*"supports one to four columns"*), não reflow de grid. A medição tinha um segundo endereço em `landing.md`, e ele saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — esta linha passa a ser o único |
 | A fila incompleta fica incompleta | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — a âncora não trata a última fila |
+| Vão de linha zero, separado do de coluna | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — a prosa da `## Anatomia` já citava o alvo desde a medição original; `gap` uniforme não o implementava, e a sonda (que só cobre coluna) não pegava a divergência |
 | `--sd-card-min` na camada 1 | origem própria | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) — o piso é derivado e compartilhado |
 | A lista de faixas também na camada 1, como `--sd-card-grid` | **origem própria (implementação)** | o motivo era *"uma declaração serve a landing e o MDX"*, só conferível se a declaração morar num lugar que as duas citem. **Metade dele caiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**: sobrou um consumidor. O token fica pela metade que restou — o precedente é a escada de elevação, que é valor composto e mora na camada 1 pelo mesmo motivo |
 | **O motivo do `--sd-card-grid` perdeu metade, e o token fica** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — *duas superfícies citando um nome* virou *uma*; a justificativa que sobrevive é *valor composto na camada 1*, e ela sozinha já bastava. Registrado em vez de reescrito calado, porque a próxima superfície que quiser a mesma grade precisa saber que o argumento do compartilhamento está vago |

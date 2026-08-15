@@ -103,15 +103,18 @@ echo
 # Documento sem literal passa de graça. Documento com literal e sem declaração
 # reprova, e a saída é escrever a declaração ou tirar o número.
 echo "2  zero número fora de tokens.md"
-PADRAO='#[0-9a-fA-F]{3,8}\b|[0-9.]+(px|rem|em|ms|s)\b|cubic-bezier|oklch\(|rgb\(|hsl\('
+# `(?<!\[)` na primeira alternativa é a partir da #100: sem ela, todo link de
+# issue de três dígitos hex-seguros — `[#100]`, `[#256]` — casa como se fosse
+# cor de três a oito algarismos. O lookbehind exige grep -P, não -E.
+PADRAO='(?<!\[)#[0-9a-fA-F]{3,8}\b|[0-9.]+(px|rem|em|ms|s)\b|cubic-bezier|oklch\(|rgb\(|hsl\('
 DECLARACAO='valor numérico|valor literal|nenhum valor de cor|Nenhum número'
 sem_declaracao=0
 while IFS= read -r arquivo; do
   [ "$arquivo" = "${SPEC}/tokens.md" ] && continue
-  grep -qE "$PADRAO" "$arquivo" || continue
+  grep -qP "$PADRAO" "$arquivo" || continue
   if ! head -20 "$arquivo" | grep -qiE "$DECLARACAO"; then
     echo "   SEM DECLARAÇÃO  ${arquivo} — tem literal de desenho e não diz o que admite"
-    grep -nE "$PADRAO" "$arquivo" | head -3 | sed 's/^/     /'
+    grep -nP "$PADRAO" "$arquivo" | head -3 | sed 's/^/     /'
     sem_declaracao=$((sem_declaracao + 1))
   fi
 done < <(find "$SPEC" -name '*.md' | sort)

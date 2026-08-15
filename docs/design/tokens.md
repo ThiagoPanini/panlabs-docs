@@ -1168,13 +1168,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
   /* --- régua, citação e tabela ------------------------------------------- */
   --ifm-hr-background-color:      var(--sd-border-default);
-  --ifm-blockquote-color:         var(--sd-text-muted);
+  --ifm-hr-margin-vertical:       var(--sd-space-12);
+  --ifm-blockquote-color:         var(--sd-text-body);
   --ifm-blockquote-border-color:  var(--sd-border-strong);
+  --ifm-blockquote-border-left-width: calc(var(--sd-border-width) * 4);
+  --ifm-blockquote-padding-horizontal: var(--sd-space-6);
   --ifm-blockquote-font-size:     var(--sd-type-base);
   --ifm-table-border-color:       var(--sd-border-subtle);
   --ifm-table-background:         transparent;
   --ifm-table-head-background:    transparent;
-  --ifm-table-stripe-background:  var(--sd-border-subtle);
+  --ifm-table-stripe-background:  transparent;
   --ifm-table-cell-color:         var(--sd-text-body);
   --ifm-table-head-color:         var(--sd-text-strong);
   --ifm-table-head-font-weight:   var(--sd-weight-ui);
@@ -1870,11 +1873,30 @@ Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias 
 
 ---
 
+## 14. Alvo medido — citação e régua
+
+Medido em `research/paridade-devin` §11, junto dos componentes — citação (`<blockquote>`) e régua (`<hr>`) são elemento nativo de Markdown, não entram no catálogo de [`componentes/`](componentes/README.md), e por isso o alvo mora aqui.
+
+| Sonda | Alvo | Tolerância |
+| --- | --- | --- |
+| Citação, borda esquerda | `4px` | avaliação visual |
+| Citação, recuo (`padding-left`) | `24px` | avaliação visual |
+| Citação, cor do texto | igual ao corpo, não esmaecida | avaliação visual |
+| Régua, margem vertical | `48px` | avaliação visual |
+
+**Três das quatro corrigidas; uma fica gap declarado.** A citação herdava o default do Infima — borda de `2px` sem recuo próprio, texto em `--sd-text-muted` — e a régua herdava a margem vertical do Infima, metade do alvo. As três fecham nesta mudança, por `--ifm-blockquote-border-left-width`, `--ifm-blockquote-padding-horizontal`, `--ifm-blockquote-color` e `--ifm-hr-margin-vertical`.
+
+**A margem vertical da citação (medida em `25,6px`) fica de fora.** Não tem correspondente exato na escala de espaço deste projeto (base `4`), e o degrau mais próximo, `24px`, já é o valor do recuo horizontal — usar o mesmo número nos dois eixos empataria duas medidas que a âncora mede diferentes. Sem sonda automática para nenhum dos dois elementos ainda.
+
+---
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | **A paleta-alvo do §12 e a escala-alvo do §13** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §3 e §5 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O alvo de citação e régua do §14** | **medido em referência** | `research/paridade-devin` §11 — [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) |
+| Margem vertical da citação fora do alvo publicado | **lacuna de medição** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `25,6px` não tem correspondente na escala de espaço base 4; reabre se a escala ganhar um degrau que bata |
 | **O acento sem linha de alvo** | **delta deliberado** | a cor de marca diverge da âncora por decisão registrada; publicar o azul dela mandaria desfazer a decisão |
 | **Alvo comparado em sRGB, não em OKLCH** | **origem própria (implementação)** | é a forma que o navegador entrega ao pedir cor computada; a folha autora em `oklch()` e as duas formas nunca fechariam por string |
 | Indireção raiz → semântica | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) §1.1 — o token de papel apontando para a raiz injetada, no alvo |

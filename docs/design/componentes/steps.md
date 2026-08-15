@@ -30,8 +30,9 @@ anuncia.
 um `<div>`, então `li > span` o alcança. O **título**, não: ele é um `<p>` no
 meio dos `<p>` que o autor escreve no corpo do passo.
 
-Um fio liga um marcador ao próximo e **não existe no último passo**: sequência que
-termina não aponta para lugar nenhum.
+Um fio liga um marcador ao próximo. **No último passo ele desvanece em
+gradiente**, em vez de repetir o traço cheio: sequência que termina não
+aponta para lugar nenhum, mas corte abrupto não é o que a âncora mede.
 
 **O contador é declarado, não herdado.** O passo é uma grade de duas colunas, e
 um `<li>` que deixa de ser item de lista deixa de incrementar o contador
@@ -45,6 +46,15 @@ implícito — o número sumiria em silêncio. Um contador nomeado fecha essa fa
 | Margem de topo | `40px` | exato |
 
 O marcador de 28×28 e o conector de 1px da âncora não têm sonda: os dois são pseudo-elemento, e `querySelector` não os alcança. Ficam para a avaliação visual.
+
+**A margem de topo estava em `24px`, não `40`** — `npm run paridade` mediu contra o build deste slice e achou o contêiner com `margin-block` simétrico (`--sd-space-6` nos dois lados) onde o alvo pede `40px` em cima e `24px` embaixo. A correção separa os dois valores.
+
+**Um quarto dado do container fica de fora: `14px` de margem à esquerda.** A anatomia mede `margin: 40px 0 24px 14px`, e o recuo esquerdo não tem justificativa própria conhecida — pode ser alinhamento com algo específico do layout da âncora que este projeto não replica. Sem sonda e sem leitura confiável do porquê, fica registrado e não implementado.
+
+**O conector do último passo desvanece em gradiente, e não termina abrupto.**
+O fio continua existindo por um trecho depois do último marcador — só que como
+`background: linear-gradient(...)` em vez de `border-inline-start`, porque
+borda não aceita gradiente.
 
 ## Variantes
 
@@ -117,5 +127,7 @@ acessibilidade — a posição do item já é anunciada pela lista.
 | Ícone substitui o número | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §8 |
 | `<ol>`/`<li>` como substrato | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
 | Contador nomeado em vez do implícito | **origem própria (implementação)** | um `<li>` que não é item de lista não incrementa o contador, e a falha seria muda |
-| O fio não existe no último passo | origem própria | este slice |
+| O fio do último passo desvanece em gradiente, em vez de não existir | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a versão anterior cortava o fio no penúltimo passo, sem medição atrás |
+| Margem de topo 40, separada da de baixo (24) | **origem própria (correção)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — achado rodando `npm run paridade` contra o build deste slice; `margin-block` simétrico não tinha medição atrás |
+| Margem esquerda de 14px | **lacuna de medição** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 mede o valor, mas nenhuma leitura confiável explica a origem dele; reabre com uma medição que explique o número |
 | Uma parte publicada | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |

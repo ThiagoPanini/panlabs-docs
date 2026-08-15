@@ -42,21 +42,21 @@ import estilos from './catalogo.module.css';
  * declarado no próprio `.callout`.
  */
 const VARIANTES = {
-  note: {glifo: 'pencil-line', classe: estilos.calloutNote},
-  info: {glifo: 'info', classe: undefined},
-  tip: {glifo: 'lightbulb', classe: estilos.calloutTip},
-  warning: {glifo: 'triangle-alert', classe: estilos.calloutWarning},
+  note: {glifo: 'pencil-line', classe: estilos.calloutNote, tamanho: 'sm'},
+  info: {glifo: 'info', classe: undefined, tamanho: 'md'},
+  tip: {glifo: 'lightbulb', classe: estilos.calloutTip, tamanho: 'md'},
+  warning: {glifo: 'triangle-alert', classe: estilos.calloutWarning, tamanho: 'md'},
 };
 
 export default function Callout({variant, title, id, children}) {
-  const {glifo, classe} = VARIANTES[variant] ?? VARIANTES.info;
+  const {glifo, classe, tamanho} = VARIANTES[variant] ?? VARIANTES.info;
   return (
     <div
       className={clsx(estilos.callout, classe)}
       id={id}
       data-sd-component="callout"
       data-sd-variant={variant}>
-      <Icon name={glifo} size="sm" />
+      <Icon name={glifo} size={tamanho} />
       {/* Sem `data-sd-part` no corpo: ele é o único `<div>` filho, e o irmão é
           um `<svg>` — a skin alcança por `> div`. O título, não: ele é um `<p>`
           entre os `<p>` que o autor escreve, e nenhum seletor de tipo o separa

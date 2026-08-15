@@ -46,20 +46,26 @@ pelo registro `Admonition/Types` — degrau 3, zero linha de upstream copiada. O
 | --- | --- | --- |
 | Raio | `16px` | exato |
 | Corpo tamanho | `14px` | exato |
+| Ícone, note | `16px` | avaliação visual |
+| Ícone, tip / warning / info | `18–20px` | avaliação visual |
 
 Na âncora o corpo é menor que a prosa em volta, e é isso que a segunda linha
-cobra: o aviso lê como aparte, não como continuação do texto.
+cobra: o aviso lê como aparte, não como continuação do texto. O ícone não é
+uniforme entre variantes — `note` mede menor que as outras três — e a escala
+fechada de três tamanhos de [`icon`](icon.md) não tem um degrau exato em
+`18px`; `note` fecha em `sm` (`16px`), e as demais em `md` (`20px`), o degrau
+mais perto disponível.
 
 ## Variantes
 
 Quatro, e nenhuma prop além de título e corpo.
 
-| Variante | Cor-base | Ícone | Papel |
-| --- | --- | --- | --- |
-| `note` | `--sd-state-info` | `pencil-line` | o contexto que o leitor não pediu |
-| `info` | **nenhuma** — neutra | `info` | a nota lateral sem carga |
-| `tip` | `--sd-state-success` | `lightbulb` | a sugestão, e a confirmação |
-| `warning` | `--sd-state-warn` | `triangle-alert` | o que muda o que ele ia fazer |
+| Variante | Cor-base | Ícone | Tamanho | Papel |
+| --- | --- | --- | --- | --- |
+| `note` | `--sd-state-info` | `pencil-line` | `sm` | o contexto que o leitor não pediu |
+| `info` | **nenhuma** — neutra | `info` | `md` | a nota lateral sem carga |
+| `tip` | `--sd-state-success` | `lightbulb` | `md` | a sugestão, e a confirmação |
+| `warning` | `--sd-state-warn` | `triangle-alert` | `md` | o que muda o que ele ia fazer |
 
 **`info` é a variante neutra e `note` é a azul.** A inversão contra a convenção é
 deliberada, e é ela que faz o sistema ler como a âncora.
@@ -113,7 +119,7 @@ Camada 2: `--sd-state-info`, `--sd-state-success`, `--sd-state-warn` e os
 `--sd-text-strong` na variante neutra; `--sd-text-body`.
 
 Camada 1: `--sd-space-3`, `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
-`--sd-radius-md`, `--sd-weight-ui`, `--sd-leading-ui`.
+`--sd-radius`, `--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`.
 
 Camada 3, declarados no escopo do componente: `--sd-callout-fill`,
 `--sd-callout-edge`, `--sd-callout-ink`. **É a variante que os move, e é só isso
@@ -166,3 +172,6 @@ texto ao lado, e anunciá-lo seria repetição.
 | Duas partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 — a régua estreita aplicada |
 | O DOM não é um `.alert` | **origem própria (implementação)** | consequência de `Types` apontar para componente nosso; ver a correção do adaptador em [`tokens.md`](../tokens.md) |
 | `:::` dentro de children de JSX funciona | **origem própria (medição)** | lacuna declarada pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), medida no artefato deste slice |
+| Ícone maior em `tip`/`warning`/`info` que em `note` | **delta deliberado** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 mede `tip` em `18px`; a escala fechada de três tamanhos de [`icon.md`](icon.md) não tem esse degrau, e `md` (`20px`) é o mais perto. Divergência por ajuste à escala existente, não medição exata — a versão anterior renderizava as quatro no mesmo tamanho |
+| `danger` também está fora da âncora, não só do uso medido | **origem própria** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 buscou a tag nos `.md` da âncora e não achou; classificação distinta e adicional à linha de uso zero da [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) acima. Decidir se `danger` entra fica fora deste ticket — ele permanece removível a uma linha em `Types.js`, sem código morto no meio tempo |
+| Raio 16, corpo 14 | **origem própria (correção)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — o alvo medido da `## Anatomia` já dizia isso desde a [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93); `npm run paridade` mediu `--sd-radius-md` (12px) e corpo herdando 16px da prosa ambiente. Achado ao rodar o comparador contra o build deste slice, não por leitura de CSS |
