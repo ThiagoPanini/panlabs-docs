@@ -7,23 +7,29 @@
  * GERADO por scripts/gerar-referencia.mjs. Não edite à mão: o portão 5 regenera
  * e reprova em `git diff --exit-code`.
  *
- * Ele é uma LISTA DE IDS e nada além. A árvore da aba é escrita à mão em
- * `sidebars-ferramentas.js`, que importa esta lista e a espalha dentro de
- * `Biblioteca C` — no nível 3, que é o teto de profundidade. Emitir a árvore
- * inteira daria ao gerador a posse das quinze folhas autorais da aba, que ele
- * não conhece.
+ * Ele é uma LISTA DE ITENS DE FOLHA e nada além. A árvore da aba é escrita à
+ * mão em `sidebars-ferramentas.js`, que importa esta lista e a espalha dentro
+ * de `Biblioteca C` — no nível 3, que é o teto de profundidade. Emitir a
+ * árvore inteira daria ao gerador a posse das quinze folhas autorais da aba,
+ * que ele não conhece.
  *
- * Procedência: docs/design/referencia.md §5 · docs/adr/0008.
+ * Issue #97: cada item carrega `className: 'sidebar-icone sidebar-icone--bibliotecas'` — a mesma família das três folhas autorais vizinhas de
+ * `Biblioteca C`. A regra é *toda folha tem ícone*, sem exceção para folha
+ * gerada; o gerador precisa saber o slug da família porque o contrato de
+ * assinatura não carrega posição na sidebar.
  *
- * @type {string[]}
+ * Procedência: docs/design/referencia.md §5 · docs/design/icones.md §8 ·
+ * docs/adr/0008.
+ *
+ * @type {import('@docusaurus/plugin-content-docs').SidebarItemConfig[]}
  */
 const referencia = [
-  'bibliotecas/biblioteca-c/referencia/panlabs-esteira',
-  'bibliotecas/biblioteca-c/referencia/esteira',
-  'bibliotecas/biblioteca-c/referencia/passo',
-  'bibliotecas/biblioteca-c/referencia/esteira-trabalho',
-  'bibliotecas/biblioteca-c/referencia/esteira-gerar',
-  'bibliotecas/biblioteca-c/referencia/padrao-python',
+  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/panlabs-esteira', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/esteira', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/passo', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/esteira-trabalho', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/esteira-gerar', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/padrao-python', className: 'sidebar-icone sidebar-icone--bibliotecas'},
 ];
 
 export default referencia;

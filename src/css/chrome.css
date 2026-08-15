@@ -489,31 +489,35 @@ html.docs-doc-page .subtitulo {
 /* -----------------------------------------------------------------------------
    3. Sidebar
 
-   `--sd-sidebar-width`, ícone por categoria de topo, hierarquia por nível e
-   falso-negrito no item ativo. **Nada disto custa swizzle**: o `className` é
-   contrato público do schema de item de sidebar, e o resto sai de
-   `ThemeClassNames`.
+   `--sd-sidebar-width`, ícone por folha, recuo por nível inteiro no link, e
+   pílula preenchida no item ativo — issue #97 reescreveu os três eixos contra
+   a âncora. **Nada disto custa swizzle**: o `className` é contrato público do
+   schema de item de sidebar, e o resto sai de `ThemeClassNames`.
 
-   O ícone é `mask-image` + `currentColor` — o segundo renderizador. Não existe
-   ponto de swizzle `safe` para injetar componente React num item de sidebar, e
-   esta é a única rota zero-swizzle. Como a máscara é pintada com `currentColor`,
-   o estado ativo pinta o ícone junto com o texto, sem uma linha a mais e sem
-   segundo desenho para o modo escuro.
+   O ícone continua `mask-image` + `currentColor` — o segundo renderizador, e a
+   única rota zero-swizzle: não existe ponto `safe` para injetar componente
+   React num item de sidebar. O que a #97 mudou é ONDE ele mora: a âncora marca
+   a FOLHA e nunca o cabeçalho de grupo — o inverso do que este projeto tinha
+   até aqui, que marcava a categoria de topo e deixava a folha muda (a regra
+   antiga e a nova estão em docs/design/icones.md §8). Os onze pares
+   seção→ícone não mudam — só o nó que carrega o `className` do manifesto.
 
-   O rótulo da categoria é um `<a class="menu__link">` com um
-   `<button class="menu__caret">` irmão — a categoria é clicável e aponta para a
-   visão geral. O `::before` mora no link, não no `<li>`, para herdar a cor dele.
+   Como a máscara é pintada com `currentColor`, o estado ativo continua
+   pintando o ícone junto com o texto, de graça, e continua sem segundo
+   desenho para o modo escuro.
+
+   O rótulo de categoria continua um `<a class="menu__link">` com um
+   `<button class="menu__caret">` irmão — a categoria é clicável e aponta para
+   a visão geral. Isso não muda; o que muda é que a categoria deixou de ser o
+   nó que leva `.sidebar-icone`.
    ----------------------------------------------------------------------------- */
 
-/* **Os dois seletores são obrigatórios, e isso é medido.** O Docusaurus
-   normaliza categoria sem filhos para LINK: o `<li>` mantém o `className`, mas
-   o rótulo deixa de ser envolvido por `.menu__list-item-collapsible` e passa a
-   ser `.menu__link` filho direto. Com um seletor só, a seção perderia o ícone
-   no dia em que a última folha dela saísse — e a falha seria muda.
-
-   O marcador é o `className` do manifesto, não o nível: `.sidebar-icone` é a
-   definição de *seção de topo* neste sistema, e ele sobrevive às duas formas. */
-.sidebar-icone > .menu__list-item-collapsible > .menu__link::before,
+/* A folha é sempre um `<a class="menu__link">` direto dentro do `<li>`, sem o
+   `<button class="menu__caret">` que a categoria tem — ela não tem filho para
+   colapsar. Por isso um seletor só basta aqui: a dupla forma que o ícone de
+   cabeçalho precisava (categoria real contra categoria normalizada para link
+   quando fica sem filhos) não tem para quem ler numa folha — folha nunca teve
+   filho para perder. */
 .sidebar-icone > .menu__link::before {
   content: '';
   flex: none;
@@ -524,10 +528,10 @@ html.docs-doc-page .subtitulo {
   mask: var(--sd-sidebar-icone) center / contain no-repeat;
 }
 
-/* Os onze pares seção→ícone. `Biblioteca C` não recebe: ela é categoria de
-   SEGUNDO nível, e a regra é *ícone só no nó de topo da sidebar* — foi a
-   reescrita dela, e não o teto de profundidade, que destravou o nível 3. As três
-   tabs de navbar também não recebem. */
+/* Os onze pares seção→ícone — inalterados pela #97, só o consumidor mudou.
+   `Biblioteca C` (nível 2, sem ícone: ela é cabeçalho de grupo) e as folhas
+   dela — autorais e geradas — herdam `--bibliotecas`: a família é a da
+   categoria de topo, e o ícone não reinicia por nível. */
 .sidebar-icone--api-owner          { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
 .sidebar-icone--security-champion  { --sd-sidebar-icone: url('/icons/lock.svg'); }
 .sidebar-icone--ambiente           { --sd-sidebar-icone: url('/icons/layers.svg'); }
@@ -540,26 +544,87 @@ html.docs-doc-page .subtitulo {
 .sidebar-icone--skills             { --sd-sidebar-icone: url('/icons/bot.svg'); }
 .sidebar-icone--servidores-mcp     { --sd-sidebar-icone: url('/icons/server.svg'); }
 
-/* Hierarquia. O teto de profundidade é 2, então existem exatamente dois degraus
-   a desenhar — e é por isso que a regra de ícone (obrigatório no topo, ausente
-   na folha) tem leitura em todos os nós que existem.
+/* Tipografia e raio — um corpo só, categoria e folha, em todo nível. A âncora
+   usa peso normal com entrelinha maior, e reserva toda marcação de ativo para
+   a pílula (abaixo) e o falso-negrito — a mesma técnica que este projeto já
+   tinha para o item ativo, agora a única fonte de ênfase textual da sidebar.
+   O degrau de cor/peso que separava cabeçalho de folha saiu com o ícone: não
+   sobra sinal nenhum para os dois lerem diferente.
 
-   O rótulo de seção usa o mesmo par de seletores do ícone, pelo mesmo motivo. */
-.sidebar-icone > .menu__list-item-collapsible > .menu__link,
-.sidebar-icone > .menu__link {
-  color: var(--sd-text-strong);
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-ui);
-}
+   `line-height: calc(24 / 14)` é 24px a 14px de fonte — o alvo publicado em
+   docs/design/tokens.md §13, escrito como razão em vez de decimal cravado
+   porque `24 ÷ 14` não fecha em dízima finita: um decimal de quatro casas
+   (o padrão deste arquivo, `1.7143`) mede 24,0002px no navegador — divergência
+   pequena, mas o alvo é `exato`, e o comparador de paridade não arredonda.
+   Deixar o `calc()` fazer a divisão em ponto flutuante duplo é mais preciso
+   que qualquer decimal escrito à mão, e nomeia a derivação: 24 é o alvo, 14 é
+   `--sd-type-sm`. Não é `--sd-leading-code` (1,7143): as duas entrelinhas
+   nascem de medições independentes que bateram perto uma da outra, e nomear a
+   daqui a partir de "código" seria o acoplamento falso que a escada de
+   leading já evita ao declarar `--sd-leading-h4` em nome próprio apesar de
+   repetir o número de `--sd-leading-ui`.
 
-/* Folha, nos dois níveis onde ela existe: nível 2 dentro de categoria, e nível
-   1 na sidebar plana de `Receitas`. `:not(.sidebar-icone)` é o que separa folha
-   de topo quando o Docusaurus normaliza a categoria vazia para link. */
-.theme-doc-sidebar-item-link-level-1:not(.sidebar-icone) > .menu__link,
-.theme-doc-sidebar-item-link-level-2 > .menu__link {
-  color: var(--sd-text-muted);
+   `border-radius` some do mixin do Infima (0,25rem cravado) e vira o alvo
+   publicado — `--sd-radius-md` bate 12px exato porque a base do projeto é 16.
+
+   `color` sai daqui e mora na regra seguinte, com `:not(.menu__link--active)`
+   — medido, não suposto: um seletor de duas classes (`.theme-doc-sidebar-menu
+   .menu__link`) tem a MESMA especificidade que `.menu__link.menu__link--active`
+   do Infima, e no empate quem carrega por último no cascade vence. Sem a
+   exclusão, o texto e o ícone do item ativo ficavam presos em
+   `--sd-text-muted` — o próprio bug que "texto e ícone do ativo herdam o
+   acento de graça" (a nota original desta seção) afirmava já estar resolvido. */
+.theme-doc-sidebar-menu .menu__link {
   font-size: var(--sd-type-sm);
   font-weight: var(--sd-weight-body);
+  line-height: calc(24 / 14);
+  border-radius: var(--sd-radius-md);
+}
+
+.theme-doc-sidebar-menu .menu__link:not(.menu__link--active) {
+  color: var(--sd-text-muted);
+}
+
+/* Recuo por nível — inteiro no link, issue #97. Até aqui o degrau vinha
+   metade da lista aninhada (o Infima soma `padding-left` a cada `<ul>` dentro
+   de `<ul>`) e metade do próprio link; a âncora não faz essa divisão, e copiar
+   o resultado sem copiar a decisão produz recuo que parece certo e se desfaz
+   no segundo nível — a pegadinha nomeada na issue.
+
+   A lista aninhada perde o `padding-left`; ela já não tinha margem nem borda
+   esquerda para perder — `.menu__list` zera margem na base do Infima, e
+   nenhuma regra deste projeto jamais desenhou borda nela.
+
+   O degrau é um `--sd-space-4` inteiro por nível, o mesmo total que a soma
+   antiga já dava: a #97 move o mecanismo, não a métrica. Nível 1 não precisa
+   de linha própria — `--ifm-menu-link-padding-horizontal` já entrega os 16px
+   do alvo publicado. Nível 3 só existe em `Ferramentas › Bibliotecas ›
+   Biblioteca C`, o único nó do site que usa o teto de profundidade (ver
+   docs/design/informacao.md §3.1).
+
+   Escopado a `.theme-doc-sidebar-menu`: `.menu__list .menu__list` sozinho
+   também casa a gaveta do dropdown de locale na navbar móvel — `Collapsible`
+   aninha um `<ul class="menu__list">` dentro do `<ul class="menu__list">` da
+   gaveta inteira, a mesma forma da sidebar. Sem o escopo, este zero vazaria
+   pro recuo do dropdown, que não pediu nada disto.
+
+   Um seletor só, não dois: `.theme-doc-sidebar-menu` é a MESMA tag que carrega
+   `.menu__list` na raiz da árvore — não um ancestral dela —, então qualquer
+   `.menu__list` aninhado (nível 2 ou 3) já é descendente de
+   `.theme-doc-sidebar-menu` sozinho. Encadear um segundo `.menu__list` no
+   seletor exigiria um ancestral ACIMA da raiz com as duas classes, que não
+   existe, e zeraria a busca inteira. */
+.theme-doc-sidebar-menu .menu__list {
+  padding-left: 0;
+}
+
+.theme-doc-sidebar-item-link-level-2 > .menu__link,
+.theme-doc-sidebar-item-category-level-2 > .menu__list-item-collapsible > .menu__link {
+  padding-left: calc(var(--sd-space-4) * 2);
+}
+
+.theme-doc-sidebar-item-link-level-3 > .menu__link {
+  padding-left: calc(var(--sd-space-4) * 3);
 }
 
 /* Falso-negrito no item ativo. Trocar o peso reflui o texto e faz o item pular
@@ -567,6 +632,22 @@ html.docs-doc-page .subtitulo {
 .theme-doc-sidebar-menu .menu__link--active {
   text-shadow: var(--sd-negrito-optico);
 }
+
+/* A PÍLULA DO ATIVO não ganha regra de FUNDO própria — ela já sai correta da
+   composição acima. `--ifm-menu-color-background-active` já era
+   `--sd-surface-wash` (o acento a 12%) antes desta issue; o que faltava era só
+   o raio, que herdava 0,25rem cravado do mixin do Infima e agora sai da regra
+   de tipografia — mesmo seletor, `.menu__link`, ativo ou não. A âncora não usa
+   barra lateral, borda nem sombra no item ativo, e este projeto nunca desenhou
+   nenhuma das três aqui: não há o que remover.
+
+   O TEXTO E O ÍCONE precisaram, sim, de uma exclusão: `--ifm-menu-color-active`
+   já é `--sd-accent`, e o ícone é `currentColor`, mas a regra de tipografia
+   acima cravava `color` em TODO `.menu__link` com a mesma especificidade da
+   regra `--active` do Infima — no empate, o cascade decidia, e decidia errado.
+   O `:not(.menu__link--active)` na regra de cor é o que devolve o acento ao
+   item ativo; sem ele, texto e ícone do ativo ficavam presos em
+   `--sd-text-muted`. */
 
 /* O DIVISOR VERTICAL — vazamento do substrato nativo, e não pedido nenhum.
    `DocRoot/Layout/Sidebar` (hasheada) declara `border-right: 1px solid

@@ -177,8 +177,14 @@ for par in "${PT}=pt-BR" "${EN}=en"; do
   }
 done
 
-ids=$(grep -c "^  'bibliotecas/biblioteca-c/referencia/" "$FRAGMENTO" 2>/dev/null || echo 0)
+# Issue #97: o fragmento passou de lista de strings para lista de itens de
+# folha (`{type: 'doc', id: '...', className: '...'}`), porque toda folha da
+# sidebar ganhou ícone. A contagem casa o `id:`, não mais a string crua.
+ids=$(grep -c "^  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/" "$FRAGMENTO" 2>/dev/null || echo 0)
 [ "$ids" = 6 ] || reprova "${FRAGMENTO} declara ${ids} ids, esperado 6"
+
+classes=$(grep -c "^  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/.*className: 'sidebar-icone sidebar-icone--bibliotecas'}," "$FRAGMENTO" 2>/dev/null || echo 0)
+[ "$classes" = 6 ] || reprova "${FRAGMENTO}: ${classes} ids carregam \`sidebar-icone--bibliotecas\`, esperado 6 — toda folha tem ícone"
 
 grep -q "^import referencia from './${FRAGMENTO}';" sidebars-ferramentas.js ||
   reprova "sidebars-ferramentas.js não importa o fragmento, e o ramo gerado fica fora da árvore"

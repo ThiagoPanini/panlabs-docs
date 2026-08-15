@@ -169,10 +169,11 @@ export const TETO = 64;
  * Os onze pares seção→ícone. A chave é o `id` da categoria de topo — o mesmo
  * que vira `sidebar-icone--<chave>` no `className` da sidebar.
  *
- * **`Biblioteca C` não recebe ícone**, e é a regra reescrita que diz isso: o
- * ícone vai **só no nó de topo da sidebar**. Ela é categoria de segundo nível, e
- * a formulação antiga (*obrigatório na categoria de topo, ausente na folha*) é
- * que não tinha leitura no nível 3.
+ * Issue #97: o `className` mora na FOLHA, não na categoria — a âncora marca a
+ * folha e nunca o cabeçalho de grupo. `Biblioteca C` não recebe ícone porque é
+ * cabeçalho de grupo (categoria), em qualquer nível em que estivesse; as
+ * folhas dela — autorais e geradas — herdam a chave da categoria de topo que
+ * as contém (`bibliotecas`), não uma chave própria de nível 3.
  *
  * As três tabs de navbar continuam sem ícone.
  */

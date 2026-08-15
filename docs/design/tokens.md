@@ -1227,7 +1227,15 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      horizontal do navbar. A marca e o primeiro ícone de seção ficam na mesma
      vertical, e o alinhamento deixa de depender de coincidência. */
   --ifm-menu-link-padding-horizontal: var(--sd-space-4);
-  --ifm-menu-link-padding-vertical:   var(--sd-space-2);
+  /* Issue #97: altura de item alvo é 36px, e a entrelinha (24px, ver
+     chrome.css) já ocupa a maior parte disso — sobra 12px para os dois
+     paddings verticais, 6 cada. `--sd-space-1` é o único literal da escada, e
+     a razão dela ser 4 (não 8) já é o meio-passo que a densidade de 14px pede
+     em chip, badge e ícone — mas nenhum consumidor até aqui multiplicava por
+     um fator fracionário. Este é o primeiro: `1,5×` de `--sd-space-1` chega
+     nos 6px sem literal novo, reaproveitando a base fina que já existe, por
+     uma técnica nova que a escada ainda não tinha precisado. */
+  --ifm-menu-link-padding-vertical:   calc(var(--sd-space-1) * 1.5);
 
   /* --- TOC ---------------------------------------------------------------- */
   --ifm-toc-border-color:      var(--sd-border-subtle);
