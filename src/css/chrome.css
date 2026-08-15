@@ -25,46 +25,88 @@
 /* -----------------------------------------------------------------------------
    1. A cadeia de proporções
 
-   `--sd-container-width` → `--sd-doc-width` (75%) → prosa. Os valores moram em
-   `tokens.css`; aqui e no documento eles se citam por nome, para que a cadeia
-   não tenha uma segunda versão que envelhece sozinha.
+   `--sd-container-width` → `--sd-doc-width` (container − TOC) → prosa. Os
+   valores moram em `tokens.css`; aqui e no documento eles se citam por nome,
+   para que a cadeia não tenha uma segunda versão que envelhece sozinha.
 
-   O CONGELAMENTO é `sidebar + container + 2 × (gutter − 16)`, e ele é o número
-   a partir do qual nada mais se mexe na tela. Os 16 são o preenchimento que o
-   Infima já põe no `.container`; o `<main>` completa o que falta.
+   O CONGELAMENTO é `sidebar + container` — token em `tokens.css`, não mais só
+   prosa — e é a largura a partir da qual o grupo sidebar + conteúdo + TOC
+   para de crescer. Não leva termo de gutter: quem fazia esse papel era o
+   preenchimento horizontal do `<main>`, e ele saiu — ver a nota abaixo do
+   bloco `(a)`.
 
-   Correção de premissa que morre aqui: o *"shell total = container + sidebar"*
-   que este arquivo e `chrome.md` escreviam NUNCA foi o congelamento — ele
-   ignora o preenchimento do `<main>` e erra para menos.
+   A #96 dá ao congelamento o seu PRIMEIRO consumidor real: antes dele, sidebar
+   e `<main>` eram dois irmãos soltos dentro de `.docRoot` — hashed, sem
+   seletor estável —, e toda a folga da tela ia para a direita porque nada
+   centralizava o par. A correção não toca `.docRoot`: seleciona ESTRUTURA, não
+   nome. `<main>` é landmark HTML5 e é sempre filho direto do flex que também
+   segura a sidebar — `div:has(> main)` alcança esse pai sem citar a classe
+   hasheada, e sem custar `unsafe`. Provado em protótipo antes desta
+   implementação — ver `prototypes/96-centralizacao` na branch descartável, e
+   o veredito no commit dela.
 
-   Ela fecha em três declarações, e as três existem por um motivo mecânico:
+   O NÚMERO MUDOU DEPOIS DO PROTÓTIPO: ele testou o mecanismo com 1472 (o
+   congelamento de antes da #96), e o mecanismo passou. O NÚMERO final é
+   1408, e só apareceu medindo o site inteiro contra a âncora — `sidebar(288)
+   + container(1152) = 1440` não cabia num quadro de 1408, que é o que as
+   margens simétricas de `chrome.md` §11 exigem. `--sd-container-width` caiu
+   para 1120 para fechar a conta: `288 + 1120 = 1408`. Ver `tokens.css`. */
 
-   (a) O gutter mora no `<main>` e não no `.container`. Trocar o preenchimento
-       do container quebraria a cadeia inteira — a margem negativa do `.row` é
-       calibrada contra ele, e o `.col` de 75% mede a row. O container fica com
-       o que o Infima dá; o `<main>` completa o que falta para o gutter.
-   (b) O `.col` perde o preenchimento horizontal. Sem isso a coluna de conteúdo
-       nasce menor que os 75%, porque os dois lados são cobrados por dentro
-       deles.
+html.docs-doc-page div:has(> main) {
+  max-width: var(--sd-congelamento);
+  margin-inline: auto;
+}
+
+/* Ela fecha em três declarações, e as três existem por um motivo mecânico:
+
+   (a) O `<main>` PERDEU o preenchimento horizontal que tinha — ver a nota na
+       regra de `<main>` abaixo. Antes da #96 era ele quem completava a
+       distância até a borda da viewport; agora essa distância é o
+       `margin-inline: auto` do wrapper acima, e um preenchimento a mais
+       aqui dobraria a conta.
+   (b) O `.col` perde o preenchimento horizontal. Sem isso a coluna de
+       conteúdo nasce menor do que deveria, porque os dois lados são cobrados
+       por dentro dela.
    (c) A coluna do TOC recebe a separação de um lado só, para que a borda
        direita dela feche com a borda direita do container. A separação é
-       `--sd-space-6` e é ORIGEM PRÓPRIA: ela foi escolhida para a LISTA cair
-       em 264, que é o número medido. A coluna fica em 288 porque é 25% de um
-       grid de doze que não se mexe — o elo que não fecha contra a âncora, e
-       ele vai escrito em `chrome.md` como tal.
-   ----------------------------------------------------------------------------- */
+       `--sd-space-6`, ORIGEM PRÓPRIA — ver `tokens.css`.
+
+   A COLUNA DO TOC NÃO É MAIS 25% DE UM GRID DE DOZE. O grid morreu nesta
+   issue: `.row` continua `display:flex` do Infima — não se toca —, mas
+   `.col--3` deixa de ler a fração de 12 e passa a ler `--sd-toc-width`
+   direto, um comprimento explícito. A coluna de conteúdo não precisa de
+   declaração simétrica: ela é `.col` NUA — sem `col--N` — e a própria regra
+   do Infima já a faz `flex: 1 0`, crescendo para preencher o que sobra da
+   `.row` depois do TOC fixo. É exatamente a "largura explícita" que a issue
+   pede, e é o motivo de a prosa poder variar com a presença do TOC em vez de
+   travar num número só — ver mais abaixo, e `chrome.md` §1.2 e §1.5. */
+
+html.docs-doc-page main > .container > .row > .col--3 {
+  flex-basis: var(--sd-toc-width);
+  max-width: var(--sd-toc-width);
+}
 
 html.docs-doc-page main {
-  padding-inline: calc(var(--sd-gutter) - var(--sd-space-4));
+  /* O `<main>` PERDEU O PREENCHIMENTO HORIZONTAL na #96. Até aqui ele
+     completava, com `calc(gutter − 16)`, a distância até a borda da
+     viewport que ele mesmo era — o `<main>` não tinha pai que o
+     centralizasse, então tinha que abrir a própria margem. Agora tem: o
+     wrapper de `chrome.css` §1 centraliza o grupo inteiro com
+     `margin-inline: auto`, e essa distância vira trabalho dele. Manter o
+     preenchimento aqui SOMARIA à margem do wrapper em vez de completá-la —
+     e foi exatamente esse dobrar que produzia os 32px de sobra que a
+     álgebra do congelamento (ver `tokens.css`) não fechava. Note que abaixo
+     de 997 esta declaração já valia zero — `gutter` e `--sd-space-4` são o
+     mesmo número aí —, então a mudança não toca a tela estreita. */
 
-  /* O TOPO DO CONTEÚDO — o último elo da cadeia, e o único vertical.
+  /* O TOPO DO CONTEÚDO — o último elo da cadeia, e o único vertical, e o
+     único que sobrevive à #96 sem mudar de mecanismo.
 
-     Ele completa no `<main>` o que o container já dá, exatamente como o gutter
-     horizontal na linha acima. E aqui isso não é simetria de estilo: é a ÚNICA
-     rota. O `DocRoot/Layout/Main` cola `padding-top--md` no container, e essa
-     classe do Infima é `!important` — nenhuma declaração de folha de estilo a
-     vence sem escrever um `!important` de volta, que é o que este projeto não
-     faz em lugar nenhum.
+     Ele completa no `<main>` o que o container já dá. E aqui isso não é
+     simetria de estilo: é a ÚNICA rota. O `DocRoot/Layout/Main` cola
+     `padding-top--md` no container, e essa classe do Infima é `!important` —
+     nenhuma declaração de folha de estilo a vence sem escrever um
+     `!important` de volta, que é o que este projeto não faz em lugar nenhum.
 
      Somando por fora, a conta fecha sem brigar: 16 do container mais o que
      falta para 40. Medido: o `<article>` abre em 152 numa viewport larga, com o
@@ -88,26 +130,45 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    `.theme-doc-markdown` como superfície não acha nada.
 
    O que sobrevive do cartão é o `max-width`, e ele MUDA DE DONO: sobe do corpo
-   para a coluna. O motivo é o mesmo de sempre, e é o que a caixa invisível
-   existe para segurar — medido em 3.10.2, o `DocItem/Layout` aplica a classe de
-   75% sempre que `hide_table_of_contents` NÃO está no front matter, inclusive
-   em página sem heading. São TRÊS configurações, não duas, e é a terceira que
-   manda a coluna a 100% da linha.
+   para a coluna. Medido em 3.10.2, o `DocItem/Layout` aplica `docItemCol`
+   (`max-width: 75% !important`, hasheada) sempre que `hide_table_of_contents`
+   NÃO está no front matter — inclusive em página sem heading, que não tem TOC
+   para mostrar mas também não foi mandada esconder. SÃO TRÊS configurações:
 
-   Verificado no fonte: na configuração sem TOC a classe hasheada **não é
-   aplicada**, então não há `!important` a vencer. Nas outras duas a declaração é
-   INERTE, porque 75% de 1152 é exatamente `--sd-doc-width`. Ela serve uma
-   configuração que nenhuma página usa hoje, e existe para o defeito não voltar
-   mudo.
+   A. **Com TOC** (`toc.length > 0`, não escondido) — `.col--3` existe como
+      irmão, e `docItemCol` também se aplica. Mas quem decide a largura aqui
+      não é o `!important`: é o `flex: 1 0` da coluna NUA, que cresce para
+      preencher o que sobra depois do TOC fixo — 816, hoje, contra o teto de
+      840 do `!important`. O teto fica acima do que o flex entrega e não
+      belisca nada.
+   B. **Sem heading, não escondida** — `docItemCol` se aplica do mesmo jeito
+      que em A (a condição é só `!hidden`), mas não há `.col--3` para dividir a
+      `.row` com ela. A coluna cresce sozinha até o teto, e o teto AQUI BATE:
+      840 — 75% de `--sd-container-width` —, e não há como descer disso sem
+      `!important` de volta — o que este projeto não escreve. É a única das
+      três configurações que o CSS não alcança.
+   C. **Escondida no front matter** (`hide_table_of_contents: true`) —
+      `docItemCol` não se aplica, e sem ela não há teto nenhum de upstream. A
+      coluna iria a 100% da `.row` se nada aqui dissesse o contrário.
+
+   ANTES da #96, o alvo das três era o MESMO número — 864, 75% dos 1152 de
+   então — e a caixa invisível existia para PREVENIR a configuração C de
+   alargar. A #96 inverte a decisão que produzia isso — ver `chrome.md`
+   §1.5 — e o `max-width` que sobrevive do cartão muda de papel: de "trava C
+   no mesmo pixel de A" para "trava só A", com `:has()` decidindo qual das
+   duas está na tela. B fica de fora dos dois lados, pelo motivo escrito
+   acima: não é escolha, é o `!important` que ninguém vence. (Os números de A
+   e B também mudaram por conta própria, depois: 816/840 em vez de 848/864,
+   quando `--sd-container-width` caiu de 1152 para 1120 — ver `tokens.css`.)
 
    A MEDIDA DA PROSA sai de dois seletores estáveis — um elemento e uma classe do
    Infima — no lugar da lista de onze elementos que crescia a cada componente
    novo do catálogo. Com a lista morre a superfície que produziu o defeito do
    `<header>`: não há mais lista da qual um elemento possa escapar.
 
-   E O BREAKOUT MORRE JUNTO. Código e tabela ficam nos mesmos 720 do texto,
-   porque a medida agora é do `<article>` inteiro e não de uma lista de filhos.
-   A âncora tem uma largura só.
+   E O BREAKOUT CONTINUA MORTO. Código e tabela medem o `<article>` inteiro,
+   nunca uma lista de filhos — só que agora o `<article>` já não é um número
+   fixo, é o que a configuração da página decide.
 
    O `.pagination-nav` entra pelo mesmo motivo que o `<article>`: ele é IRMÃO
    dele, não filho, e sem a segunda linha a paginação mediria a coluna inteira
@@ -120,13 +181,29 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    coluna de texto que ela fecha.
    ----------------------------------------------------------------------------- */
 
-html.docs-doc-page main > .container > .row > .col:not(.col--3) {
-  max-width: var(--sd-doc-width);
+/* A largura NARROW só se aplica com o TOC de fato VISÍVEL — `:has(> .col--3)`
+   sozinho não basta, porque `:has()` enxerga a PRESENÇA no DOM, não o
+   `display`, e o TOC continua no DOM entre 997 e 1279 mesmo escondido (ver
+   §9 e a regra de `.col--3` acima). O padrão sem media query é LARGO —
+   `--sd-container-width` para a coluna. O `<article>` é seletor à parte, e a
+   NARROW dele não é `--sd-doc-width`: é `--sd-prose-width`, 720 — a âncora
+   mede 720,81 com o TOC presente, o mesmo número de antes da #96. O que a
+   #96 muda não é o número da prosa com TOC; é ela deixar de ser o único
+   número que existe. Sem TOC visível, a prosa acompanha a coluna inteira —
+   `--sd-container-width` — e é aí que ela cresce. */
+html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
+  max-width: var(--sd-container-width);
+  margin-inline: auto;
 }
 
-html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
-  max-width: var(--sd-prose-width);
-  margin-inline: auto;
+@media (min-width: 1280px) {
+  html.docs-doc-page main > .container > .row:has(> .col--3) > .col:not(.col--3) {
+    max-width: var(--sd-doc-width);
+  }
+
+  html.docs-doc-page main > .container > .row:has(> .col--3) > .col:not(.col--3) :is(article, .pagination-nav) {
+    max-width: var(--sd-prose-width);
+  }
 }
 
 html.docs-doc-page .theme-doc-markdown > :first-child {
@@ -158,6 +235,38 @@ html.docs-doc-page .theme-doc-markdown > :last-child {
 html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
   margin-top: var(--sd-space-12);
   margin-bottom: var(--sd-space-4);
+}
+
+/* -----------------------------------------------------------------------------
+   O `h1`/`h2` do `<article>` ignoravam a escala de tipo — defeito medido, sem
+   ticket que o cobrisse antes da #96.
+
+   `tokens.css` escreve `--ifm-h1-font-size`/`--ifm-h2-font-size` no `:root`, e
+   o Infima RELÊ as duas direto no elemento: `.markdown h1:first-child` e
+   `.markdown > h2` redeclaram a MESMA custom property sobre o próprio título,
+   e herança perde para declaração direta no mesmo elemento — independente de
+   quão específico for o seletor do `:root`. Medido: 48px/32px na tela em vez
+   dos 36px/24px que `tokens.css` já declarava. A escala do projeto estava
+   certa; só não alcançava o elemento.
+
+   A resposta NÃO é reescrever `--ifm-h1-font-size` aqui — isso seria escrever
+   fora do adaptador, a sexta exceção com escopo contra a lista fechada do
+   ADR 1. É mais simples do que isso: `font-size` é propriedade normal, não
+   variável, e uma declaração direta nela vence a que o Infima computa a
+   partir da custom property, no MESMO seletor, carregado depois. Zero
+   `--ifm-*` tocado fora de `tokens.css`. */
+.markdown h1:first-child {
+  font-size: var(--sd-type-3xl);
+}
+
+@media (min-width: 997px) {
+  .markdown h1:first-child {
+    font-size: var(--sd-type-4xl);
+  }
+}
+
+.markdown > h2 {
+  font-size: var(--sd-type-2xl);
 }
 
 /* -----------------------------------------------------------------------------
@@ -289,33 +398,37 @@ html.docs-doc-page .subtitulo {
   letter-spacing: var(--sd-tracking-tight);
 }
 
-/* A FAIXA — três das quatro peças. A primeira mora em `tokens.css`, porque é
-   token, e o espaçador é item de config em `docusaurus.config.js`.
+/* O HAIRLINE — o rodapé do navbar inteiro, nas duas formas (uma linha no
+   estreito, duas de 997 para cima). Substitui a faixa cinza: onde havia
+   parada dura de gradiente separando uma superfície levantada da página, fica
+   só o fio — a linha de tabs passa a ler TRANSPARENTE sobre o fundo da
+   própria página, sem segunda superfície debaixo dela. */
+.navbar {
+  border-bottom: var(--sd-border-width) solid var(--sd-border-subtle);
+}
 
-   São QUATRO PEÇAS e SEIS REGRAS, e a diferença vale dita para o número não
-   virar promessa: uma peça é uma decisão, não uma declaração. O sangramento é
-   uma regra; a quebra são três — envolver, abrir a linha e impedir que as duas
-   linhas se estiquem para dividir a altura; a altura determinada são duas, uma
-   por cluster; e a altura das tabs é a que faz o realce de estado ter a forma da
-   faixa em vez da forma da palavra. */
+/* A FAIXA — três das quatro peças que sobram depois da #96. A primeira mora
+   em `tokens.css`, porque é token, e o espaçador é item de config em
+   `docusaurus.config.js`. O SANGRAMENTO DE FUNDO SAIU: a faixa não pinta mais
+   nada atrás de si — ela lê o fundo da página, como a #96 pede — e o hairline
+   acima já faz o trabalho de separação que o gradiente fazia.
+
+   São TRÊS PEÇAS e CINCO REGRAS agora: a quebra são três — envolver, abrir a
+   linha e impedir que as duas linhas se estiquem para dividir a altura —, a
+   altura determinada são duas, uma por cluster. */
 @media (min-width: 997px) {
-  /* O sangramento. Quem pinta a faixa é o próprio `<nav>`, que já vai de x=0 a
-     x=100vw; a parada dura recorta a faixa dentro dele. Transparente na linha 1
-     para o `--ifm-navbar-background-color` do adaptador continuar valendo, fio
-     de uma borda, e a superfície levantada no resto.
-
-     `background-image` e não `background`: a tinta da linha 1 continua sendo a
-     do token, e sobrescrevê-la aqui seria pintar duas vezes o que o adaptador já
-     pinta uma. */
-  .navbar {
-    background-image: linear-gradient(
-      to bottom,
-      transparent 0 var(--sd-navbar-height),
-      var(--sd-border-subtle) var(--sd-navbar-height)
-        calc(var(--sd-navbar-height) + var(--sd-border-width)),
-      var(--sd-surface-raised) calc(var(--sd-navbar-height) + var(--sd-border-width))
-        var(--sd-topo-grudado)
-    );
+  /* O CONTAINER DO NAVBAR passa a ser o MESMO grupo que centraliza sidebar +
+     conteúdo + TOC — mesmo `max-width`, mesmo `margin-inline: auto`. Sem
+     isso a marca fica alinhada ao VIEWPORT enquanto o cabeçalho de grupo da
+     sidebar se move com o congelamento, e os dois se desencontram a partir
+     da primeira largura em que o grupo centraliza. O preenchimento
+     horizontal do `.navbar` (herdado, intocado) é o que já fazia a marca
+     cair na mesma vertical do preenchimento da sidebar — ver `chrome.css`
+     §3 — e essa conta só volta a fechar se os DOIS lados tiverem o mesmo
+     inset esquerdo. */
+  .navbar__inner {
+    max-width: var(--sd-congelamento);
+    margin-inline: auto;
   }
 
   /* As duas colunas do `.navbar__inner` param de se centrar contra as DUAS
@@ -327,7 +440,7 @@ html.docs-doc-page .subtitulo {
 
   /* A quebra. `align-content: flex-start` é o que impede as duas linhas de se
      esticarem para dividir a altura do `<nav>` entre elas: sem ele a linha 1
-     rouba metade da folga e a faixa pintada deixa de casar com as tabs. */
+     rouba metade da folga e a faixa deixa de casar com as tabs. */
   .navbar__items:not(.navbar__items--right) {
     flex-wrap: wrap;
     align-content: flex-start;
@@ -352,11 +465,24 @@ html.docs-doc-page .subtitulo {
 
   /* As tabs preenchem a faixa em vez de flutuar nela. Sem a altura declarada o
      item mede o texto e o realce de estado ficaria com a forma da palavra em
-     vez da forma da faixa. */
+     vez da forma da faixa.
+
+     O SUBLINHADO NA ABA ATIVA espelha `ul.tabs` em `componentes.css`:
+     transparente em repouso, acento quando ativa, margem negativa para
+     sobrepor o hairline em vez de somar a ele. `:has(> .navbar__link--active)`
+     lê o estado do link filho sem precisar de classe nova no item — o mesmo
+     mecanismo estrutural do wrapper que centraliza o grupo, em §1. */
   .navbar__items:not(.navbar__items--right) > .navbar__item:not(.quebra-de-faixa) {
     display: flex;
     align-items: center;
     height: var(--sd-tabs-height);
+    border-block-end: calc(var(--sd-border-width) * 2) solid transparent;
+    margin-block-end: calc(var(--sd-border-width) * -1);
+  }
+
+  .navbar__items:not(.navbar__items--right)
+    > .navbar__item:has(> .navbar__link--active) {
+    border-block-end-color: var(--sd-accent);
   }
 }
 
@@ -442,20 +568,134 @@ html.docs-doc-page .subtitulo {
   text-shadow: var(--sd-negrito-optico);
 }
 
+/* O DIVISOR VERTICAL — vazamento do substrato nativo, e não pedido nenhum.
+   `DocRoot/Layout/Sidebar` (hasheada) declara `border-right: 1px solid
+   var(--ifm-toc-border-color)`. Não se toca a classe hasheada — não é
+   preciso: `ThemeClassNames.docs.docSidebarContainer` já está no MESMO
+   elemento, degrau 1.
+
+   MEDIDO, não suposto: `.theme-doc-sidebar-container` sozinha (0,1,0) NÃO
+   vence — o módulo do `DocRoot/Layout/Sidebar` é chunk separado e carrega
+   depois, o mesmo empate de ordem de carga que a seção do botão de voltar ao
+   topo já documentou para `.theme-back-to-top-button`. A resposta é a
+   mesma: somar o TIPO do elemento. O elemento é `<aside>`, e
+   `aside.theme-doc-sidebar-container` vai a (0,1,1) — tira o seletor da
+   ordem de carga em vez de depender dela.
+
+   Não se zera `--ifm-toc-border-color` no adaptador: a mesma variável também
+   pinta a borda do botão de recolher a sidebar
+   (`DocSidebar/Desktop/CollapseButton`), que não é vazamento — é contorno de
+   controle, e apagar os dois juntos seria remover peça que ninguém pediu que
+   saísse. */
+aside.theme-doc-sidebar-container {
+  border-right: none;
+}
+
+/* O ELEMENTO QUE DE FATO ROLA não é `.theme-doc-sidebar-container` — é o
+   `<nav class="menu thin-scrollbar">` dentro dele, medido em 3.10.2:
+   `DocSidebar/Desktop/Content` monta a lista nesse `<nav>`, e
+   `theme-doc-sidebar-menu` (`ThemeClassNames.docs.docSidebarMenu`) é o
+   `<ul>` FILHO dele, estático, do tamanho do conteúdo — não a caixa com
+   `overflow`. `.thin-scrollbar` é classe do Infima, degrau 0, e é ela quem
+   carrega o scroll; escopada ao container estável para não vazar para outro
+   `.thin-scrollbar` do site (código, TOC do estreito). */
+
+/* O DESVANECIMENTO DE TOPO — puro CSS, `mask-image` em vez de nó novo. A
+   máscara é relativa à CAIXA, não ao conteúdo que rola dentro dela — é por
+   isso que funciona em qualquer posição de scroll, sem JS a escutar evento. */
+.theme-doc-sidebar-container .thin-scrollbar {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black var(--sd-space-6)
+  );
+}
+
+/* A BARRA DE ROLAGEM — invisível em repouso, tingida no hover, com goteira
+   estável. `scrollbar-gutter: stable` reserva o espaço da barra SEMPRE, para
+   que o texto da sidebar não pule de largura quando ela aparece — o mesmo
+   defeito de salto que o falso-negrito do item ativo evita duas regras acima,
+   e a mesma resposta.
+
+   Duas propriedades por padrão de navegador — Firefox lê `scrollbar-color`,
+   WebKit lê os pseudo-elementos `::-webkit-scrollbar-*` que o `.thin-scrollbar`
+   do Infima já declara — e as duas citam os MESMOS tokens, para não haver uma
+   segunda paleta de barra de rolagem no projeto. */
+.theme-doc-sidebar-container .thin-scrollbar {
+  scrollbar-gutter: stable;
+  scrollbar-color: transparent transparent;
+}
+
+.theme-doc-sidebar-container .thin-scrollbar:hover {
+  scrollbar-color: var(--sd-border-strong) transparent;
+}
+
+.theme-doc-sidebar-container .thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.theme-doc-sidebar-container .thin-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: var(--sd-border-strong);
+}
+
 /* -----------------------------------------------------------------------------
    4. TOC
 
-   A largura é **derivada do grid** — a coluna é o `.col--3`, um quarto do
-   container. Não há número a escolher aqui.
-
-   Perda registrada: a âncora usa até 448px de painel à direita. Alcançar isso
-   exigiria quebrar o 75/25, que vive numa classe hasheada de CSS Module e
-   custaria `unsafe` em `DocItem/Layout`. Fica em 288.
+   A largura é `--sd-toc-width`, explícita — não é mais fração de grid. A
+   #96 corrigiu a premissa que travava em 288: ver `chrome.css` §1 e
+   `chrome.md` §1.2.
    ----------------------------------------------------------------------------- */
 
 .theme-doc-toc-desktop {
   font-size: var(--sd-type-sm);
   line-height: var(--sd-leading-ui);
+}
+
+/* A BORDA ESQUERDA — mesmo vazamento do divisor da sidebar, mesma resposta.
+   `.table-of-contents__left-border` é classe do Infima em `TOCItems`, degrau
+   0, e é o próprio nome da classe que confessa o que ela faz. */
+.table-of-contents__left-border {
+  border-left: none;
+}
+
+/* O LIMIAR PRÓPRIO DO TOC — 1280, o ponto em que a âncora o esconde. Escondido
+   por padrão, revelado só a partir dele: assim o literal do gate é UM número
+   (1280), não dois — não existe `max-width: 1279px` em lugar nenhum do
+   arquivo, só este `min-width`.
+
+   `.col--3` continua no DOM entre 997 e 1279 — `DocItemTOCDesktop` é montado
+   sempre que `windowSize` do React é `'desktop'`, que cobre TUDO acima de
+   996/997, não só acima de 1280 (ver a nota sobre o `!important` de
+   `docItemCol` acima, mesma família de acoplamento). Por isso a largura da
+   prosa em §1 verifica `:has()` E este limiar juntos: TOC no DOM sem estar
+   visível não deve estreitar o texto.
+
+   A SIDEBAR NÃO GANHOU limiar próprio, e a explicação é medida, não
+   preguiça: o toggle de hambúrguer só MONTA o `<aside>` de gaveta quando o
+   MESMO `windowSize` do React está em `'mobile'` — `shouldRender = !disabled
+   && windowSize === 'mobile'`, em
+   `@docusaurus/theme-common/lib/contexts/navbarMobileSidebar.js`. Esse
+   estado lê um limiar de 996, HARDCODED, e o próprio comentário-fonte diz
+   *"this value is also hardcoded in Infima... Updating this JS value alone
+   is not enough"* — não é ponto de swizzle, é lógica de contexto React sem
+   opção pública. Esconder a sidebar embutida antes de 1024 sem mover ESSE
+   limiar junto criaria uma faixa morta entre 997 e 1023 — sidebar
+   invisível, gaveta que não monta, sem rota nenhuma até o menu. A #96 não
+   compra essa perda: ver `chrome.md` §10, perda nova.
+
+   O QUE SE ESCONDE é `.col--3`, o SLOT inteiro — não
+   `.theme-doc-toc-desktop`, que é filho dele. Esconder só o filho deixaria o
+   slot vazio ainda reservando `--sd-toc-width` no `flex`, e a prosa não
+   ganharia o espaço de volta — o mesmo cuidado do `:has()` acima, agora do
+   lado do CSS que decide o `display`. */
+html.docs-doc-page main > .container > .row > .col--3 {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  html.docs-doc-page main > .container > .row > .col--3 {
+    display: block;
+  }
 }
 
 /* -----------------------------------------------------------------------------
@@ -497,12 +737,22 @@ html.docs-doc-page .breadcrumbs__item:nth-last-child(2)::after {
 }
 
 /* O que resta deixa de ler como pastilha e passa a ler como eyebrow: sem
-   preenchimento, sem realce de fundo, na tinta secundária. */
+   preenchimento, sem realce de fundo, corpo maior, peso forte, na cor de
+   acento — a leitura da âncora, `chrome.md` §12.
+
+   `font-size` É NECESSÁRIO aqui, e não redundante com `.theme-doc-breadcrumbs`
+   duas regras acima: o Infima declara `.breadcrumbs__link { font-size: calc(1rem
+   * var(--ifm-breadcrumb-size-multiplier)) }` DIRETO no link, e essa
+   declaração bate na frente da herança do `<nav>` — mesma família de defeito
+   do `h1`/`h2`, ver acima. Medido: sem esta linha o link renderiza 12,8px
+   (`--breadcrumb-size-multiplier` em 0,8 de fábrica) contra os 14 que
+   `chrome.md` §12 pede. */
 html.docs-doc-page .breadcrumbs__link {
   padding: 0;
   background: none;
-  color: var(--sd-text-muted);
-  font-weight: var(--sd-weight-ui);
+  color: var(--sd-accent);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-heading);
 }
 
 /* -----------------------------------------------------------------------------
@@ -579,12 +829,30 @@ html.docs-doc-page .pagination-nav__label {
 
 /* O `.container` do footer perde o preenchimento e ele sobe para o `<footer>`.
    Sem isso a compensação de alinhamento erra por 16px: a coluna de conteúdo fica
-   rente à borda do container, e o texto do rodapé começaria 16 depois dela. */
+   rente à borda do container, e o texto do rodapé começaria 16 depois dela.
+
+   O ALINHAMENTO COM A COLUNA DE DOC mudou de mecanismo na #96, não de meta.
+   `<Footer/>` continua irmão do `main-wrapper` — ver a nota abaixo —, mas
+   agora o `.container` da doc não centra mais em `100% − sidebar`: centra num
+   grupo com `margin-inline: auto` próprio, cujo inset esquerdo VARIA com a
+   viewport. Dar ao `.container` do footer o MESMO quadro — mesmo
+   `max-width`, mesmo `margin-inline: auto` — faz os dois insets esquerdos
+   coincidirem SEMPRE, não só numa largura medida; o que falta depois disso é
+   só a largura da sidebar mais o gutter, que é exatamente o texto de conteúdo
+   entra depois dela. */
 .footer .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-inline: 0;
+}
+
+@media (min-width: 997px) {
+  html.docs-doc-page .footer .container {
+    max-width: var(--sd-congelamento);
+    margin-inline: auto;
+    padding-inline-start: calc(var(--sd-sidebar-width) + var(--sd-gutter));
+  }
 }
 
 /* O `Footer/Layout` cola `text--center` nos dois filhos. Numa linha
@@ -615,31 +883,15 @@ html.docs-doc-page .pagination-nav__label {
   color: var(--sd-text-muted);
 }
 
-/* A compensação de alinhamento.
+/* `docs-doc-page` vem do `DocRoot`, então a regra de alinhamento acima vale
+   para as TRÊS instâncias de sidebar — é a mesma classe nas três.
 
-   O `<Footer/>` é irmão do `main-wrapper`, não filho da página de doc, então o
-   `.container` dele centra na VIEWPORT enquanto o da doc centra dentro de
-   `100% − sidebar`. A 1600px isso são mais de cem pixels de desalinhamento entre
-   o fio do rodapé e a borda da coluna de conteúdo.
-
-   A compensação **soma o gutter** — sem isso erra pela largura dele. E o fio
-   continua de ponta a ponta, porque mora no `<footer>`, fora do preenchimento:
-   o separador lê como régua de site (o que ele é) e o conteúdo lê alinhado com
-   o que está acima dele.
-
-   `docs-doc-page` vem do `DocRoot`, então isto vale para as TRÊS instâncias. Na
-   landing a classe não existe, o preenchimento não aplica, e o footer centra na
-   viewport junto com o conteúdo de lá.
-
-   Perda nomeada: com a sidebar recolhida pelo leitor, o `DocRoot/Layout/Main`
-   troca para a largura escondida e o footer não acompanha. O estado mora em
-   classe de CSS Module hasheada; alcançá-la por `html:has(…)` é exatamente o que
-   se recusou ao desistir da proporção 56/44. */
-@media (min-width: 997px) {
-  html.docs-doc-page .footer {
-    padding-left: calc(var(--sd-sidebar-width) + var(--sd-gutter));
-  }
-}
+   PERDA NOMEADA, e sobrevive à #96 sem mudar: com a sidebar recolhida pelo
+   leitor (o botão de esconder, não a gaveta do estreito), `Main` troca para
+   `docMainContainerEnhanced` e ocupa a largura toda — mas o padding do
+   footer continua supondo a sidebar visível. O estado mora em classe de CSS
+   Module hasheada; alcançá-la por `html:has(…)` é o mesmo custo que já se
+   recusou ao desistir da proporção 56/44 em `chrome.md` §1.2. */
 
 /* -----------------------------------------------------------------------------
    7. Tela estreita
@@ -674,11 +926,12 @@ html.docs-doc-page .pagination-nav__label {
      vale onde a cadeia existe.
 
      Ela zera o preenchimento de coluna porque, no largo, os dois lados são
-     cobrados por dentro dos 75% e sem isso a coluna não fecha em
-     `--sd-doc-width`. Abaixo do limiar não há 75%, não há 864 e não há cadeia a
-     fechar — e a compensação vira defeito: a margem negativa da `.row` cancela o
-     preenchimento do `.container`, o `<main>` fica com `gutter − 16`, que no
-     estreito é ZERO, e o texto encosta na borda da viewport.
+     cobrados por dentro da largura pretendida e sem isso a coluna não fecha em
+     `--sd-doc-width` (816, hoje). Abaixo do limiar não há essa largura a
+     fechar, nem cadeia — e a compensação vira defeito: a margem negativa da
+     `.row` cancela o preenchimento do `.container`, e sem preenchimento em
+     nenhum outro lugar (o `<main>` não tem mais preenchimento horizontal
+     próprio desde a #96 — ver §1) o texto encosta na borda da viewport.
 
      Medido a 390 antes desta regra: `x=0` no eyebrow, no título e em cada
      parágrafo. É o gutter do estreito que precisa aparecer aqui, e ele aparece

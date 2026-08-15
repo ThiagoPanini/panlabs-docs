@@ -407,22 +407,45 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      recusa em voz alta trinta linhas acima. A procedência honesta é a mesma dos
      outros comprimentos deste bloco: medida na âncora.
 
-     `--sd-toc-width` não tem consumidor, e o motivo vai escrito em vez de ficar
-     por conta de quem varrer. A coluna do TOC recebe o quarto restante do grid
-     75/25 do upstream, que vive numa classe hasheada de CSS Module — alcançá-la
-     custaria `unsafe` em DocItem/Layout, e a perda está registrada em
-     chrome.css §4. O token existe porque a cadeia de proporções de
-     docs/design/chrome.md §1 cita este elo pelo nome, e um elo sem nome é elo
-     que ninguém confere: ele é o valor CONTRA o qual se mede o que o grid
-     entrega, não o valor que o grid lê. Removê-lo quebraria a cadeia; ligá-lo
-     custaria o zero de `unsafe`.
+     `--sd-toc-width` GANHOU consumidor na #96, e o valor mudou de 288 para
+     304. A premissa que travava em 288 — *"a coluna é o quarto restante do
+     grid 75/25 do upstream, alcançar 304 custaria `unsafe` em
+     DocItem/Layout"* — era fato errado, não decisão: o grid de doze morreu
+     nesta issue, substituído por `flex` com largura explícita em
+     `chrome.css` §1, e uma largura explícita não tem 75/25 a quebrar. A
+     correção está em docs/design/chrome.md §1.2, sem apagar o texto
+     original — ver o bloco de errata lá.
      --------------------------------------------------------------------------- */
-  --sd-container-width: 1152px;  /* as DUAS variáveis de container do Infima recebem este */
+  --sd-container-width: 1120px;  /* as DUAS variáveis de container do Infima recebem este — era 1152, ver nota abaixo */
   --sd-sidebar-width:    288px;
   --sd-navbar-height:     64px;  /* a LINHA 1 do topo, não o topo inteiro */
   --sd-tabs-height:       48px;
-  --sd-toc-width:        288px;  /* nomeia o elo; quem o pinta é o grid do upstream */
+  --sd-toc-width:        304px;  /* bate com a âncora — §11 de chrome.md */
   --sd-prose-width:      720px;
+
+  /* `--sd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
+     própria — é consequência do congelamento abaixo perder o termo do
+     gutter. As DUAS medições de margem simétrica da âncora (§11: 52px a
+     1512, 256px a 1920) só fecham com `sidebar + container = 1408`; com
+     container em 1152 sobravam 32px que nenhuma distribuição de padding
+     resolve — provado por álgebra e conferido depois em navegador. A
+     coluna de conteúdo (`--sd-doc-width`) cai de 848 para 816 como
+     consequência direta; a prosa não muda, porque desde a #96 ela é
+     `--sd-prose-width` fixo com TOC (ver `chrome.md` §1.5), não a coluna
+     inteira.
+
+     O CONGELAMENTO — a largura a partir da qual o grupo sidebar + conteúdo +
+     TOC para de crescer e passa a centralizar, com a folga indo IGUAL para
+     os dois lados. Até a #96 ele levava um termo de gutter —
+     `sidebar + container + 2 × (gutter − 16)` —, porque o `<main>` precisava
+     do próprio preenchimento horizontal para fechar a distância até a borda
+     da viewport, que ele MESMO era. Com o wrapper centralizando o grupo
+     (`chrome.css` §1), essa distância virou trabalho do `margin-inline: auto`
+     do wrapper, e `<main>` perdeu o preenchimento horizontal que fazia esse
+     papel — ele soma zero agora, só o `padding-top` fica. O termo do gutter
+     sai da fórmula porque o gutter não tem mais nada a completar aqui:
+     `sidebar + container`, e mais nada. */
+  --sd-congelamento: calc(var(--sd-sidebar-width) + var(--sd-container-width));
 
   /* O recuo do subtítulo sob o título. LITERAL pelo mesmo motivo da altura da
      faixa: é medida de chrome, não parada da escala de espaço, e escrevê-lo como
@@ -447,15 +470,18 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      infla para a altura de duas linhas que ali não existem. */
   --sd-topo-grudado: var(--sd-navbar-height);
 
-  /* A coluna de conteúdo. É `.col--9` do grid de doze, então ela DERIVA do
-     container em vez de repetir um número: 1152 × 0,75 = 864. A coluna do TOC é
-     o quarto restante, e ela está acima como valor porque o Infima a escreve
-     como classe, não como conta.
+  /* A coluna de conteúdo. Até a #96 ela era `.col--9` do grid de doze — 1152 ×
+     0,75 = 864 —, e a #96 matou o grid: não há mais 75/25 a manter, só o
+     container inteiro menos o que o TOC leva. A conta muda de forma
+     (container − toc em vez de container × 0,75), e o número se move DUAS
+     vezes na mesma issue: primeiro para 848 (`--sd-toc-width` foi a 304, com
+     container ainda em 1152), depois para 816 (`--sd-container-width` foi a
+     1120 — ver a nota dele, acima).
 
-     Sem cartão, ela deixou de ter quem a preencha e passou a ser CAIXA
-     INVISÍVEL: o único consumidor é o `max-width` da coluna, que segura a página
-     no mesmo pixel na configuração sem TOC. Ver `chrome.css`. */
-  --sd-doc-width: calc(var(--sd-container-width) * 0.75);
+     Sem cartão, ela continua CAIXA INVISÍVEL na configuração sem TOC: o
+     `max-width` da coluna segura a página no mesmo pixel quando `.col--3`
+     não existe. Ver `chrome.css` §1. */
+  --sd-doc-width: calc(var(--sd-container-width) - var(--sd-toc-width));
 
   /* A MEDIDA DO CÓDIGO morreu aqui, e vale a linha de lápide. A derivação dela
      era uma frase só — *"o interior do cartão de doc"* —, e o cartão está de
@@ -477,9 +503,17 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
      O par ANTIGO era 32/64, e ele caiu junto com o cartão: a folga de lá era a
      do shell em volta de uma superfície levantada, e não há mais superfície
-     levantada. O par novo é o do `mint`, e é ele que faz o congelamento fechar
-     em 1472 — `sidebar + container + 2 × (gutter − 16)`, com os 16 do
-     preenchimento que o Infima já põe no `.container`. */
+     levantada. O par novo é o do `mint`.
+
+     ATÉ A #96 este token também fechava o congelamento — `sidebar + container
+     + 2 × (gutter − 16)` — porque o `<main>` completava com ele a distância
+     até a borda da viewport. Essa distância virou trabalho do
+     `margin-inline: auto` do wrapper de `chrome.css` §1, o `<main>` perdeu o
+     preenchimento horizontal, e o congelamento perdeu o termo do gutter — ver
+     `--sd-congelamento` acima. O que sobra para este token: o preenchimento
+     próprio do `<footer>`, o recuo do `.container` dele até a coluna de doc
+     (`chrome.css`, alinhamento do rodapé), e o preenchimento do `.col` que
+     volta no estreito. */
   --sd-gutter: var(--sd-space-4);
 
   /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7, e o
