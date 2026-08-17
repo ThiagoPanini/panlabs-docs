@@ -478,13 +478,41 @@ async function abrirChrome() {
     }
   }, TETO_CHROME);
 
-  const fechar = () => {
+  /* `SIGKILL` mata o processo que SPAWNAMOS, e o Chrome não é um processo — é
+     um pai com renderizadores e zygote embaixo. Os filhos sobrevivem alguns
+     milissegundos ao pai e continuam escrevendo em `<perfil>/Default`, então um
+     `rmSync` disparado no mesmo tique corre contra eles e estoura `ENOTEMPTY`.
+
+     A corrida sempre esteve aqui e nunca aparecia: quanto mais estado o perfil
+     tem para descarregar, maior a janela, e a varredura de estouro
+     multiplicou o trabalho da sessão. Ela apareceu na CI — disco mais lento — e
+     não nesta máquina, que é o pior modo de falhar que uma corrida tem.
+
+     Espera o pai sair de fato, depois tenta apagar com recuo. E se ainda assim
+     não apagar, DESISTE EM SILÊNCIO: o diretório está em `tmpdir()`, o sistema
+     o recolhe, e derrubar o relatório inteiro por um resto de perfil trocaria
+     um incômodo por uma perda de sinal. */
+  const fechar = async () => {
+    const saiu = new Promise((resolve) => {
+      if (proc.exitCode !== null || proc.signalCode !== null) return resolve();
+      proc.once('exit', resolve);
+      setTimeout(resolve, 2000).unref();
+    });
     proc.kill('SIGKILL');
-    rmSync(perfil, {recursive: true, force: true});
+    await saiu;
+
+    for (let tentativa = 0; tentativa < 5; tentativa += 1) {
+      try {
+        rmSync(perfil, {recursive: true, force: true});
+        return;
+      } catch {
+        await dormir(100 * (tentativa + 1));
+      }
+    }
   };
 
   if (!subiu) {
-    fechar();
+    await fechar();
     throw new Error('Chrome não subiu na porta de depuração');
   }
   return {fechar};
@@ -771,7 +799,7 @@ async function medir() {
       sessao.fechar();
     }
   } finally {
-    chrome.fechar();
+    await chrome.fechar();
     sitio.fechar();
   }
 
