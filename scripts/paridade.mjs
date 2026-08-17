@@ -64,6 +64,11 @@ const ESPERA = {
   hidratacao: 900, // React montar e aplicar o que o CSS Module renomeia
   tema: 120, // a folha repintar depois de trocar `data-theme`
   modal: 500, // o `<dialog>` abrir e assentar
+  /* Reflow depois de redimensionar SEM renavegar. Não basta o tempo do
+     navegador refazer o layout: o `useWindowSize` do Docusaurus é React, e
+     sidebar e TOC montam e desmontam em `windowSize` — medir antes desse
+     re-render leria a árvore da largura anterior. */
+  reflow: 250,
 };
 
 /* Sondagens de porta: `abrirChrome` espera o processo subir, `irPara` espera o
@@ -123,6 +128,19 @@ const CENARIOS = {
    `cor:<prop>`, que resolve a cor para sRGB pintando um pixel —
    `getComputedStyle` devolve `oklch(…)` cru, e comparar isso com o hex
    publicado nunca fecharia. */
+/* `:not(.subtitulo)` NÃO É ENFEITE, e a armadilha custou um verde falso.
+   `querySelector` devolve o PRIMEIRO casamento, e o primeiro `<p>` dentro de
+   `.theme-doc-markdown` é o subtítulo — o override de `h1` o injeta dentro do
+   `<header>`, antes de qualquer parágrafo de corpo. As quatro sondas de "prosa"
+   abaixo mediam o subtítulo desde sempre.
+
+   Enquanto o subtítulo não declarava entrelinha, isso passava como divergência
+   plausível (*Prosa tamanho — alvo 16px, medido 18px*, que é o corpo do
+   subtítulo, não o da prosa). No instante em que o subtítulo ganhou
+   `line-height: 28px` — o alvo do §12 de `chrome.md` —, a linha *Prosa
+   entrelinha* passou a BATER com o alvo da prosa por coincidência aritmética, e
+   uma sonda apontada para o elemento errado virou verde. Verde falso é pior que
+   vermelho: o vermelho ao menos se investiga. */
 const SONDAS = [
   // --- paleta, nos dois temas -------------------------------------------
   {sonda: 'paleta.pagina.escuro', cenario: 'prosa@1512/escuro', seletor: 'body', medida: 'cor:background-color'},
@@ -131,8 +149,8 @@ const SONDAS = [
   {sonda: 'paleta.navbar.claro', cenario: 'prosa@1512/claro', seletor: '.navbar', medida: 'cor:background-color'},
   {sonda: 'paleta.texto-forte.escuro', cenario: 'prosa@1512/escuro', seletor: 'article h1', medida: 'cor:color'},
   {sonda: 'paleta.texto-forte.claro', cenario: 'prosa@1512/claro', seletor: 'article h1', medida: 'cor:color'},
-  {sonda: 'paleta.texto-corpo.escuro', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p', medida: 'cor:color'},
-  {sonda: 'paleta.texto-corpo.claro', cenario: 'prosa@1512/claro', seletor: '.theme-doc-markdown p', medida: 'cor:color'},
+  {sonda: 'paleta.texto-corpo.escuro', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'cor:color'},
+  {sonda: 'paleta.texto-corpo.claro', cenario: 'prosa@1512/claro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'cor:color'},
   /* O acento NÃO tem alvo publicado: a cor de marca é divergência declarada da
      âncora — violeta, e não o azul dela. Publicar o azul aqui mandaria copiar
      exatamente o que a decisão registrada recusa. */
@@ -143,8 +161,8 @@ const SONDAS = [
   {sonda: 'tipo.h1.peso', cenario: 'prosa@1512/escuro', seletor: 'article h1', medida: 'estilo:font-weight'},
   {sonda: 'tipo.h2.tamanho', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown h2', medida: 'estilo:font-size'},
   {sonda: 'tipo.h2.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown h2', medida: 'estilo:line-height'},
-  {sonda: 'tipo.prosa.tamanho', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p', medida: 'estilo:font-size'},
-  {sonda: 'tipo.prosa.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p', medida: 'estilo:line-height'},
+  {sonda: 'tipo.prosa.tamanho', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'estilo:font-size'},
+  {sonda: 'tipo.prosa.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'estilo:line-height'},
   {sonda: 'tipo.sidebar.tamanho', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:font-size'},
   {sonda: 'tipo.sidebar.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:line-height'},
   {sonda: 'tipo.sidebar.peso', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:font-weight'},
@@ -460,13 +478,41 @@ async function abrirChrome() {
     }
   }, TETO_CHROME);
 
-  const fechar = () => {
+  /* `SIGKILL` mata o processo que SPAWNAMOS, e o Chrome não é um processo — é
+     um pai com renderizadores e zygote embaixo. Os filhos sobrevivem alguns
+     milissegundos ao pai e continuam escrevendo em `<perfil>/Default`, então um
+     `rmSync` disparado no mesmo tique corre contra eles e estoura `ENOTEMPTY`.
+
+     A corrida sempre esteve aqui e nunca aparecia: quanto mais estado o perfil
+     tem para descarregar, maior a janela, e a varredura de estouro
+     multiplicou o trabalho da sessão. Ela apareceu na CI — disco mais lento — e
+     não nesta máquina, que é o pior modo de falhar que uma corrida tem.
+
+     Espera o pai sair de fato, depois tenta apagar com recuo. E se ainda assim
+     não apagar, DESISTE EM SILÊNCIO: o diretório está em `tmpdir()`, o sistema
+     o recolhe, e derrubar o relatório inteiro por um resto de perfil trocaria
+     um incômodo por uma perda de sinal. */
+  const fechar = async () => {
+    const saiu = new Promise((resolve) => {
+      if (proc.exitCode !== null || proc.signalCode !== null) return resolve();
+      proc.once('exit', resolve);
+      setTimeout(resolve, 2000).unref();
+    });
     proc.kill('SIGKILL');
-    rmSync(perfil, {recursive: true, force: true});
+    await saiu;
+
+    for (let tentativa = 0; tentativa < 5; tentativa += 1) {
+      try {
+        rmSync(perfil, {recursive: true, force: true});
+        return;
+      } catch {
+        await dormir(100 * (tentativa + 1));
+      }
+    }
   };
 
   if (!subiu) {
-    fechar();
+    await fechar();
     throw new Error('Chrome não subiu na porta de depuração');
   }
   return {fechar};
@@ -604,6 +650,109 @@ const SONDAR = (lista) => `(() => {
   return JSON.stringify(saida);
 })()`;
 
+/* --- a varredura de estouro horizontal ---------------------------------------
+
+   Ela NÃO é paridade, e por isso vive num bloco próprio: paridade é distância
+   até a âncora, e o juiz dela é humano; estouro horizontal é DEFEITO, tem uma
+   resposta certa — zero — e não precisa de opinião nenhuma para ser julgado.
+
+   Por que ela existe: dois consertos de layout entraram sem rede, e os dois
+   falham CALADOS. Nenhum portão os vê, nenhum teste os cobre, e o build passa
+   verde com a página rolando na horizontal:
+
+     · `.step` usava `1fr`, que é `minmax(auto, 1fr)`, e o `min-content` de um
+       bloco de código travava a coluna — 388px de estouro a 390 de viewport;
+     · as duas colunas da referência gerada usavam `flex: 0 0 <base>` e somavam
+       1120 numa grade que só recebe 1120 a partir de 1408 — 411px a 997.
+
+   As larguras não são redondas por gosto: 390 é o telefone comum, 768 o tablet,
+   997 o limiar do projeto, 1280 e 1366 os dois laptops mais comuns, 1408 o
+   congelamento, e 1512 e 1920 as duas telas da medição da âncora.
+
+   REDIMENSIONA em vez de renavegar: o estouro é função da largura, não da
+   carga, e uma navegação por largura custaria 40 cargas em vez de 5. */
+const ESTOURO_LARGURAS = [390, 768, 997, 1280, 1366, 1408, 1512, 1920];
+
+/* Uma rota por FORMA que pode estourar, não uma por página. */
+const ESTOURO_ROTAS = {
+  passos: ROTAS.passos, // `<Steps>` — a grade de duas colunas
+  api: ROTAS.api, // a referência gerada — as duas colunas de flex
+  codigo: ROTAS.codigo, // bloco de código longo
+  tabela: ROTAS.tabela, // tabela larga
+  prosa: ROTAS.prosa, // o shell comum, como controle
+};
+
+/* Devolve o excesso e QUEM o causa. Só o número diria que regrediu; o culpado é
+   o que faz a regressão ser consertável sem reabrir a investigação inteira. */
+const SONDAR_ESTOURO = `(() => {
+  const raiz = document.documentElement;
+  const excesso = Math.round(raiz.scrollWidth - innerWidth);
+  if (excesso <= 0) return JSON.stringify({excesso: 0, culpado: null});
+  const descrever = (el) => {
+    const partes = [];
+    for (let n = el; n && n !== raiz && partes.length < 3; n = n.parentElement) {
+      const cls = typeof n.className === 'string' && n.className.trim()
+        ? '.' + n.className.trim().split(/\\s+/)[0]
+        : '';
+      partes.unshift(n.tagName.toLowerCase() + cls);
+    }
+    return partes.join(' > ');
+  };
+  /* O maior transbordo vence; empate vai para o MAIS FUNDO, senão a resposta é
+     sempre <body> — verdadeira e inútil. */
+  let culpado = null;
+  for (const el of raiz.querySelectorAll('*')) {
+    const r = el.getBoundingClientRect();
+    if (r.width === 0) continue;
+    const passa = Math.round(r.right - innerWidth);
+    if (passa <= 0) continue;
+    let prof = 0;
+    for (let n = el; n; n = n.parentElement) prof++;
+    if (!culpado || passa > culpado.passa || (passa === culpado.passa && prof > culpado.prof)) {
+      culpado = {passa, prof, alvo: descrever(el)};
+    }
+  }
+  return JSON.stringify({excesso, culpado: culpado && {passa: culpado.passa, alvo: culpado.alvo}});
+})()`;
+
+async function varrerEstouro(sessao, sitio) {
+  const achados = [];
+  for (const [nome, rota] of Object.entries(ESTOURO_ROTAS)) {
+    await irPara(sessao, `http://127.0.0.1:${sitio.porta}${BASE_URL}${rota}`, ESTOURO_LARGURAS[0], 'dark');
+    for (const largura of ESTOURO_LARGURAS) {
+      await sessao.enviar('Emulation.setDeviceMetricsOverride', {
+        width: largura,
+        height: ALTURA_JANELA,
+        deviceScaleFactor: 1,
+        mobile: false,
+      });
+      await dormir(ESPERA.reflow);
+      const r = JSON.parse(await avaliar(sessao, SONDAR_ESTOURO));
+      if (r.excesso > 0) achados.push({rota: nome, largura, ...r});
+    }
+  }
+  return achados;
+}
+
+function formatarEstouro(achados) {
+  const total = Object.keys(ESTOURO_ROTAS).length * ESTOURO_LARGURAS.length;
+  if (!achados.length) {
+    return `Estouro horizontal — ${total} combinações (${Object.keys(ESTOURO_ROTAS).length} rotas × ${ESTOURO_LARGURAS.length} larguras): nenhuma rola na horizontal.`;
+  }
+  const linhas = achados.map(
+    ({rota, largura, excesso, culpado}) =>
+      `  ✗ ${rota} @ ${largura}: ${excesso}px além da janela` +
+      (culpado ? ` — ${culpado.alvo} passa ${culpado.passa}px` : ''),
+  );
+  return [
+    `Estouro horizontal — ${achados.length} de ${total} combinações ROLAM na horizontal:`,
+    '',
+    ...linhas,
+    '',
+    'Isto não é distância até a âncora; é defeito. O alvo é zero.',
+  ].join('\n');
+}
+
 // --- execução ----------------------------------------------------------------
 
 async function medir() {
@@ -614,6 +763,7 @@ async function medir() {
   const sitio = await servir(BUILD);
   const chrome = await abrirChrome();
   const medidas = {};
+  let estouros = [];
 
   try {
     const sessao = await novaAba();
@@ -642,20 +792,29 @@ async function medir() {
         }
         Object.assign(medidas, doNavegador);
       }
+      /* Por último, e na MESMA sessão: subir um segundo Chrome para uma
+         varredura de layout seria pagar duas vezes pelo mesmo processo. */
+      estouros = await varrerEstouro(sessao, sitio);
     } finally {
       sessao.fechar();
     }
   } finally {
-    chrome.fechar();
+    await chrome.fechar();
     sitio.fechar();
   }
 
-  return medidas;
+  return {medidas, estouros};
 }
 
 function lerTodosOsAlvos() {
   const alvos = [];
   const falhas = [];
+  /* A chave de `ALVOS` é o ENDEREÇO da tabela, não o arquivo: `tokens.md` e
+     `tokens.md#tipo` são duas declarações no mesmo documento, e o mesmo vale
+     para `chrome.md` e `chrome.md#artigo`. Sem este cache, os dois maiores
+     documentos da spec entram em memória duas vezes cada — 228 KB relidos para
+     devolver exatamente o mesmo texto. */
+  const cache = new Map();
   for (const [chave, decl] of Object.entries(ALVOS)) {
     const arquivo = decl.arquivo ?? chave;
     const caminho = path.join(RAIZ, arquivo);
@@ -663,7 +822,8 @@ function lerTodosOsAlvos() {
       falhas.push(`${arquivo}: documento não existe, e a declaração aponta para ele`);
       continue;
     }
-    const leitura = lerAlvos(arquivo, readFileSync(caminho, 'utf8'), decl);
+    if (!cache.has(caminho)) cache.set(caminho, readFileSync(caminho, 'utf8'));
+    const leitura = lerAlvos(arquivo, cache.get(caminho), decl);
     alvos.push(...leitura.alvos);
     falhas.push(...leitura.falhas);
   }
@@ -680,10 +840,21 @@ if (falhas.length) {
   process.exit(1);
 }
 
-const medidas = await medir();
+const {medidas, estouros} = await medir();
 const diferencas = comparar(alvos, medidas);
 
 console.log(`Paridade — ${alvos.length} alvos publicados, ${Object.keys(medidas).length} sondas medidas.\n`);
 console.log(formatar(diferencas));
 
+console.log(`\n${'-'.repeat(78)}\n`);
+console.log(formatarEstouro(estouros));
+
+/* DUAS saídas, e a diferença é deliberada. A lista de paridade só reprova sob
+   `--verificar`, porque o juiz declarado dela é a avaliação visual humana e
+   travar merge por pixel criaria atrito onde o dono pediu leitura. O estouro
+   reprova SEMPRE: ele não é distância até a âncora, é defeito, e o alvo dele é
+   zero em qualquer leitura. Na CI o passo é `continue-on-error`, então isto
+   aparece como aviso vermelho em vez de travar o merge — promovê-lo a portão é
+   tirar uma linha do `ci.yml`, e é decisão do dono. */
+if (estouros.length) process.exit(1);
 if (verificar && diferencas.length) process.exit(1);

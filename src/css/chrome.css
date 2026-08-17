@@ -292,6 +292,11 @@ html.docs-doc-page h1:has(+ .subtitulo) {
 html.docs-doc-page .subtitulo {
   margin-top: var(--sd-subtitulo-recuo);
   font-size: var(--sd-type-lg);
+  /* A entrelinha é DECLARADA, e sem ela o subtítulo herdava a da prosa (1,75)
+     sobre 18px = 31,5px, contra os 28 de `chrome.md` §12 — alvo `exato`. É a
+     única das três medidas do subtítulo que a herança não entregava: peso e cor
+     continuam não declarados, e isso segue fiel à âncora. */
+  line-height: var(--sd-subtitulo-entrelinha);
 }
 
 /* -----------------------------------------------------------------------------
@@ -476,9 +481,16 @@ html.docs-doc-page .subtitulo {
 
      O SUBLINHADO NA ABA ATIVA espelha `ul.tabs` em `componentes.css`:
      transparente em repouso, acento quando ativa, margem negativa para
-     sobrepor o hairline em vez de somar a ele. `:has(> .navbar__link--active)`
-     lê o estado do link filho sem precisar de classe nova no item — o mesmo
-     mecanismo estrutural do wrapper que centraliza o grupo, em §1. */
+     sobrepor o hairline em vez de somar a ele.
+
+     AS DUAS CLASSES ESTÃO NO MESMO ELEMENTO, e é por isso que o seletor abaixo
+     é composto e não `:has()`. O `DefaultNavbarItem` do theme-classic 3.10.2
+     passa `activeClassName='navbar__link--active'` para o MESMO `<a>` que já
+     recebe `navbar__item navbar__link` — o item de navbar não é um `<li>` com
+     link dentro, é o próprio link. Um `:has(> .navbar__link--active)` pede
+     descendente direto, nenhum item tem um, e a regra casava 0 de 4 em todas
+     as rotas: a aba ativa ficou sem o sublinhado de acento que `chrome.md` §3
+     publica, em 104 páginas do build. */
   .navbar__items:not(.navbar__items--right) > .navbar__item:not(.quebra-de-faixa) {
     display: flex;
     align-items: center;
@@ -488,7 +500,7 @@ html.docs-doc-page .subtitulo {
   }
 
   .navbar__items:not(.navbar__items--right)
-    > .navbar__item:has(> .navbar__link--active) {
+    > .navbar__item.navbar__link--active {
     border-block-end-color: var(--sd-accent);
   }
 }
@@ -561,11 +573,18 @@ html.docs-doc-page .subtitulo {
    `line-height: calc(24 / 14)` é 24px a 14px de fonte — o alvo publicado em
    docs/design/tokens.md §13, escrito como razão em vez de decimal cravado
    porque `24 ÷ 14` não fecha em dízima finita: um decimal de quatro casas
-   (o padrão deste arquivo, `1.7143`) mede 24,0002px no navegador — divergência
-   pequena, mas o alvo é `exato`, e o comparador de paridade não arredonda.
-   Deixar o `calc()` fazer a divisão em ponto flutuante duplo é mais preciso
-   que qualquer decimal escrito à mão, e nomeia a derivação: 24 é o alvo, 14 é
-   `--sd-type-sm`. Não é `--sd-leading-code` (1,7143): as duas entrelinhas
+   (o padrão deste arquivo, `1.7143`) mede 24,0002px no navegador. Deixar o
+   `calc()` fazer a divisão em ponto flutuante duplo é mais preciso que
+   qualquer decimal escrito à mão, e nomeia a derivação: 24 é o alvo, 14 é
+   `--sd-type-sm`.
+
+   A JUSTIFICATIVA ENCOLHEU, e a forma fica. Este comentário dizia que o
+   `calc()` era necessário porque *"o alvo é `exato` e o comparador não
+   arredonda"* — e essa parte caiu: a tolerância daquela linha virou `±1`, que é
+   o que a doutrina de tolerância de chrome.md §11 sempre mandou para medida que
+   atravessa subpixel. Nem `calc()` nem decimal reprovariam hoje. O `calc()` fica
+   por ser mais preciso e por nomear a derivação, não mais por caber num alvo
+   que era impossível de fechar. Não é `--sd-leading-code` (1,7143): as duas entrelinhas
    nascem de medições independentes que bateram perto uma da outra, e nomear a
    daqui a partir de "código" seria o acoplamento falso que a escada de
    leading já evita ao declarar `--sd-leading-h4` em nome próprio apesar de

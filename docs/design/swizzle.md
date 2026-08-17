@@ -48,13 +48,12 @@ Hoje `src/theme/` tem os três, e **um só é swizzle**:
 
 ```
 src/theme/ApiDocItem/            componente de tema próprio  (degrau 2)
-src/theme/NavbarItem/ComponentTypes.js   registro            (SEM customização — ver §3.1)
 src/theme/MDXComponents/index.js         registro            (degrau 3)
 src/theme/Admonition/Types.js            registro            (degrau 3)
 src/theme/SearchBar/                     SWIZZLE, --eject    (degrau 5)
 ```
 
-**São dez arquivos.** Foram dez, caíram para nove quando `NavbarItem/Marca.js` saiu inteiro, e voltaram a dez com `ApiDocItem/placeholder.mjs` — o marcador de argumento editável do painel, que o gerador **também** lê. Ele é submódulo de um componente que já tem endereço, a mesma linha em que `SearchBar/escada.mjs` cai, e o portão 7 o casa por ela.
+**São nove arquivos.** Foram dez, caíram para nove quando `NavbarItem/Marca.js` saiu inteiro, voltaram a dez com `ApiDocItem/placeholder.mjs` — o marcador de argumento editável do painel, que o gerador **também** lê; ele é submódulo de um componente que já tem endereço, a mesma linha em que `SearchBar/escada.mjs` cai, e o portão 7 o casa por ela — e caíram para nove de novo quando `NavbarItem/ComponentTypes.js` saiu, pelo §3.1.
 
 O `SearchBar` entrou no slice 7 e é o **primeiro e único** swizzle do repositório. Ele tem uma propriedade que nenhum outro degrau 5 teria: ver §3.
 
@@ -87,13 +86,13 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | `.breadcrumbs__item`, `.breadcrumbs__link` | **a eyebrow por subtração**: home, ativo e o separador que sobra saem, e resta o nome da categoria | `DocBreadcrumbs` é `unsafe`; as variáveis de breadcrumb do Infima alcançam tinta e preenchimento, não presença |
 | `.pagination-nav__link`, `.pagination-nav__sublabel`, `.pagination-nav__label` | a paginação plana: sem borda, sem fundo, sem preenchimento | idem — não há variável que remova a borda sem apagar a cor dela |
 | `.theme-doc-toc-mobile` | o TOC móvel sai no estreito | não há opção que desligue só o móvel; `hide_table_of_contents` desligaria os dois |
-| `.sd-subtitulo` | o corpo e o recuo do subtítulo | a classe é **nossa**, publicada pelo registro do §3 — aqui o degrau 1 é consumidor, não alcance |
+| `.subtitulo` | o corpo e o recuo do subtítulo | a classe é **nossa**, publicada pelo registro do §3 — aqui o degrau 1 é consumidor, não alcance |
 | `className` em `sidebars*.js` | ícone por categoria de topo, por máscara | `className` **é** o mecanismo público; não há variável |
 | `theme-doc-sidebar-item-*-level-<n>` | hierarquia da sidebar | idem |
 | `.menu__link--active` | falso-negrito no item ativo | não há variável de peso por estado |
 | `.footer`, `.footer__links`, `.footer__link-item`, `.footer__link-separator`, `.container`, `.text--center` | a linha única, o fio, o alinhamento à coluna de doc, o comportamento no estreito | as sete variáveis de footer do Infima não alcançam anatomia |
 | `.footer__link-item > svg` | esconde o ícone de link externo | `Icon/ExternalLink` é `unsafe` e vem de sprite — ver §4 |
-| `.theme-back-to-top-button`, `.theme-doc-card-container`, `.theme-code-block button` | corrige os três `transition: all` que animam o anel de foco | a variável de transição do Infima controla duração, não a lista de propriedades |
+| `button.theme-back-to-top-button` | corrige o `transition: all` que anima o anel de foco — **um**, e não três: os outros dois ganchos saíram, um por não ter elemento no site e o outro por o `all` morar nos `<svg>` filhos, que não recebem foco (ver [`foco.md`](foco.md) §5) | a variável de transição do Infima controla duração, não a lista de propriedades. O tipo do elemento no seletor não é enfeite: sem ele a regra empata em (0,1,0) com a classe hasheada e perde por ordem de carga |
 | `.hash-link`, `.theme-code-block button` sob `(pointer: coarse)` | torna visível o que o upstream esconde atrás de hover | idem |
 | `a[href='#__docusaurus_skipToContent_fallback']` | dá ao skip link a forma do sistema | a classe do módulo é manglada; o `href` é estável porque o id é constante exportada |
 
@@ -126,11 +125,17 @@ Ela dizia: *acrescenta o tipo `custom-marca`; a marca precisa de `currentColor`,
 
 O que sai junto:
 
-- `src/theme/NavbarItem/Marca.js` — **um arquivo a menos em `src/theme/`**, e o portão 7 passou a nove (hoje são dez, com `ApiDocItem/placeholder.mjs`);
+- `src/theme/NavbarItem/Marca.js` — **um arquivo a menos em `src/theme/`**, e o portão 7 passou a nove (depois foram dez, com `ApiDocItem/placeholder.mjs`, e hoje são nove de novo — ver o fecho desta seção);
 - a chave `custom-marca` do registro, que era a única nossa. O objeto voltou a ser idêntico ao do upstream;
 - a declaração `.navbar__brand:empty` de `chrome.css`, que escondia o link vazio que o upstream renderizava sem `title`. Ele não é mais vazio.
 
-**O arquivo do registro fica, e a entrada dele não.** A regra deste documento é *um item sai quando a customização é removida*, e aqui não há mais nenhuma: o objeto é espalhado sem acréscimo. Ele continua sendo o ponto de extensão já ejetado do navbar, e o portão 7 continua casando o nome dele com a lista congelada — mas ledger é inventário do que **existe**, não do que já foi.
+**A entrada saiu primeiro, e o ARQUIVO saiu depois.** A regra deste documento é *um item sai quando a customização é removida*, e aqui não havia mais nenhuma: o objeto era espalhado sem acréscimo, e ledger é inventário do que **existe**, não do que já foi.
+
+**O arquivo ficou por uma rodada, com o argumento de ser *"o ponto de extensão já ejetado do navbar"*, e esse argumento não sobrevive à medição.** Conferido chave por chave contra o `@docusaurus/theme-classic@3.10.2`, o objeto era **idêntico ao upstream nas nove chaves**, e o arquivo não fazia nada além de repetir nove `import` de `@theme/NavbarItem/*` para reexportá-los sem tocar em um. Um ponto de extensão que não estende é **custo de upgrade sem contrapartida**: são nove imports a revalidar toda vez que o `theme-classic` muda de versão, para um resultado que o fallback do próprio Docusaurus já entrega — sem o arquivo, `@theme/NavbarItem/ComponentTypes` resolve para o upstream, que é exatamente o que o arquivo devolvia.
+
+**O que se perde é a mensagem de erro no dia do upgrade** — uma chave removida no upstream quebrava a resolução aqui, alto e cedo. Sem o arquivo, ela some do upstream e nada avisa. **Dissenso registrado**, e a resposta é que a defesa custava 53 linhas e nove imports para cobrir um evento que o `swizzle --list` do portão 7 também expõe: ele lê o catálogo do tema a cada CI, e uma entrada que sumiu aparece lá. Restaurar o arquivo é `npx docusaurus swizzle @docusaurus/theme-classic NavbarItem/ComponentTypes --eject`, uma linha, no dia em que houver chave nossa para acrescentar.
+
+`src/theme/` cai para **nove arquivos**, e o portão 7 passa com nove.
 
 > **A rota foi medida, contra a resolução que a declarava provável.** A resolução deste ticket registrava a rota como *"provável e não medida"*. Ela foi medida em Chrome headless, nas duas preferências de esquema de cor: o `.navbar__brand` renderiza `<b class="navbar__title">panlabs</b>`, com **zero `<svg>` e zero `<img>`** dentro, e a palavra resolve para `250,242,249` no escuro e `15,10,15` no claro — os dois iguais a `--sd-text-strong` no pixel, e nenhum igual ao acento. A tabela está em [`icones.md`](icones.md) §3. O carimbo sobe de *origem própria* para **origem própria (medição)** — que é a única forma honesta de fechar uma linha que a spec pediu para deixar aberta.
 
@@ -292,11 +297,13 @@ Dois efeitos colaterais da correção, ambos consequência de a saída completa 
 >
 > **Consequência de aritmética, dita em voz alta: o projeto tem SETE portões, não seis.** E a frase do ADR 5 que chama o portão 5 de *"o único do conjunto que não é `grep`"* passa a ter uma companhia — o portão 7 é da mesma família: regenera e diffa.
 
-**2. Cabeçalho de versão obrigatório no topo de todo arquivo ejetado.** O gerador **remove o cabeçalho de licença** ao ejetar, então sem anotação não há contra o que diffar. Exercido nos dois arquivos que existem: `NavbarItem/ComponentTypes.js` e `SearchBar/index.js` declaram de qual versão foram ejetados.
+**2. Cabeçalho de versão obrigatório no topo de todo arquivo ejetado.** O gerador **remove o cabeçalho de licença** ao ejetar, então sem anotação não há contra o que diffar. Exercido no **único** arquivo ejetado que resta, `SearchBar/index.js`, que declara de qual versão saiu. `NavbarItem/ComponentTypes.js` era o outro, e saiu inteiro — ver §3.1.
 
 **3. `--typescript` sempre, mesmo em projeto JavaScript.** Sem a flag o eject ignora `.ts`/`.tsx` e copia o JavaScript transpilado de `lib/`. Com ela, mudança de props vira **erro de build** em vez de bug de runtime.
 
-> **Desvio 1 — `NavbarItem/ComponentTypes`, em JavaScript.** A regra do [ADR 2](../adr/0002-politica-de-swizzle.md) diz *sempre*, e ela é escrita para o que a flag protege — **assinatura de props**. Este arquivo não tem props: é um objeto de mapeamento, e a garantia que interessa nele é outra — **chave removida no upstream vira falha de resolução de `@theme/…` no build**, que acontece igual em JavaScript. Ligar TypeScript aqui custaria uma dependência nova de toolchain, contra o axioma 2, para comprar uma verificação que este arquivo já tem por outro caminho.
+> **~~Desvio 1 — `NavbarItem/ComponentTypes`, em JavaScript.~~ SAIU COM O ARQUIVO.** Ele dizia: a regra do [ADR 2](../adr/0002-politica-de-swizzle.md) é *sempre*, e é escrita para o que a flag protege — **assinatura de props**; aquele arquivo não tinha props, era um objeto de mapeamento, e a garantia que interessava nele era outra — **chave removida no upstream vira falha de resolução de `@theme/…` no build**, que acontece igual em JavaScript. **O argumento continua correto; o que deixou de existir foi o arquivo**, medido idêntico ao upstream nas nove chaves e removido por isso. Ver §3.1.
+>
+> **A numeração não é remendada.** O desvio 2 continua sendo o desvio 2 — e hoje é o único. Renumerar quebraria a citação dele na tabela de Procedência, e é o mesmo precedente que congela portão, perda e exceção neste projeto.
 >
 > O desvio valia **para registro, não para componente** — e a redação original dizia: *"o primeiro `--eject` de componente que este repositório fizer reabre a conta, e aí a flag não é opcional."* O slice 7 é esse dia, e a conta foi reaberta.
 >

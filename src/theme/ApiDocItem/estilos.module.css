@@ -49,7 +49,16 @@
        referência troca a coluna do TOC por um trilho de amostras bem mais
        largo, e a prosa cede espaço para ele. Medido, `origem própria`; ver
        `referencia.md` §1 e `tokens.md`. */
-    flex: 0 0 var(--sd-api-prosa-width);
+    /* `0 1` e não `0 0`: a base é o alvo, não um piso. A soma das duas colunas
+       mais o gutter dá 1120, mas a grade só RECEBE 1120 a partir de viewport
+       1408 — abaixo disso, `flex-shrink: 0` mandava as colunas estourarem o
+       corpo. Medido: 411px de estouro a 997, 128 a 1280, 42 a 1366, zero a
+       1408. Com `0 1` as duas cedem na proporção da base e o estouro é zero em
+       toda a faixa; a proporção 577:511 se mantém, que é o que a conta abaixo
+       publica. O `min-width: 0` que faz o encolhimento valer para conteúdo
+       indivisível está declarado FORA da media query, na regra compartilhada
+       com `.colunaPainel`. */
+    flex: 0 1 var(--sd-api-prosa-width);
   }
 
   /* A aritmética do comutador: 577 (prosa da API) + 32 (--sd-space-8, o
@@ -59,7 +68,7 @@
      quebraria calado no dia em que `--sd-container-width` ou
      `--sd-api-prosa-width` mudassem de novo. */
   .colunaPainel {
-    flex: 0 0 calc(var(--sd-container-width) - var(--sd-api-prosa-width) - var(--sd-space-8));
+    flex: 0 1 calc(var(--sd-container-width) - var(--sd-api-prosa-width) - var(--sd-space-8));
     /* O erro nº 1 de quem reconstrói este layout: sem `align-self: start`,
        o item de flex estica para a altura do irmão mais alto (a prosa), e
        `position: sticky` parece travado desde o topo — a caixa já preenche

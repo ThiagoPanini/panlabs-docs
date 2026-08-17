@@ -297,7 +297,7 @@ gerador nomeia `data-sd-part="meta"`"*, e o literal **não pode** aparecer na sa
 do gerador: quem escreve o atributo é o componente, e a página escreve a **tag**.
 Grepar a string no MDX conferiria uma coisa que nenhum renderizador lê.
 
-## 6. As nove perdas nomeadas da rota vanilla, e a décima desta rota
+## 6. As oito perdas nomeadas da rota vanilla, e a décima desta rota
 
 O ledger completo, com o motivo de cada uma, mora em
 [`swizzle.md`](swizzle.md) §4. Aqui elas entram numa linha cada, porque um
@@ -309,7 +309,7 @@ de entender o que esta rota acrescenta.
 | 1 | Nó injetado dentro do corpo da página — eyebrow, bloco de feedback, CTA lateral |
 | 2 | Breadcrumb reestruturado como a eyebrow da âncora |
 | 3 | A proporção da âncora entre conteúdo e painel |
-| 4 | Faixa de tabs de largura total abaixo do navbar |
+| ~~4~~ | ~~Faixa de tabs de largura total abaixo do navbar~~ — **removida**; era fato errado, e a [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) mediu a faixa saindo de degraus 0, 1 e 2. A numeração não é remendada: ver [`swizzle.md`](swizzle.md) §4 |
 | 5 | TOC com anatomia nova — barra de progresso, seções extras |
 | 6 | Ícone preso dentro de componente `unsafe` mantém o desenho do Docusaurus |
 | 7 | Footer dentro da coluna de prosa, como a âncora faz |

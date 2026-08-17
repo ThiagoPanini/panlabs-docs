@@ -106,30 +106,54 @@ main:focus-visible,
 }
 
 /* -----------------------------------------------------------------------------
-   4. Os três `transition: all` do upstream
+   4. O `transition: all` do upstream — UM, e não três
 
-   `CopyButton`, `BackToTopButton` e `DocCard/Layout` declaram
-   `transition: all <duração>`. `outline` é animável, então os três entram na
-   transição — e o efeito é pior que um fade: `outline-style` é propriedade
-   discreta e vira aos 50%, o que deixa **o anel ausente por metade da duração
-   depois da tecla**.
+   `outline` é animável, então um `transition: all` o arrasta junto, e o efeito é
+   pior que um fade: `outline-style` é propriedade discreta e vira aos 50%, o que
+   deixa O ANEL AUSENTE POR METADE DA DURAÇÃO DEPOIS DA TECLA.
 
-   A correção não é remendo. É a regra de motion aplicada — *nenhum CSS do
-   projeto escreve duração ou curva fora dos seis movimentos* — em três
-   elementos que já eram consumidores declarados de `--sd-move-state`. Os três
-   ganchos são `ThemeClassNames`.
+   ERAM TRÊS ELEMENTOS NESTA REGRA, E DOIS NUNCA FORAM DEFEITO. Medido no CSS
+   emitido do build, o arquivo inteiro tem exatamente DUAS declarações
+   `transition: all`:
+
+     · `.backToTopButton_sjWU` — o botão de voltar ao topo. É este, e só este.
+     · `.copyButtonIcon_*` / `.copyButtonSuccessIcon_*` — os dois `<svg>` DENTRO
+       do botão de copiar, não o botão. Eles são `aria-hidden` e não recebem
+       foco, logo não há anel para o `all` deles arrastar. `.theme-code-block
+       button` também nunca os alcançava: a regra mirava o botão, e o `all` mora
+       nos filhos.
+
+   E `.theme-doc-card-container` NÃO EXISTE neste site — zero ocorrências nos 108
+   HTML publicados. O `DocCard/Layout` que a redação antiga citava não é
+   renderizado por nenhuma rota daqui.
+
+   O TERCEIRO DEFEITO ERA O SELETOR, e é o mais caro: `.theme-back-to-top-button`
+   nu é (0,1,0), o mesmo peso da classe hasheada `.backToTopButton_sjWU` que
+   carrega o `all`. Empate se resolve por ORDEM DE CARGA, e o módulo do
+   theme-classic carrega depois — medido no bundle: a nossa regra no byte 82514,
+   a do upstream no 87502. A forma nua perdia em silêncio e sem sintoma, então a
+   correção inteira desta seção nunca chegou a rodar.
+
+   Somar o tipo do elemento leva o seletor a (0,1,1) e o tira da ordem. É o mesmo
+   mecanismo de `button.theme-back-to-top-button` em `chrome.css` e de
+   `div.theme-code-block` em `componentes.css` — e este arquivo é a terceira vez
+   que a armadilha aparece, agora fechada.
+
+   `visibility` ENTRA NA LISTA porque o upstream a transicionava por dentro do
+   `all`, e a base do botão é `opacity: 0` + `visibility: hidden`. Sem ela na
+   lista, a saída deixaria de desaparecer junto com o fade. Trocamos a lista de
+   propriedades, não o comportamento — tirar `outline` dela é o objetivo inteiro.
 
    Nota que vale escrita: o Infima encurta a transição sob
-   `prefers-reduced-motion`, então hoje o defeito **desaparece justamente para
-   quem pediu menos movimento** e persiste para todo mundo.
+   `prefers-reduced-motion`, então o defeito **desaparecia justamente para quem
+   pediu menos movimento** e persistia para todo mundo.
    ----------------------------------------------------------------------------- */
 
-.theme-back-to-top-button,
-.theme-doc-card-container,
-.theme-code-block button {
+button.theme-back-to-top-button {
   transition:
     opacity var(--sd-move-state),
     transform var(--sd-move-state),
+    visibility var(--sd-move-state),
     background-color var(--sd-move-state),
     box-shadow var(--sd-move-state);
 }

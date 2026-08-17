@@ -250,7 +250,14 @@ a.card:active {
 .step {
   position: relative;
   display: grid;
-  grid-template-columns: var(--sd-step-marker) 1fr;
+  /* `minmax(0, 1fr)` e não `1fr`: `1fr` é `minmax(auto, 1fr)`, e o `auto` desse
+     piso é o `min-content` do conteúdo. Um bloco de código dentro do passo trava
+     a coluna na largura da sua linha mais longa (~643px medidos) e a grade deixa
+     de encolher — a página inteira passa a rolar na horizontal em tela estreita.
+     Medido antes: 388px de estouro a 390 de viewport, 53px a 997. Depois: zero
+     nas duas. A sonda de `documentElement.scrollWidth` em `paridade.mjs` é a
+     rede que impede isto de regredir calado. */
+  grid-template-columns: var(--sd-step-marker) minmax(0, 1fr);
   gap: var(--sd-space-4);
   counter-increment: passo;
   padding-block-end: var(--sd-space-6);

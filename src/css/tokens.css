@@ -28,7 +28,7 @@
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   @property — as três raízes registráveis do bloco de troca
+   @property — as duas raízes registráveis do bloco de troca
 
    Propriedade registrada com valor inválido cai para o initial-value, não para
    `unset`. Colagem errada degrada para o valor entregue de fábrica em vez de
@@ -36,8 +36,14 @@
 
    Registra-se exatamente as linhas do bloco de troca cuja entrega é literal E
    computacionalmente independente — é o que `initial-value` sabe expressar.
-   As outras sete entregam referência (`var()`, `oklch(from …)`) ou pilha de
+   As outras cinco entregam referência (`var()`, `oklch(from …)`) ou pilha de
    fonte, e `initial-value` não aceita nenhuma das duas.
+
+   (As duas contagens acima diziam TRÊS e SETE, contra um bloco de troca de
+   sete linhas com duas registradas. O comentário do bloco SKIN, no `:root`
+   abaixo, sempre disse *"as duas linhas"* e *"as outras cinco"* — eram os
+   números daqui que estavam soltos. Contagem em comentário não tem portão,
+   e é por isso que ela vale a errata em vez da reescrita silenciosa.)
 
    ---------------------------------------------------------------------------
    A TIPAGEM `<color>` DE --sd-brand É CARGA ESTRUTURAL, NÃO DECORAÇÃO.
@@ -122,10 +128,17 @@
      vez de fórmula reaplicada — trocar a marca não move mais nenhum neutro do
      sistema.
 
-     A rampa é declarada INTEIRA, e hoje a 200 é a única parada sem consumidor.
-     Isso vai escrito pelo mesmo argumento que sustenta a família de `-edge` mais
-     abaixo: uma rampa de onze com um buraco no meio é pior de ler do que a
-     parada a mais. Parada é geometria, não consumidor.
+     A rampa é declarada INTEIRA, e hoje TRÊS paradas estão sem consumidor: a
+     100, a 200 e a 800. Eram declaradas como "só a 200" aqui, e a contagem
+     nasceu errada no próprio commit que a escreveu — a issue #95, que
+     desacoplou a rampa da marca, é onde `git log -S` põe a perda dos
+     consumidores da 100 e da 800. Nenhuma CI tinha como ver: órfão não quebra
+     build.
+
+     As três ficam pelo mesmo argumento que sustenta a família de `-edge` mais
+     abaixo: uma rampa de onze com buraco no meio é pior de ler do que a parada
+     a mais. Parada é geometria, não consumidor — e o argumento não muda com o
+     número de buracos.
      --------------------------------------------------------------------------- */
   --sd-gray-50:  #F4F6FA;
   --sd-gray-100: #EFF1F5;
@@ -177,8 +190,11 @@
      A régua que decide isto está em docs/design/README.md, no fecho da
      varredura: o que se remove é órfão SEM MOTIVO, não órfão. `--sd-gray-200`
      fica porque é parada de uma rampa declarada inteira, e rampa com buraco é
-     pior de ler; `--sd-toc-width` fica porque nomeia um elo da cadeia de
-     proporções. Um degrau de display não é elo de nada — ele já saltava o `5xl`
+     pior de ler; `--sd-state-danger-edge` fica porque família de quatro não tem
+     buraco no meio. (O exemplo daqui ERA `--sd-toc-width`, e ele deixou de
+     servir: a #96 lhe deu três consumidores — ver o bloco de chrome abaixo.
+     Órfão que ganha consumidor sai da lista.) Um degrau de display não é elo de
+     nada — ele já saltava o `5xl`
      por não ter o que preencher no meio —, então sem o hero não sobra motivo, e
      manter o `6xl` repetiria exatamente o defeito que matou o `5xl`.
 
@@ -238,7 +254,8 @@
   --sd-space-16: calc(var(--sd-space-1) * 16);
 
   /* ---------------------------------------------------------------------------
-     Forma — base 16px (a linha dez do bloco de troca), escada por múltiplo.
+     Forma — base 16px (a sétima e última linha do bloco de troca), escada por
+     múltiplo.
      Um número entra, a escada sai: trocar --sd-radius re-forma o site inteiro
      sem incoerência possível.
      --------------------------------------------------------------------------- */
@@ -397,6 +414,20 @@
      contêiner. O que se copia é o RESULTADO medido, não a aritmética de um
      framework de utilitários que este projeto não tem. */
   --sd-subtitulo-recuo:   10px;
+
+  /* A ENTRELINHA do subtítulo. Ela existe porque sem ela o subtítulo herdava
+     `--sd-leading-prose` (1,75) sobre 18px = 31,5px, contra os 28 que
+     `chrome.md` §12 publica com tolerância `exato`.
+
+     COMPRIMENTO e não razão, de propósito: 28/18 é 1,5555…, que resolve para
+     27,999… e nasceria vermelho permanente contra um alvo `exato` — é o mesmo
+     defeito que a entrelinha subpixel do §13 de `tokens.md` já cataloga. Um
+     comprimento entrega o número medido sem resíduo.
+
+     LITERAL pelo mesmo motivo do recuo acima: é medida de chrome, e a escala de
+     espaço não tem parada em 28 — ela pula de 24 (`--sd-space-6`) para 32
+     (`--sd-space-8`). */
+  --sd-subtitulo-entrelinha: 28px;
 
   /* O TOPO GRUDADO — a altura que o navbar de fato ocupa, e o offset de tudo o
      que gruda abaixo dele. Uma linha no estreito; duas de 997 para cima.
@@ -1298,9 +1329,10 @@
 /* =============================================================================
    ADAPTADOR — as exceções com escopo
 
-   Quatro pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA.
+   TRÊS pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA, e
+   os números que sobram são 2, 3 e 4 — ver a lápide da 1, logo abaixo.
 
-   Eram cinco. A do `--docusaurus-tag-list-border` saiu porque ela não tinha
+   Eram cinco, depois quatro. A do `--docusaurus-tag-list-border` saiu porque não tinha
    superfície viva: nenhuma página deste site declara `tags:`, e o front matter
    da âncora — `title`, `description`, `icon`, `sidebarTitle`, `hidden`,
    `noindex`, `searchable`, `deprecated`, `groups` — não tem o campo. O valor
@@ -1313,17 +1345,30 @@
    volta no mesmo commit, por uma linha.
    ============================================================================= */
 
-/* --- Exceção 1 — --ifm-alert-background-color-highlight -----------------------
-   No Infima ela é rgba() LITERAL por variante, dentro de `.alert--*`, e não
-   derivada da primária. É o ponto exato onde a re-marcação por variável do
-   Infima vaza: trocar --ifm-color-primary não move nenhuma delas. Só o seletor
-   de cada variante alcança. */
-.alert--primary   { --ifm-alert-background-color-highlight: var(--sd-surface-wash); }
-.alert--secondary { --ifm-alert-background-color-highlight: var(--sd-surface-raised); }
-.alert--success   { --ifm-alert-background-color-highlight: var(--sd-state-success-fill); }
-.alert--info      { --ifm-alert-background-color-highlight: var(--sd-state-info-fill); }
-.alert--warning   { --ifm-alert-background-color-highlight: var(--sd-state-warn-fill); }
-.alert--danger    { --ifm-alert-background-color-highlight: var(--sd-state-danger-fill); }
+/* --- Exceção 1 — --ifm-alert-background-color-highlight — REMOVIDA ------------
+   Ela pintava as seis variantes de `.alert--*`, e `.alert` NÃO TEM SUPERFÍCIE
+   neste site: `src/theme/Admonition/Types.js` mapeia `note`, `info`, `tip` e
+   `warning` direto para o nosso `Callout`, que tem DOM próprio, e o `Admonition`
+   raiz cai em `info` — isto é, no mesmo `Callout` — para qualquer tipo ausente.
+   Não sobra caminho que renderize um `.alert`.
+
+   Medido no build, e não deduzido: `alert--` aparece em ZERO dos 108 HTML
+   publicados, e `class="… alert …"` também em zero.
+
+   Sai pelo MESMO precedente que já matou a 5ª (a do
+   `--docusaurus-tag-list-border`): o valor de uma lista fechada é ser conferível
+   membro a membro, e linha permanentemente infalsificável é o oposto disso —
+   ninguém consegue mostrar que ela funciona, porque não há página onde ela
+   apareça. Aqui é ainda mais fechado que lá: a de tag dependia de o front matter
+   nunca ganhar `tags:`, e esta depende de um mapa de swizzle que é nosso.
+
+   Dissenso registrado, e é o mesmo: a exceção custava seis linhas e defendia
+   contra o dia em que alguém desfizesse o mapa da admonition. Esse dia teria de
+   passar por `Types.js`, que é arquivo versionado com o motivo escrito dentro.
+
+   A NUMERAÇÃO NÃO É REMENDADA. `tokens.md` §7 cita a *exceção 3* pelo número, e
+   é o mesmo precedente que congela a numeração dos portões (ADR 5). O 1 fica
+   vago; as que ficam continuam 2, 3 e 4. */
 
 /* --- Exceção 2 — os três --docusaurus-details-* ------------------------------
    Declaradas dentro de classe de CSS Module (`.details` em theme-common e em
