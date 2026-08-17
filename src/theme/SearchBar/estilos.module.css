@@ -147,8 +147,7 @@
   color: var(--sd-text-body);
   box-shadow: var(--sd-shadow-float);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  /* SEM `display` aqui — ver o bloco `[open]` adiante. */
 }
 
 /* O `::backdrop` é o único consumidor de `--sd-surface-scrim`, e o único véu do
@@ -186,6 +185,25 @@
 .modal[open]::backdrop {
   opacity: 1;
   animation: global(sd-busca-abre) var(--sd-move-enter) both;
+}
+
+/* O `display` do painel mora AQUI, e a razão é um defeito medido: um
+   `display: flex` de AUTOR em `.modal` vence o `dialog:not([open]) {
+   display: none }` da folha do agente de usuário — folha de autor sempre ganha
+   de folha de UA. O `<dialog>` FECHADO continuava no layout, e o custo era
+   duplo: 2 paradas de Tab invisíveis entre a busca e o seletor de locale, e uma
+   zona morta de clique de 640×140 sobre a página. Reproduzido em 8 combinações
+   (2 larguras × 2 temas × 2 locales).
+
+   O `[open]` é o que devolve a alternância ao agente de usuário — e, de quebra,
+   o que faz o `transition: display … allow-discrete` do bloco acima deixar de
+   ser letra morta: só há transição de `display` quando `display` de fato muda.
+
+   `::backdrop` fica de fora de propósito: ele não tem filho, e `display` nele
+   seria ruído. */
+.modal[open] {
+  display: flex;
+  flex-direction: column;
 }
 
 /* -----------------------------------------------------------------------------

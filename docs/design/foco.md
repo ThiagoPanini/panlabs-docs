@@ -124,13 +124,22 @@ O inventário de focáveis do site é fechado:
 
 ---
 
-## 5. Os três `transition: all` do upstream
+## 5. O `transition: all` do upstream — um, e não três
 
-`CopyButton`, `BackToTopButton` e `DocCard/Layout` declaram `transition: all` com a duração rápida do Infima. `outline` é animável, então os três entram na transição.
+**`BackToTopButton` declara `transition: all` com a duração rápida do Infima.** `outline` é animável, então ele entra na transição.
 
 O efeito é **pior que um fade**: `outline-style` é propriedade discreta e vira aos 50% da transição. O anel fica **ausente por metade da duração depois da tecla**.
 
-A correção não é remendo — é a regra de motion aplicada (*nenhum CSS do projeto escreve duração ou curva fora dos seis movimentos*) em três elementos que já eram consumidores declarados do movimento de estado. Os três ganchos são `ThemeClassNames`, e o custo é degrau 1.
+A correção é a regra de motion aplicada (*nenhum CSS do projeto escreve duração ou curva fora dos seis movimentos*) num elemento que já era consumidor declarado do movimento de estado. O gancho é `ThemeClassNames`, e o custo é degrau 1. `visibility` entra na lista de propriedades porque o `all` a transicionava, e a base do botão é `opacity: 0` mais `visibility: hidden`: o que se troca é a **lista**, não o comportamento — tirar `outline` dela é o objetivo inteiro.
+
+> **Esta seção dizia *três*, e a medição derruba dois deles — mais o mecanismo do terceiro.** O CSS emitido do build tem exatamente **duas** declarações `transition: all` no arquivo inteiro:
+>
+> - **`.backToTopButton_sjWU`** — o botão de voltar ao topo. É este, e só este.
+> - **`.copyButtonIcon_*` e `.copyButtonSuccessIcon_*`** — os dois `<svg>` **dentro** do botão de copiar, e não o botão. Eles são `aria-hidden`, não recebem foco, e não há anel para o `all` deles arrastar. O seletor `.theme-code-block button` também nunca os alcançou: ele mirava o botão, e o `all` mora nos filhos.
+>
+> **`DocCard/Layout` não é renderizado por nenhuma rota daqui:** `.theme-doc-card-container` tem **zero** ocorrências nos 108 HTML publicados. A perna era um seletor sem elemento.
+>
+> **E a perna que restava não vencia.** `.theme-back-to-top-button` nu é (0,1,0), o mesmo peso da classe hasheada que carrega o `all`; empate se resolve por **ordem de carga**, e o módulo do theme-classic carrega depois — no bundle medido, a nossa regra no byte 82514 contra a do upstream no 87502. **A correção inteira desta seção nunca chegou a rodar.** O conserto é `button.theme-back-to-top-button`, que é (0,1,1) e sai da ordem — o mesmo mecanismo que [`chrome.md`](chrome.md) já usa para a sombra do mesmo botão, e que `div.theme-code-block` usa em `componentes.css`. É a terceira aparição da armadilha, e a primeira em que ela é medida em vez de deduzida.
 
 **Nota que vale escrita:** o Infima encurta a transição sob `prefers-reduced-motion`. Ou seja, hoje o defeito **desaparece justamente para quem pediu menos movimento** e persiste para todo mundo.
 
@@ -165,7 +174,7 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 
 Três coisas que esta tabela resolve:
 
-- a pastilha de código é a terceira superfície, e agora ela é mesmo a terceira. Até o cartão sair ela **reusava o preenchimento da página** no escuro, e as duas células eram o mesmo número por isso; hoje ela é um degrau acima da página nos dois modos, e a célula dela desceu de 7,33 para 6,58 no escuro — o anel encontra uma superfície mais clara, e continua com o dobro da obrigação;
+- a pastilha de código é a terceira superfície, e agora ela é mesmo a terceira. Até o cartão sair ela **reusava o preenchimento da página** no escuro, e as duas células eram o mesmo número por isso; hoje ela é um degrau acima da página nos dois modos, e a célula dela desceu de 7,33 para 6,62 no escuro — o anel encontra uma superfície mais clara, e continua com o dobro da obrigação;
 - **a obrigação é satisfeita por construção, não por esta skin.** As travas de luminosidade do acento — piso no escuro, teto no claro — garantem a folga para qualquer marca que o corporativo cole. Não há verificação por skin a fazer, do mesmo jeito que não há para AA de texto;
 - não existe token de cor de foco separado do acento. Abrir um seria abrir um nono papel semântico, que é edição de spec com linha de procedência.
 

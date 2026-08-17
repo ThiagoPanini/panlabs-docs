@@ -12,7 +12,9 @@
  * ponto de extensão. É por isso que o degrau 5 aqui não carrega a dívida que o
  * degrau 5 costuma carregar: não há implementação upstream para reconciliar.
  *
- * > **Desvio de `--typescript`, e ele é o segundo do repositório.** O ADR 2 diz
+ * > **Desvio de `--typescript` — o desvio 2, e hoje o único do repositório.** O
+ * > desvio 1 saiu com `NavbarItem/ComponentTypes.js`, que era idêntico ao
+ * > upstream nas nove chaves; a numeração não é remendada. O ADR 2 diz
  * > *sempre*, e a regra existe para o que a flag protege — **assinatura de
  * > props**. Medido no 3.10.2: os dois consumidores (`Navbar/Content` e
  * > `NavbarItem/SearchNavbarItem`) montam `<SearchBar />`, sem uma prop. E o

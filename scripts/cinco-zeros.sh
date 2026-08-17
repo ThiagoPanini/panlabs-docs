@@ -118,7 +118,7 @@ echo
 # --- 4 ------------------------------------------------------------------------
 # O substrato nativo: ou o elemento do navegador entrega o comportamento
 # (`<details>`, `<a>`, `<table>`), ou o Docusaurus entrega (`Tabs`). Nenhum dos
-# dezoito escreve o seu.
+# dezessete escreve o seu.
 echo "4  zero JS de interação no catálogo"
 catalogo="$(codigo src/components | grep -E "$COMPORTAMENTO" || true)"
 if [ -z "$catalogo" ]; then

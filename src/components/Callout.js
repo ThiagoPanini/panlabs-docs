@@ -48,12 +48,17 @@ const VARIANTES = {
   warning: {glifo: 'triangle-alert', classe: estilos.calloutWarning, tamanho: 'md'},
 };
 
-export default function Callout({variant, title, id, children}) {
+/* Sem prop `id`. Ela existiu como repasse para o atributo do `<div>` e saiu por
+   não ter consumidor: ZERO call sites em `conteudo/`. Um callout não é destino
+   de link neste site — os âncoras de navegação são os headings, que o
+   Docusaurus já ancora sozinho —, e um `id` que ninguém escreve rendia
+   `id={undefined}` em toda instância. Volta com o call site junto no dia em que
+   um callout precisar de endereço próprio. */
+export default function Callout({variant, title, children}) {
   const {glifo, classe, tamanho} = VARIANTES[variant] ?? VARIANTES.info;
   return (
     <div
       className={clsx(estilos.callout, classe)}
-      id={id}
       data-sd-component="callout"
       data-sd-variant={variant}>
       <Icon name={glifo} size={tamanho} />

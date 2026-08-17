@@ -164,7 +164,9 @@ Não é estilo. É a regra que produz as configurações de TOC que provam a med
 
 > **`Procedimentos › Ambiente › Índice` carrega ZERO `##`.** É a única página abaixo do próprio piso sem que um gabarito a autorize, e ela está lá de propósito.
 
-**Ela trocou de dona nesta spec.** A fixture morava em `Comece aqui › Ambientes`, que é página do produto anterior e morreu com a árvore. Foi para o índice de `Ambiente`, e o custo em página é **zero** — a prova é a mesma, e ela nunca foi o cartão: é o `.col` travado no mesmo pixel com ou sem TOC, **confirmado ao vivo contra o próprio Devin**, que reserva a largura da coluna de TOC mesmo vazia.
+**Ela trocou de dona nesta spec.** A fixture morava em `Comece aqui › Ambientes`, que é página do produto anterior e morreu com a árvore. Foi para o índice de `Ambiente`, e o custo em página é **zero** — ela nunca foi o cartão.
+
+**O que ela prova mudou, e a redação anterior ficou para trás.** Dizia ser *"o `.col` travado no mesmo pixel com ou sem TOC, confirmado ao vivo contra o próprio Devin, que reserva a largura da coluna de TOC mesmo vazia"*. A #96 **reverteu o mesmo-pixel** — [`chrome.md`](chrome.md) §1 registra que a caixa invisível passou a segurar dois pixels, um por configuração —, então a fixture deixou de provar aquilo no instante em que a decisão caiu. Ela continua sendo fixture, e por um motivo mais estreito: é uma das **3** páginas do acervo sem um `##`, e portanto a única forma de exercitar a perna *sem heading* — TOC fora do DOM e teto de 840 a partir de 1408. A medição contra o Devin não é apagada: ela sustentava a decisão que a #96 reverteu, e vive no registro dessa reversão.
 
 **Exceção anônima é buraco; exceção nomeada é decisão.** É por isso que ela está escrita aqui, no `sidebars-procedimentos.js` e no portão — e é por isso que a segunda reprova.
 
@@ -271,8 +273,10 @@ São dez, todos **convenção de conteúdo e zero layout**: sem front matter de 
 | *índice de jornada* | 250-400 | ver §6.4 | 2 |
 | *capítulo de jornada* | 180-1800 | 3-6 `##` · 2 blocos · 1 `:::` · prosa antes do 1º `##` · **sem `<Steps>`** | 10 |
 | *índice de categoria* | piso do tipo da seção | + um índice das folhas | 8 |
-| *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 1 |
+| *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 0 — ver nota |
 | | | **total autoral** | **46** |
+
+> **A fixture de página curta não soma, e a linha fica.** Ela é `Procedimentos › Ambiente › Índice` — a mesma página que a tabela de fixtures nomeia adiante —, e essa página já entra na linha dos **oito** *índices de categoria*. A linha existe para nomear o **papel** de fixture, não para acrescentar página; contá-la de novo fazia a coluna somar **47** contra um total de **46**. O 46 não é escolha de redação: é o número que `scripts/portao-4-conteudo.sh` crava e reprova.
 
 > **Correção de contagem contra a resolução.** Ela dizia *"Guia — doze folhas de `Procedimentos` e `Ferramentas`"*. Contado contra a árvore fechada: `Procedimentos` tem 14 folhas, das quais 2 são `Catálogo`, 2 `Conceitual` e 2 `Troubleshooting`, sobrando **8** guias; `Ferramentas` tem 11 folhas, das quais 3 SDK, 1 Quickstart, 1 Conceitual, 1 Changelog e 2 Receita, sobrando **3**. São **onze**, não doze.
 
@@ -336,8 +340,8 @@ Se um capítulo pode carregar `<Steps>`, o leitor abre a página e não consegue
 | --- | --- | --- |
 | Tabela larga | `Acessos › Permissões por papel` — 40 × 5 | scroll horizontal dentro da coluna de prosa |
 | Tabela como página inteira | `Ambiente › Comparativo dev/staging/prod` | o tipo `Catálogo` com prosa quase nula |
-| Bloco de código longo | `Esteiras › Verificar a assinatura HMAC` | altura, `<CodeGroup>` e o título nu |
-| **Página muito curta** | **`Ambiente › Índice`** — ~120 palavras, zero `##` | **a coluna no mesmo pixel sem coluna de TOC** |
+| Bloco de código longo | `Esteiras › Verificar a assinatura HMAC` | **altura** — bloco de 70 linhas. Só isso: a página não tem `<CodeGroup>` nem cerca titulada (ver nota) |
+| **Página muito curta** | **`Ambiente › Índice`** — ~120 palavras, zero `##` | **a perna sem heading**: nenhuma coluna de TOC no DOM, e o teto de 840 mordendo a partir de 1408 (ver nota) |
 | Prosa pura | `Jornadas › Security Champion › Índice` | a medida de prosa sozinha, sem nada para escondê-la |
 | Item de sidebar mais largo | `Security Champion › A varredura que reprovava tudo` — 30 caracteres | wrap ou truncamento no item, com ícone à esquerda |
 | Prosa mínima, código máximo | `Skills › Scaffold de esteira` | o escape de medida com um bloco só, muito longo |
@@ -345,6 +349,12 @@ Se um capítulo pode carregar `<Steps>`, o leitor abre a página e não consegue
 | Aninhamento profundo | `Infraestrutura › O output de um módulo` — quatro níveis | `<ResponseField>` sobre `<Expandable>` |
 | Página muito longa | `API Owner › O contrato que não existia` — ~1800 palavras | TOC longo, `sticky` e scroll-spy |
 | Painel direito vazio | `Biblioteca C › Instalação e configuração` | `ApiDocItem` na perna que **delega** — o painel é inalcançável, não vazio |
+
+> **Duas linhas desta tabela prometiam mais do que a dona entrega, e as duas foram medidas.**
+>
+> **`Página muito curta`** dizia provar *"a coluna no mesmo pixel sem coluna de TOC"*. Esse alvo **não existe mais**: a #96 reverteu o mesmo-pixel, e [`chrome.md`](chrome.md) §1 já registra que a caixa invisível hoje segura **dois** pixels, um por configuração. A prova que a página de fato entrega é outra, e continua valendo a fixture: ela é uma das **3** páginas do acervo sem um `##`, e é por isso a única forma de exercitar a perna *sem heading* da tabela de §1 — TOC ausente do DOM e teto de 840 mordendo a partir de 1408.
+>
+> **`Bloco de código longo`** prometia *"altura, `<CodeGroup>` e o título nu"*, e a dona não tem os dois últimos: `verificar-a-assinatura-hmac.md` tem **zero** `<CodeGroup>` e nenhuma cerca titulada — as duas cercas dela são ```` ```python ```` e ```` ```yaml ````, nuas. O que ela prova é a **altura**, com um bloco de 70 linhas, e isso ela prova sozinha. `<CodeGroup>` e cerca titulada têm dona em outro lugar: `Bibliotecas › Biblioteca A` e `Biblioteca B`, e `Servidores MCP › Servidor de catálogo MCP`. Fixture que promete três coisas e entrega uma não é fixture fraca — é **afirmação não conferida**, que é o defeito que esta seção existe para não ter.
 
 **Duas fixtures morrem, e nenhuma pelo cartão.** `Sidebar longa` — nenhuma aba nova chega perto das 33 linhas da árvore anterior, e este artefato **não inventa página para forçar o número**. `Navbar apertado` — a faixa de tabs saiu da navbar e levou o aperto junto.
 

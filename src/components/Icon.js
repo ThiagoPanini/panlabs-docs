@@ -1,5 +1,5 @@
 /**
- * `icon` — o veículo dos 35 ícones de autoria dentro do MDX.
+ * `icon` — o veículo dos 40 ícones de autoria dentro do MDX.
  *
  * Ele não resolve desenho: delega ao registro de `src/icons/registry.js`, que é
  * quem lança com sugestão de vizinho quando o nome não existe. Nome inexistente
@@ -30,18 +30,21 @@ const TAMANHOS = {
   lg: {traco: 1.75, classe: estilos.iconLg},
 };
 
-export default function Icon({name, size = 'sm', label}) {
+export default function Icon({name, size = 'sm'}) {
   const Desenho = resolverIcone(name);
   const {traco, classe} = TAMANHOS[size] ?? TAMANHOS.sm;
 
-  // Sem `label`, o ícone é decorativo e sai da árvore de acessibilidade — o que
-  // está certo em toda a autoria medida: o significado está no texto ao lado.
-  // Com `label`, ele vira imagem nomeada. `focusable` fecha a armadilha do IE
-  // legada que ainda vive em leitores de tela sobre `<svg>` dentro de link.
-  const acessibilidade = label
-    ? {role: 'img', 'aria-label': label}
-    : {'aria-hidden': 'true'};
-
+  // O ícone é SEMPRE decorativo e sai da árvore de acessibilidade — o que está
+  // certo em toda a autoria medida: o significado está no texto ao lado.
+  // `focusable="false"` fecha a armadilha do IE legada que ainda vive em
+  // leitores de tela sobre `<svg>` dentro de link.
+  //
+  // HAVIA uma prop `label` que virava `role="img"` mais `aria-label`, e ela
+  // saiu por não ter consumidor: zero chamadas em `conteudo/` e `role="img"`
+  // em ZERO dos 108 HTML publicados. Um ramo de ARIA que nunca roda é pior que
+  // ausente — ele parece cobertura de acessibilidade numa leitura de código, e
+  // não é. Se um ícone um dia carregar significado sozinho, a prop volta com o
+  // call site junto; sem call site ela não tem como ser conferida.
   return (
     <Desenho
       data-sd-component="icon"
@@ -49,7 +52,7 @@ export default function Icon({name, size = 'sm', label}) {
       className={clsx(estilos.icon, classe)}
       strokeWidth={traco}
       focusable="false"
-      {...acessibilidade}
+      aria-hidden="true"
     />
   );
 }

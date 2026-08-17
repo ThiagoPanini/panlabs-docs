@@ -95,7 +95,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   @property — as três raízes registráveis do bloco de troca
+   @property — as duas raízes registráveis do bloco de troca
 
    Propriedade registrada com valor inválido cai para o initial-value, não para
    `unset`. Colagem errada degrada para o valor entregue de fábrica em vez de
@@ -103,8 +103,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
    Registra-se exatamente as linhas do bloco de troca cuja entrega é literal E
    computacionalmente independente — é o que `initial-value` sabe expressar.
-   As outras sete entregam referência (`var()`, `oklch(from …)`) ou pilha de
+   As outras cinco entregam referência (`var()`, `oklch(from …)`) ou pilha de
    fonte, e `initial-value` não aceita nenhuma das duas.
+
+   (As duas contagens acima diziam TRÊS e SETE, contra um bloco de troca de
+   sete linhas com duas registradas. O comentário do bloco SKIN, no `:root`
+   abaixo, sempre disse *"as duas linhas"* e *"as outras cinco"* — eram os
+   números daqui que estavam soltos. Contagem em comentário não tem portão,
+   e é por isso que ela vale a errata em vez da reescrita silenciosa.)
 
    ---------------------------------------------------------------------------
    A TIPAGEM `<color>` DE --sd-brand É CARGA ESTRUTURAL, NÃO DECORAÇÃO.
@@ -189,10 +195,17 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      vez de fórmula reaplicada — trocar a marca não move mais nenhum neutro do
      sistema.
 
-     A rampa é declarada INTEIRA, e hoje a 200 é a única parada sem consumidor.
-     Isso vai escrito pelo mesmo argumento que sustenta a família de `-edge` mais
-     abaixo: uma rampa de onze com um buraco no meio é pior de ler do que a
-     parada a mais. Parada é geometria, não consumidor.
+     A rampa é declarada INTEIRA, e hoje TRÊS paradas estão sem consumidor: a
+     100, a 200 e a 800. Eram declaradas como "só a 200" aqui, e a contagem
+     nasceu errada no próprio commit que a escreveu — a issue #95, que
+     desacoplou a rampa da marca, é onde `git log -S` põe a perda dos
+     consumidores da 100 e da 800. Nenhuma CI tinha como ver: órfão não quebra
+     build.
+
+     As três ficam pelo mesmo argumento que sustenta a família de `-edge` mais
+     abaixo: uma rampa de onze com buraco no meio é pior de ler do que a parada
+     a mais. Parada é geometria, não consumidor — e o argumento não muda com o
+     número de buracos.
      --------------------------------------------------------------------------- */
   --sd-gray-50:  #F4F6FA;
   --sd-gray-100: #EFF1F5;
@@ -244,8 +257,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      A régua que decide isto está em docs/design/README.md, no fecho da
      varredura: o que se remove é órfão SEM MOTIVO, não órfão. `--sd-gray-200`
      fica porque é parada de uma rampa declarada inteira, e rampa com buraco é
-     pior de ler; `--sd-toc-width` fica porque nomeia um elo da cadeia de
-     proporções. Um degrau de display não é elo de nada — ele já saltava o `5xl`
+     pior de ler; `--sd-state-danger-edge` fica porque família de quatro não tem
+     buraco no meio. (O exemplo daqui ERA `--sd-toc-width`, e ele deixou de
+     servir: a #96 lhe deu três consumidores — ver o bloco de chrome abaixo.
+     Órfão que ganha consumidor sai da lista.) Um degrau de display não é elo de
+     nada — ele já saltava o `5xl`
      por não ter o que preencher no meio —, então sem o hero não sobra motivo, e
      manter o `6xl` repetiria exatamente o defeito que matou o `5xl`.
 
@@ -305,7 +321,8 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-space-16: calc(var(--sd-space-1) * 16);
 
   /* ---------------------------------------------------------------------------
-     Forma — base 16px (a linha dez do bloco de troca), escada por múltiplo.
+     Forma — base 16px (a sétima e última linha do bloco de troca), escada por
+     múltiplo.
      Um número entra, a escada sai: trocar --sd-radius re-forma o site inteiro
      sem incoerência possível.
      --------------------------------------------------------------------------- */
@@ -464,6 +481,20 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      contêiner. O que se copia é o RESULTADO medido, não a aritmética de um
      framework de utilitários que este projeto não tem. */
   --sd-subtitulo-recuo:   10px;
+
+  /* A ENTRELINHA do subtítulo. Ela existe porque sem ela o subtítulo herdava
+     `--sd-leading-prose` (1,75) sobre 18px = 31,5px, contra os 28 que
+     `chrome.md` §12 publica com tolerância `exato`.
+
+     COMPRIMENTO e não razão, de propósito: 28/18 é 1,5555…, que resolve para
+     27,999… e nasceria vermelho permanente contra um alvo `exato` — é o mesmo
+     defeito que a entrelinha subpixel do §13 de `tokens.md` já cataloga. Um
+     comprimento entrega o número medido sem resíduo.
+
+     LITERAL pelo mesmo motivo do recuo acima: é medida de chrome, e a escala de
+     espaço não tem parada em 28 — ela pula de 24 (`--sd-space-6`) para 32
+     (`--sd-space-8`). */
+  --sd-subtitulo-entrelinha: 28px;
 
   /* O TOPO GRUDADO — a altura que o navbar de fato ocupa, e o offset de tudo o
      que gruda abaixo dele. Uma linha no estreito; duas de 997 para cima.
@@ -1365,9 +1396,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 /* =============================================================================
    ADAPTADOR — as exceções com escopo
 
-   Quatro pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA.
+   TRÊS pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA, e
+   os números que sobram são 2, 3 e 4 — ver a lápide da 1, logo abaixo.
 
-   Eram cinco. A do `--docusaurus-tag-list-border` saiu porque ela não tinha
+   Eram cinco, depois quatro. A do `--docusaurus-tag-list-border` saiu porque não tinha
    superfície viva: nenhuma página deste site declara `tags:`, e o front matter
    da âncora — `title`, `description`, `icon`, `sidebarTitle`, `hidden`,
    `noindex`, `searchable`, `deprecated`, `groups` — não tem o campo. O valor
@@ -1380,17 +1412,30 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    volta no mesmo commit, por uma linha.
    ============================================================================= */
 
-/* --- Exceção 1 — --ifm-alert-background-color-highlight -----------------------
-   No Infima ela é rgba() LITERAL por variante, dentro de `.alert--*`, e não
-   derivada da primária. É o ponto exato onde a re-marcação por variável do
-   Infima vaza: trocar --ifm-color-primary não move nenhuma delas. Só o seletor
-   de cada variante alcança. */
-.alert--primary   { --ifm-alert-background-color-highlight: var(--sd-surface-wash); }
-.alert--secondary { --ifm-alert-background-color-highlight: var(--sd-surface-raised); }
-.alert--success   { --ifm-alert-background-color-highlight: var(--sd-state-success-fill); }
-.alert--info      { --ifm-alert-background-color-highlight: var(--sd-state-info-fill); }
-.alert--warning   { --ifm-alert-background-color-highlight: var(--sd-state-warn-fill); }
-.alert--danger    { --ifm-alert-background-color-highlight: var(--sd-state-danger-fill); }
+/* --- Exceção 1 — --ifm-alert-background-color-highlight — REMOVIDA ------------
+   Ela pintava as seis variantes de `.alert--*`, e `.alert` NÃO TEM SUPERFÍCIE
+   neste site: `src/theme/Admonition/Types.js` mapeia `note`, `info`, `tip` e
+   `warning` direto para o nosso `Callout`, que tem DOM próprio, e o `Admonition`
+   raiz cai em `info` — isto é, no mesmo `Callout` — para qualquer tipo ausente.
+   Não sobra caminho que renderize um `.alert`.
+
+   Medido no build, e não deduzido: `alert--` aparece em ZERO dos 108 HTML
+   publicados, e `class="… alert …"` também em zero.
+
+   Sai pelo MESMO precedente que já matou a 5ª (a do
+   `--docusaurus-tag-list-border`): o valor de uma lista fechada é ser conferível
+   membro a membro, e linha permanentemente infalsificável é o oposto disso —
+   ninguém consegue mostrar que ela funciona, porque não há página onde ela
+   apareça. Aqui é ainda mais fechado que lá: a de tag dependia de o front matter
+   nunca ganhar `tags:`, e esta depende de um mapa de swizzle que é nosso.
+
+   Dissenso registrado, e é o mesmo: a exceção custava seis linhas e defendia
+   contra o dia em que alguém desfizesse o mapa da admonition. Esse dia teria de
+   passar por `Types.js`, que é arquivo versionado com o motivo escrito dentro.
+
+   A NUMERAÇÃO NÃO É REMENDADA. `tokens.md` §7 cita a *exceção 3* pelo número, e
+   é o mesmo precedente que congela a numeração dos portões (ADR 5). O 1 fica
+   vago; as que ficam continuam 2, 3 e 4. */
 
 /* --- Exceção 2 — os três --docusaurus-details-* ------------------------------
    Declaradas dentro de classe de CSS Module (`.details` em theme-common e em
@@ -1436,7 +1481,7 @@ O corporativo apaga a identidade visual do shinydoc editando o bloco entre `SKIN
 
 | Linha | O que ela move |
 | --- | --- |
-| `--sd-brand` | Os dois acentos e a cor de link. É o hex do manual de marca, colado direto — sem converter para canais decimais. Desde a issue #95 ela **não** move mais a rampa nem as duas superfícies: essas saíram da família da marca. |
+| `--sd-brand` | Os dois acentos **e tudo que desce deles** — são **seis** papéis de camada 2, não dois: a cor de link, o hover do acento (`--sd-accent-hover`), o texto-inverso que rotula preenchimento de acento (`--sd-text-inverse`, e com ele `--sd-accent-contrast`), o **wash do item ativo** (`--sd-surface-wash`, `rgb(from var(--sd-accent) …)`) e o **anel de foco** (`--sd-focus-ring`, que é `var(--sd-accent)` direto). É o hex do manual de marca, colado direto — sem converter para canais decimais. Desde a issue #95 ela **não** move mais a rampa nem as duas superfícies: essas saíram da família da marca. |
 | `--sd-brand-on-dark` | O acento no escuro. Vem com a trava de luminosidade que garante AA; mexer aqui é assumir a verificação de contraste no lugar da arquitetura. |
 | `--sd-brand-on-light` | O mesmo, no claro. |
 | `--sd-font-body` | A pilha do corpo e de todo texto de UI. |
@@ -1453,7 +1498,9 @@ O corporativo apaga a identidade visual do shinydoc editando o bloco entre `SKIN
 
 Diferente, sim. Quebrado, não.
 
-> **O terceiro mecanismo é o que carrega mais peso, e a leitura fácil dele está errada.** Medido em navegador, arquivo a arquivo: **sem** o registro de `--sd-brand` e com marca **válida**, a cadeia `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte igual — custom property não registrada é token stream, e `oklch(from …)` aninhado é CSS legal. O que o registro compra não é a cadeia funcionar; é ela **não evaporar inteira** com uma colagem inválida. Sem ele, um valor torto na linha 1 apaga marca, os dois acentos, a cor de link e o rótulo do botão primário de uma vez, sem aviso e sem erro. Com ele, tudo isso cai no valor de fábrica e o site continua de pé. A rampa e as duas superfícies não estão nessa lista — não dependem da linha 1 para existir.
+> **A linha do `--sd-brand` dizia *"os dois acentos e a cor de link"*, e omitia dois papéis.** `--sd-surface-wash` e `--sd-focus-ring` descem do acento no bloco escuro **e** no claro, e o §10 já os media como superfície própria — *anel de foco vs levantada / página* e *`text-strong` sobre o wash do item ativo* são duas linhas da tabela de contraste dele. A omissão não era inofensiva: quem re-marca lendo só o §4 achava que o anel de foco e o realce do item ativo da sidebar ficavam onde estavam, e os dois trocam de cor junto com a marca. O critério do que entra nesta coluna é **o cone de dependência inteiro**, não os consumidores mais visíveis dele.
+
+> **O terceiro mecanismo é o que carrega mais peso, e a leitura fácil dele está errada.** Medido em navegador, arquivo a arquivo: **sem** o registro de `--sd-brand` e com marca **válida**, a cadeia `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte igual — custom property não registrada é token stream, e `oklch(from …)` aninhado é CSS legal. O que o registro compra não é a cadeia funcionar; é ela **não evaporar inteira** com uma colagem inválida. Sem ele, um valor torto na linha 1 apaga marca, os dois acentos, a cor de link, o rótulo do botão primário, **o anel de foco e o wash do item ativo** de uma vez, sem aviso e sem erro. Com ele, tudo isso cai no valor de fábrica e o site continua de pé. A rampa e as duas superfícies não estão nessa lista — não dependem da linha 1 para existir.
 >
 > O raio de dano de uma linha errada é o site inteiro, e é esse raio que o `@property` contém. Quem for tentado a tirar a linha por achá-la cerimônia está tirando a contenção, não a tipagem.
 
@@ -1549,7 +1596,9 @@ A regra que decide: **token que referencia camada 2 bifurca e mora nos dois bloc
 
 `--sd-shadow-lip` é o único papel nessa situação, e é uma correção com história: ele estava escrito como par declarado, com alfa zerado no claro. Zerar o alfa desligava uma fórmula que havia **invertido de sinal** — ancorada na tinta do modo, ela produziria uma linha **escura** na aresta superior do cartão claro, ou seja luz vindo de baixo.
 
-**Realce é luz, e luz é o topo da rampa — não "a tinta do modo".** Corrigida a âncora, o par some inteiro: no claro o cartão **é** o topo da rampa, e o topo da rampa sobre si mesmo é identidade matemática. **A aresta iluminada some no claro porque não há nada acima dela na rampa — não porque alguém a desligou.**
+**Realce é luz, e luz é o topo da rampa — não "a tinta do modo".** Corrigida a âncora, o par some inteiro, e a conta é de quantização e não de identidade: no claro o cartão é `--sd-neutral-raised-light`, **`#FFFFFF`**, que fica **acima** do topo da rampa (`--sd-gray-50`, `#F4F6FA`) e não é parada dela. Um véu de 6% de `#F4F6FA` sobre `#FFFFFF` resolve para `254,34 · 254,46 · 254,70` — **`#FEFEFF` arredondado**, menos de um passo de 8 bits em todo canal. **A aresta iluminada some no claro porque não há nada acima dela para iluminar, e o que sobra da fórmula não alcança um degrau de cor — não porque alguém a desligou.**
+
+> **A redação anterior chamava isto de *"identidade matemática"*, e não é.** Ela dizia que no claro o cartão **é** o topo da rampa, e o topo sobre si mesmo se cancela. Os dois valores são diferentes — `#FFFFFF` contra `#F4F6FA` —, e a composição sobra em `#FEFEFF`, a um 255-avo do branco em `R` e `G`. A conclusão não muda e o argumento fica **mais** forte: some por ficar sob a resolução do canal, que é um fato medido, e não por um cancelamento algébrico que não acontece. Identidade que não fecha é o tipo de afirmação que este arquivo cobra dos outros.
 
 As sombras moram junto, pelo mesmo motivo: a composição é a mesma nos dois modos, e o modo entra por `--sd-shadow-cast`, que **é** par declarado.
 
@@ -1590,13 +1639,25 @@ Então o adaptador escreve:
 >
 > **E `raised` perdeu um dos dois consumidores** com a [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94): o botão primário da landing. Sobra o painel da referência gerada. O token fica porque continua consumido — e é essa a diferença entre ele e `--sd-type-6xl`, que saiu na mesma remoção.
 
-### A camada 3 ficou vazia, e os dois glows são o que morava nela
+### A camada 3 esvaziou com a ilha, e voltou a ter membros
 
-**Não há token de componente declarado no projeto hoje.** A camada 3 continua sendo uma das três, e a regra de referência do §1 se lê pelas três — camada sem membro é diferente de camada que não existe.
+**Ela ficou vazia, e não está mais.** São hoje **cinco nomes em 24 declarações**, todos no escopo do próprio componente e nenhum em `:root` — que é exatamente a regra do §1:
 
-O que morava lá eram `--sd-glow` e `--sd-glow-2`, mais a caixa quadrada da luz e o par de amplitude da respiração. Eles saíram com a ilha na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). O registro fica porque é a especificação do que precisaria voltar:
+| Token | Onde é declarado | Quantas declarações |
+| --- | --- | ---: |
+| `--sd-callout-fill` | `src/components/catalogo.module.css` | 4 |
+| `--sd-callout-edge` | `src/components/catalogo.module.css` | 4 |
+| `--sd-callout-ink` | `src/components/catalogo.module.css` | 4 |
+| `--sd-step-marker` | `src/components/catalogo.module.css` | 1 |
+| `--sd-sidebar-icone` | `src/css/chrome.css` | 11 |
 
-`--sd-glow` e `--sd-glow-2` **não eram papel semântico** — são gradientes, não cores, e não cabiam na lista fechada de oito. Eram token de componente, e o componente era a própria ilha. **A regra deles era separada de propósito:** entrar no bloco escuro os poria em `:root`, e o glow vazaria para o site inteiro. Fora da ilha, `var(--sd-glow)` **não resolvia para nada** — a confinação não dependia de alguém lembrar dela, era fato de escopo. E custava **zero** na superfície de troca, que continua em dez linhas.
+**As duas formas de camada 3 estão as duas representadas aqui, e a diferença importa.** O trio do callout é **uma variável, quatro valores**: cada variante do componente redeclara os três no seu próprio seletor, e a regra que pinta é uma só — é a camada 3 usada como ponto de comutação. `--sd-sidebar-icone` é o mesmo padrão levado ao extremo, com uma declaração por seção e um `mask` só que as consome todas. Já `--sd-step-marker` é o caso simples: um valor nomeado no escopo onde ele significa alguma coisa, para que a régua do marcador e o fio que liga os passos não repitam o número.
+
+**A camada continua sendo uma das três, e a regra de referência do §1 se lê pelas três.** Camada sem membro é diferente de camada que não existe — e essa frase valia enquanto ela estava vazia, que é o estado que o parágrafo abaixo registra.
+
+O que morava lá **antes** eram `--sd-glow` e `--sd-glow-2`, mais a caixa quadrada da luz e o par de amplitude da respiração. Eles saíram com a ilha na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e é isso que esvaziou a camada por um tempo. O registro fica porque é a especificação do que precisaria voltar:
+
+`--sd-glow` e `--sd-glow-2` **não eram papel semântico** — são gradientes, não cores, e não cabiam na lista fechada de oito. Eram token de componente, e o componente era a própria ilha. **A regra deles era separada de propósito:** entrar no bloco escuro os poria em `:root`, e o glow vazaria para o site inteiro. Fora da ilha, `var(--sd-glow)` **não resolvia para nada** — a confinação não dependia de alguém lembrar dela, era fato de escopo. E custava **zero** na superfície de troca, que continua em sete linhas.
 
 **Eram dois, e o segundo não afrouxava o critério de emissão.** O magenta a **30%** citava `--sd-accent`; o cyan a **24%** citava `--sd-code-parameter`, que é o tom do identificador na paleta de sintaxe — dentro da ilha a laje era o material, e a segunda luz era a cor do material. Nenhum hex novo: as duas eram a operação 1 sobre token que já existe. **Um respirava, o outro não** — o par de amplitude alcançava só o magenta, e era assim que o teto de *um loop por página* se lia ao pé da letra.
 
@@ -1621,13 +1682,13 @@ Dois achados da implementação que a arquitetura não tinha:
 - **`--ifm-transition-slow` não tem consumidor.** O Infima a declara e nada a lê. A arquitetura previa que o adaptador a escrevesse; ela sai, pela regra 2.
 - **A escala de ênfase do Infima é invertida por ele no bloco escuro, e nós não podemos invertê-la** — o adaptador é cego ao modo. A rota correta é apontar cada degrau para um papel da camada 2, que já bifurcou. A escala tem dez degraus consumidos e o nosso texto tem quatro paradas, então alguns degraus repetem. **Repetir é honesto; inventar parada não seria.** O degrau 600 não é consumido por ninguém e por isso não é atribuído.
 
-### As quatro exceções com escopo — lista fechada
+### As três exceções com escopo — lista fechada
 
-Quatro pontos do Docusaurus não são alcançáveis de `:root`.
+Três pontos do Docusaurus não são alcançáveis de `:root`. **A numeração não é remendada** — os números que sobram são 2, 3 e 4, e o 1 fica vago; a *exceção 3* é citada pelo número mais abaixo, e renumerar quebraria a citação. É o mesmo precedente que congela a numeração dos portões (ADR 5).
 
 | # | Ponto | Por que escapa | Como o adaptador alcança |
 | ---: | --- | --- | --- |
-| 1 | `--ifm-alert-background-color-highlight` | `rgba()` **literal por variante** dentro de `.alert--*`, não derivado da primária — é o ponto onde a re-marcação por variável do Infima **vaza** | uma declaração no seletor de cada variante |
+| ~~1~~ | ~~`--ifm-alert-background-color-highlight`~~ | — | **removida** — `.alert` não tem superfície neste site; ver abaixo |
 | 2 | `--docusaurus-details-decoration-color`, `-transition`, `-summary-arrow-size` | declaradas dentro de classe de CSS Module, nunca em `:root` | `details[class]`, que é (0,1,1) e vence a classe hasheada sem depender do hash |
 | 3 | `--prism-background-color` | **não vem de CSS nenhum** | ver abaixo — a arquitetura previa um seletor, e ela estava errada |
 | 4 | shades de cor semântica | quatro das seis são inertes | atribuir **só as vivas**: base, `-dark`, `-darker`, `-contrast-background`, `-contrast-foreground` |
@@ -1637,6 +1698,12 @@ Quatro pontos do Docusaurus não são alcançáveis de `:root`.
 O valor de uma lista fechada é ser **conferível membro a membro**, e linha permanentemente infalsificável é o oposto disso: ninguém consegue mostrar que ela funciona, porque não há página onde ela apareça.
 
 > **Dissenso registrado.** Isso remove uma defesa que custava uma linha, e o modo de falhar que a saída dela abre é exatamente o **silencioso** que a spec combate em toda parte: o dia em que uma página declarar `tags:`, o chip sai com a borda default do Infima e nada avisa. Se a arquitetura de informação criar tag, a exceção volta **no mesmo commit**, por uma linha.
+
+**E a exceção 1 saiu depois, pela mesma régua e com evidência mais forte.** Ela pintava as seis variantes de `.alert--*`, e `.alert` **não tem superfície neste site**: [`swizzle.md`](swizzle.md) registra o mapa de `Admonition/Types.js`, que manda `note`, `info`, `tip` e `warning` direto para o nosso `Callout` — DOM próprio, zero Infima —, e o `Admonition` raiz **cai em `info`** para qualquer tipo ausente, isto é, no mesmo `Callout`. Não sobra caminho que renderize um `.alert`.
+
+**Medido no build, não deduzido:** `alert--` aparece em **zero** dos **108** HTML publicados, e `class="… alert …"` também em zero.
+
+A diferença para a exceção da tag é que esta é **mais** fechada, não menos: a de tag dependia de o front matter nunca ganhar `tags:`, e um autor podia criar essa superfície com uma linha; esta depende de um mapa de swizzle que é **nosso**, versionado, com o motivo escrito dentro do arquivo. O dissenso é o mesmo — a exceção custava seis linhas e defendia contra o dia em que alguém desfizesse o mapa —, e a resposta é que esse dia teria de passar por `Types.js`.
 
 **Correção registrada na exceção 3.** A arquitetura previa alcançar `--prism-background-color` *"por seletor na classe do bloco de código"*. **Não é alcançável assim** — medido no fonte da versão em uso: `CodeBlock/Container` injeta a variável no atributo `style` **inline**, via `getPrismCssVariables`, e nenhum seletor de folha de estilo vence estilo inline. O ponto de escrita é o **shim** de `themeConfig.prism.theme`. Escrever a regra de seletor mesmo assim seria exatamente a linha morta que sugere funcionar.
 
@@ -1894,17 +1961,21 @@ Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
 | `h1` tamanho | `36px` | exato |
-| `h1` entrelinha | `40px` | exato |
+| `h1` entrelinha | `40px` | ±1 |
 | `h1` peso | `600` | exato |
 | `h2` tamanho | `24px` | exato |
-| `h2` entrelinha | `32px` | exato |
+| `h2` entrelinha | `32px` | ±1 |
 | Prosa tamanho | `16px` | exato |
-| Prosa entrelinha | `28px` | exato |
+| Prosa entrelinha | `28px` | ±1 |
 | Item de sidebar tamanho | `14px` | exato |
-| Item de sidebar entrelinha | `24px` | exato |
+| Item de sidebar entrelinha | `24px` | ±1 |
 | Item de sidebar peso | `400` | exato |
 | Item de TOC tamanho | `14px` | exato |
 | Aba do navbar tamanho | `14px` | exato |
+
+**As quatro entrelinhas são `±1`, e as outras oito continuam `exato`.** A régua está publicada em [`chrome.md`](chrome.md) §11: *`exato` é para o que só tem dois estados — uma borda existe ou não existe, um raio é o que a folha diz; `±1` é para o que atravessa arredondamento de subpixel*. **Entrelinha é o caso central dessa segunda metade**, e não por acidente de implementação: ela é razão × tamanho, e razão decimal quase nunca fecha em binário. As quatro daqui estavam marcadas `exato`, contra a própria doutrina do projeto, e o preço eram vermelhos que ninguém podia fechar: `1,111 × 36 = 39,996` contra um alvo de 40, `1,333 × 24 = 31,992` contra 32, `calc(24 / 14) × 14 = 24,0001` contra 24. Um alvo que não fecha em nenhuma implementação correta não mede nada — ele treina quem lê o relatório a ignorar a linha, que é o oposto do que a tabela existe para fazer.
+
+**Isto NÃO afrouxa o alvo:** `±1` continua reprovando qualquer coisa a um pixel inteiro de distância, que é a menor diferença que um leitor pode ver. O que ele para de reprovar é a quarta casa decimal.
 
 **O `h1` e o `h2` convergem com a escala que este documento já declara.** A escala de tokens diz 36 e 24; o que hoje renderiza 48 e 32 são as regras `.markdown` do Infima, que vencem os tokens por especificidade. A correção não briga com a âncora — ela faz o site passar a obedecer o próprio documento, e o alvo da âncora confirma o número.
 

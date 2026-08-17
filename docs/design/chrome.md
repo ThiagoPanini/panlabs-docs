@@ -149,12 +149,17 @@ A classe de 75% é aplicada sempre que `hide_table_of_contents` **não** está n
 | configuração | coluna de conteúdo | coluna do TOC | o que a caixa invisível faz |
 | --- | --- | --- | --- |
 | com heading, TOC visível (≥ 1280) | 816 | renderizada | **inerte** — o `flex: 1 0` da coluna nua já entrega 816 sozinho, `--sd-doc-width` só confirma |
-| com heading, TOC no DOM mas escondido (997–1279), ou sem heading | 840 | presente ou ausente, sem efeito visível | **não alcança** — `docItemCol` aplica `max-width: 75% !important` (840, 75% de `--sd-container-width`) antes de qualquer regra nossa rodar, e `!important` não se vence sem escrever outro |
+| com heading, TOC no DOM mas escondido (997–1279) | **menos que 840** — 75% do que a viewport dá | presente, sem efeito visível | **não alcança**, e o teto **também não morde**: `max-width: 75%` é percentual da largura real, e nessa faixa o layout ainda não congelou. O 840 é inalcançável aqui |
+| sem heading (as **3** páginas sem `##`), a partir de 1408 | 840 | ausente | **não alcança** — `docItemCol` aplica `max-width: 75% !important` (840, 75% de `--sd-container-width`) antes de qualquer regra nossa rodar, e `!important` não se vence sem escrever outro |
 | `hide_table_of_contents: true` | 1120 | ausente | **não trava mais** — a #96 removeu o `:not(:has(> .col--3))` da lista de exceções; ver §1.5 |
 
 Verificado no fonte **e no artefato**: com `hide_table_of_contents: true` a coluna sai do build com `class="col"` e mais nada — a classe hasheada não é aplicada, então não há `!important` a vencer, e a coluna cresce para o container inteiro. Medido em navegador nessa configuração: **coluna em 1120, prosa em 1120** — a mais larga das três, de propósito, desde a #96.
 
-A linha do meio — 840 — não é escolha: é o que sobra depois de `docItemCol` vencer. Fica **entre** as duas larguras que a #96 declarou (816 e 1120), e a spec registra o número em vez de fingir que não existe.
+O 840 não é escolha: é o que sobra depois de `docItemCol` vencer. Fica **entre** as duas larguras que a #96 declarou (816 e 1120), e a spec registra o número em vez de fingir que não existe.
+
+> **Estas duas linhas eram uma só, e a fusão escondia que o 840 vale numa perna e não na outra.** A redação anterior lia *"com heading, TOC no DOM mas escondido (997–1279), **ou** sem heading"* e cravava 840 nas duas. **Em 997–1279 o 840 é inalcançável:** o teto é um percentual, o layout só congela em 1408 (`--sd-congelamento`), e até lá 75% da largura real é sempre menos que 840 — o `!important` está lá, mas não tem o que cortar. **Na perna sem heading o 840 vale**, e vale a partir de 1408, que é onde o container para de crescer. Um `ou` juntando uma faixa em que o número não acontece com outra em que ele acontece é o tipo de linha que passa em revisão e falha em medição.
+>
+> A perna sem heading tem **três** páginas medidas no build, e não é hipótese: `procedimentos/ambiente/indice`, `ferramentas/skills/rotacao-de-segredo` e `ferramentas/skills/scaffold-de-esteira` — as únicas 3 das 46 autorais sem um `##`. A primeira é a mesma que serve de fixture de página curta em [`informacao.md`](informacao.md).
 
 ### 2.2 O ritmo vertical é assimétrico
 
