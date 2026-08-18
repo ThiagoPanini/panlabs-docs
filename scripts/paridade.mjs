@@ -25,11 +25,16 @@
  *
  * Dois modos:
  *   `node scripts/paridade.mjs`              relatório legível, sempre sai 0
- *   `node scripts/paridade.mjs --verificar`  sai 1 se houver diferença
+ *   `node scripts/paridade.mjs --verificar`  sai 1 se houver diferença NOVA, ou
+ *                                            se uma aceita tiver fechado
  *
- * O modo padrão é o relatório, e é ele que roda na CI: **não é portão**. O juiz
- * declarado é a avaliação visual humana sobre o produto final; este comando
- * existe para que a deriva fique escrita em vez de descoberta.
+ * O modo `--verificar` é o que roda na CI desde a S9-8, e ele **não** cobra
+ * paridade perfeita: ele cobra que a lista de divergências aceitas —
+ * `scripts/paridade-abertas.txt` — esteja em dia nas duas direções. O juiz
+ * declarado do DESENHO continua sendo a avaliação visual humana; o que a
+ * máquina passa a cobrar é outra coisa, e é o que ela sabe cobrar: que ninguém
+ * acrescente distância sem julgá-la, e que ninguém deixe uma dívida paga
+ * escrita como se ainda existisse.
  *
  * Procedência: research/paridade-devin · docs/design/principios.md §6.
  */
@@ -40,7 +45,7 @@ import {existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync} fr
 import {homedir, tmpdir} from 'node:os';
 import path from 'node:path';
 
-import {comparar, formatar, lerAlvos} from './lib/paridade.mjs';
+import {comparar, formatar, lerAbertas, lerAlvos, triar} from './lib/paridade.mjs';
 
 const RAIZ = path.resolve(import.meta.dirname, '..');
 const BUILD = path.join(RAIZ, 'build');
@@ -113,7 +118,6 @@ const CENARIOS = {
      escondemos os dois abaixo de 997. Medir em 1280 e 1024 pegaria os dois
      visíveis e não diria nada. */
   'prosa@1100/escuro': {rota: ROTAS.prosa, largura: 1100, tema: 'dark'},
-  'prosa@1010/escuro': {rota: ROTAS.prosa, largura: 1010, tema: 'dark'},
   'busca@1512/escuro': {rota: ROTAS.prosa, largura: 1512, tema: 'dark', abrirBusca: true},
   'codigo@1512/escuro': {rota: ROTAS.codigo, largura: 1512, tema: 'dark'},
   'tabela@1512/escuro': {rota: ROTAS.tabela, largura: 1512, tema: 'dark'},
@@ -189,7 +193,6 @@ const SONDAS = [
 
   // --- limiares ----------------------------------------------------------
   {sonda: 'chrome.1100.toc', cenario: 'prosa@1100/escuro', seletor: '.theme-doc-toc-desktop', medida: 'visivel'},
-  {sonda: 'chrome.1010.sidebar', cenario: 'prosa@1010/escuro', seletor: '.theme-doc-sidebar-container', medida: 'visivel'},
 
   // --- cabeçalho do artigo ----------------------------------------------
   /* --- cabeçalho do artigo ---------------------------------------------
@@ -309,7 +312,6 @@ const ALVOS = {
       ['A 1920, margem esquerda', ['chrome.1920.esquerda']],
       ['A 1920, margem direita', ['chrome.1920.direita']],
       ['TOC visível a 1100', ['chrome.1100.toc']],
-      ['Sidebar visível a 1010', ['chrome.1010.sidebar']],
       ['Item de sidebar altura', ['sidebar.item.altura']],
       ['Item de sidebar raio', ['sidebar.item.raio']],
       ['Item de sidebar recuo', ['sidebar.item.recuo']],
@@ -843,18 +845,45 @@ if (falhas.length) {
 const {medidas, estouros} = await medir();
 const diferencas = comparar(alvos, medidas);
 
+const ABERTAS = path.join(RAIZ, 'scripts/paridade-abertas.txt');
+const abertas = lerAbertas(existsSync(ABERTAS) ? readFileSync(ABERTAS, 'utf8') : '');
+const {conhecidas, novas, fechadas} = triar(diferencas, abertas);
+
 console.log(`Paridade — ${alvos.length} alvos publicados, ${Object.keys(medidas).length} sondas medidas.\n`);
 console.log(formatar(diferencas));
+
+if (conhecidas.length || fechadas.length || novas.length) {
+  console.log(`\n${'-'.repeat(78)}\n`);
+  console.log(
+    `Triagem — ${conhecidas.length} aceita(s) em scripts/paridade-abertas.txt, ` +
+      `${novas.length} fora da lista, ${fechadas.length} listada(s) que já fecha(m).`,
+  );
+  for (const d of conhecidas) console.log(`  aceita  ${d.rotulo} — ${abertas.get(d.sonda) || d.sonda}`);
+  for (const d of novas) console.log(`  NOVA    ${d.rotulo} (${d.sonda}) — não está na lista de aceitas`);
+  for (const s of fechadas) console.log(`  FECHOU  ${s} — está na lista de aceitas e não diverge mais; tire a linha`);
+}
 
 console.log(`\n${'-'.repeat(78)}\n`);
 console.log(formatarEstouro(estouros));
 
-/* DUAS saídas, e a diferença é deliberada. A lista de paridade só reprova sob
-   `--verificar`, porque o juiz declarado dela é a avaliação visual humana e
-   travar merge por pixel criaria atrito onde o dono pediu leitura. O estouro
-   reprova SEMPRE: ele não é distância até a âncora, é defeito, e o alvo dele é
-   zero em qualquer leitura. Na CI o passo é `continue-on-error`, então isto
-   aparece como aviso vermelho em vez de travar o merge — promovê-lo a portão é
-   tirar uma linha do `ci.yml`, e é decisão do dono. */
+/* O QUE REPROVA, e a lista mudou de forma na S9-8.
+   Até aqui, `--verificar` reprovava com QUALQUER diferença, o que o tornava
+   inutilizável — a paridade nunca fecha em zero, porque parte da distância é
+   escolha registrada (`referencia.md` §8 publica 448 contra 511 de propósito).
+   Um verificador que só passa num estado que a spec recusa não é verificador; é
+   por isso que o passo da CI vinha com `continue-on-error` e ninguém lia.
+
+   Agora reprovam TRÊS coisas, e nenhuma delas é "a paridade não fecha":
+
+   · **estouro horizontal** — sempre, com ou sem `--verificar`. Não é distância
+     até a âncora, é defeito, e o alvo é zero em qualquer leitura;
+   · **divergência fora da lista de aceitas** — regressão, ou alvo publicado sem
+     o código ter chegado nele. É o que trava merge;
+   · **linha da lista que já fecha** — a dívida foi paga e o registro não foi
+     atualizado. Sem isto a lista só cresce, e uma lista que só cresce vira
+     tolerância com outro nome.
+
+   O juiz do DESENHO continua sendo humano. O que a máquina cobra é que a
+   distância esteja julgada, não que ela seja zero. */
 if (estouros.length) process.exit(1);
-if (verificar && diferencas.length) process.exit(1);
+if (verificar && (novas.length || fechadas.length)) process.exit(1);

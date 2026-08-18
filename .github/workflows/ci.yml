@@ -106,10 +106,10 @@ jobs:
       - name: Contraste medido
         run: npm run contraste
 
-      # As quatro invariantes de FORMA da spec. Não são portão — os portões
+      # As cinco invariantes de FORMA da spec. Não são portão — os portões
       # cobram o código, e estas cobram o documento. A spec é o entregável deste
       # projeto (axioma 6), e entregável sem régua envelhece calado.
-      - name: As quatro invariantes de forma
+      - name: As cinco invariantes de forma (1 a 4 e a 6)
         run: npm run invariantes
 
       # `onBrokenLinks: throw` faz a verificação de link acontecer aqui. Ela
@@ -124,22 +124,35 @@ jobs:
       - name: Os cinco zeros
         run: npm run zeros
 
-      # A paridade contra a âncora, como RELATÓRIO e não como portão. Ela imprime
-      # a distância até o `docs.devin.ai` — os alvos vivem nas tabelas da spec e o
-      # comparador mede o site construído, por isso roda depois do build.
+      # A paridade contra a âncora. Ela imprime a distância até o `docs.devin.ai`
+      # — os alvos vivem nas tabelas da spec e o comparador mede o site
+      # construído, por isso roda depois do build.
       #
-      # `continue-on-error` é a decisão, não um descuido: o juiz declarado da
-      # paridade é a avaliação visual humana sobre o produto final, e travar merge
-      # por diferença de pixel criaria atrito onde o dono pediu leitura. O que ele
-      # compra é que a deriva fique escrita no log em vez de descoberta semanas
-      # depois. É o único passo não-bloqueante deste arquivo.
+      # ESTE PASSO DEIXOU DE SER `continue-on-error` NA S9-8, e o que mudou não
+      # foi a régua de desenho: foi o que a máquina cobra.
+      #
+      # O `continue-on-error` estava certo enquanto `--verificar` reprovava com
+      # QUALQUER diferença. A paridade nunca fecha em zero — parte da distância é
+      # escolha registrada, e `referencia.md` §8 publica 448 contra 511 de
+      # propósito, recusando esconder o número atrás de uma tolerância larga. Um
+      # verificador que só passa num estado que a spec recusa não trava nada; ele
+      # só ensina a ignorar o log, que foi o que aconteceu.
+      #
+      # Agora `--verificar` cobra a lista de divergências aceitas —
+      # `scripts/paridade-abertas.txt`, no formato do `swizzle-list.txt` — e ela
+      # reprova nas DUAS direções: divergência que não está na lista (regressão,
+      # ou alvo publicado sem código atrás) e linha da lista que já fecha (dívida
+      # paga e registro velho). Sem a segunda, a lista só cresceria e viraria
+      # tolerância com outro nome.
+      #
+      # O juiz do DESENHO continua sendo a avaliação visual humana sobre o
+      # produto final. O que travou merge foi outra coisa: que ninguém
+      # acrescente distância até a âncora sem julgá-la.
       #
       # O Chrome é o que a imagem do runner já traz — `/usr/bin/google-chrome`,
       # que o script procura antes do cache do puppeteer/playwright. Nenhuma
       # action nova entra por aqui, e nenhuma dependência npm: o axioma 2 vale
       # também para o instrumento. Se a imagem deixar de trazê-lo, o passo falha
-      # com a mensagem de como apontar (`CHROME=`) e, por ser não-bloqueante,
-      # aparece como aviso em vez de travar o merge.
-      - name: Paridade com a âncora (relatório, não reprova)
-        continue-on-error: true
-        run: npm run paridade
+      # com a mensagem de como apontar (`CHROME=`).
+      - name: Paridade com a âncora (triagem contra a lista de aceitas)
+        run: npm run paridade -- --verificar

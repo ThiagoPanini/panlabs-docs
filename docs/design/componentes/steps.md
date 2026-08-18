@@ -51,6 +51,8 @@ O marcador de 28×28 e o conector de 1px da âncora não têm sonda: os dois sã
 
 **Um quarto dado do container fica de fora: `14px` de margem à esquerda.** A anatomia mede `margin: 40px 0 24px 14px`, e o recuo esquerdo não tem justificativa própria conhecida — pode ser alinhamento com algo específico do layout da âncora que este projeto não replica. Sem sonda e sem leitura confiável do porquê, fica registrado e não implementado.
 
+**E agora há medição do nosso lado, o que muda o carimbo — S9-2.** A 1512, o `<ol>` deste componente abre em `388`, **o mesmo pixel** do `<p>` ao lado dele: o bloco alinha com a coluna de prosa, que é o que a caixa invisível de [`chrome.md`](../chrome.md) §2 impõe a todo conteúdo. Copiar os 14 empurraria o bloco para `402` e quebraria esse alinhamento. Não implementar deixa de ser omissão por dúvida e passa a ser **consequência de uma regra que a spec já carrega** — ver a Procedência.
+
 **O conector do último passo desvanece em gradiente, e não termina abrupto.**
 O fio continua existindo por um trecho depois do último marcador — só que como
 `background: linear-gradient(...)` em vez de `border-inline-start`, porque
@@ -129,5 +131,5 @@ acessibilidade — a posição do item já é anunciada pela lista.
 | Contador nomeado em vez do implícito | **origem própria (implementação)** | um `<li>` que não é item de lista não incrementa o contador, e a falha seria muda |
 | O fio do último passo desvanece em gradiente, em vez de não existir | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a versão anterior cortava o fio no penúltimo passo, sem medição atrás |
 | Margem de topo 40, separada da de baixo (24) | **origem própria (correção)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — achado rodando `npm run paridade` contra o build deste slice; `margin-block` simétrico não tinha medição atrás |
-| Margem esquerda de 14px | **lacuna de medição** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 mede o valor, mas nenhuma leitura confiável explica a origem dele; reabre com uma medição que explique o número |
+| Margem esquerda de 14px, não implementada | **origem própria (consequência)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 **mede** o valor, e é por isso que a linha não é `lacuna de medição`: essa classe é dimensão que a pesquisa declarou **não medida**, e esta foi. **Recarimbada em S9-2.** O nosso zero não sai de medição — ele cai do alinhamento que a caixa invisível de [`chrome.md`](../chrome.md) §2 impõe a todo bloco de conteúdo. Medido a 1512: o `<ol>` abre em `388`, o mesmo pixel do `<p>` ao lado. Copiar os 14 empurraria o bloco para `402` e quebraria o alinhamento para comprar um número cuja função ninguém leu. **Reabre** com uma medição que explique o que os 14 fazem na âncora |
 | Uma parte publicada | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |

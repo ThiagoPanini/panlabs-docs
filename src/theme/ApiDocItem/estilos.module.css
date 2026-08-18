@@ -75,17 +75,25 @@
        a rolagem inteira, então não sobra distância para "grudar" depois de. */
     align-self: start;
     position: sticky;
-    /* O offset reusa `--sd-topo-grudado` — o painel gruda logo abaixo da barra
-       fixa, não no topo absoluto da viewport. É o TOPO INTEIRO e não a linha 1:
-       com a faixa de tabs montada, `--sd-navbar-height` mediria só a primeira
-       das duas linhas e o painel deslizaria por baixo da faixa. */
-    top: var(--sd-topo-grudado);
+    /* O offset reusa `--sd-topo-conteudo` — o painel gruda na linha em que a
+       prosa ao lado dele abre, não colado na barra. É o TOPO INTEIRO e não a
+       linha 1: com a faixa de tabs montada, `--sd-navbar-height` mediria só a
+       primeira das duas linhas e o painel deslizaria por baixo da faixa.
+
+       ERA `--sd-topo-grudado` (112), e a troca fecha o alvo `Trilho grudado em`
+       de `referencia.md` §8, que cobra 152 — medido em 112 por `npm run
+       paridade` até aqui. O §8 daquele documento afirma que este painel e o TOC
+       *"grudam sob o mesmo topo fixo"*, e o produto entregava dois números
+       diferentes: 112 aqui e 128 no TOC. Agora é um só, e é o da âncora. */
+    top: var(--sd-topo-conteudo);
     /* O trilho é FIXO com altura declarada, como na âncora — sem teto ele
        cresce com o conteúdo e o "sticky" vira decoração para painel curto e
        transbordo mudo para painel comprido. `--sd-space-10` (40) é a mesma
        respiração que o topo do conteúdo já usa abaixo do topo grudado — não é
-       um literal novo, é o mesmo token por baixo por simetria. */
-    max-height: calc(var(--sd-viewport-altura) - var(--sd-topo-grudado) - var(--sd-space-10));
+       um literal novo, é o mesmo token por baixo por simetria. E ele agora
+       aparece UMA vez: a respiração de cima entrou em `--sd-topo-conteudo`, e o
+       que sobra nesta conta é a de baixo. */
+    max-height: calc(var(--sd-viewport-altura) - var(--sd-topo-conteudo) - var(--sd-space-10));
     overflow-y: auto;
   }
 }

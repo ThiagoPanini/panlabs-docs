@@ -93,9 +93,9 @@ Um `grep` de uma linha, na cadência de commit: `transition:` ou `animation:` cu
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Reduced-motion na camada de token, alcançando o Infima | herdado + adaptador | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) mediu que o Infima zera `--ifm-transition-*` sob a media query; [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
+| Reduced-motion na camada de token, alcançando o Infima | herdado + origem própria (implementação) | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) mediu que o Infima zera `--ifm-transition-*` sob a media query; [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
 | Movimento composto da escala, não com número cravado | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §1 |
 | `1ms` em vez de `0s` | origem própria | `useCollapsible` do theme-common anima altura em JS ([#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17)) |
 | Remover, não encurtar, o que não termina sozinho | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
 | Portão de `grep` de motion | origem própria | idioma de invariante da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11), aplicado por [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
-| Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna de alcance** | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — literais fora do alcance de qualquer variável |
+| Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna por restrição** | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — literais fora do alcance de qualquer variável |

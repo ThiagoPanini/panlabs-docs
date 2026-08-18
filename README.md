@@ -42,9 +42,11 @@ npm run portao:7             # o swizzle --list congelado, cadência de upgrade
 npm run portao:6 -- <url>    # as três rotas contra o host, cadência de implantação
 
 npm test                     # a régua do algoritmo da busca
-npm run invariantes          # as quatro invariantes de forma da spec
+npm run invariantes          # as cinco invariantes de forma da spec — 1 a 4 e a 6
 npm run zeros                # os cinco zeros, conferidos e não afirmados
 npm run icones               # a bijeção manifesto ↔ static/icons/
+npm run paridade             # a distância até a âncora, medida no build
+npm run paridade -- --verificar   # a mesma, triada contra scripts/paridade-abertas.txt
 ```
 
 ## Onde está o quê
@@ -53,7 +55,7 @@ npm run icones               # a bijeção manifesto ↔ static/icons/
 | --- | --- |
 | [`docs/adr/`](docs/adr/) | Os oito ADRs. **Leitura obrigatória antes de escrever código.** |
 | [`docs/design/README.md`](docs/design/README.md) | **A espinha da spec** — ordem de leitura, a régua, o índice, as invariantes e os sete portões. Comece por aqui. |
-| [`docs/design/principios.md`](docs/design/principios.md) | A âncora, o carimbo de delta deliberado vazio e as cinco classes de procedência. |
+| [`docs/design/principios.md`](docs/design/principios.md) | A âncora, o carimbo de delta deliberado vazio e as sete classes de procedência. |
 | [`docs/agents/`](docs/agents/) | Como um agente trabalha neste repo — tracker, domínio, labels, fluxo. |
 | [`docs/research/`](docs/research/) | Índice das sete pesquisas. O material mora em branches `research/*`. |
 | `src/css/tokens.css` | **A sede única de valor.** O único arquivo do repo com literal. |

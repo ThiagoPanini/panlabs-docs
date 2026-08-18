@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Portão 2 — duração ou curva cravada numa transição.
+# Portão 2 — duas pernas: duração ou curva cravada numa transição, e transição
+# de cor sobre o documento.
 #
 # Cadência: commit.
 #
@@ -41,4 +42,70 @@ if [ -n "$achados" ]; then
   exit 1
 fi
 
-echo "Portão 2 passou — toda transição compõe do vocabulário de motion."
+# --- segunda perna: transição de cor sobre o documento -----------------------
+#
+# `motion.md` §4 fecha a lista do que nunca anima com "a superfície não anima":
+# proibição de `transition` em `background-color` ou `color` no `:root`, no
+# `html` e no `body`. Ela carregava a nota *"verificado na implementação"* desde
+# o slice 1, e ninguém a verificava desde então — a auditoria S9-1 achou a
+# afirmação de pé e a régua ausente.
+#
+# A primeira perna não a pega, e a razão é que a violação seria LEGÍTIMA por
+# ela: `transition: color var(--sd-move-state)` no `:root` compõe do vocabulário
+# certinho e passaria. O que reprova aqui é o SELETOR, não o valor.
+#
+# A varredura é de duas passadas porque a declaração e o seletor estão em linhas
+# diferentes: `awk` guarda o último seletor visto e só olha as declarações de
+# transição debaixo dele. O comentário já saiu na passada de cima.
+#
+# A ARMADILHA que custou uma rodada: `css-sem-comentario.awk` emite
+# `arquivo:linha:código`, e um seletor `:root` vira `src/css/tokens.css:12::root`.
+# Uma âncora `^` no regex do seletor nunca casa nesse texto, e o portão passa
+# verde com a violação escrita — que é o pior modo de falhar que um portão tem.
+# O prefixo sai antes da comparação, e o endereço é guardado à parte para o
+# relatório continuar apontando onde está.
+#
+# LIMITE CONHECIDO, e ele é a letra da regra e não um descuido: `motion.md` §4
+# proíbe `background-color` e `color`, e é isso que esta perna cobra. Um
+# `transition: border-color` no `:root` passa — e animaria a troca de tema do
+# mesmo jeito. Alargar a varredura seria alargar a REGRA, que não é o que um
+# portão faz; o dia em que a linha do §4 disser `border-color` é o dia de
+# acrescentar o termo aqui.
+#
+# `*` e `*, *::before` NÃO entram na lista: o reset global do bloco `reduce` é
+# exatamente uma transição sobre tudo, e é ele que faz `prefers-reduced-motion`
+# alcançar o upstream (§3). A regra é sobre a SUPERFÍCIE da página, não sobre
+# quantos elementos um seletor alcança.
+documento=$(find src -name '*.css' -exec awk -f scripts/css-sem-comentario.awk {} + \
+  | awk '
+      {
+        corpo = $0
+        onde = ""
+        if (match(corpo, /^[^ \t]+\.css:[0-9]+:/)) {
+          onde = substr(corpo, 1, RLENGTH)
+          corpo = substr(corpo, RLENGTH + 1)
+        }
+      }
+      corpo ~ /\{/ {
+        seletor = corpo
+        sub(/\{.*/, "", seletor)
+        gsub(/^[ \t]+|[ \t]+$/, "", seletor)
+      }
+      corpo ~ /transition(-property)?[ \t]*:/ {
+        if (seletor ~ /(^|,)[ \t]*(html|body|:root)[ \t]*(,|$)/ &&
+            corpo ~ /(background-color|[^-a-z]color|transition[ \t]*:[ \t]*all)/) {
+          print onde seletor " {" corpo "}"
+        }
+      }') || true
+
+if [ -n "$documento" ]; then
+  echo "Portão 2 REPROVOU — transição de cor sobre o documento:"
+  echo
+  echo "$documento"
+  echo
+  echo "\`motion.md\` §4: a superfície não anima. Mova a transição para o controle."
+  exit 1
+fi
+
+echo "Portão 2 passou — toda transição compõe do vocabulário de motion,"
+echo "e nenhuma transição de cor toca \`html\`, \`body\` ou \`:root\`."

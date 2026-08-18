@@ -126,7 +126,7 @@ numa tela onde a prosa é curta.
 .colunaPainel {
   align-self: start;
   position: sticky;
-  top: var(--sd-topo-grudado); /* o topo INTEIRO: com a faixa de tabs montada, a linha 1 sozinha deixaria o painel deslizar por baixo dela */
+  top: var(--sd-topo-conteudo); /* a linha em que a prosa ao lado abre — e é o topo INTEIRO por baixo: com a faixa de tabs montada, a linha 1 sozinha deixaria o painel deslizar por baixo dela */
 }
 ```
 
@@ -387,6 +387,21 @@ algo.
 [`chrome.md`](chrome.md) §11: os dois grudam sob o mesmo topo fixo, e é o
 mesmo fato medido na âncora, não uma coincidência tratada como derivação.
 
+> **Correção de fato — S3-3.** A frase acima estava certa e o produto a
+> desmentia. Este documento publicava `152` como alvo e, 245 linhas antes,
+> `top: var(--sd-topo-grudado)` como mecanismo — que resolve em **112**. Do
+> outro lado, o TOC herdava `calc(var(--ifm-navbar-height) + 1rem)` do
+> `theme-classic` e dava **128**. Ou seja: *"o mesmo topo fixo"* eram **dois**
+> números, e nenhum era o alvo. `npm run paridade` acusava `Δ −40` aqui e
+> `Δ −24` lá.
+>
+> Os dois passaram a ler `--sd-topo-conteudo` (`tokens.css`), que é
+> `--sd-topo-grudado` mais `--sd-space-10` — a respiração que o `<main>` já dá
+> ao `<article>`, e que o comentário do `max-height` deste painel já citava por
+> nome. **O número não foi movido para fechar:** ele é `112 + 40`, e os dois
+> parcelamentos são medição publicada da âncora — o navbar em `chrome.md` §11 e
+> o ritmo vertical em §12.
+
 ## Procedência
 
 | Decisão | Classe | Fonte |
@@ -398,7 +413,7 @@ mesmo fato medido na âncora, não uma coincidência tratada como derivação.
 | Nenhuma página da instância carrega `hide_table_of_contents` | origem própria | seria segunda fonte para uma decisão que o componente já toma |
 | **A fixture do painel inalcançável trocou de dona** | **origem própria** | `Biblioteca C › Instalação e configuração` é irmã de sidebar das geradas, o que torna a prova mais forte que a anterior |
 | `align-self: start` com `position: sticky` | origem própria (implementação) | o erro nº 1 medido ao implementar o layout — sem ele o item estica e sticky não tem onde grudar |
-| Offset do sticky em `--sd-topo-grudado` | origem própria (correção) | era `--sd-navbar-height`, que passou a medir só a linha 1 quando a faixa de tabs entrou |
+| Offset do sticky em `--sd-topo-conteudo` | **origem própria (correção)** | duas correções na mesma linha: era `--sd-navbar-height`, que passou a medir só a linha 1 quando a faixa de tabs entrou, e virou `--sd-topo-grudado`; **S3-3** mostrou que `--sd-topo-grudado` (112) contradizia o alvo de 152 publicado no §8 deste mesmo documento. Medido por `npm run paridade`, `Δ −40` |
 | Zero `order`, DOM fixo prosa-depois-painel | origem própria | issue #38 — a mesma ordem em `row` largo e `column` estreito |
 | A ordem das seções da página gerada | origem própria (implementação) | decidida ao escrever `scripts/gerar-referencia.mjs` |
 | **A espécie e o nome qualificado no lugar da pílula** | **origem própria** | sem verbo não há duas categorias para pintar, e um chip de três variações é enfeite |
@@ -415,7 +430,7 @@ mesmo fato medido na âncora, não uma coincidência tratada como derivação.
 | **O dissenso da opção rejeitada** | origem própria | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) — ela custava menos e preservava o `VerbBadge` inteiro |
 | **A aritmética do §1 corrigida para o container de 1120** | **origem própria (correção)** | a #96 derrubou `--sd-container-width` de 1152 para 1120 e este documento não veio junto; o painel real já dava 368, não 400 |
 | **`--sd-api-prosa-width` (577) substitui `--sd-prose-width` só na página gerada** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — medido em `research/paridade-devin` §10: a âncora usa prosa mais estreita e trilho mais largo nesta rota especificamente |
-| O trilho continua sendo o resto da conta, nunca um segundo literal | herdado (mecanismo) | mesmo argumento do §1 original — um `448` cravado quebraria calado no dia em que o container mudasse de novo |
+| O trilho continua sendo o resto da conta, nunca um segundo literal | herdado | mesmo argumento do §1 original — um `448` cravado quebraria calado no dia em que o container mudasse de novo |
 | **O painel ganha altura declarada e rolagem própria** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — sem teto o trilho cresce com o conteúdo e "sticky" vira decoração; `max-height` reusa `--sd-topo-grudado` e `--sd-space-10`, mais `--sd-viewport-altura` (100dvh) — o terceiro token do projeto medido contra a viewport, mesmo buraco do portão 1 que `--sd-busca-height` já fechou (`tokens.css`) |
-| **O fio sob o cabeçalho do painel** | **origem própria (mecanismo emprestado)** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a chrome de cabeçalho da âncora portada sem o segundo nível de preenchimento que ela tem, pela mesma simplificação já registrada em `estilos.module.css` |
+| **O fio sob o cabeçalho do painel** | **herdado + origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a chrome de cabeçalho da âncora portada sem o segundo nível de preenchimento que ela tem, pela mesma simplificação já registrada em `estilos.module.css` |
 | A seção "Alvo medido" (§8) | origem própria | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — mesmo padrão de [`chrome.md`](chrome.md) §11; números de `research/paridade-devin` §10 |

@@ -27,7 +27,9 @@ import {
   analisarValor,
   comparar,
   formatar,
+  lerAbertas,
   lerAlvos,
+  triar,
 } from './lib/paridade.mjs';
 
 /** Um documento de mentira, no formato que a spec publica. */
@@ -334,4 +336,59 @@ test('o relatório nomeia o documento, o rótulo e os dois valores', () => {
 
 test('sem diferença, o relatório diz que fechou', () => {
   assert.match(formatar([]), /fecha|nenhuma diferença/i);
+});
+
+// ---------------------------------------------------------------------------
+// A triagem — a lista de divergências aceitas, e as duas direções em que ela
+// reprova. Esta metade é o que torna `--verificar` utilizável: sem ela o modo
+// só passa num estado que a própria spec recusa, porque parte da distância até
+// a âncora é escolha registrada.
+// ---------------------------------------------------------------------------
+
+test('`lerAbertas` ignora comentário, linha vazia e espaço em volta', () => {
+  const abertas = lerAbertas([
+    '# um cabeçalho inteiro de comentário',
+    '',
+    '   api.painel.largura   # e a glosa da linha',
+    'paleta.texto-corpo.escuro',
+    '   ',
+    '# nada aqui',
+  ].join('\n'));
+
+  assert.deepEqual([...abertas.keys()], ['api.painel.largura', 'paleta.texto-corpo.escuro']);
+  assert.equal(abertas.get('api.painel.largura'), 'e a glosa da linha');
+  assert.equal(abertas.get('paleta.texto-corpo.escuro'), '');
+});
+
+test('lista vazia deixa toda divergência como nova', () => {
+  const difs = [{sonda: 'a', tipo: 'divergente'}, {sonda: 'b', tipo: 'divergente'}];
+  const {conhecidas, novas, fechadas} = triar(difs, lerAbertas(''));
+  assert.equal(conhecidas.length, 0);
+  assert.equal(novas.length, 2);
+  assert.equal(fechadas.length, 0);
+});
+
+test('divergência listada é conhecida; a que não está é nova', () => {
+  const difs = [{sonda: 'a', tipo: 'divergente'}, {sonda: 'b', tipo: 'divergente'}];
+  const {conhecidas, novas} = triar(difs, lerAbertas('a\n'));
+  assert.deepEqual(conhecidas.map((d) => d.sonda), ['a']);
+  assert.deepEqual(novas.map((d) => d.sonda), ['b']);
+});
+
+test('sonda listada que parou de divergir sai como `fechadas`', () => {
+  /* A direção que impede a lista de virar tolerância: dívida paga que continua
+     escrita ensina a ignorar o registro. */
+  const {fechadas} = triar([{sonda: 'a', tipo: 'divergente'}], lerAbertas('a\nb\n'));
+  assert.deepEqual(fechadas, ['b']);
+});
+
+test('`sem-medida` e `sem-alvo` nunca são cobertos pela lista', () => {
+  /* A lista aceita DISTÂNCIA julgada. Seletor que quebrou e sonda sem alvo são
+     achados do instrumento, não dívida de desenho — se a lista os silenciasse,
+     um seletor morto passaria por dívida conhecida. */
+  const difs = [{sonda: 'a', tipo: 'sem-medida'}, {sonda: 'b', tipo: 'sem-alvo'}];
+  const {conhecidas, novas, fechadas} = triar(difs, lerAbertas('a\nb\n'));
+  assert.equal(conhecidas.length, 0);
+  assert.equal(novas.length, 2);
+  assert.deepEqual(fechadas, ['a', 'b']);
 });

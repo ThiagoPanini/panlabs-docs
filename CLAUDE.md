@@ -30,14 +30,14 @@ Numa implementação, `.claude/context-economy-protocol.md` entra no contexto co
 | o que anima, o que nunca anima, reduced-motion | `docs/design/motion.md` § 2. O que anima, § 4. O que nunca anima |
 | busca — índice, pontuação, modal | `docs/design/busca.md` § 2. O índice, § 3. A escada de pontuação |
 | referência gerada, contrato de assinatura | `docs/design/referencia.md` § 5. O gerador e o contrato |
-| âncora visual, classes de procedência | `docs/design/principios.md` § 5. As cinco classes de procedência |
+| âncora visual, classes de procedência | `docs/design/principios.md` § 5. As sete classes de procedência |
 | por que uma decisão é o que é | `docs/adr/` — um arquivo por decisão, índice em `docs/adr/README.md` |
 
 O método de achar dentro de um arquivo: as seções são numeradas e o título diz o assunto — `grep -n '^## ' <arquivo>` devolve o sumário por menos que uma leitura.
 
 ## Pegadinhas — verificadas nesta máquina
 
-- **`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4 e 5 (~2,5s medidos aqui). A CI roda também o **portão 7**, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build` e `npm run zeros`. Verde no bundle não é verde na CI — antes de propor merge, rode a lista da CI, em `.github/workflows/ci.yml`.
+- **`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4 e 5 (~2,5s medidos aqui). A CI roda também o **portão 7**, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build`, `npm run zeros` e `npm run paridade -- --verificar`. Verde no bundle não é verde na CI — antes de propor merge, rode a lista da CI, em `.github/workflows/ci.yml`.
 - **Eram oito portões; são sete.** O portão 8 morreu com a landing (#94), e o **número não se reaproveita**: o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração. `ls scripts/portao-*.sh` devolve 7, de 1 a 7, e o 8 fica vago.
 - **`npm run portao:6` falha sozinho, e não é quebra.** Ele exige `<url-base>`: confere as três rotas contra o site publicado, e só roda no `deploy.yml`, depois do deploy.
 - **Editou `src/css/tokens.css`? Rode `node scripts/espelho-tokens.mjs --sincronizar`.** O bloco `css` de `docs/design/tokens.md` é espelho byte a byte do arquivo, e a CI reprova a divergência.
@@ -45,6 +45,7 @@ O método de achar dentro de um arquivo: as seções são numeradas e o título 
 - **Swizzlou algo novo? Rode `npm run swizzle:congelar`.** O portão 7 confere `src/theme/` contra `scripts/swizzle-list.txt`.
 - **Link quebrado só aparece no `build`.** `onBrokenLinks: 'throw'` não roda em `docusaurus start`, que devolve 200 com o shell da SPA para qualquer rota.
 - **Nenhuma dependência npm nova.** `npm run zeros` reprova, e é axioma. O `package-lock.json` versionado é a régua.
+- **A paridade trava desde a S9-8.** `npm run paridade -- --verificar` reprova quando aparece divergência fora de `scripts/paridade-abertas.txt` **ou** quando uma linha de lá passa a fechar. Mexeu num alvo ou num número medido? Acerte a lista, com o número e o gatilho — o passo já não é `continue-on-error`.
 - **Contagem de página é cobrada.** O portão 4 crava 12 · 19 · 21 nas três abas de `conteudo/`, mais o ramo gerado. Acrescentar página sem acertar o portão reprova.
 
 ## Idioma e voz

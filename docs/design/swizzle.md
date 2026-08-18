@@ -342,7 +342,7 @@ Um item **sai** quando a customização é removida. Sair do ledger sem sair do 
 | **O subtítulo por override de `h1`** | **origem própria (verificação)** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) §2 — a rota já estava registrada na nota da perda 10; 73/73 confere a condição |
 | **A eyebrow por subtração encolhe a perda 2** | **origem própria (implementação)** | três `display: none` sobre classes do Infima; o mecanismo continua fora de alcance |
 | As perdas 8 e 9 | **lacuna por restrição** | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §8 e §15 |
-| A perda 10, e a rota `safe` registrada | **decisão de produto** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2.1 |
+| A perda 10, e a rota `safe` registrada | **origem própria** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2.1 |
 | A disciplina de registro | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5), consolidado em [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §6 |
 | **A marca desce para o degrau 2, e a entrada de degrau 3 é aposentada** | **origem própria (medição)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — sem glifo não há `<img>` no caminho, e `navbar.title` alcança; medida no artefato publicado, contra a resolução que a declarava não medida |
 | **A primeira linha removida deste ledger** | **origem própria (implementação)** | a regra §6 já dizia *um item sai quando a customização é removida*; esta é a primeira vez que ela é exercida |

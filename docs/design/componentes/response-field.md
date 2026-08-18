@@ -111,4 +111,4 @@ valores da referência gerada mora no painel da rota, então nem este nem
 | Implementação compartilhada com `param-field` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, nota de implementação |
 | Sem campo editável | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §4 |
 | Uma parte publicada | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, sobre a régua da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| **Divisor, acento no nome, chip neutro e âncora de linha** | — | as quatro linhas de [`param-field`](param-field.md) § Procedência valem aqui verbatim — implementação compartilhada, mesma decisão |
+| **Divisor, acento no nome, chip neutro e âncora de linha** | herdado + origem própria | as quatro linhas de [`param-field`](param-field.md) § Procedência valem aqui verbatim — implementação compartilhada, mesma decisão |

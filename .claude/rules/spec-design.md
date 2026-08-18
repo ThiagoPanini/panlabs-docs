@@ -8,15 +8,15 @@ paths:
 
 Área tocada por 16 das 33 sessões que editaram o repo — a mais editada depois de `docs/agents/`. A spec **é** o entregável (axioma 6), e por isso tem régua: `npm run invariantes` cobra a forma do documento do mesmo jeito que os portões cobram o código.
 
-## As quatro invariantes de forma
+## As cinco invariantes de forma
 
-`./scripts/invariantes.sh` reprova seção vazia, número solto e procedência órfã. A quinta — completude — é leitura cruzada entre as resoluções do mapa e os arquivos da spec, não existe varredura que a faça, e o resultado dela mora em `docs/design/README.md` § 6. O axioma 6, exercido.
+`./scripts/invariantes.sh` reprova seção vazia, número solto, procedência órfã e **carimbo fora da gramática** (invariante 6, desde a S9-3). A de **completude** não está entre elas: é leitura cruzada entre as resoluções do mapa e os arquivos da spec, não existe varredura que a faça, e o resultado dela mora em `docs/design/README.md` § 6. O axioma 6, exercido.
 
 Consequência prática: **não abra seção que você não vai preencher**, e **todo número afirmado precisa de procedência**.
 
 ## Procedência — a regra que mais reprova
 
-Todo valor concreto carrega de onde veio. As cinco classes estão em `docs/design/principios.md` § 5. As cinco classes de procedência, e cada documento fecha com uma seção `## Procedência`. Valor medido em referência de produção é uma classe; valor decidido é outra; e a diferença é o que o axioma 5 protege — medição, não invenção.
+Todo valor concreto carrega de onde veio. As sete classes estão em `docs/design/principios.md` § 5. As sete classes de procedência, com a gramática do carimbo no § 5.0, e cada documento fecha com uma seção `## Procedência`. Valor medido em referência de produção é uma classe; valor decidido é outra; e a diferença é o que o axioma 5 protege — medição, não invenção.
 
 ## Onde a spec espelha código
 

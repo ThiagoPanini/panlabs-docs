@@ -403,6 +403,27 @@ html.docs-doc-page .subtitulo {
   letter-spacing: var(--sd-tracking-tight);
 }
 
+/* A ABA DO NAVBAR NA ESCALA DE UI, e a razão de ela precisar de declaração é a
+   OUTRA metade da armadilha do Infima.
+
+   O `.theme-doc-breadcrumbs` mais abaixo neste arquivo tem o caso clássico: o
+   Infima CRAVA `font-size` dentro do elemento e vence a herança. Aqui é o
+   inverso — ele **não declara nada**, e o link herda os 16px do `<html>`.
+   Medido: `.navbar__item.navbar__link` saía em `16px` contra o alvo de `14px`
+   de `tokens.md` §13, `Δ +2`.
+
+   Ausência de declaração no upstream é tão invisível quanto declaração errada,
+   e o modo de falhar é pior: não há nada para achar com `grep`. Foi o
+   comparador de paridade que apontou.
+
+   `.navbar__link` alcança as três tabs, os itens do dropdown de locale e o
+   mesmo link dentro da gaveta do estreito — que é onde ele deve chegar: a
+   escala de UI é uma só, e a tabela de alvo mede a densidade do chrome, não uma
+   instância dele. */
+.navbar__link {
+  font-size: var(--sd-type-sm);
+}
+
 /* O HAIRLINE — o rodapé do navbar inteiro, nas duas formas (uma linha no
    estreito, duas de 997 para cima). Substitui a faixa cinza: onde havia
    parada dura de gradiente separando uma superfície levantada da página, fica
@@ -758,6 +779,55 @@ aside.theme-doc-sidebar-container {
   line-height: var(--sd-leading-ui);
 }
 
+/* O OFFSET DE STICKY, e ele é reescrito porque o do upstream não conhece a
+   linha em que o conteúdo abre.
+
+   `TOC/styles.module.css` do `theme-classic` declara `top: calc(var(
+   --ifm-navbar-height) + 1rem)`. Com o adaptador escrevendo 112 em
+   `--ifm-navbar-height`, isso dá 128 — medido, e é o que `npm run paridade`
+   acusava contra o alvo de 152 do §11. Os 16 do upstream são a respiração
+   dele; a nossa é `--sd-space-10`, a mesma que o `<main>` já dá ao `<article>`
+   (§1, acima). Alinhar os dois é o que a linha `TOC grudado em` cobra: o
+   índice não sobe acima do texto que ele indexa.
+
+   O `max-height` vem junto, e não é enfeite. O do upstream é `calc(100vh -
+   (var(--ifm-navbar-height) + 2rem))` = `100vh − 144`; com o topo em 152 a
+   caixa passaria a viewport em 8px e o fim da lista ficaria fora de alcance
+   numa janela curta. A conta aqui é a mesma do painel da referência gerada
+   (`ApiDocItem/estilos.module.css`): o topo do conteúdo, mais a mesma
+   respiração embaixo. `--sd-viewport-altura` é `100dvh` — o token que o
+   projeto já usa para não medir contra a barra de endereço do telefone.
+
+   ESPECIFICIDADE, e ela custou uma medição. A regra do upstream é
+   `.tableOfContents`, hasheada, UMA classe (0,1,0) — a mesma desta, e empate
+   de especificidade se resolve por ordem de cascata. Medido no bundle:
+   `.theme-doc-toc-desktop` sai no byte 49513 e `.tableOfContents_*` no 87027,
+   ou seja o CSS Module do tema entra DEPOIS e ganha o empate. É por isso que
+   as duas declarações abaixo moram num seletor de dois degraus
+   (`html.docs-doc-page`, 0,2,1) em vez do seletor nu: subir um degrau vence
+   sem `!important`, que este projeto não escreve em lugar nenhum. É o mesmo
+   recurso que o resto deste arquivo já usa para alcançar o grid do Infima. */
+html.docs-doc-page .theme-doc-toc-desktop {
+  top: var(--sd-topo-conteudo);
+  max-height: calc(var(--sd-viewport-altura) - var(--sd-topo-conteudo) - var(--sd-space-10));
+}
+
+/* A LISTA DO TOC NA ESCALA DE UI, e o `font-size` do slot não bastava.
+
+   `.theme-doc-toc-desktop` já declara `--sd-type-sm` (14px) acima, e a herança
+   morre uma geração adiante: o Infima crava `.table-of-contents { font-size:
+   0.8rem }` no `<ul>` que é filho dele, e `0.8 × 16 = 12,8`. Medido, o item de
+   TOC saía em `12,8px` contra o alvo de `14px` de `tokens.md` §13, `Δ −1,2`,
+   enquanto o slot em volta media 14 certinho — o pior tipo de falso verde, o
+   mesmo padrão que já custou os títulos de doc na #96.
+
+   O seletor é escopado ao TOC de desktop de propósito: `.table-of-contents` é
+   classe do Infima e o `TOCInline` do upstream a usa em outro contexto, que
+   este projeto não renderiza hoje e não deve reger de longe. */
+html.docs-doc-page .theme-doc-toc-desktop .table-of-contents {
+  font-size: var(--sd-type-sm);
+}
+
 /* A BORDA ESQUERDA — mesmo vazamento do divisor da sidebar, mesma resposta.
    `.table-of-contents__left-border` é classe do Infima em `TOCItems`, degrau
    0, e é o próprio nome da classe que confessa o que ela faz. */
@@ -954,11 +1024,63 @@ html.docs-doc-page .pagination-nav__label {
   padding-inline: 0;
 }
 
+/* O ALINHAMENTO ESTAVA ERRADO POR UM GUTTER, E A PROMESSA ERA MAIS FORTE QUE O
+   RESULTADO — S3-8.
+
+   O texto acima dizia que os dois insets esquerdos *"coincidem SEMPRE, não só
+   numa largura medida"*. Medido em sete larguras, o rodapé fica à DIREITA da
+   prosa abaixo do congelamento e à ESQUERDA dela acima, e o sinal cruza o zero
+   em 1440 por coincidência aritmética:
+
+     largura | prosa | rodapé |   Δ
+        997  |  288  |  352   | +64
+       1300  |  288  |  352   | +64
+       1360  |  312  |  352   | +40
+       1408  |  336  |  352   | +16
+       1440  |  352  |  352   |   0
+       1512  |  388  |  372   | −16
+       1920  |  592  |  576   | −16
+
+   DUAS causas, e as duas são consertadas aqui:
+
+   1. **O termo estava errado.** O que separa a sidebar da PROSA não é o gutter
+      (32) — é a metade da folga da caixa invisível, `(--sd-doc-width −
+      --sd-prose-width) / 2` = 48. O `<article>` é centralizado dentro da coluna
+      de doc (§2), e o rodapé compensava com o número de antes da #96.
+   2. **O `<footer>` paga um preenchimento lateral que o grupo de doc não paga.**
+      `padding-inline: var(--sd-gutter)` no `<footer>` empurra o container 32
+      para dentro em toda largura abaixo de 1472, enquanto a sidebar cola em 0.
+      Acima do congelamento o `margin-inline: auto` do container ultrapassa os 32
+      e o defeito some sozinho — que é por que ele nunca apareceu na largura de
+      referência.
+
+   O eixo esquerdo passa para o container, e o direito FICA no `<footer>`: é ele
+   que impede o copyright de encostar na borda, e o fio de ponta a ponta continua
+   no `<footer>`, fora de qualquer preenchimento.
+
+   QUAL BORDA É O ALVO: a prosa. É a única que o leitor vê — a coluna de doc é
+   caixa invisível por construção (§2), e alinhar com ela seria alinhar com uma
+   borda que não existe na tela.
+
+   O QUE NÃO FECHA, e fica escrito: entre 997 e o congelamento a coluna
+   encolhe, a folga de centralização da prosa vai de 48 a 0, e nenhum
+   preenchimento CONSTANTE acompanha um alvo que varia. Medido depois deste
+   conserto: **zero de 1408 para cima**, +24 a 1360, +48 a 997 — e **zero de
+   novo abaixo de 997**, onde não há sidebar nem coluna e os dois voltam a
+   partir da mesma borda. A faixa que não fecha é a de uma media query só.
+   Reproduzir a cadeia inteira num `calc()` acoplaria o rodapé ao container, ao
+   TOC e ao limiar do TOC — três acoplamentos para um regime em que a página já
+   não está na proporção que a spec publica. */
 @media (min-width: 997px) {
+  html.docs-doc-page .footer {
+    padding-inline: 0;
+  }
+
   html.docs-doc-page .footer .container {
     max-width: var(--sd-congelamento);
     margin-inline: auto;
-    padding-inline-start: calc(var(--sd-sidebar-width) + var(--sd-gutter));
+    padding-inline: calc(var(--sd-sidebar-width) + (var(--sd-doc-width) - var(--sd-prose-width)) / 2)
+      var(--sd-gutter);
   }
 }
 

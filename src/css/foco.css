@@ -284,6 +284,44 @@ a[href='#__docusaurus_skipToContent_fallback'] {
     align-content: center;
   }
 
+  /* A ÂNCORA DE HEADING RECEBE O PISO E NÃO O CUMPRE, e o mecanismo é o que este
+     arquivo já cataloga noutro lugar: `.hash-link` é `<a>`, então o seletor
+     acima o alcança e escreve `min-height: 44px` nele — mas ele é `display:
+     inline`, e **elemento `inline` ignora altura mínima em silêncio**. A mesma
+     armadilha que fez o link do rodapé virar `inline-flex` no estreito.
+
+     Medido a 1512 com `(pointer: coarse)` emulado por CDP: `.hash-link` sai
+     **22,48 × 29** com `min-height` computado em `44px` e `opacity: 1`. No
+     mesmo cenário, `.menu__link` sobe de 36 para 44 — o piso funciona onde o
+     `display` deixa. A regra não falhou; ela foi engolida.
+
+     `inline-flex` conserta a altura e **não** a largura: 22,48 continua sob 44,
+     e alargar a caixa de verdade empurraria o glifo para longe do título ou
+     esticaria a linha do heading de 32 para 44, mexendo no ritmo vertical da
+     coluna em toda página. A área de toque cresce por PSEUDO-ELEMENTO, que é o
+     recurso que amplia alvo sem tocar em layout.
+
+     `::after` e não `::before`: o `::before` é do `theme-classic` e carrega o
+     glifo `#` (medido no CSS emitido). Sobrescrevê-lo apagaria o desenho.
+
+     O alvo cobre os últimos ~14px do título, e isso é ganho e não colisão: o
+     que ele ativa é o link da própria seção, que é o que quem toca ali quer.
+     No ponteiro fino nada disto existe — lá a âncora é revelada por hover e um
+     alvo invisível de 44px sobre o fim do título roubaria a seleção de texto. */
+  .hash-link {
+    position: relative;
+  }
+
+  .hash-link::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+    inline-size: var(--sd-target-min);
+    block-size: var(--sd-target-min);
+  }
+
   /* A exceção, e é a única: link inline na prosa. A própria SC 2.5.8 o isenta, e
      alargá-lo quebraria o ritmo vertical da coluna de texto.
 

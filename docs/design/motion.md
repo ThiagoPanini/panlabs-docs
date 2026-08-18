@@ -88,13 +88,30 @@ A implementação inteira redefine as **três paradas de duração** dentro de `
 
 ## 4. O que nunca anima — lista fechada
 
-**Troca de tema: instantânea.** Proibição explícita de `transition` em `background-color` ou `color` no `:root` e no `body`.
+**Troca de tema: a superfície não anima.** Proibição explícita de `transition` em `background-color` ou `color` no `:root` e no `body`. *Esta entrada dizia "instantânea", e a palavra saiu — ver a correção S9-1 no fim desta seção.*
 
 O argumento é do projeto, não genérico, e ele tinha **duas metades**. A primeira era a ilha de espetáculo: **inerte na troca de tema** — os tokens dela não mudavam —, e uma transição global de cor a faria parecer **congelada** enquanto o site inteiro esmaecia em volta, sendo a costura dela com o navbar a aresta mais visível do site no modo claro. A segunda é o custo de repintar o documento inteiro no único momento em que a animação toca cada pixel da página.
 
 > **Correção de fato: a primeira metade perdeu o sujeito, e a proibição fica de pé pela segunda.** A ilha saiu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)), e não há mais faixa que possa parecer congelada. O custo de repinte não depende de ilha nenhuma e sustenta a regra sozinho — e quem a torna revisável é a linha verificada logo abaixo, não a faixa que já não existe. A metade morta fica escrita porque ela explica por que a regra nasceu **mais forte** do que a metade sobrevivente justificaria sozinha: quem for reabrir a proibição precisa saber que está reabrindo meia decisão, não a inteira.
 
-*Verificado na implementação:* nem o Infima nem o `theme-classic` declaram transição de cor em `html`, `body` ou `:root`. A regra é **não introduzir uma**, e o portão do §6 não a pega — porque a violação seria uma transição legítima em token, no lugar errado. Esta linha é o que a torna revisável.
+*Verificado na implementação:* nem o Infima nem o `theme-classic` declaram transição de cor em `html`, `body` ou `:root`. A regra é **não introduzir uma**, e o portão do §7 não a pega — porque a violação seria uma transição legítima em token, no lugar errado.
+
+> **Correção de fato — S9-1: *"instantânea"* não é o que o leitor vê, e a palavra sai.** A proibição desta entrada sempre foi **sobre `:root` e `body`**, e o código a cumpre — medido em navegador, `getComputedStyle(document.documentElement).transition` e o mesmo no `<body>` devolvem `all 0s` nos dois. O documento **não** anima. Mas o parágrafo de abertura dizia *"Troca de tema: instantânea"*, que é uma afirmação sobre o **resultado**, e o resultado é outro.
+>
+> **O número, e como ele foi obtido.** Varrendo `document.querySelectorAll('*')` na rota de prosa a 1512 e contando o elemento cuja `transition-property` inclui uma propriedade que a troca de tema muda (`color`, `background-color`, `border-*-color`, `box-shadow`, `fill`) com duração maior que zero: **33 elementos**. E a interpolação foi provada, não inferida — trocando `data-theme` e amostrando a cor computada de um `.table-of-contents__link`, ela caminha por seis valores intermediários de `rgb(160,162,166)` a `rgb(81,83,87)` ao longo de 200ms, em vez de saltar.
+>
+> **De onde elas vêm importa mais que quantas são.** Quase todas são do **upstream**: `.navbar__link`, `.table-of-contents__link`, `.breadcrumbs__link`, `.menu__link`, `.footer__link-item`, `.pagination-nav__link` e os dez `<svg>` do chrome declaram `transition: color 0.2s` no Infima. O tempo e a curva são nossos só porque o adaptador escreve `--ifm-transition-fast: var(--sd-dur-1)` — o que o projeto controla é **quanto**, não **se**. Nossas próprias declarações de `--sd-move-state` são dez, e nenhuma delas está entre as que a troca de tema alcança na rota medida.
+>
+> **A decisão é reescrever a afirmação, não suprimir a transição.** Suprimir custaria uma de duas coisas, e as duas são piores que o que compram:
+>
+> - **JS**, uma classe no `<html>` durante a troca. É a rota que todo mundo usa, e ela está fechada aqui pelo quinto zero — *um único JS de interação no projeto inteiro*, conferido por `scripts/cinco-zeros.sh`;
+> - **mover a `transition` para dentro do `:hover`**, que é a única rota CSS-only que existe. Ela funciona — em repouso não há transição declarada, então a troca de tema fica seca —, e o preço é hover assimétrico (entra suave, sai cortado) em **todo** link do chrome. Trocar um evento raro e deliberado por uma degradação constante é o negócio errado.
+>
+> **A segunda metade do argumento também encolheu, e é honesto dizer.** Ela era *"o custo de repintar o documento inteiro no único momento em que a animação toca cada pixel da página"*. Repintar o documento inteiro é exatamente o que `:root` e `body` fariam, e é o que continua proibido e continua zero. O que sobra medido são 33 elementos de texto e ícone esmaecendo — o oposto de *cada pixel*. A proibição fica de pé pelo que ela de fato protege: **a superfície não anima**. O que anima é estado de controle, que tem outro dono e outra entrada nesta spec (§2).
+>
+> **Dissenso.** Quem lê *"o que nunca anima"* espera uma lista de resultados, não de seletores; dizer *"o `:root` e o `body` não animam"* e deixar 33 elementos esmaeçando é cumprir a letra. A resposta é que a alternativa medida é pior, e que uma lista fechada que promete o que a plataforma não entrega é o defeito que este documento inteiro existe para não ter. **Reabre quando** o zero de JS de interação for gasto por outro motivo — nesse dia a classe de supressão custa três linhas —, ou quando alguém medir o esmaecimento como defeito na avaliação visual, que é o juiz declarado.
+
+**A régua saiu desta linha e virou a segunda perna do portão 2 — §7.** Ela varre `src/` e reprova `transition` de cor declarada sobre `html`, `body` ou `:root`. Nasceu desta correção: a nota *"verificado na implementação"* estava aqui desde o slice 1 e ninguém a verificava desde então, o que é a definição de afirmação que envelhece calada. **A primeira perna não a pegaria** — `transition: color var(--sd-move-state)` no `:root` compõe do vocabulário certinho e passaria verde; o que a segunda cobra é o **seletor**, não o valor.
 
 **Troca de rota: nada.** O leitor clicou para chegar; qualquer fade atrasa exatamente o conteúdo pedido — e envolver `Root`/`Layout` gastaria degrau da escada do [ADR 2](../adr/0002-politica-de-swizzle.md) para comprar atraso.
 
@@ -199,9 +216,16 @@ Sobram pouquíssimos, porque o vocabulário é transição. **Hoje sobra um: a e
 
 | # | Portão | Cadência |
 | ---: | --- | --- |
-| 2 | `transition:` ou `animation:` cujo valor contenha unidade de tempo ou curva literal | commit |
+| 2 | **perna 1** — `transition:` ou `animation:` cujo valor contenha unidade de tempo ou curva literal | commit |
+| 2 | **perna 2** — `transition` de cor declarada sobre `html`, `body` ou `:root` | commit |
 
 `npm run portao:2`. A regra não depende de ninguém lembrar dela — depende de a varredura passar.
+
+**A segunda perna entrou com a correção S9-1 do §4**, e ela cobra o oposto da primeira: a primeira olha o **valor** e ignora o seletor; a segunda olha o **seletor** e só então o valor. Uma transição de cor no `:root` composta do vocabulário passa pela primeira sem tocá-la — foi por isso que a lista fechada do §4 ficou nove meses com a nota *"verificado na implementação"* e nenhuma verificação.
+
+*Limite escrito no próprio script:* a perna 2 cobra `background-color` e `color`, que é o que a linha do §4 proíbe. `border-color` no `:root` passa, e animaria a troca de tema igual — alargar a varredura seria alargar a regra, e portão não faz isso sozinho.
+
+*Nove casos exercitam a perna 2 antes de ela entrar* — cinco que devem reprovar (`:root`, `body`, `html`, `html, body`, e a lista de duas propriedades) e quatro que não podem (`.menu__link`, `transition: opacity` no `body`, `border-color` no `:root`, e o reset `*` do bloco `reduce`). A varredura falhou nos três primeiros na primeira escrita: `css-sem-comentario.awk` emite `arquivo:linha:código`, e um `^` no regex de seletor nunca casa contra `src/css/tokens.css:12::root`. **Portão que passa verde com a violação escrita é pior que portão nenhum**, e é por isso que o caso negativo entrou junto.
 
 A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não é mais estrito por acaso: o bloco de vocabulário sobrevive porque ele declara **tokens**, não declarações `transition:` ou `animation:`. *"Fora do bloco de vocabulário"* e *"em toda parte"* coincidem por construção.
 
@@ -226,19 +250,21 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Descarte do default do framework de utilitários | herdado | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §1 — default herdado, não aplicado |
 | Easing nomeado por intenção, animação como token completo | mecanismo emprestado | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) §3 |
 | Movimento composto da escala, não com número cravado | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §1 |
-| Reduced-motion na camada de token, alcançando o Infima | herdado + adaptador | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5); [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
+| Reduced-motion na camada de token, alcançando o Infima | herdado + origem própria (implementação) | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5); [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
 | Menor valor perceptível em vez de zero | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 — `useCollapsible` anima altura em JS |
 | Remover, não encurtar, o que não termina sozinho | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
 | `--sd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) corrigindo a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
 | Hover sob `@media (hover: hover)` | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — feature já em uso no Infima |
 | Estado nunca anima geometria | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §3, sobre a assinatura da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
-| Troca de tema instantânea | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 — consequência da ilha inerte da [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13). **A ilha saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; a decisão fica pela outra metade do argumento, o custo de repintar o documento inteiro |
-| Nenhuma transição de cor no upstream | **origem própria (verificação)** | varredura de `html`, `body` e `:root` no Infima e no theme-classic, ao implementar o slice 1 |
+| Troca de tema: a superfície não anima | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 — consequência da ilha inerte da [#13](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/13). **A ilha saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; a decisão fica pela outra metade do argumento, o custo de repintar o documento inteiro |
+| **A palavra *"instantânea"* sai da entrada** | **origem própria (medição)** | **S9-1** — medido em navegador na rota de prosa a 1512: `html` e `body` devolvem `transition: all 0s` (a proibição é cumprida), e **33 elementos** do chrome animam cor por 200ms na troca, quase todos com a transição declarada pelo Infima. A interpolação foi provada amostrando a cor computada de um `.table-of-contents__link` durante a troca. Ver §4 |
+| **Suprimir a transição na troca não é comprado** | **origem própria (consequência)** | **S9-1** — as duas rotas são JS (fechado pelo quinto zero de `cinco-zeros.sh`) ou `transition` dentro do `:hover`, que deixa todo hover do chrome assimétrico. Cai da regra que a spec já carregava, não de medição nova |
+| Nenhuma transição de cor no upstream | **origem própria (verificação)** | varredura de `html`, `body` e `:root` no Infima e no theme-classic, ao implementar o slice 1. **Virou régua de máquina com a S9-1**: perna 2 do portão 2, §7 |
 | `scroll-behavior: auto` declarado | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — `grep` contra o CSS do Infima e do `theme-classic`: zero declarações de `scroll-behavior`. A âncora não decide o ponto; herdar uma ausência não é herdar |
 | Anel de foco instantâneo | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4, entregue ao contrato de foco da [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) |
 | Reveal por `animation-timeline: view()` | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a — decisão do dono do projeto; não medido em nenhuma das sete. **Sem consumidor desde [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**: a regra morava no CSS Module da landing |
 | Guarda dupla que falha para visível e parado | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5a — **sem consumidor desde [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; a forma fica descrita como cláusula da licença suspensa |
-| Respiração do glow, e as regras de parcimônia | herdado (período) + origem própria (uso) | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5b — **o uso saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; o período medido continua sendo o valor de `--sd-move-ambient`, porque medição não expira com o consumidor |
+| Respiração do glow, e as regras de parcimônia | herdado + origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §5b — **o uso saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; o período medido continua sendo o valor de `--sd-move-ambient`, porque medição não expira com o consumidor |
 | `@keyframes` na folha global | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — CSS Modules manglam o nome |
 | Portão de varredura de motion | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
 | Os seis movimentos são camada 1, e o que é camada 3 é o consumo | **origem própria (correção)** | a redação do §5 dava dois deles como camada 3; medido ao implementar a landing |
@@ -247,7 +273,7 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Respiração desligada por regra no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | nome de keyframe não sobrevive dentro de custom property, e a classe do módulo é hasheada. **A regra saiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**; o gancho continua escolhido, e o comentário do bloco `reduce` guarda o endereço |
 | Entrada da ilha como consumidor de `--sd-move-showcase` | **origem própria (implementação)** | o movimento estava licenciado e sem consumidor, e a entrada da ilha o gastou. **Revertida por [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)**: o consumidor saiu e o movimento voltou a ser órfão — desta vez com motivo escrito, que é a linha abaixo |
 | **Os três movimentos ficam declarados sem consumidor** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — o vocabulário é fechado em seis e é o **portão 2** que o define assim; cortar três deixaria sem nome o movimento longo, o dirigido por rolagem e o loop, e a próxima superfície escreveria o valor cravado que o portão existe para impedir. Órfão **com** motivo escrito é o que a régua do projeto admite; sem motivo é o defeito do Infima |
-| Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna de alcance** | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
+| Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna por restrição** | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
 | A curva da seta do `summary` deixa de ser perda | **origem própria (correção)** | a exceção 2 do adaptador substitui o valor inteiro, não só a duração |
 | `@starting-style` não sobrevive ao minificador | **origem própria (medição)** | o bloco é descartado com `Invalid property name`; zero ocorrências no CSS emitido, nos dois locales |
 | Entrada a partir de `display: none` é `@keyframes` | **origem própria (correção)** | consequência da linha acima, encontrada na entrada do modal de busca do slice 7 |

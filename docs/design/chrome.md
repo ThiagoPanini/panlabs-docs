@@ -301,7 +301,15 @@ A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sid
 
 A largura é `--sd-toc-width`, **explícita** — não é mais fração de grid desde a #96. O que se escolhe é a **separação**, e ela continua sendo o único número da cadeia escolhido em vez de medido: ver §1.2.
 
-O comportamento sticky vem do upstream e não se toca. Ele se realinhou sozinho ao topo grudado novo, porque lê `--ifm-navbar-height` — que o adaptador escreve a partir de `--sd-topo-grudado`.
+O comportamento sticky vem do upstream. O **mecanismo** não se toca — `position: sticky` no slot, sem swizzle — mas o **offset** foi reescrito, e a distinção é o que a linha `TOC grudado em` do §11 cobra.
+
+> **Correção de fato — S3-3.** Esta seção dizia que o sticky *"se realinhou sozinho ao topo grudado novo, porque lê `--ifm-navbar-height`"*. Ele realinhou-se ao topo grudado e **parou ali**: a folha do `theme-classic` declara `top: calc(var(--ifm-navbar-height) + 1rem)`, o que dava **128** medido — os 112 do topo grudado mais a respiração de 16 que o upstream escolheu. O alvo do §11 é **152**, que é onde a prosa ao lado abre. `npm run paridade` acusava `Δ −24` desde que a linha foi publicada.
+>
+> O offset agora é `--sd-topo-conteudo` — `--sd-topo-grudado` mais `--sd-space-10`, a mesma respiração que o `<main>` já dá ao `<article>` (§1.1). O índice deixa de subir acima do texto que ele indexa. O `max-height` veio junto por obrigação aritmética: o do upstream é `100vh − 144`, e com o topo em 152 a caixa ultrapassaria a viewport em 8px numa janela curta.
+>
+> **O número não foi escolhido: ele fecha por duas medições da âncora publicadas separadamente.** O §11 mede o navbar dela em `112px`; o §12 registra o ritmo vertical dela como *"40 do navbar ao cabeçalho"*. 112 + 40 = 152, e é o mesmo 152 que `referencia.md` §8 cobra do trilho. Três leituras independentes da mesma medição, e nenhuma delas foi editada para fechar.
+>
+> **Dissenso.** Grudar em 152 compra 40px de ar sob a barra ao rolar, contra os 16 do Docusaurus — mais ar do que qualquer doc costuma dar, e 24px a menos de lista visível. A resposta é que a tabela do §11 mede uma coisa só, o alinhamento com a âncora, e trocá-la por altura de rolagem interna seria escolher o que nenhuma medição sustenta. **Reabre quando** alguém remedir a âncora e achar outro número, ou quando o TOC passar a transbordar em janela de laptop — que é medida, não opinião: numa viewport de 900, o teto resolve em **708px** e a lista mais longa das rotas sondadas mede **160**.
 
 > **Correção de fato — #96.** Esta seção dizia que a âncora usa um painel mais largo e que alcançá-lo custaria `unsafe`. Não custa: ver §1.2. A largura hoje bate exato com a âncora.
 
@@ -429,7 +437,31 @@ O terceiro caso tem uma nota: a porta fica **fechada na spec**, porque `links` �
 
 O `<Footer/>` é **irmão do `main-wrapper`**, não filho da página de doc — isto não mudou na #96. O que mudou é o quadro de referência dos dois lados.
 
-> **Correção de fato — #96.** Esta seção dizia que a correção "soma o gutter" numa declaração de `padding-left` no `<footer>`, compensando o `.container` dele centrar na viewport enquanto o da doc centrava em `100% − sidebar`. A regra existia porque a doc, antes da #96, tinha exatamente ESSE desalinho — sidebar sem centralização própria, toda a folga indo para a direita (a queixa central da issue-pai). A #96 remove a causa em vez de compensar o sintoma: agora o `.container` do rodapé usa o MESMO `max-width: var(--sd-congelamento)` e o MESMO `margin-inline: auto` do grupo que centraliza sidebar + conteúdo + TOC (§1). Os dois insets esquerdos passam a ser a MESMA fórmula, na MESMA viewport — coincidem sempre, não só na largura em que alguém mediu. O que falta depois disso não é mais compensação de um desalinho: é só a largura da sidebar mais o gutter, porque o rodapé não tem sidebar e a doc tem — `padding-inline-start: calc(var(--sd-sidebar-width) + var(--sd-gutter))` no `.container` do footer, não mais `padding-left` no `<footer>`.
+> **Correção de fato — #96.** Esta seção dizia que a correção "soma o gutter" numa declaração de `padding-left` no `<footer>`, compensando o `.container` dele centrar na viewport enquanto o da doc centrava em `100% − sidebar`. A regra existia porque a doc, antes da #96, tinha exatamente ESSE desalinho — sidebar sem centralização própria, toda a folga indo para a direita (a queixa central da issue-pai). A #96 remove a causa em vez de compensar o sintoma: agora o `.container` do rodapé usa o MESMO `max-width: var(--sd-congelamento)` e o MESMO `margin-inline: auto` do grupo que centraliza sidebar + conteúdo + TOC (§1). O que falta depois disso não é mais compensação de um desalinho: é só o que a doc tem antes do texto e o rodapé não.
+
+> **Correção de fato — S3-8: *"coincidem sempre"* era a afirmação, e ela não fechava em largura nenhuma exceto uma.** Este parágrafo dizia que os dois insets *"coincidem sempre, não só na largura em que alguém mediu"*, e que o termo que faltava era `sidebar + gutter`. Medido em sete larguras, comparando a borda esquerda do primeiro link do rodapé com a do `<article>`:
+>
+> | largura | prosa | rodapé | Δ |
+> | ---: | ---: | ---: | ---: |
+> | 997 | 288 | 352 | +64 |
+> | 1300 | 288 | 352 | +64 |
+> | 1360 | 312 | 352 | +40 |
+> | 1408 | 336 | 352 | +16 |
+> | 1440 | 352 | 352 | **0** |
+> | 1512 | 388 | 372 | −16 |
+> | 1920 | 592 | 576 | −16 |
+>
+> O único zero é **1440**, e ele é coincidência aritmética entre duas causas de sinal contrário — não é a fórmula fechando.
+>
+> **Qual borda é o alvo: a prosa.** A coluna de doc é caixa invisível por construção (§2) — alinhar com ela seria alinhar com uma borda que a tela não tem. O que o leitor compara é o texto que acabou de ler com o texto do rodapé.
+>
+> **As duas causas, e as duas foram consertadas.** *(1)* O termo estava errado: o que separa a sidebar da **prosa** não é o gutter (32), é a metade da folga da caixa invisível — `(--sd-doc-width − --sd-prose-width) / 2` = 48 —, porque o `<article>` é centralizado dentro da coluna. O número do rodapé era o de antes da #96 ter criado essa folga. *(2)* O `<footer>` paga `padding-inline: var(--sd-gutter)` que o grupo de doc não paga: abaixo de 1472 isso empurra o container 32 para dentro enquanto a sidebar cola em 0. Acima do congelamento o `margin-inline: auto` ultrapassa os 32 e o defeito some sozinho — que é exatamente por que ele nunca apareceu na largura de referência de 1512. O eixo esquerdo passou para o `.container`; o direito fica no `<footer>`, porque é ele que impede o copyright de encostar na borda, e o fio de ponta a ponta continua fora de qualquer preenchimento.
+>
+> **Medido depois: Δ = 0 em 1408, 1440, 1512 e 1920.** Entre 997 e o congelamento ele cai de +64 para **+48** a 997 e **+24** a 1360. E **abaixo de 997 ele já era zero e continua**: no estreito não há sidebar nem coluna, e rodapé e artigo partem da mesma borda — medido a 390, 768 e 996, os dois abrem em `16`.
+>
+> **O que não fecha, e fica escrito em vez de prometido.** Entre 997 e o congelamento a coluna encolhe, a folga de centralização da prosa vai de 48 a 0, e **nenhum preenchimento constante acompanha um alvo que varia**. A faixa que não fecha é a de **uma media query só**. Reproduzi-lo num `calc()` acoplaria o rodapé ao container, ao TOC e ao limiar do TOC — três acoplamentos para comprar alinhamento num regime em que a página já não está na proporção que o §1 publica.
+>
+> **Dissenso.** A frase antiga era mais forte e mais curta, e a alternativa honesta seria alinhar com a **coluna de doc** em vez da prosa: aí um preenchimento constante fecha em toda largura, sem regime nenhum. A resposta é que isso alinharia com uma borda invisível e deixaria o desalinho visível de 48px de pé — trocar a promessa correta pela promessa cumprível. **Reabre quando** a caixa invisível deixar de centralizar o artigo, ou quando o congelamento mudar: os dois movem o 48.
 
 **O fio continua de ponta a ponta** — mora no `<footer>`, fora do preenchimento, como antes.
 
@@ -503,17 +535,24 @@ A tolerância é parte do alvo, e não um detalhe do script: `exato` é para o q
 | A 1920, margem esquerda | `256px` | ±1 |
 | A 1920, margem direita | `256px` | ±1 |
 | TOC visível a 1100 | `não` | exato |
-| Sidebar visível a 1010 | `não` | exato |
 | Item de sidebar altura | `36px` | ±1 |
 | Item de sidebar raio | `12px` | exato |
 | Item de sidebar recuo | `16px` | exato |
 | TOC grudado em | `152px` | ±1 |
 
+**Uma linha saiu desta tabela, e não por ter fechado — S3-7.** Ela era `Sidebar visível a 1010 = não`, tolerância `exato`, e a paridade media `sim` desde o dia em que foi publicada. O §10 classifica **a mesma coisa** como perda 6: a gaveta do estreito só monta quando o `windowSize` do React está em `'mobile'`, e esse estado lê **996 hardcoded** em `@docusaurus/theme-common` — não é ponto de swizzle, é lógica de contexto sem opção pública. Ver §1.6 e o comentário longo em `chrome.css` §4.
+
+Um alvo que a plataforma proíbe alcançar não é alvo; é perda, e ela já estava nomeada no §10, no mesmo documento. Publicá-la nos dois lugares fazia a tabela carregar uma linha que **nunca** fecharia — e uma linha que nunca fecha treina quem lê o relatório a ignorá-lo, que é o oposto do que este instrumento existe para fazer. A sonda `chrome.1010.sidebar` e o cenário `prosa@1010/escuro` saíram junto: sonda sem alvo publicado vira `sem-alvo` no relatório, que é ruído com outro nome.
+
+**Dissenso.** Tirar a linha esconde a distância até a âncora, que é justamente o que o §11 existe para publicar — e o §10 é prosa, que *"não reprova nada"* pela abertura desta seção. A resposta é que a distância continua escrita, com o mecanismo medido junto, e que o §10 não é prosa solta: ele é lista numerada, citada por [`swizzle.md`](swizzle.md) §4 e pelo [ADR 2](../adr/0002-politica-de-swizzle.md). **Reabre quando** o Docusaurus expuser o limiar de `windowSize` como opção pública, ou quando o orçamento de `unsafe` deixar de ser zero — nos dois casos a linha volta para cá, com o número que a âncora medir.
+
+**Uma linha fechou com esta issue, e o conserto foi de CSS — S3-3.** `TOC grudado em` media 128 contra o alvo de 152: o offset do `theme-classic` é `calc(var(--ifm-navbar-height) + 1rem)`, e a respiração de 16 dele não é a nossa. O §5 tem o mecanismo, a derivação do número e o dissenso.
+
 Três linhas merecem leitura, porque não são medida direta:
 
 **As duas margens a 1920** não foram medidas na âncora nessa largura — elas são **derivadas** da regra do wrapper que foi medida: `max-width: 1472px`, `margin-inline: auto`, `padding-inline: 32px`. A 1920 sobram `(1920 − 1472) ÷ 2 = 224` de cada lado, mais os 32 de padding. Que as duas sejam **iguais** é o alvo de verdade; o valor absoluto é consequência. É a correção principal da issue-pai: hoje a sidebar cola em `x = 0` e toda a folga vai para a direita.
 
-**Os dois limiares são sondados fora do número redondo.** A âncora esconde o TOC abaixo de 1280 e a sidebar abaixo de 1024; nós escondemos os dois abaixo de 997. Medir *em* 1280 e *em* 1024 pegaria os dois lados de acordo e não diria nada — 1100 e 1010 caem dentro da faixa onde âncora e produto discordam, e é lá que a sonda tem trabalho.
+**O limiar é sondado fora do número redondo.** A âncora esconde o TOC abaixo de 1280 e a sidebar abaixo de 1024; nós escondemos os dois abaixo de 997. Medir *em* 1280 pegaria os dois lados de acordo e não diria nada — **1100** cai dentro da faixa onde âncora e produto discordam, e é lá que a sonda tem trabalho. *A sonda irmã, a 1010 para a sidebar, saiu com a linha dela — ver acima.*
 
 **O acento não tem linha aqui, nem em [`tokens.md`](tokens.md).** A cor de marca é divergência declarada: violeta, e não o azul da âncora. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa.
 
@@ -545,25 +584,28 @@ O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | **O alvo medido do §11** | **medido em referência** | as três medições de primeira mão da âncora, em `research/paridade-devin` §4 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
-| **As margens a 1920 do §11** | **derivado** | a regra do wrapper medida a 1512 (`max-width 1472`, `margin-inline auto`, `padding-inline 32`), estendida à largura maior |
-| **Os limiares sondados a 1100 e 1010** | **origem própria (implementação)** | o número redondo põe âncora e produto de acordo e não mede nada; a sonda tem que cair dentro da faixa onde discordam |
-| Container, coluna, TOC, prosa | herdado + derivado | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50), [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) |
+| **As margens a 1920 do §11** | **origem própria (consequência)** | a regra do wrapper medida a 1512 (`max-width 1472`, `margin-inline auto`, `padding-inline 32`), estendida à largura maior |
+| **O limiar sondado a 1100** | **origem própria (implementação)** | o número redondo põe âncora e produto de acordo e não mede nada; a sonda tem que cair dentro da faixa onde discordam. *Eram dois: a sonda a 1010 saiu com a linha da sidebar — §11, S3-7* |
+| Container, coluna, TOC, prosa | herdado + origem própria (consequência) | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50), [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) |
 | **O congelamento em 1408** | **origem própria (correção)** | 1472 até a #96 — o *"shell total"* ignorava o preenchimento do `<main>`, medido em navegador. A #96 encolheu para 1408 (com `--sd-container-width` indo a 1120) para as margens simétricas de §11 fecharem exatas, confirmado em navegador a 1512 e 1920 |
 | **A separação do TOC em `--sd-space-6`** | **origem própria** | escolhida para a lista cair em 264, que é o número medido |
-| **A coluna do TOC bate com a âncora, em 304** | **origem própria (correção, #96)** | era 25% de um grid de doze; o grid morreu, e a largura virou explícita — ver §1.2 |
+| **A aba do navbar e a lista do TOC na escala de UI** | **origem própria (correção)** | **S9-8** — as duas divergiam do alvo de `14px` de [`tokens.md`](tokens.md) §13 por mecanismos opostos do Infima: a aba **não tinha declaração** e herdava os 16 do `<html>` (`Δ +2`); a lista do TOC tinha declaração cravada no filho, `.table-of-contents { font-size: 0.8rem }`, que vencia o `--sd-type-sm` do slot em volta (`Δ −1,2`, com o slot medindo 14 certinho — falso verde). Ausência de declaração no upstream não aparece em `grep`; foi `npm run paridade` que apontou |
+| **O offset de sticky do TOC em `--sd-topo-conteudo`** | **origem própria (correção)** | **S3-3** — o `theme-classic` declara `top: calc(var(--ifm-navbar-height) + 1rem)`, que dá 128; o §11 cobra 152 e `npm run paridade` acusava `Δ −24`. O número não foi movido: `112 + 40` são o navbar do §11 e o ritmo vertical do §12, medidos na âncora em separado. O `max-height` veio junto por aritmética — o do upstream é `100vh − 144` e transbordaria 8px. Ver §5 |
+| **A linha `Sidebar visível a 1010` sai do §11** | **lacuna por restrição** | **S3-7** — alvo `exato` que a paridade media `sim` e que o §10 já classificava como perda 6; o `windowSize` do React lê 996 hardcoded e não há rota sem `unsafe`. Ver §11 |
+| **A coluna do TOC bate com a âncora, em 304** | **origem própria (correção)** | era 25% de um grid de doze; o grid morreu, e a largura virou explícita — ver §1.2 |
 | Largura da sidebar, prosa, navbar, faixa | herdado | medido |
 | **`--sd-tabs-height` literal, não derivado** | **origem própria** | altura de chrome não deriva de escala de espaço; a coincidência de número seria derivação falsa |
 | As **duas** variáveis de container | origem própria | armadilha fechada antes de virar sintoma |
-| Gutter, e o ponto onde ele troca | herdado (par) + origem própria (limiar) | — |
+| Gutter, e o ponto onde ele troca | herdado + origem própria | — |
 | **O cartão morre** | herdado | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) — zero elevação em conteúdo, em seis páginas medidas |
 | **A caixa invisível em dois seletores** | **origem própria (implementação)** | [#54](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/54) — uma lista de onze crescia a cada componente novo |
 | **O escopo por `.col` na caixa invisível** | **origem própria (implementação)** | sem ele a paginação da referência gerada sai do prumo com a prosa dela |
 | **O breakout morre** | herdado | a âncora tem uma largura só |
-| Medida de prosa oscila com o TOC | **origem própria (correção, #96)** | era classificada delta deliberado; a âncora oscila pelo mesmo motivo — ver §1.5 |
+| Medida de prosa oscila com o TOC | **origem própria (correção)** | era classificada delta deliberado; a âncora oscila pelo mesmo motivo — ver §1.5 |
 | As três configurações de coluna | **origem própria (correção)** | medido em `DocItem/Layout@3.10.2`: a classe de 75% não depende de heading |
 | **Ritmo vertical assimétrico 48/16** | herdado | o Infima escala o ar de cima com o corpo do título, e isso é o gesto errado |
 | Limiar 996/997 (sidebar, gutter, faixa) | **delta deliberado** | `windowSize` do React trava a gaveta em 996, hardcoded fora do alcance de CSS — ver §1.6 |
-| Limiar 1280 (TOC) | **origem própria (#96)** | puro CSS, sem estado de React no caminho; bate com a âncora — ver §1.6 |
+| Limiar 1280 (TOC) | **origem própria** | puro CSS, sem estado de React no caminho; bate com a âncora — ver §1.6 |
 | **A faixa de tabs, e o zero `unsafe` intacto** | **origem própria (medição)** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medido num 3.10.2 real, com o portão 7 verde e a faixa montada |
 | **O espaçador como item `html`** | **origem própria** | não acopla a faixa à existência de uma marca |
 | **A divergência entre ordem de foco e leitura visual** | **lacuna por restrição** | consequência de o DOM ter dois blocos e a faixa distribuir um deles em duas linhas |
@@ -579,12 +621,13 @@ O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha
 | **Rota por override de `h1`, degrau 3** | **origem própria (verificação)** | a rota estava registrada em `swizzle.md` §4; 61/61 confere a condição, e o portão 4 passou a cobrá-la |
 | **Obrigatório, ausência quebra o build** | **origem própria** | a âncora o faz condicional; a doutrina da casa é falhar alto |
 | **A eyebrow por subtração** | **origem própria (implementação)** | três `display: none` sobre classes do Infima; o JSON-LD é irmão e não é alcançado |
-| **A eyebrow vazia na visão geral de categoria** | **consequência declarada** | o breadcrumb dela é `home → categoria(ativa)`, e os dois são o que a subtração esconde |
+| **A eyebrow vazia na visão geral de categoria** | **origem própria (consequência)** | o breadcrumb dela é `home → categoria(ativa)`, e os dois são o que a subtração esconde |
 | **Paginação plana** | herdado | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) — nenhum componente de conteúdo tem elevação na âncora |
 | **O TOC móvel sai** | **delta deliberado** | o único lugar onde *"mais perto da âncora"* remove navegação; declaração, não omissão |
 | Footer em uma linha, fio superior, muito ar | herdado | a única medição que existe do rodapé da âncora |
 | A linha quebra e não empilha no estreito | **delta deliberado** | contra o comportamento entregue pelo Infima |
-| Conteúdo do footer alinhado à coluna de doc | **origem própria** | não medido; deriva da medida constante. A exceção *"na landing, não"* caiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94): a raiz monta com `noFooter` e o alinhamento passou a valer no site inteiro |
+| Conteúdo do footer alinhado à **prosa**, não à coluna de doc | **origem própria (correção)** | **S3-8** — era *"alinhado à coluna de doc"*, com o carimbo *"não medido; deriva da medida constante"*. Medido em sete larguras: o desalinho era **+64** a 997, **+16** a 1408 e **−16** a 1512, cruzando o zero em 1440 por coincidência. Duas causas — o termo era o gutter (32) onde a folga da caixa invisível é 48, e o `<footer>` pagava um preenchimento lateral que o grupo de doc não paga. Depois: **Δ = 0 do congelamento para cima**. A exceção *"na landing, não"* caiu com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94): a raiz monta com `noFooter` e o alinhamento passou a valer no site inteiro. Ver §8.3 |
+| **O alinhamento não fecha entre 997 e o congelamento** | **origem própria (consequência)** | **S3-8** — a folga de centralização da prosa varia de 0 a 48 conforme a coluna cresce, e preenchimento constante não segue alvo variável. Medido: **0** abaixo de 997 (sem sidebar, mesma borda), **+48** a 997, **+24** a 1360, **0** de 1408 para cima |
 | Os links do footer, e a regra que os escolheu | **origem própria** | regra é *só o que não está em outro lugar* |
 | `target` declarado nos links externos | **origem própria (correção)** | o `<Link>` injeta `target="_blank"` sozinho |
 | Ícone de link externo escondido | origem própria | consequência de `Icon/ExternalLink` ser `unsafe` e vir de sprite |
