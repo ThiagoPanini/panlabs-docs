@@ -199,7 +199,15 @@ A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa d
 
 **O sangramento saiu na #96.** Era a quarta peça: parada dura de `linear-gradient` no próprio `.navbar`, pintando uma faixa cinza atrás das tabs. A issue-pai chamou a faixa de invenção sem par na âncora — *"a faixa em cinza não caiu bem"* —, e ela sai sem substituto de superfície: a linha de tabs lê **transparente sobre o fundo da página**, como o resto do `<nav>`. O que fecha a separação agora é um HAIRLINE de 1px no rodapé do `.navbar` inteiro — as duas linhas, não só a de baixo —, e o item ativo ganha sublinhado em vez de a faixa ganhar fundo. Ver `chrome.css` §2.
 
-**O `.navbar__inner` passa a centralizar no MESMO container que agrupa sidebar, conteúdo e TOC** — mesmo `max-width: var(--sd-congelamento)`, mesmo `margin-inline: auto`. Sem isso a marca ficaria alinhada ao viewport enquanto o cabeçalho de grupo da sidebar se move com o congelamento (ver §1), e os dois se desencontrariam a partir da primeira largura em que o grupo centraliza. O preenchimento horizontal do `.navbar` (herdado, intocado) é o que já fazia a marca cair na mesma vertical do preenchimento da sidebar — ver §4.1 — e essa conta só fecha se os dois lados tiverem o mesmo inset esquerdo.
+**São DUAS linhas, e a segunda entrou depois.** A âncora não desenha um hairline — desenha dois, e eles têm recuos diferentes de propósito. O de baixo, descrito acima, sangra de ponta a ponta da viewport. O outro fecha o rodapé da **fileira do topo** e para exatamente onde a marca começa e onde o último ícone da direita termina — Δ zero nas duas bordas, medido na âncora e confirmado por varredura de pixel, não só por caixa. O shinydoc tinha só o de ponta a ponta; a linha da fileira entrou por `::before` no `.navbar__inner`, com a altura de `--sd-navbar-height` e a mesma cor e espessura do outro.
+
+A escolha do `.navbar__inner` como dono não é conveniência: **essa caixa já é, por medição, a identidade que a âncora pede** — o `.navbar__brand` começa no mesmo x em que ela começa, e o alternador de tema termina no mesmo x em que ela termina, acima do congelamento. E é pseudo-elemento absoluto, não borda na fileira, porque **a fileira 1 não é um elemento**: ela são dois — a marca e o cluster da direita —, e uma borda em cada um daria dois segmentos com o vão do meio aberto entre eles. O escopo de 997 é obrigatório: abaixo do limiar a navbar tem uma fileira só, e o `.navbar__inner` volta a `position: static`, o que subiria o containing block até o `<nav>` e desmancharia o recuo.
+
+**Acrescenta, não move.** Mover o hairline de baixo para o `.navbar__inner` foi testado em página viva antes de escolher: a linha de ponta a ponta encurta de cada lado e deixa de sangrar — que é exatamente a propriedade que a âncora mantém.
+
+**O `.navbar__inner` passa a centralizar no MESMO container que agrupa sidebar, conteúdo e TOC** — mesmo `max-width: var(--sd-congelamento)`, mesmo `margin-inline: auto`. Sem isso a marca ficaria alinhada ao viewport enquanto o cabeçalho de grupo da sidebar se move com o congelamento (ver §1), e os dois se desencontrariam a partir da primeira largura em que o grupo centraliza. O preenchimento horizontal do `.navbar` (herdado, intocado) é o que põe a marca na mesma vertical da sidebar — ver §4.1 —, e essa conta só fecha se os dois lados tiverem o mesmo inset esquerdo.
+
+> **Correção medida.** A frase acima dizia *"na mesma vertical do **preenchimento** da sidebar"*, e isso não se sustenta em largura nenhuma sozinha: o alvo troca de lado no congelamento. Acima dele a marca casa com a **borda da caixa** da sidebar, e o **texto** do item cai um recuo à direita; abaixo dele é o inverso — o texto casa e a caixa não. O que este bloco entrega é o inset esquerdo comum entre navbar e **caixa** da sidebar acima do congelamento, e é dele que a linha da fileira do topo depende. Alinhar a vertical do **texto** é outro ticket: mexeria no recuo do item, não aqui.
 
 **O espaçador é opção pública** — um item `{type: 'html', position: 'left'}` entre a marca e as tabs. Escolhido em vez de dar `flex-basis: 100%` à marca porque **não acopla a faixa à existência de uma marca**, e o estilo é replicável como template da casa.
 
@@ -221,7 +229,10 @@ A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa d
 
 | Ponto | Medido |
 | --- | --- |
-| Hairline | 1px, `--sd-border-subtle`, no rodapé do `.navbar` inteiro — as duas linhas |
+| Hairline de baixo | 1px, `--sd-border-subtle`, no rodapé do `.navbar` inteiro — abaixo das duas fileiras, sangrando de ponta a ponta da viewport |
+| Hairline da fileira do topo | 1px, `--sd-border-subtle`, `::before` no `.navbar__inner`, altura `--sd-navbar-height` — começa no `left` da marca e termina no `right` do alternador de tema, Δ **0px** nas duas bordas, conferido a 1512, 1280 e 1100 |
+| As duas linhas juntas | recuos diferentes de propósito: a de cima acompanha a caixa do conteúdo, a de baixo ignora e sangra. É o que a âncora desenha |
+| Hairline da fileira abaixo de 997 | **não existe** — uma fileira só, e o `.navbar__inner` é `position: static` |
 | Aba ativa | sublinhado de acento, `border-block-end` de 2px, sem somar altura ao chrome |
 | A faixa | três tabs, numa linha só, altura 48, começando em y=64, sem fundo próprio |
 | Sticky | rolando a 800px: `navTop=0`, `navBottom=112` — grudado, na altura nova |
@@ -595,6 +606,10 @@ O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha
 | **A coluna do TOC bate com a âncora, em 304** | **origem própria (correção)** | era 25% de um grid de doze; o grid morreu, e a largura virou explícita — ver §1.2 |
 | Largura da sidebar, prosa, navbar, faixa | herdado | medido |
 | **`--sd-tabs-height` literal, não derivado** | **origem própria** | altura de chrome não deriva de escala de espaço; a coincidência de número seria derivação falsa |
+| **A linha da fileira do topo, recuada** | **herdado** | a âncora desenha **duas** linhas na navbar, com recuos diferentes; a de cima para no `left` da marca e no `right` do último ícone, Δ 0 nas duas bordas. Medida de primeira mão em navegador, por caixa **e** por varredura de pixel do screenshot, nos dois temas e com e sem rolagem. O shinydoc tinha só a de baixo |
+| **O dono da linha ser o `.navbar__inner`, e não a fileira** | **origem própria (implementação)** | a fileira 1 não é um elemento — são dois, com o vão do meio entre eles, e uma borda em cada daria dois segmentos. O `.navbar__inner` já é a caixa marca→último ícone por medição (Δ 0 a 1512, 1280 e 1100), então o pseudo-elemento absoluto herda a identidade sem número novo |
+| **O escopo de 997 da linha da fileira** | **origem própria (consequência)** | cai de duas regras que a spec já carregava: abaixo do limiar a navbar tem uma fileira só (§3.1), e o `.navbar__inner` volta a `position: static`, o que subiria o containing block até o `<nav>` |
+| **A vertical da marca casa com a caixa da sidebar, não com o texto do item** | **origem própria (correção)** | o §3.1 afirmava *"a mesma vertical do preenchimento da sidebar"*, e a medição desmente em toda largura: acima do congelamento casa a **caixa** e o texto cai um recuo à direita; abaixo, o inverso. A afirmação quebrou quando o congelamento entrou, e só apareceu porque a linha da fileira dependia dela |
 | As **duas** variáveis de container | origem própria | armadilha fechada antes de virar sintoma |
 | Gutter, e o ponto onde ele troca | herdado + origem própria | — |
 | **O cartão morre** | herdado | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) — zero elevação em conteúdo, em seis páginas medidas |

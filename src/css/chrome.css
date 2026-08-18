@@ -448,10 +448,19 @@ html.docs-doc-page .subtitulo {
      isso a marca fica alinhada ao VIEWPORT enquanto o cabeçalho de grupo da
      sidebar se move com o congelamento, e os dois se desencontram a partir
      da primeira largura em que o grupo centraliza. O preenchimento
-     horizontal do `.navbar` (herdado, intocado) é o que já fazia a marca
-     cair na mesma vertical do preenchimento da sidebar — ver `chrome.css`
-     §3 — e essa conta só volta a fechar se os DOIS lados tiverem o mesmo
-     inset esquerdo. */
+     horizontal do `.navbar` (herdado, intocado) é o que põe a marca na mesma
+     vertical da sidebar — ver `chrome.css` §3 —, e essa conta só volta a
+     fechar se os DOIS lados tiverem o mesmo inset esquerdo.
+
+     CORREÇÃO MEDIDA: a frase acima dizia "na mesma vertical do PREENCHIMENTO
+     da sidebar", e isso não se sustenta em nenhuma largura sozinha — o alvo
+     troca de lado no congelamento. A 1512, `brand.left` 52 casa com a BORDA da
+     caixa da sidebar (52), enquanto o TEXTO do item cai em 76, 24px à direita.
+     A 1280 e 1100 é o inverso: o texto do item casa (24 = 24) e a caixa não
+     (0 contra 24). O que este bloco entrega é o inset esquerdo comum entre
+     navbar e caixa da sidebar acima do congelamento — que é o que a linha da
+     fileira do topo, logo abaixo, consome. Corrigir a vertical do TEXTO é
+     outro ticket, e mexeria no recuo do item, não aqui. */
   /* `position: relative` entrou na #98 — é o container que a busca centraliza
      contra (`SearchBar/estilos.module.css`), via `position: absolute` no
      próprio gatilho. Sem isto o navegador subiria a busca de containing block
@@ -469,6 +478,46 @@ html.docs-doc-page .subtitulo {
      mora na linha 1. */
   .navbar__inner {
     align-items: flex-start;
+  }
+
+  /* A LINHA DA FILEIRA DO TOPO — a segunda linha da navbar, e ela não é
+     variação da primeira.
+
+     A âncora desenha DUAS: a de baixo sangra de ponta a ponta da viewport (é a
+     que o `.navbar` já pinta, §2) e esta para exatamente onde a marca começa e
+     onde o último ícone termina. Medido na âncora a 1440: a linha vai de 48 a
+     1392, `logo.left` é 48 e o `right` do alternador de tema é 1392 — Δ 0 nas
+     DUAS bordas, confirmado por varredura de pixel do screenshot, não só por
+     `getBoundingClientRect`.
+
+     O `::before` mora no `.navbar__inner` porque essa caixa JÁ É a identidade
+     que a âncora pede, e isso é medido aqui: a 1512 o inner vai de 52 a 1460, o
+     `.navbar__brand` começa em 52 e o alternador termina em 1460. Δ 0 dos dois
+     lados, a 1512, 1280 e 1100. Não entra geometria nova — a altura é
+     `--sd-navbar-height`, que `tokens.css` já descreve como "a LINHA 1 do topo,
+     não o topo inteiro".
+
+     É `::before` ABSOLUTO, e não `border-block-end` na fileira, porque a
+     fileira 1 não é um elemento: ela são dois — `.navbar__brand` e
+     `.navbar__items--right` — separados pelo vão do meio, e uma borda em cada
+     um daria dois segmentos com buraco entre eles.
+
+     ACRESCENTA, não move. Mover o hairline do `.navbar` para cá foi testado em
+     página viva: a linha de baixo encurta 52px de cada lado a 1512 e deixa de
+     sangrar — que é justamente o que a âncora faz questão de manter.
+
+     O escopo de 997 é obrigatório, por duas razões medidas: abaixo do limiar a
+     navbar tem UMA fileira e a linha não teria o que separar; e o
+     `.navbar__inner` volta a `position: static`, o que subiria o containing
+     block até o `.navbar` e desmancharia o recuo. */
+  .navbar__inner::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: var(--sd-navbar-height);
+    border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
+    pointer-events: none;
   }
 
   /* A quebra. `align-content: flex-start` é o que impede as duas linhas de se
