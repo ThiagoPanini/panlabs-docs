@@ -581,7 +581,7 @@ Três linhas merecem leitura, porque não são medida direta:
 
 **O limiar é sondado fora do número redondo.** A âncora esconde o TOC abaixo de 1280 e a sidebar abaixo de 1024; nós escondemos os dois abaixo de 997. Medir *em* 1280 pegaria os dois lados de acordo e não diria nada — **1100** cai dentro da faixa onde âncora e produto discordam, e é lá que a sonda tem trabalho. *A sonda irmã, a 1010 para a sidebar, saiu com a linha dela — ver acima.*
 
-**O acento não tem linha aqui, nem em [`tokens.md`](tokens.md).** A cor de marca é divergência declarada: violeta, e não o azul da âncora. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa.
+**O acento não tem linha aqui, nem em [`tokens.md`](tokens.md).** A cor de marca é divergência declarada: laranja, e não o azul da âncora. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa.
 
 **A caixa do TOC é a coluna, não a lista.** A âncora publica 304 para a caixa e 264 para a lista visível, e a nossa lista **já dá os 264 dela** — o §1.2 diz isso em prosa há tempo. A sonda desta tabela mede a **coluna**, que é onde a dívida de 16px mora; medir a lista contra o alvo da caixa acusaria 40px de dívida onde há 16, e a linha contradiria o próprio §1.2.
 

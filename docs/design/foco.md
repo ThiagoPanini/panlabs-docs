@@ -151,16 +151,16 @@ O papel de foco aponta para o acento. O afastamento (§3.1) diz **quais** superf
 
 | preenchimento por trás do anel | escuro | claro |
 | --- | ---: | ---: |
-| página | 7,00 | 6,28 |
-| superfície levantada | 7,00 | 6,45 |
-| pastilha de código | 6,62 | 6,45 |
-| fundo de callout `info` | 4,90 | 5,52 |
-| fundo de callout `success` | **4,81** | 5,53 |
-| fundo de callout `warn` | 4,89 | 5,51 |
-| fundo de callout `danger` | 4,99 | 5,47 |
-| wash do item ativo de sidebar | 5,88 | 5,27 |
+| página | 6,99 | 6,28 |
+| superfície levantada | 6,99 | 6,44 |
+| pastilha de código | 6,61 | 6,44 |
+| fundo de callout `info` | 4,89 | 5,51 |
+| fundo de callout `success` | **4,80** | 5,52 |
+| fundo de callout `warn` | 4,88 | 5,50 |
+| fundo de callout `danger` | 4,99 | 5,46 |
+| wash do item ativo de sidebar | 5,93 | 5,19 |
 
-**Pior caso 4,81:1 contra os 3:1 que a SC 1.4.11 pede. Folga de 1,60×.**
+**Pior caso 4,80:1 contra os 3:1 que a SC 1.4.11 pede. Folga de 1,60×.**
 
 > **A folga encolheu antes, e agora abriu de novo — duas causas diferentes.** Ela foi de 1,44× para 1,24× quando a marca serenizou o croma do acento (histórico, ver abaixo); a issue #95 não mexeu no acento, mas trocou a superfície levantada no escuro — que passou a ser a própria página, mais escura que o cartão antigo — e é contra ela que o preenchimento de callout é composto. Um fundo mais escuro empurra o par para cima: 1,60× hoje.
 >

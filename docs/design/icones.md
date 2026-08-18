@@ -317,7 +317,10 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 | Ícone de `Card` | **cor de marca** — não cinza. A medição chama isto de *"o detalhe que mais define a aparência do card"* |
 | Ícone de sidebar | `currentColor` — herda ativo, hover e modo **de graça** |
 | Ícone de `Callout` | a cor da variante |
-| Ícones de sistema | a rampa de cinzas tingida com o matiz da marca |
+| Ícones de sistema | a rampa de cinzas, **sem tingimento** |
+| Ícone do título do TOC | `--sd-text-body`, o mesmo do rótulo — pintado por `background-color` sob `mask`, porque não há elemento a herdar `currentColor` de |
+
+> **Correção de fato.** A linha dos ícones de sistema dizia *"a rampa de cinzas **tingida com o matiz da marca**"*, e isso deixou de ser verdade na [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95): a rampa parou de ler `--sd-brand` e passou a valer os hex medidos direto na âncora, fixos qualquer que seja a marca colada. Ver [`tokens.md`](tokens.md) §5 e [`principios.md`](principios.md) §2. A afirmação sobreviveu duas trocas de matiz sem ser conferida.
 
 ---
 

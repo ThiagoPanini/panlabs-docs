@@ -156,7 +156,7 @@ const SONDAS = [
   {sonda: 'paleta.texto-corpo.escuro', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'cor:color'},
   {sonda: 'paleta.texto-corpo.claro', cenario: 'prosa@1512/claro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'cor:color'},
   /* O acento NÃO tem alvo publicado: a cor de marca é divergência declarada da
-     âncora — violeta, e não o azul dela. Publicar o azul aqui mandaria copiar
+     âncora — laranja, e não o azul dela. Publicar o azul aqui mandaria copiar
      exatamente o que a decisão registrada recusa. */
 
   // --- escala de tipo ----------------------------------------------------
