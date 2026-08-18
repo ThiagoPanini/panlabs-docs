@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 #
-# As quatro invariantes de FORMA da spec.
+# As cinco invariantes de FORMA da spec — 1 a 4 e a 6.
 #
 # Cadência: commit. Não é portão — os portões cobram o CÓDIGO, e estas quatro
 # cobram a SPEC. Um documento é o entregável deste projeto (axioma 6), e um
 # entregável sem régua envelhece calado do mesmo jeito que código sem teste.
 #
-# A quinta invariante — completude — não está aqui, e a ausência é a decisão:
+# A invariante de COMPLETUDE não está aqui, e a ausência é a decisão:
 # ela é leitura cruzada entre as 27 resoluções do mapa e os arquivos da spec, e
 # não existe varredura que a faça. O resultado dela mora em
 # docs/design/README.md §6.
 #
-# **As quatro passariam com a tipografia inteiramente ausente.** Um documento
+# **As cinco passariam com a tipografia inteiramente ausente.** Um documento
 # que não existe não tem seção vazia, não tem número solto e não tem procedência
 # órfã. É por isso que a quinta é a que importa mais.
 #
@@ -39,7 +39,7 @@ GABARITO=(
   'Procedência'
 )
 
-echo "As quatro invariantes de forma"
+echo "As cinco invariantes de forma — 1 a 4 e a 6"
 echo
 
 # --- 1: gabarito sem seção vazia ---------------------------------------------
@@ -200,8 +200,78 @@ else
 fi
 echo
 
+# --- 6: o carimbo de procedência cabe na gramática ----------------------------
+#
+# A invariante 3 confere que a coluna de classe EXISTE. Esta confere que ela
+# nomeia uma classe do cânone — que é outra coisa, e a diferença custou 42
+# linhas em 26 formas distintas de carimbo, contra as sete classes publicadas
+# (auditoria S9-3). Sem esta varredura, `lacuna de alcance`, `medição de
+# upstream`, `decisão de produto` e `derivado` conviviam com as canônicas na
+# mesma coluna, com a mesma tipografia, sem nada que os separasse.
+#
+# A gramática está publicada em `docs/design/principios.md` §5.0, e a lista
+# abaixo é a mesma, verbatim.
+#
+# O NÚMERO É 6 E NÃO 5, e isso não é engano: a invariante 5 é a COMPLETUDE, que
+# não é varredura e mora em `docs/design/README.md` §4.2. A numeração da spec
+# não se remenda — o mesmo precedente que congelou os portões em 1..7 com o 8
+# vago (ADR 5). Este script roda as de forma; a 5 continua sendo leitura.
+#
+#   carimbo      := parte { " + " parte }
+#   parte        := classe [ qualificador ]
+#   qualificador := " (" motivo ")" | " com âncora normativa"
+#
+# `origem própria com âncora normativa` é a única forma sem parênteses, e ela
+# fica porque é assim que a spec a escreve desde a #55 — trocar por
+# `origem própria (norma)` seria churn de citação, e §5.1 já a lista.
+echo "6  o carimbo de procedência cabe na gramática"
+fora="$(find "$SPEC" docs/adr -name '*.md' | sort | while IFS= read -r arquivo; do
+  awk -v arq="$arquivo" '
+    BEGIN {
+      split("herdado|medido em referência|delta deliberado|mecanismo emprestado|origem própria|lacuna por restrição|lacuna de medição", c, "|")
+      for (i in c) classe[c[i]] = 1
+      split("verificação|medição|correção|implementação|consequência", m, "|")
+      for (i in m) motivo[m[i]] = 1
+    }
+    /^## Procedência/ {dentro = 1; next}
+    /^## / {dentro = 0}
+    dentro && /^\|/ {
+      if ($0 ~ /^\|[[:space:]:-]+\|/) next
+      linha = $0
+      sub(/^\|/, "", linha); sub(/\|[[:space:]]*$/, "", linha)
+      n = split(linha, celula, "|")
+      if (n != 3) next            # a invariante 3 já reprova a forma da linha
+      carimbo = celula[2]
+      gsub(/\*\*/, "", carimbo)
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", carimbo)
+      if (carimbo == "" || carimbo == "Classe") next
+      partes = split(carimbo, parte, / \+ /)
+      for (i = 1; i <= partes; i += 1) {
+        p = parte[i]
+        gsub(/^[[:space:]]+|[[:space:]]+$/, "", p)
+        sub(/ com âncora normativa$/, "", p)
+        if (match(p, / \([^()]+\)$/)) {
+          q = substr(p, RSTART + 2, RLENGTH - 3)
+          p = substr(p, 1, RSTART - 1)
+          if (!(q in motivo)) { print "     " arq ":" NR "  motivo fora da lista: (" q ")"; continue }
+        }
+        if (!(p in classe)) print "     " arq ":" NR "  classe fora do cânone: " p
+      }
+    }
+  ' "$arquivo"
+done)"
+if [ -z "$fora" ]; then
+  echo "   toda coluna de classe nomeia uma das sete, com motivo da lista fechada."
+else
+  echo "   CARIMBO FORA DA GRAMÁTICA:"
+  echo "$fora"
+  echo "     Ver \`docs/design/principios.md\` §5.0 — a gramática, e §5 — as sete classes."
+  falhas=$((falhas + 1))
+fi
+echo
+
 if [ "$falhas" -gt 0 ]; then
-  echo "As invariantes REPROVARAM em ${falhas} de 4."
+  echo "As invariantes de forma REPROVARAM em ${falhas} de 5."
   exit 1
 fi
-echo "As quatro invariantes de forma passaram."
+echo "As cinco invariantes de forma passaram — 1 a 4 e a 6."

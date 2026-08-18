@@ -118,7 +118,7 @@ Os outros quatro portões cobram outras coisas — conteúdo, gerador, host e su
 
 ---
 
-## 5. As cinco classes de procedência
+## 5. As sete classes de procedência
 
 **Definidas aqui, e num lugar só.** Toda tabela `## Procedência` da spec usa esta lista, e nada além dela.
 
@@ -126,19 +126,54 @@ Sem o carimbo, valor medido e valor inventado ficam **graficamente idênticos** 
 
 | Classe | O que significa | O que quem implementa pode fazer |
 | --- | --- | --- |
-| **herdado** | medido na âncora | **não toca** |
+| **herdado** | medido na âncora, e adotado | **não toca** |
+| **medido em referência** | medido na âncora e publicado como **alvo**, com o produto ainda a caminho dele | não toca o número; move o **código** até ele |
 | **delta deliberado** | divergência da âncora por escolha — **classe vazia**, ver §3 e a nota abaixo | ajusta **só pela regra de derivação** do §4 |
 | **mecanismo emprestado** | arquitetura de Vapi, Neon ou Clerk, com o valor reancorado na nossa escala | estrutura fixa; **o valor é skin** |
 | **origem própria** | nada na medição sustenta | **a mais frágil, e a primeira a ser contestada** |
+| **lacuna por restrição** | dimensão medida e **não alcançável** — a plataforma recusa | reabre com a **plataforma**, não com a régua |
 | **lacuna de medição** | dimensão herdada que a pesquisa declarou **não medida** | reabre no dia em que alguém medir |
+
+> **Eram cinco na tabela e sete no uso — S9-3, e a correção é da tabela.** Duas classes viviam fora dela e dentro da spec:
+>
+> · **`lacuna por restrição`** já era tratada como classe pelo §3.1 (*"eles têm classe própria na tabela de procedência (`lacuna por restrição`, §5)"*) e pelo §5.1 — e a tabela do §5 **não a listava**. Dezessete linhas a carregam, e ela é, desde que o §3 esvaziou, **a única categoria de divergência do projeto**. A frase do §3.1 apontava para uma linha que não existia.
+> · **`medido em referência`** carimba as onze tabelas *Alvo medido* do site. Ela **não** é `herdado`: `herdado` diz *"medido na âncora e adotado, não toca"*, e estas dizem *"medido na âncora e ainda não alcançado"*. Confundi-las apagaria a distinção que `npm run paridade` inteiro existe para medir.
+>
+> **A dedução do §5.1 fica de pé:** as classes não se multiplicam por qualificador. O que aconteceu é que duas estavam em uso e fora da lista fechada — *"o mesmo defeito que a lista existe para fechar"*, na frase que o próprio §5.1 usa para o qualificador `consequência`.
+
+### 5.0 A gramática do carimbo, e a régua que a cobra
+
+O carimbo não é uma string livre. Ele tem forma, e a forma é conferida por máquina — **invariante 6** de `npm run invariantes` ([`README.md`](README.md) §4):
+
+```
+carimbo      := parte { " + " parte }
+parte        := classe [ qualificador ]
+classe       := herdado | medido em referência | delta deliberado
+              | mecanismo emprestado | origem própria
+              | lacuna por restrição | lacuna de medição
+qualificador := " (" motivo ")" | " com âncora normativa"
+motivo       := verificação | medição | correção | implementação | consequência
+```
+
+**Três coisas que a gramática decide, e que estavam decididas de fato e não por escrito:**
+
+**O qualificador vale para qualquer classe, não só para `origem própria`.** `herdado (medição)` e `herdado (correção)` já estavam em uso, e a leitura é a mesma da tabela do §5.1: o motivo diz **como se chegou ao valor**, não que classe ele é. O que o §5.1 fecha é a lista de motivos, e ela continua fechada em cinco.
+
+**A composição com `+` é legítima, e ela diz que a linha tem duas procedências de verdade** — o mecanismo de um lado, o valor do outro. Sete linhas da spec são assim, e a mais clara é *"Gutter, e o ponto onde ele troca"*: o par é medido na âncora, o limiar é nosso.
+
+**A glosa entre parênteses não é qualificador.** `herdado (a tinta) + origem própria (o recorte)` lia bem e cabia numa célula que a máquina não conseguia conferir; a glosa foi para a coluna **Fonte**, que é onde a explicação mora. **Vinte e cinco linhas** foram recarimbadas para caber na gramática, e nenhuma mudou de leitura — a lista completa está no PR da S9-3.
+
+> **Vinte e quatro delas já existiam; a vigésima quinta nasceu no mesmo trabalho.** A linha *"O alinhamento não fecha abaixo do congelamento"* de [`chrome.md`](chrome.md) foi escrita com o carimbo `consequência declarada` — inventado no ato, sem que ninguém percebesse, no PR que estava consertando exatamente esse tipo de defeito. É a evidência mais direta de que a lista precisava de régua e não de disciplina: quem a escreveu tinha a tabela do §5 aberta.
+
+> **Dissenso.** Fechar a gramática torna o carimbo menos expressivo: `herdado (semeadura autorizada)` dizia numa palavra o que agora exige uma frase na Fonte, e `medição de upstream` era mais direto que `origem própria (verificação)`. A resposta é que expressividade sem lista fechada não é vocabulário, é prosa — e uma coluna de classe que aceita prosa não pode ser varrida, o que devolve o axioma 5 ao estado que o §3 descreve: *"quem duvidar roda o `grep` do carimbo"*. Não havia `grep` do carimbo até esta seção. **Reabre quando** uma linha real não couber em nenhuma composição da gramática — aí a classe que falta se nomeia, entra na tabela e entra na régua, que é o caminho que `lacuna por restrição` e `medido em referência` acabaram de fazer.
 
 > **A classe está vazia por decisão, e a spec ainda carrega o carimbo em quinze linhas.** Isso não é contradição escondida: a varredura do §3 é nominal, e ela diz o destino de cada uma. O recarimbo viaja com a reescrita do documento que hospeda a linha — as cinco que moram em [`tokens.md`](tokens.md) e [`foco.md`](foco.md) já foram feitas, as quinze restantes chegam com [`chrome.md`](chrome.md), [`componentes/`](componentes/), [`icones.md`](icones.md) e os dois ADRs.
 >
 > **Enquanto durar, é a tabela do §3 que responde por elas**, e é por isso que ela é lista nominal e não contagem: um número não permite conferir. Quem encontrar um `delta deliberado` na spec e não achá-lo lá tem um defeito nas mãos, não uma dívida conhecida.
 
-### 5.1 Os qualificadores estreitam a classe; eles não abrem uma sexta
+### 5.1 Os qualificadores estreitam a classe; eles não abrem uma oitava
 
-As classes são cinco e continuam cinco. O que os documentos acrescentam é **qualificador**, e ele diz de onde a origem própria saiu:
+As classes são sete e continuam sete. O que os documentos acrescentam é **qualificador**, e ele diz de onde o valor saiu — na maior parte das vezes de uma `origem própria`, que é a classe onde a pergunta *"de onde"* tem mais respostas possíveis:
 
 | Qualificador | De onde o valor saiu |
 | --- | --- |
@@ -151,7 +186,9 @@ As classes são cinco e continuam cinco. O que os documentos acrescentam é **qu
 
 **O de `consequência` entrou nesta tabela depois de já estar em uso**, e a demora vale registrada: ele nasceu no slice do catálogo, em [`componentes/frame.md`](componentes/frame.md), e ficou fora da lista até a [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) precisar dele num segundo documento. Um qualificador em uso e fora da lista fechada é o mesmo defeito que a lista existe para fechar.
 
-**`lacuna por restrição` é a única que muda de leitura**, e por isso ela vale um parágrafo. Ela **não** é dimensão não medida: é dimensão **medida e não alcançável** — o Docusaurus não permite sem `unsafe`. Ela reabre com a **plataforma**, não com a régua, e é a classe de todas as divergências do §3.1.
+**`lacuna por restrição` é a que mais se confunde com a vizinha**, e por isso ela vale um parágrafo. Ela **não** é dimensão não medida: é dimensão **medida e não alcançável** — a plataforma recusa. Ela reabre com a **plataforma**, não com a régua, e é a classe de todas as divergências do §3.1.
+
+*A plataforma não é só o `unsafe` do Docusaurus.* Os três `ease-in-out` cravados no `navbar.pcss` do Infima caem aqui pelo mesmo teste — medidos, e sem variável que os alcance —, e estavam carimbados `lacuna de alcance`, uma classe que não existia (S9-3). O teste é **medido e sem rota**, não *"o CLI diz `unsafe`"*.
 
 ### 5.2 A classe mais útil é a mais frágil
 
@@ -160,6 +197,14 @@ As classes são cinco e continuam cinco. O que os documentos acrescentam é **qu
 > **Reavaliada quando a landing saiu, e ela NÃO esvaziou.** A pergunta é obrigatória porque a página removida na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) carregava a procedência mais frágil do sistema, e uma classe que perdesse todos os membros teria de ser declarada vazia em vez de ficar pendurada — é o que o §3 faz com `delta deliberado` e o §5.3 com `lacuna de medição`. **A medição, com a metodologia junto, porque contagem sem método não se reproduz:** conta-se uma linha de tabela dentro de uma seção `## Procedência` de `docs/design/` ou `docs/adr/` cuja **coluna de classe** — o segundo campo, não a de fonte — nomeia a classe. Por essa régua, `landing.md` levou **39** membros consigo, e restam **367**. Ela continua sendo, de longe, a classe mais populosa do projeto — o que é o resultado esperado, e não um alívio: `origem própria` é o carimbo do que ninguém mediu, e um sistema que o usa 367 vezes tem 367 lugares por onde ser contestado.
 
 > **Duas contagens ficam divergentes sob essa mesma régua, e a divergência é conhecida.** Ela devolve **10** membros para `delta deliberado` e **2** para `lacuna de medição`, e o §3 e o §5.3 declaram as duas **vazias**. Não é contradição nova nem defeito desta remoção: são os carimbos que ainda não foram recarimbados, e o §3 já diz que *"as demais viajam com a reescrita do documento que as hospeda"* — hoje elas moram em [`chrome.md`](chrome.md) e [`icones.md`](icones.md). A régua acima é publicada com o número que ela devolve, e não com o número que a spec gostaria: uma metodologia que só reproduz o resultado esperado não é metodologia.
+
+> **A régua cobrou, e cobrou rápido — S9-2.** Quatro linhas entraram nas duas classes depois deste parágrafo ser escrito, todas na [#105](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/105): duas em `delta deliberado` ([`componentes/accordion.md`](componentes/accordion.md), [`componentes/callout.md`](componentes/callout.md)) e duas em `lacuna de medição` ([`componentes/steps.md`](componentes/steps.md), [`tokens.md`](tokens.md)). Rodada contra `d51a37f^` a régua devolvia **10 e 2**; contra `9daa325`, **12 e 4**.
+>
+> **A distinção que decide é a do §3, e ela já estava escrita:** *"Quem encontrar um `delta deliberado` na spec e não achá-lo lá tem um defeito nas mãos, não uma dívida conhecida."* As dez de `delta deliberado` estão na lista nominal da varredura dos 21; as duas novas **não estavam** — elas nasceram depois dela. Dívida conhecida tem razão escrito; carimbo novo em classe fechada é só carimbo errado.
+>
+> **As quatro foram recarimbadas, e os números voltaram a 10 e 2 sem que este parágrafo fosse editado.** Duas viraram `origem própria (consequência)` porque o valor cai de uma escala fechada que a spec já carregava; a de `steps.md` também, com medição junto; a da citação idem. **A dívida do §3 fica intacta de propósito** — recarimbá-la aqui derrubaria os dez para nove e obrigaria a reescrever esta contagem, trocando o número da varredura por um número de conveniência.
+>
+> **O precedente certo existia no mesmo lote de trabalho.** A [#108](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/108) carimbou o raio de 14px da busca como `origem própria (implementação)` e escreveu, na própria linha, *"não é `delta deliberado` — `principios.md` §3 fecha essa classe em zero"*. A #105 é três PRs anterior e não tinha a nota. **Ler o vizinho recente não substitui ler a regra.**
 
 ### 5.3 Herdar uma ausência não é herdar
 
@@ -225,7 +270,10 @@ Cada linha aqui é uma coisa que a medição entregou e que a spec **não** usou
 | Divergência por restrição é categoria própria | **origem própria** | dar crédito de escolha a uma limitação seria mentir na tabela |
 | A regra de derivação | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §3 — mecânica de propósito |
 | Os três portões da régua | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §7, [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2, [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §11 |
-| As cinco classes de procedência | herdado | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) — consolidadas aqui, num lugar só |
+| As sete classes de procedência | herdado | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) — consolidadas aqui, num lugar só. **Eram cinco na tabela e sete no uso até a S9-3**: `lacuna por restrição` e `medido em referência` viviam fora dela |
+| **A paridade trava, e o que ela trava é distância não julgada** | **origem própria** | **S9-8** — o passo era o único `continue-on-error` da CI porque `--verificar` reprovava com qualquer diferença, e a paridade nunca fecha em zero. `scripts/paridade-abertas.txt` congela as divergências julgadas, no formato do `swizzle-list.txt`, e `--verificar` reprova nas duas direções: divergência fora da lista, e linha da lista que já fecha. O juiz do desenho continua humano. Ver [`README.md`](README.md) §5 |
+| **As três paradas de texto ficam abertas** | **origem própria (medição)** | **S9-8** — os hex-alvo do §12 de [`tokens.md`](tokens.md) existem na rampa byte a byte; o que diverge é o mapeamento papel → parada. Medido com as três trocadas: `text-strong` cai de 18,95 para 16,98 (claro) e de 17,03 para 14,18 (escuro), `text-body` de 12,05 para 7,21 (escuro), e o pior par de callout de **8,28 para 4,95** — acima do piso de 4,5 (SC 1.4.3) por 0,45, sem a folga AAA que o resto do site pratica. Nenhum piso cai: o impedimento não é técnico, é de juiz |
+| **A gramática do carimbo, e a invariante 6 que a cobra** | **origem própria (medição)** | **S9-3** — o censo pela régua do §5.2 devolveu **42 linhas** em **26 formas** distintas de carimbo, contra as cinco classes publicadas; **24** delas não cabiam em composição nenhuma das classes canônicas, e uma vigésima quinta nasceu no próprio PR. A gramática do §5.0 é a lista fechada que sobrou depois de recarimbar as 25, e a invariante 6 de `scripts/invariantes.sh` a confere |
 | Os qualificadores estreitam em vez de abrir uma sexta | **origem própria (implementação)** | os cinco nasceram do uso, nos slices 1 a 6; o de `consequência` só foi para a lista na [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) |
 | A assinatura numa frase | origem própria | síntese; não medida |
 | **A assinatura perdeu a metade visível** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a faixa de espetáculo era a única região a hospedá-la, e saiu com a landing |

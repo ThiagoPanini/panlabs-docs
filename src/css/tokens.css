@@ -443,6 +443,23 @@
      infla para a altura de duas linhas que ali não existem. */
   --sd-topo-grudado: var(--sd-navbar-height);
 
+  /* O TOPO DO CONTEÚDO — a linha em que o `<article>` abre, e o offset de tudo
+     o que gruda ALINHADO com ele em vez de com a barra.
+
+     Ele não é um número novo: `--sd-topo-grudado` mais `--sd-space-10` já era
+     calculado à mão em três lugares — o `padding-top` do `<main>`
+     (`chrome.css` §1), o `max-height` do painel da referência e o comentário
+     que o justifica (*"a mesma respiração que o topo do conteúdo já usa"*).
+     Nomeá-lo é o que faz os três pararem de repetir a soma.
+
+     O NÚMERO É ALVO DA ÂNCORA, e ele fecha por duas medições publicadas
+     independentemente: `chrome.md` §11 mede o navbar da âncora em 112, e §12
+     mede o ritmo vertical dela em *"40 do navbar ao cabeçalho"*. 112 + 40 = 152,
+     que é o que §11 e `referencia.md` §8 cobram na linha `grudado em`.
+
+     Medido aqui, a 1512: `article.getBoundingClientRect().top` = 152. */
+  --sd-topo-conteudo: calc(var(--sd-topo-grudado) + var(--sd-space-10));
+
   /* A coluna de conteúdo. Até a #96 ela era `.col--9` do grid de doze — 1152 ×
      0,75 = 864 —, e a #96 matou o grid: não há mais 75/25 a manter, só o
      container inteiro menos o que o TOC leva. A conta muda de forma

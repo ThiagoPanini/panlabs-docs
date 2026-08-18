@@ -333,7 +333,7 @@ O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes 
 | Fallback entra marcado, detectado por caminho | herdado | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) §6 |
 | Botão e não campo | herdado | medido nas quatro referências |
 | Um limiar só, o do Infima | herdado | [`chrome.md`](chrome.md) §1.6 |
-| `⌘K` / `Ctrl K`, e `/` recusado | herdado + **origem própria** (a recusa) | o atalho é das referências; a recusa é do modo de falhar invisível da guarda |
+| `⌘K` / `Ctrl K`, e `/` recusado | herdado + origem própria | o atalho é das referências; a recusa é do modo de falhar invisível da guarda |
 | O glifo da tecla decidido depois da montagem | **origem própria (implementação)** | o servidor não sabe a plataforma, e o HTML divergiria na hidratação |
 | `<dialog>` com `showModal()` | **mecanismo emprestado** | do navegador; a armadilha de foco e a camada superior são dele |
 | Largura igual ao interior do cartão | **origem própria** | derivada, não medida — a medida que o leitor já estava lendo |

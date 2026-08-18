@@ -160,7 +160,7 @@ toque ele some sem erro, sem aviso e sem sintoma para quem testa no desktop.
 | ~~Pastilha dentro de berço~~ · **objeto preenchido um passo acima da página** | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — a moldura era o cartão aparecendo em volta, e com ele morreram a segunda tinta e o `--sd-code-berco` que a produzia |
 | A superfície do código sobe para a parada 900 no escuro | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — ela era o **mesmo valor** de `--sd-surface-page`, e o bloco sumia contra a página no modo canônico |
 | ~~O código afunda~~ · **nada afunda** | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — afundar era relativo ao cartão; `--sd-shadow-sunken` morreu junto |
-| Paleta de sintaxe na camada 2 | herdado (semeadura autorizada) | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §9 |
+| Paleta de sintaxe na camada 2 | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §9 |
 | Shim de config que só referencia token | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
 | `--prism-background-color` só é alcançável pelo shim | **origem própria (correção)** | medido no fonte da versão em uso — estilo inline vence folha de estilo |
 | Botão de copiar visível sob ponteiro grosso | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.2 |

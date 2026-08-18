@@ -510,6 +510,23 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      infla para a altura de duas linhas que ali não existem. */
   --sd-topo-grudado: var(--sd-navbar-height);
 
+  /* O TOPO DO CONTEÚDO — a linha em que o `<article>` abre, e o offset de tudo
+     o que gruda ALINHADO com ele em vez de com a barra.
+
+     Ele não é um número novo: `--sd-topo-grudado` mais `--sd-space-10` já era
+     calculado à mão em três lugares — o `padding-top` do `<main>`
+     (`chrome.css` §1), o `max-height` do painel da referência e o comentário
+     que o justifica (*"a mesma respiração que o topo do conteúdo já usa"*).
+     Nomeá-lo é o que faz os três pararem de repetir a soma.
+
+     O NÚMERO É ALVO DA ÂNCORA, e ele fecha por duas medições publicadas
+     independentemente: `chrome.md` §11 mede o navbar da âncora em 112, e §12
+     mede o ritmo vertical dela em *"40 do navbar ao cabeçalho"*. 112 + 40 = 152,
+     que é o que §11 e `referencia.md` §8 cobram na linha `grudado em`.
+
+     Medido aqui, a 1512: `article.getBoundingClientRect().top` = 152. */
+  --sd-topo-conteudo: calc(var(--sd-topo-grudado) + var(--sd-space-10));
+
   /* A coluna de conteúdo. Até a #96 ela era `.col--9` do grid de doze — 1152 ×
      0,75 = 864 —, e a #96 matou o grid: não há mais 75/25 a manter, só o
      container inteiro menos o que o TOC leva. A conta muda de forma
@@ -1977,6 +1994,12 @@ Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias 
 
 **Isto NÃO afrouxa o alvo:** `±1` continua reprovando qualquer coisa a um pixel inteiro de distância, que é a menor diferença que um leitor pode ver. O que ele para de reprovar é a quarta casa decimal.
 
+> **As duas últimas linhas fecharam na S9-8, por mecanismos opostos do mesmo upstream.** `Item de TOC tamanho` media **12,8** e `Aba do navbar tamanho` media **16**, os dois contra `14px`.
+>
+> A aba **não tinha declaração nenhuma** no Infima e herdava os 16px do `<html>`; a lista do TOC tinha uma declaração cravada no filho — `.table-of-contents { font-size: 0.8rem }` —, que vence o `--sd-type-sm` que o slot em volta já declarava. O segundo é o padrão que os títulos de doc pagaram na #96: o elemento pai mede certo, o filho mede errado, e uma sonda no pai devolveria verde.
+>
+> **Ausência de declaração no upstream é tão invisível quanto declaração errada, e pior de achar:** não há o que procurar com `grep`. Nos dois casos foi `npm run paridade` que apontou, e é o argumento inteiro de por que a tabela existe. O CSS está em `chrome.css`, §3 e §4.
+
 **O `h1` e o `h2` convergem com a escala que este documento já declara.** A escala de tokens diz 36 e 24; o que hoje renderiza 48 e 32 são as regras `.markdown` do Infima, que vencem os tokens por especificidade. A correção não briga com a âncora — ela faz o site passar a obedecer o próprio documento, e o alvo da âncora confirma o número.
 
 ---
@@ -2004,7 +2027,7 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | --- | --- | --- |
 | **A paleta-alvo do §12 e a escala-alvo do §13** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §3 e §5 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
 | **O alvo de citação e régua do §14** | **medido em referência** | `research/paridade-devin` §11 — [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) |
-| Margem vertical da citação fora do alvo publicado | **lacuna de medição** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `25,6px` não tem correspondente na escala de espaço base 4; reabre se a escala ganhar um degrau que bata |
+| Margem vertical da citação fora do alvo publicado | **origem própria (consequência)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `25,6px` não tem correspondente na escala de espaço base 4; reabre se a escala ganhar um degrau que bata. **Recarimbada em S9-2:** era `lacuna de medição`, e o valor **foi** medido — o que falta não é a medição, é um degrau na escala. O nosso número cai da escala fechada que o §1 deste documento publica, que é `(consequência)` pela definição de [`principios.md`](principios.md) §5.1 |
 | **O acento sem linha de alvo** | **delta deliberado** | a cor de marca diverge da âncora por decisão registrada; publicar o azul dela mandaria desfazer a decisão |
 | **Alvo comparado em sRGB, não em OKLCH** | **origem própria (implementação)** | é a forma que o navegador entrega ao pedir cor computada; a folha autora em `oklch()` e as duas formas nunca fechariam por string |
 | Indireção raiz → semântica | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) §1.1 — o token de papel apontando para a raiz injetada, no alvo |
@@ -2051,7 +2074,7 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | Quatro matizes de estado | **herdado** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — ícone dos callouts `Note`/`Warning`/`Tip`/`Danger` medido em mintlify.com/docs (Chrome headless, `getComputedStyle`), sRGB convertido para H de OKLCH. `success` e `danger` já batiam com o ângulo anterior a menos de 1,5°; `info` e `warn` divergiam ~20° e passaram a ser o ângulo medido |
 | `Livre` dos matizes move ângulo, não tom | origem própria | [#31](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/31) §3, corrigindo a redação da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
 | Fórmula de preenchimento de callout | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — medida na Perplexity |
-| Fórmula de **aresta** de callout, e ela mora na camada 2 | herdado (fórmula) + **origem própria (implementação)** (a casa) | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) trava 30%/25%; o alfa bifurca por modo, e camada 2 é o único lugar onde modo diverge |
+| Fórmula de **aresta** de callout, e ela mora na camada 2 | herdado + origem própria (implementação) | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) trava 30%/25%; o alfa bifurca por modo, e camada 2 é o único lugar onde modo diverge |
 | `--sd-card-min` derivado da medida de prosa | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §2 — o limiar `@2xl` da âncora a três colunas; 42rem e a medida de prosa são o mesmo `max-w-2xl` |
 | `secondary` deixa de ser "o que a `note` consome" | **origem própria (correção)** | o callout ganhou DOM próprio no slice do catálogo, e `note` é a variante azul — quem é neutro é `info` ([#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15)) |
 | Escala de espaço base 4 | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — `--spacing: .25rem` medido idêntico nas sete, inclusive as três que não são Mintlify. Não é decisão da âncora: é o default do Tailwind CSS v4, que as sete rodam por baixo. Convergência de ferramenta, não de sistema de design — por isso não sobe a `herdado` |
@@ -2076,7 +2099,7 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | Regra de elemento no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | ADR 3 — de `tokens.css` não há seletor que alcance uma classe hasheada, e nome de `@keyframes` não sobrevive dentro de custom property ([`motion.md`](motion.md) §6) |
 | Portão de `grep` de literal | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §7 |
 | Espelho verificado por script | origem própria | consequência da regra de fonte única da [#9](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/9) |
-| Aviso do `postcss-calc` sobre cor relativa | **origem própria (achado)** | observado ao rodar o build do slice 1; valor emitido conferido byte a byte |
+| Aviso do `postcss-calc` sobre cor relativa | **origem própria (implementação)** | observado ao rodar o build do slice 1; valor emitido conferido byte a byte |
 | `--sd-surface-scrim`, par declarado | **origem própria** | não há medição de véu nas referências. A opacidade bifurca por motivo mecânico: no escuro a página já está na parada 950, e no claro o mesmo alfa faria buraco em vez de profundidade ([`busca.md`](busca.md) §5.3) |
 | `--sd-busca-height` como token de camada 1 | **origem própria (correção)** | `dvh` não está no padrão do portão 1, e o literal passaria pela varredura — fechar o buraco custa uma linha aqui |
 | A largura do modal de busca **não** vira token | **origem própria (implementação)** | é `--sd-prose-width`, citada por nome; nomeá-la de novo criaria segunda cópia do mesmo número |

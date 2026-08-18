@@ -264,6 +264,52 @@ export function comparar(alvos, medidas) {
   );
 }
 
+/**
+ * Lê a lista de divergências aceitas.
+ *
+ * Uma linha por sonda; `#` abre comentário e a linha em branco é ignorada. O
+ * formato é o do `scripts/swizzle-list.txt`, e pelo mesmo motivo: um estado
+ * congelado que a máquina confere, versionado ao lado do script que o confere.
+ *
+ * O que a lista NÃO é: uma tolerância. Tolerância alarga o alvo e esconde a
+ * distância; esta lista mantém o alvo intacto e diz *"esta distância está
+ * julgada"*. O relatório continua imprimindo o número.
+ */
+export function lerAbertas(texto) {
+  const abertas = new Map();
+  for (const linha of String(texto ?? '').split('\n')) {
+    const corte = linha.indexOf('#');
+    const sonda = (corte < 0 ? linha : linha.slice(0, corte)).trim();
+    if (!sonda) continue;
+    abertas.set(sonda, (corte < 0 ? '' : linha.slice(corte + 1)).trim());
+  }
+  return abertas;
+}
+
+/**
+ * Separa o que a lista de aceitas já cobre do que ela não cobre.
+ *
+ * DOIS desfechos reprovam, e o segundo é o que faz a lista não envelhecer:
+ *
+ * · `novas` — divergência que a lista não menciona. É regressão, ou alvo novo
+ *   publicado sem o código ter chegado nele.
+ * · `fechadas` — sonda listada como aberta que passou a FECHAR. A lista virou
+ *   mentira, e uma lista de dívida que não encolhe quando a dívida é paga
+ *   ensina a ignorá-la — o mesmo defeito que tirou a linha `Sidebar visível a
+ *   1010` da tabela de alvo.
+ *
+ * Uma sonda listada e sem alvo nenhum também entra em `fechadas`: a linha ficou
+ * apontando para nada.
+ */
+export function triar(diferencas, abertas) {
+  const divergentes = new Set(diferencas.filter((d) => d.tipo === 'divergente').map((d) => d.sonda));
+  return {
+    conhecidas: diferencas.filter((d) => d.tipo === 'divergente' && abertas.has(d.sonda)),
+    novas: diferencas.filter((d) => d.tipo !== 'divergente' || !abertas.has(d.sonda)),
+    fechadas: [...abertas.keys()].filter((s) => !divergentes.has(s)),
+  };
+}
+
 /** Formata o delta com o sinal e a vírgula que a spec usa. */
 const sinal = (n) => `${n > 0 ? '+' : '−'}${String(Math.abs(n)).replace('.', ',')}`;
 

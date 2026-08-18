@@ -1,0 +1,56 @@
+# As divergências de paridade JULGADAS E ACEITAS.
+#
+# Uma sonda por linha; `#` abre comentário. O formato é o de
+# `scripts/swizzle-list.txt`, e pelo mesmo motivo: um estado congelado que a
+# máquina confere, versionado ao lado do script que o confere.
+#
+# ISTO NÃO É TOLERÂNCIA. Tolerância alarga o alvo e esconde a distância — que é
+# exatamente o que `referencia.md` §8 recusa ao publicar 448 contra 511 em vez
+# de abrir a margem. A lista mantém o alvo intacto e diz outra coisa: *esta
+# distância foi julgada*. O relatório continua imprimindo o número.
+#
+# `node scripts/paridade.mjs --verificar` reprova em DOIS casos, e o segundo é o
+# que impede a lista de envelhecer:
+#
+#   · divergência que não está aqui  — regressão, ou alvo novo sem código atrás;
+#   · sonda daqui que passou a FECHAR — a linha virou mentira e sai.
+#
+# Toda linha carrega o número medido no dia em que entrou e o gatilho que a tira
+# daqui. Linha sem gatilho é dívida sem prazo.
+
+# --- referencia.md §8 --------------------------------------------------------
+# Trilho — alvo 448, medido 511 (Δ +63). Divergência DECLARADA no próprio §8:
+# a âncora mede 576,81 + 448 e este projeto publica `--sd-api-prosa-width` (577)
+# e deriva o trilho do que sobra do container (511). O documento escolhe
+# publicar a distância em vez de abrir a tolerância, e a linha existe para isso.
+# SAI quando: `--sd-container-width` ou `--sd-api-prosa-width` mudarem de modo a
+# fechar a conta, ou quando o trilho deixar de ser o resto dela.
+api.painel.largura
+
+# --- tokens.md §12 — a paleta -------------------------------------------------
+# As três paradas de texto. Os hex-alvo EXISTEM na rampa, byte a byte — o que
+# diverge é o mapeamento papel → parada:
+#
+#     papel          modo    alvo (parada)      nosso (parada)
+#     texto forte    claro   #181a1e (900)      #0b0d11 (950)
+#     texto forte    escuro  #dfe2e6 (200)      #f4f6fa (50)
+#     texto corpo    escuro  #a0a2a6 (400)      #cfd1d5 (300)
+#     texto corpo    claro   #404246 (700)      #404246 (700)   ← fecha
+#
+# Medido trocando as três paradas e rodando `node scripts/contraste.mjs`:
+# `text-strong` cai de 18,95 para 16,98 no claro e de 17,03 para 14,18 no
+# escuro; `text-body` de 12,05 para 7,21 no escuro; e o pior par de callout —
+# *corpo sobre fundo de callout* — cai de **8,28 para 4,95**, a 0,45 do piso
+# declarado (`aaMinimo: 4.5`, SC 1.4.3). Nenhum piso cai; a FOLGA cai, e some a
+# margem AAA que o resto do site pratica, num par que aparece em quatro
+# variantes de callout.
+#
+# Adotar o mapeamento da âncora é decisão de produto sobre a legibilidade do
+# corpo do texto no site inteiro, e o juiz declarado da paridade é a avaliação
+# visual humana (`principios.md` §6). Não é impedimento técnico, e dizer isso
+# é parte do registro.
+# SAI quando: o dono avaliar a rampa da âncora no produto, ou quando a fórmula
+# de fundo de callout devolver a folga que o pior par perde.
+paleta.texto-forte.claro
+paleta.texto-forte.escuro
+paleta.texto-corpo.escuro

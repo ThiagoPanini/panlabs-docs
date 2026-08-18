@@ -217,6 +217,16 @@ Achado de escopo: a âncora de heading ser `:global` faz este conserto custar um
 
 **A exceção é uma só: link inline dentro da prosa.** A própria SC 2.5.8 o isenta, e alargá-lo quebraria o ritmo vertical da coluna de texto.
 
+> **A âncora de heading recebia o piso e não o cumpria — S2-3.** Ela é um `<a>`, então o seletor do piso a alcança e escreve `min-height: 44px` nela. Medido a 1512 com `(pointer: coarse)` emulado por CDP: a caixa sai **22,48 × 29**, com `min-height` computado em `44px`. No mesmo cenário, `.menu__link` sobe de 36 para 44.
+>
+> **A regra não falhou; ela foi engolida por `display: inline`** — e esse mecanismo já está catalogado três parágrafos abaixo, na nota que explica por que o link do rodapé vira `inline-flex` no estreito. *"Elemento `inline` ignora altura mínima em silêncio"* estava escrito, e a superfície onde isso mais custa não tinha sido conferida contra a própria frase.
+>
+> **A saída não é escrever a segunda exceção, e a razão é o §8.2 inteiro.** O piso é AAA por uma decisão registrada — *"o piso AA seria uma regra que não faz nada"* —, e a âncora de heading é a **única** superfície de conteúdo em que ele teria trabalho. Isentá-la esvaziaria a decisão que a escolheu. Mais: [`chrome.md`](chrome.md) §9 já registra que sob `(pointer: coarse)` ela fica visível sempre *"porque no telefone é a única forma de copiar link de seção"* — a spec já a tratava como alvo de dedo.
+>
+> **O alvo cresce por pseudo-elemento**, `::after` — o `::before` carrega o glifo `#` do `theme-classic`. `inline-flex` consertaria a altura e não a largura (22,48 continua sob 44), e alargar a caixa de verdade esticaria a linha do heading de 32 para 44 em toda página. Medido depois do conserto: sob toque, `elementFromPoint` devolve a âncora em ±21px nos dois eixos, e a altura da linha do `h2` continua **31,98px** — o layout não se moveu. No ponteiro fino nada disto existe, e o mesmo teste confirma: a ±20px quem responde é o `h2`, não a âncora.
+>
+> **Dissenso.** A SC 2.5.8 isenta alvo cujo tamanho é *constrained by the line-height of non-target text*, e a âncora de heading cabe nessa isenção ao pé da letra — escrever a exceção seria conforme e custaria zero CSS. A resposta é que a isenção existe para não quebrar prosa, e aqui nada quebra: o pseudo-elemento não move um pixel de layout, medido. Quando o conserto é grátis, invocar a isenção é escolher a conformidade em vez do leitor. **Reabre quando** o alvo ampliado for medido roubando um toque que era do título — não do fim dele, que é ganho, mas do meio.
+
 **O escopo dela é `.markdown`, e não `.theme-doc-markdown`** — correção de fato, e ela só apareceu quando a referência gerada entrou no ar. O site tem **duas** prosas: o `DocItem/Content` do upstream escreve as duas classes juntas, e o `ApiDocItem` escreve só `markdown`, porque recusa a outra desde que ela era o cartão. Escopada pela classe de cartão, a exceção isentava a página de doc e deixava o link da página gerada com o piso de alvo inteiro, quebrando o ritmo da coluna em tela de toque. `.markdown` é a classe que de fato significa *prosa*, e ela cobre as duas.
 
 **Dissenso registrado.** O piso é a SC 2.5.5, que é AAA. O piso AA é a SC 2.5.8, e nele **nada no site mudaria** — o item de sidebar do Infima já passa. Escolher o piso AA seria escrever uma regra que não faz nada. O piso AAA muda a densidade da gaveta de sidebar no estreito, e esse é o custo, aceito porque a gaveta rola e é operada com o polegar.
@@ -338,7 +348,7 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 | --- | --- | --- |
 | `outline` em vez de camada de sombra | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §2 — argumento de composição, não de estética |
 | Regra universal com lista fechada de exceções | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §3.2, herdando o critério de modo de falhar da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
-| As três exceções, e o `:has()` do bloco de código | medição de upstream | fonte de `theme-common@3.10.2` e `theme-classic@3.10.2` |
+| As três exceções, e o `:has()` do bloco de código | origem própria (verificação) | fonte de `theme-common@3.10.2` e `theme-classic@3.10.2` |
 | Espessura do anel | **origem própria com âncora normativa** | SC 2.4.13 — limiar de perímetro |
 | Afastamento do anel | **origem própria** | derivado do requisito do §3.1, não de medição |
 | Cor do anel = acento | **origem própria com âncora normativa** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o carimbo antigo media distância até o **Infima**, e divergir do Infima não é divergir da âncora; o piso é a SC 1.4.11 |
@@ -348,12 +358,13 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 | `:active` com os tokens do hover | mecanismo emprestado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.1, sobre o argumento do anel |
 | `(pointer: coarse)` como espelho de `(hover: hover)` | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.3 — o par já é usado pelo `theme-classic` |
 | Piso de alvo | **origem própria com âncora normativa** | SC 2.5.5 |
+| **A âncora de heading paga o piso, por `::after`, só sob `(pointer: coarse)`** | **origem própria (medição)** | **S2-3** — medido a 1512 com `(pointer: coarse)` emulado por CDP: `.hash-link` saía **22,48 × 29** com `min-height: 44px` computado, porque `display: inline` engole altura mínima. Depois do conserto, `elementFromPoint` devolve a âncora a ±21px nos dois eixos e a linha do `h2` continua em **31,98px**. Não é exceção nova ao §8.2 — é a regra dele passando a alcançar. Ver §8.2 |
 | `inline` ignora altura mínima, e o rodapé vira `inline-flex` | **origem própria (implementação)** | medido ao escrever o CSS do estreito |
 | **O escopo do link isento é `.markdown`** | **origem própria (correção)** | o site tem duas prosas desde a referência gerada, e só uma delas carrega `.theme-doc-markdown` |
 | Neutralizar o hover do framework pelo adaptador | **origem própria (correção)** | varredura desta implementação: o Infima tem zero `(hover: hover)`, contra o que a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) supunha |
 | Ordem de tabulação | herdado | correta como o Docusaurus entrega |
 | **A divergência entre ordem de foco e leitura visual** | **lacuna por restrição** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medida com a faixa montada; o `Navbar/Content` emite dois blocos e a faixa distribui um deles em duas linhas |
-| Skip link | herdado, mais uma linha de forma | WCAG G1 já implementado pelo upstream |
+| Skip link | herdado | WCAG G1 já implementado pelo upstream |
 | **O `<main>` obrigatório é da rota raiz, não da landing** | **origem própria (correção)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a regra é sobre `src/pages/`, e a raiz é a única rota que sobrou ali; o sujeito trocou, a obrigação não |
 | Comentário fora da varredura dos portões | **origem própria (implementação)** | o portão cobra declaração, e reprovar por prosa ensinaria a escrever comentário pobre |
 | Sidebar de tela estreita sem armadilha de foco | **lacuna por restrição** | `unsafe`; o fonte marca o ponto como workaround temporário |

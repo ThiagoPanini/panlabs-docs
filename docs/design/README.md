@@ -18,7 +18,7 @@ O que isso compra: quem implementa não precisa julgar. Uma régua de julgamento
 
 **Corolário de forma:** nenhum documento além de [`tokens.md`](tokens.md) carrega valor numérico de desenho. Cor, comprimento, tempo e curva moram lá e se citam **por nome de token** em toda parte, inclusive em comentário de CSS. Os números que aparecem nos outros documentos são identificadores — ADR, issue, portão — ou resultado de verificação.
 
-**Todo documento fecha com uma tabela `## Procedência`**, e toda linha dela carrega uma das cinco classes. Sem o carimbo, valor medido e valor inventado ficam graficamente idênticos na página, e o axioma 5 fica infiscalizável. As cinco classes estão definidas num lugar só: [`principios.md`](principios.md) §5.
+**Todo documento fecha com uma tabela `## Procedência`**, e toda linha dela carrega uma das sete classes, na gramática que o §5.0 de [`principios.md`](principios.md) fecha e a invariante 5 confere. Sem o carimbo, valor medido e valor inventado ficam graficamente idênticos na página, e o axioma 5 fica infiscalizável. As sete classes estão definidas num lugar só: [`principios.md`](principios.md) §5.
 
 ---
 
@@ -43,7 +43,7 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 
 ### 2.2 Depois, a spec
 
-1. [`principios.md`](principios.md) — **a âncora, o carimbo de delta vazio, as cinco classes de procedência.** Ele diz de onde os valores vêm e o que pode ser contestado. Sem ele, o resto parece arbitrário.
+1. [`principios.md`](principios.md) — **a âncora, o carimbo de delta vazio, as sete classes de procedência.** Ele diz de onde os valores vêm e o que pode ser contestado. Sem ele, o resto parece arbitrário.
 2. [`tokens.md`](tokens.md) — **a sede única de valor.** Quem lê só um documento, lê este.
 3. [`informacao.md`](informacao.md) — a árvore, os tipos de página, as fixtures, o locale, os artefatos AI-era.
 4. [`chrome.md`](chrome.md) — o shell da página de doc.
@@ -64,7 +64,7 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 
 | Documento | O que ele decide |
 | --- | --- |
-| [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, a varredura que esvaziou o carimbo de delta, a régua de coerência e as cinco classes de procedência |
+| [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, a varredura que esvaziou o carimbo de delta, a régua de coerência e as sete classes de procedência |
 | [`tokens.md`](tokens.md) | as três camadas, a superfície de troca, a rampa, a tipografia, o espaço, a elevação, o adaptador do Infima e as suas quatro exceções |
 | [`informacao.md`](informacao.md) | o acervo, as três tabs, a árvore, os dez tipos de página, os orçamentos, as onze fixtures, a regra de locale e os artefatos AI-era |
 | [`chrome.md`](chrome.md) | a cadeia de proporções, navbar, sidebar, TOC, breadcrumb, paginação, footer e o comportamento no estreito |
@@ -83,9 +83,9 @@ Os dezessete, com uma linha cada, estão no índice dele. Eles não se repetem a
 
 ---
 
-## 4. As cinco invariantes
+## 4. As seis invariantes
 
-Quatro são de forma e se cobram por `grep`. A quinta é de conteúdo e é a única que enxerga o que as outras não veem.
+Cinco são de forma e se cobram por `grep`. A quinta é de conteúdo e é a única que enxerga o que as outras não veem.
 
 | # | Invariante | Como se confere |
 | ---: | --- | --- |
@@ -94,12 +94,17 @@ Quatro são de forma e se cobram por `grep`. A quinta é de conteúdo e é a ún
 | 3 | **`## Procedência` sem linha órfã** — toda tabela de procedência tem decisão, classe e fonte em toda linha | varredura |
 | 4 | **Todo bloco `Livre` nomeia o dono** — latitude sem dono é buraco | varredura |
 | 5 | **Completude** — todo item de *"O que este ticket entrega para quem vem depois"*, nas resoluções **de cada mapa que produziu esta spec**, tem endereço num arquivo | leitura cruzada |
+| 6 | **Carimbo de procedência dentro da gramática** — a coluna de classe nomeia uma das sete, com qualificador da lista fechada | varredura |
 
-**A quinta é a que importa mais, e é a mais cara.** As quatro de forma passariam com a tipografia inteiramente ausente: um documento que não existe não tem seção vazia, não tem número solto e não tem procedência órfã. Só a completude enxerga ausência.
+**A quinta é a que importa mais, e é a mais cara.** As de forma passariam com a tipografia inteiramente ausente: um documento que não existe não tem seção vazia, não tem número solto e não tem procedência órfã. Só a completude enxerga ausência.
 
-`npm run invariantes` roda as quatro primeiras. A quinta é leitura, e o resultado dela está no §4.2.
+`npm run invariantes` roda as **cinco de forma** — 1 a 4 e a 6. A quinta é leitura, e o resultado dela está no §4.2.
 
-### 4.1 Duas das quatro precisaram de régua mais fina que o mapa previa
+> **A sexta entrou depois da quinta, e o número não foi remendado — S9-3.** Ela é de forma e se cobra por `grep`, então pertence ao primeiro grupo; herdar o número 5 exigiria empurrar a completude para 6, e ela é citada pelo número no §4.2 e no `invariantes.sh`. **A numeração da spec não se remenda** — é o mesmo precedente que deixou o portão 8 vago quando ele saiu com a landing. A leitura certa é *"cinco de forma, e uma delas se chama 6"*.
+
+**O que a 6 enxerga e a 3 não:** a 3 confere que a coluna de classe **existe**; a 6, que ela **nomeia uma classe do cânone**. A distância entre as duas eram 42 linhas em 26 formas distintas de carimbo, contra as sete classes publicadas — `lacuna de alcance`, `medição de upstream`, `decisão de produto` e `derivado` conviviam com as canônicas na mesma coluna e com a mesma tipografia.
+
+### 4.1 Duas das de forma precisaram de régua mais fina que o mapa previa
 
 **A invariante 2, escrita ao pé da letra, produziria trinta falsos positivos.** A varredura crua de literal encontra o limiar de media query, a citação de valor de terceiro (os 1024 da âncora, os 1440 do Infima), o resultado de verificação (*"folga de 62,5px"*) e a aritmética de derivação escrita por extenso. Reprovar tudo isso seria portão que reprova o que funciona.
 
@@ -138,7 +143,7 @@ O que a invariante de fato protege é outra coisa: **que nenhum documento vire s
 
 **A conferência foi por varredura, e vale registrar o método**, porque ele é reproduzível e a leitura não é: `grep -rl "issues/<n>)" docs/` para cada uma das dezesseis, e depois a leitura só das que voltaram vazias. Doze voltaram com endereço direto; quatro exigiram achar onde a decisão está escrita sem o número. **Nenhuma voltou sem lugar nenhum** — que é o resultado que esta invariante existe para produzir, e o único que ela não conseguiria fabricar.
 
-**O que esta invariante enxerga e as outras quatro não:** ausência. Um documento que nunca foi escrito passa nas quatro de forma sem uma reclamação.
+**O que esta invariante enxerga e as de forma não:** ausência. Um documento que nunca foi escrito passa nas cinco de forma sem uma reclamação.
 
 ### 4.3 A auditoria anterior, do mapa que produziu a spec do Trilho
 
@@ -201,13 +206,23 @@ Mais **quatro** verificações que **não são portão** e rodam junto:
 - `npm run icones` — a bijeção manifesto ↔ `static/icons/`;
 - `npm test` — as três réguas de `node --test`: o algoritmo da busca, o contrato de assinatura e a comparação de paridade. Os portões são varredura, e nenhum dos três é varrível.
 
-E **um relatório**, que não é portão nem verificação:
+E **um relatório com trava**, que não é portão nem verificação:
 
-- `npm run paridade` — mede o site construído contra as tabelas de alvo publicadas em [`tokens.md`](tokens.md) §12 e §13, [`chrome.md`](chrome.md) §11 e §12, [`busca.md`](busca.md) §10 e a `## Anatomia` de quatro componentes, e imprime o que não fecha.
+- `npm run paridade` — mede o site construído contra as tabelas de alvo publicadas em [`tokens.md`](tokens.md) §12 e §13, [`chrome.md`](chrome.md) §11 e §12, [`busca.md`](busca.md) §10 e a `## Anatomia` de quatro componentes, e imprime o que não fecha. Com `--verificar`, tria o que não fecha contra `scripts/paridade-abertas.txt` e **reprova** — é assim que ele roda na CI.
 
 > **Por que ele é uma terceira categoria.** A régua desta seção diz que portão protege uma **regra de escrita** e verificação confere que **duas cópias da mesma verdade não divergiram**. A paridade não é nenhum dos dois: o alvo e o site **não são duas cópias de uma verdade** — o alvo é onde se quer chegar, e a distância até ele é justamente o que se quer ler. Um portão aqui reprovaria o projeto por não ter terminado.
 >
-> É o único passo com `continue-on-error` de [`ci.yml`](../../.github/workflows/ci.yml). O juiz declarado da paridade é a avaliação visual humana sobre o produto final; o relatório existe para que a deriva fique **escrita** em vez de descoberta semanas depois, que foi exatamente como *"ficou aquém"* apareceu da primeira vez.
+> O juiz declarado do **desenho** é a avaliação visual humana sobre o produto final; o relatório existe para que a deriva fique **escrita** em vez de descoberta semanas depois, que foi exatamente como *"ficou aquém"* apareceu da primeira vez.
+
+> **Ele deixou de ser `continue-on-error`, e o que travou não é o desenho — S9-8.** O `continue-on-error` estava certo enquanto `--verificar` reprovava com **qualquer** diferença. A paridade nunca fecha em zero: parte da distância é escolha registrada, e [`referencia.md`](referencia.md) §8 publica `448` contra `511` de propósito, recusando esconder o número atrás de uma tolerância larga. Um verificador que só passa num estado que a spec recusa não trava nada — ele ensina a ignorar o log, que foi o que aconteceu.
+>
+> **A lista de aceitas é o que muda a pergunta.** `scripts/paridade-abertas.txt` está no formato do `scripts/swizzle-list.txt`, e pelo mesmo motivo: um estado congelado que a máquina confere, versionado ao lado do script que o confere. Cada linha carrega o número medido no dia em que entrou e o gatilho que a tira de lá. **Ela não é tolerância** — tolerância alarga o alvo; a lista mantém o alvo intacto e diz *"esta distância foi julgada"*, e o relatório continua imprimindo o número.
+>
+> **Ela reprova nas duas direções**, e a segunda é o que impede a lista de envelhecer: divergência que não está nela (regressão, ou alvo publicado sem código atrás) **e** linha dela que já fecha (dívida paga, registro velho). Sem a segunda, a lista só cresceria — e uma lista que só cresce é tolerância com outro nome.
+>
+> **Quatro linhas hoje:** o trilho da referência gerada, e as três paradas de texto do §12 de [`tokens.md`](tokens.md). As três de cor **não** são impedidas por contraste, e dizer isso é parte do registro: medido, adotar o mapeamento da âncora derruba o pior par de callout de `8,28` para `4,95` — acima do piso declarado (`4,5`, SC 1.4.3) por `0,45`, e sem a folga AAA que o resto do site pratica. É decisão de produto sobre a legibilidade do corpo do texto no site inteiro, e ela tem juiz humano.
+>
+> *Dissenso registrado.* O passo não-bloqueante era a decisão do dono, e travar merge por paridade é exatamente o atrito que ele recusou. A resposta é que o que trava não é a distância até a âncora — é distância **não julgada**. Um PR que mova um alvo ou quebre um número passa a precisar de uma linha na lista, com o número e o gatilho; um PR que não encoste em paridade não vê a diferença. **Reabre quando** a lista precisar de uma linha por PR — aí ela deixou de medir deriva e passou a medir churn.
 
 > **Eram três, e a quarta nasceu de um defeito que a leitura não pegava.** As duas tabelas de contraste mediam o **mesmo par** e discordavam em três das quatro células, e a divergência sobreviveu a uma auditoria inteira — porque conferi-la exigia refazer a conta à mão, e ninguém refaz. Ela entra como verificação e não como portão pela régua desta seção: ela não protege uma regra de escrita, ela confere que duas cópias da mesma verdade não divergiram.
 >
@@ -227,7 +242,7 @@ E **um relatório**, que não é portão nem verificação:
 >
 > Consequência menor, dita para não envelhecer calada: a frase do [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) que chama o portão 5 de *"o único do conjunto que não é `grep`"* passou a ter companhia — o portão 7 é da mesma família, regenera e diffa.
 
-**Onde cada um roda.** Os de commit, mais as quatro verificações e o relatório de paridade, estão em `.github/workflows/ci.yml`. O 6 está em `.github/workflows/deploy.yml`, depois da publicação, porque ele é o único que depende de alguém fora do repositório. O 7 tem cadência de upgrade e roda na CI de todo commit mesmo assim: não existe gatilho barato para *"houve um upgrade"*, e um portão que depende de alguém lembrar de rodá-lo é um portão que não roda.
+**Onde cada um roda.** Os de commit, mais as quatro verificações e a triagem de paridade, estão em `.github/workflows/ci.yml` — **e nenhum passo de lá é `continue-on-error` desde a S9-8**. O 6 está em `.github/workflows/deploy.yml`, depois da publicação, porque ele é o único que depende de alguém fora do repositório. O 7 tem cadência de upgrade e roda na CI de todo commit mesmo assim: não existe gatilho barato para *"houve um upgrade"*, e um portão que depende de alguém lembrar de rodá-lo é um portão que não roda.
 
 ---
 

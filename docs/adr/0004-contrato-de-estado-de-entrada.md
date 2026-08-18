@@ -101,7 +101,7 @@ O motivo é específico. Este contrato não morre por alguém desenhar um anel r
 | --- | --- | --- |
 | `outline` em vez de sombra | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §2 — argumento de composição |
 | Regra universal com lista de exceções | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §3.2, herdando o critério de modo de falhar da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
-| As três exceções e o `:has()` do bloco de código | medição de upstream | fonte de `theme-common@3.10.2` e `theme-classic@3.10.2` |
+| As três exceções e o `:has()` do bloco de código | origem própria (verificação) | fonte de `theme-common@3.10.2` e `theme-classic@3.10.2` |
 | Espessura e afastamento | **origem própria com âncora normativa** | SC 2.4.13; as sete referências não foram medidas neste eixo |
 | Anel instantâneo | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 |
 | `:active` com os tokens do hover | mecanismo emprestado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.1, sobre o argumento do anel da [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) |
