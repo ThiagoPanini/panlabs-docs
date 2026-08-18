@@ -332,7 +332,7 @@ Mais doze de menor alcance, entre elas o fio abaixo do navbar, o corpo do rótul
 
 #### As duas ausências que são do sandbox, e não da spec
 
-As faces Inter e Paper Mono exigem rede e não existiam ali — as pilhas caíram na fonte de sistema, que é o que a última parada delas prevê. E os 60 SVG do Lucide vêm de um vendorizador com rede; ele desenhou seis à mão. **Nenhuma das duas conta como buraco de spec**, e vão escritas para não parecerem fidelidade.
+As faces Inter e Paper Mono exigem rede e não existiam ali — as pilhas caíram na fonte de sistema, que é o que a última parada delas prevê. E os 61 SVG do Lucide vêm de um vendorizador com rede; ele desenhou seis à mão. **Nenhuma das duas conta como buraco de spec**, e vão escritas para não parecerem fidelidade.
 
 > **Um achado lateral que ele deixou de passagem, e que é buraco de verdade:** a spec não fixa `font-display` nem os descritores das faces variáveis.
 
@@ -468,7 +468,7 @@ Cinco categorias, varridas no fecho:
 | --- | --- | --- |
 | **Token sem consumidor** | todo `--sd-*` de `tokens.css` contra `var(--sd-*)` em `src/`, `scripts/`, `conteudo/` e na raiz | **8 de 139**, os oito com o motivo escrito ao lado da definição |
 | **Classe de procedência sem membro** | `delta deliberado` e `lacuna de medição`, varridas nas tabelas dos vinte e nove arquivos | delta: **zero membros**, e é resultado (§3 de [`principios.md`](principios.md)). Medição: **zero membros** — os oito foram medidos nesta reescrita (ver abaixo) |
-| **SVG não referenciado** | `npm run icones` — bijeção manifesto ↔ `static/icons/` | zero: 60 desenhos, 69 tags, nenhum arquivo a mais |
+| **SVG não referenciado** | `npm run icones` — bijeção manifesto ↔ `static/icons/` | zero: 61 desenhos, 70 tags, nenhum arquivo a mais |
 | **Doc de componente sem componente** | os dezessete de [`componentes/`](componentes/) contra o registro de `MDXComponents` e `src/components/` | zero |
 | **Entrada de ledger sem assunto** | cada linha de [`swizzle.md`](swizzle.md) §3 contra o que existe em `src/` | **uma achada e removida** |
 | **Exceção de adaptador sem superfície** | as de [`tokens.md`](tokens.md) §7 contra o HTML publicado | **uma achada e removida** — a exceção 1, `.alert--*`, com zero ocorrência nos 108 HTML. Sobram **três**; a quinta já tinha saído antes, pela mesma régua e com dissenso registrado |

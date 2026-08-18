@@ -224,7 +224,7 @@ O zero cobra um preço, e cada linha é perda escrita — não silêncio.
 | 2 | Breadcrumb reestruturado — eyebrow em página **sem** categoria, ordem trocada, texto novo | `DocBreadcrumbs` | [`chrome.md`](chrome.md) §7.1 |
 | 3 | A proporção da âncora entre conteúdo e painel | classe hasheada de CSS Module | [`chrome.md`](chrome.md) §5 |
 | ~~4~~ | ~~Faixa de tabs de largura total abaixo do navbar~~ | — | **removida** — ver abaixo |
-| 5 | TOC com anatomia nova — barra de progresso, seções extras | `TOC`, `TOCItems` | [`chrome.md`](chrome.md) §5 |
+| 5 | TOC com anatomia nova — barra de progresso, colapsar pelo título, seções extras | `TOC`, `TOCItems` | [`chrome.md`](chrome.md) §5 e §5.1 — o **título com glifo saiu por CSS** e não é mais perda; o que sobra é o comportamento de colapsar |
 | 6 | Ícone preso dentro de componente `unsafe` mantém o desenho do Docusaurus | vários; `Icon/ExternalLink` é o caso concreto | [`icones.md`](icones.md) §4.2 |
 | 7 | Footer dentro da coluna de prosa, como a âncora faz | `<Footer/>` é irmão do `main-wrapper` | [`chrome.md`](chrome.md) §8.3 |
 | 8 | Armadilha de foco na sidebar de tela estreita | `Navbar/MobileSidebar/*` | [`foco.md`](foco.md) §12 |

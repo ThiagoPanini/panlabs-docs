@@ -326,6 +326,22 @@ O comportamento sticky vem do upstream. O **mecanismo** não se toca — `positi
 
 **Limiar próprio: esconde abaixo de 1280**, como a âncora — ver §1.6. `.col--3`, o slot inteiro, some por `display: none`; não só o conteúdo dele, senão a prosa não recuperaria o espaço (ver §1.5 e o comentário em `chrome.css`).
 
+### 5.1 O título — "Nesta página", e ele é CSS porque não pode ser React
+
+A âncora abre o índice com um rótulo e um glifo de lista. O shinydoc não tinha nenhum dos dois, e a ausência era **herança do upstream**, não decisão declarada: o `TOC` do `theme-classic` renderiza a lista e nada mais.
+
+**A rota de swizzle está fechada.** `TOC`, `TOCItems` e `DocItem/TOC/Desktop` são todos `unsafe` no catálogo congelado, e [`swizzle.md`](swizzle.md) §2 lê `unsafe` como proibido. O §10 registrava isto como a **perda 3** e já dizia a saída na própria linha: *"estilo e profundidade seguem alcançáveis"*. O título é o estilo alcançando — dois pseudo-elementos na caixa do TOC, com o **mesmo mecanismo do ícone da sidebar**: `mask` e cor herdada sobre uma caixa vazia, adotado lá pelo mesmo motivo, que é não existir ponto de swizzle `safe` onde injetar React ([`icones.md`](icones.md) §3).
+
+**Todo valor medido na âncora já era token deste projeto.** A cor do rótulo é `--sd-text-body` nos **dois** modos, e isso não é aproximação: a âncora mede `#404246` no claro e `#cfd1d5` no escuro, que é exatamente o que o token resolve. O corpo é `--sd-type-sm`, o peso é `--sd-weight-ui`, o vão entre glifo e palavra é `--sd-space-2` e o glifo mede `--sd-space-4`, o tamanho de ícone de chrome que [`icones.md`](icones.md) §1 já fixa. **Zero valor novo entrou.** A âncora também não põe borda, fundo nem separador sob o rótulo, e aqui não há.
+
+**O recuo fecha por coincidência, e ela merece registro.** O texto do item de TOC começa a duas vezes o preenchimento horizontal do índice — metade do `<ul>`, metade do `<li>`, as duas do Infima. Glifo mais vão dão o mesmo número. Por isso o rótulo alinha com o texto dos itens **e** o glifo encosta na borda da caixa, como na âncora, sem que nenhum dos dois ceda.
+
+**O rolador desceu para a lista.** O upstream põe o `overflow` na caixa; com o rótulo entrando como pseudo-elemento dela, ele rolaria junto e sumiria num índice longo — e na âncora o título fica fora da área que rola. A caixa virou `flex` em coluna e cedeu o `overflow` para o `<ul>`, o que resolve sem aritmética: a caixa mantém o `max-height`, o rótulo ocupa o que precisa e a lista fica com o resto.
+
+**O EN sai por `html[lang]`.** `content` não passa pelo i18n do Docusaurus — não há `<Translate>` a chamar de dentro do CSS —, e `html[lang]` é a única junta disponível sem swizzle. Não existe portão que confira tradução de string de UI neste repositório, então essa regra é a régua: se ela sumir, o EN some com ela.
+
+**O que não se alcança:** na âncora o rótulo é um `<button>` que **colapsa** o índice. Aqui ele é texto inerte. Isso é `lacuna por restrição`, pelo mesmo `unsafe` de sempre — comportamento exige React, e estilo não.
+
 ---
 
 ## 6. O subtítulo — a linha que toda página ganha
@@ -430,7 +446,7 @@ Isso é pré-requisito do parágrafo seguinte, não detalhe: o ícone de link ex
 
 **O ícone de link externo sai, e o motivo não é estética.** `Icon/ExternalLink` não está no `getSwizzleConfig` — cai no default `unsafe` — e vem de um sprite injetado. A regra da política responde sem enumerar: **o que só é alcançável por `unsafe` não é trocado**.
 
-**Sem logotipo e sem wordmark estilizado no copyright.** O schema de logo exige um arquivo de imagem, e a marca deste sistema é **só a palavra** — ver [`icones.md`](icones.md) §3. Consequência limpa: o footer consome **zero** dos 60 ícones, e o navbar também.
+**Sem logotipo e sem wordmark estilizado no copyright.** O schema de logo exige um arquivo de imagem, e a marca deste sistema é **só a palavra** — ver [`icones.md`](icones.md) §3. Consequência limpa: o footer consome **zero** dos 61 ícones, e o navbar também.
 
 ### 8.2 As três divergências obrigatórias contra o Infima
 
@@ -510,7 +526,7 @@ Consequência direta do orçamento `unsafe` zero — quatro delas — mais uma c
 | ---: | --- | --- |
 | 1 | **Qualquer nó injetado dentro do corpo da página** — bloco de feedback no rodapé, CTA lateral | `DocItem/Layout` e `DocItem/Content` são `unsafe`, e **não é contornável por CSS**. *O subtítulo saiu desta lista:* ele é injetado pelo registro de `MDXComponents`, ancorado no `h1`, sem tocar nos dois |
 | 2 | **Breadcrumb reestruturado** — eyebrow em página sem categoria, ordem trocada, texto novo | `DocBreadcrumbs` é `unsafe`. *A metade visível foi comprada por subtração* (§7.1); o que fica é o mecanismo |
-| 3 | **TOC com anatomia nova** — barra de progresso, seções extras | `TOC` e `TOCItems` são `unsafe`. Estilo e profundidade seguem alcançáveis |
+| 3 | **TOC com anatomia NOVA** — barra de progresso, colapsar pelo título, seções extras | `TOC` e `TOCItems` são `unsafe`. Estilo e profundidade seguem alcançáveis — **e o §5.1 cobrou essa promessa**: o título com glifo entrou por pseudo-elemento, sem swizzle. O que resta perdido aqui é **comportamento**, não aparência: o rótulo da âncora colapsa o índice, e o nosso é inerte |
 | 4 | **Ícone preso dentro de componente `unsafe`** mantém o desenho do Docusaurus | a regra responde sem enumerar; ver [`icones.md`](icones.md) |
 | 5 | **Footer dentro da coluna de prosa**, como a âncora faz | `<Footer/>` é irmão do `main-wrapper`. Irmã da perda 2: divergência por restrição |
 | 6 | **A sidebar embutida some no limiar da âncora (1024), independente do TOC** | a gaveta só monta quando `windowSize` do React está em `'mobile'`, e esse estado lê 996 HARDCODED em `@docusaurus/theme-common` — não é ponto de swizzle, é lógica de contexto sem opção pública. Ver §1.6 |
@@ -609,6 +625,10 @@ O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha
 | **A linha da fileira do topo, recuada** | **herdado** | a âncora desenha **duas** linhas na navbar, com recuos diferentes; a de cima para no `left` da marca e no `right` do último ícone, Δ 0 nas duas bordas. Medida de primeira mão em navegador, por caixa **e** por varredura de pixel do screenshot, nos dois temas e com e sem rolagem. O shinydoc tinha só a de baixo |
 | **O dono da linha ser o `.navbar__inner`, e não a fileira** | **origem própria (implementação)** | a fileira 1 não é um elemento — são dois, com o vão do meio entre eles, e uma borda em cada daria dois segmentos. O `.navbar__inner` já é a caixa marca→último ícone por medição (Δ 0 a 1512, 1280 e 1100), então o pseudo-elemento absoluto herda a identidade sem número novo |
 | **O escopo de 997 da linha da fileira** | **origem própria (consequência)** | cai de duas regras que a spec já carregava: abaixo do limiar a navbar tem uma fileira só (§3.1), e o `.navbar__inner` volta a `position: static`, o que subiria o containing block até o `<nav>` |
+| **O título do TOC, com rótulo e glifo** | **herdado** | a âncora abre o índice com um rótulo e um ícone de lista, e o shinydoc não tinha nenhum dos dois por herança calada do `theme-classic`. Medido em navegador: corpo 14, peso 500, sem caixa-alta, sem borda, sem fundo, vão de 8 entre glifo e palavra, e a cor do rótulo mais forte que a dos itens nos dois modos. Os dois hexes medidos são, byte a byte, o que `--sd-text-body` já resolvia aqui |
+| **O título sair por pseudo-elemento em vez de swizzle** | **lacuna por restrição** | `TOC`, `TOCItems` e `DocItem/TOC/Desktop` são `unsafe`, e o orçamento é zero. A perda 3 do §10 previa o caso e dizia *"estilo e profundidade seguem alcançáveis"* — o estilo alcançou; o **comportamento** não: na âncora o rótulo colapsa o índice, e aqui é texto inerte. Reabre com a plataforma, não com a régua |
+| **O rolador descer da caixa para a lista** | **origem própria (consequência)** | cai de duas regras que a spec já carregava: o rótulo é pseudo-elemento da caixa (acima), e a caixa é quem rola (upstream) — logo o rótulo rolaria junto, e na âncora ele fica fora da área que rola. `flex` em coluna resolve sem número novo |
+| **O rótulo em EN por `html[lang]`** | **origem própria (implementação)** | `content` não alcança o i18n do Docusaurus, e não há `<Translate>` chamável de dentro do CSS. Descoberto escrevendo: `html[lang]` é a única junta sem swizzle, e como não existe portão de tradução de string de UI, a regra é a própria régua |
 | **A vertical da marca casa com a caixa da sidebar, não com o texto do item** | **origem própria (correção)** | o §3.1 afirmava *"a mesma vertical do preenchimento da sidebar"*, e a medição desmente em toda largura: acima do congelamento casa a **caixa** e o texto cai um recuo à direita; abaixo, o inverso. A afirmação quebrou quando o congelamento entrou, e só apareceu porque a linha da fileira dependia dela |
 | As **duas** variáveis de container | origem própria | armadilha fechada antes de virar sintoma |
 | Gutter, e o ponto onde ele troca | herdado + origem própria | — |

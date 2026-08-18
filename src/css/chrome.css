@@ -859,6 +859,79 @@ aside.theme-doc-sidebar-container {
 html.docs-doc-page .theme-doc-toc-desktop {
   top: var(--sd-topo-conteudo);
   max-height: calc(var(--sd-viewport-altura) - var(--sd-topo-conteudo) - var(--sd-space-10));
+
+  /* O ROLADOR DESCE PARA A LISTA. O upstream põe `overflow-y: auto` nesta
+     caixa; com o título entrando como pseudo-elemento DELA, o título rolaria
+     junto e sumiria em TOC longo — e na âncora ele fica fora da área que rola.
+     `flex` em coluna resolve sem aritmética nenhuma: a caixa mantém o
+     `max-height` de cima, o título ocupa o que precisa, e a lista fica com o
+     resto. Sem `min-height: 0` no filho o item flex se recusa a encolher
+     abaixo do conteúdo e a barra nunca aparece. */
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* O TÍTULO DO ÍNDICE — "Nesta página", e ele é DUAS peças de CSS porque não
+   pode ser React.
+
+   `TOC`, `TOCItems` e `DocItem/TOC/Desktop` são todos `unsafe` no catálogo
+   congelado, e `swizzle.md` §2 lê `unsafe` como proibido; `chrome.md` §10 já
+   registrava isso como a perda 3, *"TOC com anatomia nova"*, e dizia que
+   estilo seguia alcançável. Isto é o estilo alcançando. O mecanismo é o mesmo
+   do ícone da sidebar — `mask` + `currentColor` sobre um pseudo-elemento —,
+   adotado lá pelo mesmo motivo: não há ponto de swizzle `safe` onde injetar
+   React.
+
+   Tudo o que a âncora mede aqui já era token deste projeto, sem exceção: a cor
+   é `--sd-text-body` nos DOIS modos (medido `#404246` no claro e `#cfd1d5` no
+   escuro, que é exatamente o que o token resolve), o corpo é `--sd-type-sm`, o
+   peso é `--sd-weight-ui` e o vão do ícone é `--sd-space-2`. Zero valor novo.
+
+   O RECUO É UMA COINCIDÊNCIA QUE FECHA, e vale escrever: o texto do item de
+   TOC começa a `2 × --ifm-toc-padding-horizontal` da borda da caixa — 12 do
+   `padding-left` do `<ul>` mais 12 do `margin` do `<li>`, os dois do Infima. E
+   ícone (`--sd-space-4`) mais vão (`--sd-space-2`) dão o mesmo número. Por
+   isso o título alinha com o texto dos itens E o ícone encosta na borda da
+   caixa, como na âncora, sem que nenhum dos dois precise ceder. */
+html.docs-doc-page .theme-doc-toc-desktop::before {
+  content: 'Nesta página';
+  display: block;
+  flex: none;
+  padding-inline-start: calc(var(--sd-space-4) + var(--sd-space-2));
+  color: var(--sd-text-body);
+  font-size: var(--sd-type-sm);
+  font-weight: var(--sd-weight-ui);
+  line-height: var(--sd-leading-ui);
+}
+
+/* O EN. `content` não passa pelo i18n do Docusaurus — não há `<Translate>` a
+   chamar de dentro do CSS. `html[lang]` é o que o próprio framework escreve na
+   raiz, e é a única junta disponível sem swizzle. Não há portão que confira
+   tradução de string de UI, então esta linha é a régua: some daqui, some do
+   site. */
+html[lang='en'].docs-doc-page .theme-doc-toc-desktop::before {
+  content: 'On this page';
+}
+
+/* O ÍCONE. Caixa própria, absoluta contra a caixa da TOC — que é `sticky`, e
+   portanto containing block. Ela não rola mais (o rolador desceu para a
+   lista), então o ícone fica parado junto com o título.
+
+   `block-size` é a altura da LINHA do título, não a do ícone: com
+   `mask ... center`, isso centra o glifo na primeira linha sem que ninguém
+   precise calcular meio pixel. `--sd-space-4` é o tamanho de ícone de chrome
+   que `icones.md` §1 já fixa, e é o mesmo do ícone da sidebar — dois glifos de
+   chrome em tamanhos diferentes na mesma tela leriam como defeito. */
+html.docs-doc-page .theme-doc-toc-desktop::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: var(--sd-space-4);
+  block-size: calc(var(--sd-type-sm) * var(--sd-leading-ui));
+  background-color: var(--sd-text-body);
+  mask: url('/icons/list.svg') center / var(--sd-space-4) no-repeat;
 }
 
 /* A LISTA DO TOC NA ESCALA DE UI, e o `font-size` do slot não bastava.
@@ -875,6 +948,16 @@ html.docs-doc-page .theme-doc-toc-desktop {
    este projeto não renderiza hoje e não deve reger de longe. */
 html.docs-doc-page .theme-doc-toc-desktop .table-of-contents {
   font-size: var(--sd-type-sm);
+
+  /* A LISTA VIROU O ROLADOR, e as três declarações são consequência disso: a
+     caixa em volta cedeu o `overflow` para o título ficar fora do que rola
+     (ver o bloco acima), `min-height: 0` destrava o encolhimento do item flex,
+     e `scrollbar-width` repõe o afinamento que vinha da classe
+     `.thin-scrollbar` — ela mora na caixa, não aqui, e o tratamento completo
+     de barra deste arquivo é escopado à sidebar de propósito. */
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
 }
 
 /* A BORDA ESQUERDA — mesmo vazamento do divisor da sidebar, mesma resposta.

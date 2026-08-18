@@ -18,7 +18,7 @@ Tudo aqui é obrigatório. Não há bloco `Livre`: os **desenhos** são skin e s
 
 ## 1. Origem — Lucide vendorizado
 
-**60 arquivos `.svg` do Lucide (ISC), copiados para dentro do repositório.** Não é dependência, não é CDN, não é resolução em runtime.
+**61 arquivos `.svg` do Lucide (ISC), copiados para dentro do repositório.** Não é dependência, não é CDN, não é resolução em runtime.
 
 O axioma 2 fecha a porta do **pacote**, não a do desenho: `npm install` de uma biblioteca de ícones está proibido, mas copiar arquivos de licença permissiva custa **zero dependência** e um arquivo de licença. A restrição sempre foi mais estreita do que parecia.
 
@@ -69,7 +69,7 @@ O ícone da sidebar é o único que roda por máscara e não recebe compensaçã
 
 ## 3. Dois renderizadores, uma fonte de verdade
 
-**Eram três.** O terceiro era a marca, e ela perdeu o glifo — ver abaixo. Os dois que sobram não são inconsistência: cada um é **forçado pelo contexto**, e os dois leem os mesmos 60 arquivos.
+**Eram três.** O terceiro era a marca, e ela perdeu o glifo — ver abaixo. Os dois que sobram não são inconsistência: cada um é **forçado pelo contexto**, e os dois leem os mesmos 61 arquivos.
 
 ### (a) Componentes de conteúdo → SVGR inline
 
@@ -139,7 +139,7 @@ As nove são `package`, `puzzle`, `bot`, `server`, `layers`, `workflow`, `cloud`
 >
 > **A landing saiu ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e a definição fica.** Ela foi o caso que expôs a diferença entre *superfície* e *consumidor*, e é exatamente por isso que reverter a definição junto com a página seria o erro: voltar a dizer *MDX* recriaria a redação estreita que já se mostrou errada uma vez, e o próximo `<Card>` escrito fora de `.mdx` a quebraria de novo. **Hoje o MDX é o único consumidor outra vez, e a regra continua sendo a superfície.**
 
-**O teto é 64. Teto, não meta — e a folga voltou a quatro.** Ele foi alcançado no mapa do `mint`, com `wrench` no último slot; a árvore do `panlabs` cortou **quatro** desenhos e a folga voltou. O 65º ícone continua sendo troca; o 61º voltou a ser revisão de design.
+**O teto é 64. Teto, não meta — e a folga está em três.** Ele foi alcançado no mapa do `mint`, com `wrench` no último slot; a árvore do `panlabs` cortou **quatro** desenhos e a folga voltou a quatro. **Um foi gasto**: `list`, o glifo do título do índice desta página, é o 61º arquivo. O 65º ícone continua sendo troca; o 61º era revisão de design, e foi revisto — a decisão está no §8, e o argumento é que a superfície nova é chrome, onde a regra de glifo já existia e só não tinha alcançado o índice.
 
 **O teto NÃO desce para 60.** Ele é o limite do que se consegue auditar de uma vez, não uma marca d'água do que já se gastou — descê-lo seria trocar uma régua por um registro do passado, e o número perderia o argumento que o justifica.
 
@@ -181,7 +181,7 @@ Os cinco de chrome (`Icon/Arrow`, `Icon/DarkMode`, `Icon/LightMode`, `Icon/Edit`
 O manifesto vive em `src/icons/manifest.js`, e ele **é o contrato**:
 
 ```
-static/icons/*.svg     ← 60 desenhos.  TROCÁVEL — é skin, axioma 3
+static/icons/*.svg     ← 61 desenhos.  TROCÁVEL — é skin, axioma 3
 src/icons/manifest.js  ← 60 nomes + papéis.  CONTRATO. Não troca.
 ```
 
@@ -189,9 +189,9 @@ Os nomes são **semânticos** (`rocket`, `database`, `terminal`), nunca de marca
 
 > **Correção de fato:** esta linha citava `shield-check` como exemplo, e ele **nunca esteve no manifesto**. Um exemplo que não existe é pior que nenhum exemplo — quem for conferir a lista procura por ele e conclui que a lista está errada. O corporativo com iconografia própria **substitui os arquivos e mantém os nomes**: nenhum componente e nenhum MDX é reescrito. Isso torna a troca de iconografia uma operação do mesmo tipo que a troca de paleta — mexer na skin, não no sistema.
 
-### Sistema · 18
+### Sistema · 19
 
-`info` · `lightbulb` · `triangle-alert` · `pencil-line` · `chevron-right` · `check` · `copy` · `wrap-text` · `external-link` · `search` · `x` · `menu` · `sun` · `moon` · `monitor` · `languages` · `link` · `arrow-right`
+`info` · `lightbulb` · `triangle-alert` · `pencil-line` · `chevron-right` · `check` · `copy` · `wrap-text` · `external-link` · `search` · `x` · `menu` · `sun` · `moon` · `monitor` · `languages` · `link` · `list` · `arrow-right`
 
 O ponto de consumo de cada um está na entrada do manifesto. `chevron-right` é **um desenho, dois estados** — caret de accordion e de categoria de sidebar, rotacionado por CSS quando aberto.
 
@@ -235,7 +235,7 @@ Sem ela, o cartão e um quarto da aba leem a mesma hierarquia, e o leitor não s
 
 **`wrench` foi o único ponto de todo o esforço em que o teto comprou alguma coisa.** Na porta `Ferramentas`, todo glifo adequado do acervo — `package`, `puzzle`, `bot`, `server` — é uma das quatro famílias que aquela aba abre, e a regra acima os eliminava um a um. Não havia reuso disponível; havia o slot livre.
 
-> **Correção de fato: as três portas não existem mais, e nenhum dos três desenhos sai do manifesto.** A landing foi removida em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e com ela os três `<Card icon="…">` que davam consumidor nomeado a `book-open`, `terminal` e `wrench`. **A aritmética não se move:** os três já eram contados na tag de **autoria** — `terminal` e `wrench` em *Objetos*, `book-open` em *Conceitos* —, e autoria é *vocabulário do autor*, não *uso hoje*. **69 tags sobre 60 arquivos continua sendo o número**, e a bijeção que o vendorizador cobra continua fechada nos três lados.
+> **Correção de fato: as três portas não existem mais, e nenhum dos três desenhos sai do manifesto.** A landing foi removida em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e com ela os três `<Card icon="…">` que davam consumidor nomeado a `book-open`, `terminal` e `wrench`. **A aritmética não se move:** os três já eram contados na tag de **autoria** — `terminal` e `wrench` em *Objetos*, `book-open` em *Conceitos* —, e autoria é *vocabulário do autor*, não *uso hoje*. **69 tags sobre 60 arquivos continuava sendo o número** até o `list` do §5.1 de [`chrome.md`](chrome.md) gastar o 61º slot, e a bijeção que o vendorizador cobra continua fechada nos três lados.
 >
 > **O que se perde é mais estreito, e é `wrench`.** Ele foi o único desenho do acervo comprado **por causa de um consumidor concreto** — a porta `Ferramentas` —, e esse consumidor deixou de existir. Ele não vira órfão de manifesto; ele vira **vocabulário de autoria como os outros 39**, e passa a valer o que qualquer um deles vale: está lá para quando alguém escrever `icon="wrench"`. Se o próximo corte de teto precisar de um slot, **é aqui que a régua manda olhar primeiro** — *sobrevive quem é neutro de domínio ou nomeia o cenário fixado*, e `wrench` nomeava a porta, não o cenário.
 >
@@ -261,7 +261,7 @@ Três pares merecem o motivo escrito:
 
 **Conceitos (9):** `layers` * · `workflow` * · `puzzle` * · `bot` * · `webhook` · `bell` · `book-open` · `repeat` · `undo-2`
 
-\* carrega também a tag de navegação — são as nove que fazem 69 tags caberem em 60 arquivos.
+\* carrega também a tag de navegação — são as nove que fazem 70 tags caberem em 61 arquivos.
 
 **Quatro nomes entraram nesta lista sem desenho novo**: `rocket`, `shapes`, `repeat` e `undo-2` perderam o papel de navegação quando a árvore anterior morreu, e teriam ficado sem tag nenhuma. Entrada sem tag é entrada sem papel, e o vendorizador a trataria como órfã.
 
@@ -333,6 +333,7 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 | **`Accordion`** | ícone opcional; o **caret é sistema**, não opcional |
 | **Tab de navbar** | **sem ícone** |
 | **Footer** | **sem ícone** — consome zero slots |
+| **Título do TOC** | **obrigatório** — um glifo, `list`, no rótulo *Nesta página*. É a única superfície de chrome fora da sidebar que carrega ícone, e é assim na âncora. Ver [`chrome.md`](chrome.md) §5.1 |
 
 **A regra da sidebar foi reescrita, e é ela que destravou o nível 3.** A formulação antiga — *obrigatório na categoria de topo, ausente na folha* — não tinha leitura num terceiro nível: o nó do meio não é nem topo nem folha. A nova é *só no nó de topo*, e ela **decide o caso intermediário por construção**, em vez de proibi-lo. O teto de profundidade não era o problema; a redação era. Ver [`informacao.md`](informacao.md).
 
@@ -342,7 +343,7 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 
 ## 9. Custo de bundle, aceito conscientemente
 
-Registro estático coloca os 60 no bundle principal. É o preço de `icon="rocket"` funcionar sem import dinâmico, e é barato — dezenas de kilobytes crus, poucos gzipados.
+Registro estático coloca os 61 no bundle principal. É o preço de `icon="rocket"` funcionar sem import dinâmico, e é barato — dezenas de kilobytes crus, poucos gzipados.
 
 O caminho da sidebar não paga isso duas vezes: as máscaras entram no CSS, e como os arquivos são pequenos o empacotador as embute como dado em vez de gerar requisição. Um desenho, dois consumidores, zero divergência possível.
 
@@ -366,7 +367,8 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | Compensação óptica por tamanho | origem própria | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §2 — habilitada pela escolha de SVGR |
 | Máscara na sidebar | **lacuna por restrição** | não há ponto `safe` para injetar componente em item de sidebar |
 | O papel é tag na entrada | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §4 |
-| 69 tags sobre 60 arquivos, folga quatro | **origem própria (correção)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — quatro cortes contra a árvore nova; a resolução dizia *sete mais dois* e a contagem fecha em *oito mais dois mais um* |
+| 70 tags sobre 61 arquivos, folga três | **origem própria (correção)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — quatro cortes contra a árvore nova; a resolução dizia *sete mais dois* e a contagem fecha em *oito mais dois mais um*. **Um slot gasto depois**: `list`, para o título do TOC — o 61º arquivo, dentro do teto de 64 |
+| O glifo do título do TOC | **herdado** | a âncora abre o índice com rótulo e glifo de lista; medido em navegador — `viewBox` 18, três traços, e o vão de 8px entre glifo e palavra. O nome é nosso (`list`) e o arquivo upstream é `text-align-start`, pelo mapa de uma linha que o manifesto já prevê |
 | **A marca fica só com a palavra** | **origem própria** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — o argumento da figura da landing, aplicado a uma superfície que aparece em toda página |
 | **A rota da marca é `navbar.title` no `.navbar__brand` nativo** | **origem própria (medição)** | a resolução a declarava *provável e não medida*; medida no artefato publicado, nos dois modos |
 | **Os três renderizadores viram dois** | **origem própria (consequência)** | o §3(c) perdeu o assunto quando a marca perdeu o glifo |
