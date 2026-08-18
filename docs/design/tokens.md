@@ -138,7 +138,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    alguém colar um valor torto.
    --------------------------------------------------------------------------- */
 
-@property --sd-brand  { syntax: '<color>';  inherits: true; initial-value: #8156C0; }
+@property --sd-brand  { syntax: '<color>';  inherits: true; initial-value: #BC461D; }
 @property --sd-radius { syntax: '<length>'; inherits: true; initial-value: 16px; }
 
 /* =============================================================================
@@ -152,7 +152,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      de fábrica. As outras cinco entregam referência ou pilha de fonte, que
      initial-value não sabe expressar: colagem inválida ali apaga o que a linha
      alimenta, à vista. */
-  --sd-brand:          #8156C0;
+  --sd-brand:          #BC461D;
   --sd-brand-on-dark:  oklch(from var(--sd-brand) max(l, 0.72) c h);
   --sd-brand-on-light: oklch(from var(--sd-brand) min(l, 0.50) c h);
   --sd-font-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -1839,11 +1839,11 @@ Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superf
 | `text-strong` sobre levantada / página | 17,03 / 17,03 | 19,45 / 18,95 |
 | `text-body` sobre levantada / página | 12,05 / 12,05 | 10,07 / 9,81 |
 | `text-muted` sobre levantada / página | 7,21 / 7,21 | 7,71 / 7,51 |
-| acento como link, sobre levantada / página | 7,00 / 7,00 | 6,45 / 6,28 |
-| `text-inverse` sobre preenchimento de acento | 7,98 | 6,45 |
-| anel de foco vs levantada / página (SC 1.4.11 pede 3:1) | 7,00 / 7,00 | 6,45 / 6,28 |
-| anel de foco vs pastilha de código | 6,62 | 6,45 |
-| `text-strong` sobre o wash do item ativo | 14,30 | 15,91 |
+| acento como link, sobre levantada / página | 6,99 / 6,99 | 6,44 / 6,28 |
+| `text-inverse` sobre preenchimento de acento | 7,97 | 6,44 |
+| anel de foco vs levantada / página (SC 1.4.11 pede 3:1) | 6,99 / 6,99 | 6,44 / 6,28 |
+| anel de foco vs pastilha de código | 6,61 | 6,44 |
+| `text-strong` sobre o wash do item ativo | 14,44 | 15,68 |
 | **sintaxe, pior token, sobre a pastilha** | **8,13** | **6,29** |
 | ícone de estado sobre o próprio fundo, pior caso | 6,33 | 5,98 |
 | corpo sobre fundo de callout, pior caso | 8,28 | 8,54 |
@@ -1899,7 +1899,9 @@ Ela é a **menos saturada das três nos dois modos** e a única que bate os dois
 
 ### A garantia é da arquitetura, não desta skin
 
-**O contraste é propriedade das paradas, não da marca.** Desde a issue #95 isso não é mais um efeito medido — é garantia de construção: a rampa e as duas superfícies não leem `--sd-brand`, então não existe troca de marca capaz de mover uma célula desta tabela. Antes de #95 a garantia era empírica, não estrutural, e o parágrafo abaixo registra essa medição — histórica, mas ainda o motivo de a garantia ter sido escrita como regra em vez de ficar como coincidência.
+**O contraste do TEXTO é propriedade das paradas, não da marca.** Desde a issue #95 isso não é mais um efeito medido — é garantia de construção: a rampa e as duas superfícies não leem `--sd-brand`, então **nenhuma célula que não cite o acento** se move numa troca de marca.
+
+> **Correção de fato.** Esta frase dizia *"não existe troca de marca capaz de mover uma célula desta tabela"*, sem a ressalva, e a medição derruba a versão forte: trocar o violeta pelo laranja moveu **treze** células entre esta tabela e a de [`foco.md`](foco.md) §6 — todas as que citam o acento, e só elas. A razão de contraste é função da luminância relativa do WCAG, que **não** é o `L` do OKLCH: dois acentos de mesmo `L` e matizes diferentes têm luminâncias diferentes. O que a #95 comprou foi a metade certa da garantia, e o parágrafo abaixo já a enunciava corretamente — *"as linhas que não o citam não se mexeram"*. Nenhum piso caiu na troca, e a menor folga da tabela seguiu sendo a mesma linha. Antes de #95 a garantia era empírica, não estrutural, e o parágrafo abaixo registra essa medição — histórica, mas ainda o motivo de a garantia ter sido escrita como regra em vez de ficar como coincidência.
 
 A troca de marca desta skin, medida à época em que a rampa ainda tingia, é a prova disso rodando ao vivo. O acento perdeu um terço de croma, e as linhas que não o citam **não se mexeram**: `text-strong`, `text-body` e o corpo sobre fundo de callout saíram idênticas nas duas colunas, e `text-muted` saiu idêntica no escuro.
 
@@ -1967,7 +1969,7 @@ Os valores são medição de primeira mão do `docs.devin.ai`, registrada em `re
 
 **O chão da página não vem da rampa, e ali estava o defeito de origem.** A âncora tinge a rampa de onze cinzas com o matiz da marca, mas **não pinta a página com ela** — o fundo é token separado, cinza neutro puro. Herdávamos o mecanismo certo e o aplicávamos numa superfície onde a âncora não o aplica; com marca magenta, o chão inteiro do site ficava magenta. A linha *Fundo da página* desta tabela foi a que cobrou a correção — fechada na issue #95: `--sd-surface-page` ganhou token próprio (`--sd-neutral-page-dark` / `-light`) e a rampa parou de tingir. Ver §5, acima.
 
-**O acento não tem linha.** A cor de marca é divergência declarada da âncora — violeta, e não o azul dela. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa, e o comparador passaria a reprovar a decisão em vez da deriva.
+**O acento não tem linha.** A cor de marca é divergência declarada da âncora — laranja, e não o azul dela. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa, e o comparador passaria a reprovar a decisão em vez da deriva.
 
 ---
 
@@ -2035,7 +2037,7 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | Rampa de onze cinzas, hex fixo, fora da marca | herdado | `research/paridade-devin` §3.1 — [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95), medida direto na âncora (Devin), e escrita como hex — não mais como `oklch(from …)`, porque não deriva de nada em tempo de navegador. Substitui a rampa tingida pelo matiz da marca ([#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.2, medida nos quatro sites do alvo anterior, expressa em `oklch(from …)` por [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §3) — o mecanismo de tingir estava certo, a camada em que ele pintava é que não: ver [`tokens.md`](tokens.md) §5 |
 | `--sd-neutral-page-dark` / `-light` e `--sd-neutral-raised-light` | herdado | `research/paridade-devin` §3.1 — [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95): `#141414` / `#fcfcfc` / `#ffffff`, medidos direto na âncora. Papel novo — antes a página era a própria parada `gray-950` (escuro) / `gray-100` (claro) |
 | `--sd-brand-tint` sai do sistema | **origem própria (consequência)** | [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95) — a rampa desacoplou da marca; não sobrou produto `c × tint` para travar. Substitui a procedência anterior (banda herdada de [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §1 + a conta que a travava em 0,0120) |
-| Matiz da marca, violeta (h≈300) | origem própria | [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95) — escolhido por eliminação, não por gosto: os quatro matizes de estado são intocáveis, o ciano é skin fixa da sintaxe, o azul é da âncora, e o magenta anterior foi recusado pelo dono do produto ([#68](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/68), croma 0,240→0,160 — o croma 0,160 se mantém, só o ângulo mudou) |
+| Matiz da marca, laranja queimado (h≈38) | origem própria | **escolhido pelo dono do produto, e a eliminação da [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95) foi revista com o custo na mesa.** A #95 tinha eliminado esta banda por escrito — *"os quatro matizes de estado são intocáveis"* —, e o laranja mora entre `--sd-hue-danger` (27) e `--sd-hue-warn` (62). O custo foi MEDIDO antes de decidir: em ΔE OKLab, o acento saía a **0,120 / 0,103** do estado mais próximo com o violeta (era o `info`), e sai a **0,088 / 0,065** com o laranja (é o `danger`) — a distância cai pela metade, e **nenhum laranja escapa disso**, porque a banda é bracketada pelos dois estados. Mover `--sd-hue-danger` ou `--sd-hue-warn` para abrir espaço foi recusado: §5 desta seção diz que repintar matiz de estado *não é re-marcar, é quebrar significado*. O croma **0,161 se mantém** — como na troca anterior, só o ângulo mudou —, e h≈38 é o teto: acima dele o acento claro (L 0,50) sai do gamute sRGB e o navegador corta o croma que a spec publica |
 | Travas de luminosidade do acento | origem própria | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §2a — verificadas em 24 matizes |
 | Três acentos no bloco de troca | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) §3.1 |
 | Tipografia dentro do contrato de troca | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o carimbo antigo contrariava o [`principios.md`](principios.md) §2, que já dizia que tipografia é parâmetro que a âncora expõe |

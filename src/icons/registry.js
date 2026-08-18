@@ -12,7 +12,7 @@
  * `::before`, em `src/css/chrome.css`. Não é inconsistência: não existe ponto de
  * swizzle `safe` para injetar componente React num item de sidebar, então a
  * rota de `className` + máscara é a **única** zero-swizzle. Os dois leem os
- * mesmos 60 arquivos.
+ * mesmos 61 arquivos.
  *
  * **Nada aqui degrada em silêncio.** Nome desconhecido lança; o Docusaurus
  * prerenderiza toda página no build, então o `throw` *é* falha de build, sem
@@ -29,7 +29,7 @@
  * SVG cai na regra de asset. O que volta é uma **data URI**, não um componente,
  * e o sintoma é `Invalid tag: data:image/svg+xml;base64,…` no prerender.
  *
- * Registro estático também é o que a decisão de orçamento pediu: os 60 no
+ * Registro estático também é o que a decisão de orçamento pediu: os 61 no
  * bundle principal, que é o preço de `icon="rocket"` funcionar sem import
  * dinâmico. A medição que acompanhava esta linha — *"~20 KB crus e ~6 KB
  * gzip"* — era de quando eram 64, e sai em vez de ser ajustada a olho: número
@@ -62,6 +62,7 @@ import Moon from '@site/static/icons/moon.svg';
 import Monitor from '@site/static/icons/monitor.svg';
 import Languages from '@site/static/icons/languages.svg';
 import LinkIcone from '@site/static/icons/link.svg';
+import Lista from '@site/static/icons/list.svg';
 import ArrowRight from '@site/static/icons/arrow-right.svg';
 
 import Rocket from '@site/static/icons/rocket.svg';
@@ -127,6 +128,7 @@ const DESENHOS = {
   'monitor': Monitor,
   'languages': Languages,
   'link': LinkIcone,
+  'list': Lista,
   'arrow-right': ArrowRight,
 
   'rocket': Rocket,

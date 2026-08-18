@@ -9,10 +9,12 @@
  * uma pilha separada de desenhos** — é por isso que `package`, `layers`,
  * `workflow` e outros seis carregam duas tags e consomem um arquivo só.
  *
- *   18 sistema + 11 navegação + 40 autoria = 69 tags sobre 60 arquivos
+ *   19 sistema + 11 navegação + 40 autoria = 70 tags sobre 61 arquivos
  *
  * O teto é 64 — **teto, não meta**. Ele foi alcançado no mapa do `mint` e a
  * árvore do `panlabs` devolveu folga: **quatro cortes, quatro slots livres**.
+ * **Um voltou a ser gasto**: `list`, o glifo do título do índice desta página,
+ * é o 61º arquivo e deixa a folga em três. O teto NÃO desce junto.
  * `train-track` morreu com a marca, que ficou só com a palavra; `wallet` e
  * `receipt` nomeavam pagamentos, e o domínio inteiro morreu; `credit-card` já
  * estava sem consumidor desde que a grade de cinco cartões da landing morreu.
@@ -34,7 +36,7 @@
  */
 
 /**
- * Sistema · 18 — o componente escolhe, o autor nunca.
+ * Sistema · 19 — o componente escolhe, o autor nunca.
  *
  * **Eram 19.** `train-track` saiu porque a marca ficou só com a palavra: sem
  * glifo ao lado do nome, o desenho perdeu o único consumidor que tinha, e
@@ -59,6 +61,7 @@ const SISTEMA = [
   {nome: 'monitor', papeis: ['sistema'], onde: 'tema do sistema'},
   {nome: 'languages', papeis: ['sistema'], onde: 'seletor de locale'},
   {nome: 'link', papeis: ['sistema'], onde: 'âncora de heading'},
+  {nome: 'list', papeis: ['sistema'], onde: 'título do índice desta página', lucide: 'text-align-start'},
   {nome: 'arrow-right', papeis: ['sistema'], onde: 'paginação e CTA de card'},
 ];
 
@@ -66,7 +69,7 @@ const SISTEMA = [
  * Navegação · 11 tags sobre 11 arquivos, dos quais **dois moram aqui**.
  *
  * Os outros nove reusam entrada de autoria e carregam a segunda tag na própria
- * entrada — é isso que faz 69 tags caberem em 60 arquivos. Os dois daqui são
+ * entrada — é isso que faz 70 tags caberem em 61 arquivos. Os dois daqui são
  * órfãos de navegação **reempregados**: `code-xml` e `activity` já eram
  * navegação na árvore anterior, e trocaram de seção sem trocar de papel.
  * @type {Entrada[]}
