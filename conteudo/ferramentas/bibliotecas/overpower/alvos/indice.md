@@ -25,7 +25,7 @@ formas diferentes.
 | O que aterrissa | cópia real, sempre | cópia real no primeiro destino, link relativo nos demais |
 | Precisa de git | sim, e recusa fora dele | não |
 | Rede de segurança | `git status` revela e desfaz | nenhuma, e é por isso que `--force` existe |
-| Destino ocupado | sobrescreve, porque o git mostra | recusa, saída `3`, salvo com `--force` |
+| Destino ocupado | sobrescreve, porque o git mostra | pergunta num terminal; recusa com saída `3` sem terminal, sob `--yes` ou sob `--dry-run`; `--force` sobrescreve sem perguntar |
 
 Em escopo de **projeto**, toda aterrissagem é cópia real, nunca link simbólico.
 Isso é deliberado: sob `core.symlinks=false`, um valor de configuração do git que
@@ -65,16 +65,41 @@ lá de cima, atribuído em `NOTICE`, mais o `vscode`, que não tem destino de sk
 em nenhum dos escopos e existe nesta tabela só para que o passo de enxerto de MCP
 do assistente tenha um nome para ele.
 
-74 dos 77 têm destino em escopo global. O `eve`, o `promptscript` e o `vscode`
-não têm, então pedir um desses três sob `--global` é uma linha válida com
-resposta negativa, saída `3`, e não uma linha inválida.
+74 dos 77 têm destino de skill em escopo global. O `eve` e o `promptscript` não
+têm, então pedir um dos dois sob `--global` é uma linha válida com resposta
+negativa, saída `3`, e não uma linha inválida.
+
+O `vscode` é o terceiro, e ele recusa por outro eixo: ele não tem destino de
+skill em **escopo nenhum**, e a recusa não muda com `--global`. A mensagem
+também é outra, e diz o que ele aceita no lugar:
+
+```
+`vscode` takes MCP servers and has no skills destination of its own;
+```
+
+`--runtime vscode --mcp <nome>` instala; `--runtime vscode --skill <nome>` sai
+`3` nos dois escopos.
 
 :::note
 Os caminhos globais abaixo usam `~` para o diretório do usuário. Vários são de
 fato resolvidos por uma variável de ambiente primeiro, caindo no caminho mostrado
-só quando ela não está posta. O `claude-code` honra `CLAUDE_CONFIG_DIR`, o
-`codex` honra `CODEX_HOME`, e mais seis resolvem por `XDG_CONFIG_HOME` antes de
-cair em `~/.config`.
+só quando ela não está posta. São três mecanismos, e a tabela não os distingue:
+
+- **seis honram uma variável da própria ferramenta**: `autohand-code`
+  (`AUTOHAND_HOME`), `claude-code` (`CLAUDE_CONFIG_DIR`), `codex`
+  (`CODEX_HOME`), `grok` (`GROK_HOME`), `hermes-agent` (`HERMES_HOME`) e
+  `mistral-vibe` (`VIBE_HOME`);
+- **seis resolvem por `XDG_CONFIG_HOME`** antes de cair em `~/.config`, e são
+  `amp`, `devin`, `goose`, `opencode`, `replit` e `universal`;
+- **um usa o primeiro diretório que existir**: o `openclaw` procura
+  `~/.openclaw`, `~/.clawdbot` e `~/.moltbot` nessa ordem, e cai no primeiro
+  quando nenhum existe.
+
+Os demais caminhos de `~/.config` na tabela são literais, não XDG: o `crush` e o
+`kimchi` moram lá por escrita direta, e não mudam com a variável.
+
+Valor em branco conta como não posto. **Valor relativo é ignorado de propósito**,
+e a ferramenta declara essa divergência contra o upstream.
 :::
 
 | Chave de `--runtime` | Runtime | Escopo de projeto | Escopo global |

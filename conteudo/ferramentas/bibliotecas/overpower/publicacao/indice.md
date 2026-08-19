@@ -38,7 +38,8 @@ ls src/overpower/*.py | wc -l
 | `grafting.py` | inserção cirúrgica num documento que não é do `overpower` |
 | `runtimes.py` | a tabela de caminhos de runtime |
 | `jsonio.py` | a forma sancionada de alcançar o leitor de JSON da biblioteca padrão |
-| `errors.py` | a única exceção que o produto levanta de propósito |
+| `yamlio.py` | a forma sancionada de alcançar o leitor de YAML, e a porta do catálogo |
+| `errors.py` | a raiz de exceção do produto, com as duas subclasses que separam `2` de `3` |
 
 ## O fluxo de uma invocação
 
@@ -78,9 +79,12 @@ duplicasse um caminho que o sistema de arquivos já conhece seria uma segunda fo
 de verdade para um fato que tem uma só.
 :::
 
-Dois portões na CI guardam exatamente a primeira: um confirma que nada sob
-`content/` está escondido do git, o outro confirma que a wheel carrega o mesmo
-conjunto que a árvore do git carrega. A segunda raiz não tem portão dedicado,
+Três portões na CI guardam exatamente a primeira. O **P1** confirma que nada sob
+`content/` está escondido do git, e recusa até o caso em que o git não rastreia
+nada ali, para que um portão sem sujeito não passe por verde. O **P2** confirma
+que a wheel carrega o mesmo conjunto que a árvore do git carrega. O **P3**
+confirma que o sdist carrega exatamente o que declarou. A segunda raiz não tem
+portão dedicado,
 porque perdê-la falha alto em vez de calado: um bundle some do `list`, e o
 `install` responde que não conhece o nome. O que falha alto não precisa de portão;
 o que falha calado é o que os dois portões existem para pegar.

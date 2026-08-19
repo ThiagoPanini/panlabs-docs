@@ -41,6 +41,20 @@ executable on your `PATH`, resolved once instead of on every invocation, which
 means it no longer self-updates the way `@latest` does, and `uv tool upgrade`
 becomes something you run on purpose.
 
+## What it needs from the machine
+
+**Python 3.12 or newer.** That is the floor the package declares, and `uvx`
+respects it on its own: it builds the environment with an interpreter that
+qualifies, downloading one if the machine has none that does.
+
+The dependencies ship with the package and you install nothing by hand. There
+are four, all of them terminal work: the command-line parser, the screen
+painter, the engine behind the wizard's questions, and the keyboard layer under
+it.
+
+The catalog is **not** one of them. It is embedded in the package itself, which
+is why the version of the tool is the version of the catalog.
+
 ## The `op` shortcut you have to make yourself
 
 Typing `overpower` in full, every time, is longer than most people want. The

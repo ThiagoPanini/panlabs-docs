@@ -33,7 +33,18 @@ no `--dir` escape hatch to fall back on. The second is `3` because the value is
 real and what does not exist is the pairing: it happens for `eve` and
 `promptscript` under `--global`, since neither declares a global destination.
 
-**`already exists`.** In global scope, off a terminal or under `--yes` and
+**`vscode` exits `3` on the same axis with a different message, and that one says
+nothing about scope:**
+
+```
+`vscode` takes MCP servers and has no skills destination of its own;
+the runtimes that take one there are: ...
+```
+
+It has no skills destination in either scope, so the refusal holds with and
+without `--global`. `--runtime vscode --mcp <name>` installs normally.
+
+**`already exists`.** In global scope, off a terminal or under `--yes` or
 `--dry-run`, a destination that already has content is refused rather than
 silently replaced. Global scope has no `git status` to reveal or undo an overwrite
 the way project scope does.

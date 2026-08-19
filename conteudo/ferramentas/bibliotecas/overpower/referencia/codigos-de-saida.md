@@ -61,5 +61,17 @@ uvx overpower@latest install --skill panlabs-python-standards --runtime claude-c
 
 Um traceback nunca chega ao terminal. Uma exceção que o produto não reconhece
 como uma das falhas nomeadas dele vira um painel de erro em vez de saída crua de
-Python, e sai `1`. Isso é em si uma afirmação: diz que o defeito é do
-`overpower`, e não do que você digitou.
+Python, e sai `1`.
+
+**`1` não significa só defeito do produto, e a leitura curta engana.** Ele é
+*não deu para rodar até o fim*, e três desses casos são você mesmo dizendo não:
+
+| O que aconteceu | Por que é `1` |
+| --- | --- |
+| Uma exceção que o produto não reconhece | o defeito é do `overpower` |
+| Você recusou a confirmação antes da escrita | a linha parou antes do primeiro byte |
+| Você saiu do assistente em qualquer passo | idem, e sair de um passo aborta todos |
+| `Ctrl-C` | o shell devolveria `130`, e a ferramenta traduz para `1` uma vez, para não vazar um quinto código numa tabela que declara quatro |
+
+O que os quatro têm em comum é que **nada foi escrito**. Um script que trata `1`
+como falha do produto vai reportar bug quando o operador só apertou `n`.

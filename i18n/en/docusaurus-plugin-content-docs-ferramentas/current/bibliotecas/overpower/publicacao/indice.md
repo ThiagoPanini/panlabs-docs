@@ -37,7 +37,8 @@ ls src/overpower/*.py | wc -l
 | `grafting.py` | surgical insertion into a document that is not overpower's |
 | `runtimes.py` | the runtime path table |
 | `jsonio.py` | the sanctioned way to reach the standard library's JSON reader |
-| `errors.py` | the one exception the product raises on purpose |
+| `yamlio.py` | the sanctioned way to reach the YAML reader, and the catalog's door |
+| `errors.py` | the product's exception root, with the two subclasses that separate `2` from `3` |
 
 ## The flow of one invocation
 
@@ -77,9 +78,11 @@ path the filesystem already knows would be a second source of truth for a fact t
 has only one.
 :::
 
-Two gates in CI guard exactly the first: one confirms nothing under `content/` is
-hidden from git, the other confirms the wheel carries the same set the git tree
-carries. The second root has no dedicated gate, because losing it fails loudly
+Three gates in CI guard exactly the first. **P1** confirms nothing under
+`content/` is hidden from git, and refuses even the case where git tracks nothing
+there, so a gate with no subject never passes as green. **P2** confirms the wheel
+carries the same set the git tree carries. **P3** confirms the sdist carries
+exactly what it declared. The second root has no dedicated gate, because losing it fails loudly
 rather than quietly: a bundle vanishes from `list`, and `install` answers that it
 does not know the name. What fails loudly does not need a gate; what fails silently
 is what the two gates exist to catch.

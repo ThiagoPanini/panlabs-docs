@@ -41,6 +41,19 @@ põe um executável `overpower` no seu `PATH`, resolvido uma vez em vez de a cad
 invocação, o que significa que ele deixa de se atualizar sozinho como o `@latest`
 faz, e `uv tool upgrade` passa a ser algo que você roda de propósito.
 
+## O que ele exige da máquina
+
+**Python 3.12 ou mais novo.** É o piso declarado pelo pacote, e o `uvx` o
+respeita sozinho: ele monta o ambiente com um interpretador que sirva, baixando
+um se a máquina não tiver nenhum que sirva.
+
+As dependências vêm com o pacote e você não instala nada à mão. São quatro, e
+todas de terminal: o parser da linha de comando, o desenhista das telas, o
+motor das perguntas do assistente e a camada de teclado embaixo dele.
+
+O catálogo **não** é uma delas. Ele vem embutido no próprio pacote, e é por isso
+que a versão da ferramenta é a versão do catálogo.
+
 ## O atalho `op` que você mesmo faz
 
 Digitar `overpower` por extenso, toda vez, é mais longo do que a maioria das

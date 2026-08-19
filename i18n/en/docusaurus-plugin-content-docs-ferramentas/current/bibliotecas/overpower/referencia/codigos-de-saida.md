@@ -61,5 +61,18 @@ uvx overpower@latest install --skill panlabs-python-standards --runtime claude-c
 
 A traceback never reaches the terminal. An exception the product does not
 recognise as one of its own named failures becomes an error panel instead of raw
-Python output, and exits `1`. That is itself a claim: it says the bug is in
-overpower, not in what you typed.
+Python output, and exits `1`.
+
+**`1` does not only mean a bug in the product, and the short reading misleads.**
+It is *could not run to the end*, and three of those cases are you saying no:
+
+| What happened | Why it is `1` |
+| --- | --- |
+| An exception the product does not recognise | the bug is in overpower |
+| You declined the confirmation before the write | the line stopped before the first byte |
+| You backed out of the wizard at any step | same, and backing out of one step abandons them all |
+| `Ctrl-C` | the shell would hand back `130`, and the tool translates it to `1` once, so a fifth code never leaks into a table that declares four |
+
+What the four have in common is that **nothing was written**. A script that
+treats `1` as a product failure will file a bug when the operator just pressed
+`n`.

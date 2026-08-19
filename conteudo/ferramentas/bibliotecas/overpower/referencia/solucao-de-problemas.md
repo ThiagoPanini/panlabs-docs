@@ -34,10 +34,25 @@ correspondência parcial nem escape por `--dir` para onde recuar. A segunda é `
 porque o valor é real e o que não existe é o par: acontece com o `eve` e o
 `promptscript` sob `--global`, já que nenhum dos dois declara destino global.
 
-**`already exists`.** Em escopo global, fora de um terminal ou sob `--yes` e
+**O `vscode` sai `3` pelo mesmo eixo e com outra mensagem, e ela não fala de
+escopo:**
+
+```
+`vscode` takes MCP servers and has no skills destination of its own;
+the runtimes that take one there are: ...
+```
+
+Ele não tem destino de skill em escopo nenhum, então a recusa vale igual com e
+sem `--global`. `--runtime vscode --mcp <nome>` instala normalmente.
+
+**`already exists`.** Em escopo global, fora de um terminal ou sob `--yes` ou
 `--dry-run`, um destino que já tem conteúdo é recusado em vez de substituído
 calado. O escopo global não tem `git status` para revelar ou desfazer uma
 sobrescrita do jeito que o de projeto tem.
+
+Num terminal, sem essas flags, ele **pergunta** em vez de recusar. Vale reler a
+lista acima: `--yes` entra nela, e é isso que faz `-y` transformar uma pergunta
+que você poderia responder `sim` numa saída `3`.
 
 ```bash
 uvx overpower@latest install --skill panlabs-python-standards --runtime cursor --global --force

@@ -119,7 +119,7 @@
       "especie": "comando",
       "titulo": "overpower install",
       "qualificado": "overpower install",
-      "assinatura": "overpower install --runtime <key> [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]",
+      "assinatura": "overpower install [--runtime <key>] [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]",
       "resumo": "Escreve. Imprime o plano, com todo destino e quem o lê, antes de encostar em disco, e pergunta antes de escrever quando há um terminal do outro lado.",
       "descricao": "Os quatro seletores se misturam livremente numa linha só, e cada um aceita valor separado por vírgula, a repetição da flag, ou as duas coisas. Quando a linha resolve para escritas em mais de uma unidade, elas acontecem sempre na mesma ordem, framework, depois bundle, depois artefato avulso, depois servidor MCP, e a unidade mais específica escreve por último.\n\nNum terminal, uma linha que não fecha um plano abre o assistente em vez de simplesmente recusar. Ele abre só os passos que a sua linha deixou em aberto, sempre na mesma ordem, e o que ele coleta vira exatamente a mesma requisição que a linha digitada à mão teria montado.",
       "chamada": "overpower install",
@@ -133,8 +133,7 @@
         {
           "nome": "--runtime",
           "tipo": "key",
-          "obrigatorio": true,
-          "descricao": "Quem recebe o que foi instalado. Aceita as chaves de uma tabela fechada de 77 runtimes, e não tem valor padrão. Uma linha que nomeia o que instalar e nenhum runtime recusa em vez de adivinhar.",
+          "descricao": "Quem recebe o que foi instalado. Aceita as chaves de uma tabela fechada de 77 runtimes, e não tem valor padrão. O que acontece sem ele depende de haver terminal: num terminal, uma linha que nomeia o que instalar e nenhum runtime abre o assistente no passo que faltou; fora de terminal, ela recusa com saída 2 em vez de adivinhar. A exceção é a linha que mistura skill e servidor MCP, que exige o runtime nomeado nos dois casos.",
           "exemplo": "claude-code"
         },
         {
@@ -165,7 +164,7 @@
         {
           "nome": "--yes",
           "tipo": "flag",
-          "descricao": "Pula a confirmação, e nada além dela. Aceita a forma curta `-y`."
+          "descricao": "Pula a confirmação antes da escrita. Aceita a forma curta `-y`. Fora de terminal ele é aceito e não faz nada, porque lá não há confirmação a pular. Num terminal ele tem um segundo efeito que a ajuda da ferramenta não anuncia: um destino já ocupado no escopo de máquina deixa de virar pergunta e vira recusa, com saída 3, onde a linha sem `-y` teria perguntado e podido escrever."
         },
         {
           "nome": "--force",
@@ -194,17 +193,17 @@
       "parametros": [],
       "retorno": {
         "tipo": "int",
-        "descricao": "O `doctor` usa dois dos quatro códigos da aplicação, e a escolha entre eles é o que o torna utilizável como portão de CI. Um relatório ruim nunca sai `1`, porque relatório ruim não é queda.",
+        "descricao": "O `doctor` usa dois dos quatro códigos da aplicação, e a escolha entre eles é o que o torna utilizável como portão de CI. Um relatório ruim nunca sai `1`, porque relatório ruim não é queda.\n\nO que o relatório traz se divide em dois, e só um lado mexe no código: **achado** reprova, **aviso** não. São cinco achados e dois avisos, e a lista está na página de solução de problemas.",
         "campos": [
           {
             "nome": "0",
             "tipo": "int",
-            "descricao": "As três conferências rodaram e nenhuma achou problema."
+            "descricao": "As cinco conferências que reprovam rodaram e nenhuma achou problema. Aviso não conta: slot vazio e clone órfão saem no relatório e não mexem no código de saída."
           },
           {
             "nome": "3",
             "tipo": "int",
-            "descricao": "Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código."
+            "descricao": "Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código. As cinco que chegam aqui são link pendurado, link virado texto, divergência de conteúdo, servidor pendente de aprovação e clone sumido."
           }
         ]
       },

@@ -24,7 +24,7 @@ differently.
 | What lands | a real copy, always | a real copy at the first destination, relative links after it |
 | Needs git | yes, and refuses outside one | no |
 | Safety net | `git status` reveals and undoes | none, which is why `--force` exists |
-| Occupied destination | overwritten, because git shows it | refused, exit `3`, unless `--force` |
+| Occupied destination | overwritten, because git shows it | asks in a terminal; refused with exit `3` off a terminal, under `--yes` or under `--dry-run`; `--force` overwrites without asking |
 
 In **project** scope, every landing is a real copy, never a symlink. This is
 deliberate: under `core.symlinks=false`, a git config value a clone can inherit
@@ -64,16 +64,42 @@ runtime map, attributed in `NOTICE`, plus `vscode`, which has no skill
 destination in either scope and exists in this table purely so the MCP graft step
 of the wizard has a name for it.
 
-74 of the 77 have a destination in global scope. `eve`, `promptscript` and
-`vscode` do not, so asking for one of those three under `--global` is a valid line
-with a negative answer, exit `3`, rather than an invalid one.
+74 of the 77 have a skills destination in global scope. `eve` and `promptscript`
+do not, so asking for either under `--global` is a valid line with a negative
+answer, exit `3`, rather than an invalid one.
+
+`vscode` is the third, and it refuses on a different axis: it has no skills
+destination in **either** scope, and the refusal does not change with `--global`.
+The message is different too, and names what it takes instead:
+
+```
+`vscode` takes MCP servers and has no skills destination of its own;
+```
+
+`--runtime vscode --mcp <name>` installs; `--runtime vscode --skill <name>`
+exits `3` in both scopes.
 
 :::note
 Global paths below use `~` for the home directory. Several are actually resolved
 through an environment variable first, falling back to the path shown only when
-that variable is unset. `claude-code` honours `CLAUDE_CONFIG_DIR`, `codex` honours
-`CODEX_HOME`, and six more resolve through `XDG_CONFIG_HOME` before falling back
-to `~/.config`.
+that variable is unset. There are three mechanisms, and the table does not tell
+them apart:
+
+- **six honour a variable of the tool's own**: `autohand-code`
+  (`AUTOHAND_HOME`), `claude-code` (`CLAUDE_CONFIG_DIR`), `codex`
+  (`CODEX_HOME`), `grok` (`GROK_HOME`), `hermes-agent` (`HERMES_HOME`) and
+  `mistral-vibe` (`VIBE_HOME`);
+- **six resolve through `XDG_CONFIG_HOME`** before falling back to `~/.config`,
+  and they are `amp`, `devin`, `goose`, `opencode`, `replit` and `universal`;
+- **one uses the first directory that exists**: `openclaw` looks for
+  `~/.openclaw`, `~/.clawdbot` and `~/.moltbot` in that order, and falls back to
+  the first when none exists.
+
+The other `~/.config` paths in the table are literals, not XDG: `crush` and
+`kimchi` live there by direct spelling, and do not move with the variable.
+
+A blank value counts as unset. **A relative value is ignored on purpose**, and
+the tool declares that divergence against upstream.
 :::
 
 | `--runtime` key | Runtime | Project scope | Global scope |
