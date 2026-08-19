@@ -26,7 +26,7 @@ O que isso compra: quem implementa não precisa julgar. Uma régua de julgamento
 
 ### 2.1 Antes de escrever qualquer código
 
-Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura de referência: são restrição sobre o que se pode construir depois, e um agente que descobre a política de swizzle no quinto slice já gastou degraus que não podia.
+Os **dez ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura de referência: são restrição sobre o que se pode construir depois, e um agente que descobre a política de swizzle no quinto slice já gastou degraus que não podia.
 
 **O 5 lê-se pelo 8.** Ele foi **superado**, e continua na lista porque a imutabilidade dos ADRs é o que preserva o registro de *"decidimos OpenAPI uma vez, e por quê"*. O que decide hoje é o 8.
 
@@ -40,6 +40,8 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | 6 | [A busca é índice local, sem serviço externo](../adr/0006-busca-local-sem-servico-externo.md) | é o único que descreve uma superfície **removível** |
 | 7 | [`trailingSlash: false`](../adr/0007-trailingslash-false.md) | seis coisas derivam a URL dele; descobrir tarde custa caro |
 | 8 | [A referência de biblioteca é gerada de contrato de assinatura](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) | quem edita a página gerada edita a saída em vez da fonte |
+| 9 | [A referência de CLI é gerada de contrato de superfície de comando](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md) | o mesmo mecanismo do 8 para a outra superfície gerada |
+| 10 | [A categoria de sidebar não é destino](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) | o nível de topo é separador mudo, e é ele que decide a forma de toda árvore nova |
 
 ### 2.2 Depois, a spec
 
@@ -69,7 +71,7 @@ Os **oito ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura d
 | [`informacao.md`](informacao.md) | o acervo, as três tabs, a árvore, os dez tipos de página, os orçamentos, as onze fixtures, a regra de locale e os artefatos AI-era |
 | [`chrome.md`](chrome.md) | a cadeia de proporções, navbar, sidebar, TOC, breadcrumb, paginação, footer e o comportamento no estreito |
 | [`foco.md`](foco.md) | `:focus-visible` universal, `:active`, o piso de alvo no toque, e o portão que impede `outline: none` |
-| [`motion.md`](motion.md) | as duas durações, as duas curvas, os seis movimentos nomeados e o reduced-motion resolvido na camada de token |
+| [`motion.md`](motion.md) | as quatro durações, as duas curvas, os sete movimentos nomeados e o reduced-motion resolvido na camada de token |
 | [`icones.md`](icones.md) | o manifesto de 60 nomes com teto de 64 e folga quatro, os dois renderizadores, a marca sem glifo e os onze pares seção→ícone |
 | [`swizzle.md`](swizzle.md) | o ledger vivo, os três significados de `src/theme/`, as perdas nomeadas e a disciplina de registro |
 | [`referencia.md`](referencia.md) | a ruptura de layout — o contrato de assinatura, o gerador de fragmento e as três colunas |
@@ -495,7 +497,7 @@ Cinco categorias, varridas no fecho:
 
 **Os oito têm uma linha cada, e quatro deles são um argumento só.** `--sd-gray-100`, `--sd-gray-200` e `--sd-gray-800` são **parada de rampa**: a rampa de onze é declarada inteira, e rampa com buraco no meio é pior de ler do que a parada a mais — quem re-marca precisa da geometria completa para julgar o que a marca dele produz em cada degrau. `--sd-state-danger-edge` é o mesmo argumento na família de quatro. Os outros quatro estão na nota abaixo.
 
-> **Eram três de 136, e a remoção da landing os levou a sete de 130.** Os quatro que entraram são todos consumidores que a página levou consigo, e nenhum deles é órfão sem motivo. `--sd-move-showcase`, `--sd-move-reveal` e `--sd-move-ambient` são metade do **vocabulário fechado** que o portão 2 cobra: ele reprova toda duração ou curva cravada e manda usar um dos seis nomes, e tirar três deixaria a próxima faixa sem nome para pedir — escrevendo o número que o portão existe para impedir. `--sd-accent-contrast` é papel semântico da camada 2, e a camada 2 declara a mesma lista nos dois modos: um papel que sai de um bloco e não do outro é o buraco visível que essa simetria existe para denunciar.
+> **Eram três de 136, e a remoção da landing os levou a sete de 130.** Os quatro que entraram são todos consumidores que a página levou consigo, e nenhum deles é órfão sem motivo. `--sd-move-showcase`, `--sd-move-reveal` e `--sd-move-ambient` são metade do **vocabulário fechado** que o portão 2 cobra: ele reprova toda duração ou curva cravada e manda usar um dos sete nomes, e tirar três deixaria a próxima faixa sem nome para pedir — escrevendo o número que o portão existe para impedir. `--sd-accent-contrast` é papel semântico da camada 2, e a camada 2 declara a mesma lista nos dois modos: um papel que sai de um bloco e não do outro é o buraco visível que essa simetria existe para denunciar.
 >
 > **E a lista se mexeu duas vezes desde então, nas duas direções.** `--sd-toc-width` **saiu por ganhar consumidor**: ele entrou nela quando a coluna do TOC era o quarto restante do grid 75/25 do upstream e alcançá-la custaria `unsafe`, e a [#96](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/96) matou o grid de doze, substituindo-o por `flex` com largura explícita. Hoje o token é lido em **três** pontos — `flex-basis` e `max-width` em [`chrome.md`](chrome.md) §1, mais o `--sd-doc-width` que deriva dele —, e `tokens.css` já registra a virada ao lado da definição. Órfão que ganha consumidor sai da lista sem discussão: ele deixou de ser o caso que a lista existe para admitir. E `--sd-gray-100` e `--sd-gray-800` **entraram calados**: `git log -S` põe a perda dos consumidores dos dois na [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95), a issue que desacoplou a rampa da marca — a **mesma** cujo comentário em `tokens.css` afirma que *"hoje a 200 é a única parada sem consumidor"*. A frase nasceu errada no commit que a criou, e nenhuma CI tinha como vê-la: órfão não quebra build, que é a premissa desta seção inteira. A rampa tem três buracos, não um, e o argumento não muda com o número — parada é geometria, não consumidor.
 >
@@ -505,4 +507,4 @@ Cinco categorias, varridas no fecho:
 
 **A entrada de ledger sem assunto era `.navbar__brand:empty`.** Ela escondia o link vazio que o upstream renderiza quando não há `navbar.title` — e o `title` voltou com a marca sem glifo. O próprio `chrome.css` já dizia, em comentário, que a declaração não existia mais; o ledger é que não tinha sido lido contra o arquivo. **É a morte exata que esta varredura existe para pegar**: nenhum build reclamaria de uma linha de tabela descrevendo CSS que ninguém escreve.
 
-> **A varredura também corrigiu um número que envelheceu calado.** O ledger justificava o override de `h1` dizendo *"61 de 61 páginas escrevem o próprio `# Título`"*. São **73** — 52 em pt-BR e 21 em EN —, e a condição continua valendo em todas. A contagem certa exige ignorar blocos cercados, porque comentário de shell abre com a mesma marca: contada crua, a varredura acusa 35 páginas com dois títulos e nenhuma delas tem.
+> **A varredura também corrigiu um número que envelheceu calado.** O ledger justificava o override de `h1` dizendo *"61 de 61 páginas escrevem o próprio `# Título`"*. Eram **73** — 52 em pt-BR e 21 em EN —, e são **62** desde a #114 — 45 e 17. A condição continua valendo em todas, e o número já envelheceu duas vezes: ele conta páginas, e toda issue que mexe na árvore o move. A contagem certa exige ignorar blocos cercados, porque comentário de shell abre com a mesma marca: contada crua, a varredura acusa 35 páginas com dois títulos e nenhuma delas tem.

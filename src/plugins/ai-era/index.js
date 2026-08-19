@@ -209,7 +209,7 @@ export default function pluginAiEra(context, options) {
  * as ferramentas do `panlabs` como se elas existissem.
  *
  * **Ele sai em pt-BR nos dois locales, e é a mesma regra do resto do site.** As
- * 31 páginas sem contraparte em inglês também saem em português sob `/en/`
+ * 28 páginas sem contraparte em inglês também saem em português sob `/en/`
  * (`informacao.md` §8) — o preâmbulo é a mesma classe de fallback, num artefato
  * cujo leitor é máquina. O que TEM tradução chega traduzido: título, descrição
  * e rótulo de seção. A rota para mudar isso está registrada e não foi comprada:

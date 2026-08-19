@@ -48,7 +48,8 @@ panlabs-mcp-catalogo --conferir
 
 ## The three tools
 
-All reads. The rule that picked them is in [MCP servers](indice).
+All reads. One rule picked them: the server exposes what the catalog already
+publishes, and nothing else.
 
 ```python
 # panlabs_mcp_catalogo/ferramentas.py

@@ -222,7 +222,7 @@ O 840 não é escolha: é o que sobra depois de `docItemCol` vencer. Fica **entr
 
 > **Estas duas linhas eram uma só, e a fusão escondia que o 840 vale numa perna e não na outra.** A redação anterior lia *"com heading, TOC no DOM mas escondido (997–1279), **ou** sem heading"* e cravava 840 nas duas. **Em 997–1279 o 840 é inalcançável:** o teto é um percentual, o layout só congela em 1408 (`--sd-congelamento`), e até lá 75% da largura real é sempre menos que 840 — o `!important` está lá, mas não tem o que cortar. **Na perna sem heading o 840 vale**, e vale a partir de 1408, que é onde o container para de crescer. Um `ou` juntando uma faixa em que o número não acontece com outra em que ele acontece é o tipo de linha que passa em revisão e falha em medição.
 >
-> A perna sem heading tem **três** páginas medidas no build, e não é hipótese: `procedimentos/ambiente/indice`, `ferramentas/skills/rotacao-de-segredo` e `ferramentas/skills/scaffold-de-esteira` — as únicas 3 das 46 autorais sem um `##`. A primeira é a mesma que serve de fixture de página curta em [`informacao.md`](informacao.md).
+> A perna sem heading tem **três** páginas medidas no build, e não é hipótese: `procedimentos/ambiente/indice`, `ferramentas/skills/rotacao-de-segredo` e `ferramentas/skills/scaffold-de-esteira` — as únicas 3 das 39 autorais sem um `##`. A primeira é a mesma que serve de fixture de página curta em [`informacao.md`](informacao.md).
 
 ### 2.2 O ritmo vertical é assimétrico
 
@@ -320,7 +320,9 @@ Um transplante corporativo que remova a busca não deixa buraco no navbar: o `Se
 
 Largura `--sd-sidebar-width`, e **nada aqui custa swizzle**.
 
-**O número é medido, não default.** *Dissenso registrado:* ele aperta aninhamento profundo, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. O teto de profundidade — 3, com o nível 3 usado uma vez, em `Ferramentas › Bibliotecas › Biblioteca C` (ver [`informacao.md`](informacao.md) §3.1) — é o que o segura; aprofundar mais reabre este número.
+**O número é medido, não default.** *Dissenso registrado, e ele caiu:* a nota dizia que aprofundar a árvore reabriria este número, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. **Medido:** a sidebar do `docs.devin.ai` e a do `docs.windsurf.com` têm `w-[18rem]` — os mesmos 288px —, e o windsurf, também tema `mint`, segura **cinco níveis** dentro deles. O Mintlify não declara teto numérico de aninhamento. O 288 não reabre; ver [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md).
+
+**O nível de topo não é categoria — é separador.** Rótulo em negrito, sem página, sem seta e sem ícone, e sempre aberto: `collapsible: false` mais ausência de `link` em `sidebars-*.js`. O único nó do site que colapsa está no nível 2, `Bibliotecas › Biblioteca C`, e o teto de profundidade continua 3 (ver [`informacao.md`](informacao.md) §3.2).
 
 ### 4.1 Ícone por folha
 
@@ -333,9 +335,11 @@ Duas propriedades caem de graça e valem escrita:
 
 O `::before` mora no **link**, não no `<li>`, para herdar a cor dele.
 
-**A regra é *toda folha tem ícone, nenhum cabeçalho de grupo tem* — issue #97, o inverso do que valia até ela.** Até aqui o `className` do manifesto marcava a categoria de topo, e a folha ficava muda; a âncora faz o oposto (ver [`icones.md`](icones.md) §8). A folha nunca ganha o `<button class="menu__caret">` que a categoria tem — não tem filho para colapsar —, então ela nunca é envolvida pelo bloco colapsável que obrigava a categoria a cobrir duas formas de DOM (categoria real, e categoria sem filhos normalizada para link). Um seletor só basta numa folha.
+**A regra é *nenhum ícone no separador; ícone em tudo abaixo dele, folha ou grupo, em qualquer nível* — issue #114.** É a terceira redação, e a primeira **agnóstica de profundidade**: o teste é *"isto é o separador de topo?"*, e ele tem resposta em qualquer árvore. A da #97 — *toda folha, nenhum cabeçalho de grupo* — dava ícone à folha e negava ao nó intermediário; a anterior a ela fazia o inverso. As duas mudavam de resultado com o nível, e foi isso, não o teto, que travou o nível 3 por duas issues (ver [`icones.md`](icones.md) §8).
 
-O marcador continua sendo o **`className` do manifesto**, e não o número de nível: uma folha em `Biblioteca C` (nível 3) herda a família da categoria de topo que a contém (`--bibliotecas`), não uma família própria do nível 3 — o ícone é da **seção**, não do degrau.
+**São duas formas de DOM, e desde a #114 as duas precisam de seletor.** A folha é um `<a class="menu__link">` direto dentro do `<li>`; o nó colapsável embrulha o link num `<div class="menu__list-item-collapsible">` junto com o `<button class="menu__caret">` irmão. Enquanto a regra excluía todo cabeçalho de grupo, um seletor bastava. O separador não aparece em nenhum dos dois, e não por seletor: ele não recebe `className` nenhum em `sidebars-*.js` — quem decide é a árvore, não o CSS, e é isso que faz a regra valer em qualquer profundidade sem crescer no arquivo.
+
+O marcador continua sendo o **`className` do manifesto**, e não o número de nível: `Biblioteca C` (nível 2) e as folhas dela (nível 3) herdam a família do separador que as contém (`--bibliotecas`), não uma família própria do degrau — o ícone é da **seção**, não do nível.
 
 O alinhamento não é coincidência: o preenchimento horizontal do item de menu foi escolhido para que, somado ao preenchimento que o `DocSidebar` põe na lista, o ícone caia **na mesma vertical do preenchimento do navbar**.
 
@@ -343,13 +347,37 @@ Os onze pares seção→ícone estão em [`icones.md`](icones.md), verbatim; a r
 
 ### 4.2 Hierarquia, recuo e item ativo
 
-A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sidebar-item-link-level-<n>`, que são `ThemeClassNames`. O teto de profundidade é 3 (ver [`informacao.md`](informacao.md) §3.1), e existem **três degraus a desenhar** — o terceiro só aparece em `Ferramentas › Bibliotecas › Biblioteca C`.
+A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sidebar-item-link-level-<n>`, que são `ThemeClassNames`. O teto de profundidade é 3 (ver [`informacao.md`](informacao.md) §3.1) e a forma de cada nível está no §3.2 de lá; existem **três degraus a desenhar** — o terceiro só aparece em `Ferramentas › Bibliotecas › Biblioteca C`.
 
-**O recuo por nível mora inteiro no link, não na lista — issue #97.** Até aqui o Docusaurus somava dois mecanismos: a lista aninhada (`.menu__list` dentro de `.menu__list`) ganhava `padding-left` por nível, e o próprio link tinha o seu — a soma dos dois é que produzia o degrau visual. A âncora não divide assim, e copiar o resultado sem copiar a decisão produz recuo que parece certo no nível 2 e se desfaz no nível 3, ou em qualquer nível que a árvore ganhe depois. A #97 zera o `padding-left` da lista aninhada e escreve o recuo inteiro no link, por nível, com `--sd-space-4` (16px) por degrau — o mesmo total que a soma antiga já dava; a issue move o mecanismo, não a métrica.
+**O recuo por nível mora inteiro no link, não na lista — issue #97.** Até aquela issue o Docusaurus somava dois mecanismos: a lista aninhada (`.menu__list` dentro de `.menu__list`) ganhava `padding-left` por nível, e o próprio link tinha o seu — a soma dos dois é que produzia o degrau visual. A âncora não divide assim, e copiar o resultado sem copiar a decisão produz recuo que parece certo no nível 2 e se desfaz no nível 3. A #97 zera o `padding-left` da lista aninhada e escreve o recuo inteiro no link.
+
+**A rampa é 16 · 16 · 28, e o passo é medido — issue #114.** A #97 moveu o mecanismo e preservou a métrica: `--sd-space-4` (16px) por degrau, *"o mesmo total que a soma antiga já dava"*. Essa soma era o **default do Infima**. O `16px` publicado como alvo `exato` é o BASE, e ele bate com a âncora; o PASSO por nível não tinha sonda de paridade nenhuma, e por isso sobreviveu duas issues sem ninguém notar de onde vinha. Medido no `docs.devin.ai` e no `docs.windsurf.com`, o `padding-left` inline por nível é **16 · 16 · 28 · 40 · 52**: separador e primeiro nível **encostados**, e +12px por degrau daí em diante.
+
+Consequência que vale declarar: em `Jornadas` e `Procedimentos` as folhas descem de 32px para 16px e ficam **alinhadas** com o separador. Quem separa um ramo do outro passa a ser o negrito do separador mais o ícone da folha — e é assim na âncora.
+
+Só o nível 3 escreve regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-link-padding-horizontal` é `--sd-space-4`, e o Infima o aplica a todo `.menu__link`. As sondas `Item de sidebar recuo`, `… nível 2` e `… nível 3` do §11 travam os três degraus — três alvos e não um, porque um número que soma dois degraus não reprova quando só um deles anda.
+
+### 4.2.1 A seta, e o manifesto que parou de mentir
+
+**A seta fica colada ao rótulo, e é o único lugar do sistema onde ela tem função.** Só o nó de nível 2 para baixo colapsa; o separador não tem seta nenhuma.
+
+**A migração da pílula é o que cola a seta no texto.** O Infima dá `flex: 1` ao `.menu__link` dentro de `.menu__list-item-collapsible`: o link cresce até a borda da sidebar e empurra o `<button class="menu__caret">` irmão para longe do rótulo que ele governa. Na âncora não há dois elementos — a linha inteira é um `<button>` só. A resposta é migrar o realce de linha do link para o **wrapper** e tirar o `flex` do link: o link passa a medir o próprio texto, a seta encosta nele, e a pílula continua ocupando a linha inteira porque quem a desenha agora é o elemento que já ocupava a linha inteira.
+
+**O seletor exclui o separador**, que também é embrulhado por `.menu__list-item-collapsible` e não pode ganhar realce, por não ser destino. São **dois** realces a apagar nele, e ambos foram lidos no HTML gerado: o hover do wrapper, e a pílula do ativo — o `theme-classic` põe `menu__link--active` no rótulo do separador sempre que a página aberta está dentro do grupo, e a exclusão que o Infima usa para não pintar rótulo de categoria (`.menu__link--active:not(.menu__link--sublist)`) não o alcança, porque `menu__link--sublist` só é emitida quando `collapsible` é verdadeiro.
+
+**O desenho é `chevron-right` do manifesto, por `mask` e `currentColor`.** [`icones.md`](icones.md) §5 afirmava que esse par servia o *"caret de categoria de sidebar"* desde que o manifesto existe, e nenhuma regra do repositório implementava isso: o desenho era o SVG embutido do Infima (`--ifm-menu-link-sublist-icon`), pintado no modo escuro por um `filter: invert(…)` de sete etapas. A máscara troca as sete etapas por uma declaração e faz a seta seguir a cor do rótulo — inclusive o acento do item ativo — de graça.
+
+**A geometria é 1:1 com o arquivo.** O alvo medido na âncora é *traço 2, 8px de largura*; o `chevron-right.svg` vendorizado é um lucide de `viewBox="0 0 24 24"` com `stroke-width="2"` e `d="m9 18 6-6-6-6"` — o traço cobre de x=8 a x=16, que são exatamente 8 unidades de largura com traço 2. Renderizar a máscara a `mask-size: 24px` entrega os dois números do alvo sem escalar nada. A **caixa** é 16px e não 8: `rotate` gira o elemento, não a máscara, e numa caixa de 8px a seta aberta transbordaria. O gap ao rótulo é **12px**, e o `padding-left` do botão paga 8 — o desenho nasce centrado na caixa de 16, então 4px de folga já vêm de dentro.
+
+**Fechada é rotação zero; aberta é `rotate: 90deg`, em 75ms.** O Infima escreve `transform: rotate(180deg)` no estado base e `rotateZ(90deg)` no colapsado, girando um glifo que apontava para cima; nosso desenho já aponta para a direita. Zerar o `transform` e usar a propriedade `rotate` independente deixa os dois estados legíveis pelo valor, e não pela soma de duas rotações herdadas. Os 75ms são `--sd-move-flip`, o sétimo movimento do vocabulário (ver [`motion.md`](motion.md) §2) — a parada de duração `--sd-dur-0` entrou com ele e existe por esta medição.
+
+**Sem trilho vertical ligando os filhos ao pai.** A âncora não desenha um, e este projeto nunca desenhou. O que separa um ramo do vizinho é o recuo e o negrito do separador.
 
 **O item ativo é uma pílula preenchida, largura cheia, no acento a 12% — issue #97.** `--ifm-menu-color-background-active` já era esse preenchimento antes da issue; o que faltava era o raio (a base do Infima crava 0,25rem) e a folha ganhar ícone — sem ícone na folha, o item ativo pintava só o texto na cor de acento, nunca um glifo junto. Sem barra lateral, sem borda, sem sombra: a âncora não usa nenhuma das três no ativo, e este projeto nunca desenhou nenhuma aqui.
 
-**O item ativo ganha falso-negrito por `text-shadow`, não por `font-weight`.** Trocar o peso reflui o texto e faz o item **pular de largura** no instante em que o leitor navega — a mesma técnica de sempre, e agora a única fonte de ênfase textual da sidebar: peso e entrelinha são uniformes entre cabeçalho de grupo e folha (400 · 24px, ver [`tokens.md`](tokens.md) §13), e o degrau que antes separava os dois visualmente saiu junto com o ícone de cabeçalho.
+**O item ativo ganha falso-negrito por `text-shadow`, não por `font-weight`.** Trocar o peso reflui o texto e faz o item **pular de largura** no instante em que o leitor navega. Peso e entrelinha são uniformes entre tudo que é **destino** — 400 · 24px, ver [`tokens.md`](tokens.md) §13.
+
+**O separador é a exceção, e ela usa peso de verdade.** Ele nasce em `--sd-weight-heading` (600) e em `--sd-text-strong`, com o falso-negrito do ativo apagado por cima. Os dois mecanismos resolvem problemas diferentes: o `text-shadow` existe onde o peso MUDA, e o separador nunca muda de peso — não há reflow a evitar, e uma sombra de 0,4px seria uma aproximação onde cabe o desenho certo. O alvo está publicado no §11 como `Separador de sidebar peso`.
 
 **O respiro entre grupos não mudou na #97, e é lacuna nomeada, não folga silenciosa.** A issue pede que ele bata com o da âncora, mas nenhum documento desta spec publica o número — nem esta tabela, nem `tokens.md` §13 — e inventar um aqui seria exatamente o que o axioma 5 proíbe: procedência de medição, não de decisão de quem implementa. O que fica em pé é o `margin-top: 0,25rem` que o Infima já cravava entre categorias antes desta issue, inalterado. Fechar este critério pede uma medição de primeira mão contra a âncora — o mesmo processo que produziu a tabela do §11 —, e fica pendente para quem fizer essa medição.
 
@@ -423,7 +451,7 @@ Toda página do site ganha uma linha abaixo do `h1`: **`--sd-type-lg`, num bloco
 
 Um **override da chave `h1` no registro de `@theme/MDXComponents`, degrau 3**, lendo `useDoc().frontMatter.description` — API pública, já consumida pelo `ApiDocItem`.
 
-A condição estava escrita em [`swizzle.md`](swizzle.md) §4, na nota da perda 10, e está conferida: **61 de 61 páginas escrevem o próprio `# Título`**, nenhuma escreve dois, e 61 de 61 já têm `description` — as 46 autorais mais as 15 traduções. **Quem confere hoje não é uma varredura de mão:** a cobrança 10 do portão 4 percorre `conteudo/` e a árvore de tradução e reprova a primeira página sem o campo.
+A condição estava escrita em [`swizzle.md`](swizzle.md) §4, na nota da perda 10, e está conferida: **62 de 62 páginas escrevem o próprio `# Título`**, nenhuma escreve dois, e 62 de 62 já têm `description` — as 39 autorais, as 6 geradas em pt-BR e as 17 de EN. **Quem confere hoje não é uma varredura de mão:** a cobrança 10 do portão 4 percorre `conteudo/` e a árvore de tradução e reprova a primeira página sem o campo.
 
 A alternativa era injetar nó no corpo da página, que é a **perda 1** do ledger e exige `DocItem/Layout` ou `DocItem/Content` — os dois `unsafe`, os dois proibidos. A rota escolhida não encosta neles.
 
@@ -692,7 +720,9 @@ A tolerância é parte do alvo, e não um detalhe do script: `exato` é para o q
 | TOC visível a 1100 | `não` | exato |
 | Item de sidebar altura | `36px` | ±1 |
 | Item de sidebar raio | `12px` | exato |
-| Item de sidebar recuo | `16px` | exato |
+| Item de sidebar recuo nível 1 | `16px` | exato |
+| Item de sidebar recuo nível 2 | `16px` | exato |
+| Item de sidebar recuo nível 3 | `28px` | exato |
 | TOC grudado em | `152px` | ±1 |
 
 **Uma linha saiu desta tabela, e não por ter fechado — S3-7.** Ela era `Sidebar visível a 1010 = não`, tolerância `exato`, e a paridade media `sim` desde o dia em que foi publicada. O §10 classifica **a mesma coisa** como perda 6: a gaveta do estreito só monta quando o `windowSize` do React está em `'mobile'`, e esse estado lê **996 hardcoded** em `@docusaurus/theme-common` — não é ponto de swizzle, é lógica de contexto sem opção pública. Ver §1.6 e o comentário longo em `chrome.css` §4.
@@ -742,6 +772,12 @@ O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | **O alvo medido do §11** | **medido em referência** | as três medições de primeira mão da âncora, em `research/paridade-devin` §4 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O nível de topo é separador — sem link, sem colapso, sem seta, sem ícone** | herdado | `docs.devin.ai` — `<h3 class="sidebar-title">` sem link nem `aria-expanded`; e `mintlify.com/docs/organize/navigation`, *"Top-level groups always expand and you cannot collapse them"* |
+| **A rampa de recuo 16 · 16 · 28** | **herdado (medição)** | `docs.devin.ai` e `docs.windsurf.com`, `padding-left` inline por nível; o passo de +16px anterior era o default do Infima e não tinha sonda de paridade |
+| **`--sd-sidebar-width` não reabre com a profundidade** | **herdado (medição)** | `w-[18rem]` = 288px nos dois sites medidos, e o `docs.windsurf.com` segura cinco níveis dentro deles — o dissenso registrado no §4 cai |
+| **A seta colada ao rótulo: traço 2, 8px, `currentColor`, `rotate: 90deg` ao abrir em 75ms, sem trilho vertical** | herdado | `docs.devin.ai` — chevron depois do rótulo a `gap-x-3` |
+| **A pílula migra para `.menu__list-item-collapsible`** | **herdado (implementação)** | na âncora a linha inteira é um `<button>` só; é o que faz o link parar de crescer e a seta encostar no texto |
+| **O separador em `--sd-weight-heading` e `--sd-text-strong`** | **origem própria** | é a única linha da sidebar que não é destino, e a diferença de peso sozinha não a separa de um link apagado |
 | **O corredor de §1.7, em 43,2** | **medido em referência** | medição de primeira mão da âncora, a 1024 e a 1512, pelo mesmo instrumento CDP de `npm run paridade`: o conteúdo dela abre `pl-[5.7rem]` sobre um `-ml-12`, e o líquido é o mesmo nas duas larguras. O número que ele substitui não era decisão — era o resto da centralização da prosa, 47,6 numa largura e zero em toda a faixa de laptop |
 | **O padding lateral do quadro em 32** | **medido em referência (correção)** | a regra do wrapper da âncora que o §11 já publicava para derivar as margens a 1920 — `max-width: 1472`, `padding-inline: 32`. Estava implementada só pela metade de dentro (`max-width: 1408`), que é idêntica a partir de 1472 e cai a zero abaixo dela. Confirmado em navegador: nenhuma das 62 sondas de paridade se moveu |
 | **A `.row` a 4/3 abaixo de 1280** | **origem própria (implementação)** | `docItemCol` crava `max-width: 75% !important` numa classe hasheada, e o `!important` não se vence sem escrever outro. `calc(-100% / 3)` é o complemento exato de 75%, derivado do próprio teto — `0,75 × 4/3 = 1` —, não um número escolhido. A faixa vazia que ele fecha foi medida: 180px a 1024, 244px a 1279 |

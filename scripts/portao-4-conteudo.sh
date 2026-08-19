@@ -22,7 +22,7 @@
 # locale, que é a única sobrevivente da versão anterior deste portão — ela não é
 # acréscimo, é a linha que não foi jogada fora com o resto.
 #
-#    1. o volume por aba e por categoria     12 · 19 · 21, e 52 no total
+#    1. o volume por aba e por categoria     12 · 16 · 17, e 45 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
 #    3. a regra de heading                    com UMA exceção nomeada
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
@@ -35,7 +35,7 @@
 #   10. `description`                         em 100% das páginas
 #   11. as onze fixtures                      por caminho nomeado
 #   12. os dez tipos têm instância            e nenhum fica pendente
-#   13. a cobertura de locale                 21 em EN, e só `Ferramentas`
+#   13. a cobertura de locale                 17 em EN, e só `Ferramentas`
 #
 # **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
 # ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
@@ -94,16 +94,23 @@ reprova() {
 # `chave=valor` separados por espaço, lidos com `${par%%=*}` / `${par##*=}` —
 # o repo não tem bash 4 garantido, então nada de array associativo.
 #
-# **Estas contagens são de AUTORAL**, e continuam em 15 para `Ferramentas`: a
-# função conta `.md`, e o ramo gerado é `.mdx`. A soma das duas — 21 folhas na
-# aba e 52 no site — é cobrada logo abaixo, com o número gerado somado por fora.
+# **Estas contagens são de AUTORAL**, e são 11 para `Ferramentas`: a função conta
+# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 17 folhas na aba e 45 no
+# site — é cobrada logo abaixo, com o número gerado somado por fora.
 VOLUME_JORNADAS='api-owner=7 security-champion=5'
-VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=4 infraestrutura=4 acessos=4 diagnostico=4'
-VOLUME_FERRAMENTAS='bibliotecas=7 modulos-terraform=3 skills=3 servidores-mcp=2'
+VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=3 infraestrutura=3 acessos=3 diagnostico=4'
+VOLUME_FERRAMENTAS='bibliotecas=6 modulos-terraform=2 skills=2 servidores-mcp=1'
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 46 autorais.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 39 autorais.
 #
-# `indice` e `fixture-curta` são FORMAS de índice de categoria, não tipos (§6.3);
+# **A forma `indice` MORREU com a issue #114**, e com ela sete páginas: o
+# conteúdo delas era *a lista do que está logo abaixo*, e a sidebar já é essa
+# lista (ADR 10 §c). Nenhuma linha `:indice` sobrou aqui, e é por isso que o
+# `indice` não aparece — não é omissão, é a forma que deixou de existir.
+#
+# `fixture-curta` é a forma que ficou, e ela não é tipo (§6.3): é o gabarito de
+# `Ambiente › Índice`, que sobreviveu como FOLHA por carregar a fixture
+# `pagina-muito-curta` e a única exceção nomeada da regra de heading.
 # `capitulo` é o gabarito da folha de `Jornadas`, e também não é tipo — os dez
 # tipos são os da tabela do §6.1, e `indice-de-jornada` é o décimo.
 TIPOS=$(cat <<'FIM'
@@ -122,15 +129,12 @@ jornadas/security-champion/o-inventario-de-imagens:capitulo
 procedimentos/ambiente/indice:fixture-curta
 procedimentos/ambiente/comparativo-dev-staging-prod:catalogo
 procedimentos/ambiente/preparar-a-maquina-local:guia
-procedimentos/esteiras/indice:indice
 procedimentos/esteiras/verificar-a-assinatura-hmac:guia
 procedimentos/esteiras/publicar-um-pacote-interno:guia
 procedimentos/esteiras/rodar-a-esteira-localmente:guia
-procedimentos/infraestrutura/indice:indice
 procedimentos/infraestrutura/o-output-de-um-modulo:conceitual
 procedimentos/infraestrutura/criar-um-bucket-versionado:guia
 procedimentos/infraestrutura/promover-um-modulo:guia
-procedimentos/acessos/indice:indice
 procedimentos/acessos/permissoes-por-papel:catalogo
 procedimentos/acessos/assumir-um-papel-na-aws:guia
 procedimentos/acessos/rotacionar-uma-chave:guia
@@ -138,20 +142,16 @@ procedimentos/diagnostico/indice-de-sintomas:troubleshooting
 procedimentos/diagnostico/monitoramento-e-alertas:conceitual
 procedimentos/diagnostico/o-mesmo-erro-em-tres-formas:troubleshooting
 procedimentos/diagnostico/o-diff-que-resolveu:troubleshooting
-ferramentas/bibliotecas/indice:indice
 ferramentas/bibliotecas/biblioteca-a:sdk
 ferramentas/bibliotecas/biblioteca-b:sdk
 ferramentas/bibliotecas/biblioteca-c/visao-geral:quickstart
 ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao:guia
 ferramentas/bibliotecas/biblioteca-c/tratamento-de-erros:conceitual
 ferramentas/bibliotecas/biblioteca-c/changelog:changelog
-ferramentas/modulos-terraform/indice:indice
 ferramentas/modulos-terraform/modulo-de-bucket:guia
 ferramentas/modulos-terraform/modulo-de-papel-iam:guia
-ferramentas/skills/indice:indice
 ferramentas/skills/scaffold-de-esteira:receita
 ferramentas/skills/rotacao-de-segredo:receita
-ferramentas/servidores-mcp/indice:indice
 ferramentas/servidores-mcp/servidor-de-catalogo-mcp:sdk
 FIM
 )
@@ -240,26 +240,26 @@ echo
 echo "1  volume por aba e por categoria"
 
 volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
-volume_da_aba "$PROCEDIMENTOS" 19 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
-volume_da_aba "$FERRAMENTAS" 15 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
+volume_da_aba "$PROCEDIMENTOS" 16 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
+volume_da_aba "$FERRAMENTAS" 11 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
 
 autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
-[ "$autorais" = 46 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 46"
+[ "$autorais" = 39 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 39"
 
-# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 13, `Ferramentas`
-# em 21 e o site em 52 — os três números que a spec publica.
+# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 12, `Ferramentas`
+# em 17 e o site em 45 — os três números que a spec publica.
 geradas=$(find "$GERADO_PT" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas" = "$GERADAS" ] ||
   reprova "o ramo gerado tem ${geradas} páginas, esperado ${GERADAS}"
 
 bibliotecas=$(( $(find "${FERRAMENTAS}/bibliotecas" -name '*.md' | wc -l) + geradas ))
-[ "$bibliotecas" = 13 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 13"
+[ "$bibliotecas" = 12 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 12"
 
 folhas_ferramentas=$((total_ferramentas + geradas))
-[ "$folhas_ferramentas" = 21 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 21"
+[ "$folhas_ferramentas" = 17 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 17"
 
 total=$((autorais + geradas))
-[ "$total" = 52 ] || reprova "o site tem ${total} páginas, esperado 52"
+[ "$total" = 45 ] || reprova "o site tem ${total} páginas, esperado 45"
 
 echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${folhas_ferramentas} = ${total}"
 echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
@@ -526,7 +526,7 @@ echo
 #
 # **A regra apertou**, e é consequência de o locale ter fronteira: `<Untranslated
 # />` é sobre a página SÓ existir num locale, e isso só acontece em `Jornadas` e
-# `Procedimentos`. As 15 de `Ferramentas` nascem traduzidas, então marcá-las
+# `Procedimentos`. As 11 de `Ferramentas` nascem traduzidas, então marcá-las
 # seria carimbar um estado que elas nunca terão.
 echo "9  marcador de tradução"
 sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS") || true
@@ -548,8 +548,8 @@ if [ -n "$com_marcador_en" ]; then
 fi
 
 marcadas=$(grep -Rl '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS" 2>/dev/null | wc -l)
-[ "$marcadas" = 31 ] || reprova "${marcadas} páginas com marcador, esperado 31"
-echo "   ${marcadas} marcam (12 de Jornadas + 19 de Procedimentos); Ferramentas e as traduções não"
+[ "$marcadas" = 28 ] || reprova "${marcadas} páginas com marcador, esperado 28"
+echo "   ${marcadas} marcam (12 de Jornadas + 16 de Procedimentos); Ferramentas e as traduções não"
 echo
 
 # --- 10. `description` em 100% ------------------------------------------------
@@ -627,7 +627,7 @@ geradas_en=$(find "$GERADO_EN" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas_en" = "$geradas" ] ||
   reprova "EN: ${geradas_en} páginas geradas, e o pt-BR tem ${geradas} — o gerador escreve os dois"
 traduzidas=$((traduzidas + geradas_en))
-[ "$traduzidas" = 21 ] || reprova "EN: ${traduzidas} páginas, esperado 21"
+[ "$traduzidas" = 17 ] || reprova "EN: ${traduzidas} páginas, esperado 17"
 
 for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
   n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)

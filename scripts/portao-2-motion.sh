@@ -5,7 +5,7 @@
 #
 # Cadência: commit.
 #
-# Nenhum CSS do projeto escreve duração ou curva fora dos seis movimentos
+# Nenhum CSS do projeto escreve duração ou curva fora dos sete movimentos
 # nomeados. Não é higiene: é o que faz `prefers-reduced-motion` alcançar o
 # Infima e o theme-classic, que nós não escrevemos. Movimento que compõe da
 # escala herda a redefinição; movimento com número cravado, não.
@@ -38,7 +38,7 @@ if [ -n "$achados" ]; then
   echo
   echo "$achados"
   echo
-  echo "Use um dos seis movimentos: --sd-move-{state,enter,expand,showcase,reveal,ambient}."
+  echo "Use um dos sete movimentos: --sd-move-{flip,state,enter,expand,showcase,reveal,ambient}."
   exit 1
 fi
 

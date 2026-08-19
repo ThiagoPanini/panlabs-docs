@@ -46,23 +46,23 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 
 /**
- * O primeiro destino declarado na primeira sidebar — `sidebars-jornadas.js`, o
- * `link` da categoria `API Owner`. **A ordem é declarada lá e em lugar nenhum
- * mais**, e esta constante é uma leitura dela, não uma segunda fonte.
+ * A ROTA NUA da primeira aba. Ela existe porque a primeira folha de
+ * `sidebars-jornadas.js` carrega `slug: /` no front matter — `/jornadas` é
+ * página de verdade, não redirecionamento nem 404 (ADR 10 §h).
  *
- * Há uma terceira citação da mesma rota, e ela não é cópia desta:
- * `scripts/portao-4-conteudo.sh` a soletra para cobrar o TIPO da página
- * (`indice-de-jornada`), que é outra pergunta. Mudar a ordem da sidebar exige
- * acertar esta linha; mudar o tipo da página exige acertar a de lá.
+ * **O acoplamento encolheu, e vale dizer o que ele era.** Esta constante
+ * soletrava `/jornadas/api-owner/indice`: o `link` da categoria `API Owner`,
+ * copiado à mão de outro arquivo. Trocar aquele `link` sem trocar esta linha
+ * reapontava a raiz em silêncio, com a CI verde — a lacuna estava nomeada aqui
+ * e nenhum portão a casava. Com a rota nua, o alvo é a **instância**, não a
+ * página: trocar qual folha abre a aba não mexe neste arquivo, porque quem
+ * muda de dono é o `slug: /`, que viaja com a folha.
  *
- * **Lacuna nomeada, porque nenhum portão casa as duas.** O build reprova se
- * este destino deixar de existir — é o `<Link>` abaixo que compra essa
- * verificação —, mas não reprova se ele deixar de ser o **primeiro**: trocar o
- * `link` da categoria em `sidebars-jornadas.js` sem trocar esta linha reaponta
- * a raiz em silêncio, com a CI verde. O portão 6 confere três rotas contra o
- * host publicado e a raiz não é uma delas.
+ * O que sobra de acoplamento é o que o portão 6 cobre: ele confere que
+ * `/jornadas`, `/procedimentos` e `/ferramentas` devolvem 200 no host
+ * publicado, e a primeira das três é exatamente este destino.
  */
-const DESTINO = '/jornadas/api-owner/indice';
+const DESTINO = '/jornadas';
 
 export default function Raiz() {
   const url = useBaseUrl(DESTINO);

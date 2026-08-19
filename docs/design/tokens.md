@@ -349,10 +349,19 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Livre — skin corporativa (redesenho): nenhum manual de marca especifica
      duração. Quem edita aqui está redesenhando, não re-marcando.
 
-     Os números são medidos, não escolhidos: 200ms é o valor mais aplicado de
-     toda a amostra; 300ms é a banda de mudança grande; 500ms é a banda de
-     entrada grande; 5s é o único loop ambiente medido em qualquer uma das sete.
+     Os números são medidos, não escolhidos: 75ms é a banda do giro curto —
+     medida no caret de sidebar da âncora, o único movimento do site que atravessa
+     menos de um décimo de segundo; 200ms é o valor mais aplicado de toda a
+     amostra; 300ms é a banda de mudança grande; 500ms é a banda de entrada
+     grande; 5s é o único loop ambiente medido em qualquer uma das sete.
+
+     `--sd-dur-0` entrou na issue #114, e a parada é da âncora, não da escala:
+     75 não é 200 dividido por nada. Ela existe porque a rotação do caret é o
+     único movimento cujo alvo publicado fica abaixo de `--sd-dur-1`, e
+     arredondá-lo para 200ms trocaria uma medição por uma conveniência de
+     vocabulário. Ver docs/adr/0010 — a linha da seta é `herdado`.
      --------------------------------------------------------------------------- */
+  --sd-dur-0: 75ms;
   --sd-dur-1: 200ms;
   --sd-dur-2: 300ms;
   --sd-dur-3: 500ms;
@@ -363,12 +372,12 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-ease-settle: cubic-bezier(0, 0, 0.2, 1);   /* responde ao leitor e assenta */
   --sd-ease-inout:  cubic-bezier(0.4, 0, 0.2, 1); /* tem início e fim na tela */
 
-  /* Os seis movimentos. Cada um é um token COMPLETO — <duração> <easing> — que
+  /* Os sete movimentos. Cada um é um token COMPLETO — <duração> <easing> — que
      compõe da escala em vez de cravar número. É isso que faz reduced-motion
      alcançar o Infima que não escrevemos: o adaptador escreve
      --ifm-transition-fast a partir de --sd-dur-1, e a redefinição atravessa.
 
-     Os quatro primeiros terminam sozinhos e ENCURTAM sob reduced-motion.
+     Os cinco primeiros terminam sozinhos e ENCURTAM sob reduced-motion.
      Os dois últimos não terminam sozinhos — `reveal` é dirigido por rolagem,
      `ambient` é infinito — e são REMOVIDOS, não encurtados; quem os consome
      acrescenta timeline / `infinite`.
@@ -377,12 +386,24 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      ficam declarados de propósito. O motivo é o que a régua de órfãos pede — e
      não é o mesmo do `--sd-type-6xl`, que saiu no mesmo movimento. O vocabulário
      de motion é FECHADO por portão: `scripts/portao-2-motion.sh` reprova toda
-     duração ou curva cravada e manda usar um destes seis nomes. Remover três
+     duração ou curva cravada e manda usar um destes sete nomes. Remover três
      deixaria o portão apontando para um vocabulário que não cobre `showcase`,
      `reveal` nem `ambient` — e a próxima faixa que precisasse de um deles
      escreveria o número cravado que o portão existe para impedir. É uma escala
      declarada inteira, como a rampa de cinza, e o buraco no meio custa mais do
-     que a parada a mais. */
+     que a parada a mais.
+
+     `flip` é o sétimo, e ele entrou na issue #114 com um consumidor só: a
+     rotação do caret de categoria de sidebar. Ele não é `state` com outro nome —
+     `state` é 200ms e cobre cor, fundo e sombra, que respondem ao ponteiro;
+     `flip` é o giro de um glifo pequeno em torno do próprio eixo, e a âncora o
+     mede em 75ms. Fundir os dois arredondaria a medição para caber no
+     vocabulário, que é a troca que este arquivo não faz.
+
+     A curva de `flip` é `settle`, não `inout`: o giro responde ao clique do
+     leitor e assenta — não tem começo próprio na tela. É a mesma leitura que
+     põe `state` e `enter` em `settle`. */
+  --sd-move-flip:     var(--sd-dur-0) var(--sd-ease-settle);
   --sd-move-state:    var(--sd-dur-1) var(--sd-ease-settle);
   --sd-move-enter:    var(--sd-dur-1) var(--sd-ease-settle);
   --sd-move-expand:   var(--sd-dur-2) var(--sd-ease-inout);
@@ -1029,6 +1050,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --sd-dur-0: 1ms;
     --sd-dur-1: 1ms;
     --sd-dur-2: 1ms;
     --sd-dur-3: 1ms;
@@ -1847,7 +1869,7 @@ Ela é a única linha da tipografia que **não é token**, e mora em `src/css/cu
 
 Os valores moram aqui; a doutrina mora em [`motion.md`](motion.md) e no [ADR 3](../adr/0003-reduced-motion-na-camada-de-token.md).
 
-Três paradas de duração mais um período de loop, duas curvas nomeadas por intenção, e **seis movimentos** que são tokens completos — `<duração> <easing>` — compostos da escala em vez de cravar número. É isso que faz reduced-motion alcançar o framework que não escrevemos.
+Quatro paradas de duração mais um período de loop, duas curvas nomeadas por intenção, e **sete movimentos** que são tokens completos — `<duração> <easing>` — compostos da escala em vez de cravar número. É isso que faz reduced-motion alcançar o framework que não escrevemos.
 
 Os números são medidos, não escolhidos: a parada curta é o valor mais aplicado de toda a amostra das sete referências; a média é a banda de mudança grande; a longa é a banda de entrada grande; e o período de loop é o único loop ambiente medido em qualquer uma das sete.
 
@@ -2022,6 +2044,7 @@ Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias 
 | Item de sidebar tamanho | `14px` | exato |
 | Item de sidebar entrelinha | `24px` | ±1 |
 | Item de sidebar peso | `400` | exato |
+| Separador de sidebar peso | `600` | exato |
 | Item de TOC tamanho | `14px` | exato |
 | Aba do navbar tamanho | `14px` | exato |
 

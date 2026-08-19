@@ -19,7 +19,7 @@ O portão 4 (`npm run portao:4`) transforma em varredura os critérios da arquit
 | `conteudo/procedimentos/` | 19 |
 | `conteudo/ferramentas/` | 21 |
 
-Mais o ramo gerado, somado por fora — **52 no site**. Acrescentar ou remover página **exige acertar o portão 4 junto**. São treze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
+Mais o ramo gerado, somado por fora — **45 no site**. Acrescentar ou remover página **exige acertar o portão 4 junto**. São treze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
 
 ## Proibição por localização
 
@@ -31,7 +31,7 @@ O portão 4 tem uma classe de cobrança que não é só teto — é *"aqui não 
 
 ## Locale
 
-**Só `Ferramentas` é traduzida** — 21 folhas, cobertura cobrada pelo portão 4. As outras duas abas existem só em pt-BR, e isso é decisão, não pendência: `docs/design/informacao.md` § 8. Locale.
+**Só `Ferramentas` é traduzida** — 17 folhas, cobertura cobrada pelo portão 4. As outras duas abas existem só em pt-BR, e isso é decisão, não pendência: `docs/design/informacao.md` § 8. Locale.
 
 Tradução mora em `i18n/en/docusaurus-plugin-content-docs-ferramentas/current/`, espelhando a árvore de `conteudo/ferramentas/`. Rótulo de UI vai em `i18n/en/docusaurus-theme-classic/`.
 

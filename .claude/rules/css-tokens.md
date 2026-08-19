@@ -32,7 +32,7 @@ Faltou o papel na camada 2? A escada está em `docs/design/tokens.md` § 1. As t
 ## Os três portões desta área
 
 - **Portão 1** (`npm run portao:1`) — cor, comprimento, tempo ou curva fora de `tokens.css`. `0`, número sem unidade, `%`, `fr`, `ch`, `lh` e `auto` ficam de fora do escopo: são layout.
-- **Portão 2** (`npm run portao:2`) — duração ou curva cravada numa transição. Os seis movimentos nomeados são o vocabulário fechado, e é o que faz `prefers-reduced-motion` alcançar o Infima e o theme-classic, que não escrevemos aqui.
+- **Portão 2** (`npm run portao:2`) — duração ou curva cravada numa transição. Os sete movimentos nomeados são o vocabulário fechado, e é o que faz `prefers-reduced-motion` alcançar o Infima e o theme-classic, que não escrevemos aqui.
 - **Portão 3** (`npm run portao:3`) — `outline` fora de `src/css/foco.css`. Ele existe contra o `outline: none` escrito para "limpar" um botão.
 
 Cada um roda em menos de meio segundo. Rode o que a mudança ativa enquanto trabalha.

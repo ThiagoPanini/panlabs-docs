@@ -12,12 +12,13 @@ Tudo aqui é obrigatório, salvo bloco marcado `Livre`.
 
 ---
 
-## 1. O vocabulário são seis movimentos
+## 1. O vocabulário são sete movimentos
 
 **Nenhum CSS do projeto escreve duração ou curva fora deles.**
 
 | Movimento | Papel | Termina sozinho? |
 | --- | --- | --- |
+| `--sd-move-flip` | gira um glifo no próprio eixo: o caret de categoria de sidebar | sim |
 | `--sd-move-state` | muda em lugar: cor, borda, sombra, opacidade | sim |
 | `--sd-move-enter` | aparece: o modal de busca | sim |
 | `--sd-move-expand` | muda de tamanho: `<details>`, sidebar em tela estreita | sim |
@@ -25,7 +26,7 @@ Tudo aqui é obrigatório, salvo bloco marcado `Livre`.
 | `--sd-move-reveal` | reveal por rolagem — **sem consumidor**, ver §5 | **não** — dirigido por rolagem |
 | `--sd-move-ambient` | respiração do glow — **sem consumidor**, ver §5 | **não** — infinito |
 
-> **Três dos seis não têm consumidor hoje, e continuam declarados.** A ilha de espetáculo saiu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)), levando os três `@keyframes` que os consumiam. **O vocabulário continua sendo seis**, e é o **portão 2** que o define assim: ele reprova toda duração ou curva cravada e manda usar um destes nomes. Um vocabulário de três deixaria a próxima faixa que precisasse de um movimento longo sem nome para pedir — e o que ela escreveria é o número cravado que o portão existe para impedir. **Órfão com motivo escrito é decisão registrada; órfão sem motivo é o defeito do Infima que este projeto nomeia para não copiar.** O motivo está escrito aqui, no §5 e ao lado das três linhas em `tokens.css`.
+> **Três dos sete não têm consumidor hoje, e continuam declarados.** A ilha de espetáculo saiu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)), levando os três `@keyframes` que os consumiam. **O vocabulário continua fechado**, e é o **portão 2** que o define assim: ele reprova toda duração ou curva cravada e manda usar um destes nomes. Um vocabulário de três deixaria a próxima faixa que precisasse de um movimento longo sem nome para pedir — e o que ela escreveria é o número cravado que o portão existe para impedir. **Órfão com motivo escrito é decisão registrada; órfão sem motivo é o defeito do Infima que este projeto nomeia para não copiar.** O motivo está escrito aqui, no §5 e ao lado das três linhas em `tokens.css`.
 
 Cada um é um **token completo** — duração mais easing —, e o componente consome por nome:
 
@@ -52,6 +53,7 @@ As curvas próprias de uma das referências medidas **não entram**: dela se tom
 
 | Movimento | Onde |
 | --- | --- |
+| `--sd-move-flip` | **só** o caret de categoria de sidebar — o único nó colapsável do site |
 | `--sd-move-state` | link, item de sidebar, aba, cartão, botão de cópia, borda |
 | `--sd-move-expand` | os componentes com `<details>`, e a sidebar em tela estreita |
 | `--sd-move-enter` | **só** o modal de busca |
@@ -246,6 +248,8 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | Escala de duração e o período do loop | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) — medidos nas sete referências |
+| **A parada `--sd-dur-0`, 75ms, e o movimento `--sd-move-flip`** | **herdado (medição)** | `docs.devin.ai` — o caret de categoria gira em 75ms ao abrir; é o único alvo publicado abaixo de `--sd-dur-1`, e arredondá-lo para 200ms trocaria a medição por conveniência de vocabulário. Ver [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) |
+| A curva de `flip` é `settle`, e não `inout` | **origem própria (consequência)** | o giro responde ao clique e assenta; não tem começo próprio na tela — a mesma leitura que põe `state` e `enter` em `settle` |
 | Duas curvas de easing | herdado | [#3](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/3) §1.5 — base dos quatro sites do alvo |
 | Descarte do default do framework de utilitários | herdado | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §1 — default herdado, não aplicado |
 | Easing nomeado por intenção, animação como token completo | mecanismo emprestado | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) §3 |

@@ -1,5 +1,6 @@
 ---
 title: Biblioteca A
+slug: /
 description: O cliente Python do catálogo interno — instalação, configuração, uso e o tratamento de erro que ela espera de quem a consome.
 ---
 
@@ -50,8 +51,8 @@ catalogo = Catalogo(
 ```
 
 `leitor_de_segredo` é injetado de propósito: a biblioteca não escolhe política
-de cache por quem a usa. Ver a regra de dependência em
-[Bibliotecas](indice).
+de cache por quem a usa. Quem chama traz o leitor, e a dependência aponta para
+fora.
 
 ## Uso
 
@@ -99,4 +100,4 @@ tipos do pacote, e o `help()` do Python é a fonte:
 python -c "from panlabs.catalogo import Catalogo; help(Catalogo)"
 ```
 
-Quem tem referência gerada é a [Biblioteca C](biblioteca-c/visao-geral).
+Quem tem referência gerada é a [Biblioteca C](./biblioteca-c/visao-geral.md).

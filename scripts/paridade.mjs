@@ -98,7 +98,11 @@ async function esperarPor(tentar, {tentativas, intervalo}) {
 const ROTAS = {
   prosa: '/procedimentos/acessos/rotacionar-uma-chave',
   codigo: '/ferramentas/bibliotecas/biblioteca-b',
-  tabela: '/ferramentas/bibliotecas/indice',
+  /* A rota da tabela mudou na #114: o índice de `Bibliotecas` era a página que a
+     renderizava, e ele morreu com a forma *índice de categoria* (ADR 10 §c). A
+     herdeira é a fixture `tabela-como-pagina-inteira` — o tipo `Catálogo` com
+     prosa quase nula, que é ainda mais tabela do que a anterior era. */
+  tabela: '/procedimentos/ambiente/comparativo-dev-staging-prod',
   /* O cartão morava na landing. A landing morreu e a raiz virou salto para a
      primeira doc, então a rota do cartão é a página que ainda o renderiza —
      sondar `/` daria `sem-medida` para sempre. */
@@ -167,9 +171,22 @@ const SONDAS = [
   {sonda: 'tipo.h2.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown h2', medida: 'estilo:line-height'},
   {sonda: 'tipo.prosa.tamanho', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'estilo:font-size'},
   {sonda: 'tipo.prosa.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-markdown p:not(.subtitulo)', medida: 'estilo:line-height'},
-  {sonda: 'tipo.sidebar.tamanho', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:font-size'},
-  {sonda: 'tipo.sidebar.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:line-height'},
-  {sonda: 'tipo.sidebar.peso', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:font-weight'},
+  /* `.theme-doc-sidebar-item-link > .menu__link` e não `.menu__link` seco, desde a
+     #114. `querySelector` devolve o primeiro casamento, e o primeiro
+     `.menu__link` da árvore passou a ser o SEPARADOR — que não é item, tem peso
+     próprio e não é destino. Com o seletor solto, estas três sondas mediriam o
+     rótulo mudo e publicariam o número dele sob o nome do item; a de peso foi a
+     que denunciou, porque é a única das três em que separador e folha diferem.
+
+     A classe de item de LINK exclui o separador por construção: ele é
+     `theme-doc-sidebar-item-category`, e a diferença não depende de nível. */
+  {sonda: 'tipo.sidebar.tamanho', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link > .menu__link', medida: 'estilo:font-size'},
+  {sonda: 'tipo.sidebar.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link > .menu__link', medida: 'estilo:line-height'},
+  {sonda: 'tipo.sidebar.peso', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link > .menu__link', medida: 'estilo:font-weight'},
+  /* O SEPARADOR tem peso próprio e alvo próprio, e é a única linha da sidebar
+     que não usa `--sd-weight-body`. Sem sonda, o negrito que agrupa a árvore
+     inteira seria a única decisão de tipografia do chrome sem régua. */
+  {sonda: 'tipo.separador.peso', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link', medida: 'estilo:font-weight'},
   {sonda: 'tipo.toc.tamanho', cenario: 'prosa@1512/escuro', seletor: '.table-of-contents__link', medida: 'estilo:font-size'},
   {sonda: 'tipo.aba.tamanho', cenario: 'prosa@1512/escuro', seletor: '.navbar__item.navbar__link', medida: 'estilo:font-size'},
 
@@ -225,9 +242,36 @@ const SONDAS = [
      não repetir. */
 
   // --- sidebar e TOC, métrica -------------------------------------------
-  {sonda: 'sidebar.item.altura', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'caixa:height'},
-  {sonda: 'sidebar.item.raio', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:border-radius'},
-  {sonda: 'sidebar.item.recuo', cenario: 'prosa@1512/escuro', seletor: '.menu__link', medida: 'estilo:padding-left'},
+  /* Item, e não separador — a mesma armadilha de seletor das três sondas de
+     tipografia acima: `.menu__link` seco devolve o primeiro da árvore, que desde
+     a #114 é o rótulo mudo do topo. Estas duas medem o mesmo número nos dois
+     elementos hoje, e é justamente por isso que valia acertar: um alvo que
+     fecha pelo elemento errado só denuncia no dia em que os dois divergirem. */
+  {sonda: 'sidebar.item.altura', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link > .menu__link', medida: 'caixa:height'},
+  {sonda: 'sidebar.item.raio', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link > .menu__link', medida: 'estilo:border-radius'},
+  /* A RAMPA DE RECUO, degrau a degrau. Até a #114 havia uma sonda só, e ela media
+     o `.menu__link` genérico — que é o do separador, porque `querySelector`
+     devolve o primeiro casamento. O BASE tinha sonda; o PASSO não tinha nenhuma,
+     e foi por isso que o +16px por nível sobreviveu duas issues sem ninguém
+     notar que ele era o default do Infima e não a medição da âncora (ADR 10 §f).
+
+     Três sondas porque a rampa tem três degraus vivos — 16 · 16 · 28 —, e um
+     alvo que some dois deles num número só não reprova quando um dos dois anda.
+     O nível 2 medir o mesmo que o nível 1 é o ALVO, não redundância: separador e
+     primeiro nível ficam encostados, e é essa igualdade que a sonda trava.
+
+     O nível 1 é o SEPARADOR, e o seletor passou a dizer isso. Antes ele era
+     `.menu__link` seco, que devolvia o mesmo elemento por acidente de ordem —
+     `querySelector` dá o primeiro casamento — e não por escolha.
+
+     O nível 3 sonda no cenário `api`, e não em `prosa`: ele só existe em
+     `Ferramentas › Bibliotecas › Biblioteca C`, e o ramo nasce fechado. A rota
+     de `api` está DENTRO dele, então o Docusaurus abre o ramo sozinho e os nós
+     de nível 3 chegam ao DOM medíveis. Sondar de `prosa` daria `sem-medida`
+     para sempre. */
+  {sonda: 'sidebar.item.recuo', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link', medida: 'estilo:padding-left'},
+  {sonda: 'sidebar.item.recuo.n2', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link-level-2 > .menu__link', medida: 'estilo:padding-left'},
+  {sonda: 'sidebar.item.recuo.n3', cenario: 'api@1512/escuro', seletor: '.theme-doc-sidebar-item-link-level-3 > .menu__link', medida: 'estilo:padding-left'},
   /* O que gruda é a lista, não a coluna: `.col--3` é `static` e
      `.theme-doc-toc-desktop` é `sticky`. */
   {sonda: 'toc.topo', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-toc-desktop', medida: 'estilo:top'},
@@ -308,6 +352,7 @@ const ALVOS = {
       ['Item de sidebar tamanho', ['tipo.sidebar.tamanho']],
       ['Item de sidebar entrelinha', ['tipo.sidebar.entrelinha']],
       ['Item de sidebar peso', ['tipo.sidebar.peso']],
+      ['Separador de sidebar peso', ['tipo.separador.peso']],
       ['Item de TOC tamanho', ['tipo.toc.tamanho']],
       ['Aba do navbar tamanho', ['tipo.aba.tamanho']],
     ],
@@ -330,7 +375,9 @@ const ALVOS = {
       ['TOC visível a 1100', ['chrome.1100.toc']],
       ['Item de sidebar altura', ['sidebar.item.altura']],
       ['Item de sidebar raio', ['sidebar.item.raio']],
-      ['Item de sidebar recuo', ['sidebar.item.recuo']],
+      ['Item de sidebar recuo nível 1', ['sidebar.item.recuo']],
+      ['Item de sidebar recuo nível 2', ['sidebar.item.recuo.n2']],
+      ['Item de sidebar recuo nível 3', ['sidebar.item.recuo.n3']],
       ['TOC grudado em', ['toc.topo']],
     ],
   },
