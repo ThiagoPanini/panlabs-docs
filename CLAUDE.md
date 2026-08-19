@@ -46,7 +46,7 @@ O método de achar dentro de um arquivo: as seções são numeradas e o título 
 - **Link quebrado só aparece no `build`.** `onBrokenLinks: 'throw'` não roda em `docusaurus start`, que devolve 200 com o shell da SPA para qualquer rota.
 - **Nenhuma dependência npm nova.** `npm run zeros` reprova, e é axioma. O `package-lock.json` versionado é a régua.
 - **A paridade trava desde a S9-8.** `npm run paridade -- --verificar` reprova quando aparece divergência fora de `scripts/paridade-abertas.txt` **ou** quando uma linha de lá passa a fechar. Mexeu num alvo ou num número medido? Acerte a lista, com o número e o gatilho — o passo já não é `continue-on-error`.
-- **Contagem de página é cobrada.** O portão 4 crava 12 · 19 · 21 nas três abas de `conteudo/`, mais o ramo gerado. Acrescentar página sem acertar o portão reprova.
+- **Contagem de página é cobrada.** O portão 4 crava 12 · 16 · 17 nas três abas de `conteudo/`, mais o ramo gerado. Acrescentar página sem acertar o portão reprova.
 
 ## Idioma e voz
 

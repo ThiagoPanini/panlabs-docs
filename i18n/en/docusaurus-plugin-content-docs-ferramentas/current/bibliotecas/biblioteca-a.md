@@ -1,5 +1,6 @@
 ---
 title: Library A
+slug: /
 description: The Python client for the internal catalogue — installation, configuration, usage, and the error handling it expects from callers.
 ---
 
@@ -50,7 +51,8 @@ catalogo = Catalogo(
 ```
 
 `leitor_de_segredo` is injected on purpose: the library does not pick a cache
-policy for its callers. See the dependency rule in [Libraries](indice).
+policy for its callers. The caller brings the reader, and the dependency points
+outward.
 
 ## Usage
 
@@ -98,4 +100,4 @@ package types, and Python's `help()` is the source:
 python -c "from panlabs.catalogo import Catalogo; help(Catalogo)"
 ```
 
-The one with a generated reference is [Library C](biblioteca-c/visao-geral).
+The one with a generated reference is [Library C](./biblioteca-c/visao-geral.md).

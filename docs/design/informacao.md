@@ -57,7 +57,7 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 ### 2.1 `Ferramentas` declara `docItemComponent`, e as folhas dela não mudam de layout
 
-**Verificado no código, não deduzido:** o `ApiDocItem` comuta **por página** pelo front matter `api_exemplos` e delega para `@theme/DocItem` quando o campo falta. A instância inteira o declara sem que nenhuma folha autoral mude de layout — as **15 autorais** não carregam o campo, e quem acende a outra perna são as **6 geradas** de `Biblioteca C`, e só elas.
+**Verificado no código, não deduzido:** o `ApiDocItem` comuta **por página** pelo front matter `api_exemplos` e delega para `@theme/DocItem` quando o campo falta. A instância inteira o declara sem que nenhuma folha autoral mude de layout — as **11 autorais** não carregam o campo, e quem acende a outra perna são as **6 geradas** de `Biblioteca C`, e só elas.
 
 É a segunda instância do projeto a usar a opção, e ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle. Ver [ADR 2](../adr/0002-politica-de-swizzle.md).
 
@@ -86,59 +86,79 @@ Jornadas              Procedimentos        Ferramentas
                                            └ Servidores MCP
 ```
 
-| Aba | Categorias | Páginas pt-BR | EN |
+**Onze separadores no topo, e um só nó que colapsa.** O nível de topo não é categoria: é **separador** — rótulo em negrito, sem página, sem seta e sem ícone, sempre aberto (§3.2). O único nó do site que colapsa de verdade é `Bibliotecas › Biblioteca C`, no nível 2, e é por isso que a seta só ganha desenho ali.
+
+| Aba | Separadores | Páginas pt-BR | EN |
 | --- | ---: | ---: | ---: |
-| `Jornadas` | 2 | **12** (2 índices + 10 capítulos) | — |
-| `Procedimentos` | 5 | **19** (5 índices + 14 folhas) | — |
-| `Ferramentas` | 4 | **21** (15 autorais + 6 geradas) | **21** |
-| | **11** | **52** | **21** |
+| `Jornadas` | 2 | **12** (2 folhas de abertura + 10 capítulos) | — |
+| `Procedimentos` | 5 | **16** (2 folhas de abertura + 14 folhas) | — |
+| `Ferramentas` | 4 | **17** (11 autorais + 6 geradas) | **17** |
+| | **11** | **45** | **17** |
 
-**A árvore está fechada: 46 autorais mais 6 geradas, e o EN em 21.** O ramo gerado de `Biblioteca C` chegou pelo contrato de assinatura, e com ele `Bibliotecas` fecha em 13, `Ferramentas` em 21 e o site em **52**. O portão 4 cobra os quatro números.
+**A árvore está fechada: 39 autorais mais 6 geradas, e o EN em 17.** O ramo gerado de `Biblioteca C` chegou pelo contrato de assinatura, e com ele `Bibliotecas` fecha em 12, `Ferramentas` em 17 e o site em **45**. O portão 4 cobra os quatro números.
 
-> **Correção de aritmética contra a resolução, e ela continua valendo lida ao contrário.** A resolução pedia *"46 páginas autorais em pt-BR e 21 em EN"*, e os dois números não podiam valer juntos: as 6 geradas estão **fora** do 46 e **dentro** do 21. Elas chegaram no mesmo commit nos dois locales, então hoje o pt-BR tem 52 e o EN tem 21 — e a diferença é exatamente as 31 páginas de `Jornadas` e `Procedimentos`, que não se traduzem.
+> **Correção de contagem — #114.** Os números anteriores eram 12 · 19 · 21, com 46 autorais, 52 no site e 21 em EN. Sete páginas de índice saíram com a forma *índice de categoria* (§6.3), e as quatro que carregavam tipo ou fixture viraram folha. A queda é de sete em pt-BR e de quatro em EN — as três de `Procedimentos` nunca tiveram contraparte traduzida.
+
+> **Correção de aritmética contra a resolução, e ela continua valendo lida ao contrário.** A resolução pedia *"46 páginas autorais em pt-BR e 21 em EN"*, e os dois números não podiam valer juntos: as 6 geradas estão **fora** do primeiro e **dentro** do segundo. Elas chegaram no mesmo commit nos dois locales. Com a #114 os números são 39 e 17, e a relação é a mesma — a diferença é exatamente as 28 páginas de `Jornadas` e `Procedimentos`, que não se traduzem.
 
 **A contagem desigual das jornadas é de propósito** — `API Owner` com 6 capítulos e `Security Champion` com 4. Arco de papel não tem comprimento fixo, e duas jornadas com o mesmo número leem como formulário preenchido duas vezes.
 
-**`Ferramentas` é a única aba com nível 3**, e ele existe onde uma ferramenta tem mais de uma página: `Bibliotecas › Biblioteca C`. As outras três famílias são categoria → folha.
+**`Ferramentas` é a única aba com nível 3**, e ele existe onde uma ferramenta tem mais de uma página: `Bibliotecas › Biblioteca C`. As outras três famílias são separador → folha.
 
 ### 3.1 O teto de profundidade sobe de 2 para 3, e o que destravou foi a redação
 
 O teto anterior era 2, e o argumento forte dele não era medição — era a **regra de ícone**: *obrigatório na categoria de topo, ausente na folha*. Num terceiro nível o nó do meio não é nem uma coisa nem outra, e a regra não tinha leitura.
 
-**A regra foi reescrita para *ícone só no nó de topo da sidebar*.** Ela decide o caso intermediário por construção, em vez de proibi-lo — e com isso o teto de 2 perdeu a razão de existir. Ver [`icones.md`](icones.md) §8.
+**A regra foi reescrita duas vezes desde então**, e a terceira redação é a que fecha o assunto: **nenhum ícone no separador; ícone em tudo abaixo dele, folha ou grupo, em qualquer nível** (ver [`icones.md`](icones.md) §8). Ela é a primeira **agnóstica de profundidade** — o teste é *"isto é o separador de topo?"*, e ele tem resposta em qualquer árvore. As duas anteriores tinham teste que mudava de resultado com o nível, e foi isso, não o teto, que travou o nível 3 por duas issues.
 
-> **Correção de fato — #97.** A regra citada acima é a de antes da #97, e ela não vale mais: a âncora marca a FOLHA, não o nó de topo, e a redação passou a ser *ícone em toda folha, nenhum em cabeçalho de grupo* (ver [`icones.md`](icones.md) §8). O raciocínio deste parágrafo continua de pé, só que pela ponta oposta — é *folha contra cabeçalho de grupo* que decide o nó do meio por construção agora, não mais *topo contra o resto*. `Biblioteca C` é cabeçalho de grupo em qualquer nível em que aparecesse, e as folhas dela são folha em qualquer nível em que aparecessem: as duas formulações resolvem o nível 3 pelo mesmo motivo estrutural, sem depender de qual delas está em vigor.
+> **Correção de fato — #97, e ela ficou obsoleta na #114.** A redação intermediária era *ícone em toda folha, nenhum em cabeçalho de grupo*, e ela negava ícone a `Biblioteca C`. A redação em vigor dá ícone a ela: `Biblioteca C` está abaixo do separador, e o nível dela não entra no teste. As três redações resolvem o nível 3, e só a terceira resolve sem que alguém tenha de decidir de novo no nível 4.
 
 **O nível 3 é usado uma vez, e o portão 4 cobra que seja uma.** Um teto que se declara e não se confere é um teto que sobe sozinho.
 
-### 3.2 A categoria é clicável e aponta para o índice
+> **O teto continua 3, e o ADR 10 §g já decidiu que ele sobe para 4** — confinado a um ramo, quando o `overpower` entrar em `Ferramentas › Bibliotecas`. A subida viaja com esse trabalho e não com a #114: teto de 4 sem nenhum uso é teto sem consumidor, que é o defeito que a própria regra acima nomeia.
 
-| Jornadas | aponta para | Procedimentos | aponta para | Ferramentas | aponta para |
-| --- | --- | --- | --- | --- | --- |
-| API Owner | `Índice` | Ambiente | `Índice` | Bibliotecas | `Índice` |
-| Security Champion | `Índice` | Esteiras | `Índice` | Biblioteca C | `Visão geral` |
-| | | Infraestrutura | `Índice` | Módulos Terraform | `Índice` |
-| | | Acessos | `Índice` | Skills | `Índice` |
-| | | Diagnóstico | `Índice de sintomas` | Servidores MCP | `Índice` |
+### 3.2 O nível de topo é separador, e a categoria não é destino
 
-Três fatos verificados na fonte sustentam o modelo:
+**O separador não é página.** Sem `link`, sem seta, sem ícone, e sempre aberto — em `sidebars-*.js` isso é `collapsible: false` mais ausência de `link`. Ele é um rótulo em negrito cuja única função é agrupar, e é o análogo exato do `<h3 class="sidebar-title">` da âncora.
 
-1. **Categoria com link não perde o colapso.** O botão de caret é elemento separado do link — o rótulo navega, o caret colapsa;
-2. **Categoria sem link não é inerte de verdade.** O Docusaurus aponta para o primeiro filho quando não há navegador. O modelo *"não é página"* se comporta como página no SSR e muda de comportamento no cliente;
-3. **O rótulo da categoria é quem carrega o ícone.** Fazer o elemento mais proeminente da sidebar ser um **destino** em vez de um toggle é melhor.
+**Do segundo nível para baixo o nó aponta para a própria página de abertura.** Colapsável, clicável, com ícone, e ele **nasce fechado** — o Docusaurus abre sozinho o ramo da página atual.
 
-**Todas com `collapsed: false`** — a árvore inteira aberta, como a âncora.
+| Nível | O que é | Tem página | Colapsa | Ícone | Seta |
+| --- | --- | :---: | :---: | :---: | :---: |
+| 1 | separador | não | não (sempre aberto) | não | não |
+| 2+ | categoria | sim, a de abertura | sim, nasce fechada | sim | sim |
+| folha | folha | sim | — | sim | não |
 
-**Duas categorias apontam para página que carrega tipo de verdade**, e não para uma forma de índice: `Diagnóstico › Índice de sintomas` é `Troubleshooting`, e `Biblioteca C › Visão geral` é `Quickstart`. Forma e tipo são eixos diferentes; quando discordam, quem manda no número do §6.2 é o tipo.
+Hoje o único nó de nível 2 é `Bibliotecas › Biblioteca C`, que aponta para `Visão geral`.
+
+**A folha de abertura tem linha própria.** Quatro páginas de entrada sobreviveram à morte da forma *índice de categoria* (§6.3), e as quatro abrem o grupo delas como primeira folha:
+
+| Aba | Separador | Folha de abertura |
+| --- | --- | --- |
+| `Jornadas` | API Owner | `Índice` |
+| `Jornadas` | Security Champion | `Índice` |
+| `Procedimentos` | Ambiente | `Índice` |
+| `Procedimentos` | Diagnóstico | `Índice de sintomas` |
+
+**A assimetria que sobra é medida, não descuido:** os outros sete separadores não têm folha de abertura nenhuma, e na âncora é assim — `Get Started` abre com a folha `Introducing Devin`, e outros grupos abrem direto no primeiro item.
+
+**A rota nua de cada aba resolve por `slug: /`.** A primeira folha de cada instância carrega `slug: /` no front matter, e `/jornadas`, `/procedimentos` e `/ferramentas` passam a ser páginas de verdade em vez de 404 ou redirecionamento. O portão 6 confere as três contra o host publicado.
+
+> **Correção de fato — #114.** Esta seção dizia *"a categoria é clicável e aponta para o índice"*, e sustentava a decisão em *"três fatos verificados na fonte"*. Lidos um a um, dois eram mecânica do Docusaurus — o caret é elemento separado do link; categoria sem link não é inerte no SSR — e o terceiro era uma **opinião** escrita como fato: *"fazer o elemento mais proeminente da sidebar ser um destino em vez de um toggle é melhor"*. Nenhum dos três media a âncora, e o carimbo da linha dizia isso: `origem própria`, que a [`principios.md`](principios.md) §5 define como *"a mais frágil, e a primeira a ser contestada"*. A medição contestou. O detalhe está no [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md).
+
+> **Correção de carimbo — #114.** `collapsed: false` estava carimbado **`herdado`**, com a fonte *"a âncora mostra a árvore aberta"*. A medição diz que a âncora mostra o **nível 1** aberto — e ele nem colapsa —, enquanto grupo aninhado nasce **fechado**. `herdado` significa *não toca*; um `herdado` falso congela uma decisão que ninguém tomou. A chave saiu do repositório inteiro: onde não há colapso ela não tem sujeito, e onde há, o default do Docusaurus já é o alvo.
+
+**Duas páginas de abertura carregam tipo de verdade**, e não uma forma: `Diagnóstico › Índice de sintomas` é `Troubleshooting`, e `Biblioteca C › Visão geral` é `Quickstart`. Forma e tipo são eixos diferentes; quando discordam, quem manda no número do §6.2 é o tipo.
 
 ### 3.3 O que existe, e o que falta
 
 | Estado | O quê | Dono |
 | --- | --- | --- |
-| escrito | `Jornadas` inteira — 2 índices e 10 capítulos | este ticket |
-| escrito | `Procedimentos` inteira — 5 índices e 14 folhas | este ticket |
-| escrito | as **15 folhas autorais** de `Ferramentas`, nos dois locales | este ticket |
+| escrito | `Jornadas` inteira — 2 folhas de abertura e 10 capítulos | este ticket |
+| escrito | `Procedimentos` inteira — 2 folhas de abertura e 14 folhas | este ticket |
+| escrito | as **11 folhas autorais** de `Ferramentas`, nos dois locales | este ticket |
 | escrito | as **6 páginas geradas** de `Biblioteca C` e o fragmento de sidebar | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) |
+| removido | as **7 páginas de índice de categoria**, e a forma com elas | [#114](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/114) |
 
 **O ramo gerado não é escrito à mão.** Ele sai de um contrato de assinatura de função, tipo e módulo, e o gerador emite também o fragmento de sidebar que `sidebars-ferramentas.js` importa — escrevê-lo à mão seria exatamente a segunda fonte de verdade que o gerador existe para impedir. Ver [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md), que supera o [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md).
 
@@ -148,7 +168,7 @@ Três fatos verificados na fonte sustentam o modelo:
 
 **Medido no artefato.** Uma categoria declarada com lista de itens vazia é **normalizada para link** pelo Docusaurus: o `<li>` conserva o `className`, mas o rótulo deixa de ser envolvido pelo bloco colapsável. O caret some, e some com razão.
 
-O CSS de sidebar cobre as duas formas. O marcador é o `className` do manifesto, não o nível — `.sidebar-icone` **é** a definição de *nó de topo* neste sistema. **Nenhuma das onze categorias está vazia hoje**, então a regra é **cobertura sem fixture**, escrita para não ser removida por parecer morta.
+O CSS de sidebar cobre as duas formas — a folha, e o nó embrulhado por `.menu__list-item-collapsible`. **Nenhum dos onze separadores está vazio hoje**, então a regra é **cobertura sem fixture**, escrita para não ser removida por parecer morta.
 
 ---
 
@@ -180,7 +200,7 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 
 | # | O que confere |
 | ---: | --- |
-| 1 | o volume por aba e por categoria — 12 · 19 · 21, e **52** no total |
+| 1 | o volume por aba e por categoria — 12 · 16 · 17, e **45** no total |
 | 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
 | 3 | a regra de heading, com a exceção nomeada acima como **única** |
 | 4 | **`<Steps>` ausente em toda `Jornadas`** |
@@ -272,21 +292,33 @@ São dez, todos **convenção de conteúdo e zero layout**: sem front matter de 
 | Referência de API | — | a saída do gerador | **6 — geradas** |
 | *índice de jornada* | 250-400 | ver §6.4 | 2 |
 | *capítulo de jornada* | 180-1800 | 3-6 `##` · 2 blocos · 1 `:::` · prosa antes do 1º `##` · **sem `<Steps>`** | 10 |
-| *índice de categoria* | piso do tipo da seção | + um índice das folhas | 8 |
-| *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 0 — ver nota |
-| | | **total autoral** | **46** |
+| *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 1 |
+| | | **total autoral** | **39** |
 
-> **A fixture de página curta não soma, e a linha fica.** Ela é `Procedimentos › Ambiente › Índice` — a mesma página que a tabela de fixtures nomeia adiante —, e essa página já entra na linha dos **oito** *índices de categoria*. A linha existe para nomear o **papel** de fixture, não para acrescentar página; contá-la de novo fazia a coluna somar **47** contra um total de **46**. O 46 não é escolha de redação: é o número que `scripts/portao-4-conteudo.sh` crava e reprova.
+> **A linha *índice de categoria* saiu, e a da fixture curta passou a somar.** Eram **oito** índices de categoria, e a fixture de página curta — `Procedimentos › Ambiente › Índice` — era uma delas: a linha dela existia para nomear o **papel**, e contá-la de novo fazia a coluna somar 47 contra um total de 46. Com a #114 a forma morreu (§6.3): sete das oito páginas saíram, e a oitava é justamente a fixture, que agora tem linha própria na sidebar e conta uma vez, na linha dela. 46 − 8 + 1 = **39**, e o 39 não é escolha de redação: é o número que `scripts/portao-4-conteudo.sh` crava e reprova.
 
 > **Correção de contagem contra a resolução.** Ela dizia *"Guia — doze folhas de `Procedimentos` e `Ferramentas`"*. Contado contra a árvore fechada: `Procedimentos` tem 14 folhas, das quais 2 são `Catálogo`, 2 `Conceitual` e 2 `Troubleshooting`, sobrando **8** guias; `Ferramentas` tem 11 folhas, das quais 3 SDK, 1 Quickstart, 1 Conceitual, 1 Changelog e 2 Receita, sobrando **3**. São **onze**, não doze.
 
 **Os dez tipos têm instância neste artefato**, e o décimo é o único gerado. O portão 4 passou a cobrar a pendência **pelo avesso**: as seis existem, e nenhuma delas pode aparecer no manifesto de tipo — uma linha ali seria página escrita à mão sob o gabarito *a saída do gerador*, que é a incoerência que o §6.1 já adjudicou uma vez.
 
-### 6.3 O índice de categoria é uma forma, não um tipo
+### 6.3 O índice de categoria era uma forma, e a forma morreu
 
-**Oito páginas de entrada** — quatro em `Procedimentos` e quatro em `Ferramentas` — são **o tipo da seção no piso do orçamento, mais um índice das folhas**. Não ganham gabarito próprio, e é deliberado: um tipo cujo único traço distintivo é *ser curto* seria um tipo que só existe para explicar por que os outros não se aplicam.
+**Sete páginas saíram, e a forma saiu com elas.** `Bibliotecas`, `Módulos Terraform`, `Skills`, `Servidores MCP`, `Esteiras`, `Infraestrutura` e `Acessos` tinham por conteúdo *a lista do que está logo abaixo* — e a sidebar já é essa lista. A redundância é o que a âncora não tem, e sem categoria clicável (§3.2) não sobra destino a que o índice sirva.
 
-**O nono índice carrega tipo de verdade.** `Diagnóstico › Índice de sintomas` é a tabela de sintomas do gabarito de `Troubleshooting`, e é contado lá. Forma e tipo são eixos diferentes; quando discordam, quem manda no número é o tipo. O mesmo vale para `Biblioteca C › Visão geral`, que é destino de categoria **e** `Quickstart`.
+**Quatro sobreviveram como folha, e nenhuma delas era forma.** Eram conteúdo com dona, e matá-las derrubaria quatro invariantes de uma vez:
+
+| Página | Por que sobrevive |
+| --- | --- |
+| `Ambiente › Índice` | fixture `pagina-muito-curta` **e** a única exceção nomeada da regra de heading (§4.1) |
+| `Diagnóstico › Índice de sintomas` | carrega `Troubleshooting` de verdade |
+| `API Owner › Índice` | é o décimo tipo de página |
+| `Security Champion › Índice` | é o décimo tipo **e** a fixture `prosa-pura` |
+
+Custo de matar as quatro: um tipo de página, duas das onze fixtures e a exceção de heading — quatro invariantes derrubadas para poupar quatro arquivos.
+
+**`fixture-curta` é o que resta da forma, e continua não sendo tipo.** É o gabarito de `Ambiente › Índice`: ~120 palavras e zero `##`. Ele descreve *como aquela página se escreve*, não uma classe de conteúdo — a mesma distinção de sempre, gabarito sem tipo.
+
+**Duas folhas de abertura carregam tipo de verdade.** `Diagnóstico › Índice de sintomas` é a tabela de sintomas do gabarito de `Troubleshooting`, e é contado lá. Forma e tipo são eixos diferentes; quando discordam, quem manda no número é o tipo. O mesmo vale para `Biblioteca C › Visão geral`, que é página de abertura de categoria **e** `Quickstart`.
 
 **`capítulo` também é forma, e não um décimo primeiro tipo.** Ele tem gabarito próprio — e um gabarito apertado, porque é a folha mais numerosa do acervo —, mas o que ele descreve é *como uma folha de `Jornadas` se escreve*, não uma classe de conteúdo que exista noutra aba. A distinção é a mesma do índice de categoria: gabarito sem tipo.
 
@@ -393,10 +425,10 @@ A fronteira é **audiência do artefato**, e não infra pública contra corporat
 
 | Traduzido para EN | Só pt-BR |
 | --- | --- |
-| `Ferramentas` — **21**: 15 autorais e 6 geradas | `Jornadas` 12 · `Procedimentos` 19 |
-| **21** | **31** |
+| `Ferramentas` — **17**: 11 autorais e 6 geradas | `Jornadas` 12 · `Procedimentos` 16 |
+| **17** | **28** |
 
-**31 páginas carregam o marcador de fallback.** *(Correção de aritmética: a contagem anterior dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes.)*
+**28 páginas carregam o marcador de fallback.** *(Correção de aritmética: a contagem dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes, e depois 31; a #114 tirou três índices de `Procedimentos` do acervo.)*
 
 ### 8.1 A sinalização se resolve sozinha, e é isso que a torna barata
 
@@ -514,7 +546,7 @@ A mesma abertura, e depois o conteúdo inteiro, documento a documento:
 
 Ele diz o que a máquina tem em mãos: quantas páginas, por qual eixo estão divididas, que toda página é servida como Markdown, e que **o `panlabs` é ficção**. A última linha não é modéstia — sem ela, um assistente responde sobre as bibliotecas do acervo como se elas existissem. Ela também diz que **a empresa nunca é nomeada**, porque um leitor de máquina que tentasse deduzi-la produziria exatamente a atribuição falsa que o §1.1 existe para evitar.
 
-**Ele não é traduzido, e é a mesma regra do §8.** As 31 páginas sem contraparte em inglês também saem em português sob `/en/`; o preâmbulo é a mesma classe de fallback, num artefato cujo leitor é máquina. O que **tem** tradução chega traduzido: título, description e rótulo de seção.
+**Ele não é traduzido, e é a mesma regra do §8.** As 28 páginas sem contraparte em inglês também saem em português sob `/en/`; o preâmbulo é a mesma classe de fallback, num artefato cujo leitor é máquina. O que **tem** tradução chega traduzido: título, description e rótulo de seção.
 
 A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles` + `translateContent` no plugin põem a prosa em `i18n/<locale>/sd-ai-era/`.
 
@@ -543,9 +575,16 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) §árvore |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |
-| Categoria clicável | origem própria | três fatos verificados na fonte |
-| `collapsed: false` | herdado | a âncora mostra a árvore aberta |
-| **46 autorais mais 6 geradas, e 21 em EN** | **origem própria (correção)** | a resolução contava as 6 geradas fora do pt-BR e dentro do EN; com o ramo no ar o pt-BR fecha em 52 e o EN em 21 |
+| Categoria clicável | origem própria | três fatos verificados na fonte — **superada na #114**; dois dos três eram mecânica do Docusaurus e o terceiro era opinião escrita como fato |
+| `collapsed: false` | herdado | a âncora mostra a árvore aberta — **superada na #114**: verdadeira só do nível 1, que nem colapsa |
+| O nível de topo é separador — sem link, sem colapso, sem seta | herdado | `docs.devin.ai` — `<h3 class="sidebar-title">` sem link nem `aria-expanded`; e `mintlify.com/docs/organize/navigation`, *"Top-level groups always expand and you cannot collapse them"* |
+| **A categoria deixa de ser destino** | **origem própria (correção)** | a linha anterior — *"categoria clicável"* — se sustentava num *"fato verificado"* que era opinião; ver [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) |
+| Do segundo nível para baixo o nó é colapsável e aponta para a abertura | herdado | `docs.devin.ai` — `<button aria-expanded>`, e o ramo da página atual abre sozinho |
+| **Grupo aninhado nasce fechado** | **herdado (correção)** | a linha `collapsed: false` estava carimbada `herdado` com a fonte *"a âncora mostra a árvore aberta"*, verdadeira só do nível 1 |
+| **A forma *índice de categoria* morre** | **origem própria (consequência)** | sem categoria clicável não há destino a que o índice sirva |
+| Quatro índices sobrevivem como folha | **origem própria** | são as que carregam tipo ou fixture, e matá-las derrubaria quatro invariantes |
+| A rota nua resolve por `slug: /` | **origem própria (implementação)** | o `docSidebar` já leva à primeira doc; o que não resolve sozinho é a rota digitada |
+| **39 autorais mais 6 geradas, e 17 em EN** | **origem própria (correção)** | a resolução contava as 6 geradas fora do pt-BR e dentro do EN; com o ramo no ar e as sete páginas de índice fora (#114) o pt-BR fecha em 45 e o EN em 17 |
 | **Onze guias, e não doze** | **origem própria (correção)** | contado contra a árvore fechada: 8 em `Procedimentos` e 3 em `Ferramentas` |
 | Os três retipos de `Biblioteca C` | **origem própria (correção)** | `Referência de API` tem por gabarito *a saída do gerador*, e as três são escritas à mão |
 | O décimo tipo, e o gabarito dele | herdado | [#57](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/57) — o gabarito encoda a condição que salva o tipo com mais precisão que prosa |
@@ -561,7 +600,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | As onze fixtures com dona nomeada | herdado | [#59](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/59), reatribuídas contra a árvore nova |
 | Os quatro casos do domínio novo não são fixture | **origem própria** | fixture nasce de teto de layout; estes nascem de o domínio ter mais textura |
 | O locale corta por audiência do artefato | **origem própria** | biblioteca, módulo, skill e servidor são consumidos fora da equipe; jornada e procedimento não |
-| **31 páginas com o marcador** | **origem própria (correção)** | a contagem anterior somava os cinco índices de `Procedimentos` duas vezes |
+| **28 páginas com o marcador** | **origem própria (correção)** | a contagem somava os cinco índices de `Procedimentos` duas vezes; depois disso a #114 tirou três deles do acervo |
 | A convenção do marcador aperta para *quem não tem contraparte* | **origem própria (consequência)** | a fronteira do locale passou a cortar abas inteiras |
 | A marca é string traduzível e fica idêntica | **origem própria (implementação)** | `navbar.title` entra em `navbar.json`; traduzi-la desfaria a decisão do §1 |
 | `current.json` da instância `default` fica de fora | **origem própria (implementação)** | os dois rótulos dela são idênticos nos dois locales, e o rótulo de versão nada renderiza |

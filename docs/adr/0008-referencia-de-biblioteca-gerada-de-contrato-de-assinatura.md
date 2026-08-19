@@ -1,6 +1,31 @@
 # ADR 8 — A referência de biblioteca é gerada de contrato de assinatura
 
-**Status:** aceito · slice 8 · 2026-08-13 · **supera o [ADR 5](0005-referencia-da-api-gerada-de-contrato.md)**
+**Status:** **superado** pelo [ADR 9](0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md) · aceito · slice 8 · 2026-08-13 · **supera o [ADR 5](0005-referencia-da-api-gerada-de-contrato.md)**
+
+> ### Superado — a decisão sobreviveu, o sujeito não
+>
+> **Leia como registro histórico.** O que decide hoje é o
+> [ADR 9](0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md).
+>
+> **O que sobreviveu, e está no ar:** gerar a referência de um contrato, com dois
+> arquivos monolíngues congruentes, JSON puro e zero dependência de parser;
+> validador que recusa alto, com JSON Pointer do nó ofensor; gerador fora do
+> build, rodado à mão, saída commitada e conferida por diff no portão 5;
+> fragmento de sidebar em vez da árvore; painel por front matter, nunca marcador
+> em MDX; zero snippet escrito à mão.
+>
+> **O que morreu:** o sujeito. `Biblioteca C` — o `panlabs-esteira` — era
+> conteúdo mockado e saiu do acervo. No lugar entrou o `overpower`, uma CLI real
+> que ninguém importa, e com ele a **espécie** do contrato trocou: `aplicacao` e
+> `comando` no lugar de `modulo`, `tipo` e `funcao`.
+>
+> **Duas seções deste documento ficaram factualmente vencidas.** A §c) recusa
+> categoria própria para o ramo gerado *"porque seria o nível 4, e o teto é 3"* —
+> o teto subiu para 4 no
+> [ADR 10](0010-a-categoria-de-sidebar-nao-e-destino.md). E a linha da
+> Procedência que carimba *"o teto de quatro níveis"* fala de aninhamento de
+> componente dentro da página, não de sidebar; ela continua correta e continua
+> valendo.
 
 ## Contexto
 

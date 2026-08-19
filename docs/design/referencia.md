@@ -93,7 +93,7 @@ são mecânicas, não estéticas:
 | ausente | delega para `@theme/DocItem`, sem tocar em mais nada | `--sd-prose-width` (720, dentro da coluna de 864) | coluna de 288, se houver heading |
 | presente | layout próprio, `LayoutComPainel` | `--sd-prose-width` (720) | ausente — o painel ocupa o espaço |
 
-**A instância inteira declara `docItemComponent`, e as quinze folhas autorais
+**A instância inteira declara `docItemComponent`, e as onze folhas autorais
 dela não mudam de layout.** É a segunda instância do projeto a usar a opção, e
 ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle.
 
@@ -420,7 +420,7 @@ mesmo fato medido na âncora, não uma coincidência tratada como derivação.
 | **O painel perde as abas de linguagem e de resposta** | **origem própria (consequência)** | uma linguagem real no cenário fixado, e uma forma de resultado por chamada de função |
 | Editável é argumento escalar com exemplo | origem própria (implementação) | porte da regra de caminho/consulta; estrutura num campo de texto exigiria um parser |
 | O gerador e o contrato | origem própria | [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) |
-| **Fragmento de sidebar em vez de árvore** | **origem própria** | a instância tem quinze folhas autorais que o gerador não conhece |
+| **Fragmento de sidebar em vez de árvore** | **origem própria** | a instância tem folhas autorais que o gerador não conhece — quinze quando a decisão foi tomada, onze desde a #114 |
 | **O teto de quatro níveis trocou de dona** | **origem própria** | era `cobranca.pagamento.cartao.verificacoes`, do domínio morto; é `Infraestrutura › O output de um módulo` |
 | **O reset de nível sai sem deixar buraco** | **origem própria (consequência)** | um campo cujo tipo é outra entrada linka em vez de aninhar |
 | **A condição de `meta` vira conferência de cadeia** | **origem própria (implementação)** | o literal não pode aparecer no MDX; quem escreve o atributo é o componente |

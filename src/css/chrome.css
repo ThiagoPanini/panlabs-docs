@@ -706,36 +706,49 @@ html.docs-doc-page .subtitulo {
 /* -----------------------------------------------------------------------------
    3. Sidebar
 
-   `--sd-sidebar-width`, ícone por folha, recuo por nível inteiro no link, e
-   pílula preenchida no item ativo — issue #97 reescreveu os três eixos contra
-   a âncora. **Nada disto custa swizzle**: o `className` é contrato público do
-   schema de item de sidebar, e o resto sai de `ThemeClassNames`.
+   `--sd-sidebar-width`, separador mudo no topo, ícone em tudo abaixo dele, a
+   rampa de recuo da âncora e a única seta do site. A issue #97 reescreveu três
+   eixos contra a âncora; a #114 reescreveu a REGRA que os governava, e o ADR 10
+   carrega o porquê de cada linha. **Nada disto custa swizzle**: o `className` é
+   contrato público do schema de item de sidebar, e o resto sai de
+   `ThemeClassNames`.
 
-   O ícone continua `mask-image` + `currentColor` — o segundo renderizador, e a
-   única rota zero-swizzle: não existe ponto `safe` para injetar componente
-   React num item de sidebar. O que a #97 mudou é ONDE ele mora: a âncora marca
-   a FOLHA e nunca o cabeçalho de grupo — o inverso do que este projeto tinha
-   até aqui, que marcava a categoria de topo e deixava a folha muda (a regra
-   antiga e a nova estão em docs/design/icones.md §8). Os onze pares
-   seção→ícone não mudam — só o nó que carrega o `className` do manifesto.
+   O NÍVEL DE TOPO É SEPARADOR, e ele fica inerte sem uma linha de CSS para
+   isso. `collapsible: false` mais ausência de `link` em `sidebars-*.js` fazem
+   `useCategoryHrefWithSSRFallback` devolver `undefined` **nos dois lados** — SSR
+   e navegador —, e o `theme-classic` emite um `<a class="menu__link">` sem
+   `href`, sem caret e sem `CollapseButton`. `pointer-events: none` seria remédio
+   para uma doença que a configuração já não produz. O que o CSS daqui paga é só
+   a APARÊNCIA: o negrito que agrupa, e o realce de linha que o separador não
+   pode receber por não ser destino.
 
-   Como a máscara é pintada com `currentColor`, o estado ativo continua
-   pintando o ícone junto com o texto, de graça, e continua sem segundo
-   desenho para o modo escuro.
+   O ÍCONE continua `mask-image` + `currentColor` — o segundo renderizador, e a
+   única rota zero-swizzle: não existe ponto `safe` para injetar componente React
+   num item de sidebar. O que a #114 mudou é a REGRA de onde ele mora: **nenhum
+   no separador; em tudo abaixo dele, folha ou grupo, em qualquer nível**. É a
+   terceira redação, e a primeira agnóstica de profundidade — o teste é *"isto é
+   o separador de topo?"*, e ele tem resposta em qualquer árvore. As duas
+   anteriores (`toda categoria de topo, nenhuma folha`, depois `toda folha,
+   nenhum cabeçalho de grupo`) mudavam de resultado com o nível, e foi isso — não
+   o teto — que travou o nível 3 por duas issues.
 
-   O rótulo de categoria continua um `<a class="menu__link">` com um
-   `<button class="menu__caret">` irmão — a categoria é clicável e aponta para
-   a visão geral. Isso não muda; o que muda é que a categoria deixou de ser o
-   nó que leva `.sidebar-icone`.
+   Como a máscara é pintada com `currentColor`, o estado ativo continua pintando
+   o ícone junto com o texto, de graça, e continua sem segundo desenho para o
+   modo escuro.
    ----------------------------------------------------------------------------- */
 
-/* A folha é sempre um `<a class="menu__link">` direto dentro do `<li>`, sem o
-   `<button class="menu__caret">` que a categoria tem — ela não tem filho para
-   colapsar. Por isso um seletor só basta aqui: a dupla forma que o ícone de
-   cabeçalho precisava (categoria real contra categoria normalizada para link
-   quando fica sem filhos) não tem para quem ler numa folha — folha nunca teve
-   filho para perder. */
-.sidebar-icone > .menu__link::before {
+/* DUAS formas de DOM para o mesmo ícone, e as duas passaram a ser necessárias na
+   #114. A folha é um `<a class="menu__link">` direto dentro do `<li>`; o nó
+   colapsável embrulha o link num `<div class="menu__list-item-collapsible">`
+   junto com o `<button class="menu__caret">` irmão. Enquanto a regra excluía
+   todo cabeçalho de grupo, um seletor bastava — o segundo é o preço de a
+   redação nova marcar o grupo abaixo do separador.
+
+   O separador não aparece em nenhum dos dois, e não por seletor: ele não recebe
+   `className` nenhum em `sidebars-*.js`. Quem decide é a árvore, não o CSS, e é
+   isso que faz a regra valer em qualquer profundidade sem crescer aqui. */
+.sidebar-icone > .menu__link::before,
+.sidebar-icone > .menu__list-item-collapsible > .menu__link::before {
   content: '';
   flex: none;
   width: var(--sd-space-4);
@@ -745,10 +758,10 @@ html.docs-doc-page .subtitulo {
   mask: var(--sd-sidebar-icone) center / contain no-repeat;
 }
 
-/* Os onze pares seção→ícone — inalterados pela #97, só o consumidor mudou.
-   `Biblioteca C` (nível 2, sem ícone: ela é cabeçalho de grupo) e as folhas
-   dela — autorais e geradas — herdam `--bibliotecas`: a família é a da
-   categoria de topo, e o ícone não reinicia por nível. */
+/* Os onze pares seção→ícone — inalterados desde a #97, só o consumidor mudou
+   duas vezes. `Biblioteca C` (nível 2) passou a marcar na #114 e herda
+   `--bibliotecas`: a família é a do separador que a contém, e o ícone não
+   reinicia por nível. */
 .sidebar-icone--api-owner          { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
 .sidebar-icone--security-champion  { --sd-sidebar-icone: url('/icons/lock.svg'); }
 .sidebar-icone--ambiente           { --sd-sidebar-icone: url('/icons/layers.svg'); }
@@ -761,12 +774,11 @@ html.docs-doc-page .subtitulo {
 .sidebar-icone--skills             { --sd-sidebar-icone: url('/icons/bot.svg'); }
 .sidebar-icone--servidores-mcp     { --sd-sidebar-icone: url('/icons/server.svg'); }
 
-/* Tipografia e raio — um corpo só, categoria e folha, em todo nível. A âncora
-   usa peso normal com entrelinha maior, e reserva toda marcação de ativo para
-   a pílula (abaixo) e o falso-negrito — a mesma técnica que este projeto já
-   tinha para o item ativo, agora a única fonte de ênfase textual da sidebar.
-   O degrau de cor/peso que separava cabeçalho de folha saiu com o ícone: não
-   sobra sinal nenhum para os dois lerem diferente.
+/* Tipografia e raio — um corpo só, para tudo que é destino, em todo nível. A
+   âncora usa peso normal com entrelinha maior, e reserva toda marcação de ativo
+   para a pílula (abaixo) e o falso-negrito. O separador é a única exceção, e ela
+   tem regra própria logo adiante: ele não é destino, e o negrito dele é o que
+   agrupa.
 
    `line-height: calc(24 / 14)` é 24px a 14px de fonte — o alvo publicado em
    docs/design/tokens.md §13, escrito como razão em vez de decimal cravado
@@ -809,22 +821,183 @@ html.docs-doc-page .subtitulo {
   color: var(--sd-text-muted);
 }
 
-/* Recuo por nível — inteiro no link, issue #97. Até aqui o degrau vinha
-   metade da lista aninhada (o Infima soma `padding-left` a cada `<ul>` dentro
-   de `<ul>`) e metade do próprio link; a âncora não faz essa divisão, e copiar
-   o resultado sem copiar a decisão produz recuo que parece certo e se desfaz
-   no segundo nível — a pegadinha nomeada na issue.
+/* O SEPARADOR — o rótulo em negrito que agrupa, e o único item da sidebar que
+   não é destino. Duas declarações e nada mais: a inércia sai da árvore, não
+   daqui (ver o cabeçalho da seção).
 
-   A lista aninhada perde o `padding-left`; ela já não tinha margem nem borda
-   esquerda para perder — `.menu__list` zera margem na base do Infima, e
-   nenhuma regra deste projeto jamais desenhou borda nela.
+   O peso é `--sd-weight-heading`, e é peso de verdade, não o falso-negrito de
+   `--sd-negrito-optico`. Os dois resolvem problemas diferentes: o falso-negrito
+   existe onde o peso MUDA — o item ativo troca de peso a cada navegação, e
+   trocar `font-weight` reflui o texto e faz a linha pular de largura na hora em
+   que o leitor clica. O separador nasce e morre no mesmo peso; não há reflow a
+   evitar, e uma sombra de 0,4px seria uma aproximação onde cabe o desenho certo.
 
-   O degrau é um `--sd-space-4` inteiro por nível, o mesmo total que a soma
-   antiga já dava: a #97 move o mecanismo, não a métrica. Nível 1 não precisa
-   de linha própria — `--ifm-menu-link-padding-horizontal` já entrega os 16px
-   do alvo publicado. Nível 3 só existe em `Ferramentas › Bibliotecas ›
-   Biblioteca C`, o único nó do site que usa o teto de profundidade (ver
-   docs/design/informacao.md §3.1).
+   A cor sobe para `--sd-text-strong`: o separador é a única linha da sidebar que
+   não pode ser lida como link apagado, e a diferença de peso sozinha não paga
+   isso contra `--sd-text-muted`.
+
+   Quatro classes contra as três da regra de cor acima — `:not()` conta a
+   especificidade do argumento, então aquela regra é (0,3,0) e esta precisa
+   passar dela sem depender da ordem do arquivo. */
+.theme-doc-sidebar-menu
+  .theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link {
+  color: var(--sd-text-strong);
+  font-weight: var(--sd-weight-heading);
+  text-shadow: none;
+}
+
+/* O REALCE NÃO PINTA O SEPARADOR, e são DOIS realces a apagar, não um. Ambos
+   foram lidos no HTML gerado, não deduzidos:
+
+   1. O HOVER DO WRAPPER. O Infima realça `.menu__list-item-collapsible` sob o
+      ponteiro, e o wrapper existe no separador tanto quanto no nó colapsável —
+      o `theme-classic` embrulha os dois com a mesma classe. Sem isto, a linha
+      que não navega acende e promete um clique que não acontece.
+
+   2. A PÍLULA DO ATIVO, e esta é a que surpreende. O `theme-classic` põe
+      `menu__link--active` no rótulo do separador sempre que a página aberta
+      está dentro do grupo — é marca de *o ramo contém a página*, e no separador
+      ela é permanente, porque o separador nunca colapsa. E a exclusão que o
+      Infima usa para não pintar rótulo de categoria,
+      `.menu__link--active:not(.menu__link--sublist)`, NÃO alcança o separador:
+      `menu__link--sublist` só é emitida quando `collapsible` é verdadeiro, e a
+      nossa é falsa. O resultado sem esta regra são duas pílulas empilhadas — a
+      do separador e a da folha de abertura logo abaixo dele.
+
+   O `text-shadow: none` da regra anterior fecha o terceiro caso pela mesma
+   causa: o falso-negrito do item ativo chegaria por cima de um rótulo que já
+   nasce em `--sd-weight-heading`.
+
+   Nada disto é `pointer-events: none`: o rótulo continua selecionável e continua
+   alcançável pelo leitor de tela como o texto que é. O que sai é a tinta. */
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible,
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible:hover,
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link,
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link:hover {
+  background: none;
+}
+
+/* A LINHA INTEIRA É UM BOTÃO SÓ — e é isso que cola a seta no rótulo.
+
+   O Infima dá `flex: 1` ao `.menu__link` dentro do wrapper. O link cresce até a
+   borda da sidebar e empurra o `<button class="menu__caret">` irmão para a
+   direita; a seta acaba a 200px do texto que ela governa. Na âncora não há dois
+   elementos: a linha inteira é um `<button>` só, com o chevron logo depois do
+   rótulo.
+
+   A resposta é migrar o realce de linha do link para o WRAPPER e tirar o `flex`
+   do link. O link passa a medir o próprio texto, a seta encosta nele, e a
+   pílula continua ocupando a linha inteira porque quem a desenha agora é o
+   elemento que já ocupava a linha inteira. É a mesma pílula, noutro dono.
+
+   `:not(...-level-1)` exclui o separador — ele é embrulhado pela mesma classe e
+   não pode ganhar realce, por não ser destino (ADR 10, consequência 2).
+
+   SOBRE O NÍVEL APARECER EM CINCO BLOCOS DESTA SEÇÃO, e a alternativa recusada:
+   um `className: 'sidebar-separador'` em `sidebars-*.js` colapsaria as
+   ocorrências num seletor só, pelo mesmo degrau 1 que o ícone já usa. Recusado:
+   o `className` é escrito à mão, e um separador novo que esqueça de carregá-lo
+   nasce com pílula, com hover e com falso-negrito — errado, e em silêncio.
+   `theme-doc-sidebar-item-category-level-1` sai do `ThemeClassNames` e **é** a
+   definição estrutural de separador neste sistema; ela está certa em toda árvore
+   sem que ninguém precise lembrar de nada. A repetição do seletor é o preço de
+   não ter uma segunda fonte de verdade para *o que é o topo*. */
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible {
+  border-radius: var(--sd-radius-md);
+  padding-right: var(--sd-space-4);
+}
+
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible
+  > .menu__link {
+  flex: none;
+  padding-right: 0;
+}
+
+/* A pílula do ativo, quando quem está ativo é o nó colapsável. O Infima cobre o
+   caso da FOLHA sozinho (`--ifm-menu-color-background-active` em
+   `.menu__link--active`), e no wrapper ele só pinta o realce de HOVER — a
+   classe `--active` que o `theme-classic` põe no wrapper marca *o ramo contém a
+   página*, não *esta linha é a página*, e as duas não podem ler igual.
+
+   `:has()` é o seletor que sabe a diferença: ele pergunta pelo `--active` do
+   próprio link, que só existe quando a página aberta é a de abertura do
+   grupo. */
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible:has(> .menu__link--active) {
+  background: var(--ifm-menu-color-background-active);
+}
+
+/* A SETA — o manifesto para de mentir aqui.
+
+   `src/icons/manifest.js` afirma que `chevron-right` serve o *"caret de
+   categoria de sidebar"* desde que o manifesto existe, e até a #114 nenhuma
+   regra deste repositório implementava isso: o desenho era o SVG embutido do
+   Infima (`--ifm-menu-link-sublist-icon`, um `data:` URI de 16px com
+   `fill: rgba(0,0,0,0.5)`), pintado no modo escuro por um `filter: invert(100%)
+   sepia(94%) saturate(17%)…` de sete etapas. Máscara com `currentColor` troca as
+   sete etapas por uma declaração e faz a seta seguir a cor do rótulo — inclusive
+   o acento do item ativo — de graça.
+
+   A GEOMETRIA É 1:1 COM O ARQUIVO, e vale escrever porque parece coincidência e
+   não é. O alvo medido na âncora é *traço 2, 8px de largura*; o
+   `chevron-right.svg` vendorizado é um lucide de `viewBox="0 0 24 24"` com
+   `stroke-width="2"` e `d="m9 18 6-6-6-6"` — o traço cobre de x=8 a x=16, que são
+   exatamente **8 unidades de largura com traço 2**. Renderizar a máscara a
+   `mask-size: 24px` entrega os dois números do alvo sem escalar nada: o desenho
+   sai no tamanho em que foi desenhado.
+
+   A CAIXA é 16px e não 8, e a folga é deliberada. `rotate: 90deg` gira o
+   elemento, não a máscara: numa caixa de 8×16 a seta aberta ocuparia 14px de
+   largura dentro de 8px de espaço reservado e transbordaria 3px para cada lado.
+   Quadrada e maior que o desenho nos dois eixos, a caixa segura o giro sem
+   reservar espaço a mais na linha — os 16px são `--sd-space-4`, a mesma caixa do
+   ícone de família do outro lado do rótulo.
+
+   O GAP É 12px do rótulo, e o `padding-left` do botão paga 8: o desenho de 8px
+   nasce centrado na caixa de 16, então 4px de folga já vêm de dentro. 8 + 4 = 12.
+
+   `rotate` e não `transform`: o Infima escreve `transform: rotate(180deg)` no
+   estado base e `rotateZ(90deg)` no colapsado, girando um glifo que apontava
+   para cima. Nosso desenho já aponta para a direita — o estado fechado é
+   rotação ZERO, e o aberto é 90deg. Zerar o `transform` do Infima e usar a
+   propriedade independente deixa os dois estados legíveis pelo valor, e não pela
+   soma de duas rotações herdadas. */
+.theme-doc-sidebar-menu .menu__caret {
+  padding-block: 0;
+  padding-inline: var(--sd-space-2) 0;
+}
+
+.theme-doc-sidebar-menu .menu__caret::before {
+  width: var(--sd-space-4);
+  height: var(--sd-space-4);
+  background: none;
+  background-color: currentColor;
+  filter: none;
+  mask: url('/icons/chevron-right.svg') center / var(--sd-space-6) var(--sd-space-6) no-repeat;
+  transform: none;
+  rotate: 90deg;
+  transition: rotate var(--sd-move-flip);
+}
+
+/* Fechado é o estado SEM rotação — o desenho já aponta para a direita. */
+.theme-doc-sidebar-menu .menu__list-item--collapsed .menu__caret::before {
+  transform: none;
+  rotate: none;
+}
+
+/* SEM TRILHO VERTICAL ligando os filhos ao pai. A âncora não desenha um, este
+   projeto nunca desenhou, e a nota fica escrita porque a lista aninhada é o
+   lugar óbvio para alguém acrescentar um `border-left` achando que completa o
+   desenho. O que separa um ramo do vizinho é o recuo e o negrito do separador.
+
+   A LISTA ANINHADA perde o `padding-left` do Infima: o recuo é inteiro no link
+   (issue #97). Até ali o degrau vinha metade da lista e metade do próprio link;
+   a âncora não faz essa divisão, e copiar o resultado sem copiar a decisão
+   produz recuo que parece certo e se desfaz no segundo nível.
 
    Escopado a `.theme-doc-sidebar-menu`: `.menu__list .menu__list` sozinho
    também casa a gaveta do dropdown de locale na navbar móvel — `Collapsible`
@@ -834,21 +1007,45 @@ html.docs-doc-page .subtitulo {
 
    Um seletor só, não dois: `.theme-doc-sidebar-menu` é a MESMA tag que carrega
    `.menu__list` na raiz da árvore — não um ancestral dela —, então qualquer
-   `.menu__list` aninhado (nível 2 ou 3) já é descendente de
-   `.theme-doc-sidebar-menu` sozinho. Encadear um segundo `.menu__list` no
-   seletor exigiria um ancestral ACIMA da raiz com as duas classes, que não
-   existe, e zeraria a busca inteira. */
+   `.menu__list` aninhado já é descendente de `.theme-doc-sidebar-menu` sozinho.
+   Encadear um segundo `.menu__list` no seletor exigiria um ancestral ACIMA da
+   raiz com as duas classes, que não existe, e zeraria a busca inteira. */
 .theme-doc-sidebar-menu .menu__list {
   padding-left: 0;
 }
 
-.theme-doc-sidebar-item-link-level-2 > .menu__link,
-.theme-doc-sidebar-item-category-level-2 > .menu__list-item-collapsible > .menu__link {
-  padding-left: calc(var(--sd-space-4) * 2);
-}
+/* A RAMPA DE RECUO É 16 · 16 · 28, e ela é medida, não derivada.
 
-.theme-doc-sidebar-item-link-level-3 > .menu__link {
-  padding-left: calc(var(--sd-space-4) * 3);
+   O que havia antes era +16px por nível — 16 · 32 · 48. A #97 o escolheu para
+   preservar *"o mesmo total que a soma antiga já dava"*, e essa soma era o
+   default do Infima: o `16px` publicado como alvo `exato` é o BASE, e ele bate
+   com a âncora, mas o PASSO por nível nunca teve sonda de paridade nenhuma.
+   Medido no `docs.devin.ai` e no `docs.windsurf.com`, o `padding-left` inline
+   por nível é 16 · 16 · 28 · 40 · 52: separador e primeiro nível ENCOSTADOS, e
+   +12px por degrau daí em diante (ADR 10 §f).
+
+   Consequência que vale declarar: em `Jornadas` e `Procedimentos` as folhas
+   descem de 32px para 16px e ficam **alinhadas** com o separador. Quem separa um
+   ramo do outro passa a ser o negrito do separador mais o ícone da folha — e é
+   assim na âncora.
+
+   Só o nível 3 escreve linha. O 1 e o 2 já medem 16px sem regra:
+   `--ifm-menu-link-padding-horizontal` é `--sd-space-4`, e o Infima o aplica a
+   todo `.menu__link`. Uma regra que redeclara o valor herdado é uma segunda
+   fonte para o mesmo número.
+
+   28px não é parada da escala de espaço — ela vai de 4 em 4 até 24 e salta para
+   32. `calc(var(--sd-space-1) * 7)` compõe do único literal da escala em vez de
+   abrir uma parada nova para um consumidor só; a sonda `sidebar.item.recuo.n3`
+   em `scripts/paridade.mjs` é quem confere o resultado contra o alvo publicado.
+
+   Os DOIS seletores por nível existem porque o nó abaixo do separador pode ser
+   folha ou grupo, e as duas formas de DOM põem o link em lugares diferentes. O
+   par é a mesma regra vista das duas formas, e ele é o que faz a rampa continuar
+   valendo se um nível ganhar ou perder filhos. */
+.theme-doc-sidebar-item-link-level-3 > .menu__link,
+.theme-doc-sidebar-item-category-level-3 > .menu__list-item-collapsible > .menu__link {
+  padding-left: calc(var(--sd-space-1) * 7);
 }
 
 /* Falso-negrito no item ativo. Trocar o peso reflui o texto e faz o item pular
@@ -857,13 +1054,14 @@ html.docs-doc-page .subtitulo {
   text-shadow: var(--sd-negrito-optico);
 }
 
-/* A PÍLULA DO ATIVO não ganha regra de FUNDO própria — ela já sai correta da
-   composição acima. `--ifm-menu-color-background-active` já era
-   `--sd-surface-wash` (o acento a 12%) antes desta issue; o que faltava era só
-   o raio, que herdava 0,25rem cravado do mixin do Infima e agora sai da regra
+/* A PÍLULA DO ATIVO não ganha regra de FUNDO própria na FOLHA — ela já sai
+   correta da composição acima. `--ifm-menu-color-background-active` já era
+   `--sd-surface-wash` (o acento a 12%) antes da #97; o que faltava era só o
+   raio, que herdava 0,25rem cravado do mixin do Infima e agora sai da regra
    de tipografia — mesmo seletor, `.menu__link`, ativo ou não. A âncora não usa
    barra lateral, borda nem sombra no item ativo, e este projeto nunca desenhou
-   nenhuma das três aqui: não há o que remover.
+   nenhuma das três aqui: não há o que remover. O nó COLAPSÁVEL precisou de
+   regra, e ela está acima, junto da migração do realce.
 
    O TEXTO E O ÍCONE precisaram, sim, de uma exclusão: `--ifm-menu-color-active`
    já é `--sd-accent`, e o ícone é `currentColor`, mas a regra de tipografia

@@ -94,4 +94,4 @@ jobs:
       # fallback em português, e apontar o portão para uma delas mediria a
       # rota de fallback em vez da rota traduzida.
       - name: Portão 6 — as três rotas, en
-        run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}" /en/ferramentas/bibliotecas/indice
+        run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}" /en/ferramentas/bibliotecas/biblioteca-b

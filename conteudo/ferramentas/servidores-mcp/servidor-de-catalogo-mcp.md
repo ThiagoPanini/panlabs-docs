@@ -48,8 +48,8 @@ panlabs-mcp-catalogo --conferir
 
 ## As três ferramentas
 
-Todas de leitura. A regra que as escolheu está em
-[Servidores MCP](indice).
+Todas de leitura. A regra que as escolheu é uma só: o servidor expõe o que o
+catálogo já publica, e nada além.
 
 ```python
 # panlabs_mcp_catalogo/ferramentas.py

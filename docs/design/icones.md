@@ -209,7 +209,7 @@ Os onze pares seção→ícone, **verbatim**:
 
 \* reusa entrada de autoria e não consome arquivo.
 
-**`Biblioteca C` não recebe ícone.** Ela é o único nó de segundo nível do site, e a regra foi reescrita para caber nele: **ícone só no nó de topo da sidebar**. A formulação antiga — *obrigatório na categoria de topo, ausente na folha* — é que não tinha leitura no nível 3, não o teto de profundidade; ver §8.
+**`Biblioteca C` recebe ícone desde a #114.** Ela é o único nó colapsável do site, e a regra em vigor não abre exceção por nível: **nenhum ícone no separador de topo; ícone em tudo abaixo dele**. As duas redações anteriores lhe negavam o ícone por motivos opostos, e as duas precisavam ser reescritas a cada nível novo; ver §8.
 
 > **Correção de fato — #97.** A regra acima é a de antes da #97. A âncora marca a **folha**, não o topo, e a #97 reescreveu de novo: **ícone em toda folha, nenhum em cabeçalho de grupo** — ver §8. `Biblioteca C` continua sem ícone, mas por outro motivo agora: ela é cabeçalho de grupo, não porque more no nível 2. As folhas dela — as três autorais e as seis geradas de `docs/design/referencia.md` §5 — ganham ícone pela primeira vez, herdando `--bibliotecas`, a família da categoria de topo que as contém.
 
@@ -328,7 +328,7 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 
 | Superfície | Regra |
 | --- | --- |
-| **Sidebar** | **obrigatório** em toda folha, **ausente** em todo cabeçalho de grupo — categoria de qualquer nível. Até a issue #97 valia o inverso — obrigatório no topo, ausente na folha —, divergência da âncora que a issue fechou |
+| **Sidebar** | **ausente** no separador de topo; **obrigatório** em tudo abaixo dele — folha ou grupo, em qualquer nível. É a terceira redação (issue #114) e a primeira agnóstica de profundidade |
 | **`Card`** | opcional, mas ícone **XOR** imagem — nunca os dois |
 | **`Callout` tipado** | **fixo por variante; o autor não sobrescreve.** Os tipados da âncora não aceitam prop nenhuma |
 | **`Steps`** | opcional; o default é o número do passo. Ícone **substitui** o número, não o acompanha |
@@ -338,9 +338,11 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 | **Footer** | **sem ícone** — consome zero slots |
 | **Título do TOC** | **obrigatório** — um glifo, `list`, no rótulo *Nesta página*. É a única superfície de chrome fora da sidebar que carrega ícone, e é assim na âncora. Ver [`chrome.md`](chrome.md) §5.1 |
 
-**A regra da sidebar foi reescrita, e é ela que destravou o nível 3.** A formulação antiga — *obrigatório na categoria de topo, ausente na folha* — não tinha leitura num terceiro nível: o nó do meio não é nem topo nem folha. A nova é *só no nó de topo*, e ela **decide o caso intermediário por construção**, em vez de proibi-lo. O teto de profundidade não era o problema; a redação era. Ver [`informacao.md`](informacao.md).
+**A regra da sidebar foi reescrita três vezes, e só a terceira fecha o assunto.** As duas primeiras — *obrigatório na categoria de topo, ausente na folha*, depois *toda folha tem ícone, nenhum cabeçalho de grupo tem* — tinham um teste que **mudava de resultado com o nível**: a primeira não sabia ler o nó do meio, a segunda o lia negando, e cada árvore mais funda exigia decidir de novo. Foi isso, e não o teto de profundidade, que travou o nível 3 por duas issues.
 
-> **Correção de fato — #97.** A regra descrita acima já não vale: a paridade com a âncora pede o inverso, e a redação atual é *toda folha tem ícone, nenhum cabeçalho de grupo tem* (tabela do §8, acima). O argumento sobre o nível 3 continua valendo — a regra nova também decide `Biblioteca C` por construção, só que pela ponta oposta: ela é cabeçalho de grupo, não folha, em qualquer nível em que estivesse.
+**A redação em vigor pergunta uma coisa só: *isto é o separador de topo?*** Tem resposta em qualquer árvore, em qualquer profundidade, sem que ninguém precise voltar aqui. Bate com a medição: no `docs.devin.ai` o `<h3>` de topo não tem ícone, e o botão de subgrupo tem. Ver [`informacao.md`](informacao.md) §3.1 e [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) §e.
+
+> **Correção de fato — #97, obsoleta desde a #114.** A redação da #97 negava ícone a `Biblioteca C`, por ela ser cabeçalho de grupo. A regra em vigor dá ícone a ela: `Biblioteca C` está abaixo do separador, e o nível dela não entra no teste.
 
 ---
 
@@ -376,6 +378,9 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | **A rota da marca é `navbar.title` no `.navbar__brand` nativo** | **origem própria (medição)** | a resolução a declarava *provável e não medida*; medida no artefato publicado, nos dois modos |
 | **Os três renderizadores viram dois** | **origem própria (consequência)** | o §3(c) perdeu o assunto quando a marca perdeu o glifo |
 | **A regra de ícone vira *só no nó de topo da sidebar*** | **origem própria (correção)** | a formulação antiga não tinha leitura no nível 3, e era ela — não o teto de profundidade — que impedia `Biblioteca C` |
+| **Nenhum ícone no separador, ícone em tudo abaixo** | herdado | `docs.devin.ai` — `<h3>` de topo sem ícone, botão de subgrupo com `mask-image` à esquerda |
+| **A regra passa a ser agnóstica de profundidade** | **origem própria (correção)** | as duas redações anteriores tinham teste que mudava de resultado com o nível, e travaram o nível 3 por duas issues |
+| `chevron-right` serve o caret de sidebar **de fato** | **origem própria (correção)** | o manifesto afirmava isso desde que existe, e nenhuma regra do repositório implementava — era o SVG do Infima com `filter: invert()` |
 | **A regra de ícone vira *toda folha, nenhum cabeçalho de grupo*** | **origem própria (correção)** | [#97](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/97) — a linha acima marcava o nó de topo e divergia da âncora; fechada contra `docs.devin.ai` |
 | `shield-check` citado e nunca existente | **origem própria (correção)** | varrido contra o manifesto: o nome nunca esteve lá |
 | O exemplo de autoria usava um nome tagueado só como navegação | **origem própria (correção)** | `icon="rocket"` no §6 contra a tag dele à época |
