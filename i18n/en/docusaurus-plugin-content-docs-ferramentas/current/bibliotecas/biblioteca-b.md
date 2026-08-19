@@ -1,12 +1,12 @@
 ---
 title: Library B
-description: Secret reading with cache — installation, the expiry policy, usage, and what happens during a rotation.
+description: Secret reading with cache, plus installation, the expiry policy, usage, and what happens during a rotation.
 ---
 
 # Library B
 
 Reads secrets from the manager, with an in-memory cache and explicit expiry.
-What it solves is not the call — it is the cost: the manager charges per call,
+What it solves is not the call but the cost: the manager charges per call,
 and a service that reads the secret on every request pays for it twice, in money
 and in latency.
 
@@ -88,7 +88,7 @@ except SegredoAusente:
     # the secret does not exist: configuration error, never transient
     raise
 except SemPermissao:
-    # the role does not reach this secret — see the permission matrix
+    # the role does not reach this secret: see the permission matrix
     raise
 ```
 

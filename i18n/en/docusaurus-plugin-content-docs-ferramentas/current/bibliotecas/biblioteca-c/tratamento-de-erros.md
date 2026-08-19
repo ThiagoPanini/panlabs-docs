@@ -7,7 +7,7 @@ description: Why generation fails loudly instead of emitting partial YAML, what 
 
 The library generates an artifact that another machine will execute with nobody
 watching. That decides the whole error model: **it never emits partial output.**
-Either the YAML describes the complete pipeline, or there is no YAML — because a
+Either the YAML describes the complete pipeline, or there is no YAML, because a
 workflow that runs with a step missing passes, and passing without checking is
 worse than not running.
 
@@ -51,7 +51,7 @@ only rejection on the list that exists for security rather than correctness.
 # rejected
 esteira.passo(usa="actions/checkout@v4")
 
-# accepted — the tag stays readable in the comment
+# accepted: the tag stays readable in the comment
 esteira.passo(usa="actions/checkout@b4ffde6…", comentario="v4.2.2")
 ```
 
@@ -63,7 +63,7 @@ reaches every repository without a pull request in each.
 
 ## What the library does not validate
 
-It does not check that the workflow **works** — only that it is complete and
+It does not check that the workflow **works**, only that it is complete and
 safe. Pipeline logic errors show up at execution time, and the place to reproduce
 them is locally: see
 [Run the pipeline locally](/procedimentos/esteiras/rodar-a-esteira-localmente).

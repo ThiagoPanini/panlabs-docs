@@ -15,7 +15,7 @@ avisaria de qualquer jeito.
 
 ## O que o log já sabia
 
-A informação nunca esteve faltando — ela estava no log de acesso e ninguém a
+A informação nunca esteve faltando: ela estava no log de acesso e ninguém a
 lia. Cada chamada carrega o papel IAM que a autenticou, e o papel carrega o
 nome do time no prefixo, porque a convenção de nomes de papel exige isso desde
 antes deste serviço existir.
@@ -39,7 +39,7 @@ ORDER BY chamadas DESC
 
 Trinta dias é a janela em que um consumidor real aparece pelo menos uma vez.
 Noventa traz de volta chamadas de rotina que já foram desligadas e infla a lista
-com times que não usam mais — e uma lista inflada custa exatamente o que ela
+com times que não usam mais, e uma lista inflada custa exatamente o que ela
 deveria economizar: conversas com quem não precisa ser avisado.
 
 :::note
@@ -86,7 +86,7 @@ candidato a uma pergunta.
 ## O que ficou
 
 O formulário de cadastro foi desligado. Ele não estava errado sobre o que
-perguntar — estava errado sobre quem responderia, e um inventário que depende de
+perguntar; estava errado sobre quem responderia, e um inventário que depende de
 alguém lembrar mede memória, não uso.
 
 O corte seguinte foi o primeiro em que a lista de equipes a avisar saiu pronta,

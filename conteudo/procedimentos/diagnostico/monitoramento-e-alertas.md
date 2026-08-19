@@ -8,7 +8,7 @@ description: Por que a casa alerta sobre sintoma e não sobre causa, quais são 
 <Untranslated />
 
 Alerta é caro: cada um que dispara consome atenção, e atenção gasta com alarme
-falso não volta. A regra que decide o que vira alerta não é sobre gravidade — é
+falso não volta. A regra que decide o que vira alerta não é sobre gravidade, é
 sobre **acionabilidade**, e ela tem uma forma verificável: um alerta precisa
 dizer o que fazer a seguir, ou ele é um painel com notificação.
 
@@ -29,7 +29,7 @@ painel responde *por quê*; o alerta responde *se*.
 | Taxa de erro | acima de 1% | 5 min | há resposta imediata: rollback |
 | Latência p99 | acima de 800 ms | 10 min | há resposta imediata: escalar ou rollback |
 | Idade da mensagem mais antiga | acima de 15 min | 5 min | há resposta imediata: reiniciar ou escalar |
-| Falha de deploy | qualquer | — | há resposta imediata: investigar antes do próximo |
+| Falha de deploy | qualquer | imediata | há resposta imediata: investigar antes do próximo |
 
 Nada mais chama alguém de madrugada. Saturação de disco, uso de memória e
 contagem de réplicas moram no painel, e viram tarefa no horário comercial.
@@ -65,7 +65,7 @@ dono: equipe-alfa
 ```
 
 `primeira_acao` é o campo que separa um alerta de um susto. Ele não descreve a
-solução — descreve o primeiro passo, que é o que a pessoa acordada consegue
+solução; descreve o primeiro passo, que é o que a pessoa acordada consegue
 executar sem contexto.
 
 :::tip

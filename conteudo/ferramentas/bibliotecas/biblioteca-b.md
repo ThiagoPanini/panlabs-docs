@@ -1,12 +1,12 @@
 ---
 title: Biblioteca B
-description: A leitura de segredo com cache — instalação, a política de expiração, o uso, e o que acontece durante uma rotação.
+description: A leitura de segredo com cache, mais a instalação, a política de expiração, o uso, e o que acontece durante uma rotação.
 ---
 
 # Biblioteca B
 
 Leitura de segredo do gerenciador, com cache em memória e expiração explícita. O
-que ela resolve não é a chamada — é o custo: o gerenciador cobra por chamada, e
+que ela resolve não é a chamada, é o custo: o gerenciador cobra por chamada, e
 um serviço que lê o segredo a cada requisição paga por isso duas vezes, em
 dinheiro e em latência.
 
@@ -88,7 +88,7 @@ except SegredoAusente:
     # o segredo não existe: erro de configuração, nunca transitório
     raise
 except SemPermissao:
-    # o papel não alcança este segredo — ver a matriz de permissões
+    # o papel não alcança este segredo: ver a matriz de permissões
     raise
 ```
 

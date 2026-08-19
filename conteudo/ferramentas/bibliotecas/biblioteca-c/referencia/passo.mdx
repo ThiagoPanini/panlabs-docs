@@ -2,7 +2,7 @@
 # GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.pt-BR.json.
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: Passo
-description: Um passo de um trabalho — ou um comando que roda, ou uma ação de terceiro fixada por sha.
+description: Um passo de um trabalho, ou um comando que roda, ou uma ação de terceiro fixada por sha.
 api_exemplos: {"assinatura":"Passo(nome: str, *, roda: str | None = None, usa: str | None = None, comentario: str | None = None)","parametros":[{"nome":"nome","exemplo":"testar"},{"nome":"roda","exemplo":"pytest -q"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Passo\n\npasso = Passo(nome=\"{{nome}}\", roda=\"{{roda}}\")"}}
 ---
 
@@ -12,7 +12,7 @@ api_exemplos: {"assinatura":"Passo(nome: str, *, roda: str | None = None, usa: s
 
 O menor bloco da esteira. Um passo faz uma de duas coisas: roda um comando, ou usa uma ação. Declarar as duas no mesmo passo é o erro que a geração recusa antes de escrever qualquer YAML.
 
-Ação de terceiro entra fixada por sha, nunca por tag — a tag é reescrita debaixo de você, e o `comentario` é onde a versão legível fica.
+Ação de terceiro entra fixada por sha, nunca por tag: a tag é reescrita debaixo de você, e o `comentario` é onde a versão legível fica.
 
 ## Parâmetros
 

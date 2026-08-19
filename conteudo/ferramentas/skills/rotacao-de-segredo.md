@@ -1,6 +1,6 @@
 ---
 title: Rotação de segredo
-description: Executa a rotação com janela de aceitação dupla, espera a propagação e revoga a versão anterior — sem intervenção manual.
+description: Executa a rotação com janela de aceitação dupla, espera a propagação e revoga a versão anterior, sem intervenção manual.
 ---
 
 # Rotação de segredo
@@ -13,7 +13,7 @@ acontece depois de a versão anterior ficar uma hora sem uso.
 name: rotacao
 on:
   schedule:
-    # todo dia 1º, 04h — fora da janela de deploy de prod (09h–17h)
+    # todo dia 1º, 04h, fora da janela de deploy de prod (09h–17h)
     - cron: "0 4 1 * *"
   workflow_dispatch:
 

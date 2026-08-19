@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Portão 4 — o volume, o tipo de página, os dois gabaritos de `Jornadas`, a
-# regra de heading, as fixtures e a cobertura de locale.
+# regra de heading, as fixtures, a cobertura de locale e o travessão.
 #
 # Cadência: commit.
 #
@@ -18,9 +18,10 @@
 # índices são teto de zero, e existem onde a alternativa era confiar em bom
 # senso.
 #
-# São treze cobranças: as **doze** que a árvore nova trouxe, mais a cobertura de
+# São quatorze cobranças: as **doze** que a árvore nova trouxe; a cobertura de
 # locale, que é a única sobrevivente da versão anterior deste portão — ela não é
-# acréscimo, é a linha que não foi jogada fora com o resto.
+# acréscimo, é a linha que não foi jogada fora com o resto; e a varredura de
+# travessão, a única que olha o caractere em vez da estrutura.
 #
 #    1. o volume por aba e por categoria     12 · 16 · 17, e 45 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
@@ -36,6 +37,7 @@
 #   11. as onze fixtures                      por caminho nomeado
 #   12. os dez tipos têm instância            e nenhum fica pendente
 #   13. a cobertura de locale                 17 em EN, e só `Ferramentas`
+#   14. o travessão                           zero nas três superfícies
 #
 # **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
 # ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
@@ -72,6 +74,11 @@ JORNADAS='conteudo/jornadas'
 PROCEDIMENTOS='conteudo/procedimentos'
 FERRAMENTAS='conteudo/ferramentas'
 EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
+
+# As três superfícies do conteúdo publicado, para a varredura de travessão. `EN`
+# não serve aqui: ele aponta uma aba, e a régua é sobre tudo o que sai no site.
+I18N='i18n'
+CONTRATOS='contratos'
 
 # O ramo gerado, nos dois locales. Ele é contado à parte de toda contagem de
 # autoral: `.mdx` é o sinal greppável de *gerado, não editar*, e ele é o que
@@ -636,6 +643,31 @@ for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-co
 done
 
 echo "   ${traduzidas} traduzidas · ${marcadas} das ${autorais} autorais sem EN, de propósito"
+echo
+
+# --- 14. o travessão fora do conteúdo publicado --------------------------------
+#
+# O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um
+# site que se olha. Português tem pontuação para tudo o que ele faz — vírgula,
+# dois-pontos, parênteses, ponto final — e nenhuma dessas denuncia a origem.
+#
+# **A régua cobra a ausência, nunca a substituição.** Travessão é pontuação
+# legítima, e cada ocorrência cai numa saída diferente: a que vira vírgula não é
+# a que vira dois-pontos, e algumas exigem reescrever a frase. Por isso o portão
+# aponta arquivo e linha e para por aí; quem decide é quem escreve.
+#
+# `docs/` fica de fora, e por decisão: a spec não é produto, ninguém a navega
+# como página, e `invariantes.sh` EXIGE o literal `Livre — <dono>` lá dentro.
+# Varrê-la aqui seria uma régua de máquina reprovando o que a outra obriga.
+echo "14  travessão em \`conteudo\`, \`i18n\` e \`contratos\`"
+com_travessao=$(grep -Rn '—' "$CONTEUDO" "$I18N" "$CONTRATOS" 2>/dev/null) || true
+if [ -n "$com_travessao" ]; then
+  reprova "travessão no conteúdo publicado; reescreva a frase, em vez de trocar o caractere:"
+  echo "$com_travessao" | sed 's/^/    /'
+else
+  varridos=$(find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f | wc -l)
+  echo "   ${varridos} arquivos varridos, e nenhum travessão"
+fi
 echo
 
 if [ "$falhas" -gt 0 ]; then

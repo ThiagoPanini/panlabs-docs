@@ -6,7 +6,7 @@ description: O que mudou em cada versão da Biblioteca C, em cronologia reversa,
 # Changelog
 
 Cronologia reversa, uma entrada por versão publicada. Quebra de contrato leva
-major, e a lista do que conta como quebra é a mesma de todo pacote da casa —
+major, e a lista do que conta como quebra é a mesma de todo pacote da casa:
 está em [A política de versão](/jornadas/api-owner/a-politica-de-versao).
 
 Os agrupamentos por major existem para a coluna de navegação: uma lista de vinte
@@ -39,7 +39,7 @@ entradas sem heading é uma lista que ninguém percorre.
 
 <Update label="3.3.0">
   **Importação de workflows existentes.** `panlabs.esteira importar` lê
-  `.github/workflows` e escreve o Python equivalente. Ela não apaga nada — a
+  `.github/workflows` e escreve o Python equivalente. Ela não apaga nada: a
   adoção continua sendo dois `pull requests`.
 </Update>
 

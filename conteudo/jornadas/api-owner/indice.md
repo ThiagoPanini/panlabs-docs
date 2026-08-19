@@ -14,18 +14,18 @@ que já existe, e travar isso num contrato que a esteira consiga cobrar.
 
 ## Como foi
 
-1. **Primeiro trimestre** — [O contrato que não existia](./o-contrato-que-nao-existia.md) —
+1. **Primeiro trimestre**, [O contrato que não existia](./o-contrato-que-nao-existia.md):
    o serviço tinha seis meses de vida e nenhuma descrição do que ele prometia.
-2. **Logo depois** — [O que o contrato não cobre](./o-que-o-contrato-nao-cobre.md) —
+2. **Logo depois**, [O que o contrato não cobre](./o-que-o-contrato-nao-cobre.md):
    escrever o contrato deixou à vista o que ele deliberadamente não diz.
-3. **Segundo trimestre** — [A política de versão](./a-politica-de-versao.md) —
+3. **Segundo trimestre**, [A política de versão](./a-politica-de-versao.md):
    versionar por data não respondia a única pergunta que importava.
-4. **No mesmo trimestre** — [O schema que mudou sem aviso](./o-schema-que-mudou-sem-aviso.md) —
+4. **No mesmo trimestre**, [O schema que mudou sem aviso](./o-schema-que-mudou-sem-aviso.md):
    um campo opcional virou obrigatório e o erro só apareceu no terminal de quem
    consumia.
-5. **Terceiro trimestre** — [Depreciar em seis meses](./depreciar-em-seis-meses.md) —
+5. **Terceiro trimestre**, [Depreciar em seis meses](./depreciar-em-seis-meses.md):
    o aviso saiu do changelog e passou a viajar na própria resposta.
-6. **Agora** — [O consumidor invisível](./o-consumidor-invisivel.md) —
+6. **Agora**, [O consumidor invisível](./o-consumidor-invisivel.md):
    o inventário de quem chama o serviço deixou de sair de conversa e passou a
    sair de log.
 

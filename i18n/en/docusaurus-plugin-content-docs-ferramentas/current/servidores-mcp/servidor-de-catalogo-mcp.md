@@ -69,7 +69,7 @@ def listar_por_dono(equipe: str, limite: int = 50) -> list[Recurso]:
 ## Error handling
 
 The server translates Library A's exceptions into messages that make sense to
-whoever reads the assistant's answer — and the translation keeps the cause, which
+whoever reads the assistant's answer, and the translation keeps the cause, which
 is the defect described in
 [The same error in three shapes](/procedimentos/diagnostico/o-mesmo-erro-em-tres-formas).
 

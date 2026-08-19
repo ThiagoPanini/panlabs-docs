@@ -14,15 +14,15 @@ que uma trava seja aceita em vez de contornada.
 
 ## Como foi
 
-1. **Primeiro trimestre** — [A varredura que reprovava tudo](a-varredura-que-reprovava-tudo) —
+1. **Primeiro trimestre**, [A varredura que reprovava tudo](a-varredura-que-reprovava-tudo):
    ligar a varredura em modo bloqueante no primeiro dia parou seis repositórios
    e não produziu um achado acionável.
-2. **Segundo trimestre** — [O segredo no commit](o-segredo-no-commit) —
+2. **Segundo trimestre**, [O segredo no commit](o-segredo-no-commit):
    o vazamento não foi o problema; o problema foi descobrir que rotacionar era
    manual.
-3. **Terceiro trimestre** — [A exceção que virou regra](a-excecao-que-virou-regra) —
+3. **Terceiro trimestre**, [A exceção que virou regra](a-excecao-que-virou-regra):
    toda trava precisa de uma saída, e a saída precisa de prazo.
-4. **Quarto trimestre** — [O inventário de imagens](o-inventario-de-imagens) —
+4. **Quarto trimestre**, [O inventário de imagens](o-inventario-de-imagens):
    a pergunta *"onde essa imagem roda?"* não tinha dono, e passou a ter.
 
 ## O que não funcionou

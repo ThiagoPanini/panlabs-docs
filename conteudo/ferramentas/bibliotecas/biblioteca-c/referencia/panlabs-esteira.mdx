@@ -2,7 +2,7 @@
 # GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.pt-BR.json.
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: panlabs.esteira
-description: A superfície pública do módulo que descreve esteiras em Python — os dois tipos, as duas funções de esteira e a família de padrões da casa.
+description: A superfície pública do módulo que descreve esteiras em Python, com os dois tipos, as duas funções de esteira e a família de padrões da casa.
 api_exemplos: {"assinatura":"from panlabs.esteira import Esteira, padrao","parametros":[],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Esteira, padrao\n\nesteira = Esteira(nome=\"verificar\", em=[\"pull_request\"], permissoes={\"contents\": \"read\", \"id-token\": \"write\"})\nesteira.trabalho(nome=\"verificar\", passos=padrao.python(versao=\"3.12\"), precisa=[])\ngeracao = esteira.gerar(destino=\".github/workflows\", diff=False)"}}
 ---
 
@@ -12,14 +12,14 @@ api_exemplos: {"assinatura":"from panlabs.esteira import Esteira, padrao","param
 
 Descreva a esteira em Python e emita o YAML de GitHub Actions a partir dela. O módulo expõe dois tipos e três funções, e nada além disso é contrato: qualquer nome com underscore à frente muda entre versões menores sem aviso.
 
-A ordem de uso é a mesma da lista de exportações — construa a esteira, acrescente os trabalhos, gere. O snippet ao lado é essa sequência inteira.
+A ordem de uso é a mesma da lista de exportações: construa a esteira, acrescente os trabalhos, gere. O snippet ao lado é essa sequência inteira.
 
 ## Exportações
 
 | Nome | Espécie | O que é |
 | --- | --- | --- |
-| [`Esteira`](./esteira.mdx) | Tipo | A esteira inteira, como objeto — o nome do workflow, os eventos que o disparam e as permissões do token. |
-| [`Passo`](./passo.mdx) | Tipo | Um passo de um trabalho — ou um comando que roda, ou uma ação de terceiro fixada por sha. |
+| [`Esteira`](./esteira.mdx) | Tipo | A esteira inteira como objeto, com o nome do workflow, os eventos que o disparam e as permissões do token. |
+| [`Passo`](./passo.mdx) | Tipo | Um passo de um trabalho, ou um comando que roda, ou uma ação de terceiro fixada por sha. |
 | [`Esteira.trabalho`](./esteira-trabalho.mdx) | Função | Acrescenta um trabalho à esteira, com os passos dele e as dependências que ele espera. |
-| [`Esteira.gerar`](./esteira-gerar.mdx) | Função | Valida a esteira inteira e escreve o YAML — ou devolve as recusas sem escrever nada. |
-| [`padrao.python`](./padrao-python.mdx) | Função | Os passos que a casa usa num repositório Python — teste, tipo, formato e varredura, nesta ordem. |
+| [`Esteira.gerar`](./esteira-gerar.mdx) | Função | Valida a esteira inteira e escreve o YAML, ou devolve as recusas sem escrever nada. |
+| [`padrao.python`](./padrao-python.mdx) | Função | Os passos que a casa usa num repositório Python, com teste, tipo, formato e varredura, nesta ordem. |

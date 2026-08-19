@@ -2,7 +2,7 @@
 # GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.en.json.
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: Esteira
-description: The whole pipeline as an object — the workflow name, the events that trigger it, and the token permissions.
+description: The whole pipeline as an object, with the workflow name, the events that trigger it, and the token permissions.
 api_exemplos: {"assinatura":"Esteira(nome: str, em: list[str], *, permissoes: dict[str, str] | None = None)","parametros":[{"nome":"nome","exemplo":"verificar"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Esteira\n\nesteira = Esteira(nome=\"{{nome}}\", em=[\"pull_request\"], permissoes={\"contents\": \"read\", \"id-token\": \"write\"})"}}
 ---
 
@@ -12,7 +12,7 @@ api_exemplos: {"assinatura":"Esteira(nome: str, em: list[str], *, permissoes: di
 
 The object standing for a workflow. Constructing it writes nothing to disk: the YAML only exists after `gerar`.
 
-The name is what shows up in the Actions UI, and it also becomes the file name — two workflows with the same name in the same repository overwrite each other silently.
+The name is what shows up in the Actions UI, and it also becomes the file name: two workflows with the same name in the same repository overwrite each other silently.
 
 ## Parameters
 
@@ -25,7 +25,7 @@ The events that trigger the pipeline. Takes the Actions event names as they are,
 </ParamField>
 
 <ParamField name="permissoes" type="dict[str, str] | None" default="None">
-The workflow token permissions. Left out, the pipeline inherits the repository default — which tends to be broader than the job needs.
+The workflow token permissions. Left out, the pipeline inherits the repository default, which tends to be broader than the job needs.
 
 <Expandable title="dict[str, str] | None" defaultOpen>
 

@@ -6,7 +6,7 @@ description: O módulo que cria papel com limite de permissão aplicado, e por q
 # Módulo de papel IAM
 
 Cria um papel com o limite de permissão da casa já aplicado. O limite é o que
-impede um papel de conceder mais do que quem o criou possui — e ele é aplicado
+impede um papel de conceder mais do que quem o criou possui, e ele é aplicado
 pelo módulo justamente para não depender de alguém lembrar.
 
 ## Antes de começar
@@ -33,7 +33,7 @@ Papel sem quem o assuma é recurso morto que aparece em toda auditoria.
   </Step>
 
   <Step title="Anexar políticas gerenciadas">
-    Só ARN de política existente. Política inline é recusada — ver abaixo.
+    Só ARN de política existente. Política inline é recusada: ver abaixo.
 
     ```hcl
       politicas = [
@@ -55,7 +55,7 @@ Papel sem quem o assuma é recurso morto que aparece em toda auditoria.
 ## Verificação
 
 O papel existe, tem o limite anexado, e a política de confiança nomeia o
-repositório e a branch — nunca `*`:
+repositório e a branch, nunca `*`:
 
 ```bash
 panlabs infra conferir papel publicacao
@@ -77,7 +77,7 @@ isoladamente. Numa auditoria, ela é o que ninguém encontra.
 
 :::warning
 `branch` no `assumido_por` não é opcional para repositório. Sem ele, a política
-de confiança aceita qualquer referência do repositório — inclusive um `pull
+de confiança aceita qualquer referência do repositório, inclusive um `pull
 request` de fora, que é o caminho conhecido para roubar o papel de publicação.
 :::
 

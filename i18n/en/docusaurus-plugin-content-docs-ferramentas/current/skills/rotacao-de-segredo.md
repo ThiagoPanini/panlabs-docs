@@ -1,6 +1,6 @@
 ---
 title: Secret rotation
-description: Runs the rotation with a dual-acceptance window, waits for propagation and revokes the previous version — with no manual intervention.
+description: Runs the rotation with a dual-acceptance window, waits for propagation and revokes the previous version, with no manual intervention.
 ---
 
 # Secret rotation
@@ -13,7 +13,7 @@ happens after the previous version has gone an hour without use.
 name: rotacao
 on:
   schedule:
-    # first day of the month, 04:00 — outside the prod deploy window (09:00–17:00)
+    # first day of the month, 04:00, outside the prod deploy window (09:00–17:00)
     - cron: "0 4 1 * *"
   workflow_dispatch:
 

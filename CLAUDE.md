@@ -53,3 +53,5 @@ O método de achar dentro de um arquivo: as seções são numeradas e o título 
 Prosa deste repo — docs, ADR, issue, commit, PR — em **pt-BR**. O conteúdo mockado também nasce em pt-BR, com EN como segundo locale.
 
 A voz do conteúdo é **`você` + imperativo**, no site inteiro. **Zero primeira pessoa, sem exceção** — o acervo é pessoal pelo que escolhe documentar, não pela gramática. Detalhe em `docs/agents/domain.md` § Vocabulário.
+
+**Zero travessão no conteúdo publicado.** `conteudo/`, `i18n/` e `contratos/` fecham em zero `—`, e a saída é vírgula, dois-pontos, parênteses ou a frase reescrita, escolhida uma a uma. A cobrança 14 do portão 4 varre as três e reprova apontando arquivo e linha. `docs/` fica de fora, e por decisão: `invariantes.sh` exige o literal `Livre — <dono>` lá dentro.

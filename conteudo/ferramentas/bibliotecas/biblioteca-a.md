@@ -1,13 +1,13 @@
 ---
 title: Biblioteca A
 slug: /
-description: O cliente Python do catálogo interno — instalação, configuração, uso e o tratamento de erro que ela espera de quem a consome.
+description: O cliente Python do catálogo interno, com instalação, configuração, uso e o tratamento de erro que ela espera de quem a consome.
 ---
 
 # Biblioteca A
 
 O cliente do catálogo interno. Ela embrulha as chamadas, aplica retentativa com
-espera exponencial e ruído, e devolve os tipos do contrato publicado — nunca
+espera exponencial e ruído, e devolve os tipos do contrato publicado, nunca
 dicionários crus.
 
 ## Instalação
@@ -36,7 +36,7 @@ url = "$PANLABS_INDICE"
 ## Configuração
 
 A biblioteca não descobre credencial sozinha e não lê variável de ambiente por
-conta própria. Quem constrói o cliente passa o que ele precisa — é o que permite
+conta própria. Quem constrói o cliente passa o que ele precisa: é o que permite
 usá-la em teste sem tocar em rede.
 
 ```python
@@ -81,7 +81,7 @@ except ErroDeValidacao as erro:
     # nunca vale retentar: o corpo nomeia o campo e a versão do contrato
     log.error("campo %s recusado (contrato %s)", erro.campo, erro.contrato)
 except ErroDeAcesso:
-    # sessão expirada ou papel errado — ver o índice de sintomas
+    # sessão expirada ou papel errado: ver o índice de sintomas
     raise
 except ErroTemporario:
     # a biblioteca já retentou; chegar aqui significa que o teto foi atingido

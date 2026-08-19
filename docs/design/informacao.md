@@ -196,7 +196,7 @@ Não é estilo. É a regra que produz as configurações de TOC que provam a med
 
 Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e contagem que só existe em prosa é contagem que envelhece calada. Uma página a mais em `Esteiras` não quebra build nenhum; ela só faz este documento passar a mentir.
 
-`scripts/portao-4-conteudo.sh` cobra **doze** coisas, na cadência de commit:
+`scripts/portao-4-conteudo.sh` cobra **quatorze** coisas, na cadência de commit:
 
 | # | O que confere |
 | ---: | --- |
@@ -212,6 +212,8 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 | 10 | **`description` presente em 100%** das páginas |
 | 11 | **as onze fixtures existem**, por caminho nomeado |
 | 12 | **os dez tipos têm instância** — e nenhum fica pendente |
+| 13 | **a cobertura de locale** — 17 páginas em EN, e só `Ferramentas` |
+| 14 | **zero travessão** em `conteudo/`, `i18n/` e `contratos/` — a mensagem aponta arquivo e linha |
 
 As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>` citado dentro de um trecho de código contariam.
 
@@ -220,6 +222,10 @@ As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>
 **Proibição por localização é classe de regra nova neste projeto.** Até aqui gabarito **exigia** e **limitava**; nenhum dizia *"aqui não entra"*. As linhas 4 e 5 são teto de zero, e existem onde a alternativa era confiar em bom senso.
 
 **O tipo de cada página mora no portão, e não no conteúdo.** O §6 trava que tipo é convenção de conteúdo e **zero layout** — sem front matter `type:`, sem classe CSS por tipo. Um manifesto de build não é nenhum dos dois: ele não toca a página nem o CSS, e não existe no artefato publicado.
+
+**O travessão sai do conteúdo publicado, e `docs/` fica de fora.** O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha; o português tem vírgula, dois-pontos, parênteses e ponto final para tudo o que ele faz. A cobrança 14 cobra a **ausência**, nunca a substituição: cada ocorrência cai numa saída diferente, e algumas exigem reescrever a frase — é por isso que o portão aponta arquivo e linha e para por aí, e é por isso que ela não vira `sed`. A spec não é varrida porque não é produto, ninguém a navega como página, e `scripts/invariantes.sh` **exige** o literal `Livre — <dono>` dentro de `docs/`: varrê-la seria uma régua de máquina reprovando o que a outra obriga.
+
+**A linha 13 estava faltando nesta tabela, e a contagem dizia doze.** A cobertura de locale é cobrada pelo portão desde que ele foi reescrito com a árvore do `panlabs`, e a tabela nunca a listou. A #115 acertou os dois lados de uma vez, ao acrescentar a 14.
 
 **A coluna de palavras não é cobrada, e a de estrutura é.** Palavra é proxy ruim, e cobrar por máquina um número que as páginas de código não têm por que bater só produziria prosa de enchimento.
 

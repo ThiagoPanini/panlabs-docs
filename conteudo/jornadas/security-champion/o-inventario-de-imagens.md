@@ -1,6 +1,6 @@
 ---
 title: O inventário de imagens
-description: A pergunta "onde essa imagem roda?" não tinha dono, e passou a ter — construída a partir do que a esteira já publicava.
+description: A pergunta "onde essa imagem roda?" não tinha dono, e passou a ter uma resposta construída a partir do que a esteira já publicava.
 ---
 
 # O inventário de imagens
@@ -10,7 +10,7 @@ description: A pergunta "onde essa imagem roda?" não tinha dono, e passou a ter
 O último trimestre do programa começou com uma pergunta simples de um time de
 resposta a incidente: uma imagem base tinha uma falha crítica, e eles queriam
 saber onde ela rodava. A resposta levou dois dias e saiu incompleta. Não porque
-a informação não existisse — porque ela estava em três lugares que ninguém
+a informação não existisse, mas porque ela estava em três lugares que ninguém
 cruzava: o registro de imagens, os manifestos de deploy, e a memória de quem
 mantinha cada serviço.
 
@@ -18,7 +18,7 @@ mantinha cada serviço.
 
 Uma imagem não é usada por um serviço; ela é usada por uma **camada** de outra
 imagem, que é usada por um serviço. A pergunta *"onde `python:3.12-slim` roda?"*
-não se responde olhando quem a referencia — se responde olhando quem referencia
+não se responde olhando quem a referencia; se responde olhando quem referencia
 quem a referencia, recursivamente.
 
 E a segunda dificuldade é temporal: o manifesto diz o que **deveria** estar
@@ -59,7 +59,7 @@ def onde_roda(imagem, arestas, implantadas):
 
 :::note
 `implantadas` é lido do cluster, e não do manifesto. É a diferença entre
-responder *"onde isso deveria rodar"* e *"onde isso roda"* — e num incidente só a
+responder *"onde isso deveria rodar"* e *"onde isso roda"*, e num incidente só a
 segunda serve.
 :::
 
@@ -71,5 +71,5 @@ ninguém lembrar de alimentá-lo.** O passo que registra a procedência está na
 esteira que todo serviço já usa para publicar, e um serviço que não publica não
 tem imagem para inventariar.
 
-A mesma pergunta, feita um ano depois num incidente real, levou onze minutos —
+A mesma pergunta, feita um ano depois num incidente real, levou onze minutos,
 e o tempo foi de leitura, não de investigação.
