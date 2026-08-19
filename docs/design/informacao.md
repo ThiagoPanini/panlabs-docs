@@ -337,7 +337,7 @@ Custo de matar as quatro: um tipo de página, duas das onze fixtures e a exceç�
 <abertura: o período e o estado — uma ou duas frases>
 
 ## Como foi
-1. <marco temporal> — <link do capítulo> — <uma linha>
+1. <marco temporal>, <link do capítulo>: <uma linha>
 2. …
 
 ## O que não funcionou

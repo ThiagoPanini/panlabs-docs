@@ -29,7 +29,7 @@ painel responde *por quê*; o alerta responde *se*.
 | Taxa de erro | acima de 1% | 5 min | há resposta imediata: rollback |
 | Latência p99 | acima de 800 ms | 10 min | há resposta imediata: escalar ou rollback |
 | Idade da mensagem mais antiga | acima de 15 min | 5 min | há resposta imediata: reiniciar ou escalar |
-| Falha de deploy | qualquer | imediata | há resposta imediata: investigar antes do próximo |
+| Falha de deploy | qualquer | sem janela | há resposta imediata: investigar antes do próximo |
 
 Nada mais chama alguém de madrugada. Saturação de disco, uso de memória e
 contagem de réplicas moram no painel, e viram tarefa no horário comercial.

@@ -645,7 +645,7 @@ done
 echo "   ${traduzidas} traduzidas · ${marcadas} das ${autorais} autorais sem EN, de propósito"
 echo
 
-# --- 14. o travessão fora do conteúdo publicado --------------------------------
+# --- 14. o travessão fora do conteúdo publicado -------------------------------
 #
 # O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um
 # site que se olha. Português tem pontuação para tudo o que ele faz — vírgula,
@@ -659,14 +659,28 @@ echo
 # `docs/` fica de fora, e por decisão: a spec não é produto, ninguém a navega
 # como página, e `invariantes.sh` EXIGE o literal `Livre — <dono>` lá dentro.
 # Varrê-la aqui seria uma régua de máquina reprovando o que a outra obriga.
+#
+# **As três raízes são conferidas antes da varredura.** `grep` sobre caminho
+# inexistente devolve vazio, e vazio AQUI é aprovação: das quatorze, esta é a
+# única cuja forma de passar é não achar nada. Sem a guarda, um diretório
+# renomeado transformaria a cobrança num carimbo.
 echo "14  travessão em \`conteudo\`, \`i18n\` e \`contratos\`"
-com_travessao=$(grep -Rn '—' "$CONTEUDO" "$I18N" "$CONTRATOS" 2>/dev/null) || true
-if [ -n "$com_travessao" ]; then
-  reprova "travessão no conteúdo publicado; reescreva a frase, em vez de trocar o caractere:"
-  echo "$com_travessao" | sed 's/^/    /'
+faltando=''
+for raiz in "$CONTEUDO" "$I18N" "$CONTRATOS"; do
+  [ -d "$raiz" ] || faltando="${faltando}${raiz} "
+done
+
+if [ -n "$faltando" ]; then
+  reprova "superfície ausente, e sem ela a varredura passaria calada: ${faltando% }"
 else
-  varridos=$(find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f | wc -l)
-  echo "   ${varridos} arquivos varridos, e nenhum travessão"
+  com_travessao=$(grep -Rn '—' "$CONTEUDO" "$I18N" "$CONTRATOS") || true
+  if [ -n "$com_travessao" ]; then
+    reprova "travessão no conteúdo publicado; reescreva a frase, em vez de trocar o caractere:"
+    echo "$com_travessao" | sed 's/^/    /'
+  else
+    varridos=$(find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f | wc -l)
+    echo "   ${varridos} arquivos varridos, e nenhum travessão"
+  fi
 fi
 echo
 

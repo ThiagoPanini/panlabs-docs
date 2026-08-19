@@ -1,6 +1,6 @@
 ---
 title: O inventário de imagens
-description: A pergunta "onde essa imagem roda?" não tinha dono, e passou a ter uma resposta construída a partir do que a esteira já publicava.
+description: A pergunta "onde essa imagem roda?" não tinha dono, e passou a ter, com a resposta construída a partir do que a esteira já publicava.
 ---
 
 # O inventário de imagens
