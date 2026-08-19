@@ -2,7 +2,7 @@
 # GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.pt-BR.json.
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: Esteira
-description: A esteira inteira, como objeto — o nome do workflow, os eventos que o disparam e as permissões do token.
+description: A esteira inteira como objeto, com o nome do workflow, os eventos que o disparam e as permissões do token.
 api_exemplos: {"assinatura":"Esteira(nome: str, em: list[str], *, permissoes: dict[str, str] | None = None)","parametros":[{"nome":"nome","exemplo":"verificar"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Esteira\n\nesteira = Esteira(nome=\"{{nome}}\", em=[\"pull_request\"], permissoes={\"contents\": \"read\", \"id-token\": \"write\"})"}}
 ---
 
@@ -12,7 +12,7 @@ api_exemplos: {"assinatura":"Esteira(nome: str, em: list[str], *, permissoes: di
 
 O objeto que representa um workflow. Construí-lo não escreve nada em disco: o YAML só existe depois de `gerar`.
 
-O nome é o que aparece na interface do Actions, e ele também vira o nome do arquivo — dois workflows com o mesmo nome no mesmo repositório se sobrescrevem sem aviso.
+O nome é o que aparece na interface do Actions, e ele também vira o nome do arquivo: dois workflows com o mesmo nome no mesmo repositório se sobrescrevem sem aviso.
 
 ## Parâmetros
 
@@ -25,7 +25,7 @@ Os eventos que disparam a esteira. Aceita os nomes do próprio Actions, sem trad
 </ParamField>
 
 <ParamField name="permissoes" type="dict[str, str] | None" default="None">
-As permissões do token do workflow. Ausente, a esteira herda o default do repositório — que costuma ser mais amplo do que o trabalho precisa.
+As permissões do token do workflow. Ausente, a esteira herda o default do repositório, que costuma ser mais amplo do que o trabalho precisa.
 
 <Expandable title="dict[str, str] | None" defaultOpen>
 

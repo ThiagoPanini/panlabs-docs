@@ -7,7 +7,7 @@ description: What changed in each version of Library C, in reverse chronological
 
 Reverse chronological order, one entry per published version. A contract break
 takes a major, and the list of what counts as a break is the same for every
-package in the house — it is in
+package in the house: it is in
 [The versioning policy](/jornadas/api-owner/a-politica-de-versao).
 
 The groupings by major exist for the navigation column: a list of twenty entries
@@ -40,7 +40,7 @@ with no headings is a list nobody scans.
 
 <Update label="3.3.0">
   **Importing existing workflows.** `panlabs.esteira importar` reads
-  `.github/workflows` and writes the equivalent Python. It deletes nothing —
+  `.github/workflows` and writes the equivalent Python. It deletes nothing:
   adoption is still two pull requests.
 </Update>
 

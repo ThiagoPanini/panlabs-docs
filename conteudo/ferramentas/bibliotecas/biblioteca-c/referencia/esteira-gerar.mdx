@@ -2,7 +2,7 @@
 # GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.pt-BR.json.
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: Esteira.gerar
-description: Valida a esteira inteira e escreve o YAML — ou devolve as recusas sem escrever nada.
+description: Valida a esteira inteira e escreve o YAML, ou devolve as recusas sem escrever nada.
 api_exemplos: {"assinatura":"Esteira.gerar(destino: Path | str, *, diff: bool = False) -> Geracao","parametros":[{"nome":"destino","exemplo":".github/workflows"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Esteira\n\nesteira = Esteira(nome=\"verificar\", em=[\"pull_request\"], permissoes={\"contents\": \"read\", \"id-token\": \"write\"})\ngeracao = esteira.gerar(destino=\"{{destino}}\", diff=False)"}}
 ---
 
@@ -37,7 +37,7 @@ Verdadeiro quando o YAML gerado difere do que estava em disco.
 </ResponseField>
 
 <ResponseField name="recusas" type="list[dict]">
-As recusas encontradas. Vazia quando a esteira passa — e quando não está vazia, nada foi escrito.
+As recusas encontradas. Vazia quando a esteira passa, e quando não está vazia, nada foi escrito.
 
 <Expandable title="list[dict]" defaultOpen>
 
@@ -46,7 +46,7 @@ O nome da recusa, da lista fechada.
 </ResponseField>
 
 <ResponseField name="ponteiro" type="str">
-O nó ofensor, em caminho pontilhado — `trabalhos.verificar.passos[2].uses`.
+O nó ofensor, em caminho pontilhado: `trabalhos.verificar.passos[2].uses`.
 </ResponseField>
 
 <ResponseField name="detalhe" type="str">

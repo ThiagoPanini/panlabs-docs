@@ -2,7 +2,7 @@
 # GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.en.json.
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: Esteira.gerar
-description: Validates the whole pipeline and writes the YAML — or returns the refusals and writes nothing.
+description: Validates the whole pipeline and writes the YAML, or returns the refusals and writes nothing.
 api_exemplos: {"assinatura":"Esteira.gerar(destino: Path | str, *, diff: bool = False) -> Geracao","parametros":[{"nome":"destino","exemplo":".github/workflows"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Esteira\n\nesteira = Esteira(nome=\"verificar\", em=[\"pull_request\"], permissoes={\"contents\": \"read\", \"id-token\": \"write\"})\ngeracao = esteira.gerar(destino=\"{{destino}}\", diff=False)"}}
 ---
 
@@ -37,7 +37,7 @@ True when the generated YAML differs from what was on disk.
 </ResponseField>
 
 <ResponseField name="recusas" type="list[dict]">
-The refusals found. Empty when the pipeline passes — and when it is not empty, nothing was written.
+The refusals found. Empty when the pipeline passes, and when it is not empty, nothing was written.
 
 <Expandable title="list[dict]" defaultOpen>
 
@@ -46,7 +46,7 @@ The refusal name, from the closed list.
 </ResponseField>
 
 <ResponseField name="ponteiro" type="str">
-The offending node, as a dotted path — `trabalhos.verificar.passos[2].uses`.
+The offending node, as a dotted path: `trabalhos.verificar.passos[2].uses`.
 </ResponseField>
 
 <ResponseField name="detalhe" type="str">

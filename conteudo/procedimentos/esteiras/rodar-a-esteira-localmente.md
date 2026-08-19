@@ -50,7 +50,7 @@ instaladas. Ver [Preparar a máquina local](/procedimentos/ambiente/preparar-a-m
 ## Verificação
 
 A saída local e a do runner precisam ser a mesma. Quando não são, a diferença é
-quase sempre de versão de intérprete ou de variável de ambiente ausente — e o
+quase sempre de versão de intérprete ou de variável de ambiente ausente, e o
 alvo `make ambiente` imprime as duas para comparação:
 
 ```bash
@@ -77,5 +77,5 @@ que monta o diretório e roda o mesmo comando com a imagem que a esteira usa.
 :::warning
 Não copie o comando do arquivo de workflow para o terminal. Ele frequentemente
 depende de variável que o Actions injeta, e o que você reproduz passa a ser um
-comando parecido em vez do mesmo — que é a forma mais cara de investigar.
+comando parecido em vez do mesmo, que é a forma mais cara de investigar.
 :::

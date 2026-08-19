@@ -18,7 +18,7 @@ cima dela responde.
 O consumidor faz uma pergunta só, e ela é binária: **isso quebra quem já usa?**
 
 Data não responde. `2026-03-14` é posterior a `2026-02-02` e isso é tudo o que
-se sabe — a mudança pode ter sido um campo novo opcional ou a remoção do campo
+se sabe: a mudança pode ter sido um campo novo opcional ou a remoção do campo
 que o consumidor usa como chave primária. Para descobrir, é preciso ler o diff,
 e o objetivo do número é justamente dispensar essa leitura.
 
@@ -26,7 +26,7 @@ Semver responde. O major é a resposta.
 
 ## O que ficou travado como quebra
 
-O acordo caro não foi adotar semver — foi listar o que conta como quebra. A
+O acordo caro não foi adotar semver, foi listar o que conta como quebra. A
 lista é fechada, e mora no próprio pacote.
 
 ```python
@@ -70,6 +70,6 @@ python -m panlabs.contrato --diff-contra origem/main --politica semver
 ## O que ficou
 
 A data não foi apagada. Ela continua no metadado do pacote, onde responde
-*"quando"* — que é uma pergunta legítima e diferente. O que mudou é que ela
+*"quando"*, que é uma pergunta legítima e diferente. O que mudou é que ela
 parou de ser o identificador, e com isso parou de ser lida como resposta para
 uma pergunta que ela nunca soube responder.

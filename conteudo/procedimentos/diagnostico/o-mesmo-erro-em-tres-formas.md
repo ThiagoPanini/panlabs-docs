@@ -1,6 +1,6 @@
 ---
 title: O mesmo erro em três formas
-description: Uma falha de credencial expirada aparece diferente em Python, em Terraform e no log do Actions — e só uma das três nomeia a causa.
+description: Uma falha de credencial expirada aparece diferente em Python, em Terraform e no log do Actions, e só uma das três nomeia a causa.
 ---
 
 # O mesmo erro em três formas
@@ -9,7 +9,7 @@ description: Uma falha de credencial expirada aparece diferente em Python, em Te
 
 A causa mais comum de chamado interno é sessão expirada, e ela quase nunca é
 reconhecida na primeira leitura. O motivo é que cada camada reescreve a mensagem
-da camada de baixo, e a informação se perde por reescrita — não por ausência.
+da camada de baixo, e a informação se perde por reescrita, não por ausência.
 
 ## O que a AWS de fato devolve
 
@@ -72,7 +72,7 @@ Error: Process completed with exit code 1.
 
 | Camada | O que a mensagem diz | O que ela esconde |
 | --- | --- | --- |
-| AWS | `ExpiredToken` | nada — é a mensagem completa |
+| AWS | `ExpiredToken` | nada (é a mensagem completa) |
 | Python | `acesso negado` | a expiração, e o serviço |
 | Terraform | `AccessDenied` | a expiração |
 | Actions | `exit code 1` | tudo |

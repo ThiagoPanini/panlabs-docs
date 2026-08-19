@@ -11,7 +11,7 @@ Com o bloqueio de dependências estabilizado em onze achados, apareceu o caso qu
 a política não previa: uma correção publicada que exigia subir de major uma
 biblioteca com mudança de contrato, no meio de um trimestre já comprometido. A
 equipe pediu duas semanas. A política dizia *"sem exceção"*, e o que aconteceu
-foi previsível — a trava foi contornada por fora, num commit que desligava o
+foi previsível: a trava foi contornada por fora, num commit que desligava o
 passo com um comentário explicando o motivo.
 
 ## Por que a saída de emergência é obrigatória
@@ -21,7 +21,7 @@ Uma trava sem saída não produz zero exceções. Produz **exceções invisívei
 deveria medir o risco passou a esconder parte dele.
 
 :::tip
-A pergunta certa não é *"devemos permitir exceção?"* — é *"onde a exceção vai
+A pergunta certa não é *"devemos permitir exceção?"*, e sim *"onde a exceção vai
 ficar registrada?"*. Quem responde a segunda já respondeu a primeira.
 :::
 
@@ -61,7 +61,7 @@ def aplicar_excecoes(achados, excecoes, hoje):
     return [a for a in achados if a.identificador not in perdoados]
 ```
 
-A exceção vencida reprova o build da mesma forma que o achado reprovaria — é o
+A exceção vencida reprova o build da mesma forma que o achado reprovaria, e é o
 que impede o arquivo de virar um depósito.
 
 ## O que ficou

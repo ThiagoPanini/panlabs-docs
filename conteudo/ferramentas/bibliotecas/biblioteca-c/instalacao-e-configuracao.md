@@ -29,7 +29,7 @@ com os workflows antigos ainda ativos.
 
   <Step title="Importar o que já existe">
     O comando lê os workflows atuais e escreve o Python equivalente. Ele não
-    apaga nada — a saída é um arquivo novo, para leitura.
+    apaga nada: a saída é um arquivo novo, para leitura.
 
     ```bash
     python -m panlabs.esteira importar .github/workflows > esteira.py
@@ -49,7 +49,7 @@ com os workflows antigos ainda ativos.
 ## Verificação
 
 Diff vazio significa que a biblioteca reproduz a esteira atual, e a troca é
-mecânica. Diff não vazio significa que a importação simplificou algo — leia
+mecânica. Diff não vazio significa que a importação simplificou algo; leia
 antes de aceitar:
 
 ```bash

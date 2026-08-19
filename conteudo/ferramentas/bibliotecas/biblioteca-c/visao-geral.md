@@ -1,13 +1,13 @@
 ---
 title: Visão geral
-description: Esteira como código — do primeiro workflow gerado ao pipeline rodando, em cinco passos e sem editar YAML à mão.
+description: Esteira como código, do primeiro workflow gerado ao pipeline rodando, em cinco passos e sem editar YAML à mão.
 ---
 
 # Visão geral
 
 A Biblioteca C descreve esteiras em Python e emite os workflows de GitHub
 Actions. Ela existe porque YAML de esteira é copiado entre repositórios e
-diverge em silêncio — e um workflow que diverge não é notado até o dia em que
+diverge em silêncio, e um workflow que diverge não é notado até o dia em que
 ele deixa de reprovar o que deveria.
 
 ## Instalação e primeiro workflow
@@ -61,7 +61,7 @@ ele deixa de reprovar o que deveria.
 
 :::warning
 O YAML gerado **não é editável**. Ele abre com um cabeçalho dizendo isso, e o
-passo de conferência reprova qualquer edição — a fonte é o Python, e duas fontes
+passo de conferência reprova qualquer edição: a fonte é o Python, e duas fontes
 divergem no dia em que alguém corrige só uma.
 :::
 
@@ -74,7 +74,7 @@ zero é como se herda o workflow de outro time por cópia.
 ## O que ela não faz
 
 Ela não executa esteira e não fala com o GitHub. A saída dela é YAML no disco, e
-quem o executa é o Actions como sempre — trocar o executor seria trocar uma
+quem o executa é o Actions como sempre; trocar o executor seria trocar uma
 ferramenta auditada por dívida própria.
 
 Ela também não valida se a esteira **funciona**: só se ela está completa e

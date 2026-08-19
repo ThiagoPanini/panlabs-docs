@@ -10,7 +10,7 @@ description: Ligar a varredura de dependências em modo bloqueante no primeiro d
 O programa de champion começou com uma tarefa concreta: ligar a varredura de
 dependências na esteira das seis aplicações da squad. A ferramenta já estava
 contratada, o passo era de cinco linhas, e a decisão de ligá-lo bloqueando
-pareceu óbvia — uma trava que só avisa é uma trava que ninguém obedece. Na
+pareceu óbvia: uma trava que só avisa é uma trava que ninguém obedece. Na
 manhã seguinte os seis repositórios estavam vermelhos, ninguém conseguia subir
 nada, e a lista de achados tinha 340 linhas.
 
@@ -22,7 +22,7 @@ sem correção publicada, em caminho de código que a aplicação não executa.
 
 O efeito prático de bloquear com essa lista é que **a única saída disponível
 vira desligar a trava**. Quem precisa entregar não tem como escolher entre 340
-itens indistinguíveis, e a conversa que se segue não é sobre segurança — é sobre
+itens indistinguíveis, e a conversa que se segue não é sobre segurança, é sobre
 o build parado.
 
 :::warning
@@ -36,7 +36,7 @@ de o relatório rodar por um tempo.
 Três meses de relatório, com o mesmo passo e sem `exit 1`.
 
 ```yaml
-# .github/workflows/dependencias.yml — a fase de relatório
+# .github/workflows/dependencias.yml: a fase de relatório
 - name: Varrer dependências
   run: |
     panlabs-scan --formato json > achados.json
@@ -68,7 +68,7 @@ def bloqueia(achado):
 ```
 
 `caminho_alcancavel` é a linha que faz o trabalho. Uma vulnerabilidade numa
-função que a aplicação nunca chama é dívida de inventário, não risco — ela entra
+função que a aplicação nunca chama é dívida de inventário, não risco. Ela entra
 no relatório e não para ninguém.
 
 ## O segundo bloqueio

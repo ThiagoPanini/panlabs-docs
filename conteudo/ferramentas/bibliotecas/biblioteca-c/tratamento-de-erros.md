@@ -7,7 +7,7 @@ description: Por que a geração falha alto em vez de emitir YAML parcial, quais
 
 A biblioteca gera um artefato que outra máquina vai executar sem ninguém olhar.
 Isso decide o modelo de erro inteiro: **ela nunca emite saída parcial.** Ou o
-YAML descreve a esteira completa, ou não há YAML — porque um workflow que roda
+YAML descreve a esteira completa, ou não há YAML, porque um workflow que roda
 faltando um passo passa, e passar sem verificar é pior que não rodar.
 
 ## A lista fechada de recusas
@@ -51,7 +51,7 @@ correção.
 # recusado
 esteira.passo(usa="actions/checkout@v4")
 
-# aceito — a tag continua legível no comentário
+# aceito: a tag continua legível no comentário
 esteira.passo(usa="actions/checkout@b4ffde6…", comentario="v4.2.2")
 ```
 
@@ -63,7 +63,7 @@ para que a correção chegue sem um `pull request` em cada repositório.
 
 ## O que a biblioteca não valida
 
-Ela não confere se o workflow **funciona** — só se ele está completo e seguro.
+Ela não confere se o workflow **funciona**, só se ele está completo e seguro.
 Erro de lógica de esteira aparece na execução, e o lugar de reproduzi-lo é
 local: ver
 [Rodar a esteira localmente](/procedimentos/esteiras/rodar-a-esteira-localmente).

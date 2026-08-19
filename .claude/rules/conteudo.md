@@ -5,6 +5,7 @@ paths:
   - "i18n/**/*.md"
   - "i18n/**/*.mdx"
   - "i18n/**/*.json"
+  - "contratos/**/*.json"
 ---
 
 # Conteúdo — o que é contado, e por quem
@@ -19,7 +20,7 @@ O portão 4 (`npm run portao:4`) transforma em varredura os critérios da arquit
 | `conteudo/procedimentos/` | 19 |
 | `conteudo/ferramentas/` | 21 |
 
-Mais o ramo gerado, somado por fora — **45 no site**. Acrescentar ou remover página **exige acertar o portão 4 junto**. São treze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
+Mais o ramo gerado, somado por fora — **45 no site**. Acrescentar ou remover página **exige acertar o portão 4 junto**. São quatorze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
 
 ## Proibição por localização
 
@@ -38,6 +39,12 @@ Tradução mora em `i18n/en/docusaurus-plugin-content-docs-ferramentas/current/`
 ## Voz
 
 **`você` + imperativo. Zero primeira pessoa, sem exceção** — no site inteiro, nos dois locales. O acervo é pessoal pelo que escolhe documentar, não pela gramática.
+
+## Travessão
+
+**Zero `—` em `conteudo/`, `i18n/` e `contratos/`.** O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha. A saída é vírgula, dois-pontos, parênteses ou a frase reescrita, **escolhida uma a uma**: travessão é pontuação legítima do português, e trocar o caractere por outro fixo produz frase truncada ou pontuação dobrada.
+
+A cobrança 14 do portão 4 varre as três superfícies e reprova apontando arquivo e linha. `docs/` fica de fora, e por decisão: a spec não é produto, e `scripts/invariantes.sh` exige o literal `Livre — <dono>` lá dentro.
 
 ## Link quebrado
 

@@ -29,7 +29,7 @@ to pass with the old workflows still active.
 
   <Step title="Import what already exists">
     The command reads the current workflows and writes the equivalent Python. It
-    deletes nothing — the output is a new file, for reading.
+    deletes nothing: the output is a new file, for reading.
 
     ```bash
     python -m panlabs.esteira importar .github/workflows > esteira.py
@@ -49,7 +49,7 @@ to pass with the old workflows still active.
 ## Verification
 
 An empty diff means the library reproduces the current pipeline, and the switch
-is mechanical. A non-empty diff means the import simplified something — read it
+is mechanical. A non-empty diff means the import simplified something; read it
 before accepting:
 
 ```bash

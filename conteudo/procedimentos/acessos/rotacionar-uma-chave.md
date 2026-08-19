@@ -1,6 +1,6 @@
 ---
 title: Rotacionar uma chave
-description: O procedimento de quando algo deu errado — trocar uma chave em uso sem derrubar quem a lê, com janela de aceitação dupla.
+description: O procedimento de quando algo deu errado, trocar uma chave em uso sem derrubar quem a lê, com janela de aceitação dupla.
 ---
 
 # Rotacionar uma chave
@@ -15,7 +15,7 @@ indisponibilidade.
 ## Antes de começar
 
 O identificador do segredo e a lista de quem o lê. A lista sai de
-`panlabs segredos consumidores <segredo>` e não de memória — foi assim que a
+`panlabs segredos consumidores <segredo>` e não de memória: foi assim que a
 jornada de Security Champion descobriu o consumidor que ninguém sabia que
 existia.
 
@@ -74,7 +74,7 @@ chamadas, nesta ordem:
 
 ```bash
 panlabs segredos testar prod/integracao/chave-externa --versao anterior
-# 401 — esperado
+# 401 (esperado)
 panlabs segredos testar prod/integracao/chave-externa
 # 200
 ```
@@ -89,7 +89,7 @@ o mínimo, e para consumidor diário o número certo é vinte e quatro.
 
 **Vazamento confirmado.** A ordem inverte: revogar primeiro, aceitar a
 indisponibilidade, rotacionar depois. É a única situação em que derrubar o
-serviço é a decisão certa, e a chamada é de quem responde pelo incidente — não
+serviço é a decisão certa, e a chamada é de quem responde pelo incidente, não
 de quem executa o procedimento.
 
 **Terceiro que não suporta duas chaves.** Sem janela de aceitação dupla, a

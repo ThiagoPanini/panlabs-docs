@@ -51,9 +51,9 @@ jobs:
           body: |
             Gerado por `panlabs/scaffold-de-esteira@v3`.
 
-            - `verificar.yml` — teste, tipo, formato e varredura em todo PR
-            - `publicar.yml` — build, assinatura e publicação em `main`
-            - `inventario.yml` — registro semanal de procedência de imagem
+            - `verificar.yml`: teste, tipo, formato e varredura em todo PR
+            - `publicar.yml`: build, assinatura e publicação em `main`
+            - `inventario.yml`: registro semanal de procedência de imagem
 
             O `esteira.py` é a fonte; o YAML é gerado. Ver
             https://panlabs.interno/ferramentas/bibliotecas/biblioteca-c/visao-geral

@@ -1,13 +1,13 @@
 ---
 title: Library A
 slug: /
-description: The Python client for the internal catalogue — installation, configuration, usage, and the error handling it expects from callers.
+description: The Python client for the internal catalogue, with installation, configuration, usage, and the error handling it expects from callers.
 ---
 
 # Library A
 
 The client for the internal catalogue. It wraps the calls, applies retries with
-exponential backoff and jitter, and returns the published contract types — never
+exponential backoff and jitter, and returns the published contract types, never
 raw dictionaries.
 
 ## Installation
@@ -36,7 +36,7 @@ url = "$PANLABS_INDICE"
 ## Configuration
 
 The library does not discover credentials on its own and does not read
-environment variables by itself. Whoever builds the client passes what it needs —
+environment variables by itself. Whoever builds the client passes what it needs,
 which is what makes it usable in tests without touching the network.
 
 ```python
@@ -81,7 +81,7 @@ except ErroDeValidacao as erro:
     # never worth retrying: the body names the field and the contract version
     log.error("field %s rejected (contract %s)", erro.campo, erro.contrato)
 except ErroDeAcesso:
-    # expired session or wrong role — see the symptom index
+    # expired session or wrong role: see the symptom index
     raise
 except ErroTemporario:
     # the library already retried; reaching here means the ceiling was hit

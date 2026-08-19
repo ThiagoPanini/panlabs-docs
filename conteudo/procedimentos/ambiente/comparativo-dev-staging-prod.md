@@ -13,7 +13,7 @@ as primeiras linhas mordem no primeiro dia, as últimas só num incidente.
 ## Como ler
 
 Cada linha é uma dimensão em que os três ambientes divergem. Onde a célula diz
-`igual a prod`, a divergência é deliberada e o valor é o mesmo — está escrito
+`igual a prod`, a divergência é deliberada e o valor é o mesmo: está escrito
 para que ninguém precise conferir.
 
 ## A tabela

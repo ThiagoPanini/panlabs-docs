@@ -2,7 +2,7 @@
 # GERADO por scripts/gerar-referencia.mjs a partir de contratos/panlabs-esteira.en.json.
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: Passo
-description: One step of a job — either a command it runs, or a third-party action pinned to a sha.
+description: One step of a job, either a command it runs, or a third-party action pinned to a sha.
 api_exemplos: {"assinatura":"Passo(nome: str, *, roda: str | None = None, usa: str | None = None, comentario: str | None = None)","parametros":[{"nome":"nome","exemplo":"testar"},{"nome":"roda","exemplo":"pytest -q"}],"snippet":{"linguagem":"python","modelo":"from panlabs.esteira import Passo\n\npasso = Passo(nome=\"{{nome}}\", roda=\"{{roda}}\")"}}
 ---
 
@@ -12,7 +12,7 @@ api_exemplos: {"assinatura":"Passo(nome: str, *, roda: str | None = None, usa: s
 
 The smallest block of the pipeline. A step does one of two things: it runs a command, or it uses an action. Declaring both on the same step is the mistake generation refuses before writing any YAML.
 
-A third-party action goes in pinned to a sha, never to a tag — the tag gets rewritten under you, and `comentario` is where the readable version lives.
+A third-party action goes in pinned to a sha, never to a tag: the tag gets rewritten under you, and `comentario` is where the readable version lives.
 
 ## Parameters
 

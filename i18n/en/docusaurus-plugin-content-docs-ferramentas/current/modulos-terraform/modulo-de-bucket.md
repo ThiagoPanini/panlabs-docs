@@ -1,6 +1,6 @@
 ---
 title: Bucket module
-description: The module that creates a private, versioned and encrypted bucket — the three variables, the nested output, and what it decides for you.
+description: The module that creates a private, versioned and encrypted bucket, with the three variables, the nested output, and what it decides for you.
 ---
 
 # Bucket module
@@ -12,7 +12,7 @@ first two are required.
 ## Before you start
 
 A session assumed in the target environment and the module version chosen. Pin
-the version — `source` without `version` resolves to the latest on every `init`.
+the version: `source` without `version` resolves to the latest on every `init`.
 
 ## The steps
 

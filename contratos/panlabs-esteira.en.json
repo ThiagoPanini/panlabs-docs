@@ -28,8 +28,8 @@
       "titulo": "panlabs.esteira",
       "qualificado": "panlabs.esteira",
       "assinatura": "from panlabs.esteira import Esteira, padrao",
-      "resumo": "The module's public surface — the two types, the two pipeline functions, and the house defaults.",
-      "descricao": "Describe the pipeline in Python and emit the GitHub Actions YAML from it. The module exposes two types and three functions, and nothing beyond that is contract: any name with a leading underscore moves between minor versions without notice.\n\nThe order of use is the order of the export list — build the pipeline, add the jobs, generate. The snippet beside this page is that whole sequence.",
+      "resumo": "The module's public surface, with the two types, the two pipeline functions, and the house defaults.",
+      "descricao": "Describe the pipeline in Python and emit the GitHub Actions YAML from it. The module exposes two types and three functions, and nothing beyond that is contract: any name with a leading underscore moves between minor versions without notice.\n\nThe order of use is the order of the export list: build the pipeline, add the jobs, generate. The snippet beside this page is that whole sequence.",
       "exporta": ["esteira", "passo", "esteira-trabalho", "esteira-gerar", "padrao-python"],
       "fluxo": ["esteira", "esteira-trabalho", "esteira-gerar"],
       "parametros": [],
@@ -42,8 +42,8 @@
       "titulo": "Esteira",
       "qualificado": "panlabs.esteira.Esteira",
       "assinatura": "Esteira(nome: str, em: list[str], *, permissoes: dict[str, str] | None = None)",
-      "resumo": "The whole pipeline as an object — the workflow name, the events that trigger it, and the token permissions.",
-      "descricao": "The object standing for a workflow. Constructing it writes nothing to disk: the YAML only exists after `gerar`.\n\nThe name is what shows up in the Actions UI, and it also becomes the file name — two workflows with the same name in the same repository overwrite each other silently.",
+      "resumo": "The whole pipeline as an object, with the workflow name, the events that trigger it, and the token permissions.",
+      "descricao": "The object standing for a workflow. Constructing it writes nothing to disk: the YAML only exists after `gerar`.\n\nThe name is what shows up in the Actions UI, and it also becomes the file name: two workflows with the same name in the same repository overwrite each other silently.",
       "chamada": "Esteira",
       "resultado": "esteira",
       "parametros": [
@@ -65,7 +65,7 @@
           "nome": "permissoes",
           "tipo": "dict[str, str] | None",
           "padrao": "None",
-          "descricao": "The workflow token permissions. Left out, the pipeline inherits the repository default — which tends to be broader than the job needs.",
+          "descricao": "The workflow token permissions. Left out, the pipeline inherits the repository default, which tends to be broader than the job needs.",
           "exemplo": {"contents": "read", "id-token": "write"},
           "campos": [
             {
@@ -118,8 +118,8 @@
       "titulo": "Passo",
       "qualificado": "panlabs.esteira.Passo",
       "assinatura": "Passo(nome: str, *, roda: str | None = None, usa: str | None = None, comentario: str | None = None)",
-      "resumo": "One step of a job — either a command it runs, or a third-party action pinned to a sha.",
-      "descricao": "The smallest block of the pipeline. A step does one of two things: it runs a command, or it uses an action. Declaring both on the same step is the mistake generation refuses before writing any YAML.\n\nA third-party action goes in pinned to a sha, never to a tag — the tag gets rewritten under you, and `comentario` is where the readable version lives.",
+      "resumo": "One step of a job, either a command it runs, or a third-party action pinned to a sha.",
+      "descricao": "The smallest block of the pipeline. A step does one of two things: it runs a command, or it uses an action. Declaring both on the same step is the mistake generation refuses before writing any YAML.\n\nA third-party action goes in pinned to a sha, never to a tag: the tag gets rewritten under you, and `comentario` is where the readable version lives.",
       "chamada": "Passo",
       "resultado": "passo",
       "parametros": [
@@ -191,7 +191,7 @@
       "qualificado": "panlabs.esteira.Esteira.trabalho",
       "assinatura": "Esteira.trabalho(nome: str, passos: list[Passo], *, precisa: list[str] = []) -> None",
       "resumo": "Adds a job to the pipeline, with its steps and the dependencies it waits on.",
-      "descricao": "It accumulates on the object and returns nothing — the pipeline is built by successive calls, and what closes the build is `gerar`.\n\nThe call order is the order the jobs appear in the YAML. It does not decide execution order: `precisa` does.",
+      "descricao": "It accumulates on the object and returns nothing: the pipeline is built by successive calls, and what closes the build is `gerar`.\n\nThe call order is the order the jobs appear in the YAML. It does not decide execution order: `precisa` does.",
       "chamada": "esteira.trabalho",
       "receptor": "esteira",
       "resultado": null,
@@ -237,7 +237,7 @@
       "titulo": "Esteira.gerar",
       "qualificado": "panlabs.esteira.Esteira.gerar",
       "assinatura": "Esteira.gerar(destino: Path | str, *, diff: bool = False) -> Geracao",
-      "resumo": "Validates the whole pipeline and writes the YAML — or returns the refusals and writes nothing.",
+      "resumo": "Validates the whole pipeline and writes the YAML, or returns the refusals and writes nothing.",
       "descricao": "It validates before writing, and never emits partial output: either the YAML describes the complete pipeline, or there is no YAML. A workflow that runs with a step missing passes, and passing without checking is worse than not running.\n\nWith `diff=True` nothing is written. That is the mode the verification pipeline uses to fail when the committed YAML stops being what the Python produces.",
       "chamada": "esteira.gerar",
       "receptor": "esteira",
@@ -275,7 +275,7 @@
           {
             "nome": "recusas",
             "tipo": "list[dict]",
-            "descricao": "The refusals found. Empty when the pipeline passes — and when it is not empty, nothing was written.",
+            "descricao": "The refusals found. Empty when the pipeline passes, and when it is not empty, nothing was written.",
             "campos": [
               {
                 "nome": "recusa",
@@ -285,7 +285,7 @@
               {
                 "nome": "ponteiro",
                 "tipo": "str",
-                "descricao": "The offending node, as a dotted path — `trabalhos.verificar.passos[2].uses`."
+                "descricao": "The offending node, as a dotted path: `trabalhos.verificar.passos[2].uses`."
               },
               {
                 "nome": "detalhe",
@@ -321,7 +321,7 @@
       "titulo": "padrao.python",
       "qualificado": "panlabs.esteira.padrao.python",
       "assinatura": "padrao.python(versao: str = \"3.12\", *, cobertura: bool = True) -> list[Passo]",
-      "resumo": "The steps the house uses on a Python repository — test, types, format and scan, in that order.",
+      "resumo": "The steps the house uses on a Python repository, with test, types, format and scan, in that order.",
       "descricao": "Returns the step list already assembled, with the actions pinned to shas. Start from it and add whatever is specific to the repository; assembling the list from scratch is how a workflow gets inherited from another team by copy.\n\nThe function is pure: calling it twice returns two equivalent lists, and neither is bound to a pipeline.",
       "chamada": "padrao.python",
       "resultado": "passos",

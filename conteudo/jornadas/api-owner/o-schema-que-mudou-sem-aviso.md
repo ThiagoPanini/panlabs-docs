@@ -1,6 +1,6 @@
 ---
 title: O schema que mudou sem aviso
-description: Um campo opcional virou obrigatório sem subir de major, e o erro só apareceu no terminal de quem consumia — em três formatos diferentes.
+description: Um campo opcional virou obrigatório sem subir de major, e o erro só apareceu no terminal de quem consumia, em três formatos diferentes.
 ---
 
 # O schema que mudou sem aviso
@@ -44,7 +44,7 @@ em todos: **qual campo**.
 
 ## O que a correção foi de verdade
 
-A correção não foi reverter — o campo precisava mesmo ser obrigatório. Foi fazer
+A correção não foi reverter: o campo precisava mesmo ser obrigatório. Foi fazer
 a recusa dizer o que recusou.
 
 ```python
@@ -73,5 +73,5 @@ A pergunta que separa uma mensagem de erro boa de uma ruim é sempre a mesma:
 
 A esteira ganhou um terceiro passo, que compara as regras de **validação** e não
 só os tipos. E ficou uma regra de redação para resposta de erro: categoria,
-campo e versão, sempre os três — porque quem lê a mensagem está num terminal
+campo e versão, sempre os três, porque quem lê a mensagem está num terminal
 que não tem o contrato aberto ao lado.

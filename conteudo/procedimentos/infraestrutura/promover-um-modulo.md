@@ -8,7 +8,7 @@ description: Como um trecho de composição repetido em três repositórios vira
 <Untranslated />
 
 Todo módulo da casa começou como um trecho copiado. A promoção acontece quando o
-mesmo trecho aparece pela terceira vez — antes disso o custo de generalizar é
+mesmo trecho aparece pela terceira vez: antes disso o custo de generalizar é
 maior que o de copiar, e depois disso as três cópias já divergiram o suficiente
 para que unificá-las seja uma migração.
 
@@ -36,7 +36,7 @@ não esteja nela vira decisão do módulo.
   <Step title="Provar o plano vazio">
     O teste da promoção é este: trocar o trecho pela chamada do módulo e o
     `plan` não propor nenhuma mudança. Se ele propõe, o módulo não é
-    equivalente — e aplicar aí recria recurso em produção.
+    equivalente, e aplicar aí recria recurso em produção.
 
     ```bash
     terraform plan -detailed-exitcode
@@ -78,7 +78,7 @@ mais pode mudar de contrato, porque os dois que faltam nunca chegam.
 
 **Recurso que não pode ser recriado.** Use `moved` para dizer ao Terraform que o
 endereço mudou sem que o recurso tenha mudado. Sem ele, a extração destrói e
-recria — que é o modo de falhar mais caro deste procedimento.
+recria, que é o modo de falhar mais caro deste procedimento.
 
 ```hcl
 moved {
@@ -93,7 +93,7 @@ e uma isolada é melhor que um módulo com uma variável que só um consumidor u
 
 :::warning
 Não promova durante uma janela de mudança. `moved` é seguro e o `plan` vazio é
-prova, mas o procedimento troca o endereço de todo recurso envolvido no estado —
+prova, mas o procedimento troca o endereço de todo recurso envolvido no estado,
 e um conflito de estado no meio disso é a reconciliação mais desagradável que
 este repositório já produziu.
 :::

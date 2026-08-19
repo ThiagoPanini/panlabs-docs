@@ -1,13 +1,13 @@
 ---
 title: Overview
-description: Pipeline as code — from the first generated workflow to a running pipeline, in five steps and without editing YAML by hand.
+description: Pipeline as code, from the first generated workflow to a running pipeline, in five steps and without editing YAML by hand.
 ---
 
 # Overview
 
 Library C describes pipelines in Python and emits GitHub Actions workflows. It
 exists because pipeline YAML gets copied between repositories and drifts
-silently — and a workflow that drifts goes unnoticed until the day it stops
+silently, and a workflow that drifts goes unnoticed until the day it stops
 failing what it should.
 
 ## Installing and the first workflow
@@ -61,7 +61,7 @@ failing what it should.
 
 :::warning
 The generated YAML is **not editable**. It opens with a header saying so, and the
-check step rejects any edit — the source is the Python, and two sources drift the
+check step rejects any edit: the source is the Python, and two sources drift the
 day someone fixes only one.
 :::
 
@@ -74,7 +74,7 @@ starting from scratch is how you inherit another team's workflow by copy.
 ## What it does not do
 
 It does not run pipelines and it does not talk to GitHub. Its output is YAML on
-disk, and Actions runs it as always — swapping the runner would trade an audited
+disk, and Actions runs it as always; swapping the runner would trade an audited
 tool for debt of our own.
 
 It also does not validate that the pipeline **works**: only that it is complete
