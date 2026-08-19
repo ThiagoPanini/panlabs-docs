@@ -1,0 +1,210 @@
+{
+  "contrato": "assinatura",
+  "versao": 1,
+  "biblioteca": {
+    "modulo": "overpower"
+  },
+  "rotulos": {
+    "aplicacao": "Aplicação",
+    "comando": "Comando",
+    "comandos": "Comandos",
+    "opcoesGlobais": "Opções globais",
+    "opcoes": "Opções",
+    "codigosDeSaida": "Códigos de saída",
+    "semRetorno": "Os códigos de saída são os da aplicação.",
+    "erros": "Erros",
+    "colunaErro": "Erro",
+    "colunaQuando": "Quando",
+    "colunaNome": "Nome",
+    "colunaEspecie": "Espécie",
+    "colunaResumo": "O que faz",
+    "veja": "Os campos estão na página do comando:"
+  },
+  "entradas": [
+    {
+      "id": "overpower",
+      "especie": "aplicacao",
+      "titulo": "overpower",
+      "qualificado": "overpower",
+      "assinatura": "overpower [--help] [--version] &lt;command&gt;",
+      "resumo": "A raiz da linha de comando, com as opções que valem em qualquer posição e a tabela dos quatro códigos de saída que os três comandos compartilham.",
+      "descricao": "Toda invocação do `overpower` responde a uma de exatamente três perguntas, e cada pergunta é um comando. Digitado nu, o `overpower` imprime a marca e a ajuda de topo, e sai `0`; sob um cano a marca cai e só a ajuda passa, para que um `grep` ou um redirecionamento receba algo que valha a leitura.\n\nO catálogo que o `overpower` instala vem embutido no pacote, então a versão da ferramenta é a versão do catálogo. É por isso que toda linha deste site fixa `@latest`, e é isso que `--version` prova.",
+      "exporta": ["list", "install", "doctor"],
+      "fluxo": ["list", "install", "doctor"],
+      "parametros": [
+        {
+          "nome": "--help",
+          "tipo": "flag",
+          "descricao": "Imprime a ajuda do nível em que aparece e sai `0`. Na raiz, é a mesma tela que o `overpower` nu já mostra."
+        },
+        {
+          "nome": "--version",
+          "tipo": "flag",
+          "descricao": "Imprime a versão lida dos metadados do pacote instalado, e não de uma constante fixada no código. É a conferência mais barata de que o pacote chegou inteiro."
+        }
+      ],
+      "retorno": {
+        "tipo": "int",
+        "descricao": "O código de saída é a resposta da linha, e ele vale igual nos três comandos. O eixo entre `2` e `3` diz de quem é o defeito, e é essa distinção que torna os dois úteis dentro de um script.",
+        "campos": [
+          {
+            "nome": "0",
+            "tipo": "int",
+            "descricao": "Fez o que foi pedido."
+          },
+          {
+            "nome": "1",
+            "tipo": "int",
+            "descricao": "Não conseguiu rodar. Uma falha que o produto não reconhece como recusa própria vira painel de erro e sai por aqui, o que é em si uma afirmação, a de que o defeito é do `overpower`."
+          },
+          {
+            "nome": "2",
+            "tipo": "int",
+            "descricao": "A invocação está errada. O valor que você digitou não existe em lugar nenhum, e a mensagem imprime a lista fechada inteira."
+          },
+          {
+            "nome": "3",
+            "tipo": "int",
+            "descricao": "Rodou, e a resposta é não. A linha estava bem formada, o valor era real, e o que não existe é o par que você pediu."
+          }
+        ]
+      },
+      "erros": []
+    },
+    {
+      "id": "list",
+      "especie": "comando",
+      "titulo": "overpower list",
+      "qualificado": "overpower list",
+      "assinatura": "overpower list [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;]",
+      "resumo": "Responde o que existe. Nu, imprime o catálogo embutido em quatro blocos; com um seletor, abre um item só, por inteiro.",
+      "descricao": "Cada entrada sai com o tamanho, a contagem de arquivos e a descrição por inteiro, nunca truncada, porque a descrição é aquilo sobre o que a decisão de instalar é de fato tomada. Abaixo dela vem a linha que instala o item, sem cifrão na frente, para que copiar e colar devolva algo que roda.\n\n`list` responde sobre um item de cada vez. Dois seletores na mesma linha são uma pergunta com duas respostas, e o comando recusa em vez de escolher uma calado.",
+      "chamada": "overpower list",
+      "parametros": [
+        {
+          "nome": "--skill",
+          "tipo": "name",
+          "descricao": "Abre uma skill do pool por inteiro. Aceita a forma curta `-s`.",
+          "exemplo": "panlabs-python-standards"
+        },
+        {
+          "nome": "--bundle",
+          "tipo": "name",
+          "descricao": "Abre um bundle e lista os artefatos que o manifesto dele nomeia. Aceita a forma curta `-b`."
+        },
+        {
+          "nome": "--mcp",
+          "tipo": "name",
+          "descricao": "Abre a receita de um servidor MCP, com o transporte, os campos que o TOML soletra e os alvos derivados."
+        },
+        {
+          "nome": "--ai-framework",
+          "tipo": "name",
+          "descricao": "Abre um AI Framework e imprime cada artefato dentro dele. É o único seletor que `--from` recusa."
+        },
+        {
+          "nome": "--from",
+          "tipo": "url",
+          "descricao": "Lê de um repositório do GitHub em vez do catálogo embutido. Nu, imprime a vitrine daquele repositório."
+        }
+      ],
+      "retorno": null,
+      "erros": []
+    },
+    {
+      "id": "install",
+      "especie": "comando",
+      "titulo": "overpower install",
+      "qualificado": "overpower install",
+      "assinatura": "overpower install --runtime &lt;key&gt; [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;] [--global] [--force] [--yes] [--dry-run]",
+      "resumo": "Escreve. Imprime o plano, com todo destino e quem o lê, antes de encostar em disco, e pergunta antes de escrever quando há um terminal do outro lado.",
+      "descricao": "Os quatro seletores se misturam livremente numa linha só, e cada um aceita valor separado por vírgula, a repetição da flag, ou as duas coisas. Quando a linha resolve para escritas em mais de uma unidade, elas acontecem sempre na mesma ordem, framework, depois bundle, depois artefato avulso, depois servidor MCP, e a unidade mais específica escreve por último.\n\nNum terminal, uma linha que não fecha um plano abre o assistente em vez de simplesmente recusar. Ele abre só os passos que a sua linha deixou em aberto, sempre na mesma ordem, e o que ele coleta vira exatamente a mesma requisição que a linha digitada à mão teria montado.",
+      "chamada": "overpower install",
+      "parametros": [
+        {
+          "nome": "--skill",
+          "tipo": "name",
+          "descricao": "Uma skill do pool, instalada sozinha. Aceita a forma curta `-s`.",
+          "exemplo": "panlabs-python-standards"
+        },
+        {
+          "nome": "--runtime",
+          "tipo": "key",
+          "obrigatorio": true,
+          "descricao": "Quem recebe o que foi instalado. Aceita as chaves de uma tabela fechada de 77 runtimes, e não tem valor padrão. Uma linha que nomeia o que instalar e nenhum runtime recusa em vez de adivinhar.",
+          "exemplo": "claude-code"
+        },
+        {
+          "nome": "--bundle",
+          "tipo": "name",
+          "descricao": "Um bundle, expandido nos artefatos de pool que o manifesto dele nomeia. Aceita a forma curta `-b`."
+        },
+        {
+          "nome": "--mcp",
+          "tipo": "name",
+          "descricao": "Um servidor MCP, enxertado na configuração do próprio runtime. Aqui nada é copiado, e sim acrescentado dentro de um documento que já é seu."
+        },
+        {
+          "nome": "--ai-framework",
+          "tipo": "name",
+          "descricao": "Um AI Framework, instalado inteiro. Ele não tem forma curta de propósito, porque `-f` já é `--force` neste mesmo comando."
+        },
+        {
+          "nome": "--from",
+          "tipo": "url",
+          "descricao": "Instala a partir de um repositório do GitHub, sem passo de registro. Uma vez na linha, o catálogo embutido não é consultado."
+        },
+        {
+          "nome": "--dry-run",
+          "tipo": "flag",
+          "descricao": "Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio."
+        },
+        {
+          "nome": "--yes",
+          "tipo": "flag",
+          "descricao": "Pula a confirmação, e nada além dela. Aceita a forma curta `-y`."
+        },
+        {
+          "nome": "--force",
+          "tipo": "flag",
+          "descricao": "Sobrescreve um destino que já existe no escopo de máquina, sem perguntar. No escopo de repositório não tem efeito, porque lá o `git status` já revela e desfaz. Aceita a forma curta `-f`."
+        },
+        {
+          "nome": "--global",
+          "tipo": "flag",
+          "descricao": "Escreve sob o diretório do usuário em vez do repositório atual. Aceita a forma curta `-g`."
+        }
+      ],
+      "retorno": null,
+      "erros": []
+    },
+    {
+      "id": "doctor",
+      "especie": "comando",
+      "titulo": "overpower doctor",
+      "qualificado": "overpower doctor",
+      "assinatura": "overpower doctor",
+      "resumo": "Responde se o que foi escrito continua sendo o que foi escrito. Reporta o terminal e a integridade numa saída só, nos dois escopos ao mesmo tempo.",
+      "descricao": "A metade de terminal reporta quatro fatos, se há um TTY ligado, que sistema de cor foi detectado, a largura da tela e se `NO_COLOR` está posto. É o conjunto exato que explica uma tela que saiu torta, sem precisar de uma ida e volta para perguntar.\n\nA metade de integridade lê a tabela de runtimes nos dois escopos e confere o que encontra contra o que foi de fato instalado. Ela lê os dois porque o alvo não carrega manifesto próprio, então não existe conferir um escopo só que queira dizer alguma coisa. É também por isso que `doctor` não tem `--global`, e é por isso que ele responde fora de um repositório git, reportando vazio a metade que não achou.",
+      "chamada": "overpower doctor",
+      "parametros": [],
+      "retorno": {
+        "tipo": "int",
+        "descricao": "O `doctor` usa dois dos quatro códigos da aplicação, e a escolha entre eles é o que o torna utilizável como portão de CI. Um relatório ruim nunca sai `1`, porque relatório ruim não é queda.",
+        "campos": [
+          {
+            "nome": "0",
+            "tipo": "int",
+            "descricao": "As três conferências rodaram e nenhuma achou problema."
+          },
+          {
+            "nome": "3",
+            "tipo": "int",
+            "descricao": "Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código."
+          }
+        ]
+      },
+      "erros": []
+    }
+  ]
+}

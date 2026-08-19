@@ -1,0 +1,57 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/overpower.pt-BR.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower install
+description: Escreve. Imprime o plano, com todo destino e quem o lê, antes de encostar em disco, e pergunta antes de escrever quando há um terminal do outro lado.
+api_exemplos: {"assinatura":"overpower install --runtime &lt;key&gt; [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
+---
+
+# overpower install
+
+**Comando** · `overpower install`
+
+Os quatro seletores se misturam livremente numa linha só, e cada um aceita valor separado por vírgula, a repetição da flag, ou as duas coisas. Quando a linha resolve para escritas em mais de uma unidade, elas acontecem sempre na mesma ordem, framework, depois bundle, depois artefato avulso, depois servidor MCP, e a unidade mais específica escreve por último.
+
+Num terminal, uma linha que não fecha um plano abre o assistente em vez de simplesmente recusar. Ele abre só os passos que a sua linha deixou em aberto, sempre na mesma ordem, e o que ele coleta vira exatamente a mesma requisição que a linha digitada à mão teria montado.
+
+## Opções
+
+<ParamField name="--skill" type="name">
+Uma skill do pool, instalada sozinha. Aceita a forma curta `-s`.
+</ParamField>
+
+<ParamField name="--runtime" type="key" required>
+Quem recebe o que foi instalado. Aceita as chaves de uma tabela fechada de 77 runtimes, e não tem valor padrão. Uma linha que nomeia o que instalar e nenhum runtime recusa em vez de adivinhar.
+</ParamField>
+
+<ParamField name="--bundle" type="name">
+Um bundle, expandido nos artefatos de pool que o manifesto dele nomeia. Aceita a forma curta `-b`.
+</ParamField>
+
+<ParamField name="--mcp" type="name">
+Um servidor MCP, enxertado na configuração do próprio runtime. Aqui nada é copiado, e sim acrescentado dentro de um documento que já é seu.
+</ParamField>
+
+<ParamField name="--ai-framework" type="name">
+Um AI Framework, instalado inteiro. Ele não tem forma curta de propósito, porque `-f` já é `--force` neste mesmo comando.
+</ParamField>
+
+<ParamField name="--from" type="url">
+Instala a partir de um repositório do GitHub, sem passo de registro. Uma vez na linha, o catálogo embutido não é consultado.
+</ParamField>
+
+<ParamField name="--dry-run" type="flag">
+Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio.
+</ParamField>
+
+<ParamField name="--yes" type="flag">
+Pula a confirmação, e nada além dela. Aceita a forma curta `-y`.
+</ParamField>
+
+<ParamField name="--force" type="flag">
+Sobrescreve um destino que já existe no escopo de máquina, sem perguntar. No escopo de repositório não tem efeito, porque lá o `git status` já revela e desfaz. Aceita a forma curta `-f`.
+</ParamField>
+
+<ParamField name="--global" type="flag">
+Escreve sob o diretório do usuário em vez do repositório atual. Aceita a forma curta `-g`.
+</ParamField>

@@ -3,9 +3,29 @@
     "message": "Libraries",
     "description": "The label for category 'Bibliotecas' in sidebar 'ferramentas'"
   },
-  "sidebar.ferramentas.category.Biblioteca C": {
-    "message": "Library C",
-    "description": "The label for category 'Biblioteca C' in sidebar 'ferramentas'"
+  "sidebar.ferramentas.category.overpower": {
+    "message": "overpower",
+    "description": "The label for category 'overpower' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Comandos": {
+    "message": "Commands",
+    "description": "The label for category 'Comandos' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Alvos": {
+    "message": "Targets",
+    "description": "The label for category 'Alvos' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Referência": {
+    "message": "Reference",
+    "description": "The label for category 'Referência' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Desenvolvimento": {
+    "message": "Development",
+    "description": "The label for category 'Desenvolvimento' in sidebar 'ferramentas'"
+  },
+  "sidebar.ferramentas.category.Publicação": {
+    "message": "Shipping",
+    "description": "The label for category 'Publicação' in sidebar 'ferramentas'"
   },
   "sidebar.ferramentas.category.Módulos Terraform": {
     "message": "Terraform modules",

@@ -38,9 +38,17 @@ set -uo pipefail
 GERADOR='scripts/gerar-referencia.mjs'
 FRAGMENTO='sidebars-referencia.js'
 CAMPO='src/components/Campo.js'
-PT='conteudo/ferramentas/bibliotecas/biblioteca-c/referencia'
-EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/biblioteca-c/referencia'
-CONTRATOS='contratos/panlabs-esteira.pt-BR.json contratos/panlabs-esteira.en.json'
+PT='conteudo/ferramentas/bibliotecas/overpower/comandos'
+EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/overpower/comandos'
+CONTRATO_PT='contratos/overpower.pt-BR.json'
+CONTRATOS="${CONTRATO_PT} contratos/overpower.en.json"
+
+# O prefixo de id no fragmento, e a família de ícone que as folhas geradas
+# carregam. Ela é a da SEÇÃO que as hospeda desde o ADR 9 §d), e não mais a do
+# separador de topo.
+PREFIXO_DE_ID='bibliotecas/overpower/comandos'
+FAMILIA='sidebar-icone--comandos'
+GERADAS=4
 
 # Os seis verbos, mais os três substantivos que só existem num contrato HTTP. A
 # varredura de `src/` remove COMENTÁRIO antes de olhar, pelo mesmo motivo dos
@@ -96,7 +104,15 @@ if [ -f "$GERADOR" ]; then
     reprova "o contrato foi RECUSADO pelo validador:"
     printf '%s\n' "$saida" | sed 's/^/    /'
   else
-    sujo=$(git status --porcelain -- "$PT" "$EN" "$FRAGMENTO")
+    # **O filtro por extensão é o que separa as duas posses dentro de uma pasta
+    # só.** Desde o ADR 9 §d) o ramo gerado tem categoria própria, e a folha
+    # autoral que a abre — `Comandos › Índice` — mora ao lado das quatro `.mdx`.
+    # Sem o filtro, editar essa folha reprovaria aqui com a mensagem *a página foi
+    # editada à mão*, que é verdade e não é defeito: ela é autoral, e editá-la à
+    # mão é a única forma de mexer nela. `.mdx` é o sinal greppável de *gerado*, e
+    # é o mesmo teste que o portão 4 usa para contar as duas posses em separado.
+    sujo=$(git status --porcelain -- "$PT" "$EN" "$FRAGMENTO" |
+      grep -E "\.mdx\$|${FRAGMENTO}\$") || true
     if [ -n "$sujo" ]; then
       reprova "regenerar mexeu na saída commitada — o contrato mudou sem o gerador rodar, ou a página foi editada à mão:"
       printf '%s\n' "$sujo" | sed 's/^/    /'
@@ -113,17 +129,24 @@ echo "4  a parte \`meta\` — a condição que a mantém publicada"
 grep -q 'data-sd-part="meta"' "$CAMPO" ||
   reprova "${CAMPO} não nomeia \`data-sd-part=\"meta\"\`, e a parte perde o consumidor"
 
-# O outro elo: as páginas que consomem o campo. **A do módulo não entra na
-# conta**, e a exclusão é do contrato e não uma lista de exceção a manter — um
-# módulo não tem parâmetro nem retorno, então ele lista exportações e mais nada.
-# O número esperado sai do próprio contrato.
+# O outro elo: as páginas que consomem o campo. O número esperado sai do próprio
+# CONTRATO, e não de uma constante nem de uma lista de exceção a manter.
+#
+# **A pergunta deixou de ser a espécie e passou a ser o conteúdo.** Enquanto o
+# contrato era de biblioteca, a exclusão se escrevia `especie !== 'modulo'`,
+# porque o módulo era a única espécie que por definição não tinha campo. Com
+# `aplicacao` e `comando` isso deixa de valer pela espécie: um comando sem opção e
+# sem código de saída próprio é legítimo, e é o contrato que diz qual é qual. A
+# régua passa a perguntar o que a entrada tem, que é o que decide se a página sai
+# com campo.
 #
 # **Os DOIS locales são cobrados.** A versão anterior desta cobrança olhava só o
 # pt-BR, e o elo do EN ficava sem casamento — uma tradução que perdesse o campo
 # despublicaria a parte em metade do site sem reprovar nada.
 esperado=$(node -e "
-  const c = JSON.parse(require('node:fs').readFileSync('contratos/panlabs-esteira.pt-BR.json', 'utf8'));
-  console.log(c.entradas.filter((e) => e.especie !== 'modulo').length);
+  const c = JSON.parse(require('node:fs').readFileSync('${CONTRATO_PT}', 'utf8'));
+  const temCampo = (e) => (e.parametros ?? []).length > 0 || e.retorno !== null;
+  console.log(c.entradas.filter(temCampo).length);
 ")
 for par in "${PT}=pt-BR" "${EN}=en"; do
   raiz="${par%%=*}"
@@ -135,7 +158,7 @@ for par in "${PT}=pt-BR" "${EN}=en"; do
   fi
 done
 [ "$falhas" = 0 ] &&
-  echo "   o campo nomeia a parte, e as ${esperado} entradas de tipo e função consomem o campo nos dois locales"
+  echo "   o campo nomeia a parte, e as ${esperado} entradas com opção ou código de saída o consomem nos dois locales"
 echo
 
 # --- 5. zero verbo HTTP -------------------------------------------------------
@@ -169,8 +192,14 @@ for par in "${PT}=pt-BR" "${EN}=en"; do
   raiz="${par%%=*}"
   locale="${par##*=}"
   n=$(find "$raiz" -name '*.mdx' 2>/dev/null | wc -l | tr -d ' ')
-  [ "$n" = 6 ] || reprova "${locale}: ${n} páginas geradas, esperado 6"
-  soltos=$(find "$raiz" -type f -not -name '*.mdx' 2>/dev/null) || true
+  [ "$n" = "$GERADAS" ] || reprova "${locale}: ${n} páginas geradas, esperado ${GERADAS}"
+  # **A régua é a EXTENSÃO, e não o nome do arquivo.** A pasta hospeda as duas
+  # posses desde o ADR 9 §d): `.mdx` é do gerador, `.md` é autoral — e a folha que
+  # abre a categoria, dona da fixture `painel-direito-vazio`, é a autoral de hoje.
+  # A versão anterior desta linha nomeava `indice.md`, o que fazia a cobrança
+  # depender do nome que a folha por acaso tem; contar autoral é trabalho do
+  # portão 4, e aqui o que se cobra é que nada além das duas extensões apareça.
+  soltos=$(find "$raiz" -type f -not -name '*.mdx' -not -name '*.md' 2>/dev/null) || true
   [ -z "$soltos" ] || {
     reprova "${locale}: arquivo que não é \`.mdx\` dentro do ramo gerado:"
     printf '%s\n' "$soltos" | sed 's/^/    /'
@@ -180,16 +209,16 @@ done
 # Issue #97: o fragmento passou de lista de strings para lista de itens de
 # folha (`{type: 'doc', id: '...', className: '...'}`), porque toda folha da
 # sidebar ganhou ícone. A contagem casa o `id:`, não mais a string crua.
-ids=$(grep -c "^  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/" "$FRAGMENTO" 2>/dev/null || echo 0)
-[ "$ids" = 6 ] || reprova "${FRAGMENTO} declara ${ids} ids, esperado 6"
+ids=$(grep -c "^  {type: 'doc', id: '${PREFIXO_DE_ID}/" "$FRAGMENTO" 2>/dev/null || echo 0)
+[ "$ids" = "$GERADAS" ] || reprova "${FRAGMENTO} declara ${ids} ids, esperado ${GERADAS}"
 
-classes=$(grep -c "^  {type: 'doc', id: 'bibliotecas/biblioteca-c/referencia/.*className: 'sidebar-icone sidebar-icone--bibliotecas'}," "$FRAGMENTO" 2>/dev/null || echo 0)
-[ "$classes" = 6 ] || reprova "${FRAGMENTO}: ${classes} ids carregam \`sidebar-icone--bibliotecas\`, esperado 6 — toda folha tem ícone"
+classes=$(grep -c "^  {type: 'doc', id: '${PREFIXO_DE_ID}/.*className: 'sidebar-icone ${FAMILIA}'}," "$FRAGMENTO" 2>/dev/null || echo 0)
+[ "$classes" = "$GERADAS" ] || reprova "${FRAGMENTO}: ${classes} ids carregam \`${FAMILIA}\`, esperado ${GERADAS} — toda folha tem ícone"
 
 grep -q "^import referencia from './${FRAGMENTO}';" sidebars-ferramentas.js ||
   reprova "sidebars-ferramentas.js não importa o fragmento, e o ramo gerado fica fora da árvore"
 
-echo "   6 páginas por locale, 6 ids no fragmento, e a sidebar da aba o importa"
+echo "   ${GERADAS} páginas por locale, ${GERADAS} ids no fragmento, e a sidebar da aba o importa"
 echo
 
 if [ "$falhas" -gt 0 ]; then

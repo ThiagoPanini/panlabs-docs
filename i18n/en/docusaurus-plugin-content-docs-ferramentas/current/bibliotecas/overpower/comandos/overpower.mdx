@@ -1,0 +1,53 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/overpower.en.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower
+description: The root of the command line, with the options that hold in any position and the table of four exit codes the three commands share.
+api_exemplos: {"assinatura":"overpower [--help] [--version] &lt;command&gt;","parametros":[],"snippet":{"linguagem":"bash","modelo":"overpower list --skill \"panlabs-python-standards\"\noverpower install --skill \"panlabs-python-standards\" --runtime \"claude-code\"\noverpower doctor"}}
+---
+
+# overpower
+
+**Application** · `overpower`
+
+Every invocation of overpower answers one of exactly three questions, and each question is a command. Typed bare, overpower prints a banner and the top-level help, and exits `0`; under a pipe the banner is dropped and only the help goes through, so a `grep` or a redirect gets something worth reading.
+
+The catalog overpower installs from is embedded in the package, so the version of the tool is the version of the catalog. That is why every line on this site pins `@latest`, and it is what `--version` proves.
+
+## Commands
+
+| Name | Kind | What it does |
+| --- | --- | --- |
+| [`overpower list`](./list.mdx) | Command | Answers what is there. Bare, it prints the embedded catalog in four blocks; with a selector, it opens exactly one item, in full. |
+| [`overpower install`](./install.mdx) | Command | Writes. It prints the plan, with every destination and who reads it, before touching disk, and asks before writing when there is a terminal on the other side. |
+| [`overpower doctor`](./doctor.mdx) | Command | Answers whether what was written is still what was written. It reports the terminal and the integrity in a single output, across both scopes at once. |
+
+## Global options
+
+<ParamField name="--help" type="flag">
+Prints the help for the level it appears at and exits `0`. At the root, it is the same screen bare overpower already shows.
+</ParamField>
+
+<ParamField name="--version" type="flag">
+Prints the version read from the installed package's own metadata, rather than from a constant baked into the source. It is the cheapest available check that the package arrived whole.
+</ParamField>
+
+## Exit codes
+
+The exit code is the line's answer, and it means the same across the three commands. The axis between `2` and `3` is whose defect it is, and that distinction is what makes both usable inside a script.
+
+<ResponseField name="0" type="int">
+Did what was asked.
+</ResponseField>
+
+<ResponseField name="1" type="int">
+Could not run. A failure the product does not recognise as one of its own refusals becomes an error panel and leaves through here, which is itself a claim, that the defect is overpower's.
+</ResponseField>
+
+<ResponseField name="2" type="int">
+The invocation is wrong. The value you typed exists nowhere, and the message prints the whole closed list.
+</ResponseField>
+
+<ResponseField name="3" type="int">
+Ran, and the answer is no. The line was well formed, the value was real, and what does not exist is the pairing you asked for.
+</ResponseField>

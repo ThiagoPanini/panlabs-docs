@@ -25,9 +25,9 @@
  *    A assimetria é medida: no Devin, `Get Started` abre com a folha
  *    `Introducing Devin`, e outros grupos não têm folha de abertura nenhuma.
  *    ADR 10 §d.
- * 3. **Teto de profundidade 3, e esta aba usa 2.** Separador → folha, e nada
- *    abaixo. O único lugar do site que colapsa de verdade é `Ferramentas ›
- *    Bibliotecas › Biblioteca C`.
+ * 3. **Teto de profundidade 4, e esta aba usa 2.** Separador → folha, e nada
+ *    abaixo. O teto é confinado a `Ferramentas › Bibliotecas › overpower`, que
+ *    é também o único lugar do site que colapsa de verdade.
  *
  * **`collapsed: false` saiu, e não foi troca de gosto.** A linha estava
  * carimbada `herdado` com a fonte *"a âncora mostra a árvore aberta"* — verdade

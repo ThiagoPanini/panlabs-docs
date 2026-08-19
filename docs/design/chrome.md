@@ -322,7 +322,7 @@ Largura `--sd-sidebar-width`, e **nada aqui custa swizzle**.
 
 **O número é medido, não default.** *Dissenso registrado, e ele caiu:* a nota dizia que aprofundar a árvore reabriria este número, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. **Medido:** a sidebar do `docs.devin.ai` e a do `docs.windsurf.com` têm `w-[18rem]` — os mesmos 288px —, e o windsurf, também tema `mint`, segura **cinco níveis** dentro deles. O Mintlify não declara teto numérico de aninhamento. O 288 não reabre; ver [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md).
 
-**O nível de topo não é categoria — é separador.** Rótulo em negrito, sem página, sem seta e sem ícone, e sempre aberto: `collapsible: false` mais ausência de `link` em `sidebars-*.js`. O único nó do site que colapsa está no nível 2, `Bibliotecas › Biblioteca C`, e o teto de profundidade continua 3 (ver [`informacao.md`](informacao.md) §3.2).
+**O nível de topo não é categoria — é separador.** Rótulo em negrito, sem página, sem seta e sem ícone, e sempre aberto: `collapsible: false` mais ausência de `link` em `sidebars-*.js`. Os nós que colapsam moram todos em `Bibliotecas › overpower` — um no nível 2 e cinco no nível 3 —, e o teto de profundidade é 4, confinado a esse ramo (ver [`informacao.md`](informacao.md) §3.1 e §3.2).
 
 ### 4.1 Ícone por folha
 
@@ -339,23 +339,25 @@ O `::before` mora no **link**, não no `<li>`, para herdar a cor dele.
 
 **São duas formas de DOM, e desde a #114 as duas precisam de seletor.** A folha é um `<a class="menu__link">` direto dentro do `<li>`; o nó colapsável embrulha o link num `<div class="menu__list-item-collapsible">` junto com o `<button class="menu__caret">` irmão. Enquanto a regra excluía todo cabeçalho de grupo, um seletor bastava. O separador não aparece em nenhum dos dois, e não por seletor: ele não recebe `className` nenhum em `sidebars-*.js` — quem decide é a árvore, não o CSS, e é isso que faz a regra valer em qualquer profundidade sem crescer no arquivo.
 
-O marcador continua sendo o **`className` do manifesto**, e não o número de nível: `Biblioteca C` (nível 2) e as folhas dela (nível 3) herdam a família do separador que as contém (`--bibliotecas`), não uma família própria do degrau — o ícone é da **seção**, não do nível.
+O marcador continua sendo o **`className` do manifesto**, e não o número de nível: o nó `overpower` e as três folhas de abertura dele herdam `--bibliotecas`, a família do separador que os contém, e as folhas de nível 4 herdam a família da **seção** em que moram — `--comandos`, `--alvos`, `--referencia`, `--desenvolvimento`, `--publicacao`. O ícone é da seção, não do degrau; onde não há seção com identidade própria, quem nomeia é o separador.
 
 O alinhamento não é coincidência: o preenchimento horizontal do item de menu foi escolhido para que, somado ao preenchimento que o `DocSidebar` põe na lista, o ícone caia **na mesma vertical do preenchimento do navbar**.
 
-Os onze pares seção→ícone estão em [`icones.md`](icones.md), verbatim; a regra de obrigatoriedade está no §8 de lá.
+Os dezesseis pares seção→ícone estão em [`icones.md`](icones.md), verbatim; a regra de obrigatoriedade está no §8 de lá.
 
 ### 4.2 Hierarquia, recuo e item ativo
 
-A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sidebar-item-link-level-<n>`, que são `ThemeClassNames`. O teto de profundidade é 3 (ver [`informacao.md`](informacao.md) §3.1) e a forma de cada nível está no §3.2 de lá; existem **três degraus a desenhar** — o terceiro só aparece em `Ferramentas › Bibliotecas › Biblioteca C`.
+A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sidebar-item-link-level-<n>`, que são `ThemeClassNames`. O teto de profundidade é 4 (ver [`informacao.md`](informacao.md) §3.1) e a forma de cada nível está no §3.2 de lá; existem **quatro degraus a desenhar**, e os dois últimos escrevem regra própria — os dois só aparecem em `Ferramentas › Bibliotecas › overpower`.
 
 **O recuo por nível mora inteiro no link, não na lista — issue #97.** Até aquela issue o Docusaurus somava dois mecanismos: a lista aninhada (`.menu__list` dentro de `.menu__list`) ganhava `padding-left` por nível, e o próprio link tinha o seu — a soma dos dois é que produzia o degrau visual. A âncora não divide assim, e copiar o resultado sem copiar a decisão produz recuo que parece certo no nível 2 e se desfaz no nível 3. A #97 zera o `padding-left` da lista aninhada e escreve o recuo inteiro no link.
 
-**A rampa é 16 · 16 · 28, e o passo é medido — issue #114.** A #97 moveu o mecanismo e preservou a métrica: `--sd-space-4` (16px) por degrau, *"o mesmo total que a soma antiga já dava"*. Essa soma era o **default do Infima**. O `16px` publicado como alvo `exato` é o BASE, e ele bate com a âncora; o PASSO por nível não tinha sonda de paridade nenhuma, e por isso sobreviveu duas issues sem ninguém notar de onde vinha. Medido no `docs.devin.ai` e no `docs.windsurf.com`, o `padding-left` inline por nível é **16 · 16 · 28 · 40 · 52**: separador e primeiro nível **encostados**, e +12px por degrau daí em diante.
+**A rampa é 16 · 16 · 28 · 40, e o passo é medido — issue #114, quarto degrau na #117.** A #97 moveu o mecanismo e preservou a métrica: `--sd-space-4` (16px) por degrau, *"o mesmo total que a soma antiga já dava"*. Essa soma era o **default do Infima**. O `16px` publicado como alvo `exato` é o BASE, e ele bate com a âncora; o PASSO por nível não tinha sonda de paridade nenhuma, e por isso sobreviveu duas issues sem ninguém notar de onde vinha. Medido no `docs.devin.ai` e no `docs.windsurf.com`, o `padding-left` inline por nível é **16 · 16 · 28 · 40 · 52**: separador e primeiro nível **encostados**, e +12px por degrau daí em diante.
 
 Consequência que vale declarar: em `Jornadas` e `Procedimentos` as folhas descem de 32px para 16px e ficam **alinhadas** com o separador. Quem separa um ramo do outro passa a ser o negrito do separador mais o ícone da folha — e é assim na âncora.
 
-Só o nível 3 escreve regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-link-padding-horizontal` é `--sd-space-4`, e o Infima o aplica a todo `.menu__link`. As sondas `Item de sidebar recuo`, `… nível 2` e `… nível 3` do §11 travam os três degraus — três alvos e não um, porque um número que soma dois degraus não reprova quando só um deles anda.
+Os níveis 3 e 4 escrevem regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-link-padding-horizontal` é `--sd-space-4`, e o Infima o aplica a todo `.menu__link`. As quatro sondas de recuo do §11 travam os quatro degraus — quatro alvos e não um, porque um número que soma dois degraus não reprova quando só um deles anda.
+
+> **O quarto degrau só existiu depois do `overpower`, e a ausência dele era defeito.** A rampa medida sempre teve cinco números; o CSS escrevia até onde a árvore chegava, e ela parava no nível 3. Quando o teto subiu para 4 ([`informacao.md`](informacao.md) §3.1), as 13 folhas novas passaram a cair nos 16px base do Infima, com o mesmo recuo do nível 1 — e a fixture `aninhamento-de-sidebar-maximo` teria provado um número que o CSS não escrevia. A regra do nível 4 e a sonda `… nível 4` entraram junto com ela, que é a ordem que este documento cobra: alvo publicado, regra escrita, sonda medindo.
 
 ### 4.2.1 A seta, e o manifesto que parou de mentir
 
@@ -723,6 +725,7 @@ A tolerância é parte do alvo, e não um detalhe do script: `exato` é para o q
 | Item de sidebar recuo nível 1 | `16px` | exato |
 | Item de sidebar recuo nível 2 | `16px` | exato |
 | Item de sidebar recuo nível 3 | `28px` | exato |
+| Item de sidebar recuo nível 4 | `40px` | exato |
 | TOC grudado em | `152px` | ±1 |
 
 **Uma linha saiu desta tabela, e não por ter fechado — S3-7.** Ela era `Sidebar visível a 1010 = não`, tolerância `exato`, e a paridade media `sim` desde o dia em que foi publicada. O §10 classifica **a mesma coisa** como perda 6: a gaveta do estreito só monta quando o `windowSize` do React está em `'mobile'`, e esse estado lê **996 hardcoded** em `@docusaurus/theme-common` — não é ponto de swizzle, é lógica de contexto sem opção pública. Ver §1.6 e o comentário longo em `chrome.css` §4.

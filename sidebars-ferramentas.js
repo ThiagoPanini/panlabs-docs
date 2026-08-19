@@ -1,8 +1,9 @@
 // @ts-check
 
-// O ramo gerado de `Biblioteca C`, emitido por `scripts/gerar-referencia.mjs`.
-// É o ÚNICO import de um arquivo de sidebar deste projeto, e ele existe para que
-// as duas posses não se misturem — ver o bloco abaixo.
+// O ramo gerado de `overpower › Comandos`, emitido por
+// `scripts/gerar-referencia.mjs`. É o ÚNICO import de um arquivo de sidebar deste
+// projeto, e ele existe para que as duas posses não se misturem — ver o bloco
+// abaixo.
 import referencia from './sidebars-referencia.js';
 
 /**
@@ -14,17 +15,24 @@ import referencia from './sidebars-referencia.js';
  * **consumidos por outros times**, e é isso que lhes dá leitor de inglês.
  *
  * **O único lugar do site que COLAPSA.** Os quatro nós de topo são separadores
- * mudos (`collapsible: false`, sem `link`), e o único nó com seta do site é
- * `Bibliotecas › Biblioteca C` — nível 2, com página de abertura própria e
- * nascendo **fechado**. É por isso que a seta só ganha desenho aqui: ela é o
+ * mudos (`collapsible: false`, sem `link`), e os únicos nós com seta do site
+ * moram todos dentro de `Bibliotecas › overpower` — o nó do produto, no nível 2,
+ * e as cinco seções dele, no nível 3. Todos com página de abertura própria e
+ * nascendo **fechados**. É por isso que a seta só ganha desenho aqui: ela é o
  * único lugar do sistema onde tem função (ADR 10 §a, §b).
+ *
+ * **O teto de profundidade é 4, e ele é confinado a este ramo.** O ADR 10 §g)
+ * subiu o número e escreveu a condição junto: as 13 folhas de nível 4 estão todas
+ * sob `overpower`, e o portão 4 cobra o confinamento em vez de *usado uma vez*.
+ * Nenhuma outra aba passa do nível 2.
  *
  * **`collapsed: false` saiu do repositório inteiro.** A chave estava carimbada
  * `herdado` com a fonte *"a âncora mostra a árvore aberta"*, e a medição diz
  * outra coisa: a âncora mostra o **nível 1** aberto — e ele nem colapsa —,
  * enquanto grupo aninhado nasce fechado e abre sozinho no ramo da página atual.
- * `Biblioteca C` omite a chave e herda o default `true` do Docusaurus; o
- * `DocSidebar` abre o ramo da página atual sozinho, sem estado nosso.
+ * Os seis grupos de `overpower` omitem a chave e herdam o default `true` do
+ * Docusaurus; o `DocSidebar` abre o ramo da página atual sozinho, sem estado
+ * nosso.
  *
  * **As quatro páginas de índice saíram.** `Bibliotecas`, `Módulos Terraform`,
  * `Skills` e `Servidores MCP` eram *a lista do que está logo abaixo*, e a
@@ -33,27 +41,30 @@ import referencia from './sidebars-referencia.js';
  * outras duas abas.
  *
  * **A regra de ícone é a da ADR 10 §e: nenhum no separador, ícone em tudo
- * abaixo, folha ou grupo, em qualquer nível.** `Biblioteca C` passa a receber
- * `className` — ela é grupo, mas está abaixo do separador, e o teste da regra
- * não pergunta mais o nível. É a terceira redação, e a primeira agnóstica de
- * profundidade; as duas anteriores travaram o nível 3 por duas issues porque o
- * teste mudava de resultado com a profundidade.
+ * abaixo, folha ou grupo, em qualquer nível.** É a terceira redação, e a
+ * primeira agnóstica de profundidade; as duas anteriores travaram o nível 3 por
+ * duas issues porque o teste mudava de resultado com a profundidade. Com o
+ * `overpower` dentro, a régua é exercitada até o nível 4 e não muda de resposta.
+ *
+ * **A família de ícone é da SEÇÃO, não do separador.** As cinco seções do
+ * `overpower` trazem família própria, e o nó do produto e as três folhas de
+ * abertura ficam com `--bibliotecas`, que é a do separador que as contém. Nenhum
+ * arquivo novo entrou em `static/icons/`: as cinco famílias reaproveitam desenhos
+ * que o manifesto já carregava, e o teto de 64 não se move.
  *
  * **O ramo gerado chega por IMPORT, e a árvore continua escrita à mão aqui.** As
- * 6 páginas de referência de `Biblioteca C` saem do contrato de assinatura, e o
- * gerador emite um **fragmento** — uma lista de itens de folha, com o mesmo
- * `className` que as três autorais vizinhas — em vez da sidebar inteira da
- * instância. `Bibliotecas` fecha em 12 e a aba em 17. É a única forma de as
- * duas posses conviverem: as onze folhas autorais são nossas e o gerador não as
- * conhece; as seis geradas são dele e editá-las à mão seria a segunda fonte de
- * verdade que o gerador existe para impedir.
+ * 4 páginas de `Comandos` saem do contrato de superfície de comando, e o gerador
+ * emite um **fragmento** — uma lista de itens de folha — em vez da sidebar
+ * inteira da instância. A categoria `Comandos` que as hospeda é escrita aqui,
+ * porque o rótulo dela e a folha autoral que a abre são nossos e o gerador não os
+ * conhece. `Bibliotecas` fecha em 21 e a aba em 26.
  *
  * **A instância declara `docItemComponent` e as folhas autorais não mudam de
  * layout.** O `ApiDocItem` comuta por página pelo front matter `api_exemplos`, e
- * delega para `@theme/DocItem` quando o campo falta — as seis geradas o declaram,
- * as onze autorais não.
+ * delega para `@theme/DocItem` quando o campo falta — as quatro geradas o
+ * declaram, as vinte e duas autorais não.
  *
- * Procedência: docs/design/informacao.md · docs/design/icones.md · docs/adr/0008
+ * Procedência: docs/design/informacao.md · docs/design/icones.md · docs/adr/0009
  * · docs/adr/0010.
  *
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
@@ -65,29 +76,74 @@ const sidebars = {
       label: 'Bibliotecas',
       collapsible: false,
       items: [
-        // A folha de abertura da instância. Ela carrega `slug: /`, e é o que faz
-        // `/ferramentas` responder 200 sem redirecionamento (ADR 10 §h).
-        {type: 'doc', id: 'bibliotecas/biblioteca-a', className: 'sidebar-icone sidebar-icone--bibliotecas'},
-        {type: 'doc', id: 'bibliotecas/biblioteca-b', className: 'sidebar-icone sidebar-icone--bibliotecas'},
         {
-          // O NÍVEL 2 COLAPSÁVEL, e o único do site — a única seta com função.
-          // COM ícone: a regra nova não abre exceção por nível, só pelo
-          // separador de topo. Sem `collapsed`, que é `true` por default: o
-          // Docusaurus abre este ramo sozinho quando a página atual está dentro.
+          // O NÍVEL 2, e o nó do produto. A folha de abertura dele carrega
+          // `slug: /`, e é o que faz `/ferramentas` responder 200 sem
+          // redirecionamento (ADR 10 §h). Sem `collapsed`, que é `true` por
+          // default: o Docusaurus abre este ramo sozinho quando a página atual
+          // está dentro.
           type: 'category',
-          label: 'Biblioteca C',
+          label: 'overpower',
           className: 'sidebar-icone sidebar-icone--bibliotecas',
-          link: {type: 'doc', id: 'bibliotecas/biblioteca-c/visao-geral'},
+          link: {type: 'doc', id: 'bibliotecas/overpower/visao-geral'},
           items: [
-            // A fixture de painel direito vazio: a folha autoral desta
-            // instância passa pela perna do comutador que delega, e a coluna do
-            // painel nem chega a existir nela.
-            {type: 'doc', id: 'bibliotecas/biblioteca-c/instalacao-e-configuracao', className: 'sidebar-icone sidebar-icone--bibliotecas'},
-            {type: 'doc', id: 'bibliotecas/biblioteca-c/tratamento-de-erros', className: 'sidebar-icone sidebar-icone--bibliotecas'},
-            {type: 'doc', id: 'bibliotecas/biblioteca-c/changelog', className: 'sidebar-icone sidebar-icone--bibliotecas'},
-            // O ramo gerado, espalhado como irmão das autorais. Sem categoria
-            // própria: um nó a mais aqui seria o nível 4, e o teto é 3.
-            ...referencia,
+            {type: 'doc', id: 'bibliotecas/overpower/instalacao', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+            {type: 'doc', id: 'bibliotecas/overpower/conceitos', className: 'sidebar-icone sidebar-icone--bibliotecas'},
+            {
+              // A seção que hospeda o ramo gerado. A folha de abertura dela é
+              // autoral e é a fixture de painel direito vazio: ela passa pela
+              // perna do comutador que delega, e a coluna do painel nem chega a
+              // existir nela — irmã direta das quatro que a pintam.
+              type: 'category',
+              label: 'Comandos',
+              className: 'sidebar-icone sidebar-icone--comandos',
+              link: {type: 'doc', id: 'bibliotecas/overpower/comandos/indice'},
+              items: [...referencia],
+            },
+            {
+              type: 'category',
+              label: 'Alvos',
+              className: 'sidebar-icone sidebar-icone--alvos',
+              link: {type: 'doc', id: 'bibliotecas/overpower/alvos/indice'},
+              items: [
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/servidores-mcp', className: 'sidebar-icone sidebar-icone--alvos'},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/from', className: 'sidebar-icone sidebar-icone--alvos'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Referência',
+              className: 'sidebar-icone sidebar-icone--referencia',
+              link: {type: 'doc', id: 'bibliotecas/overpower/referencia/indice'},
+              items: [
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/codigos-de-saida', className: 'sidebar-icone sidebar-icone--referencia'},
+                // A fixture de aninhamento máximo: nível 4, com os 40px de
+                // recuo mais o ícone mais o rótulo mais longo desta
+                // profundidade, tudo dentro dos 288px da coluna.
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/solucao-de-problemas', className: 'sidebar-icone sidebar-icone--referencia'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Desenvolvimento',
+              className: 'sidebar-icone sidebar-icone--desenvolvimento',
+              link: {type: 'doc', id: 'bibliotecas/overpower/desenvolvimento/indice'},
+              items: [
+                {type: 'doc', id: 'bibliotecas/overpower/desenvolvimento/testes', className: 'sidebar-icone sidebar-icone--desenvolvimento'},
+                {type: 'doc', id: 'bibliotecas/overpower/desenvolvimento/telas', className: 'sidebar-icone sidebar-icone--desenvolvimento'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Publicação',
+              className: 'sidebar-icone sidebar-icone--publicacao',
+              link: {type: 'doc', id: 'bibliotecas/overpower/publicacao/indice'},
+              items: [
+                {type: 'doc', id: 'bibliotecas/overpower/publicacao/curadoria', className: 'sidebar-icone sidebar-icone--publicacao'},
+                {type: 'doc', id: 'bibliotecas/overpower/publicacao/release', className: 'sidebar-icone sidebar-icone--publicacao'},
+                {type: 'doc', id: 'bibliotecas/overpower/publicacao/changelog', className: 'sidebar-icone sidebar-icone--publicacao'},
+              ],
+            },
           ],
         },
       ],

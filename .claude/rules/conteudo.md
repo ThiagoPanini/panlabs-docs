@@ -14,17 +14,21 @@ O portão 4 (`npm run portao:4`) transforma em varredura os critérios da arquit
 
 ## As contagens travadas
 
-| Aba | Páginas |
+| Aba | Páginas autorais |
 | --- | --- |
 | `conteudo/jornadas/` | 12 |
-| `conteudo/procedimentos/` | 19 |
-| `conteudo/ferramentas/` | 21 |
+| `conteudo/procedimentos/` | 16 |
+| `conteudo/ferramentas/` | 22 |
 
-Mais o ramo gerado, somado por fora — **45 no site**. Acrescentar ou remover página **exige acertar o portão 4 junto**. São quatorze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
+Mais o ramo gerado, somado por fora — **54 no site**, 50 autorais mais 4 geradas. Acrescentar ou remover página **exige acertar o portão 4 junto**. São quinze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
 
 ## Proibição por localização
 
 O portão 4 tem uma classe de cobrança que não é só teto — é *"aqui não entra"*. `<Steps>` fora de `Jornadas` e `<CardGroup>` fora dos dois índices têm teto **zero**. Antes de usar um componente de autoria, confira o tipo de página em `docs/design/informacao.md` § 6. Tipos de página.
+
+## O teto de profundidade
+
+É **4**, e ele é **confinado** a `conteudo/ferramentas/bibliotecas/overpower/`. Fora desse ramo nada passa do nível 2. O portão 4 cobra as duas metades, e a régua está em `docs/design/informacao.md` § 3.1.
 
 ## A regra de heading
 
@@ -32,7 +36,7 @@ O portão 4 tem uma classe de cobrança que não é só teto — é *"aqui não 
 
 ## Locale
 
-**Só `Ferramentas` é traduzida** — 17 folhas, cobertura cobrada pelo portão 4. As outras duas abas existem só em pt-BR, e isso é decisão, não pendência: `docs/design/informacao.md` § 8. Locale.
+**Só `Ferramentas` é traduzida** — 26 folhas, cobertura cobrada pelo portão 4. As outras duas abas existem só em pt-BR, e isso é decisão, não pendência: `docs/design/informacao.md` § 8. Locale.
 
 Tradução mora em `i18n/en/docusaurus-plugin-content-docs-ferramentas/current/`, espelhando a árvore de `conteudo/ferramentas/`. Rótulo de UI vai em `i18n/en/docusaurus-theme-classic/`.
 

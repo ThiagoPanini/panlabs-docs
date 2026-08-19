@@ -189,11 +189,11 @@ const config = {
         // Substitui o layout inteiro da página com custo de upgrade zero: não é
         // swizzle, é componente de tema próprio. Ver ADR 2.
         //
-        // **A instância inteira o declara, e as 15 folhas autorais dela não
+        // **A instância inteira o declara, e as 22 folhas autorais dela não
         // mudam de layout.** O `ApiDocItem` comuta POR PÁGINA pelo front matter
         // `api_exemplos` e delega para `@theme/DocItem` quando o campo falta —
         // verificado no código, não deduzido. Quem acende a outra perna são as
-        // **6 páginas geradas** de `Biblioteca C`, e só elas.
+        // **4 páginas geradas** de `overpower › Comandos`, e só elas.
         docItemComponent: '@theme/ApiDocItem',
       }),
     ],
@@ -337,7 +337,7 @@ const config = {
         // `target="_blank"` SOZINHO em tudo que ele lê como externo, e a decisão
         // do rodapé é que nenhum link abre em nova aba.
         links: [
-          {label: 'Changelog', to: '/ferramentas/bibliotecas/biblioteca-c/changelog'},
+          {label: 'Changelog', to: '/ferramentas/bibliotecas/overpower/publicacao/changelog'},
           {label: 'llms.txt', href: 'pathname:///llms.txt', target: '_self'},
         ],
         copyright: '© 2026 panlabs',

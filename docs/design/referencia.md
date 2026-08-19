@@ -1,11 +1,11 @@
 # A referência gerada
 
-A **única** ruptura de layout do site. **Seis
-páginas**, geradas de um contrato de **assinatura de função, tipo e módulo** (ver
-[ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md)
-para a decisão de arquitetura; este documento é o desenho), um componente de
-tema próprio (`ApiDocItem`, ver [`swizzle.md`](swizzle.md)), e um único degrau de
-interatividade confinado a um painel.
+A **única** ruptura de layout do site. **Quatro páginas**, geradas de um contrato
+de **superfície de comando** — uma aplicação e três comandos (a decisão de
+arquitetura é o [ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md),
+que supera o [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md);
+este documento é o desenho) —, um componente de tema próprio (`ApiDocItem`, ver
+[`swizzle.md`](swizzle.md)), e um único degrau de interatividade num painel.
 
 > **Correção de contagem.** Esta abertura dizia *"a primeira das duas rupturas de
 > layout do site — a outra é a landing"*. **É uma.** A landing saiu em
@@ -93,12 +93,12 @@ são mecânicas, não estéticas:
 | ausente | delega para `@theme/DocItem`, sem tocar em mais nada | `--sd-prose-width` (720, dentro da coluna de 864) | coluna de 288, se houver heading |
 | presente | layout próprio, `LayoutComPainel` | `--sd-prose-width` (720) | ausente — o painel ocupa o espaço |
 
-**A instância inteira declara `docItemComponent`, e as onze folhas autorais
-dela não mudam de layout.** É a segunda instância do projeto a usar a opção, e
+**A instância inteira declara `docItemComponent`, e as vinte e duas folhas
+autorais dela não mudam de layout.** É a segunda instância do projeto a usar a opção, e
 ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle.
 
 A perna "ausente" é a que prova que o painel é **inalcançável, não vazio**:
-`Ferramentas › Bibliotecas › Biblioteca C › Instalação e configuração` é a
+`Ferramentas › Bibliotecas › overpower › Comandos › Índice` é a
 fixture — prosa autoral, zero `api_exemplos`, coluna e TOC como qualquer página
 de doc comum. Uma implementação que deixasse uma coluna direita vazia ali estaria
 errada; o correto é essa coluna nem existir, porque a página passou pela **outra**
@@ -106,11 +106,11 @@ perna do comutador.
 
 **A fixture é irmã das geradas, e isso é o que a torna forte.** Antes ela morava
 numa seção autoral de uma instância inteiramente gerada; agora ela está **dentro
-da mesma categoria de sidebar** que as seis páginas com painel, a um clique de
-distância. Se o comutador algum dia decidir por instância em vez de por página, é
+da mesma categoria de sidebar** que as quatro páginas com painel, a um clique de
+distância — e mais que isso, ela é a folha que **abre** essa categoria. Se o comutador algum dia decidir por instância em vez de por página, é
 aqui que quebra, à vista.
 
-A perna "presente" são as seis páginas geradas, e mais nenhuma.
+A perna "presente" são as quatro páginas geradas, e mais nenhuma.
 
 ## 3. `align-self: start`, junto com `position: sticky`
 
@@ -147,17 +147,17 @@ aplicaria a `flex-basis` no eixo errado (altura, não largura) quando
 
 Fixa, e o gerador a produz sempre na mesma sequência:
 
-1. `# Título` — o nome da entrada, como o leitor a escreveria em Python
-2. **a espécie e o nome qualificado, em prosa** — `**Função** · `panlabs.esteira.Esteira.gerar``. É o lugar onde a pílula de verbo ficava, e ele não ganhou substituto gráfico: sem verbo não há duas categorias para pintar, e um chip com uma palavra em três variações não é sinal, é enfeite
+1. `# Título` — o nome da entrada, como o leitor a digitaria no terminal
+2. **a espécie e o nome qualificado, em prosa** — `**Comando** · `overpower install``. É o lugar onde a pílula de verbo ficava, e ele não ganhou substituto gráfico: sem verbo não há duas categorias para pintar, e um chip com uma palavra em três variações não é sinal, é enfeite
 3. A `descricao` da entrada
-4. `## Parâmetros` — um `<ParamField>` por parâmetro, na ordem da assinatura; ausente quando a entrada não tem nenhum
-5. `## Retorno` (função) ou `## Atributos` (tipo) — a árvore `<ResponseField>`; a frase *"não devolve valor"* nas funções que não devolvem
-6. `## Exportações` — **só no módulo**, e no lugar dos dois anteriores: um módulo não tem parâmetro nem retorno, e o que ele tem é a lista do que se importa dele
+4. `## Comandos` — **só na raiz**, e antes de ela descrever a si mesma: a tabela dos membros, com nome, espécie e resumo
+5. `## Opções globais` (aplicação) ou `## Opções` (comando) — um `<ParamField>` por opção, na ordem da assinatura; ausente quando a entrada não tem nenhuma
+6. `## Códigos de saída` — a árvore `<ResponseField>`. **Sempre na raiz**, que é a única dona da tabela, e no comando só quando ele tem um código que a raiz não cobre
 7. `## Erros` — uma tabela Erro/Quando; ausente quando a entrada não levanta nada
 
 O painel, à direita, não é uma seção da prosa — ele é a **outra** coluna, e a
 ordem dele é interna e fixa: a assinatura, a fileira de argumentos editáveis (só
-quando existem), e o snippet de uso em Python.
+quando existem), e o snippet da linha de comando.
 
 **No estreito, o painel completo vem depois de toda a prosa** — não
 intercalado por seção. É consequência do §3: a grade tem exatamente dois
@@ -188,9 +188,9 @@ interpretador dentro de um site estático.
 Resumo; a decisão de arquitetura completa está no
 [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md).
 
-`contratos/panlabs-esteira.pt-BR.json` e `contratos/panlabs-esteira.en.json` —
+`contratos/overpower.pt-BR.json` e `contratos/overpower.en.json` —
 JSON puro, monolíngues, estruturalmente congruentes. `scripts/gerar-referencia.mjs`
-os lê, valida (`scripts/lib/assinatura.mjs`), e escreve **seis** páginas `.mdx`
+os lê, valida (`scripts/lib/assinatura.mjs`), e escreve **quatro** páginas `.mdx`
 nos dois locales mais `sidebars-referencia.js`. Rodado à mão
 (`npm run gerar:referencia`), fora do build; a saída é commitada, e
 `npm run portao:5` reprova se regenerar produzir um diff contra o que está
@@ -207,10 +207,11 @@ conhecer as seis páginas autorais que a instância também tinha — elas entra
 num pequeno manifesto dentro do próprio gerador, não porque fossem geradas, mas
 porque a posição delas na árvore era.
 
-Isso não sobrevive à instância nova. `ferramentas` tem **quinze** folhas autorais
-em quatro famílias, e a árvore delas é escrita à mão. O gerador passa a emitir um
-**fragmento** — `sidebars-referencia.js`, uma lista de ids e nada além —, e
-`sidebars-ferramentas.js` o importa e o espalha dentro de `Biblioteca C`.
+Isso não sobrevive à instância nova. `ferramentas` tem **vinte e duas** folhas
+autorais em quatro famílias, e a árvore delas é escrita à mão. O gerador passa a
+emitir um **fragmento** — `sidebars-referencia.js`, uma lista de itens de folha e
+nada além —, e `sidebars-ferramentas.js` o importa e o espalha dentro da
+categoria `Comandos`.
 
 Três consequências, e as três são o motivo:
 
@@ -218,22 +219,23 @@ Três consequências, e as três são o motivo:
   gerador; editar uma gerada não passa pela mão;
 - **os dois tickets ficam verdes.** A sidebar sem o ramo gerado era válida, e a
   com o ramo é a mesma sidebar mais um `import`;
-- **o ramo não ganha categoria própria.** Um nó a mais ali seria o nível 4, e o
-  teto de profundidade é 3 (ver [`informacao.md`](informacao.md) §3.1). As seis
-  entram como irmãs das três folhas autorais de `Biblioteca C`.
+- **o ramo ganha categoria própria, e ela é autoral.** O ADR 8 §c) a recusava
+  porque *"seria o nível 4, e o teto é 3"*; o teto subiu para 4
+  ([ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) §g) e a razão
+  caiu com ele. As quatro moram sob `Comandos`, que é nó de nível 3 escrito à
+  mão: o rótulo dele e a folha que o abre são autorais, e o gerador não os
+  conhece. O que o fragmento traz continua sendo só a lista de folhas.
 
 ### 5.2 O snippet é composto, nunca escrito
 
-Nenhuma das seis entradas tem snippet próprio. O gerador o compõe em três
+Nenhuma das quatro entradas tem snippet próprio. O gerador o compõe em três
 pedaços, e os três saem do contrato:
 
-1. **o preâmbulo de alcance** — na espécie de biblioteca, a linha de `import`,
-   com os símbolos que a cadeia usa, deduplicados e ordenados. Uma entrada com
-   receptor não contribui a raiz da própria chamada: `esteira.gerar` abre com a
-   variável que o preâmbulo ligou, não com um nome importado. **Na espécie de
-   CLI ele não existe** — não há o que importar antes de digitar um comando, e
-   uma linha em branco no topo do bloco seria enfeite que o leitor copiaria
-   junto (§5.5);
+1. **o preâmbulo de alcance** — **na espécie de CLI ele não existe**: não há o
+   que importar antes de digitar um comando, e uma linha em branco no topo do
+   bloco seria enfeite que o leitor copiaria junto (§5.5). Ele existia na espécie
+   de biblioteca, como a linha de `import` com os símbolos da cadeia, e saiu com
+   ela;
 2. **o preâmbulo** — a chamada da entrada que liga o receptor, com os exemplos
    dela **congelados**. É recursivo, e o validador recusa ciclo;
 3. **a chamada** — a assinatura com os exemplos dos parâmetros, e um
@@ -303,23 +305,27 @@ Grepar a string no MDX conferiria uma coisa que nenhum renderizador lê.
 ### 5.5 As espécies, e a forma que cada uma emite
 
 A lista de espécies é **fechada e validada**, com recusa nomeada
-(`especie-fora-da-lista`) e o JSON Pointer do nó ofensor. Ela está em cinco, e
-cinco é **estado de passagem**: as três de biblioteca são do
+(`especie-fora-da-lista`) e o JSON Pointer do nó ofensor. Ela está em **duas**,
+`aplicacao` e `comando`, decididas pelo
+[ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md) §a).
+As três de biblioteca do
 [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md)
-e as duas de CLI são do
-[ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md) §a),
-que decide a lista final em duas. A máquina chega antes do sujeito porque é
-expand–contract: o gerador aprende a espécie nova enquanto `Biblioteca C`
-continua no ar, e quem devolve a lista a duas é a troca do contrato.
+saíram com o contrato mockado que as pedia.
+
+> **O expand–contract fechou, e o meio dele foi um estado real.** A máquina
+> aprendeu `aplicacao` e `comando` num commit em que o sujeito no ar ainda era
+> `Biblioteca C`, e a lista ficou em cinco por um ticket. O que a fatia contract
+> devolveu não foi só o tamanho: com as três espécies saiu o **dialeto Python** do
+> gerador, que ficaria inalcançável se ficasse. A tabela de dialetos ficou com uma
+> linha e a tabela fica — o que ela prova, que a espécie escolhe o dialeto em vez
+> de o contrato declarar um, é o que dispensa um campo novo no JSON no dia em que
+> a segunda linha voltar.
 
 Quem escolhe as seções é uma tabela de forma no gerador, não uma cascata de
 `if`, e quem escreve os títulos é o bloco `rotulos` do contrato:
 
 | Espécie | Membros | `<ParamField>` | `<ResponseField>` | Snippet |
 | --- | --- | --- | --- | --- |
-| `modulo` | `## Exportações` | — | — | Python |
-| `tipo` | — | `## Parâmetros` | `## Atributos` | Python |
-| `funcao` | — | `## Parâmetros` | `## Retorno` | Python |
 | `aplicacao` | `## Comandos` | `## Opções globais` | `## Códigos de saída` | shell |
 | `comando` | — | `## Opções` | `## Códigos de saída`, só se tiver | shell |
 
@@ -378,7 +384,7 @@ vez de pela dos headings.
 **Na prática isso aperta menos do que antes, e a razão mudou.** O argumento
 anterior era que o gerador emitia só duas seções por página. O gerador novo emite
 **até quatro** — parâmetros, retorno, exportações, erros —, e o que segura a perda
-é outra coisa: as seis páginas são curtas por construção, porque cada uma
+é outra coisa: as quatro páginas são curtas por construção, porque cada uma
 documenta **uma** entrada. Uma referência que crescesse a ponto de precisar de TOC
 seria uma entrada que precisa virar duas.
 
@@ -455,7 +461,7 @@ mesmo fato medido na âncora, não uma coincidência tratada como derivação.
 | O painel é objeto, e o único do corpo | origem própria (correção) | era *"o painel é o cartão"*; ele sobrevive por ser bloco de dados ao lado do texto, não moldura de prosa |
 | Front matter em vez de marcador em MDX | origem própria | `position: sticky` exige ancestral com contexto de rolagem previsível |
 | Nenhuma página da instância carrega `hide_table_of_contents` | origem própria | seria segunda fonte para uma decisão que o componente já toma |
-| **A fixture do painel inalcançável trocou de dona** | **origem própria** | `Biblioteca C › Instalação e configuração` é irmã de sidebar das geradas, o que torna a prova mais forte que a anterior |
+| **A fixture do painel inalcançável trocou de dona** | **origem própria** | `overpower › Comandos › Índice` é irmã de sidebar das geradas **e** a folha que abre a categoria delas, o que torna a prova mais forte que a anterior |
 | `align-self: start` com `position: sticky` | origem própria (implementação) | o erro nº 1 medido ao implementar o layout — sem ele o item estica e sticky não tem onde grudar |
 | Offset do sticky em `--sd-topo-conteudo` | **origem própria (correção)** | duas correções na mesma linha: era `--sd-navbar-height`, que passou a medir só a linha 1 quando a faixa de tabs entrou, e virou `--sd-topo-grudado`; **S3-3** mostrou que `--sd-topo-grudado` (112) contradizia o alvo de 152 publicado no §8 deste mesmo documento. Medido por `npm run paridade`, `Δ −40` |
 | Zero `order`, DOM fixo prosa-depois-painel | origem própria | issue #38 — a mesma ordem em `row` largo e `column` estreito |
