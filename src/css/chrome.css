@@ -184,8 +184,8 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    abrir e não há quarto reservado — a `.row` alargada ali só produzia estouro
    horizontal, medido em 45px a 390 e 247px a 996 antes do escopo.
 
-A REFERÊNCIA DA CLI FICAVA DE FORA, e a lacuna FECHOU na #118. A `.row` dela
-   não tinha `.col` — o filho era o CSS Module do `ApiDocItem` —, então nenhum
+   A REFERÊNCIA DA CLI FICAVA DE FORA, e a lacuna FECHOU na #118. A `.row`
+   dela não tinha `.col` — o filho era o CSS Module do `ApiDocItem` —, então nenhum
    destes seletores a alcançava, e dar-lhe o corredor encolheria uma prosa que
    tinha alvo medido próprio. O componente saiu, a página passou a montar a
    mesma `.row > .col` de qualquer página de doc, e o corredor a alcança sem

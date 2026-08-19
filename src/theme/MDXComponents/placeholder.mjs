@@ -3,7 +3,7 @@
  * outro, e declarado num lugar só.**
  *
  * `scripts/gerar-referencia.mjs` ESCREVE o marcador dentro do snippet que vai no
- * front matter; `Painel.js` o LÊ a cada tecla para substituir pelo valor do
+ * front matter; `PainelComando.js` o LÊ a cada tecla para substituir pelo valor do
  * campo. São duas árvores diferentes — a de build e a do site —, e antes deste
  * arquivo cada uma carregava a própria cópia da sintaxe.
  *

@@ -87,4 +87,4 @@ confirma que o sdist carrega exatamente o que declarou. A segunda raiz não tem
 portão dedicado,
 porque perdê-la falha alto em vez de calado: um bundle some do `list`, e o
 `install` responde que não conhece o nome. O que falha alto não precisa de portão;
-o que falha calado é o que os dois portões existem para pegar.
+o que falha calado é o que os três portões existem para pegar.

@@ -85,4 +85,4 @@ carries the same set the git tree carries. **P3** confirms the sdist carries
 exactly what it declared. The second root has no dedicated gate, because losing it fails loudly
 rather than quietly: a bundle vanishes from `list`, and `install` answers that it
 does not know the name. What fails loudly does not need a gate; what fails silently
-is what the two gates exist to catch.
+is what the three gates exist to catch.

@@ -478,7 +478,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
      280 é `origem própria`: é onde `--skill` mais um valor de exemplo do
      catálogo (`panlabs-python-standards`, 24 caracteres em mono) deixam de
-     caber na mesma linha. Medido nesta máquina, no Chromium 148. */
+     caber na mesma linha. Medido nesta máquina, no Chromium 148.
+
+     **Ele é medida de UM componente e mora em `:root`, e a tensão é real.** A
+     regra das camadas manda camada 3 declarar no escopo do próprio componente;
+     o portão 1 manda todo literal de comprimento morar aqui. As duas não podem
+     valer ao mesmo tempo para um número que só um componente usa, e este bloco
+     já resolveu isso duas vezes antes, do mesmo jeito: `--sd-copiar-height` e
+     `--sd-copiar-menu-width` são medidas do par segmentado do cabeçalho, e
+     estão logo abaixo. O portão é a régua que reprova, e é ele que decide o
+     empate. */
   --sd-campo-min:        280px;
 
   /* O CORREDOR — a distância entre a borda direita da sidebar e o começo do

@@ -55,7 +55,7 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 **O eixo é a natureza do conteúdo**, e ele é mais forte aqui do que era antes: `Jornadas` diz **o que aconteceu**, `Procedimentos` diz **como se faz**, `Ferramentas` diz **o que saiu daqui**. Os três respondem perguntas diferentes do mesmo leitor.
 
-### 2.1 `Ferramentas` declara `docItemComponent`, e as folhas dela não mudam de layout
+### 2.1 `Ferramentas` não declara mais `docItemComponent`, e nenhuma folha muda de layout
 
 **Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **26 folhas** — 22 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
 
