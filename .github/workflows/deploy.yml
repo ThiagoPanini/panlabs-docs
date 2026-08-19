@@ -35,15 +35,15 @@ jobs:
 
       - run: npm ci
 
-      - name: Portão 1 — literais
-        run: npm run portao:1
-
-      - name: Portão 2 — motion
-        run: npm run portao:2
-
-      - name: Espelho de tokens
-        run: node scripts/espelho-tokens.mjs --verificar
-
+      # Nenhum portão roda aqui, e a razão é o ruleset da `main`: o check `gate`
+      # é required e `strict` está ligado, então nada entra na `main` sem a
+      # bateria inteira do `ci.yml` ter passado sobre o conteúdo que vai ser
+      # mergeado. Repetir o portão 1, o portão 2 e o espelho de tokens neste
+      # ponto não cobre risco nenhum — cobria antes do ruleset, quando nada
+      # garantia que a `main` tinha recebido conteúdo verde.
+      #
+      # A exceção é `workflow_dispatch`: disparo manual passa a construir sem
+      # portão nenhum, e isso é aceito — é ato de quem sabe o que está fazendo.
       - name: Build (pt-BR e en)
         run: npm run build
 

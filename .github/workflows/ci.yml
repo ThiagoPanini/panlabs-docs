@@ -5,19 +5,37 @@ name: CI
 # Nenhuma dependência npm nova entra por esta porta: tudo aqui é `actions/*` e
 # `npm ci` sobre o `package-lock.json` versionado.
 
+# O gatilho é `push`, e SÓ `push`. `pull_request` saiu porque duplicava toda
+# run: um check run cola no SHA, não no evento, então o mesmo commit reportava
+# `Portões e build` duas vezes e a run do push já satisfazia o required check do
+# PR.
+#
+# O gatilho NÃO se estreita para `feature/**`. Uma branch fora da convenção
+# passaria a não ter CI, o required check nunca reportaria, e o PR travaria para
+# sempre em *"Expected — waiting for status to be reported"*. Runner de repo
+# público é grátis; a convenção `feature/` é de prosa, não de máquina.
 on:
   push:
     branches-ignore:
       - main
-  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# Em modo autônomo o agente empurra várias vezes seguidas, e sem isto cada push
+# paga a bateria inteira. Cancela só SHA mais velho do MESMO ref, então a run do
+# HEAD do PR sempre completa e o required check nunca some.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  portoes-e-build:
-    name: Portões e build
+  # O id do job é o contrato do ruleset da `main` — é esta string que
+  # `required_status_checks.contexts` exige. Ele NÃO tem linha `name:`, e isso é
+  # deliberado: sem ela o GitHub reporta o id como nome do check, e não sobra
+  # string de exibição que alguém possa editar quebrando o ruleset em silêncio.
+  gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
