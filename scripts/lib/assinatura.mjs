@@ -24,8 +24,21 @@ import fs from 'node:fs';
 export const CONTRATO = 'assinatura';
 export const VERSAO = 1;
 
-/** As três espécies de entrada. Fechado. */
-export const ESPECIES = ['modulo', 'tipo', 'funcao'];
+/**
+ * As espécies de entrada. Fechado.
+ *
+ * **Cinco é estado de passagem.** As três primeiras descrevem superfície de
+ * biblioteca (ADR 8); `aplicacao` e `comando` descrevem superfície de CLI
+ * (ADR 9 §a). Elas convivem porque esta é a fatia **expand** de um
+ * expand–contract: a máquina aprende a espécie nova enquanto o contrato no ar
+ * ainda é o de `Biblioteca C`, e o portão 5 continua diffando contra ele. O
+ * ticket do port fecha o **contract** e devolve a lista a duas.
+ *
+ * A lista continua **fechada e validada**, com a mesma recusa nomeada e o mesmo
+ * JSON Pointer do nó ofensor — o que o ADR 9 §a) preserva não é o tamanho, é a
+ * propriedade.
+ */
+export const ESPECIES = ['modulo', 'tipo', 'funcao', 'aplicacao', 'comando'];
 
 /**
  * O teto de aninhamento, calibrado e não redondo.
@@ -177,7 +190,11 @@ export function validar(contrato) {
       recusar(
         RECUSAS.especieForaDaLista,
         `${raiz}/especie`,
-        `\`${entrada?.especie}\` não é uma das três: ${ESPECIES.join(', ')}`,
+        // A contagem NÃO entra na redação. Ela já mudou uma vez e vai mudar de
+        // novo no ticket do port; uma recusa que dissesse "uma das três" com
+        // cinco na lista mentiria sobre o próprio motivo, e quem a recebe lê o
+        // detalhe justamente por não saber a lista de cor.
+        `\`${entrada?.especie}\` não está na lista fechada: ${ESPECIES.join(', ')}`,
       );
       continue;
     }

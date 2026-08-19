@@ -28,8 +28,17 @@
 /** O marcador, como o gerador o escreve. */
 export const marcador = (nome) => `{{${nome}}}`;
 
-/** O mesmo marcador, como o painel o lê. */
-export const PLACEHOLDER = /\{\{(\w+)\}\}/g;
+/**
+ * O mesmo marcador, como o painel o lê.
+ *
+ * **O traço entra no nome, e não é enfeite.** A chave do marcador É o nome do
+ * argumento: o painel casa por `painel.parametros[].nome`, e o argumento de um
+ * `comando` se chama `--from`. Presa a `\w+`, a sintaxe não casaria `{{--from}}`
+ * em NENHUM dos dois lados — `marcadoresDe` não o veria, a conferência de órfão
+ * do gerador passaria calada, e a página sairia com o marcador cru na tela.
+ * É o buraco que o cabeçalho acima descreve, chegando pela outra ponta.
+ */
+export const PLACEHOLDER = /\{\{([\w.-]+)\}\}/g;
 
 /**
  * Troca cada marcador pelo valor corrente. Marcador sem valor fica como está —
