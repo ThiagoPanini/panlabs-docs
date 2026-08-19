@@ -1,22 +1,28 @@
 # A referência gerada
 
-A **única** ruptura de layout do site. **Quatro páginas**, geradas de um contrato
-de **superfície de comando** — uma aplicação e três comandos (a decisão de
-arquitetura é o [ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md),
-que supera o [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md);
-este documento é o desenho) —, um componente de tema próprio (`ApiDocItem`, ver
-[`swizzle.md`](swizzle.md)), e um único degrau de interatividade num painel.
-
-> **Correção de contagem.** Esta abertura dizia *"a primeira das duas rupturas de
-> layout do site — a outra é a landing"*. **É uma.** A landing saiu em
-> [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e esta
-> deixou de ser a primeira de um par para ser a única. Nada do que vem abaixo
-> muda: a ruptura continua saindo de `docItemComponent`, que é opção pública, e
-> continua sendo a exceção que [`informacao.md`](informacao.md) §6 autoriza por
-> nome.
-
 **Nenhum valor numérico nasce aqui sem citar `tokens.md`.** Os comprimentos
 moram lá; este documento faz contas com eles.
+
+**Quatro páginas**, geradas de um contrato de **superfície de comando** — uma
+aplicação e três comandos (a decisão de arquitetura é o
+[ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md),
+que supera o [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md);
+este documento é o desenho) —, e um único degrau de interatividade num painel.
+
+> **Correção de contagem, duas vezes, e a segunda esvazia a primeira.** Esta
+> abertura dizia *"a primeira das duas rupturas de layout do site — a outra é a
+> landing"*. A landing saiu em
+> [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e o par
+> virou uma só. Depois **a que sobrava também saiu**: na
+> [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) o
+> `docItemComponent` foi removido e o painel desceu para o fluxo da prosa.
+>
+> **O site tem ZERO ruptura de layout.** As 26 folhas da aba `Ferramentas`
+> passam pelo mesmo `@theme/DocItem`, e a exceção que
+> [`informacao.md`](informacao.md) §6 autorizava por nome deixou de ser usada —
+> ela continua autorizada, e ninguém a exerce. O que este documento descreve, de
+> §4 em diante, é **conteúdo gerado**, não moldura: a ordem das seções, o
+> contrato, o gerador e o painel.
 
 O documento anterior descrevia trinta páginas de endpoint sobre um contrato
 OpenAPI, e foi **renomeado e reescrito** quando o contrato deixou de falar HTTP.
@@ -25,123 +31,126 @@ refeita contra a cadeia nova.
 
 ---
 
-## 1. A aritmética decide o layout, não o gosto
+## 1. A página de comando mede o que qualquer página mede
 
-> **Correção de fato — #96.** Este bloco publicava `720 + 32 + 400 = 1152`, e
-> o container mudou de dono sem esta página vir junto: a #96 derrubou
-> `--sd-container-width` de 1152 para 1120 (`tokens.md` §1), e o resto da
-> conta — o painel — dá **368**, não 400. O texto original fica pela mesma
-> regra do resto da spec; a conta abaixo é a que fecha hoje.
+> **Correção de fato — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118), e ela derruba a seção inteira que estava aqui.**
+> Este bloco publicava uma aritmética — `577 + 32 + 511 = 1120` — e o que ela
+> justificava era a ausência do TOC nesta rota. A conta fechava; o produto que
+> ela descrevia é que não se sustentou.
+>
+> Duas coisas o mediram. A prosa desta rota era **a mais estreita do site**
+> (577 contra 720), e ela é justamente a rota com a linha de comando mais
+> longa — a assinatura do `install` tem 137 caracteres e quebrava em três
+> linhas dentro do painel. E o trilho era **grudado e curto**: ele acabava
+> depois de três blocos, enquanto a prosa seguia por mais mil pixels de
+> rolagem, deixando a metade direita da tela vazia pelo resto da página.
+>
+> O texto antigo fica registrado abaixo, pela mesma regra do resto da spec.
 
-> **Correção de fato — #99.** A prosa da página gerada **deixou de ser**
-> `--sd-prose-width` (a mesma da página comum): §10 de
-> `research/paridade-devin` mede a âncora com uma prosa mais estreita e um
-> trilho bem mais largo do que o TOC nesta rota especificamente, e a #99
-> porta essa proporção. `--sd-api-prosa-width` (577, medido, `origem
-> própria`) substitui `--sd-prose-width` **só aqui**; o painel continua sendo
-> o resto da conta, agora sobre a base nova.
+**Não há aritmética a publicar, e essa é a decisão.** A página de comando usa
+`--sd-prose-width` (720) e a coluna do TOC (304), como toda página de doc deste
+site. Não há grade própria, não há gutter próprio, não há coluna que precise ser
+o resto de uma conta.
 
-```
-577 (--sd-api-prosa-width) + 32 (--sd-space-8) + 511 = 1120 (--sd-container-width)
-```
+O painel desceu para o **fluxo da prosa** e virou `<PainelComando />`, um bloco
+de MDX que o gerador emite no corpo — ver §5. Um bloco de fluxo herda a largura
+do texto e não negocia com nada.
 
-O painel não é uma largura escolhida — é o resto da conta:
+### 1.1 O que a conta antiga justificava, e o que fica dela
 
-```
-511 = calc(var(--sd-container-width) - var(--sd-api-prosa-width) - var(--sd-space-8))
-```
+A conta teve três justificativas ao longo da vida, e as três caíram:
 
-`--sd-space-8` aqui é o gutter **entre as duas colunas desta grade**, não o
-`--sd-gutter` do shell do site (que seria o espaço entre a coluna de conteúdo e
-a sidebar/TOC numa página comum) — os dois vêm da mesma escala por coincidência
-de valor, não porque sejam o mesmo token.
+1. **A página de endpoint não tinha cartão** — porque a soma fechava o container
+   e não sobrava pixel para a moldura. Caiu duas vezes: a geometria `mint` tirou
+   o cartão de todas as páginas, e o endpoint deixou de existir.
+2. **Não sobra coluna para o TOC** — a décima perda nomeada da rota, e ela era
+   apresentada como aritmética, não gosto. Era verdade enquanto a grade era a
+   premissa; a [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) derrubou a premissa, e o TOC voltou sem ninguém precisar
+   arrumar espaço para ele.
+3. **`--sd-api-prosa-width` porta a proporção da âncora** (#99): §10 de
+   `research/paridade-devin` mede a âncora com prosa estreita e trilho largo
+   nesta rota. Esta é a única que não caiu por defeito de raciocínio — ela caiu
+   por decisão, e a decisão está no §7.
 
-### 1.1 O que esta conta justifica hoje, e o que ela justificava antes
+**O que fica é o `calc()` como técnica, e o registro de que ele funcionou.** A
+prosa subiu de 672 para 720 e o painel desceu de 448 para 400 sozinho quando a
+geometria mudou, e depois a base virou 577 e o trilho virou 511 sozinho de novo
+— nenhuma linha de ajuste, nas duas vezes. Um 448 cravado teria quebrado calado
+nas duas. A conta saiu porque o layout saiu, não porque a técnica falhou.
 
-**A justificativa foi reescrita, não herdada.** A conta antiga existia para
-explicar por que a página de endpoint **não tinha cartão**: a soma já fechava o
-container, e não sobrava pixel para o preenchimento da moldura. Esse argumento
-morreu duas vezes — a geometria `mint` tirou o cartão de **todas** as páginas do
-site, e depois o endpoint deixou de existir. Repeti-lo aqui seria transcrever de
-um documento sobre HTTP uma conclusão cuja premissa caiu.
+## 2. Não há comutador, e nenhuma página desta instância muda de layout
 
-O que a conta justifica hoje é **uma coisa só, e ela é a décima perda**: não
-sobra coluna para o TOC. As três medidas fecham o container no pixel, e a coluna
-que o painel ocupa é exatamente a do TOC.
+> **Correção de fato — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118).** Esta seção descrevia `ApiDocItem`, um
+> `docItemComponent` que lia `frontMatter.api_exemplos` e trocava o layout da
+> página inteira: a perna *ausente* delegava para `@theme/DocItem`, a perna
+> *presente* montava uma grade de duas colunas sem TOC. As duas pernas viraram
+> uma. O componente saiu de `src/theme/`, e `docusaurus.config.js` não declara
+> mais `docItemComponent` nesta instância.
 
-**É o `calc()` que faz esta seção sobreviver a troca de geometria.** A prosa
-subiu de 672 para 720 e o painel desceu de 448 para 400 **sozinho**, sem uma
-linha de ajuste — e a soma continua fechando o container. Um 448 cravado teria
-quebrado calado.
+As **26 páginas** da aba `Ferramentas` — 22 autorais e 4 geradas — passam pelo
+mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O que distingue uma
+página de comando de uma página autoral é **o que está escrito nela**, não a
+moldura em volta.
 
-## 2. O comutador, nas duas pernas
+`api_exemplos` **continua no front matter**, e continua sendo a fonte única dos
+dados do painel — o que ele deixou de fazer é comutar layout. Quem o lê hoje é
+o próprio `<PainelComando />`, por `useDoc()`, de dentro do fluxo do MDX. As
+duas razões pelas quais ele é front matter e não atributo de tag sobrevivem
+inteiras:
 
-`ApiDocItem` decide pelo front matter `api_exemplos` — nunca por marcador
-solto no corpo do MDX, e nunca por `hide_table_of_contents`. As duas razões
-são mecânicas, não estéticas:
+- **serializar o painel como prop** dentro do corpo do MDX daria uma segunda
+  cópia dos mesmos dados, e o portão 5 não veria as duas divergirem — ele
+  regenera e diffa a saída contra ela mesma;
+- **`hide_table_of_contents` continua ausente de todas as páginas**, geradas
+  inclusive. Ele era segunda fonte para uma decisão que o comutador tomava;
+  agora não há nem comutador nem decisão a tomar — o TOC aparece quando a
+  página tem heading, que é a regra do site inteiro.
 
-- um marcador em MDX obrigaria o painel a ser irmão de grid dos
-  parágrafos, e `position: sticky` precisa de um ancestral com contexto de
-  rolagem previsível — não de uma posição arbitrária que o fluxo do
-  Markdown decidiu;
-- `hide_table_of_contents` seria segunda fonte de verdade para uma decisão
-  que o componente já toma sozinho ao ler o front matter — e é por isso que
-  **nenhuma página desta instância carrega esse campo**, geradas inclusive.
+> **A razão que caiu, e vale registrar por que ela era boa.** O texto antigo
+> dizia que um marcador no corpo do MDX obrigaria o painel a ser irmão de grid
+> dos parágrafos, e que `position: sticky` precisa de um ancestral com contexto
+> de rolagem previsível. Estava certo — **enquanto o painel fosse grudado**. Ele
+> não é mais, e um bloco de fluxo é exatamente o que o argumento proibia. A
+> premissa saiu junto com o `sticky`; o argumento não foi refutado, ficou sem
+> sujeito.
 
-| `api_exemplos` | Layout | Largura da coluna de conteúdo | TOC |
-| --- | --- | --- | --- |
-| ausente | delega para `@theme/DocItem`, sem tocar em mais nada | `--sd-prose-width` (720, dentro da coluna de 864) | coluna de 288, se houver heading |
-| presente | layout próprio, `LayoutComPainel` | `--sd-prose-width` (720) | ausente — o painel ocupa o espaço |
+### 2.1 A fixture que provava a perna vazia
 
-**A instância inteira declara `docItemComponent`, e as vinte e duas folhas
-autorais dela não mudam de layout.** É a segunda instância do projeto a usar a opção, e
-ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle.
+`Ferramentas › Bibliotecas › overpower › Comandos › Índice` era a fixture da
+perna *ausente*: prosa autoral, zero `api_exemplos`, e o painel direito
+**inalcançável, não vazio**. Ela continua onde estava — a folha que abre a
+categoria das quatro geradas —, e o que ela prova mudou: hoje ela é a página
+irmã que mostra que uma folha **sem** painel e uma **com** painel medem a mesma
+coisa, lado a lado, a um clique de distância.
 
-A perna "ausente" é a que prova que o painel é **inalcançável, não vazio**:
-`Ferramentas › Bibliotecas › overpower › Comandos › Índice` é a
-fixture — prosa autoral, zero `api_exemplos`, coluna e TOC como qualquer página
-de doc comum. Uma implementação que deixasse uma coluna direita vazia ali estaria
-errada; o correto é essa coluna nem existir, porque a página passou pela **outra**
-perna do comutador.
+Uma implementação que deixasse coluna direita vazia ali estaria errada; hoje o
+motivo é mais simples do que era, e é o mesmo de qualquer página do site: não
+existe coluna direita além do TOC.
 
-**A fixture é irmã das geradas, e isso é o que a torna forte.** Antes ela morava
-numa seção autoral de uma instância inteiramente gerada; agora ela está **dentro
-da mesma categoria de sidebar** que as quatro páginas com painel, a um clique de
-distância — e mais que isso, ela é a folha que **abre** essa categoria. Se o comutador algum dia decidir por instância em vez de por página, é
-aqui que quebra, à vista.
+## 3. O `sticky` saiu, e com ele o erro nº 1
 
-A perna "presente" são as quatro páginas geradas, e mais nenhuma.
+> **Correção de fato — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118).** Esta seção era um aviso, e o aviso perdeu o
+> assunto. Ela ficou porque o mecanismo que ela descreve é real e volta a
+> morder quem montar qualquer trilho grudado neste projeto.
 
-## 3. `align-self: start`, junto com `position: sticky`
+**O que ela dizia.** Dentro de um `display: flex` com `align-items: stretch` (o
+default), um item de flex sem `align-self` próprio estica para a altura do irmão
+mais alto — ali, a prosa. Um painel esticado para a altura da prosa **já
+preenche toda a área de rolagem disponível**, então `position: sticky` não tem
+para onde grudar: parece travado desde o topo, e o sintoma é sutil o bastante
+para passar batido numa tela onde a prosa é curta. A saída era `align-self:
+start`, que encolhe o painel para a altura do próprio conteúdo, e só depois
+disso "sticky" tem distância a percorrer.
 
-**O erro nº 1 de quem reconstrói este layout.** Dentro de um `display: flex`
-com `align-items: stretch` (o default), um item de flex sem `align-self`
-próprio estica para a altura do irmão mais alto — aqui, a prosa. Um painel
-esticado para a altura da prosa **já preenche toda a área de rolagem
-disponível**, então `position: sticky` não tem para onde grudar: parece
-travado desde o topo, e o sintoma é sutil o bastante para passar batido
-numa tela onde a prosa é curta.
+**Nada disso está no produto hoje.** Sem grade não há item de flex, sem item de
+flex não há `align-self`, e o painel em fluxo não gruda em nada. As três
+declarações saíram juntas, e com elas o limiar de 997px que virava a grade de
+`column` para `row`.
 
-```css
-.colunaPainel {
-  align-self: start;
-  position: sticky;
-  top: var(--sd-topo-conteudo); /* a linha em que a prosa ao lado abre — e é o topo INTEIRO por baixo: com a faixa de tabs montada, a linha 1 sozinha deixaria o painel deslizar por baixo dela */
-}
-```
-
-`align-self: start` encolhe o painel para a altura do próprio conteúdo, e é
-só depois disso que "sticky" tem alguma distância para percorrer.
-
-**Zero `order`, zero duplicação de HTML por breakpoint.** O DOM é sempre
-prosa-depois-painel; o que muda entre largo e estreito é só
-`flex-direction` (`column` abaixo de 997px, `row` a partir dele — o mesmo
-limiar único do projeto inteiro). No estreito, isso empilha o painel
-**depois** da prosa, sem regra a escrever: é a mesma ordem do DOM, só que
-lida de cima para baixo em vez de lado a lado. A largura fixa das duas
-colunas só existe dentro da media query de 997px — declará-la fora
-aplicaria a `flex-basis` no eixo errado (altura, não largura) quando
-`flex-direction` é `column`.
+**O que sobrevive é a regra geral, e ela vale para o TOC**, que é o único
+elemento grudado que restou no corpo de uma página: quem gruda precisa de altura
+própria menor que a do irmão, e o offset dele lê `--sd-topo-conteudo`. Ver
+`chrome.md` §11.
 
 ## 4. A ordem das seções da página gerada
 
@@ -242,7 +251,8 @@ pedaços, e os três saem do contrato:
    `{{placeholder}}` em cada argumento editável.
 
 **O marcador `{{argumento}}` é declarado num lugar só, e os dois lados o leem de
-lá.** `src/theme/ApiDocItem/placeholder.mjs` é submódulo do componente de rota, e
+lá.** `src/theme/MDXComponents/placeholder.mjs` é submódulo do registro que
+hospeda o painel — ele mudou de casa junto com `PainelComando.js` na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — e
 o gerador o importa — o mesmo caminho que a régua da busca já usa sobre
 `SearchBar/escada.mjs`. **O portão 5 não pegaria a divergência**, e é por isso que
 ela precisa de arquivo: ele regenera e diffa, então um gerador que passasse a
@@ -347,7 +357,7 @@ sairia `## undefined` dos dois lados do diff, que é o mesmo buraco do marcador
 que os **valores** divirjam por definição: uma chave que existisse num locale só
 seria uma seção sem título na metade do site.
 
-## 6. As oito perdas nomeadas da rota vanilla, e a décima desta rota
+## 6. As oito perdas nomeadas da rota vanilla, e a décima — que foi paga
 
 O ledger completo, com o motivo de cada uma, mora em
 [`swizzle.md`](swizzle.md) §4. Aqui elas entram numa linha cada, porque um
@@ -366,27 +376,33 @@ de entender o que esta rota acrescenta.
 | 8 | Armadilha de foco na sidebar de tela estreita |
 | 9 | Posição do botão de voltar ao topo na ordem de tabulação |
 
-A décima é desta rota, e diferente das nove: não é preço do orçamento
-`unsafe` zero — `ApiDocItem` não esbarrou em nenhum limite de swizzle para
-chegar nela. É consequência pura da aritmética do §1.
+**A décima era desta rota, e ela foi PAGA na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118).** Ela dizia *a página gerada
+não tem TOC*, e o motivo era a aritmética do §1: a soma das três medidas fechava
+o container, e a coluna que o painel ocupava era justamente a do TOC. O painel
+desceu para o fluxo, a coluna vagou, e o TOC voltou — nas quatro páginas, sem
+ninguém precisar abrir espaço para ele.
 
-| # | Perda | Por quê |
+| # | Perda | Estado |
 | ---: | --- | --- |
-| 10 | A página gerada não tem TOC | a soma das três medidas já fecha o container, e a coluna do TOC é justamente o que o painel ocupa; ver §1 |
+| ~~10~~ | ~~A página gerada não tem TOC~~ | **paga** — o painel saiu da coluna do TOC na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) |
 
-**A perda 10 encolheu duas vezes, e vale registrado onde ela parou.** Ela nasceu
-dizendo *"a página de endpoint não tem cartão nem breakout"*; a geometria `mint`
-tirou os dois de todas as páginas, e o que era perda desta rota virou fato do
-site. Depois a página de endpoint deixou de existir. O que sobrou é o TOC, e ele
-é perda de verdade: o leitor navega a página pela lista de entradas da sidebar em
+**Ela encolheu três vezes, e a terceira zerou.** Nasceu dizendo *"a página de
+endpoint não tem cartão nem breakout"*; a geometria `mint` tirou os dois de
+todas as páginas, e o que era perda desta rota virou fato do site. Depois a
+página de endpoint deixou de existir. Sobrou o TOC — e ele era perda de verdade,
+porque obrigava o leitor a navegar a página pela lista de entradas da sidebar em
 vez de pela dos headings.
 
-**Na prática isso aperta menos do que antes, e a razão mudou.** O argumento
-anterior era que o gerador emitia só duas seções por página. O gerador novo emite
-**até quatro** — parâmetros, retorno, exportações, erros —, e o que segura a perda
-é outra coisa: as quatro páginas são curtas por construção, porque cada uma
-documenta **uma** entrada. Uma referência que crescesse a ponto de precisar de TOC
-seria uma entrada que precisa virar duas.
+**O argumento que a segurava era bom, e não foi ele que a resolveu.** Ele dizia
+que as quatro páginas são curtas por construção, porque cada uma documenta *uma*
+entrada, e que uma referência grande a ponto de precisar de TOC seria uma
+entrada que precisa virar duas. Continua verdade. O que mudou é que a página
+não precisa mais desse argumento: ela tem TOC como qualquer outra, e a
+brevidade dela virou qualidade em vez de defesa.
+
+**A conta das perdas fica em nove**, e o número não se reaproveita — a décima
+não vira a décima primeira de outra coisa, pelo mesmo precedente que congela a
+numeração dos portões. Ver [`swizzle.md`](swizzle.md) §4.
 
 ## 7. O dissenso, registrado
 
@@ -402,6 +418,40 @@ de referência **não-HTTP** é a superfície que o projeto nunca tinha exercita
 
 O preço está pago à vista, e é este: um componente especificado morreu, um ADR foi
 superado, e um documento inteiro da spec foi reescrito.
+
+### 7.1 O trilho lateral, e por que ele saiu — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118)
+
+**A opção rejeitada é a que estava no produto**, e ela tinha uma medição
+sustentando: §10 de `research/paridade-devin` mede a âncora com prosa estreita e
+trilho largo **nesta rota especificamente**, e a #99 portou essa proporção. Manter
+o trilho seria manter o carimbo `herdado` numa decisão de layout — a classe que o
+§5 de [`principios.md`](principios.md) manda não tocar.
+
+Ela foi recusada por dois fatos medidos aqui, não na âncora:
+
+1. **A prosa mais estreita do site caiu na rota de linha mais longa.** 577px
+   contra os 720 de todas as outras páginas, e a assinatura do `install` tem 137
+   caracteres. Ela quebrava em três linhas dentro do painel, e o snippet ao lado
+   rolava na horizontal. A âncora documenta HTTP, onde o caminho é curto; a
+   proporção dela foi medida sobre um conteúdo que esta rota não tem.
+2. **O trilho grudado esvaziava a tela.** Ele acabava depois de três blocos, e a
+   prosa seguia por mais de mil pixels de rolagem com metade da largura da
+   janela em branco ao lado.
+
+**O que se pagou:** um `docItemComponent` foi apagado, três linhas de alvo
+medido saíram do §8, uma linha de `paridade-abertas.txt` saiu pelo próprio
+gatilho, e a proporção da âncora nesta rota deixou de ser perseguida — o que é
+uma decisão de produto contra uma medição, e está escrita aqui para poder ser
+contestada.
+
+**O que se comprou:** a décima perda paga, uma superfície a menos em
+`src/theme/`, e uma página de comando que mede o que qualquer página mede.
+
+> **Dissenso.** Nada disso refuta a medição da âncora: ela mede o que mede, e
+> uma prosa estreita ao lado de um trilho largo é uma escolha defensável para
+> quem tem conteúdo que a comporte. **Reabre quando** o contrato de assinatura
+> passar a carregar exemplo longo o bastante para o painel valer uma coluna
+> própria — hoje ele carrega uma linha de comando e dois campos.
 
 ---
 
@@ -419,52 +469,61 @@ mesma dos demais alvos do site.
 
 | Sonda | Alvo | Tolerância |
 | --- | --- | --- |
-| Coluna de texto | `576,81px` | ±1 |
-| Trilho | `448px` | ±1 |
-| Trilho grudado em | `152px` | ±1 |
 | Painel raio | `16px` | exato |
 
-**As duas larguras não fecham no pixel, e é esperado.** A âncora mede
-576,81 + 448; este projeto publica `--sd-api-prosa-width` (577, arredondado)
-e deriva o trilho do que sobra do próprio container (511, §1) — a mesma
-lógica que já divergia em 720/400 contra a prosa comum antes desta issue.
-`±1` cobre o arredondamento; a diferença de dezenas entre 448 e 511 é
-divergência **deliberada**, não erro de medição — publicada aqui para não
-esconder a distância atrás de uma tolerância larga demais para significar
-algo.
+**A tabela tinha quatro linhas e tem uma, e as três que saíram não fecharam:
+elas perderam o objeto.** `Trilho`, `Trilho grudado em` e `Coluna de texto`
+mediam o layout de duas colunas desta rota — prosa de 577 ao lado de um trilho
+grudado de 511. O trilho desceu para o fluxo na
+[#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) e virou
+um bloco de MDX, e não existe mais elemento a medir: as duas sondas de trilho
+passariam a imprimir `sem-medida` em toda execução.
 
-**`Trilho grudado em` reusa o número da `TOC grudado em`** de
-[`chrome.md`](chrome.md) §11: os dois grudam sob o mesmo topo fixo, e é o
-mesmo fato medido na âncora, não uma coincidência tratada como derivação.
+**A régua para isso é a que este projeto já aplica**, e ela está escrita em
+`scripts/paridade.mjs`: `Accordion`, `Tabs`, `Frame` e `Mermaid` não têm sonda
+porque não são renderizados em página nenhuma, e a nota de lá diz por quê — *um
+alvo que não confere nada é pior que alvo nenhum: parece cobertura*. Alvo que
+sobrevive ao elemento é o mesmo defeito visto do outro lado.
 
-> **Correção de fato — S3-3.** A frase acima estava certa e o produto a
-> desmentia. Este documento publicava `152` como alvo e, 245 linhas antes,
-> `top: var(--sd-topo-grudado)` como mecanismo — que resolve em **112**. Do
-> outro lado, o TOC herdava `calc(var(--ifm-navbar-height) + 1rem)` do
-> `theme-classic` e dava **128**. Ou seja: *"o mesmo topo fixo"* eram **dois**
-> números, e nenhum era o alvo. `npm run paridade` acusava `Δ −40` aqui e
-> `Δ −24` lá.
+**`Coluna de texto` saiu por outro motivo, e é o que interessa:** esta rota
+deixou de ter largura de prosa própria. Ela mede o que qualquer página de doc
+mede, e quem a cobre é `Coluna de texto` de [`chrome.md`](chrome.md) §11 —
+alvo `720,81px`, que **fecha**. Republicar o número aqui daria duas linhas de
+alvo para um mecanismo só, que é a segunda fonte que a §1 deste documento
+existe para não ter.
+
+**O que se perdeu de cobertura, e o que não.** A prosa desta rota continua
+medida — pela sonda da prosa comum, que é o mecanismo que ela passou a usar.
+O que deixa de ser medido é a distância entre este projeto e o trilho da
+âncora, e ela deixa de ser medida porque deixou de ser perseguida. Não é
+tolerância alargada para esconder distância: é uma linha de alvo retirada
+junto com o alvo.
+
+> **O que a tabela dizia sobre o topo grudado, e por que fica registrado.**
+> `Trilho grudado em` publicava `152` reusando o número da `TOC grudado em` de
+> [`chrome.md`](chrome.md) §11 — os dois grudavam sob o mesmo topo fixo, e era
+> o mesmo fato medido na âncora, não coincidência tratada como derivação.
 >
-> Os dois passaram a ler `--sd-topo-conteudo` (`tokens.css`), que é
-> `--sd-topo-grudado` mais `--sd-space-10` — a respiração que o `<main>` já dá
-> ao `<article>`, e que o comentário do `max-height` deste painel já citava por
-> nome. **O número não foi movido para fechar:** ele é `112 + 40`, e os dois
-> parcelamentos são medição publicada da âncora — o navbar em `chrome.md` §11 e
-> o ritmo vertical em §12.
+> A correção S3-3 nasceu daí: este documento publicava `152` como alvo e, 245
+> linhas antes, `top: var(--sd-topo-grudado)` como mecanismo, que resolve em
+> **112**; do outro lado, o TOC herdava `calc(var(--ifm-navbar-height) + 1rem)`
+> do `theme-classic` e dava **128**. *"O mesmo topo fixo"* eram **dois**
+> números, e nenhum era o alvo. Os dois passaram a ler `--sd-topo-conteudo`
+> (`tokens.css`), que é `--sd-topo-grudado` mais `--sd-space-10`.
+>
+> **O TOC continua lendo esse token**, e é por isso que a correção sobrevive à
+> saída do trilho: ela nunca foi sobre o painel, foi sobre haver um número só
+> para *sob o topo fixo*. O que sai é a segunda leitura dele, não a decisão.
 
 ## Procedência
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| A aritmética 720 + 32 + 400 = 1152 | origem própria | issue #38 — a medida de prosa, o gutter e o painel somam o container; o `calc()` absorveu a troca de medida sem ajuste |
-| **A conta justifica o TOC ausente, e não mais o cartão** | **origem própria (correção)** | a premissa antiga caiu duas vezes: nenhuma página tem cartão desde a [#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78), e a página de endpoint deixou de existir |
 | O painel é objeto, e o único do corpo | origem própria (correção) | era *"o painel é o cartão"*; ele sobrevive por ser bloco de dados ao lado do texto, não moldura de prosa |
-| Front matter em vez de marcador em MDX | origem própria | `position: sticky` exige ancestral com contexto de rolagem previsível |
-| Nenhuma página da instância carrega `hide_table_of_contents` | origem própria | seria segunda fonte para uma decisão que o componente já toma |
+| **Front matter em vez de prop na tag** | **origem própria (correção)** | a razão era `position: sticky` exigir ancestral com contexto de rolagem previsível, e ela saiu com o `sticky`. A decisão fica com razão nova, mais forte: prop seria segunda cópia do `api_exemplos`, e o portão 5 não veria as duas divergirem — ele diffa a saída contra ela mesma |
+| Nenhuma página da instância carrega `hide_table_of_contents` | origem própria (correção) | era segunda fonte para uma decisão do comutador; sem comutador, o TOC segue a regra do site — aparece quando há heading |
 | **A fixture do painel inalcançável trocou de dona** | **origem própria** | `overpower › Comandos › Índice` é irmã de sidebar das geradas **e** a folha que abre a categoria delas, o que torna a prova mais forte que a anterior |
-| `align-self: start` com `position: sticky` | origem própria (implementação) | o erro nº 1 medido ao implementar o layout — sem ele o item estica e sticky não tem onde grudar |
 | Offset do sticky em `--sd-topo-conteudo` | **origem própria (correção)** | duas correções na mesma linha: era `--sd-navbar-height`, que passou a medir só a linha 1 quando a faixa de tabs entrou, e virou `--sd-topo-grudado`; **S3-3** mostrou que `--sd-topo-grudado` (112) contradizia o alvo de 152 publicado no §8 deste mesmo documento. Medido por `npm run paridade`, `Δ −40` |
-| Zero `order`, DOM fixo prosa-depois-painel | origem própria | issue #38 — a mesma ordem em `row` largo e `column` estreito |
 | A ordem das seções da página gerada | origem própria (implementação) | decidida ao escrever `scripts/gerar-referencia.mjs` |
 | **A espécie e o nome qualificado no lugar da pílula** | **origem própria** | sem verbo não há duas categorias para pintar, e um chip de três variações é enfeite |
 | **O painel perde as abas de linguagem e de resposta** | **origem própria (consequência)** | uma linguagem real no cenário fixado, e uma forma de resultado por chamada de função |
@@ -475,12 +534,13 @@ mesmo fato medido na âncora, não uma coincidência tratada como derivação.
 | **O reset de nível sai sem deixar buraco** | **origem própria (consequência)** | um campo cujo tipo é outra entrada linka em vez de aninhar |
 | **A condição de `meta` vira conferência de cadeia** | **origem própria (implementação)** | o literal não pode aparecer no MDX; quem escreve o atributo é o componente |
 | As nove perdas nomeadas, restatadas | herdado | [`swizzle.md`](swizzle.md) §4 |
-| A décima perda, desta rota | origem própria | issue #38 — consequência aritmética do §1, não do orçamento `unsafe` |
+| **A décima perda foi paga** | **origem própria** | [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — o painel saiu da coluna do TOC e o TOC voltou; o número não se reaproveita |
 | **O que segura a décima perda mudou de argumento** | **origem própria (correção)** | não é o gerador emitir duas seções — ele emite até quatro; é cada página documentar uma entrada |
 | **O dissenso da opção rejeitada** | origem própria | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) — ela custava menos e preservava o `VerbBadge` inteiro |
 | **A aritmética do §1 corrigida para o container de 1120** | **origem própria (correção)** | a #96 derrubou `--sd-container-width` de 1152 para 1120 e este documento não veio junto; o painel real já dava 368, não 400 |
-| **`--sd-api-prosa-width` (577) substitui `--sd-prose-width` só na página gerada** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — medido em `research/paridade-devin` §10: a âncora usa prosa mais estreita e trilho mais largo nesta rota especificamente |
-| O trilho continua sendo o resto da conta, nunca um segundo literal | herdado | mesmo argumento do §1 original — um `448` cravado quebraria calado no dia em que o container mudasse de novo |
-| **O painel ganha altura declarada e rolagem própria** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — sem teto o trilho cresce com o conteúdo e "sticky" vira decoração; `max-height` reusa `--sd-topo-grudado` e `--sd-space-10`, mais `--sd-viewport-altura` (100dvh) — o terceiro token do projeto medido contra a viewport, mesmo buraco do portão 1 que `--sd-busca-height` já fechou (`tokens.css`) |
 | **O fio sob o cabeçalho do painel** | **herdado + origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a chrome de cabeçalho da âncora portada sem o segundo nível de preenchimento que ela tem, pela mesma simplificação já registrada em `estilos.module.css` |
 | A seção "Alvo medido" (§8) | origem própria | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — mesmo padrão de [`chrome.md`](chrome.md) §11; números de `research/paridade-devin` §10 |
+| **O painel desce para o fluxo, logo depois da linha do comando** | **origem própria** | [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — a linha diz *como isto se chama*, e a pergunta seguinte numa página de CLI é *como isto se digita*; prosa entre as duas obrigaria a rolar para achar a linha copiável |
+| **`ApiDocItem` sai de `src/theme/`** | **origem própria (consequência)** | sem layout a comutar, o componente da rota era `@theme/DocItem` chamando `@theme/DocItem`; segunda entrada removida do ledger de [`swizzle.md`](swizzle.md) §2 |
+| **Três linhas de alvo saem do §8** | **origem própria** | o objeto medido deixou de existir; a régua é a que `paridade.mjs` já aplica a `Accordion` e `Tabs` — *alvo que não confere nada parece cobertura* |
+| **A assinatura deixa de sair escapada** | **origem própria (correção)** | o contrato guardava `&lt;key&gt;`, e quem renderiza é `<code>{assinatura}</code>`, que já escapa sozinho — a tela mostrava a entidade crua |

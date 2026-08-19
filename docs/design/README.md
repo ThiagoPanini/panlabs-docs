@@ -449,7 +449,7 @@ Não são metas: são propriedades que o repositório mantém, e cada uma é con
 
 A resolução do slice 7 escreveu *"um único JS de interação no projeto inteiro"*. **Varrido ao pé da letra, isso é falso**, e a varredura o mostrou: além do `SearchBar`, dois arquivos casavam com uma régua ampla de comportamento —
 
-- **`src/theme/ApiDocItem/Painel.js`**, que guarda estado e ouve `onChange`. É o *"único degrau de interatividade confinado a um painel"* que [`referencia.md`](referencia.md) §4.1 declara desde o slice 5;
+- **`src/theme/MDXComponents/PainelComando.js`**, que guarda estado e ouve `onChange`. É o *"único degrau de interatividade confinado a um painel"* que [`referencia.md`](referencia.md) §4.1 declara desde o slice 5; ele mudou de casa na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — era `ApiDocItem/Painel.js`, e o endereço novo é o que o zero 4 exige, porque `src/components/` fecha em zero estado;
 - **`src/theme/NavbarItem/Marca.js`**, que **repassava** o `onClick` que o painel de tela estreita lhe entregava — ele não autorava handler nenhum.
 
 A régua correta não é *"tem `useState`?"*, e o vocabulário de domínio já a tinha escrito: **zero `keydown` escrito no projeto**. O que obriga a spec a descrever tecla, foco, anúncio de leitor de tela e ARIA em prosa — que é o custo que o axioma 6 cobra — é **autorar modelo de interação**. Um campo controlado não obriga nada disso: quem trata digitação, foco e cursor é o navegador, e o React só espelha o valor.

@@ -57,7 +57,7 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 ### 2.1 `Ferramentas` declara `docItemComponent`, e as folhas dela não mudam de layout
 
-**Verificado no código, não deduzido:** o `ApiDocItem` comuta **por página** pelo front matter `api_exemplos` e delega para `@theme/DocItem` quando o campo falta. A instância inteira o declara sem que nenhuma folha autoral mude de layout — as **22 autorais** não carregam o campo, e quem acende a outra perna são as **4 geradas** de `overpower › Comandos`, e só elas.
+**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **26 folhas** — 22 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
 
 É a segunda instância do projeto a usar a opção, e ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle. Ver [ADR 2](../adr/0002-politica-de-swizzle.md).
 
@@ -394,7 +394,7 @@ Se um capítulo pode carregar `<Steps>`, o leitor abre a página e não consegue
 | Fallback silencioso de locale | `/en/jornadas/api-owner/a-politica-de-versao` | `<Untranslated />` e texto pt-BR sob rota EN |
 | Aninhamento profundo | `Infraestrutura › O output de um módulo` — quatro níveis | `<ResponseField>` sobre `<Expandable>` |
 | Página muito longa | `API Owner › O contrato que não existia` — ~1800 palavras | TOC longo, `sticky` e scroll-spy |
-| Painel direito vazio | `overpower › Comandos › Índice` | `ApiDocItem` na perna que **delega** — o painel é inalcançável, não vazio |
+| Sem painel, mesma moldura | `overpower › Comandos › Índice` | a folha autoral que abre a categoria das quatro geradas: **sem** `api_exemplos`, e medindo o mesmo que as **com** — era a fixture da perna que delegava, e virou a prova de que não há duas pernas |
 | **Aninhamento de sidebar máximo** | **`overpower › Referência › Solução de problemas`** — nível 4 | os 40px de recuo mais o ícone mais 20 caracteres de rótulo, dentro dos 288px |
 
 > **Duas linhas desta tabela prometiam mais do que a dona entrega, e as duas foram medidas.**
@@ -594,7 +594,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | O cenário fecha em três strings | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — GitHub Actions, AWS e Python; o resto cai delas somadas às categorias |
 | O custo de gabarito sobe sem convenção conhecida | **origem própria (consequência)** | o gênero público do domínio anterior era o que segurava a coerência; sem ele, quem segura é o gabarito |
 | Três tabs, três instâncias | origem própria | `routeBasePath` e versionamento são por instância |
-| `Ferramentas` declara `docItemComponent` | **origem própria (verificação)** | conferido no código: o `ApiDocItem` comuta por página e delega quando `api_exemplos` falta; só as 6 geradas o declaram |
+| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) junto com o `ApiDocItem`; as 26 folhas da instância usam o `@theme/DocItem` do upstream |
 | Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) §árvore |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |

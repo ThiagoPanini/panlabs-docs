@@ -59,10 +59,11 @@ import referencia from './sidebars-referencia.js';
  * porque o rótulo dela e a folha autoral que a abre são nossos e o gerador não os
  * conhece. `Bibliotecas` fecha em 21 e a aba em 26.
  *
- * **A instância declara `docItemComponent` e as folhas autorais não mudam de
- * layout.** O `ApiDocItem` comuta por página pelo front matter `api_exemplos`, e
- * delega para `@theme/DocItem` quando o campo falta — as quatro geradas o
- * declaram, as vinte e duas autorais não.
+ * **Nenhuma folha desta instância muda de layout, e desde a #118 não há o que
+ * comutar.** A instância declarava `docItemComponent: '@theme/ApiDocItem'`, que
+ * trocava a moldura das quatro páginas geradas por uma grade de duas colunas sem
+ * TOC. O componente saiu, a linha saiu da config, e as vinte e seis folhas — 22
+ * autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`.
  *
  * Procedência: docs/design/informacao.md · docs/design/icones.md · docs/adr/0009
  * · docs/adr/0010.

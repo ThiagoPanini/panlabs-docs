@@ -19,7 +19,7 @@
  * mesma razão: a régua e o consumidor leem o mesmo arquivo.
  *
  * O portão 7 continua passando — este é submódulo de um componente que já tem
- * endereço, a mesma linha em que `SearchBar/escada` e `ApiDocItem/estilos.module`
+ * endereço, a mesma linha em que `SearchBar/escada` e `MDXComponents/painel.module`
  * caem.
  *
  * Procedência: docs/design/referencia.md §5.2.

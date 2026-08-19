@@ -115,7 +115,7 @@ import PainelComando from './PainelComando';
  * enganou uma vez não se recicla com significado novo.
  *
  * `useDoc` é API pública de `@docusaurus/plugin-content-docs/client`, já
- * consumida pelo `ApiDocItem`. Ele estoura fora de um `DocProvider`, e isso é
+ * consumida também pelo `PainelComando`. Ele estoura fora de um `DocProvider`, e isso é
  * propriedade e não descuido: todo MDX deste site é documentação, e o dia em que
  * um `.mdx` nascer fora de `conteudo/` é o dia de decidir o que o subtítulo dele
  * é — não o dia de descobrir que a página saiu sem um.

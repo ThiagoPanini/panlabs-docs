@@ -329,7 +329,7 @@ a[href='#__docusaurus_skipToContent_fallback'] {
      importar quando a referência gerada entrou no ar. São duas prosas agora: o
      `DocItem/Content` do upstream escreve as DUAS classes juntas
      (`clsx(ThemeClassNames.docs.docMarkdown, 'markdown')`, medido em 3.10.2), e
-     o `ApiDocItem` escreve só `markdown` — ele recusa a outra desde que ela era
+     o painel de comando escreve só `markdown` — ele recusa a outra desde que ela era
      o cartão. Escopar pela classe de cartão isentaria a página de doc e deixaria
      o link da página gerada com 44px de altura, quebrando o ritmo da coluna em
      tela de toque. `.markdown` é a classe que de fato significa *prosa*, e ela

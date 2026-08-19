@@ -617,7 +617,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
      Eram DOIS na redação original — a largura do modal de busca e a laje de
      código da landing. A segunda saiu com a página na issue #94; quem cita o
-     token hoje é `chrome.css`, o `SearchBar` e o `ApiDocItem`. */
+     token hoje é `chrome.css`, o `SearchBar` e o painel de comando. */
 
   /* A folga lateral do shell, de cada lado. Ela dobra a partir de 997px — o
      mesmo limiar em que a sidebar aparece. O par 16/32 é herdado da âncora; o

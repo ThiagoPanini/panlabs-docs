@@ -168,7 +168,7 @@ A 1024 o texto passa a abrir em **363**, que é o pixel exato em que a âncora o
 
 **Dissenso.** Abaixo de 1280 a prosa fica **mais larga** que antes — 594 contra 541 a 1024 —, e §1.5 declara que sem TOC visível a medida é `--sd-container-width`. Alguém pode ler o quarto vazio como respiro deliberado em vez de defeito. A resposta é que ele nunca foi declarado em lugar nenhum desta spec, que a âncora não o tem, e que ele cresce com a janela — respiro que aumenta 64px entre 1024 e 1279 não é decisão, é sobra. **Reabre quando** alguém medir a âncora numa largura dessa faixa e achar uma coluna de conteúdo que não ocupa o que a janela dá.
 
-**A referência da API fica de fora, e é lacuna nomeada.** A `.row` dela não tem `.col` — o filho é o CSS Module do `ApiDocItem` —, então nenhum destes seletores a alcança. Dar-lhe o corredor encolheria a prosa dela, que tem alvo medido próprio em [`referencia.md`](referencia.md) §8, e o número teria de ser remedido na âncora antes. Ela ganha só o padding lateral do quadro, junto com todo o resto do site.
+> **A referência da CLI era lacuna nomeada aqui, e a lacuna FECHOU na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118).** A `.row` dela não tinha `.col` — o filho era o CSS Module do `ApiDocItem` —, então nenhum destes seletores a alcançava, e dar-lhe o corredor encolheria uma prosa que tinha alvo medido próprio. O componente saiu, a página passou a montar a mesma `.row > .col` de qualquer página de doc, e o corredor a alcança sem exceção a escrever. O alvo próprio saiu junto — ver [`referencia.md`](referencia.md) §8.
 
 ---
 
@@ -451,7 +451,7 @@ Toda página do site ganha uma linha abaixo do `h1`: **`--sd-type-lg`, num bloco
 
 ### 6.1 A rota, e o degrau que ela custa
 
-Um **override da chave `h1` no registro de `@theme/MDXComponents`, degrau 3**, lendo `useDoc().frontMatter.description` — API pública, já consumida pelo `ApiDocItem`.
+Um **override da chave `h1` no registro de `@theme/MDXComponents`, degrau 3**, lendo `useDoc().frontMatter.description` — API pública, e a mesma porta pela qual o `<PainelComando />` lê o `api_exemplos` dele.
 
 A condição estava escrita em [`swizzle.md`](swizzle.md) §4, na nota da perda 10, e está conferida: **62 de 62 páginas escrevem o próprio `# Título`**, nenhuma escreve dois, e 62 de 62 já têm `description` — as 39 autorais, as 6 geradas em pt-BR e as 17 de EN. **Quem confere hoje não é uma varredura de mão:** a cobrança 10 do portão 4 percorre `conteudo/` e a árvore de tradução e reprova a primeira página sem o campo.
 

@@ -16,7 +16,7 @@
  * de código.
  *
  * **Zero JS.** Nenhum dos dois alimenta playground: a edição do nível 1 mora no
- * painel do `ApiDocItem`, que é território da rota e não do catálogo. O
+ * painel de comando, que é território da rota e não do catálogo. O
  * aninhamento é `expandable`, e a recursão de `response-field` é o autor
  * escrevendo outro `response-field` dentro do primeiro.
  *
