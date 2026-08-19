@@ -25,7 +25,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-import {RECUSAS, lerContrato, validar, validarPar} from './lib/assinatura.mjs';
+import {ESPECIES, RECUSAS, lerContrato, validar, validarPar} from './lib/assinatura.mjs';
+import {FORMA, contextoDe, corpoMdx, frontMatter} from './gerar-referencia.mjs';
 import {marcador, marcadoresDe, substituir} from '../src/theme/ApiDocItem/placeholder.mjs';
 
 const CONTRATO_PT = 'contratos/panlabs-esteira.pt-BR.json';
@@ -36,6 +37,9 @@ const contrato = () => JSON.parse(fs.readFileSync(CONTRATO_PT, 'utf8'));
 
 /** A primeira recusa, ou `undefined` — quase todo caso abaixo tem exatamente uma. */
 const primeira = (contrato) => validar(contrato)[0];
+
+/** O `api_exemplos` de uma página, lido do front matter. */
+const painelDoTexto = (bruto) => JSON.parse(bruto.match(/^api_exemplos: (.+)$/m)[1]);
 
 // ---------------------------------------------------------------------------
 // O par que está no repositório
@@ -90,12 +94,47 @@ test('id-duplicado — duas entradas com o mesmo id escreveriam o mesmo arquivo'
   assert.equal(recusa.ponteiro, '/entradas/2/id');
 });
 
-test('especie-fora-da-lista — três espécies, e nenhuma quarta', () => {
+test('especie-fora-da-lista — a lista é fechada, e `classe` não está nela', () => {
   const c = contrato();
   c.entradas[1].especie = 'classe';
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.especieForaDaLista);
   assert.equal(recusa.ponteiro, '/entradas/1/especie');
+});
+
+// A fatia EXPAND do ADR 9: as duas espécies de CLI entram ao lado das três de
+// biblioteca, e a lista continua fechada em cinco. Quem a devolve a duas é o
+// ticket do port, quando o sujeito do contrato trocar.
+test('a lista fechada tem as cinco espécies, e nenhuma sexta', () => {
+  assert.deepEqual(ESPECIES, ['modulo', 'tipo', 'funcao', 'aplicacao', 'comando']);
+});
+
+test('as DUAS listas fechadas casam — validador e gerador não divergem', () => {
+  // Uma espécie aceita pelo validador e sem forma no gerador não daria recusa
+  // nomeada: daria `TypeError` no meio da emissão, que é o oposto de recusar
+  // alto. São dois arquivos, e nada além deste caso os amarra.
+  assert.deepEqual(Object.keys(FORMA).sort(), [...ESPECIES].sort());
+});
+
+for (const especie of ['aplicacao', 'comando']) {
+  test(`\`${especie}\` é espécie aceita, e o validador não a trata como caso especial`, () => {
+    const c = contrato();
+    c.entradas[5].especie = especie;
+    assert.deepEqual(validar(c), []);
+  });
+}
+
+test('o detalhe da recusa não crava a contagem — ele lista a lista', () => {
+  const c = contrato();
+  c.entradas[1].especie = 'classe';
+  const {detalhe} = primeira(c);
+  // A redação anterior dizia "não é uma das três". Com cinco espécies ela virou
+  // mentira, e uma recusa que mente sobre o próprio motivo custa a leitura de
+  // quem a recebe.
+  assert.doesNotMatch(detalhe, /uma das (três|duas|quatro|cinco)/);
+  for (const nomeada of ESPECIES) {
+    assert.match(detalhe, new RegExp(nomeada));
+  }
 });
 
 test('descricao-ausente — em qualquer nó, e o ponteiro nomeia qual', () => {
@@ -231,6 +270,19 @@ test('contratos-incongruentes — entrada a mais de um lado é divergência de f
   assert.equal(recusa.ponteiro, '/entradas/6');
 });
 
+test('a espécie é ESTRUTURA, não prosa — trocá-la de um lado só reprova', () => {
+  const pt = lerContrato(CONTRATO_PT);
+  const en = lerContrato(CONTRATO_EN);
+  // `aplicacao` é espécie válida, então o contrato do EN passa sozinho. O que
+  // reprova é o par: uma página que fosse `funcao` em pt-BR e `aplicacao` em EN
+  // teria seções diferentes nos dois locales.
+  en.entradas[5].especie = 'aplicacao';
+  assert.deepEqual(validar(en), []);
+  const recusa = validarPar(pt, en)[0];
+  assert.equal(recusa.recusa, RECUSAS.contratosIncongruentes);
+  assert.equal(recusa.ponteiro, '/entradas/5/especie');
+});
+
 test('a PROSA diverge de propósito — é o que faz o par ser monolíngue', () => {
   const pt = lerContrato(CONTRATO_PT);
   const en = lerContrato(CONTRATO_EN);
@@ -265,6 +317,19 @@ test('quem escreve o marcador e quem o lê usam a mesma sintaxe', () => {
   assert.deepEqual(marcadoresDe(`x=${marcador('a')}, y=${marcador('b')}`), ['a', 'b']);
 });
 
+test('o marcador aceita nome de opção de CLI — o traço não é fim de nome', () => {
+  // O argumento de um `comando` se chama `--from`, e o nome do argumento É a
+  // chave do marcador: o painel casa por `painel.parametros[].nome`. Com a
+  // sintaxe presa a `\\w+`, `{{--from}}` não casaria em NENHUM dos dois lados —
+  // `marcadoresDe` não o veria, a conferência de órfão passaria calada, e a
+  // página sairia com o marcador cru na tela.
+  assert.deepEqual(marcadoresDe(marcador('--from')), ['--from']);
+  assert.equal(substituir(`op ${marcador('--from')}`, {'--from': 'acervo/'}), 'op acervo/');
+  // E a classe não vai além do que os dois lados precisam combinar.
+  assert.deepEqual(marcadoresDe('{{a.b}}'), []);
+  assert.deepEqual(marcadoresDe('{{a b}}'), []);
+});
+
 test('substituir troca o conhecido e deixa o desconhecido — nunca apaga texto', () => {
   assert.equal(substituir(`f(${marcador('n')})`, {n: '7'}), 'f(7)');
   assert.equal(substituir(`f(${marcador('n')})`, {}), `f(${marcador('n')})`);
@@ -278,8 +343,7 @@ test('nenhuma página gerada tem marcador sem argumento que o substitua', () => 
   let conferidas = 0;
   for (const raiz of raizes) {
     for (const arquivo of fs.readdirSync(raiz)) {
-      const bruto = fs.readFileSync(`${raiz}/${arquivo}`, 'utf8');
-      const painel = JSON.parse(bruto.match(/^api_exemplos: (.+)$/m)[1]);
+      const painel = painelDoTexto(fs.readFileSync(`${raiz}/${arquivo}`, 'utf8'));
       const nomes = painel.parametros.map((p) => p.nome);
       for (const marca of marcadoresDe(painel.snippet.modelo)) {
         assert.ok(nomes.includes(marca), `${raiz}/${arquivo}: \`${marca}\` sem argumento`);
@@ -288,4 +352,317 @@ test('nenhuma página gerada tem marcador sem argumento que o substitua', () => 
     }
   }
   assert.equal(conferidas, 12);
+});
+
+// ---------------------------------------------------------------------------
+// As duas espécies de CLI, e a página que o gerador emite delas
+//
+// **Nenhum contrato de CLI está no disco ainda**, e é isso que obriga o par
+// sintético a morar aqui. Esta é a fatia EXPAND do ADR 9: a máquina aprende
+// `aplicacao` e `comando` enquanto o sujeito no ar continua sendo
+// `Biblioteca C`, então o único lugar onde os ramos novos rodam é o teste. Sem
+// ele, as duas espécies entrariam na lista fechada sem uma linha que as
+// exercitasse — que é o mesmo defeito que este arquivo existe para não ter.
+// ---------------------------------------------------------------------------
+
+const ROTULOS_CLI_PT = {
+  aplicacao: 'Aplicação',
+  comando: 'Comando',
+  comandos: 'Comandos',
+  opcoesGlobais: 'Opções globais',
+  opcoes: 'Opções',
+  codigosDeSaida: 'Códigos de saída',
+  semRetorno: 'Os códigos de saída são os da aplicação.',
+  erros: 'Erros',
+  colunaErro: 'Erro',
+  colunaQuando: 'Quando',
+  colunaNome: 'Nome',
+  colunaEspecie: 'Espécie',
+  colunaResumo: 'O que faz',
+  veja: 'Os campos estão na página do tipo:',
+};
+
+const ROTULOS_CLI_EN = {
+  aplicacao: 'Application',
+  comando: 'Command',
+  comandos: 'Commands',
+  opcoesGlobais: 'Global options',
+  opcoes: 'Options',
+  codigosDeSaida: 'Exit codes',
+  semRetorno: "The exit codes are the application's.",
+  erros: 'Errors',
+  colunaErro: 'Error',
+  colunaQuando: 'When',
+  colunaNome: 'Name',
+  colunaEspecie: 'Kind',
+  colunaResumo: 'What it does',
+  veja: 'The fields are on the type page:',
+};
+
+/**
+ * Um contrato de CLI monolíngue — uma raiz e um comando.
+ *
+ * A PROSA entra por parâmetro e o resto é idêntico nos dois locales: é
+ * exatamente a forma que `validarPar` cobra, e montar os dois do mesmo molde
+ * prova que a congruência não é acidente do que eu digitei.
+ */
+const contratoDeCli = (rotulos, prosa) => ({
+  contrato: 'assinatura',
+  versao: 1,
+  biblioteca: {modulo: 'overpower'},
+  // CÓPIA, e não a referência: um caso que apaga um rótulo para provar a parada
+  // do gerador apagaria do banco compartilhado, e os casos seguintes herdariam
+  // o buraco. É a promessa que o comentário de `parDeCli` faz.
+  rotulos: {...rotulos},
+  entradas: [
+    {
+      id: 'overpower',
+      especie: 'aplicacao',
+      titulo: 'overpower',
+      qualificado: 'overpower',
+      assinatura: 'overpower [--json] <comando>',
+      resumo: prosa.resumoRaiz,
+      descricao: prosa.descricaoRaiz,
+      exporta: ['overpower-install'],
+      fluxo: ['overpower-install'],
+      parametros: [{nome: '--json', tipo: 'flag', descricao: prosa.json, exemplo: true}],
+      retorno: {
+        tipo: 'int',
+        descricao: prosa.saida,
+        campos: [
+          {nome: '0', tipo: 'int', descricao: prosa.zero},
+          {nome: '2', tipo: 'int', descricao: prosa.dois},
+        ],
+      },
+      erros: [],
+    },
+    {
+      id: 'overpower-install',
+      especie: 'comando',
+      titulo: 'overpower install',
+      qualificado: 'overpower install',
+      assinatura: 'overpower install [--from <path>]',
+      resumo: prosa.resumoComando,
+      descricao: prosa.descricaoComando,
+      chamada: 'overpower install',
+      parametros: [{nome: '--from', tipo: 'path', descricao: prosa.from, exemplo: 'acervo/'}],
+      retorno: null,
+      erros: [],
+    },
+  ],
+});
+
+/** O par, refeito a cada caso para ninguém mutar o do vizinho. */
+const parDeCli = () => ({
+  pt: contratoDeCli(ROTULOS_CLI_PT, {
+    resumoRaiz: 'A ferramenta inteira, e as opções que valem para todo comando.',
+    descricaoRaiz: 'Instale e inspecione o acervo pela linha de comando.',
+    json: 'Emite a saída como JSON em vez de tabela.',
+    saida: 'O que o processo devolve ao shell.',
+    zero: 'Tudo correu.',
+    dois: 'A linha de comando estava errada.',
+    resumoComando: 'Instala um pacote do acervo.',
+    descricaoComando: 'Baixa e instala, resolvendo as dependências antes.',
+    from: 'De onde ler o acervo.',
+  }),
+  en: contratoDeCli(ROTULOS_CLI_EN, {
+    resumoRaiz: 'The whole tool, and the options that hold for every command.',
+    descricaoRaiz: 'Install and inspect the collection from the command line.',
+    json: 'Emit output as JSON instead of a table.',
+    saida: 'What the process hands back to the shell.',
+    zero: 'Everything worked.',
+    dois: 'The command line was wrong.',
+    resumoComando: 'Installs a package from the collection.',
+    descricaoComando: 'Downloads and installs, resolving dependencies first.',
+    from: 'Where to read the collection from.',
+  }),
+});
+
+const CAMINHO_CLI = 'contratos/overpower.pt-BR.json';
+
+/** O `api_exemplos` de uma entrada, já parseado. */
+const painelDe = (contrato, indice, caminho = CAMINHO_CLI) =>
+  painelDoTexto(frontMatter(contrato.entradas[indice], contextoDe(contrato, caminho)));
+
+test('o par de CLI é congruente, e cada contrato passa sozinho', () => {
+  const {pt, en} = parDeCli();
+  assert.deepEqual(validar(pt), []);
+  assert.deepEqual(validar(en), []);
+  assert.deepEqual(validarPar(pt, en), []);
+});
+
+test('`aplicacao` é a raiz — comandos, opções globais e códigos de saída, nesta ordem', () => {
+  const {pt} = parDeCli();
+  const corpo = corpoMdx(pt.entradas[0], contextoDe(pt, CAMINHO_CLI));
+
+  assert.match(corpo, /^# overpower\n/);
+  assert.match(corpo, /\*\*Aplicação\*\* · `overpower`/);
+  assert.ok(
+    corpo.indexOf('## Comandos') < corpo.indexOf('## Opções globais') &&
+      corpo.indexOf('## Opções globais') < corpo.indexOf('## Códigos de saída'),
+    'a raiz aponta para os membros antes de descrever a si mesma',
+  );
+  // A perna de hierarquia que o ADR 9 §a) manda `aplicacao` guardar.
+  assert.match(corpo, /\| \[`overpower install`\]\(\.\/overpower-install\.mdx\) \| Comando \|/);
+  assert.match(corpo, /<ParamField name="--json" type="flag">/);
+  assert.match(corpo, /<ResponseField name="0" type="int">/);
+  assert.match(corpo, /<ResponseField name="2" type="int">/);
+});
+
+test('`comando` é opção, e não inventa a tabela de saída que mora na raiz', () => {
+  const {pt} = parDeCli();
+  const corpo = corpoMdx(pt.entradas[1], contextoDe(pt, CAMINHO_CLI));
+
+  assert.match(corpo, /\*\*Comando\*\* · `overpower install`/);
+  assert.match(corpo, /## Opções\n/);
+  assert.match(corpo, /<ParamField name="--from" type="path">/);
+  // Os quatro códigos valem para todos os comandos, e prometê-los de novo em
+  // cada página seria a segunda fonte que o gerador inteiro existe para não ter.
+  assert.doesNotMatch(corpo, /## Códigos de saída/);
+});
+
+test('as duas espécies saem nos dois locales, e o rótulo é o do locale', () => {
+  const {pt, en} = parDeCli();
+  for (const indice of [0, 1]) {
+    assert.notEqual(
+      corpoMdx(pt.entradas[indice], contextoDe(pt, CAMINHO_CLI)),
+      corpoMdx(en.entradas[indice], contextoDe(en, CAMINHO_CLI)),
+    );
+  }
+  const raizEn = corpoMdx(en.entradas[0], contextoDe(en, CAMINHO_CLI));
+  assert.match(raizEn, /## Commands/);
+  assert.match(raizEn, /## Global options/);
+  assert.match(raizEn, /## Exit codes/);
+  assert.match(raizEn, /\| Name \| Kind \| What it does \|/);
+  // O campo é o mesmo componente nos dois locales: o que muda é o título.
+  assert.match(raizEn, /<ParamField name="--json" type="flag">/);
+  assert.match(raizEn, /<ResponseField name="0" type="int">/);
+
+  const comandoEn = corpoMdx(en.entradas[1], contextoDe(en, CAMINHO_CLI));
+  assert.match(comandoEn, /## Options\n/);
+  assert.match(comandoEn, /<ParamField name="--from" type="path">/);
+  assert.doesNotMatch(comandoEn, /## Exit codes/);
+
+  // E o snippet do EN é o mesmo código: só a prosa é traduzida.
+  assert.equal(painelDe(pt, 1).snippet.modelo, painelDe(en, 1).snippet.modelo);
+});
+
+test('rótulo de seção some do contrato → o gerador PARA, e nomeia a chave', () => {
+  // Sem a parada, a seção sairia `## undefined` e o portão 5 a diffaria contra
+  // ela mesma, com o diff limpo. É o mesmo buraco do marcador órfão.
+  //
+  // O caso enumera as chaves que as DUAS espécies novas exigem em vez de cravar
+  // uma: cravar `opcoes` deixaria as outras três sem nenhuma linha que as
+  // cobrasse, e é exatamente delas que o contrato do port vai precisar.
+  const exigidas = {
+    0: ['aplicacao', 'comandos', 'opcoesGlobais', 'codigosDeSaida', 'colunaNome'],
+    1: ['comando', 'opcoes'],
+  };
+  for (const [indice, chaves] of Object.entries(exigidas)) {
+    for (const chave of chaves) {
+      const {pt} = parDeCli();
+      delete pt.rotulos[chave];
+      assert.throws(
+        () => corpoMdx(pt.entradas[Number(indice)], contextoDe(pt, CAMINHO_CLI)),
+        new RegExp(chave),
+        `remover \`${chave}\` devia parar o gerador`,
+      );
+    }
+  }
+});
+
+test('o painel de um comando é bash, e o marcador casa com a opção', () => {
+  const {pt} = parDeCli();
+  const painel = painelDe(pt, 1);
+
+  assert.equal(painel.snippet.linguagem, 'bash');
+  assert.equal(painel.snippet.modelo, `overpower install --from "${marcador('--from')}"`);
+  assert.deepEqual(painel.parametros, [{nome: '--from', exemplo: 'acervo/'}]);
+  for (const marca of marcadoresDe(painel.snippet.modelo)) {
+    assert.ok(
+      painel.parametros.some((p) => p.nome === marca),
+      `\`${marca}\` sem argumento que o substitua`,
+    );
+  }
+});
+
+test('a raiz de CLI não tem linha de import, e a flag booleana sai nua', () => {
+  const {pt} = parDeCli();
+  const painel = painelDe(pt, 0);
+
+  // A cadeia da raiz é a dos membros, sem marcador — igual à do módulo.
+  assert.equal(painel.snippet.modelo, 'overpower install --from "acervo/"');
+  assert.doesNotMatch(painel.snippet.modelo, /import/);
+  assert.deepEqual(painel.parametros, []);
+});
+
+test('a flag booleana entra nua quando verdadeira, e some quando falsa', () => {
+  const {pt} = parDeCli();
+  pt.entradas[1].parametros.push({
+    nome: '--json',
+    tipo: 'flag',
+    descricao: 'Saída em JSON.',
+    exemplo: true,
+  });
+  assert.match(painelDe(pt, 1).snippet.modelo, /--json$/);
+
+  const desligada = parDeCli().pt;
+  desligada.entradas[1].parametros.push({
+    nome: '--json',
+    tipo: 'flag',
+    descricao: 'Saída em JSON.',
+    exemplo: false,
+  });
+  assert.doesNotMatch(painelDe(desligada, 1).snippet.modelo, /--json/);
+});
+
+test('a espécie de biblioteca não trocou de dialeto — o painel dela continua python', () => {
+  const c = lerContrato(CONTRATO_PT);
+  const painel = painelDe(c, 5, CONTRATO_PT);
+  assert.equal(painel.snippet.linguagem, 'python');
+  assert.match(painel.snippet.modelo, /^from panlabs\.esteira import /);
+});
+
+test('o módulo NÃO ganhou tabela de erros ao virar tabela — a forma antiga é a mesma', () => {
+  // `corpoMdx` deixou de sair cedo no módulo e passou a percorrer as seções por
+  // `FORMA`. A saída não mudou porque a entrada commitada tem `erros: []` — e
+  // *isso* é acidente do dado, não garantia da forma. Este caso trava a
+  // garantia: quem levanta erro são as funções do módulo, cada uma na página
+  // dela, e o portão 5 não pegaria a diferença porque o contrato no ar não
+  // exercita o caminho.
+  const c = lerContrato(CONTRATO_PT);
+  c.entradas[0].erros = [{nome: 'ErroQualquer', quando: 'nunca'}];
+  const corpo = corpoMdx(c.entradas[0], contextoDe(c, CONTRATO_PT));
+  assert.doesNotMatch(corpo, /## Erros/);
+  assert.doesNotMatch(corpo, /ErroQualquer/);
+});
+
+test('a raiz sem códigos de saída PARA — ela é a única dona da tabela', () => {
+  const {pt} = parDeCli();
+  pt.entradas[0].retorno = null;
+  // Sem a parada, a página que devia trazer os códigos sairia dizendo que não
+  // devolve valor, e os comandos apontariam para uma tabela que não existe.
+  assert.throws(
+    () => corpoMdx(pt.entradas[0], contextoDe(pt, CAMINHO_CLI)),
+    /overpower.*raiz|raiz.*overpower/s,
+  );
+  // O membro, esse, pode não ter os próprios códigos: os dele são os da raiz.
+  assert.doesNotThrow(() => corpoMdx(pt.entradas[1], contextoDe(pt, CAMINHO_CLI)));
+});
+
+test('as CHAVES de `rotulos` são congruentes, e só os valores divergem', () => {
+  const {pt, en} = parDeCli();
+  delete en.rotulos.opcoes;
+  // Sem esta cobrança o par passava, e o defeito só aparecia na emissão do EN:
+  // um locale com a seção sem título, descoberto na próxima vez que alguém
+  // rodasse o gerador.
+  const recusa = validarPar(pt, en)[0];
+  assert.equal(recusa.recusa, RECUSAS.contratosIncongruentes);
+  assert.equal(recusa.ponteiro, '/rotulos/opcoes');
+});
+
+test('o par commitado continua congruente com a cobrança nova de rótulos', () => {
+  // A cobrança é nova e o par é antigo: se as chaves já divergissem, isto
+  // reprovaria aqui em vez de na próxima geração.
+  assert.deepEqual(validarPar(lerContrato(CONTRATO_PT), lerContrato(CONTRATO_EN)), []);
 });

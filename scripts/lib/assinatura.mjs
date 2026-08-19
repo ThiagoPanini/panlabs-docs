@@ -24,8 +24,21 @@ import fs from 'node:fs';
 export const CONTRATO = 'assinatura';
 export const VERSAO = 1;
 
-/** As três espécies de entrada. Fechado. */
-export const ESPECIES = ['modulo', 'tipo', 'funcao'];
+/**
+ * As espécies de entrada. Fechado.
+ *
+ * **Cinco é estado de passagem.** As três primeiras descrevem superfície de
+ * biblioteca (ADR 8); `aplicacao` e `comando` descrevem superfície de CLI
+ * (ADR 9 §a). Elas convivem porque esta é a fatia **expand** de um
+ * expand–contract: a máquina aprende a espécie nova enquanto o contrato no ar
+ * ainda é o de `Biblioteca C`, e o portão 5 continua diffando contra ele. O
+ * ticket do port fecha o **contract** e devolve a lista a duas.
+ *
+ * A lista continua **fechada e validada**, com a mesma recusa nomeada e o mesmo
+ * JSON Pointer do nó ofensor — o que o ADR 9 §a) preserva não é o tamanho, é a
+ * propriedade.
+ */
+export const ESPECIES = ['modulo', 'tipo', 'funcao', 'aplicacao', 'comando'];
 
 /**
  * O teto de aninhamento, calibrado e não redondo.
@@ -177,7 +190,11 @@ export function validar(contrato) {
       recusar(
         RECUSAS.especieForaDaLista,
         `${raiz}/especie`,
-        `\`${entrada?.especie}\` não é uma das três: ${ESPECIES.join(', ')}`,
+        // A contagem NÃO entra na redação. Ela já mudou uma vez e vai mudar de
+        // novo no ticket do port; uma recusa que dissesse "uma das três" com
+        // cinco na lista mentiria sobre o próprio motivo, e quem a recebe lê o
+        // detalhe justamente por não saber a lista de cor.
+        `\`${entrada?.especie}\` não está na lista fechada: ${ESPECIES.join(', ')}`,
       );
       continue;
     }
@@ -287,9 +304,11 @@ export function validarPar(pt, en) {
 /**
  * A primeira divergência estrutural entre dois nós, ou `null`.
  *
- * `rotulos` sai inteiro da comparação — ele é o bloco de prosa da forma da
- * página, e a razão de ele existir é justamente traduzir sem que o gerador
- * carregue uma tabela de strings por locale.
+ * `rotulos` é o único nó em que **as chaves são estrutura e os valores são
+ * prosa**. Os valores divergem por definição — é o que faz o par ser monolíngue
+ * e o que dispensa o gerador de carregar uma tabela de strings por locale. As
+ * chaves, não: cada uma é o título de uma seção que a forma da espécie exige, e
+ * uma que exista só de um lado é uma seção sem título num locale só.
  */
 function comparar(a, b, ponteiro) {
   if (Array.isArray(a) || Array.isArray(b)) {
@@ -314,11 +333,23 @@ function comparar(a, b, ponteiro) {
     }
     const chaves = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort();
     for (const chave of chaves) {
-      if (PROSA.has(chave) || (ponteiro === '' && chave === 'rotulos')) {
+      if (PROSA.has(chave)) {
         continue;
       }
       if (!(chave in a) || !(chave in b)) {
         return `${ponteiro}${ponteiroDe(chave)}`;
+      }
+      // O bloco de rótulos: confere o conjunto de chaves e para aí. Sem isto o
+      // par podia perder `opcoes` num locale só, e o defeito só apareceria na
+      // emissão daquele locale.
+      if (ponteiro === '' && chave === 'rotulos' && ehObjeto(a[chave]) && ehObjeto(b[chave])) {
+        const rotulos = [...new Set([...Object.keys(a[chave]), ...Object.keys(b[chave])])].sort();
+        for (const nome of rotulos) {
+          if (!(nome in a[chave]) || !(nome in b[chave])) {
+            return `${ponteiro}${ponteiroDe(chave)}${ponteiroDe(nome)}`;
+          }
+        }
+        continue;
       }
       const dentro = comparar(a[chave], b[chave], `${ponteiro}${ponteiroDe(chave)}`);
       if (dentro !== null) {
