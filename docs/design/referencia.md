@@ -227,10 +227,13 @@ Três consequências, e as três são o motivo:
 Nenhuma das seis entradas tem snippet próprio. O gerador o compõe em três
 pedaços, e os três saem do contrato:
 
-1. **a linha de `import`** — os símbolos que a cadeia usa, deduplicados e
-   ordenados. Uma entrada com receptor não contribui a raiz da própria chamada:
-   `esteira.gerar` abre com a variável que o preâmbulo ligou, não com um nome
-   importado;
+1. **o preâmbulo de alcance** — na espécie de biblioteca, a linha de `import`,
+   com os símbolos que a cadeia usa, deduplicados e ordenados. Uma entrada com
+   receptor não contribui a raiz da própria chamada: `esteira.gerar` abre com a
+   variável que o preâmbulo ligou, não com um nome importado. **Na espécie de
+   CLI ele não existe** — não há o que importar antes de digitar um comando, e
+   uma linha em branco no topo do bloco seria enfeite que o leitor copiaria
+   junto (§5.5);
 2. **o preâmbulo** — a chamada da entrada que liga o receptor, com os exemplos
    dela **congelados**. É recursivo, e o validador recusa ciclo;
 3. **a chamada** — a assinatura com os exemplos dos parâmetros, e um
@@ -296,6 +299,47 @@ não de uma lista de exceção a manter.
 gerador nomeia `data-sd-part="meta"`"*, e o literal **não pode** aparecer na saída
 do gerador: quem escreve o atributo é o componente, e a página escreve a **tag**.
 Grepar a string no MDX conferiria uma coisa que nenhum renderizador lê.
+
+### 5.5 As espécies, e a forma que cada uma emite
+
+A lista de espécies é **fechada e validada**, com recusa nomeada
+(`especie-fora-da-lista`) e o JSON Pointer do nó ofensor. Ela está em cinco, e
+cinco é **estado de passagem**: as três de biblioteca são do
+[ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md)
+e as duas de CLI são do
+[ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md) §a),
+que decide a lista final em duas. A máquina chega antes do sujeito porque é
+expand–contract: o gerador aprende a espécie nova enquanto `Biblioteca C`
+continua no ar, e quem devolve a lista a duas é a troca do contrato.
+
+Quem escolhe as seções é uma tabela de forma no gerador, não uma cascata de
+`if`, e quem escreve os títulos é o bloco `rotulos` do contrato:
+
+| Espécie | Membros | `<ParamField>` | `<ResponseField>` | Snippet |
+| --- | --- | --- | --- | --- |
+| `modulo` | `## Exportações` | — | — | Python |
+| `tipo` | — | `## Parâmetros` | `## Atributos` | Python |
+| `funcao` | — | `## Parâmetros` | `## Retorno` | Python |
+| `aplicacao` | `## Comandos` | `## Opções globais` | `## Códigos de saída` | shell |
+| `comando` | — | `## Opções` | `## Códigos de saída`, só se tiver | shell |
+
+**Os dois componentes não mudam, e é a leitura deles que muda.** `ParamField`
+descreve *um parâmetro nomeado com tipo, obrigatoriedade e padrão*, que é o que
+uma opção de CLI é; `ResponseField` descreve *o que a chamada devolve*, que é o
+que um código de saída é. O catálogo continua fechado em dezessete — foi por
+nunca terem sido específicos de protocolo que os dois sobreviveram à morte do
+`VerbBadge`.
+
+**A raiz é a única dona da tabela de códigos de saída.** Os comandos apontam
+para ela em vez de repeti-la, e uma `aplicacao` sem `retorno` **para o gerador**:
+sem a parada, a página que devia trazer os códigos sairia dizendo que não
+devolve valor, com o diff do portão 5 limpo.
+
+**Rótulo ausente também para o gerador**, nomeando a chave. Sem isso a seção
+sairia `## undefined` dos dois lados do diff, que é o mesmo buraco do marcador
+órfão do §5.2. E as **chaves** de `rotulos` entram na congruência do par, ainda
+que os **valores** divirjam por definição: uma chave que existisse num locale só
+seria uma seção sem título na metade do site.
 
 ## 6. As oito perdas nomeadas da rota vanilla, e a décima desta rota
 

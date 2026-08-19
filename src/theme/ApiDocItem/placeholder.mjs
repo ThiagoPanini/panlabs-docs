@@ -37,8 +37,12 @@ export const marcador = (nome) => `{{${nome}}}`;
  * em NENHUM dos dois lados — `marcadoresDe` não o veria, a conferência de órfão
  * do gerador passaria calada, e a página sairia com o marcador cru na tela.
  * É o buraco que o cabeçalho acima descreve, chegando pela outra ponta.
+ *
+ * **O traço, e mais nada.** A classe fica no menor conjunto que os dois lados
+ * precisam combinar: alargá-la por precaução é superfície de sintaxe que
+ * ninguém exercita, numa régua cujo valor inteiro é as duas árvores casarem.
  */
-export const PLACEHOLDER = /\{\{([\w.-]+)\}\}/g;
+export const PLACEHOLDER = /\{\{([\w-]+)\}\}/g;
 
 /**
  * Troca cada marcador pelo valor corrente. Marcador sem valor fica como está —

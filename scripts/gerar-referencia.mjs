@@ -75,17 +75,25 @@ const FRAGMENTO = 'sidebars-referencia.js';
  *   · `retorno` — a chave de rótulo da seção de `<ResponseField>`, e se ela sai
  *     **sempre** (com a frase de `semRetorno` quando a entrada não tem retorno)
  *     ou só quando há o que dizer.
+ *   · `erros` — se a espécie tem tabela de erros.
  *   · `dialeto` — quem compõe o snippet do painel, e em que linguagem.
+ *
+ * **A tabela é fechada contra `ESPECIES`**, e o `npm test` amarra as duas: uma
+ * espécie que entrasse na lista do validador sem forma aqui não daria recusa
+ * nomeada, daria `TypeError` no meio da emissão.
  *
  * `ParamField` lê como parâmetro nas três primeiras e como **opção** nas duas
  * últimas; `ResponseField`, como retorno e como **código de saída**. Nenhum dos
  * dois muda, e é a leitura que muda (ADR 9 §c): eles nunca foram específicos de
  * protocolo nem de linguagem, que é por que sobreviveram à morte do `VerbBadge`.
  */
-const FORMA = {
-  modulo: {membros: 'exportacoes', campos: null, retorno: null, dialeto: 'python'},
-  tipo: {membros: null, campos: 'parametros', retorno: {rotulo: 'atributos', sempre: true}, dialeto: 'python'},
-  funcao: {membros: null, campos: 'parametros', retorno: {rotulo: 'retorno', sempre: true}, dialeto: 'python'},
+export const FORMA = {
+  // O módulo lista o que exporta e para aí. Ele não tem parâmetro, não devolve
+  // valor e **não levanta erro** — quem levanta são as funções dele, cada uma na
+  // própria página.
+  modulo: {membros: 'exportacoes', campos: null, retorno: null, erros: false, dialeto: 'python'},
+  tipo: {membros: null, campos: 'parametros', retorno: {rotulo: 'atributos', sempre: true}, erros: true, dialeto: 'python'},
+  funcao: {membros: null, campos: 'parametros', retorno: {rotulo: 'retorno', sempre: true}, erros: true, dialeto: 'python'},
   // A raiz da CLI: as opções globais e a tabela dos códigos de saída que valem
   // para todos os comandos. Ela SEMPRE traz a tabela, porque é o único lugar
   // onde ela mora.
@@ -93,6 +101,7 @@ const FORMA = {
     membros: 'comandos',
     campos: 'opcoesGlobais',
     retorno: {rotulo: 'codigosDeSaida', sempre: true},
+    erros: true,
     dialeto: 'cli',
   },
   // O comando traz código de saída só quando tem um que a raiz não cobre.
@@ -102,6 +111,7 @@ const FORMA = {
     membros: null,
     campos: 'opcoes',
     retorno: {rotulo: 'codigosDeSaida', sempre: false},
+    erros: true,
     dialeto: 'cli',
   },
 };
@@ -176,9 +186,19 @@ function chamadaPython(entrada, comPlaceholder) {
   return `${atribuicao}${entrada.chamada}(${argumentos.join(', ')})`;
 }
 
-/** Um valor JSON escrito como palavra de uma linha de shell. */
+/**
+ * Um valor JSON escrito como palavra de uma linha de shell.
+ *
+ * Dentro de aspas duplas o shell ainda expande `$`, executa crase e consome a
+ * contrabarra, e esta é a linha que o leitor copia para o terminal dele. O
+ * gêmeo em Python escapa a contrabarra antes das aspas pela mesma razão, e a
+ * ordem importa nos dois: escapar `\\` depois de `"` escaparia a barra que
+ * acabou de ser inserida.
+ */
 const literalDeComando = (valor) =>
-  typeof valor === 'string' ? `"${valor.replace(/"/g, '\\"')}"` : String(valor);
+  typeof valor === 'string'
+    ? `"${valor.replace(/[\\$`"]/g, (c) => `\\${c}`)}"`
+    : String(valor);
 
 /**
  * A linha de uso de um comando — `overpower install --from "…"`.
@@ -238,8 +258,8 @@ const DIALETOS = {
     // A linha 1 do módulo É a assinatura dele — o que se escreve para alcançar
     // o módulo é o `import`, e ter duas fontes para a mesma linha era o convite
     // a elas divergirem.
-    preambulo: (entrada, {contrato, simbolos}) =>
-      FORMA[entrada.especie].membros
+    preambulo: (entrada, {contrato, simbolos, forma}) =>
+      forma.membros
         ? entrada.assinatura
         : `from ${contrato.biblioteca.modulo} import ${[...simbolos].sort().join(', ')}`,
   },
@@ -266,7 +286,8 @@ function emitirCadeia(entrada, porId, vistos, linhas, comPlaceholder, dialeto) {
 
 /** O snippet inteiro de uma página — preâmbulo, receptor e chamada. */
 function snippetDe(entrada, {contrato, porId}) {
-  const dialeto = DIALETOS[FORMA[entrada.especie].dialeto];
+  const forma = FORMA[entrada.especie];
+  const dialeto = DIALETOS[forma.dialeto];
   const vistos = new Set();
   const linhas = [];
   const simbolos = new Set();
@@ -274,7 +295,7 @@ function snippetDe(entrada, {contrato, porId}) {
   // A raiz mostra o fluxo dos membros e não a si mesma: o que se digita para
   // usar um módulo é a função dele, e o que se digita para usar uma CLI é um
   // comando dela. Ter membros é ser raiz.
-  if (FORMA[entrada.especie].membros) {
+  if (forma.membros) {
     for (const id of entrada.fluxo ?? []) {
       const alvo = porId.get(id);
       emitirCadeia(alvo, porId, vistos, linhas, false, dialeto);
@@ -289,7 +310,7 @@ function snippetDe(entrada, {contrato, porId}) {
     }
   }
 
-  const preambulo = dialeto.preambulo(entrada, {contrato, simbolos});
+  const preambulo = dialeto.preambulo(entrada, {contrato, simbolos, forma});
   return (preambulo === null ? linhas : [preambulo, '', ...linhas]).join('\n');
 }
 
@@ -428,35 +449,48 @@ export function corpoMdx(entrada, contexto) {
   }
 
   if (forma.retorno && (forma.retorno.sempre || entrada.retorno)) {
-    partes.push('', `## ${rotulo(rotulos, forma.retorno.rotulo)}`, '');
-    corpoDoRetorno(entrada, contexto, partes);
+    partes.push('', `## ${rotulo(rotulos, forma.retorno.rotulo)}`, '', ...linhasDoRetorno(entrada, contexto));
   }
 
-  if ((entrada.erros ?? []).length > 0) {
+  if (forma.erros && (entrada.erros ?? []).length > 0) {
     partes.push('', `## ${rotulo(rotulos, 'erros')}`, '', tabelaDeErros(entrada.erros, contexto));
   }
 
   return `${partes.join('\n')}\n`;
 }
 
-/** O miolo da seção de retorno — a frase, o link, ou a árvore de campos. */
-function corpoDoRetorno(entrada, contexto, partes) {
+/** As linhas da seção de retorno — a frase, o link, ou a árvore de campos. */
+function linhasDoRetorno(entrada, contexto) {
   const {rotulos} = contexto;
+
   if (!entrada.retorno) {
-    partes.push(rotulo(rotulos, 'semRetorno'));
-  } else if ((entrada.retorno.campos ?? []).length === 0) {
-    partes.push(
+    // A raiz é a ÚNICA dona da tabela de códigos de saída: os comandos não a
+    // repetem, e apontam para ela. Uma raiz sem retorno emitiria a seção com a
+    // frase de "não devolve valor" — a página que devia trazer os códigos
+    // dizendo que não há códigos, com o diff limpo. Parar aqui é o mesmo
+    // remédio do rótulo ausente.
+    if (FORMA[entrada.especie].membros) {
+      throw new Error(
+        `${entrada.id}: a raiz \`${entrada.especie}\` não traz \`retorno\`, e é ela que carrega a tabela para todos os membros.`,
+      );
+    }
+    return [rotulo(rotulos, 'semRetorno')];
+  }
+
+  if ((entrada.retorno.campos ?? []).length === 0) {
+    return [
       entrada.retorno.entrada === undefined
         ? entrada.retorno.descricao
         : `${entrada.retorno.descricao} ${linkDaEntrada(entrada.retorno.entrada, contexto)}`,
-    );
-  } else {
-    partes.push(entrada.retorno.descricao, '');
-    for (const campo of entrada.retorno.campos) {
-      partes.push(campoMdx(campo, 'ResponseField', contexto, 1), '');
-    }
-    partes.pop();
+    ];
   }
+
+  const linhas = [entrada.retorno.descricao, ''];
+  for (const campo of entrada.retorno.campos) {
+    linhas.push(campoMdx(campo, 'ResponseField', contexto, 1), '');
+  }
+  linhas.pop();
+  return linhas;
 }
 
 /** O front matter — dois campos de conteúdo, mais o comutador do painel. */
@@ -617,10 +651,32 @@ function principal() {
   console.log(`Referência gerada — ${contadas.join(' · ')} · ${FRAGMENTO}`);
 }
 
+/**
+ * É este arquivo que está sendo executado, ou ele foi importado?
+ *
+ * **O link simbólico tem de ser resolvido dos dois lados.** `import.meta.url` já
+ * vem com o caminho real; `process.argv[1]`, não. Invocado por um symlink, um
+ * `path.resolve` cru compara caminho real com caminho de link, decide que não é
+ * o comando, e **sai zero sem gerar nada** — e aí o portão 5 regenera o vazio,
+ * diffa a saída antiga contra ela mesma e PASSA. É o mesmo buraco de "diff
+ * limpo" que o marcador órfão e o rótulo ausente abrem, pela terceira porta.
+ */
+function ehOComando() {
+  if (!process.argv[1]) {
+    return false;
+  }
+  try {
+    return fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    // `argv[1]` que não existe no disco não é este arquivo.
+    return false;
+  }
+}
+
 // **Só roda quando é o comando, nunca quando é importado.** `npm test` importa
 // `corpoMdx` e `frontMatter` daqui para exercitar as espécies que ainda não têm
 // contrato no disco; sem esta guarda, um `node --test` reescreveria o ramo
 // gerado de `Biblioteca C` como efeito colateral de conferir uma string.
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (ehOComando()) {
   principal();
 }
