@@ -40,6 +40,23 @@
   box-shadow: var(--sd-shadow-raised);
 }
 
+/* O `CodeBlock` do Infima traz `margin-bottom` própria, pensada para prosa: ele
+   é um bloco entre parágrafos, e reserva a respiração do que vem depois. Dentro
+   do painel não vem nada depois, e a margem virava um vão abaixo da última
+   linha, somando com o `padding` da caixa. O mesmo vale em cima, do lado do
+   primeiro filho, no caso em que o cabeçalho não é emitido.
+
+   Escopado ao filho direto de propósito: a prosa DENTRO de um bloco continua
+   com o ritmo dela. É a mesma normalização que `.prosa > :first-child` fazia no
+   layout antigo, e a única coisa daquele arquivo que atravessou a mudança. */
+.painel > :first-child {
+  margin-block-start: 0;
+}
+
+.painel > :last-child {
+  margin-block-end: 0;
+}
+
 /* O cabeçalho — a ASSINATURA. Uma linha longa que precisa quebrar dentro do
    painel; `overflow-wrap: anywhere` é o que impede a linha de comando de
    estourar a caixa numa tela estreita.

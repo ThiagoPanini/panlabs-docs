@@ -81,13 +81,26 @@ function Painel({exemplos}) {
 
   const texto = useMemo(() => substituir(snippet.modelo, valores), [snippet, valores]);
 
+  // **Um comando sem opção nenhuma tem assinatura igual ao snippet.** É o caso
+  // do `doctor`: os dois dizem `overpower doctor`, e o painel os empilhava, um
+  // sobre o outro, separados por um fio. Duas cópias da mesma linha não são
+  // duas informações — são a mesma, e a segunda faz o leitor procurar a
+  // diferença que não existe. Quando elas coincidem, fica o snippet: ele é o
+  // que carrega o botão de copiar, e o cabeçalho não carrega nada que ele não
+  // tenha. A comparação é sobre o texto JÁ SUBSTITUÍDO, então editar um
+  // argumento faz o cabeçalho reaparecer sozinho, que é exatamente quando ele
+  // volta a dizer algo que o snippet não diz.
+  const duplicada = texto.trim() === assinatura.trim();
+
   return (
     <div className={estilos.painel} data-sd-component="api-painel">
       {/* A assinatura é o cabeçalho do painel porque é a única linha que
           responde *como se chama isto* sem o leitor descer para a prosa. */}
-      <p className={estilos.painelCabecalho}>
-        <code>{assinatura}</code>
-      </p>
+      {!duplicada && (
+        <p className={estilos.painelCabecalho}>
+          <code>{assinatura}</code>
+        </p>
+      )}
 
       {parametros.length > 0 && (
         <div className={estilos.painelParametros}>
