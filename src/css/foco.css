@@ -325,15 +325,22 @@ a[href='#__docusaurus_skipToContent_fallback'] {
   /* A exceção, e é a única: link inline na prosa. A própria SC 2.5.8 o isenta, e
      alargá-lo quebraria o ritmo vertical da coluna de texto.
 
-     O ESCOPO É `.markdown`, E NÃO `.theme-doc-markdown`, e a diferença passou a
-     importar quando a referência gerada entrou no ar. São duas prosas agora: o
-     `DocItem/Content` do upstream escreve as DUAS classes juntas
-     (`clsx(ThemeClassNames.docs.docMarkdown, 'markdown')`, medido em 3.10.2), e
-     o `ApiDocItem` escreve só `markdown` — ele recusa a outra desde que ela era
-     o cartão. Escopar pela classe de cartão isentaria a página de doc e deixaria
-     o link da página gerada com 44px de altura, quebrando o ritmo da coluna em
-     tela de toque. `.markdown` é a classe que de fato significa *prosa*, e ela
-     cobre as duas. */
+     O ESCOPO É `.markdown`, E NÃO `.theme-doc-markdown`, e a razão mudou de
+     lugar na #118. Eram DUAS prosas: o `DocItem/Content` do upstream escrevia as
+     duas classes juntas (`clsx(ThemeClassNames.docs.docMarkdown, 'markdown')`,
+     medido em 3.10.2), e a página de referência tinha prosa própria, que
+     escrevia só `markdown` porque recusava a outra desde que ela era o cartão.
+     Escopar pela classe de cartão isentava a página de doc e deixava o link da
+     página gerada com 44px de altura, quebrando o ritmo da coluna em tela de
+     toque.
+
+     A prosa própria saiu com o layout de duas colunas, e hoje há UMA: toda
+     página do site passa pelo mesmo `DocItem/Content`, e as duas classes andam
+     sempre juntas. A escolha entre elas deixou de ter consequência, e por isso
+     ela fica onde está — `.markdown` é a classe que de fato significa *prosa*, e
+     é a que continuaria certa se a outra voltasse a divergir. Trocar por
+     `.theme-doc-markdown` seria escolher a classe cujo nome descreve a rota em
+     vez do conteúdo, sem ganhar nada. */
   .markdown :is(p, li, td, th, blockquote) a {
     min-height: 0;
     align-content: normal;

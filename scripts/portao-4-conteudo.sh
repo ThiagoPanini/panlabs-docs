@@ -404,11 +404,16 @@ echo "   ${sem_toc} sem coluna de TOC · ${com_toc} com"
 #
 # **A terceira NÃO chegou com o ramo gerado, e a linha anterior errava ao
 # prometê-la.** Ela dizia que `hide_table_of_contents` viria com as páginas
-# geradas; ele não vem, e não vir é decisão escrita: o campo seria segunda fonte
-# de verdade para algo que o `ApiDocItem` já decide sozinho — ele simplesmente
-# nunca renderiza `@theme/TOC` na perna do painel. As geradas ficam sem TOC por
-# COMPONENTE, não por front matter, e é a varredura logo abaixo — deste portão,
-# não do 5 — que cobra que nenhuma delas declare o campo.
+# geradas; ele não veio, e não vir era decisão escrita: o campo seria segunda
+# fonte de verdade para algo que o componente da rota decidia sozinho.
+#
+# **Desde a #118 nem o componente decide.** O `ApiDocItem` saiu, e as quatro
+# páginas geradas ganharam TOC como qualquer outra. Quem fica sem TOC hoje é
+# quem não tem heading para listar — que é a regra do site inteiro, e é ela que
+# as duas contagens abaixo continuam cobrando. A varredura de
+# `hide_table_of_contents` nas geradas fica: o campo continua proibido lá, e
+# agora por um motivo mais simples — não há decisão nenhuma para ele
+# sobrescrever.
 [ "$sem_toc" -ge 1 ] || reprova "nenhuma página sem coluna de TOC"
 [ "$com_toc" -ge 1 ] || reprova "nenhuma página monta coluna de TOC"
 

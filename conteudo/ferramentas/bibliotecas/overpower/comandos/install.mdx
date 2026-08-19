@@ -3,12 +3,14 @@
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: overpower install
 description: Escreve. Imprime o plano, com todo destino e quem o lê, antes de encostar em disco, e pergunta antes de escrever quando há um terminal do outro lado.
-api_exemplos: {"assinatura":"overpower install --runtime &lt;key&gt; [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
+api_exemplos: {"assinatura":"overpower install [--runtime <key>] [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
 ---
 
 # overpower install
 
 **Comando** · `overpower install`
+
+<PainelComando />
 
 Os quatro seletores se misturam livremente numa linha só, e cada um aceita valor separado por vírgula, a repetição da flag, ou as duas coisas. Quando a linha resolve para escritas em mais de uma unidade, elas acontecem sempre na mesma ordem, framework, depois bundle, depois artefato avulso, depois servidor MCP, e a unidade mais específica escreve por último.
 
@@ -20,8 +22,8 @@ Num terminal, uma linha que não fecha um plano abre o assistente em vez de simp
 Uma skill do pool, instalada sozinha. Aceita a forma curta `-s`.
 </ParamField>
 
-<ParamField name="--runtime" type="key" required>
-Quem recebe o que foi instalado. Aceita as chaves de uma tabela fechada de 77 runtimes, e não tem valor padrão. Uma linha que nomeia o que instalar e nenhum runtime recusa em vez de adivinhar.
+<ParamField name="--runtime" type="key">
+Quem recebe o que foi instalado. Aceita as chaves de uma tabela fechada de 77 runtimes, e não tem valor padrão. O que acontece sem ele depende de haver terminal: num terminal, uma linha que nomeia o que instalar e nenhum runtime abre o assistente no passo que faltou; fora de terminal, ela recusa com saída 2 em vez de adivinhar. A exceção é a linha que mistura skill e servidor MCP, que exige o runtime nomeado nos dois casos.
 </ParamField>
 
 <ParamField name="--bundle" type="name">
@@ -45,7 +47,7 @@ Resolve tudo, imprime o plano, espelha o código de saída real e não escreve n
 </ParamField>
 
 <ParamField name="--yes" type="flag">
-Pula a confirmação, e nada além dela. Aceita a forma curta `-y`.
+Pula a confirmação antes da escrita. Aceita a forma curta `-y`. Fora de terminal ele é aceito e não faz nada, porque lá não há confirmação a pular. Num terminal ele tem um segundo efeito que a ajuda da ferramenta não anuncia: um destino já ocupado no escopo de máquina deixa de virar pergunta e vira recusa, com saída 3, onde a linha sem `-y` teria perguntado e podido escrever.
 </ParamField>
 
 <ParamField name="--force" type="flag">

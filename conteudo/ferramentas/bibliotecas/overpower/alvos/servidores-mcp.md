@@ -41,6 +41,13 @@ pendente de aprovação e fica inerte até você aprovar ali, então a instalaç
 imprime esse aviso nomeando o arquivo, ainda com saída `0`, porque a escrita
 funcionou e o que resta é um passo que pertence a você.
 
+:::warning
+O `doctor` lê o mesmo fato de outro jeito. Servidor pendente de aprovação é um
+dos cinco **achados** dele, e achado reprova: um `install` que saiu `0` seguido
+de um `doctor` na mesma máquina sai `3` pelo mesmo servidor, até você aprovar.
+Numa esteira que encadeia os dois, aprove antes ou separe os passos.
+:::
+
 ## O `--global` escreve o seu arquivo pessoal
 
 O `--global` escreve num arquivo pessoal por alvo em vez de num arquivo de

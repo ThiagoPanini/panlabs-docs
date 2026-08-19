@@ -44,16 +44,17 @@ Chamar todas de swizzle esconde a diferença, e a diferença é o acoplamento in
 | **Componente de tema próprio** | um componente que o `theme-classic` **não tem**, registrado por opção pública | **nenhum** — o Docusaurus só conhece o nome que a config deu |
 | **Registro** | um **objeto**, não um componente. Espalha-se o original e acrescentam-se chaves | **nenhum** para o que a gente acrescenta; erro de build se o upstream mudar as chaves |
 
-Hoje `src/theme/` tem os três, e **um só é swizzle**:
+Hoje `src/theme/` tem **dois dos três**, e um só é swizzle:
 
 ```
-src/theme/ApiDocItem/            componente de tema próprio  (degrau 2)
-src/theme/MDXComponents/index.js         registro            (degrau 3)
+src/theme/MDXComponents/                 registro            (degrau 3)
 src/theme/Admonition/Types.js            registro            (degrau 3)
 src/theme/SearchBar/                     SWIZZLE, --eject    (degrau 5)
 ```
 
-**São nove arquivos.** Foram dez, caíram para nove quando `NavbarItem/Marca.js` saiu inteiro, voltaram a dez com `ApiDocItem/placeholder.mjs` — o marcador de argumento editável do painel, que o gerador **também** lê; ele é submódulo de um componente que já tem endereço, a mesma linha em que `SearchBar/escada.mjs` cai, e o portão 7 o casa por ela — e caíram para nove de novo quando `NavbarItem/ComponentTypes.js` saiu, pelo §3.1.
+**O degrau 2 ficou vazio na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118)**, e é a segunda entrada que este ledger já removeu. `ApiDocItem` era o `docItemComponent` da instância `ferramentas` e comutava o layout da página de comando por front matter; o painel dele desceu para o fluxo e virou `<PainelComando />`, um registro de `MDXComponents`. Sem layout a comutar, o componente da rota era `@theme/DocItem` chamando `@theme/DocItem` — e componente de tema próprio que não substitui nada não é degrau 2, é indireção. Ver [`referencia.md`](referencia.md) §2.
+
+**São dez arquivos.** A conta subiu e desceu quatro vezes: onze, dez quando `NavbarItem/Marca.js` saiu inteiro, onze de novo com o `placeholder.mjs` do painel, dez quando `NavbarItem/ComponentTypes.js` saiu pelo §3.1, e dez de novo depois da [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — o diretório `ApiDocItem/` levou três arquivos e o registro devolveu três, `PainelComando.js`, `painel.module.css` e o `placeholder.mjs` que mudou de casa junto. Os três caem na mesma linha que `SearchBar/escada.mjs`: submódulo de um componente que já tem endereço, e o portão 7 os casa por ela.
 
 O `SearchBar` entrou no slice 7 e é o **primeiro e único** swizzle do repositório. Ele tem uma propriedade que nenhum outro degrau 5 teria: ver §3.
 
@@ -104,7 +105,6 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | `themeConfig.navbar.items` | as três tabs, o slot de busca, o locale, o GitHub | idem |
 | `navbar.items[]` do tipo `html` | **o espaçador que abre a faixa de tabs** — base 100%, altura 0. Escolhido em vez de dar `flex-basis: 100%` à marca porque não acopla a faixa à existência de uma marca | não há classe estável num nó que o tema não renderiza; o item é o que cria o nó |
 | `themeConfig.footer` | os links, o copyright, a forma plana | idem |
-| `docItemComponent: '@theme/ApiDocItem'` | substitui o layout inteiro da página gerada | classe não troca componente de rota |
 | `themeConfig.prism.additionalLanguages: ['bash']` | registra `bash` para as cercas de shell do acervo — **o consumidor mudou de dono e ficou maior**: ele era o snippet de cURL do painel, e o painel tem uma linguagem só | `bash` não está no bundle padrão do `prism-react-renderer`; sem o registro o bloco sai sem realce e ninguém avisa. `python`, a linguagem do painel, **está** no bundle |
 | `themeConfig.prism.theme` | paleta de sintaxe que só referencia token | `--prism-background-color` é injetada em estilo **inline**, e nenhum seletor vence estilo inline |
 | `localeConfigs[*].label` | o rótulo curto do seletor de idioma | o default vem de `Intl.DisplayNames`, em código |
@@ -125,7 +125,7 @@ Ela dizia: *acrescenta o tipo `custom-marca`; a marca precisa de `currentColor`,
 
 O que sai junto:
 
-- `src/theme/NavbarItem/Marca.js` — **um arquivo a menos em `src/theme/`**, e o portão 7 passou a nove (depois foram dez, com `ApiDocItem/placeholder.mjs`, e hoje são nove de novo — ver o fecho desta seção);
+- `src/theme/NavbarItem/Marca.js` — **um arquivo a menos em `src/theme/`**, e a conta do portão 7 se mexeu quatro vezes desde então; o fecho do §2 tem o histórico e o número de hoje;
 - a chave `custom-marca` do registro, que era a única nossa. O objeto voltou a ser idêntico ao do upstream;
 - a declaração `.navbar__brand:empty` de `chrome.css`, que escondia o link vazio que o upstream renderizava sem `title`. Ele não é mais vazio.
 

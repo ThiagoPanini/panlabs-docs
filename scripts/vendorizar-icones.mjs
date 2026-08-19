@@ -75,7 +75,20 @@ const cssDaSidebar = readFileSync(CSS_DA_SIDEBAR, 'utf8');
 //
 // A varredura ficou barata quando as sidebars viraram três: um arquivo por aba,
 // com o `className` escrito à mão em toda categoria de topo.
-const SIDEBARS = ['sidebars-jornadas.js', 'sidebars-procedimentos.js', 'sidebars-ferramentas.js'];
+//
+// **A quarta é GERADA, e entra na varredura pela mesma porta.** Deixá-la de
+// fora punha o portão 5 e este script cobrando lados diferentes do mesmo par:
+// desde a #118 as folhas de `sidebars-referencia.js` carregam chave por página
+// (`comando-raiz`, `comando-list`, …), e sem ela aqui todas as quatro
+// apareceriam como par sem declarante. Ela é saída de gerador e não se edita à
+// mão, o que não a torna menos declarante — o que se lê é o `className` que foi
+// parar no arquivo, venha ele de onde vier.
+const SIDEBARS = [
+  'sidebars-jornadas.js',
+  'sidebars-procedimentos.js',
+  'sidebars-ferramentas.js',
+  'sidebars-referencia.js',
+];
 // O `'` de fechamento no fim NÃO é enfeite: `[a-z0-9-]+` casa PREFIXO, então
 // `sidebar-icone--api-ownerX` extrairia `api-owner` e a conferência passaria
 // achando que o par existe. Medido escrevendo o rename de propósito.

@@ -24,6 +24,15 @@ como `‹marcador›`.
 | `already exists, use --force to overwrite: ‹os caminhos›` | `3` | acrescente `--force`, ou rode interativamente |
 | `‹caminho› is not ours to repair, and it is broken` | `3` | conserte o arquivo à mão e rode de novo |
 | `--from ‹url› is not a GitHub repository URL` | `2` | corrija a URL para um endereço real |
+| `a skill and an MCP server on one line need --runtime named explicitly` | `2` | nomeie o runtime, ou parta em dois comandos |
+| `nothing to install: name at least one --skill, --ai-framework, --bundle or --mcp` | `2` | diga o que instalar, ou rode num terminal e deixe o assistente perguntar |
+| `‹chave› has no MCP document in ‹escopo› scope` | `3` | escolha outro escopo, ou outro runtime |
+| `‹caminho› is not in ‹dono›/‹repo› at ‹ref›` | `3` | o subcaminho do `--from` não existe naquela referência |
+| `‹origem› offers nothing to install` | `3` | o repositório não tem o diretório que o `--from` procura na raiz |
+| `no skill named ‹nome› under ‹origem›` | `3` | confira o nome contra o que aquele repositório oferece |
+| `‹nome› is ambiguous under ‹origem›: ‹os caminhos›` | `3` | aponte o `--from` para um deles |
+| `no bundle named ‹nome› in ‹origem›` | `3` | idem, para bundle |
+| `the bundle ‹nome› of ‹origem› names ‹item›, which is not among the skills that repository offers` | `3` | o manifesto do bundle está furado do lado de lá |
 
 ## As três que confundem mais
 
@@ -34,10 +43,25 @@ correspondência parcial nem escape por `--dir` para onde recuar. A segunda é `
 porque o valor é real e o que não existe é o par: acontece com o `eve` e o
 `promptscript` sob `--global`, já que nenhum dos dois declara destino global.
 
-**`already exists`.** Em escopo global, fora de um terminal ou sob `--yes` e
+**O `vscode` sai `3` pelo mesmo eixo e com outra mensagem, e ela não fala de
+escopo:**
+
+```
+`vscode` takes MCP servers and has no skills destination of its own;
+the runtimes that take one there are: ...
+```
+
+Ele não tem destino de skill em escopo nenhum, então a recusa vale igual com e
+sem `--global`. `--runtime vscode --mcp <nome>` instala normalmente.
+
+**`already exists`.** Em escopo global, fora de um terminal ou sob `--yes` ou
 `--dry-run`, um destino que já tem conteúdo é recusado em vez de substituído
 calado. O escopo global não tem `git status` para revelar ou desfazer uma
 sobrescrita do jeito que o de projeto tem.
+
+Num terminal, sem essas flags, ele **pergunta** em vez de recusar. Vale reler a
+lista acima: `--yes` entra nela, e é isso que faz `-y` transformar uma pergunta
+que você poderia responder `sim` numa saída `3`.
 
 ```bash
 uvx overpower@latest install --skill panlabs-python-standards --runtime cursor --global --force

@@ -91,8 +91,14 @@ decisão sobreviveu à troca de premissa:
   `sidebars-ferramentas.js`;
 - **validador que recusa alto**, com JSON Pointer do nó ofensor;
 - **zero snippet escrito à mão**;
-- **o painel é front matter** (`api_exemplos`), não marcador em MDX, e é ele que
-  comuta o `ApiDocItem` por página.
+- **o painel é front matter** (`api_exemplos`), não prop de tag.
+
+> **Correção — #118.** Esta linha dizia *"e é ele que comuta o `ApiDocItem` por
+> página"*. O comutador saiu: o painel desceu para o fluxo do MDX, o
+> `ApiDocItem` foi removido, e a página de comando passou a usar o mesmo
+> `@theme/DocItem` de qualquer outra. O front matter continua sendo a fonte dos
+> dados do painel — o que ele deixou de fazer é escolher layout. Ver
+> [`referencia.md`](../design/referencia.md) §2.
 
 ### f) O arquivo do gerador não troca de nome
 

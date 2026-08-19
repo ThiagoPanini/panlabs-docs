@@ -21,8 +21,21 @@ overpower install --skill one-skill --skill another-skill --bundle api-python,an
 
 Mixing selectors of different kinds on a single `install` line is the normal
 case, not an edge case. `--ai-framework matt-pocock --skill some-other-skill
---mcp cloudflare` is one ordinary invocation, not three commands stitched
-together.
+--mcp cloudflare --runtime claude-code` is one ordinary invocation, not three
+commands stitched together.
+
+The `--runtime` on that line is not decoration. **A skill and an MCP server
+together require the runtime named**, and the refusal lands before any lookup in
+the catalog or on disk:
+
+```
+a skill and an MCP server on one line need --runtime named explicitly,
+or two separate commands, one per class
+```
+
+The reason is that the two classes write into different tables, and not every
+runtime is in both. Without the runtime on the line, the wizard would have to
+open two steps of different shapes at once, and it is one gesture. Exit `2`.
 
 :::note
 `list` is the one place this does not hold. It answers about a single item, so
@@ -50,6 +63,45 @@ most specific unit is written last, so its content is what survives on disk.
 ```bash
 overpower install --ai-framework matt-pocock --skill panlabs-python-standards --runtime claude-code
 ```
+
+## The wizard opens the gap, not the screen
+
+In a terminal, an `install` line that does not add up to a plan opens the wizard
+instead of refusing. The trigger is the **gap**, not the empty line: it is enough
+to be missing what to install, or missing the runtime.
+
+It opens only the steps your line left open, always in this order:
+
+<Steps>
+<Step title="Artifacts">
+What to install. Opens only when the line named no artifact, framework, bundle or
+MCP server.
+</Step>
+<Step title="Scope">
+Project or machine. Opens only when the line carried neither `--runtime` nor
+`--global`, because scope is what decides the set the next step offers.
+</Step>
+<Step title="Runtimes">
+Who receives it. Pre-ticked with whatever the tool found on disk.
+</Step>
+<Step title="Confirmation">
+The whole plan, before the first byte.
+</Step>
+</Steps>
+
+What it collects becomes exactly the request the hand-typed line would have
+built. `--dry-run`, `--force` and `--yes` are not steps and travel through the
+session untouched.
+
+:::warning
+**Backing out of any step abandons everything**, and does not resume at the
+previous step. Nothing is written, and the exit is `1`. It is the same
+all-or-nothing shape the final confirmation has.
+:::
+
+Off a terminal the wizard never opens: the same incomplete line falls into the
+same two errors it always did and exits `2`. That is what makes a partial
+invocation in a pipe fail early instead of hanging for an answer.
 
 ## The four pages beside this one
 

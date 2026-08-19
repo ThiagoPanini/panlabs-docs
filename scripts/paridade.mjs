@@ -315,26 +315,19 @@ const SONDAS = [
   {sonda: 'passos.margem-topo', cenario: 'passos@1512/escuro', seletor: '[data-sd-component="steps"]', medida: 'estilo:margin-top'},
   {sonda: 'expandable.raio', cenario: 'aninhamento@1512/escuro', seletor: '[data-sd-component="expandable"]', medida: 'estilo:border-radius'},
   // --- a moldura e o painel da página gerada (#99) -----------------------
-  /* `article` é o único da rota `api`: sem TOC e sem admonition nesta
-     fixture, o seletor por tipo não colide com nada — mesmo raciocínio de
-     `article h1` acima. `aside` JÁ colide — `.theme-doc-sidebar-container` da
-     sidebar do site TAMBÉM é `<aside>` e vem antes no DOM, então
-     `document.querySelector('aside')` mediria a sidebar (288px, o
-     `--sd-sidebar-width`) e não o trilho. `:has()` escopa para o `<aside>`
-     que contém o painel — sem depender do hash de CSS Module. */
-  {sonda: 'api.prosa.largura', cenario: 'api@1512/escuro', seletor: 'article', medida: 'caixa:width'},
-  {
-    sonda: 'api.painel.largura',
-    cenario: 'api@1512/escuro',
-    seletor: 'aside:has([data-sd-component="api-painel"])',
-    medida: 'caixa:width',
-  },
-  {
-    sonda: 'api.painel.topo',
-    cenario: 'api@1512/escuro',
-    seletor: 'aside:has([data-sd-component="api-painel"])',
-    medida: 'estilo:top',
-  },
+  /* A rota `api` tinha QUATRO sondas e tem uma, e as três que saíram mediam o
+     layout de duas colunas: `article` para a prosa estreita, e o `<aside>` do
+     trilho para a largura e o topo grudado dele. O trilho desceu para o fluxo
+     na #118 e o `<aside>` não existe mais — as duas sondas dele imprimiriam
+     `sem-medida` para sempre, que é o mesmo defeito que a nota do fim desta
+     lista descreve para `Accordion` e `Tabs`, visto do outro lado.
+     `api.prosa.largura` saiu junto por outro motivo: esta rota deixou de ter
+     largura de prosa própria, e quem a mede agora é `chrome.prosa.largura`.
+     Ver docs/design/referencia.md §8.
+
+     O que fica é o raio do painel, e o seletor dele nunca dependeu do layout:
+     `[data-sd-component="api-painel"]` é o atributo que o componente escreve,
+     e ele atravessou a mudança de casa sem mudar de nome. */
   {sonda: 'api.painel.raio', cenario: 'api@1512/escuro', seletor: '[data-sd-component="api-painel"]', medida: 'estilo:border-radius'},
   {sonda: 'grupo-cartoes.vao', cenario: 'cartao@1512/escuro', seletor: '[data-sd-component="card-group"]', medida: 'estilo:column-gap'},
   /* Accordion, Tabs, Frame e Mermaid não têm sonda porque **não são
@@ -434,9 +427,7 @@ const ALVOS = {
     secao: '## 8. Alvo medido',
     colunas: ['alvo'],
     linhas: [
-      ['Coluna de texto', ['api.prosa.largura']],
-      ['Trilho', ['api.painel.largura']],
-      ['Trilho grudado em', ['api.painel.topo']],
+      // Uma linha só desde a #118 — ver o comentário das sondas `api.*` acima.
       ['Painel raio', ['api.painel.raio']],
     ],
   },

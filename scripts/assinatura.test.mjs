@@ -27,7 +27,7 @@ import fs from 'node:fs';
 
 import {ESPECIES, RECUSAS, lerContrato, validar, validarPar} from './lib/assinatura.mjs';
 import {FORMA, contextoDe, corpoMdx, frontMatter} from './gerar-referencia.mjs';
-import {marcador, marcadoresDe, substituir} from '../src/theme/ApiDocItem/placeholder.mjs';
+import {marcador, marcadoresDe, substituir} from '../src/theme/MDXComponents/placeholder.mjs';
 
 const CONTRATO_PT = 'contratos/overpower.pt-BR.json';
 const CONTRATO_EN = 'contratos/overpower.en.json';

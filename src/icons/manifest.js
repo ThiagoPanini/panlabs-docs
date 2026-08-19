@@ -88,10 +88,14 @@ const NAVEGACAO = [
  * definição da tag NÃO reverte com elas: `autoria` é *"o nome escrito como
  * string"*, e não *"o MDX do autor"* — a correção que a estabeleceu vale por si.
  *
- * **Quatorze entradas carregam a segunda tag `navegacao` e moram aqui.** As
- * cinco últimas chegaram com o `overpower`, e com elas a navegação passou de 11
- * para 16 tags SEM um arquivo novo: as cinco seções do produto reaproveitam
- * desenhos que já estavam no vocabulário do autor, e o teto de 64 não se move.
+ * **Vinte e nove entradas carregam a segunda tag `navegacao` e moram aqui.**
+ * Elas chegaram em duas levas, e as duas provam a mesma coisa: navegação nova
+ * NÃO custa arquivo. As cinco seções do `overpower` levaram a navegação de 11
+ * para 16 tags; a #118 deu ícone próprio a cada uma das 21 páginas do produto e
+ * a levou a 31, reaproveitando outros dezesseis desenhos que já estavam no
+ * vocabulário do autor. `package` fez o caminho contrário e devolveu a tag na
+ * mesma issue — ver a nota na entrada dele. O teto de 64 não se moveu em
+ * nenhuma das três vezes, e a contagem de arquivos segue em 61.
  *
  * As nove primeiras foram escolhidas pela regra da porta lida ao contrário: a
  * categoria ficava com o glifo que nomeia o que ela guarda, e a porta ficava com
@@ -102,18 +106,18 @@ const NAVEGACAO = [
  */
 const AUTORIA = [
   // Ações · 8
-  {nome: 'play', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'download', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'upload', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'refresh-cw', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'play', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Desenvolvimento › Telas · vocabulário do autor'},
+  {nome: 'download', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › overpower › Instalação · vocabulário do autor'},
+  {nome: 'upload', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Publicação › Release · vocabulário do autor'},
+  {nome: 'refresh-cw', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Solução de problemas · vocabulário do autor'},
   {nome: 'send', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'trash-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'plus', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'filter', papeis: ['autoria'], onde: 'vocabulário do autor', lucide: 'funnel'},
+  {nome: 'plus', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower install · vocabulário do autor'},
+  {nome: 'filter', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Publicação › Curadoria · vocabulário do autor', lucide: 'funnel'},
 
   // Objetos · 16
   {nome: 'file-text', papeis: ['autoria'], onde: 'vocabulário do autor e o item `Ver como Markdown`'},
-  {nome: 'folder', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'folder', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Alvos › from · vocabulário do autor'},
   // Era também a porta `Procedimentos` da landing, que saiu na #94. Hoje é o
   // glifo de `Comandos`, que é o nome que ele já nomeava.
   {nome: 'terminal', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Comandos · vocabulário do autor'},
@@ -121,7 +125,7 @@ const AUTORIA = [
   // vocabulário do autor, é o único nome de ferramenta do manifesto, e hoje
   // nomeia também `Desenvolvimento`.
   {nome: 'wrench', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Desenvolvimento · vocabulário do autor'},
-  {nome: 'database', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'database', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower list · vocabulário do autor'},
   {nome: 'server', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Servidores MCP · vocabulário do autor'},
   {nome: 'cloud', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Infraestrutura · vocabulário do autor'},
   {nome: 'key', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Acessos · vocabulário do autor'},
@@ -130,39 +134,43 @@ const AUTORIA = [
   {nome: 'calendar', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'users', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'globe', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Alvos · vocabulário do autor'},
-  {nome: 'package', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas · vocabulário do autor'},
+  // PERDEU a tag `navegacao` na #118. Ele era a chave `bibliotecas`, que as
+  // três folhas de topo do `overpower` repetiam; com ícone próprio por página
+  // ninguém mais a declara, e par sem declarante é o que `npm run icones`
+  // reprova. O separador `Bibliotecas` nunca teve ícone — ADR 10 §e).
+  {nome: 'package', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'rocket', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Publicação · vocabulário do autor'},
-  {nome: 'shapes', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'shapes', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › overpower › Conceitos · vocabulário do autor'},
 
   // Estados e sinais · 7
-  {nome: 'zap', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'clock', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'circle-alert', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'circle-help', papeis: ['autoria'], onde: 'vocabulário do autor', lucide: 'circle-question-mark'},
+  {nome: 'zap', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower · vocabulário do autor'},
+  {nome: 'clock', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Publicação › Changelog · vocabulário do autor'},
+  {nome: 'circle-alert', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Códigos de saída · vocabulário do autor'},
+  {nome: 'circle-help', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower · vocabulário do autor', lucide: 'circle-question-mark'},
   {nome: 'sparkles', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'trending-up', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'gauge', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'gauge', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower doctor · vocabulário do autor'},
 
   // Conceitos · 9
   {nome: 'layers', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Ambiente · vocabulário do autor'},
   {nome: 'workflow', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Esteiras · vocabulário do autor'},
   {nome: 'puzzle', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Módulos Terraform · vocabulário do autor'},
   {nome: 'bot', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Skills · vocabulário do autor'},
-  {nome: 'webhook', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'webhook', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Alvos › Servidores MCP · vocabulário do autor'},
   {nome: 'bell', papeis: ['autoria'], onde: 'vocabulário do autor'},
   // Era a porta `Jornadas` da landing, que saiu na #94. A regra da porta ficou
   // sem sujeito quando a landing morreu, e é por isso que ele pôde virar glifo de
   // categoria aqui: `Referência` é seção do `overpower`, e nenhuma porta a
   // contém.
   {nome: 'book-open', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Referência · vocabulário do autor'},
-  {nome: 'repeat', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'repeat', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Desenvolvimento › Testes · vocabulário do autor'},
   {nome: 'undo-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
 ];
 
 /** @type {Entrada[]} */
 export const ICONES = [...SISTEMA, ...NAVEGACAO, ...AUTORIA];
 
-/** Os 60 nomes de arquivo, em ordem de manifesto. */
+/** Os nomes de arquivo, em ordem de manifesto — 61 hoje, contra o teto de 64. */
 export const NOMES = ICONES.map((i) => i.nome);
 
 /**
@@ -177,23 +185,35 @@ export const NOMES = ICONES.map((i) => i.nome);
 export const TETO = 64;
 
 /**
- * Os dezesseis pares seção→ícone. A chave vira `sidebar-icone--<chave>` no
+ * Os trinta e um pares seção→ícone. A chave vira `sidebar-icone--<chave>` no
  * `className` da sidebar.
  *
- * **A chave deixou de ser sempre a da categoria de topo.** Até o `overpower`
- * entrar, toda folha herdava a chave do separador que a continha, porque nenhuma
- * árvore tinha seção intermediária com identidade própria. As cinco últimas
- * linhas abaixo são as seções dele, no nível 3, e as folhas de nível 4 herdam a
- * chave da SEÇÃO em vez da do separador. A regra que vale é a do ADR 10 §e) e ela
+ * **A chave deixou de ser da seção e passou a ser da PÁGINA — no `overpower`.**
+ * Até o produto entrar, toda folha herdava a chave do separador que a continha.
+ * Depois passou a herdar a da seção de nível 3. A #118 fecha o caminho: no ramo
+ * do `overpower`, cada uma das 21 páginas tem glifo próprio, e nenhuma repete o
+ * da página que a contém. A regra que vale continua sendo a do ADR 10 §e), e ela
  * não fala de nível: nenhum ícone no separador de topo, ícone em tudo abaixo.
+ *
+ * **O ORÇAMENTO é o que decide o alcance, e ele vai escrito porque a assimetria
+ * é visível.** Fazer o site inteiro pedir 55 chaves — uma por nó de sidebar — e
+ * cada chave pede um desenho com a tag `navegacao`. Sobrando 19 de sistema, os
+ * 61 arquivos oferecem 42, e o teto de 64 não fecha a conta nem gastando a folga
+ * de 3. As 21 do `overpower` cabem com sobra de 11, e é por isso que a regra
+ * nova vale no ramo que a pediu — o único com profundidade 4, e o único onde a
+ * fileira de folhas idênticas era longa o bastante para incomodar. As outras
+ * três árvores seguem com ícone de seção, e a linha que as separa é aritmética,
+ * não gosto.
  *
  * O que continua da #97 é a metade que a medição sustentou: as três tabs de
  * navbar seguem sem ícone, e o separador de topo também.
  *
- * **As cinco novas não custaram arquivo.** Elas reaproveitam desenhos que o
+ * **Nenhuma das novas custou arquivo.** Todas reaproveitam desenhos que o
  * manifesto já carregava como vocabulário do autor, e o teto de 64 não se move.
  */
 export const PARES_SECAO = {
+  // As dez de SEÇÃO — as árvores em que a folha ainda herda a chave do ramo que
+  // a contém. Ver a nota sobre o orçamento, acima.
   'api-owner': 'code-xml',
   'security-champion': 'lock',
   ambiente: 'layers',
@@ -201,15 +221,46 @@ export const PARES_SECAO = {
   infraestrutura: 'cloud',
   acessos: 'key',
   diagnostico: 'activity',
-  bibliotecas: 'package',
   'modulos-terraform': 'puzzle',
   skills: 'bot',
   'servidores-mcp': 'server',
+
+  // As vinte e uma do `overpower` — uma por PÁGINA, e nenhuma repetida.
+  //
+  // A ordem é a da árvore, não a alfabética: ela se lê ao lado da sidebar, e é
+  // assim que se confere que duas páginas vizinhas não ganharam o mesmo glifo.
+  //
+  // As cinco de seção que já existiam (`comandos`, `alvos`, `referencia`,
+  // `desenvolvimento`, `publicacao`) continuam, e o que mudou é o alcance:
+  // antes elas vestiam a categoria E as folhas dela, agora vestem só a
+  // categoria. `bibliotecas` (`package`) SAIU — era a chave que as três folhas
+  // de topo repetiam, e nenhuma a declara mais.
+  overpower: 'zap',
+  instalacao: 'download',
+  conceitos: 'shapes',
+
   comandos: 'terminal',
+  'comando-raiz': 'circle-help',
+  'comando-list': 'database',
+  'comando-install': 'plus',
+  'comando-doctor': 'gauge',
+
   alvos: 'globe',
+  'alvo-mcp': 'webhook',
+  'alvo-from': 'folder',
+
   referencia: 'book-open',
+  'codigos-de-saida': 'circle-alert',
+  'solucao-de-problemas': 'refresh-cw',
+
   desenvolvimento: 'wrench',
+  telas: 'play',
+  testes: 'repeat',
+
   publicacao: 'rocket',
+  changelog: 'clock',
+  curadoria: 'filter',
+  release: 'upload',
 };
 
 /**

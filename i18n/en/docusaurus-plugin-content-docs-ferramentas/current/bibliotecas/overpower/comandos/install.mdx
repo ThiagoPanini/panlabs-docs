@@ -3,12 +3,14 @@
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: overpower install
 description: Writes. It prints the plan, with every destination and who reads it, before touching disk, and asks before writing when there is a terminal on the other side.
-api_exemplos: {"assinatura":"overpower install --runtime &lt;key&gt; [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
+api_exemplos: {"assinatura":"overpower install [--runtime <key>] [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
 ---
 
 # overpower install
 
 **Command** · `overpower install`
+
+<PainelComando />
 
 The four selectors mix freely on a single line, and each takes a comma-separated value, a repeated flag, or both. When a line resolves to writes across more than one unit, they always happen in the same order, framework, then bundle, then individual artifact, then MCP server, and the most specific unit is written last.
 
@@ -20,8 +22,8 @@ In a terminal, a line that does not close a plan opens the wizard instead of sim
 One pool skill, installed on its own. Takes the short form `-s`.
 </ParamField>
 
-<ParamField name="--runtime" type="key" required>
-Who receives what is installed. Takes keys from a closed table of 77 runtimes, and has no default. A line that names something to install and no runtime refuses rather than guessing.
+<ParamField name="--runtime" type="key">
+Who receives what is installed. Takes keys from a closed table of 77 runtimes, and has no default. What happens without it depends on there being a terminal: in one, a line that names something to install and no runtime opens the wizard on the step that was missing; off a terminal, it refuses with exit 2 rather than guessing. The exception is a line mixing a skill and an MCP server, which needs the runtime named in both cases.
 </ParamField>
 
 <ParamField name="--bundle" type="name">
@@ -45,7 +47,7 @@ Resolves everything, prints the plan, mirrors the real exit code and writes noth
 </ParamField>
 
 <ParamField name="--yes" type="flag">
-Skips the confirmation, and nothing else. Takes the short form `-y`.
+Skips the confirmation before the write. Takes the short form `-y`. Off a terminal it is accepted and does nothing, because there is no confirmation to skip there. In a terminal it has a second effect the tool's own help does not announce: a destination already taken in machine scope stops being a question and becomes a refusal, exit 3, where the line without `-y` would have asked and could have written.
 </ParamField>
 
 <ParamField name="--force" type="flag">

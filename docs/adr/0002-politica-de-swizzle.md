@@ -31,10 +31,12 @@ Duas correções precederam qualquer política, e as duas valem mais que a lista
 | Termo | O que é | Acoplamento ao upstream |
 | --- | --- | --- |
 | **Swizzle** | `src/theme/X` que envolve ou substitui um componente que o `theme-classic` **já tem** | à assinatura de props (`wrap`) ou à implementação inteira (`eject`) |
-| **Componente de tema próprio** | `src/theme/X` que o `theme-classic` **não tem**, registrado por opção pública — `ApiDocItem` via `docItemComponent` | **nenhum**; o Docusaurus só conhece o nome que a config deu |
+| **Componente de tema próprio** | `src/theme/X` que o `theme-classic` **não tem**, registrado por opção pública — por exemplo, um `docItemComponent` | **nenhum**; o Docusaurus só conhece o nome que a config deu |
 | **Registro** | `src/theme/X` que é **objeto**, não componente — `MDXComponents`, `Admonition/Types` | **nenhum**; espalha-se o original e acrescentam-se chaves |
 
-Chamar o `ApiDocItem` de swizzle o faria parecer dívida, quando é a técnica de menor acoplamento do projeto inteiro.
+Chamar um componente de tema próprio de swizzle o faria parecer dívida, quando é a técnica de menor acoplamento do projeto inteiro.
+
+> **O exemplo saiu; a distinção fica.** `ApiDocItem` era o componente de tema próprio deste repositório, via `docItemComponent`, e foi removido na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — o layout que ele comutava deixou de existir. A categoria continua no vocabulário porque ela é sobre **acoplamento**, não sobre quem a ocupa: o degrau 2 está vazio hoje e volta a valer no dia em que alguma rota precisar de componente próprio de novo. Ver [`swizzle.md`](../design/swizzle.md) §2.
 
 ## Decisão
 
@@ -100,7 +102,7 @@ E uma boa notícia que reduz o escopo: a assinatura visual mais reconhecível do
 | `--wrap` como padrão, `--eject` como exceção | Os itens mais baratos do inventário têm `wrap: forbidden`; o eixo está errado |
 | Teto numérico de `unsafe` ("no máximo dois") | Convida a gastar dois, e tem gradiente para escorregar |
 | Reabrir o zero por decisão de ticket | A política sobrevive à troca de skin, logo é ADR — e ADR só se reabre com ADR |
-| Chamar `ApiDocItem` de swizzle | Faria a técnica de menor acoplamento do projeto parecer dívida |
+| Chamar componente de tema próprio de swizzle | Faria a técnica de menor acoplamento do projeto parecer dívida |
 | `--typescript` só em projeto TypeScript | Sem a flag, o eject copia o JS transpilado de `lib/` e a mudança de props vira bug de runtime |
 
 ## Procedência

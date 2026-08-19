@@ -10,6 +10,8 @@ api_exemplos: {"assinatura":"overpower doctor","parametros":[],"snippet":{"lingu
 
 **Command** · `overpower doctor`
 
+<PainelComando />
+
 The terminal half reports four facts, whether a TTY is attached, what colour system was detected, the terminal width, and whether `NO_COLOR` is set. It is the exact set that explains a screen that came out looking wrong, without needing a round trip to ask.
 
 The integrity half reads the runtime table in both scopes and checks what it finds against what was actually installed. It reads both because a target carries no manifest of its own, so there is no way to check one scope that would mean anything. That is also why `doctor` has no `--global`, and why it still answers outside a git repository, reporting nothing for the half it cannot find.
@@ -18,10 +20,12 @@ The integrity half reads the runtime table in both scopes and checks what it fin
 
 `doctor` uses two of the application's four codes, and the choice between them is what makes it usable as a CI gate. An unhealthy report is never `1`, because an unhealthy report is not a crash.
 
+What the report carries splits in two, and only one side moves the code: a **finding** fails, a **notice** does not. There are five findings and two notices, and the list is on the troubleshooting page.
+
 <ResponseField name="0" type="int">
-The three checks ran and none found a problem.
+The five checks that fail the gate ran and none found a problem. Notices do not count: an unset slot and an orphan clone show in the report and leave the exit code alone.
 </ResponseField>
 
 <ResponseField name="3" type="int">
-Found a problem. The check ran correctly and computed a real answer that happens to be negative, so a script tells `the check ran and failed` apart from `the check itself broke` by exit code alone.
+Found a problem. The check ran correctly and computed a real answer that happens to be negative, so a script tells `the check ran and failed` apart from `the check itself broke` by exit code alone. The five that reach here are a dangling link, a link turned into text, a content divergence, a server pending approval, and a missing clone.
 </ResponseField>

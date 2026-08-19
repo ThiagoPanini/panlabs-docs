@@ -40,6 +40,13 @@ approval and stays inert until you approve it there, so the install prints that
 warning naming the file, still at exit `0`, because the write succeeded and what
 remains is a step that belongs to you.
 
+:::warning
+`doctor` reads the same fact the other way. A server pending approval is one of
+its five **findings**, and a finding fails: an `install` that exited `0` followed
+by a `doctor` on the same machine exits `3` over the same server, until you
+approve it. In a pipeline that chains the two, approve first or split the steps.
+:::
+
 ## `--global` writes your personal file instead
 
 `--global` writes to one personal file per target instead of a repository one,

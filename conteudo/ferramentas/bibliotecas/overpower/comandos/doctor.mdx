@@ -10,6 +10,8 @@ api_exemplos: {"assinatura":"overpower doctor","parametros":[],"snippet":{"lingu
 
 **Comando** · `overpower doctor`
 
+<PainelComando />
+
 A metade de terminal reporta quatro fatos, se há um TTY ligado, que sistema de cor foi detectado, a largura da tela e se `NO_COLOR` está posto. É o conjunto exato que explica uma tela que saiu torta, sem precisar de uma ida e volta para perguntar.
 
 A metade de integridade lê a tabela de runtimes nos dois escopos e confere o que encontra contra o que foi de fato instalado. Ela lê os dois porque o alvo não carrega manifesto próprio, então não existe conferir um escopo só que queira dizer alguma coisa. É também por isso que `doctor` não tem `--global`, e é por isso que ele responde fora de um repositório git, reportando vazio a metade que não achou.
@@ -18,10 +20,12 @@ A metade de integridade lê a tabela de runtimes nos dois escopos e confere o qu
 
 O `doctor` usa dois dos quatro códigos da aplicação, e a escolha entre eles é o que o torna utilizável como portão de CI. Um relatório ruim nunca sai `1`, porque relatório ruim não é queda.
 
+O que o relatório traz se divide em dois, e só um lado mexe no código: **achado** reprova, **aviso** não. São cinco achados e dois avisos, e a lista está na página de solução de problemas.
+
 <ResponseField name="0" type="int">
-As três conferências rodaram e nenhuma achou problema.
+As cinco conferências que reprovam rodaram e nenhuma achou problema. Aviso não conta: slot vazio e clone órfão saem no relatório e não mexem no código de saída.
 </ResponseField>
 
 <ResponseField name="3" type="int">
-Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código.
+Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código. As cinco que chegam aqui são link pendurado, link virado texto, divergência de conteúdo, servidor pendente de aprovação e clone sumido.
 </ResponseField>

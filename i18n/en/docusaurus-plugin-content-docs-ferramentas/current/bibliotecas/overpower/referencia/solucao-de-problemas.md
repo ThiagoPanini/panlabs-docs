@@ -23,6 +23,15 @@ typed, the scope, a path, it appears here as `‹placeholder›`.
 | `already exists, use --force to overwrite: ‹the paths›` | `3` | add `--force`, or run interactively |
 | `‹path› is not ours to repair, and it is broken` | `3` | fix the file by hand and run again |
 | `--from ‹url› is not a GitHub repository URL` | `2` | fix the URL to a real repository address |
+| `a skill and an MCP server on one line need --runtime named explicitly` | `2` | name the runtime, or split it into two commands |
+| `nothing to install: name at least one --skill, --ai-framework, --bundle or --mcp` | `2` | say what to install, or run in a terminal and let the wizard ask |
+| `‹key› has no MCP document in ‹scope› scope` | `3` | pick another scope, or another runtime |
+| `‹path› is not in ‹owner›/‹repo› at ‹ref›` | `3` | the `--from` subpath does not exist at that ref |
+| `‹source› offers nothing to install` | `3` | the repository has neither directory `--from` looks for at its root |
+| `no skill named ‹name› under ‹source›` | `3` | check the name against what that repository offers |
+| `‹name› is ambiguous under ‹source›: ‹the paths›` | `3` | point `--from` at one of them |
+| `no bundle named ‹name› in ‹source›` | `3` | same, for a bundle |
+| `the bundle ‹name› of ‹source› names ‹item›, which is not among the skills that repository offers` | `3` | the bundle manifest is broken on their side |
 
 ## The three that confuse people most
 
@@ -33,7 +42,18 @@ no `--dir` escape hatch to fall back on. The second is `3` because the value is
 real and what does not exist is the pairing: it happens for `eve` and
 `promptscript` under `--global`, since neither declares a global destination.
 
-**`already exists`.** In global scope, off a terminal or under `--yes` and
+**`vscode` exits `3` on the same axis with a different message, and that one says
+nothing about scope:**
+
+```
+`vscode` takes MCP servers and has no skills destination of its own;
+the runtimes that take one there are: ...
+```
+
+It has no skills destination in either scope, so the refusal holds with and
+without `--global`. `--runtime vscode --mcp <name>` installs normally.
+
+**`already exists`.** In global scope, off a terminal or under `--yes` or
 `--dry-run`, a destination that already has content is refused rather than
 silently replaced. Global scope has no `git status` to reveal or undo an overwrite
 the way project scope does.

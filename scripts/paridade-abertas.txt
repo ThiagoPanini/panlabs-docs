@@ -18,14 +18,16 @@
 # Toda linha carrega o número medido no dia em que entrou e o gatilho que a tira
 # daqui. Linha sem gatilho é dívida sem prazo.
 
-# --- referencia.md §8 --------------------------------------------------------
-# Trilho — alvo 448, medido 511 (Δ +63). Divergência DECLARADA no próprio §8:
-# a âncora mede 576,81 + 448 e este projeto publica `--sd-api-prosa-width` (577)
-# e deriva o trilho do que sobra do container (511). O documento escolhe
-# publicar a distância em vez de abrir a tolerância, e a linha existe para isso.
-# SAI quando: `--sd-container-width` ou `--sd-api-prosa-width` mudarem de modo a
-# fechar a conta, ou quando o trilho deixar de ser o resto dela.
-api.painel.largura
+# --- referencia.md §8 — SAIU na #118 -----------------------------------------
+# `api.painel.largura` morava aqui: alvo 448, medido 511 (Δ +63), porque a
+# âncora media 576,81 + 448 e este projeto publicava `--sd-api-prosa-width`
+# (577) e derivava o trilho do que sobrava do container.
+#
+# O gatilho escrito era *"quando o trilho deixar de ser o resto dela"*, e foi o
+# que aconteceu — o trilho desceu para o fluxo e deixou de existir. A linha sai
+# pelo próprio gatilho, junto com as duas outras sondas de trilho e com o alvo
+# publicado no §8. Fica registrada aqui porque lista de dívida que apaga a
+# linha sem dizer que ela foi paga é lista que só cresce.
 
 # --- tokens.md §12 — a paleta -------------------------------------------------
 # As três paradas de texto. Os hex-alvo EXISTEM na rampa, byte a byte — o que
