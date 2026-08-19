@@ -71,6 +71,7 @@ import Update from '@site/src/components/Update';
 import {ParamField, ResponseField} from '@site/src/components/Campo';
 
 import CopiarPagina from './CopiarPagina';
+import PainelComando from './PainelComando';
 
 /**
  * O SUBTÍTULO — a linha que toda página do site ganha abaixo do título.
@@ -179,10 +180,14 @@ export default {
   Tabs,
   TabItem,
 
-  // Os treze componentes com tag própria — CATORZE chaves, porque `steps` tem
-  // duas. Os outros quatro do catálogo de dezessete não têm tag: `callout` é
-  // `:::`, `code-block` é a cerca, `tabs` vem do Docusaurus acima, e `table` é a
-  // chave de elemento acima.
+  // Os treze componentes de CATÁLOGO com tag própria — catorze chaves, porque
+  // `steps` tem duas. Os outros quatro do catálogo de dezessete não têm tag:
+  // `callout` é `:::`, `code-block` é a cerca, `tabs` vem do Docusaurus acima, e
+  // `table` é a chave de elemento acima.
+  //
+  // A décima quinta chave, `PainelComando`, NÃO é do catálogo — ela é chrome de
+  // uma rota, e a nota ao lado dela diz por quê. O catálogo continua fechado em
+  // dezessete.
   //
   // Inicial maiúscula não é estilo: em MDX v3 a tag minúscula é elemento HTML, e
   // um `<card>` sairia como tag desconhecida.
@@ -194,6 +199,13 @@ export default {
   Expandable,
   Frame,
   Icon,
+  // A única chave do registro que NENHUM autor escreve, e por isso ela é a
+  // única fora do catálogo de componentes: quem emite `<PainelComando />` é
+  // `scripts/gerar-referencia.mjs`, no corpo das 4 páginas de comando, e o
+  // portão 5 regenera e diffa. Ele entra pela mesma porta que os outros — o
+  // registro é global, e um bloco de fluxo não precisa de componente de rota
+  // para existir. Ver o cabeçalho dele e ADR 2.
+  PainelComando,
   ParamField,
   ResponseField,
   Step,

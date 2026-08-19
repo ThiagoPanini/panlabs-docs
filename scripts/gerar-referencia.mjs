@@ -41,7 +41,7 @@ import {lerContrato, validarPar} from './lib/assinatura.mjs';
 // O marcador de argumento editável vem do MESMO arquivo que o painel lê. Ver o
 // cabeçalho de `placeholder.mjs`: o portão 5 regenera e diffa, e uma divergência
 // de sintaxe entre as duas árvores passaria por ele com o diff limpo.
-import {marcador, marcadoresDe} from '../src/theme/ApiDocItem/placeholder.mjs';
+import {marcador, marcadoresDe} from '../src/theme/MDXComponents/placeholder.mjs';
 
 const CONTRATOS = {
   'pt-BR': 'contratos/overpower.pt-BR.json',
@@ -60,16 +60,39 @@ const PREFIXO = 'bibliotecas/overpower/comandos';
 const FRAGMENTO = 'sidebars-referencia.js';
 
 /**
- * A família de ícone das folhas geradas.
+ * A tag do painel, emitida no corpo de toda página gerada.
  *
- * **Ela deixou de ser a do vizinho e passou a ser a da seção.** Enquanto o ramo
- * gerado morava espalhado entre as folhas autorais de uma biblioteca, herdar
- * `--bibliotecas` era o que fazia a fileira ler como uma coisa só; com o ADR 9
- * §d) o ramo ganhou categoria própria, `Comandos`, e a família passa a ser a
- * dela. O gerador precisa saber o slug porque o contrato de assinatura não
- * carrega posição na sidebar.
+ * Ela é literal e sem atributo de propósito: serializar o painel como prop
+ * dentro do MDX seria uma segunda cópia do `api_exemplos` que o front matter já
+ * carrega, e o portão 5 não veria as duas divergirem — ele regenera e diffa a
+ * saída contra ela mesma. O componente lê o front matter pela mesma porta que a
+ * página, `useDoc()`.
  */
-const FAMILIA_DE_ICONE = 'comandos';
+const PAINEL = '<PainelComando />';
+
+/**
+ * A chave de ícone de uma folha gerada — e ela passou a ser POR ENTRADA.
+ *
+ * A história tem três degraus. Enquanto o ramo gerado morava espalhado entre as
+ * folhas autorais de uma biblioteca, ele herdava `--bibliotecas`, a família do
+ * separador. Com o ADR 9 §d) ganhou categoria própria e passou a `--comandos`, a
+ * família da seção — e as quatro páginas viraram uma fileira de quatro linhas
+ * com o mesmo glifo, que é exatamente o que a #118 veio desfazer.
+ *
+ * Hoje **o contrato carrega a chave**, em `entrada.icone`. Ela não é dedutível
+ * do `id`: `sidebar-icone--install` colidiria com a página autoral `Instalação`
+ * do mesmo ramo, e é por isso que o campo é dado e não convenção. O gerador
+ * confere que ela existe — uma entrada sem chave sairia com `undefined` no
+ * `className`, e o portão 5 diffaria a saída contra ela mesma sem ver nada.
+ */
+const chaveDeIcone = (entrada) => {
+  if (typeof entrada.icone !== 'string' || entrada.icone === '') {
+    throw new Error(
+      `${entrada.id}: falta \`icone\` no contrato, e é ele que dá o \`className\` da folha na sidebar.`,
+    );
+  }
+  return entrada.icone;
+};
 
 /**
  * O que cada espécie emite — a tabela que existe no lugar do `if (especie ===)`.
@@ -378,6 +401,22 @@ export function corpoMdx(entrada, contexto) {
     '',
     `**${rotulo(rotulos, entrada.especie)}** · \`${entrada.qualificado}\``,
     '',
+    // O painel — assinatura, argumentos editáveis e snippet — entra AQUI, e a
+    // posição é a decisão da #118. Ele era um trilho grudado à direita, o que
+    // comutava o layout da página inteira e a deixava com prosa de 577 sem
+    // coluna para o TOC.
+    //
+    // Em fluxo, ele fica **imediatamente depois da linha que nomeia o
+    // comando** e antes da prosa, e a ordem tem uma razão: a linha diz *como
+    // isto se chama*, e a pergunta seguinte de quem chega numa página de CLI é
+    // *como isto se digita*. Pôr a prosa entre as duas obrigaria a rolar dois
+    // parágrafos para achar a linha copiável. A prosa explica o que a
+    // assinatura já mostrou, e explicar depois de mostrar é a ordem barata.
+    //
+    // A tag não leva prop: quem carrega os dados é o `api_exemplos` do front
+    // matter, lido por `useDoc()`.
+    PAINEL,
+    '',
     entrada.descricao,
   ];
 
@@ -551,12 +590,12 @@ function escreverFragmento(contrato) {
     ' * ADR 10 §g). Emitir a árvore inteira daria ao gerador a posse da categoria e',
     ' * da folha autoral que a abre, `Comandos › Índice`, que ele não conhece.',
     ' *',
-    ' * Cada item carrega `className: \'sidebar-icone sidebar-icone--' +
-      `${FAMILIA_DE_ICONE}'\` — a família da SEÇÃO que as hospeda, e não a do`,
-    ' * vizinho. A regra é a de docs/design/icones.md §8 — *nenhum ícone no',
-    ' * separador de topo; ícone em tudo abaixo dele* —, e folha gerada não abre',
-    ' * exceção. O gerador precisa saber o slug da família porque o contrato de',
-    ' * assinatura não carrega posição na sidebar.',
+    ' * Cada item carrega `className: \'sidebar-icone sidebar-icone--<chave>\'`,',
+    ' * e a chave é a da PRÓPRIA ENTRADA, lida de `icone` no contrato. Ela era a',
+    ' * da seção que as hospeda, o que punha o mesmo glifo nas quatro folhas; a',
+    ' * #118 trocou por uma chave por página, no ramo inteiro do produto. A regra',
+    ' * é a de docs/design/icones.md §8 — *nenhum ícone no separador de topo;',
+    ' * ícone em tudo abaixo dele* —, e folha gerada não abre exceção.',
     ' *',
     ' * Procedência: docs/design/referencia.md §5 · docs/design/icones.md §8 ·',
     ' * docs/adr/0009 · docs/adr/0010.',
@@ -566,7 +605,7 @@ function escreverFragmento(contrato) {
     'const referencia = [',
     ...contrato.entradas.map(
       (entrada) =>
-        `  {type: 'doc', id: '${PREFIXO}/${entrada.id}', className: 'sidebar-icone sidebar-icone--${FAMILIA_DE_ICONE}'},`,
+        `  {type: 'doc', id: '${PREFIXO}/${entrada.id}', className: 'sidebar-icone sidebar-icone--${chaveDeIcone(entrada)}'},`,
     ),
     '];',
     '',

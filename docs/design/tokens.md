@@ -462,13 +462,24 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --sd-toc-width:        304px;  /* bate com a âncora — §11 de chrome.md */
   --sd-prose-width:      720px;
 
-  /* A prosa da página de referência é MAIS ESTREITA que a prosa comum — a
-     âncora troca a coluna do TOC (304) por um trilho de amostras bem mais
-     largo, e reduz o texto para abrir espaço. Medido em
-     `research/paridade-devin` §10 (576,81, arredondado), citado pela #99.
-     O trilho continua sendo o RESTO da conta — ver `referencia.md` §1 —, e
-     não um segundo literal: só a prosa é `origem própria`. */
-  --sd-api-prosa-width:  577px;
+  /* O PISO DE UM CAMPO EDITÁVEL do painel de comando — a largura abaixo da
+     qual a grade dele para de pôr dois campos lado a lado e empilha.
+
+     **Ele ocupa o slot que era `--sd-api-prosa-width` (577), e a troca conta
+     uma decisão.** Aquele token existia para uma página de referência com
+     prosa mais estreita que a comum, porque a âncora trocava a coluna do TOC
+     por um trilho de amostras — medido em `research/paridade-devin` §10
+     (576,81), citado pela #99. O trilho desceu para o fluxo na #118: a página
+     de comando passou a medir o que qualquer página de doc mede, a prosa
+     voltou para `--sd-prose-width` e o TOC voltou a caber. Sem trilho não há
+     prosa estreita a declarar, e o token ficaria inerte — que é a mesma classe
+     de defeito das variáveis mortas do Infima. O delta contra a âncora está
+     registrado em `scripts/paridade-abertas.txt` e em `referencia.md` §8.
+
+     280 é `origem própria`: é onde `--skill` mais um valor de exemplo do
+     catálogo (`panlabs-python-standards`, 24 caracteres em mono) deixam de
+     caber na mesma linha. Medido nesta máquina, no Chromium 148. */
+  --sd-campo-min:        280px;
 
   /* O CORREDOR — a distância entre a borda direita da sidebar e o começo do
      texto, e até aqui ele existia por ACIDENTE.
@@ -488,9 +499,9 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
      Os dois são medida da âncora e NÃO da escala: 34 não é múltiplo de 4 por
      acidente de arredondamento, é a altura que ela desenha, e 277 é a largura
-     do menu dela (276,7 medido, arredondado como `--sd-api-prosa-width` já
-     foi). Derivar qualquer um dos dois de `--sd-space-*` seria coincidência de
-     número, não parentesco. Ver `chrome.md` §6.4. */
+     do menu dela (276,7 medido, arredondado ao inteiro como toda medida de
+     âncora deste bloco). Derivar qualquer um dos dois de `--sd-space-*` seria
+     coincidência de número, não parentesco. Ver `chrome.md` §6.4. */
   --sd-copiar-height:      34px;
   --sd-copiar-menu-width: 277px;
 
@@ -654,12 +665,16 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
   /* O TERCEIRO token medido contra a viewport, não o único — a nota acima
      mentia por omissão assim que este entrou. Mesmo buraco de portão 1, mesma
-     saída: `100vh` cravado em `estilos.module.css` (#99, painel da
+     saída: `100vh` cravado num módulo de componente (#99, painel da
      referência) passaria a varredura calada, porque `vh` também não está no
      padrão `px|rem|em|ms|s`. `dvh`, e não `vh`, pela mesma razão do token
-     acima — nunca pior, e a diferença só aparece em navegador móvel, onde
-     esta rota não monta o trilho (`--sd-api-prosa-width` some abaixo de
-     997px). */
+     acima: nunca pior, e a diferença só aparece em navegador móvel.
+
+     **O consumidor que o trouxe já não existe, e ele fica.** Era o teto do
+     trilho grudado da página de referência, que desceu para o fluxo na #118;
+     quem o lê hoje é o teto do TOC em `chrome.css`, que tem a mesma conta e
+     chegou depois. Um token com dois pedidos e um consumidor não é token
+     inerte, é token com um consumidor. */
   --sd-viewport-altura: 100dvh;
 
   /* ---------------------------------------------------------------------------

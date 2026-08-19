@@ -758,15 +758,27 @@ html.docs-doc-page .subtitulo {
   mask: var(--sd-sidebar-icone) center / contain no-repeat;
 }
 
-/* Os dezesseis pares seção→ícone. Os onze primeiros vêm inalterados da #97; os
-   cinco últimos chegaram com o `overpower` e são as seções dele, no nível 3.
+/* Os trinta e um pares seção→ícone, e eles se leem em dois blocos porque valem
+   por duas regras diferentes.
 
-   **A herança tem dois degraus agora.** O nó do produto e as três folhas de
-   abertura dele herdam `--bibliotecas`, a família do separador que os contém; as
-   folhas de nível 4 herdam a família da SEÇÃO em que moram. Onde há seção com
-   identidade própria, ela é quem nomeia; onde não há, o separador é.
+   **As dez primeiras são de SEÇÃO**, inalteradas desde a #97: a folha herda a
+   família do ramo que a contém, e uma fileira de irmãs mostra o mesmo glifo.
 
-   Nenhum arquivo novo em `static/icons/`: as cinco reaproveitam desenhos que o
+   **As vinte e uma seguintes são de PÁGINA**, e chegaram na #118. No ramo do
+   `overpower` cada página tem o seu, e nenhuma repete o da que a contém — a
+   fileira de quatro comandos idênticos foi o que pediu a mudança. Elas estão na
+   ordem da ÁRVORE, não na alfabética: é assim que se confere, lendo ao lado da
+   sidebar, que duas vizinhas não caíram no mesmo desenho.
+
+   `--bibliotecas` SAIU. Era a família que o nó do produto e as duas folhas de
+   abertura dele repetiam, e as três ganharam a sua. Regra CSS sem declarante em
+   `sidebars-*.js` é o que `npm run icones` reprova, nos dois sentidos.
+
+   **O alcance é o que o orçamento paga**, e o número está no manifesto: o site
+   inteiro pediria 55 chaves, e os 61 arquivos oferecem 42 depois de tirar os 19
+   de sistema. As 21 daqui cabem; as outras três árvores seguem por seção.
+
+   Nenhum arquivo novo em `static/icons/`: todas reaproveitam desenhos que o
    manifesto já carregava, e o teto de 64 não se move. */
 .sidebar-icone--api-owner          { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
 .sidebar-icone--security-champion  { --sd-sidebar-icone: url('/icons/lock.svg'); }
@@ -775,15 +787,37 @@ html.docs-doc-page .subtitulo {
 .sidebar-icone--infraestrutura     { --sd-sidebar-icone: url('/icons/cloud.svg'); }
 .sidebar-icone--acessos            { --sd-sidebar-icone: url('/icons/key.svg'); }
 .sidebar-icone--diagnostico        { --sd-sidebar-icone: url('/icons/activity.svg'); }
-.sidebar-icone--bibliotecas        { --sd-sidebar-icone: url('/icons/package.svg'); }
 .sidebar-icone--modulos-terraform  { --sd-sidebar-icone: url('/icons/puzzle.svg'); }
 .sidebar-icone--skills             { --sd-sidebar-icone: url('/icons/bot.svg'); }
 .sidebar-icone--servidores-mcp     { --sd-sidebar-icone: url('/icons/server.svg'); }
-.sidebar-icone--comandos           { --sd-sidebar-icone: url('/icons/terminal.svg'); }
-.sidebar-icone--alvos              { --sd-sidebar-icone: url('/icons/globe.svg'); }
-.sidebar-icone--referencia         { --sd-sidebar-icone: url('/icons/book-open.svg'); }
-.sidebar-icone--desenvolvimento    { --sd-sidebar-icone: url('/icons/wrench.svg'); }
-.sidebar-icone--publicacao         { --sd-sidebar-icone: url('/icons/rocket.svg'); }
+
+/* O ramo do `overpower` — uma por página, na ordem da árvore. */
+.sidebar-icone--overpower              { --sd-sidebar-icone: url('/icons/zap.svg'); }
+.sidebar-icone--instalacao             { --sd-sidebar-icone: url('/icons/download.svg'); }
+.sidebar-icone--conceitos              { --sd-sidebar-icone: url('/icons/shapes.svg'); }
+
+.sidebar-icone--comandos               { --sd-sidebar-icone: url('/icons/terminal.svg'); }
+.sidebar-icone--comando-raiz           { --sd-sidebar-icone: url('/icons/circle-help.svg'); }
+.sidebar-icone--comando-list           { --sd-sidebar-icone: url('/icons/database.svg'); }
+.sidebar-icone--comando-install        { --sd-sidebar-icone: url('/icons/plus.svg'); }
+.sidebar-icone--comando-doctor         { --sd-sidebar-icone: url('/icons/gauge.svg'); }
+
+.sidebar-icone--alvos                  { --sd-sidebar-icone: url('/icons/globe.svg'); }
+.sidebar-icone--alvo-mcp               { --sd-sidebar-icone: url('/icons/webhook.svg'); }
+.sidebar-icone--alvo-from              { --sd-sidebar-icone: url('/icons/folder.svg'); }
+
+.sidebar-icone--referencia             { --sd-sidebar-icone: url('/icons/book-open.svg'); }
+.sidebar-icone--codigos-de-saida       { --sd-sidebar-icone: url('/icons/circle-alert.svg'); }
+.sidebar-icone--solucao-de-problemas   { --sd-sidebar-icone: url('/icons/refresh-cw.svg'); }
+
+.sidebar-icone--desenvolvimento        { --sd-sidebar-icone: url('/icons/wrench.svg'); }
+.sidebar-icone--telas                  { --sd-sidebar-icone: url('/icons/play.svg'); }
+.sidebar-icone--testes                 { --sd-sidebar-icone: url('/icons/repeat.svg'); }
+
+.sidebar-icone--publicacao             { --sd-sidebar-icone: url('/icons/rocket.svg'); }
+.sidebar-icone--changelog              { --sd-sidebar-icone: url('/icons/clock.svg'); }
+.sidebar-icone--curadoria              { --sd-sidebar-icone: url('/icons/filter.svg'); }
+.sidebar-icone--release                { --sd-sidebar-icone: url('/icons/upload.svg'); }
 
 /* Tipografia e raio — um corpo só, para tudo que é destino, em todo nível. A
    âncora usa peso normal com entrelinha maior, e reserva toda marcação de ativo

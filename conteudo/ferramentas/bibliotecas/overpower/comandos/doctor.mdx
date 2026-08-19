@@ -10,6 +10,8 @@ api_exemplos: {"assinatura":"overpower doctor","parametros":[],"snippet":{"lingu
 
 **Comando** · `overpower doctor`
 
+<PainelComando />
+
 A metade de terminal reporta quatro fatos, se há um TTY ligado, que sistema de cor foi detectado, a largura da tela e se `NO_COLOR` está posto. É o conjunto exato que explica uma tela que saiu torta, sem precisar de uma ida e volta para perguntar.
 
 A metade de integridade lê a tabela de runtimes nos dois escopos e confere o que encontra contra o que foi de fato instalado. Ela lê os dois porque o alvo não carrega manifesto próprio, então não existe conferir um escopo só que queira dizer alguma coisa. É também por isso que `doctor` não tem `--global`, e é por isso que ele responde fora de um repositório git, reportando vazio a metade que não achou.

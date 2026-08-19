@@ -43,11 +43,11 @@ EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/overp
 CONTRATO_PT='contratos/overpower.pt-BR.json'
 CONTRATOS="${CONTRATO_PT} contratos/overpower.en.json"
 
-# O prefixo de id no fragmento, e a família de ícone que as folhas geradas
-# carregam. Ela é a da SEÇÃO que as hospeda desde o ADR 9 §d), e não mais a do
-# separador de topo.
+# O prefixo de id no fragmento. A família de ícone NÃO é mais uma só: desde a
+# #118 cada folha gerada carrega a chave da própria entrada, lida de `icone` no
+# contrato, e o que se cobra aqui passou de *todas iguais a esta* para *todas
+# presentes e todas distintas*.
 PREFIXO_DE_ID='bibliotecas/overpower/comandos'
-FAMILIA='sidebar-icone--comandos'
 GERADAS=4
 
 # Os seis verbos, mais os três substantivos que só existem num contrato HTTP. A
@@ -212,8 +212,17 @@ done
 ids=$(grep -c "^  {type: 'doc', id: '${PREFIXO_DE_ID}/" "$FRAGMENTO" 2>/dev/null || echo 0)
 [ "$ids" = "$GERADAS" ] || reprova "${FRAGMENTO} declara ${ids} ids, esperado ${GERADAS}"
 
-classes=$(grep -c "^  {type: 'doc', id: '${PREFIXO_DE_ID}/.*className: 'sidebar-icone ${FAMILIA}'}," "$FRAGMENTO" 2>/dev/null || echo 0)
-[ "$classes" = "$GERADAS" ] || reprova "${FRAGMENTO}: ${classes} ids carregam \`${FAMILIA}\`, esperado ${GERADAS} — toda folha tem ícone"
+# Toda folha tem ícone, e desde a #118 nenhuma repete a da vizinha. As duas
+# metades são cobradas separadas porque falham por motivos diferentes: a
+# primeira pega a folha que saiu sem `className`, a segunda pega o `icone`
+# copiado de uma entrada para outra no contrato — que passaria calado, porque o
+# portão regenera e diffa a saída contra ela mesma.
+classes=$(grep -c "^  {type: 'doc', id: '${PREFIXO_DE_ID}/.*className: 'sidebar-icone sidebar-icone--[a-z-]*'}," "$FRAGMENTO" 2>/dev/null || echo 0)
+[ "$classes" = "$GERADAS" ] || reprova "${FRAGMENTO}: ${classes} ids carregam chave de ícone, esperado ${GERADAS} — toda folha tem ícone"
+
+distintas=$(grep -o "sidebar-icone--[a-z-]*'}," "$FRAGMENTO" | sort -u | wc -l | tr -d ' ')
+[ "$distintas" = "$GERADAS" ] ||
+  reprova "${FRAGMENTO}: ${distintas} chaves de ícone distintas em ${GERADAS} folhas — cada página gerada tem a sua, e o campo \`icone\` do contrato é onde ela mora"
 
 grep -q "^import referencia from './${FRAGMENTO}';" sidebars-ferramentas.js ||
   reprova "sidebars-ferramentas.js não importa o fragmento, e o ramo gerado fica fora da árvore"

@@ -185,16 +185,15 @@ const config = {
         path: 'conteudo/ferramentas',
         routeBasePath: 'ferramentas',
         sidebarPath: './sidebars-ferramentas.js',
-        // Opção PÚBLICA do plugin — vira literalmente o `component` da rota.
-        // Substitui o layout inteiro da página com custo de upgrade zero: não é
-        // swizzle, é componente de tema próprio. Ver ADR 2.
-        //
-        // **A instância inteira o declara, e as 22 folhas autorais dela não
-        // mudam de layout.** O `ApiDocItem` comuta POR PÁGINA pelo front matter
-        // `api_exemplos` e delega para `@theme/DocItem` quando o campo falta —
-        // verificado no código, não deduzido. Quem acende a outra perna são as
-        // **4 páginas geradas** de `overpower › Comandos`, e só elas.
-        docItemComponent: '@theme/ApiDocItem',
+        // **Esta instância declarava `docItemComponent`, e não declara mais.**
+        // O `ApiDocItem` era um componente de tema próprio que comutava o
+        // layout inteiro por página, pelo front matter `api_exemplos`: as 4
+        // páginas geradas de `overpower › Comandos` ganhavam prosa de 577 e um
+        // trilho grudado de 511, e com isso perdiam a coluna do TOC. O trilho
+        // desceu para o fluxo na #118 — virou `<PainelComando />`, um bloco de
+        // MDX que o registro global resolve —, e sem layout a comutar o
+        // componente da rota ficou sendo `@theme/DocItem` chamando
+        // `@theme/DocItem`. As 26 páginas desta instância medem a mesma coisa.
       }),
     ],
 

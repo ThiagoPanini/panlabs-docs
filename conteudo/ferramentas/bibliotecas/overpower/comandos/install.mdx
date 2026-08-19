@@ -3,12 +3,14 @@
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: overpower install
 description: Escreve. Imprime o plano, com todo destino e quem o lê, antes de encostar em disco, e pergunta antes de escrever quando há um terminal do outro lado.
-api_exemplos: {"assinatura":"overpower install --runtime &lt;key&gt; [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
+api_exemplos: {"assinatura":"overpower install --runtime <key> [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
 ---
 
 # overpower install
 
 **Comando** · `overpower install`
+
+<PainelComando />
 
 Os quatro seletores se misturam livremente numa linha só, e cada um aceita valor separado por vírgula, a repetição da flag, ou as duas coisas. Quando a linha resolve para escritas em mais de uma unidade, elas acontecem sempre na mesma ordem, framework, depois bundle, depois artefato avulso, depois servidor MCP, e a unidade mais específica escreve por último.
 

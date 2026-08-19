@@ -3,12 +3,14 @@
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: overpower
 description: The root of the command line, with the options that hold in any position and the table of four exit codes the three commands share.
-api_exemplos: {"assinatura":"overpower [--help] [--version] &lt;command&gt;","parametros":[],"snippet":{"linguagem":"bash","modelo":"overpower list --skill \"panlabs-python-standards\"\noverpower install --skill \"panlabs-python-standards\" --runtime \"claude-code\"\noverpower doctor"}}
+api_exemplos: {"assinatura":"overpower [--help] [--version] <command>","parametros":[],"snippet":{"linguagem":"bash","modelo":"overpower list --skill \"panlabs-python-standards\"\noverpower install --skill \"panlabs-python-standards\" --runtime \"claude-code\"\noverpower doctor"}}
 ---
 
 # overpower
 
 **Application** · `overpower`
+
+<PainelComando />
 
 Every invocation of overpower answers one of exactly three questions, and each question is a command. Typed bare, overpower prints a banner and the top-level help, and exits `0`; under a pipe the banner is dropped and only the help goes through, so a `grep` or a redirect gets something worth reading.
 

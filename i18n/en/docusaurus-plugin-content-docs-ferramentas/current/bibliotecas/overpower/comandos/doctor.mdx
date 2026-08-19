@@ -10,6 +10,8 @@ api_exemplos: {"assinatura":"overpower doctor","parametros":[],"snippet":{"lingu
 
 **Command** · `overpower doctor`
 
+<PainelComando />
+
 The terminal half reports four facts, whether a TTY is attached, what colour system was detected, the terminal width, and whether `NO_COLOR` is set. It is the exact set that explains a screen that came out looking wrong, without needing a round trip to ask.
 
 The integrity half reads the runtime table in both scopes and checks what it finds against what was actually installed. It reads both because a target carries no manifest of its own, so there is no way to check one scope that would mean anything. That is also why `doctor` has no `--global`, and why it still answers outside a git repository, reporting nothing for the half it cannot find.

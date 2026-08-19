@@ -67,12 +67,22 @@ const ANSI = new RegExp('\\u001b\\[[0-9;]*m', 'g');
  * `docs/design/swizzle.md` §2.
  */
 const PROPRIOS = [
-  'ApiDocItem', // degrau 2 — `docItemComponent` da instância `ferramentas`
-  // `NavbarItem/Marca` SAIU. A marca ficou só com a palavra e voltou para o
-  // `.navbar__brand` nativo por `navbar.title`, então o componente que
-  // desenhava o par glifo+palavra perdeu o assunto. É a única entrada que este
-  // repositório já removeu daqui, e o efeito é o que a perna 2 promete: um
-  // arquivo a menos em `src/theme/`, sem nada ficar sem endereço.
+  // Vazio, e as DUAS entradas que já moraram aqui saíram pelo mesmo motivo:
+  // o assunto delas acabou.
+  //
+  // `NavbarItem/Marca` foi a primeira. A marca ficou só com a palavra e voltou
+  // para o `.navbar__brand` nativo por `navbar.title`, e o componente que
+  // desenhava o par glifo+palavra perdeu o assunto.
+  //
+  // `ApiDocItem` foi a segunda, na #118. Ele era `docItemComponent` da
+  // instância `ferramentas` e comutava o layout da página por front matter: as
+  // 4 páginas geradas ganhavam prosa estreita e um trilho grudado à direita. O
+  // trilho desceu para o fluxo e virou `<PainelComando />`, um registro de
+  // `MDXComponents` — sem layout a comutar, o componente da rota ficou sendo
+  // `@theme/DocItem` chamando `@theme/DocItem`.
+  //
+  // O efeito é o que a perna 2 promete: menos arquivo em `src/theme/`, e nada
+  // sem endereço.
 ];
 
 const modo = process.argv[2];
@@ -243,7 +253,7 @@ for (const relativo of arquivosDoTema()) {
     continue;
   }
   // Arquivo interno — CSS Module, submódulo — de um componente que já tem
-  // endereço. `SearchBar/escada` e `ApiDocItem/estilos.module` caem aqui.
+  // endereço. `SearchBar/escada` e `MDXComponents/painel.module` caem aqui.
   const temDono = [...catalogo.keys(), ...PROPRIOS].some((dono) => nome.startsWith(`${dono}/`));
   if (!temDono) {
     orfaos.push(relativo);
