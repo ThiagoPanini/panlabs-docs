@@ -437,7 +437,7 @@ Não são metas: são propriedades que o repositório mantém, e cada uma é con
 | --- | --- | --- |
 | **Zero swizzle `unsafe`** | portão 7, perna 2 — todo arquivo de `src/theme/` casa com um componente `Safe` do `swizzle --list` | 220 componentes no artefato, 10 arquivos com endereço |
 | **Zero dependência npm nova** | a lista de `package.json` é exatamente a que o `create-docusaurus classic` escreve | 7 de produção, 2 de desenvolvimento |
-| **Zero serviço externo** | nada em `src/` chama a rede, e nada no HTML publicado carrega recurso de outra origem | zero e zero |
+| **Zero serviço externo** | nada em `src/` chama a rede **de outra origem** — lista fechada para a própria —, e nada no HTML publicado carrega recurso de fora | uma chamada declarada, zero de fora |
 | **Zero JS de interação no catálogo** | o *substrato nativo* de [`../agents/domain.md`](../agents/domain.md) | 12 arquivos, zero handler e zero estado |
 | **Um único autor de modelo de interação no projeto inteiro** | escuta de DOM e tecla | um: `src/theme/SearchBar/index.js` |
 
@@ -455,6 +455,24 @@ A régua correta não é *"tem `useState`?"*, e o vocabulário de domínio já a
 Por isso o zero é **escuta de DOM e tecla**, e por isso o resultado da varredura **imprime as outras superfícies em vez de escondê-las**. Uma afirmação limpa que esconde um fato é pior que uma afirmação com nota de rodapé.
 
 > **Hoje a régua ampla pega uma superfície, e não duas.** `Marca.js` saiu com a marca sem glifo ([`icones.md`](icones.md) §3), e a saída está no ledger ([`swizzle.md`](swizzle.md) §3): o componente de tema que desenhava o par glifo+palavra deixou de ter assunto, e o arquivo foi removido. Sobra `Painel.js`, e `npm run zeros` continua imprimindo-o sob *"com estado ou campo controlado, sem autorar modelo"*. **A precisão do quinto zero sobreviveu à morte do caso que a motivou** — o que mudou foi a contagem, não a régua, e é assim que se sabe que ela era régua e não desculpa.
+
+> **O quinto zero foi exercido, e ele mudou uma implementação em vez de ceder.** O par "Copiar página" ([`chrome.md`](chrome.md) §6.4) nasceu com `onKeyDown` para `Escape` e para as setas do menu. A varredura reprovou, e a resposta não foi afrouxar a régua: o menu virou `popover` nativo, que entrega `Escape`, fechar-ao-clicar-fora e devolução de foco sem uma linha de tecla escrita. **O custo foi pago e vai escrito na spec** — sem as setas, o menu não usa `role="menu"`, porque o ARIA descreveria um modelo que não existe. Hoje `CopiarPagina.js` aparece ao lado de `Painel.js` sob *"com estado, sem autorar modelo"*, e o único autor continua sendo um.
+
+### 7.2 O terceiro zero tinha a mesma imprecisão, e ela apareceu pelo mesmo caminho
+
+A régua era *"nada em `src/` chama a rede"*. **Ela pega demais**, e a prova estava dentro do próprio zero: a segunda perna dele, que varre o HTML publicado, **já distingue** a nossa origem da de terceiro — ela exclui `panlabs-tech.github.io` da busca por recurso carregado, e imprime as origens que aparecem só em link de navegação em vez de reprová-las.
+
+O zero se chama zero serviço **externo**. Buscar uma rota do próprio site não acrescenta serviço nenhum: se o site está no ar, a rota está no ar, no mesmo deploy e no mesmo host. Foi o que o botão de copiar precisou — ele lê o `.md` que o plugin de artefatos AI-era já publica ([`informacao.md`](informacao.md) §9.1), em vez de serializar a página por conta própria, que criaria uma segunda ideia do que o documento é.
+
+A régua nova é uma **lista fechada**, o mesmo idioma de `DEPS_ESPERADAS` e dos limiares do portão 1: uma linha, com o alvo escrito ao lado. Chamada de rede nova reprova até alguém declará-la, e qualquer alvo com esquema (`http://`, `https://`, `//`) reprova sempre — inclusive dentro da lista. E, como no quinto zero, **a varredura imprime o que passou** em vez de esconder:
+
+```
+3  zero serviço externo
+   nenhuma chamada de rede a outra origem; o HTML publicado não carrega nada de fora.
+   à própria origem, declarada:
+     · src/theme/MDXComponents/CopiarPagina.js: fetch(rotaMd)
+   (origens citadas em link de navegação, que o leitor clica: …)
+```
 
 ---
 

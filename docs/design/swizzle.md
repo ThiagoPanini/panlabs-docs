@@ -114,7 +114,7 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
 | `MDXComponents` | registra os treze componentes com tag própria (catorze chaves — `steps` tem duas), mais `Tabs`/`TabItem`, mais **duas** chaves de elemento: `table` e `h1` | `.md` de conteúdo não deve importar nada, e não há opção pública que acrescente componente ao escopo do MDX. O próprio `getSwizzleConfig` diz *"meant to be ejected"* |
-| `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description` | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: **73 de 73** páginas escrevem exatamente um `# Título` — 52 em pt-BR e 21 em EN, contadas fora dos blocos cercados, porque comentário de shell abre com a mesma marca |
+| `MDXComponents.h1` — **superfície nova** | **o subtítulo**, injetado abaixo do título a partir de `frontMatter.description`, e **o par "Copiar página"**, na mesma linha do título | injetar nó no corpo da página exige `DocItem/Layout` ou `DocItem/Content`, os dois `unsafe` — é a perda 1. Ancorar no `<h1>` alcança, e a condição está conferida: **73 de 73** páginas escrevem exatamente um `# Título` — 52 em pt-BR e 21 em EN, contadas fora dos blocos cercados, porque comentário de shell abre com a mesma marca. O par é a **perda 10 fechada** pela rota que esta linha já registrava; `CopiarPagina.js` mora dentro de `MDXComponents/` e por isso tem endereço no portão 7, sem entrar no catálogo de `src/components/`, cuja contagem é afirmação da spec |
 | `Admonition/Types` | substitui a anatomia vertical do Infima pela horizontal medida, nas quatro variantes de callout | não há variável nem classe que reoriente o eixo da admonition. O degrau 5 (`Admonition/Layout`) alcançaria, mas o 3 alcança **antes**: o arquivo é um objeto, e nada obriga as entradas dele a apontarem para o layout do upstream |
 
 ### 3.1 A entrada aposentada — `NavbarItem/ComponentTypes`
@@ -216,7 +216,7 @@ O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não 
 
 O zero cobra um preço, e cada linha é perda escrita — não silêncio.
 
-**Eram dez. São nove, e a numeração não foi remendada** — os sobreviventes ficam com o número que já tinham. Renumerar uma lista citada por outro documento para fechar um buraco é o mesmo churn que este arquivo recusou ao decidir que o portão do `swizzle --list` é o 7 e não o 5.
+**Eram dez. São oito, e a numeração não foi remendada** — os sobreviventes ficam com o número que já tinham. Renumerar uma lista citada por outro documento para fechar um buraco é o mesmo churn que este arquivo recusou ao decidir que o portão do `swizzle --list` é o 7 e não o 5.
 
 | # | Perda | Componente que a obriga | Onde ela aparece |
 | ---: | --- | --- | --- |
@@ -229,7 +229,7 @@ O zero cobra um preço, e cada linha é perda escrita — não silêncio.
 | 7 | Footer dentro da coluna de prosa, como a âncora faz | `<Footer/>` é irmão do `main-wrapper` | [`chrome.md`](chrome.md) §8.3 |
 | 8 | Armadilha de foco na sidebar de tela estreita | `Navbar/MobileSidebar/*` | [`foco.md`](foco.md) §12 |
 | 9 | Posição do botão de voltar ao topo na ordem de tabulação | `DocRoot/Layout` | [`foco.md`](foco.md) §10 |
-| 10 | O controle de página AI-era — *Copiar página* e deep-link para assistente | `DocItem/Layout` | fora **por produto**, não por preço |
+| ~~10~~ | ~~O controle de página AI-era — *Copiar página* e deep-link para assistente~~ | — | **removida** — ver abaixo |
 
 ### A perda 4 sai, e não por ter sido comprada
 
@@ -249,9 +249,15 @@ A mesma errata está no [ADR 2](../adr/0002-politica-de-swizzle.md), «Consequê
 
 **A perda 6 é a que a regra resolve sem enumerar:** *o que só é alcançável por `unsafe` não é trocado.* Não há lista a manter.
 
-**A perda 10 tem nota própria, e ela importa para o orçamento.** O recurso saiu por decisão de produto, e a rota `safe` fica registrada: ancorar o controle no `<h1>` via `MDXComponents` (degrau 3) alcança, desde que toda página escreva o próprio `# Título`. **O zero de `unsafe` não é comprado com o sacrifício desse recurso** — mesmo que ele voltasse, caberia no degrau 3.
+### A perda 10 sai, e ela é a primeira que sai porque a rota registrada foi EXERCIDA
 
-**E a rota agora tem precedente exercido, não só registrado.** O subtítulo é essa mesma rota, montada e medida. Quem reabrir a perda 10 não precisa mais confiar na frase: pode ler o `h1` do §3.
+Ela nunca foi perda de preço. A linha dizia *"fora por produto, não por preço"*, e a nota ao lado registrava a rota inteira: **ancorar o controle no `<h1>` via `MDXComponents` (degrau 3) alcança, desde que toda página escreva o próprio `# Título`**. A condição já estava conferida pelo subtítulo, e a cobrança 10 do portão 4 a mantém verdadeira.
+
+O produto mudou de ideia, e a rota estava lá. O par "Copiar página" está montado — [`chrome.md`](chrome.md) §6.4 —, **sem uma linha de `unsafe`**, sem tocar em `DocItem/Layout` e sem arquivo novo fora do dono que o portão 7 já conhece: `CopiarPagina.js` mora dentro de `MDXComponents/`, que tem endereço no catálogo congelado.
+
+**É a diferença entre uma perda registrada e uma perda estimada.** A perda 4 saiu porque o ledger tinha um fato errado sobre ela; esta sai porque o ledger tinha o fato **certo** e alguém veio cobrar. Uma nota de rota que envelhece bem é o produto que este documento existe para entregar.
+
+**O que mudou de dono, e não some:** o menu do par não usa `role="menu"`, porque o padrão do WAI-ARIA pediria setas e setas são tecla — o quinto zero de [`README.md`](README.md) §7.1 tem um autor de modelo de interação só, e ele continua sendo o `SearchBar`. Isso é perda de **anatomia de ARIA**, não de swizzle, e por isso não entra nesta tabela: mora em `chrome.md` §6.4, ao lado do mecanismo que a produziu.
 
 **Perdas fora do alcance do adaptador**, que não são de swizzle mas envelhecem junto: as curvas de easing cravadas no CSS do navbar e a curva da transição de largura da sidebar. Elas estão em [`motion.md`](motion.md).
 

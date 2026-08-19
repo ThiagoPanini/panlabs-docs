@@ -393,5 +393,53 @@
   "shinydoc.busca.tecla.fechar": {
     "message": "close",
     "description": "Legenda do Esc no rodapé do modal"
+  },
+  "shinydoc.copiar.rotulo": {
+    "message": "Copy page",
+    "description": "Rótulo do botão que copia a página em Markdown"
+  },
+  "shinydoc.copiar.feito": {
+    "message": "Copied",
+    "description": "Confirmação de que a página foi copiada"
+  },
+  "shinydoc.copiar.erro": {
+    "message": "Didn't copy",
+    "description": "Aviso de que a cópia falhou"
+  },
+  "shinydoc.copiar.prompt": {
+    "message": "Read {url} so I can ask questions about this documentation page.",
+    "description": "Pergunta que o assistente externo recebe já escrita, com a URL do Markdown"
+  },
+  "shinydoc.copiar.menu.copiar": {
+    "message": "Copy page",
+    "description": "Item de menu que copia o Markdown"
+  },
+  "shinydoc.copiar.menu.copiar.apoio": {
+    "message": "The Markdown of this page, to paste into an assistant",
+    "description": "Explicação do item que copia o Markdown"
+  },
+  "shinydoc.copiar.menu.ver": {
+    "message": "View as Markdown",
+    "description": "Item de menu que abre o Markdown"
+  },
+  "shinydoc.copiar.menu.ver.apoio": {
+    "message": "The same page as plain text",
+    "description": "Explicação do item que abre o Markdown"
+  },
+  "shinydoc.copiar.menu.chatgpt": {
+    "message": "Open in ChatGPT",
+    "description": "Item de menu que abre a página no ChatGPT"
+  },
+  "shinydoc.copiar.menu.assistente.apoio": {
+    "message": "Ask about this page",
+    "description": "Explicação dos itens que abrem a página num assistente"
+  },
+  "shinydoc.copiar.menu.claude": {
+    "message": "Open in Claude",
+    "description": "Item de menu que abre a página no Claude"
+  },
+  "shinydoc.copiar.mais": {
+    "message": "More ways to take this page",
+    "description": "Nome acessível do botão que abre o menu ao lado de Copiar página"
   }
 }

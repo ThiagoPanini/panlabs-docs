@@ -382,6 +382,39 @@
      não um segundo literal: só a prosa é `origem própria`. */
   --sd-api-prosa-width:  577px;
 
+  /* O CORREDOR — a distância entre a borda direita da sidebar e o começo do
+     texto, e até aqui ele existia por ACIDENTE.
+
+     Medido na âncora a 1024 e a 1512, e o número é o mesmo nas duas: o
+     conteúdo dela abre `pl-[5.7rem]` (91,2) sobre um `-ml-12` (−48), e o
+     líquido é 43,2 em qualquer largura. Ela NÃO centraliza a prosa na coluna
+     — ancora o texto a esta distância e deixa a sobra do lado do índice.
+
+     Aqui a distância era o que sobrasse da centralização do `<article>`
+     dentro da coluna: 47,6 a 1512, perto do número da âncora por coincidência
+     aritmética, e ZERO em toda largura entre 997 e 1408 — que é onde um
+     laptop vive. Ver `chrome.md` §1.7. */
+  --sd-corredor: 43.2px;
+
+  /* O PAR SEGMENTADO do cabeçalho — "Copiar página" e o menu ao lado.
+
+     Os dois são medida da âncora e NÃO da escala: 34 não é múltiplo de 4 por
+     acidente de arredondamento, é a altura que ela desenha, e 277 é a largura
+     do menu dela (276,7 medido, arredondado como `--sd-api-prosa-width` já
+     foi). Derivar qualquer um dos dois de `--sd-space-*` seria coincidência de
+     número, não parentesco. Ver `chrome.md` §6.4. */
+  --sd-copiar-height:      34px;
+  --sd-copiar-menu-width: 277px;
+
+  /* A GOTEIRA DA BARRA FINA — o que `scrollbar-width: thin` reserva, medido
+     no Chromium 148 desta máquina: 15px com `auto`, 10 com `thin`.
+
+     Ele não desenha nada. Existe para a conta do respiro da lista da sidebar
+     fechar nos 32 da âncora sem que ninguém tenha de medir de novo, e é o
+     único número deste arquivo que outro navegador pode desmentir — por isso
+     é citado uma vez só, em `chrome.css` §4. */
+  --sd-scrollbar-fina: 10px;
+
   /* `--sd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
      própria — é consequência do congelamento abaixo perder o termo do
      gutter. As DUAS medições de margem simétrica da âncora (§11: 52px a

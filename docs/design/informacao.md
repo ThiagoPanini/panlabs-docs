@@ -450,6 +450,10 @@ Três decisões mecânicas, e as três estão no ADR 7:
 
 **Perda aceita e nomeada:** em `docusaurus start` as rotas `.md` não existem e devolvem **200 com o shell da SPA** — não 404. É recurso de build, e quem o verifica é o portão 6 rota 2, contra o host real.
 
+> **A perda ganhou uma segunda cara, e uma guarda junto.** O `.md` deixou de ser artefato só para máquina: o par "Copiar página" ([`chrome.md`](chrome.md) §6.4) o **busca** para copiar, e é a única chamada de rede do projeto — declarada na lista do terceiro zero ([`README.md`](README.md) §7.2). Em `docusaurus start`, onde a rota devolve o shell da SPA, o leitor copiaria HTML achando que copiou Markdown: o pior modo de falhar que uma ação de copiar tem, porque o erro só aparece do outro lado, colado. O botão olha o corpo antes de escrever na área de transferência, e documento HTML no lugar do Markdown vira estado de erro **visível no próprio botão**.
+
+**O `.md` deixou de ser beco sem saída também no site.** O §9.3 diz que o ponteiro de volta é o que transforma arquivos soltos em grafo navegável para quem chega neles; o caminho contrário — de quem está lendo a página para o `.md` dela — não existia fora do link do rodapé. O par do cabeçalho é esse caminho, e ele é o primeiro consumidor de `permalink + '.md'` dentro do próprio site.
+
 O corpo servido é o MDX **quase cru**: front matter fora, `import`/`export` do topo fora por regex, o subtítulo de volta, e nada mais. **Não é preciso transformador de AST** — o estado da arte serve MDX quase cru, e a tag `<ParamField>` que sobra diz à máquina exatamente o que ela é.
 
 > *Do topo* não é detalhe de redação. Uma varredura global comeria um `import` de exemplo dentro de bloco cercado, o `.md` sairia com o código mutilado, e o build passaria. Hoje nenhum arquivo de `conteudo/` importa nada — a remoção é o que mantém a promessa verdadeira quando alguém esquecer.

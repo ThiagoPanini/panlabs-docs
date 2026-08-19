@@ -186,6 +186,12 @@ const SONDAS = [
   {sonda: 'chrome.toc.borda', cenario: 'prosa@1512/escuro', seletor: '.col--3', medida: 'estilo:border-left-width'},
   {sonda: 'chrome.navbar.altura', cenario: 'prosa@1512/escuro', seletor: '.navbar', medida: 'caixa:height'},
   {sonda: 'chrome.margem-direita', cenario: 'prosa@1512/escuro', seletor: '.col--3', medida: 'margem-direita'},
+  /* O CORREDOR é `padding-left` da coluna, e não a distância entre duas
+     caixas, porque este instrumento lê um elemento de cada vez — a mesma
+     limitação que deixa o ritmo vertical do §12 fora da tabela. Medir a
+     declaração em vez do vão é o que dá uma sonda de verdade: o vão só existe
+     porque ela existe, e a regra que a apagasse apareceria aqui. */
+  {sonda: 'chrome.corredor', cenario: 'prosa@1512/escuro', seletor: 'main > .container > .row > .col:not(.col--3)', medida: 'estilo:padding-left'},
 
   // --- a área útil centraliza (a correção principal da issue-pai) --------
   {sonda: 'chrome.1920.esquerda', cenario: 'prosa@1920/escuro', seletor: '.theme-doc-sidebar-container', medida: 'caixa:left'},
@@ -204,6 +210,15 @@ const SONDAS = [
   {sonda: 'artigo.sobrancelha.peso', cenario: 'prosa@1512/escuro', seletor: '.breadcrumbs__link', medida: 'estilo:font-weight'},
   {sonda: 'artigo.subtitulo.tamanho', cenario: 'prosa@1512/escuro', seletor: '.subtitulo', medida: 'estilo:font-size'},
   {sonda: 'artigo.subtitulo.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.subtitulo', medida: 'estilo:line-height'},
+  /* O par "Copiar página". A sonda de raio mede o CANTO EXTERNO da metade
+     esquerda — `border-radius` computado devolve os quatro (`12px 0 0 12px`),
+     e comparar essa string com o alvo publicado nunca fecharia. O menu não tem
+     sonda: ele é `popover`, e medi-lo exigiria um cenário que o abre — o
+     número dele fica publicado em §6.4, sem linha nesta tabela, porque alvo
+     que o instrumento não alcança vira `sem-medida` para sempre. */
+  {sonda: 'artigo.copiar.altura', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="copiar"]', medida: 'caixa:height'},
+  {sonda: 'artigo.copiar.raio', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="copiar"]', medida: 'estilo:border-top-left-radius'},
+  {sonda: 'artigo.copiar.tamanho', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="copiar"]', medida: 'estilo:font-size'},
   /* O título do artigo NÃO é sondado aqui: ele é o `h1`, e o `h1` já tem alvo
      na escala de tipo. Publicá-lo duas vezes criaria duas verdades sobre o
      mesmo número, que é exatamente o defeito que este instrumento existe para
@@ -309,6 +324,7 @@ const ALVOS = {
       ['TOC `border-left`', ['chrome.toc.borda']],
       ['Navbar altura', ['chrome.navbar.altura']],
       ['Margem direita', ['chrome.margem-direita']],
+      ['Corredor', ['chrome.corredor']],
       ['A 1920, margem esquerda', ['chrome.1920.esquerda']],
       ['A 1920, margem direita', ['chrome.1920.direita']],
       ['TOC visível a 1100', ['chrome.1100.toc']],
@@ -327,6 +343,9 @@ const ALVOS = {
       ['Sobrancelha peso', ['artigo.sobrancelha.peso']],
       ['Subtítulo tamanho', ['artigo.subtitulo.tamanho']],
       ['Subtítulo entrelinha', ['artigo.subtitulo.entrelinha']],
+      ['Copiar página altura', ['artigo.copiar.altura']],
+      ['Copiar página raio', ['artigo.copiar.raio']],
+      ['Copiar página corpo', ['artigo.copiar.tamanho']],
     ],
   },
   'docs/design/busca.md': {

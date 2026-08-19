@@ -25,6 +25,7 @@ Uma cadeia, e cada elo deriva do anterior. **Ou os números fecham na tela, ou n
 | Sidebar | `--sd-sidebar-width` | 288 | medido |
 | Coluna de conteúdo | `--sd-doc-width` | 816 | derivado, container − TOC — não é mais fração de grid. Era 864 antes da #96 (grid), depois 848 (container ainda em 1152), ver §1.2 |
 | Coluna do TOC | `--sd-toc-width` | 304 | **origem própria** — bate com a âncora desde a #96. Era 288, derivado do grid, até §1.2 |
+| **Corredor** | `--sd-corredor` | **43,2** | **medido em referência** — a distância entre a borda da sidebar e o texto. Era ACIDENTE até §1.7: o que sobrasse da centralização da prosa, 47,6 a 1512 e **zero** entre 997 e 1408 |
 | Separação do TOC | `--sd-space-6` | 24 | **origem própria** — inalterada; a lista muda de valor porque a caixa mudou, não a separação |
 | Lista do TOC | — | **280** | herdado — 304 − 24, era 264 quando a caixa era 288 |
 | Medida de prosa | `--sd-prose-width` / `--sd-container-width` | **720 / 1120** | **origem própria (correção, #96)** — duas larguras, não uma constante; ver §1.5. Com TOC visível o número NÃO mudou — a âncora já batia em 720 antes da #96 |
@@ -107,6 +108,68 @@ As media queries de **sidebar, gutter e faixa de tabs** continuam alinhadas aos 
 
 Isto é cobrado por portão: a segunda perna do portão 1 reprova qualquer media query cujo limiar não esteja na lista fechada — 996/997 e 1280.
 
+### 1.7 O corredor, e os 25% que o `docItemCol` reserva para um índice escondido
+
+**Duas correções que respondem à mesma queixa — *o texto está colado na sidebar, e apertado* — e as duas só se enxergam medindo fora de 1512.** A tabela de §11 mede a 1512 e a 1920, e nas duas larguras o produto fechava; a distância entre a sidebar e a prosa **nunca teve linha**, e é exatamente ela que some quando a janela encolhe.
+
+#### O corredor era acidente
+
+A distância entre a borda da sidebar e o começo do texto nunca foi declarada. Ela era o resto de uma divisão: `margin-inline: auto` no `<article>`, dentro de uma coluna maior que a prosa. A 1512 sobravam **47,6** de cada lado — perto dos 43,2 da âncora por coincidência aritmética, e foi por isso que passou por tanto tempo.
+
+Entre 997 e 1408 a coluna encolhe até caber na prosa, não sobra nada para dividir, e a distância medida é **zero**: o `h1` começa no mesmo `x` em que a sidebar termina.
+
+| viewport | sidebar termina em | o `h1` começa em | corredor |
+| ---: | ---: | ---: | ---: |
+| 1024 | 288 | 288 | **0** |
+| 1100 | 288 | 288 | **0** |
+| 1280 | 288 | 288 | **0** |
+| 1440 | 297 | 345 | 48 |
+| 1512 | 333 | 381 | 47,6 |
+
+**A âncora não divide sobra — ela declara a distância.** O conteúdo dela abre `pl-[5.7rem]` (91,2) sobre um `-ml-12` (−48), e o líquido é **43,2 em qualquer largura**: medido a 1024 e a 1512, o mesmo número nas duas. Ela também não centraliza a prosa: ancora o texto e deixa a sobra do lado do índice.
+
+O corredor passa a ser `--sd-corredor`, `padding-left` da coluna de conteúdo, e o `<article>` passa a `margin-inline: 0 auto`. **É mudança de mecanismo, não de métrica** — a mesma classe de correção da #97, que moveu o recuo da sidebar da lista para o link sem mexer no total.
+
+#### Os 25% mortos
+
+`docItemCol` é `max-width: 75% !important` numa classe hasheada de CSS Module, e o `!important` não se vence sem escrever outro — que este projeto não faz. Ele existe para abrir lugar ao TOC. Só que **abaixo de 1280 o TOC está `display: none` por decisão nossa** (§1.6, o limiar da âncora), e o quarto reservado vira faixa vazia à direita:
+
+| viewport | prosa termina em | borda da janela | faixa vazia |
+| ---: | ---: | ---: | ---: |
+| 1024 | 829 | 1009 | **180** |
+| 1100 | 886 | 1085 | **199** |
+| 1279 | 1020 | 1264 | **244** |
+
+O teto não se derruba — **muda-se a base dele**. `max-width: 75%` resolve contra a `.row`, então uma `.row` de 4/3 do container faz 75% dela valer o container inteiro. `calc(-100% / 3)` é o complemento exato de 75%, não um número escolhido: `0,75 × 4/3 = 1`. A partir de 1280 a `.row` devolve a margem negativa do Infima e o índice volta a ocupar o quarto que é dele.
+
+#### As três declarações que a correção obrigou, e nenhuma é enfeite
+
+- **`min-width: 0` na coluna.** Item de flex não encolhe abaixo do próprio conteúdo mínimo. Com o corredor entrando, a coluna passava a não caber ao lado do TOC, e a `.row` do Infima é `flex-wrap: wrap` — **o índice caía para baixo do texto**, medido a 1280 antes da declaração.
+- **`overflow-x: clip` no `<main>`**, que paga a `.row` transbordando 1/3 à direita. É `clip` e não `hidden` de propósito: `hidden` cria caixa de rolagem e mataria o `position: sticky` do TOC. Conferido depois de rolar 1200px — o índice continua grudando em **152**, o alvo de §11. A âncora clipa no mesmo lugar e pelo mesmo motivo (`lg:overflow-x-clip`, sobre o `-ml-12` dela).
+- **Tudo escopado a 997.** Abaixo do limiar não há sidebar, não há corredor a abrir e não há quarto reservado — a `.row` alargada ali só produzia estouro horizontal, medido em **45px a 390** e **247px a 996** antes do escopo. Depois dele, a varredura de estouro de `npm run paridade` dá zero em 40 combinações.
+
+#### O padding lateral do quadro, que é a mesma regra da âncora escrita inteira
+
+O §11 publica a regra do wrapper dela desde sempre — `max-width: 1472`, `margin-inline: auto`, `padding-inline: 32` — e usa essa regra para **derivar** as margens a 1920. O que estava implementado era só a metade de dentro: `max-width: 1408`, que é exatamente `1472 − 2 × 32`.
+
+**As duas formas entregam o mesmo número a partir de 1472**, e é por isso que a troca não move alvo nenhum: a 1512, `(1512 − 1472) ÷ 2 + 32 = 52`, e a de dentro dá `(1512 − 1408) ÷ 2 = 52`. Elas divergem **abaixo** de 1472: a de dentro deixa a margem cair a zero e encosta a sidebar na borda da viewport (medido: `x = 0` a 1024), a da âncora trava em 32 — que é o que ela mede a 1024.
+
+O congelamento não muda de valor. Ele continua sendo `sidebar + container`, e continua sendo o que a caixa entrega **por dentro** do preenchimento.
+
+#### O resultado, medido
+
+| viewport | sidebar | corredor | prosa | faixa vazia |
+| ---: | ---: | ---: | ---: | ---: |
+| 1024 | 32 | **43,2** | 594 | 52 |
+| 1280 | 32 | **43,2** | 566 | 32 |
+| 1512 | 45 | **43,2** | 720 | 44 |
+
+A 1024 o texto passa a abrir em **363**, que é o pixel exato em que a âncora o abre nessa largura.
+
+**Dissenso.** Abaixo de 1280 a prosa fica **mais larga** que antes — 594 contra 541 a 1024 —, e §1.5 declara que sem TOC visível a medida é `--sd-container-width`. Alguém pode ler o quarto vazio como respiro deliberado em vez de defeito. A resposta é que ele nunca foi declarado em lugar nenhum desta spec, que a âncora não o tem, e que ele cresce com a janela — respiro que aumenta 64px entre 1024 e 1279 não é decisão, é sobra. **Reabre quando** alguém medir a âncora numa largura dessa faixa e achar uma coluna de conteúdo que não ocupa o que a janela dá.
+
+**A referência da API fica de fora, e é lacuna nomeada.** A `.row` dela não tem `.col` — o filho é o CSS Module do `ApiDocItem` —, então nenhum destes seletores a alcança. Dar-lhe o corredor encolheria a prosa dela, que tem alvo medido próprio em [`referencia.md`](referencia.md) §8, e o número teria de ser remedido na âncora antes. Ela ganha só o padding lateral do quadro, junto com todo o resto do site.
+
 ---
 
 ## 2. O cartão morre, e a caixa invisível fica
@@ -150,7 +213,7 @@ A classe de 75% é aplicada sempre que `hide_table_of_contents` **não** está n
 | --- | --- | --- | --- |
 | com heading, TOC visível (≥ 1280) | 816 | renderizada | **inerte** — o `flex: 1 0` da coluna nua já entrega 816 sozinho, `--sd-doc-width` só confirma |
 | com heading, TOC no DOM mas escondido (997–1279) | **menos que 840** — 75% do que a viewport dá | presente, sem efeito visível | **não alcança**, e o teto **também não morde**: `max-width: 75%` é percentual da largura real, e nessa faixa o layout ainda não congelou. O 840 é inalcançável aqui |
-| sem heading (as **3** páginas sem `##`), a partir de 1408 | 840 | ausente | **não alcança** — `docItemCol` aplica `max-width: 75% !important` (840, 75% de `--sd-container-width`) antes de qualquer regra nossa rodar, e `!important` não se vence sem escrever outro |
+| sem heading (as **3** páginas sem `##`), a partir de 1408 | 840, e o `<article>` mede **797** | ausente | **não alcança** — `docItemCol` aplica `max-width: 75% !important` (840, 75% de `--sd-container-width`) antes de qualquer regra nossa rodar, e `!important` não se vence sem escrever outro. Os 43,2 que faltam para o `<article>` são o corredor de §1.7, cobrado por dentro da coluna |
 | `hide_table_of_contents: true` | 1120 | ausente | **não trava mais** — a #96 removeu o `:not(:has(> .col--3))` da lista de exceções; ver §1.5 |
 
 Verificado no fonte **e no artefato**: com `hide_table_of_contents: true` a coluna sai do build com `class="col"` e mais nada — a classe hasheada não é aplicada, então não há `!important` a vencer, e a coluna cresce para o container inteiro. Medido em navegador nessa configuração: **coluna em 1120, prosa em 1120** — a mais larga das três, de propósito, desde a #96.
@@ -290,19 +353,25 @@ A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sid
 
 **O respiro entre grupos não mudou na #97, e é lacuna nomeada, não folga silenciosa.** A issue pede que ele bata com o da âncora, mas nenhum documento desta spec publica o número — nem esta tabela, nem `tokens.md` §13 — e inventar um aqui seria exatamente o que o axioma 5 proíbe: procedência de medição, não de decisão de quem implementa. O que fica em pé é o `margin-top: 0,25rem` que o Infima já cravava entre categorias antes desta issue, inalterado. Fechar este critério pede uma medição de primeira mão contra a âncora — o mesmo processo que produziu a tabela do §11 —, e fica pendente para quem fizer essa medição.
 
-### 4.3 O divisor sai, a barra de rolagem se esconde, o topo desvanece — três queixas da issue-pai, três respostas puramente CSS
+### 4.3 O divisor sai, a barra de rolagem afina, o topo desvanece — três queixas da issue-pai, três respostas puramente CSS
+
+> **Esta seção estava DUPLICADA byte a byte no arquivo**, duas vezes com o mesmo título e o mesmo corpo. A cópia saiu junto com a correção da barra abaixo. Nenhuma das duas dizia algo que a outra não dissesse — foi acúmulo de edição, não divergência.
 
 **O divisor vertical entre sidebar e conteúdo não era pedido de ninguém.** `DocRoot/Layout/Sidebar` (hasheada) declara `border-right: 1px solid var(--ifm-toc-border-color)` — vazamento do substrato nativo. Não se toca a classe hasheada: `ThemeClassNames.docs.docSidebarContainer` está no MESMO elemento, e uma borda declarada nela tem a mesma especificidade e carrega depois no cascade. `--ifm-toc-border-color` não se zera no adaptador, porque a mesma variável também pinta o contorno do botão de recolher a sidebar (`DocSidebar/Desktop/CollapseButton`) — apagar os dois juntos removeria peça que ninguém pediu que saísse.
 
 **A barra de rolagem fica transparente em repouso e tingida no hover.** O elemento que rola não é `.theme-doc-sidebar-container` — é o `<nav class="menu thin-scrollbar">` dentro dele; `theme-doc-sidebar-menu` é o `<ul>` filho, estático. `scrollbar-color` (Firefox) e os pseudo-elementos `::-webkit-scrollbar-*` que `.thin-scrollbar` do Infima já declara (WebKit) citam os mesmos tokens, para não haver segunda paleta de barra de rolagem no projeto. `scrollbar-gutter: stable` reserva o espaço sempre, para a lista não pular de largura quando a barra aparece — o mesmo defeito de salto que o falso-negrito acima evita, mesma resposta.
 
-**O desvanecimento de topo é `mask-image`, puro CSS.** A máscara é relativa à CAIXA que rola, não ao conteúdo dentro dela — funciona em qualquer posição de scroll, sem listener de JS.
+#### A espessura era do Infima, com uma condição embutida
 
-### 4.3 O divisor sai, a barra de rolagem se esconde, o topo desvanece — três queixas da issue-pai, três respostas puramente CSS
+`.thin-scrollbar` declara `scrollbar-width: thin` **dentro de `@media (pointer: fine)`**. Quem chega sem apontador fino — toque, ou um ambiente que simplesmente não reporte o pointer — cai no `auto` do navegador, que é a barra larga. Medido no mesmo Chromium, no mesmo elemento: **15px sem a condição, 10 com ela**.
 
-**O divisor vertical entre sidebar e conteúdo não era pedido de ninguém.** `DocRoot/Layout/Sidebar` (hasheada) declara `border-right: 1px solid var(--ifm-toc-border-color)` — vazamento do substrato nativo. Não se toca a classe hasheada: `ThemeClassNames.docs.docSidebarContainer` está no MESMO elemento, e uma borda declarada nela tem a mesma especificidade e carrega depois no cascade. `--ifm-toc-border-color` não se zera no adaptador, porque a mesma variável também pinta o contorno do botão de recolher a sidebar (`DocSidebar/Desktop/CollapseButton`) — apagar os dois juntos removeria peça que ninguém pediu que saísse.
+A declaração passa a ser nossa, sem media query. A espessura da barra da sidebar deixa de depender de uma condição que não escrevemos e que nem sempre é verdadeira.
 
-**A barra de rolagem fica transparente em repouso e tingida no hover.** O elemento que rola não é `.theme-doc-sidebar-container` — é o `<nav class="menu thin-scrollbar">` dentro dele; `theme-doc-sidebar-menu` é o `<ul>` filho, estático. `scrollbar-color` (Firefox) e os pseudo-elementos `::-webkit-scrollbar-*` que `.thin-scrollbar` do Infima já declara (WebKit) citam os mesmos tokens, para não haver segunda paleta de barra de rolagem no projeto. `scrollbar-gutter: stable` reserva o espaço sempre, para a lista não pular de largura quando a barra aparece — o mesmo defeito de salto que o falso-negrito acima evita, mesma resposta.
+**O respiro da lista vem da âncora, e é ele que impede o texto de encostar na barra.** Lá o item termina **32px** antes da borda do painel — `pr-8` no elemento que rola, com a barra desenhada por dentro desse corredor. Aqui a barra é nativa e a goteira soma **por fora** do preenchimento: medido, com `padding-right: 32` a lista terminava a 42 da borda, não a 32. Por isso o preenchimento é `--sd-space-8` **menos** `--sd-scrollbar-fina`, e o resultado fecha no número da âncora em vez de ultrapassá-lo por uma largura que não escolhemos.
+
+`--sd-scrollbar-fina` é o único número deste projeto que outro navegador pode desmentir — ele é o que o Chromium reserva para `thin`. Está declarado uma vez, citado uma vez, e a consequência de ele estar errado é 2 ou 3px de respiro, nunca layout quebrado.
+
+**Medido depois:** a lista termina em 288 num painel que vai até 320, e o item ativo com ela. Exatamente os 32 da âncora.
 
 **O desvanecimento de topo é `mask-image`, puro CSS.** A máscara é relativa à CAIXA que rola, não ao conteúdo dentro dela — funciona em qualquer posição de scroll, sem listener de JS.
 
@@ -382,6 +451,63 @@ O recuo é do subtítulo e não do título, e isso é mecânico: margens de irm�
 **Peso e cor não são declarados**, e isso é fiel: na âncora o subtítulo herda o bloco de prosa.
 
 **O termo `lead` fica morto e não volta.** O nome é **subtítulo**. Um termo que já enganou uma vez não se recicla com significado novo.
+
+### 6.4 O par "Copiar página" — a segunda peça que o override do `h1` injeta
+
+A âncora abre a página com um par segmentado à direita do título: um botão que copia a página em Markdown e um chevron que abre o menu com as outras formas de levá-la. **É a peça que faz o leitor perceber que a página tem um formato para máquina** — o `.md` deste site existe desde o slice dos artefatos AI-era, e até aqui não havia nenhuma entrada de navegação para ele fora do link do rodapé.
+
+**A fonte é o `.md` que já existe.** O plugin `src/plugins/ai-era/` publica toda rota também como Markdown ([`informacao.md`](informacao.md) §9.1), e o botão **busca esse arquivo** — não serializa o DOM, não tem uma segunda ideia do que a página é. Uma fonte só, a mesma regra do subtítulo, e o dia em que o `.md` mudar de forma o que o leitor copia muda junto.
+
+#### A anatomia, medida na âncora
+
+| Sonda | Alvo |
+| --- | --- |
+| Altura do par | `34px` |
+| Raio das pontas externas | `12px` |
+| Corpo do rótulo | `14px`, peso `500` |
+| Vão entre glifo e palavra | `8px` |
+| Largura do menu | `277px` (276,7 medido) |
+| Raio do menu | `16px` |
+| Título do item de menu | `14px`, peso `500` |
+| Apoio do item de menu | `12px`, peso `400` |
+
+**Zero valor novo entrou na paleta e na escala:** o corpo é `--sd-type-sm`, o peso é `--sd-weight-ui`, o vão é `--sd-space-2`, o raio das pontas é `--sd-radius-md` — o mesmo do item de sidebar — e o raio do menu é `--sd-radius`. A cor do rótulo é `--sd-text-body`, e ela **bate exato**: a âncora mede `rgb(64, 66, 70)`, que é `#404246`, o mesmo valor que o §5.1 já registrou para o rótulo do índice. Só a altura (34) e a largura do menu (277) viraram token próprio, porque nenhuma das duas cai na escala de espaço.
+
+**As duas metades se encostam sem borda dupla:** a da esquerda não desenha a borda direita, a da direita desenha as quatro. Medido na âncora, `border-width: 1px 0 1px 1px` e `1px`.
+
+**O rótulo não muda de largura quando o estado muda.** "Copiar página" e "Copiado" têm larguras diferentes, e trocar o texto faria o par saltar no instante do clique. A resposta é a da âncora, medida no artefato dela: os rótulos empilhados na **mesma célula de grade**, o que não está em cena segurando a largura com `visibility: hidden`. Conferido: 136,2px antes e depois de copiar.
+
+#### O menu é `popover` nativo, e o quinto zero é quem escolheu
+
+A primeira escrita autorava modelo de interação — `onKeyDown` para `Escape`, `onKeyDown` para as setas, `onBlur` para fechar. **`npm run zeros` reprovou na hora**, e a régua está em [`README.md`](README.md) §7.1: *um único autor de modelo de interação no projeto inteiro*, e o único é o `SearchBar`.
+
+O zero não foi afrouxado — o menu é que desceu para o substrato. `popover` dá `Escape`, dá o fechar-ao-clicar-fora e dá a devolução do foco ao gatilho, as três do navegador. É o mesmo movimento que o `SearchBar` fez com `<dialog>` e `showModal()`. Conferido em navegador: `Escape` fecha e o foco volta ao chevron; clique fora fecha; `aria-expanded` acompanha pelo evento `toggle`.
+
+**O que a troca custou, e vai escrito:** o padrão `menu` do WAI-ARIA quer `ArrowDown`/`ArrowUp` entre os itens, e isso é tecla — não há como tê-lo sem reabrir o zero. Sem as setas, `role="menu"` seria ARIA mentindo sobre o modelo, então o menu não o usa: os quatro itens são links e botões comuns, numa ordem de tabulação comum, que é o que `Tab` já percorre.
+
+**O posicionamento é ancoramento de CSS**, e ele precisou de duas correções que só a medição achou:
+
+- **`anchor()` e não `position-area`.** A forma curta obriga a escolher entre eixo físico e lógico, e `bottom span-inline-start` mistura os dois — o Chromium a descarta em silêncio, com `position-area` computando `none` e o menu no canto da tela. As duas funções dizem a mesma coisa sem a armadilha.
+- **O bloco inteiro vai dentro de `@supports`.** Declarar o posicionamento solto deixaria `inset: auto` valer sozinho onde não há ancoramento, e a posição estática de um elemento em top layer **não** é a que ele teria no fluxo: medido, o menu ia para `x=0, y=8`. Com o `@supports`, o fallback é a folha do navegador — centro da viewport, com fundo, borda e sombra intactos.
+
+#### As quatro ações, e a que sai do site
+
+| Ação | O que faz |
+| --- | --- |
+| **Copiar página** | busca `permalink + '.md'` e escreve na área de transferência |
+| **Ver como Markdown** | abre a mesma rota `.md` |
+| **Abrir no ChatGPT** | leva a URL absoluta do `.md` numa pergunta pronta |
+| **Abrir no Claude** | idem |
+
+As duas últimas **saem do site**, e isso passa perto do terceiro zero. Não passa por dentro: elas são `<a href>` — navegação que o leitor clica —, e a segunda perna do zero 3 já separa isso de recurso carregado pela página, com o mesmo critério que deixa o GitHub do rodapé passar. `npm run zeros` as imprime na lista de origens citadas.
+
+**Dissenso.** Num ambiente corporativo fechado, oferecer dois assistentes públicos pode ser exatamente o que a política proíbe. A resposta é que a spec declara **zero delta deliberado** contra a âncora, que ela tem os dois, e que este é um repositório de referência — apagar dois itens de uma lista é uma linha, e reconstruí-los depois não é. **Reabre quando** o transplante tiver uma política escrita sobre destino de conteúdo.
+
+**Os ícones são os que já existiam.** `copy`, `check`, `file-text` e `external-link` estão no manifesto desde antes; o chevron é o `chevron-right` **girado**, e girá-lo é o que evita um vigésimo primeiro glifo de sistema no orçamento de [`icones.md`](icones.md) para uma seta que só muda de eixo. `external-link` serve os dois itens de assistente porque o manifesto **não vendoriza marca de terceiro** — o que o glifo diz ali é *isto sai do site*, que é o fato relevante.
+
+**O par não existe abaixo de 997.** Na âncora ele some quando o cabeçalho fica mais estreito que 520px, por container query; aqui o limiar é o do projeto (§1.6), que é a lista fechada que o portão 1 cobra. O comportamento é o mesmo em espírito, e no estreito a página abre no conteúdo — o mesmo critério que tira o TOC móvel (§9).
+
+**O `<h1>` ganhou um pai.** Ele e o par moram numa linha `flex` — `align-items: center`, o par empurrado por `margin-inline-start: auto`. Medido: o `h1` centra em 209,3 e o botão também, o mesmo alinhamento que a âncora tem (lá, 204 para os dois). O subtítulo passa a ser irmão da **linha**, não do `h1`, e a regra que zera a margem de baixo acompanhou — as duas formas ficam declaradas, e nenhuma cobra a outra. `.markdown h1:first-child`, que carrega a escala de tipo do título, **não se abala**: ele é descendente de `.markdown` e primeiro filho do pai, e continua sendo as duas coisas dentro da linha.
 
 ---
 
@@ -507,7 +633,8 @@ Abaixo de 997px — o mesmo limiar em que a sidebar vira gaveta, em que o gutter
 - **o cartão não está mais lá para encolher.** A história inteira dele no estreito era uma declaração de meio preenchimento, e ela morre junto com a superfície que a consumia;
 - **o breakout já resolveu para zero**, e agora nos dois lados do limiar — não há lista de escape em lugar nenhum;
 - **o gutter NÃO se preservava sozinho, e esta é a correção que a implementação achou.** A regra (b) do §1.4 zera o preenchimento do `.col` para a cadeia fechar no largo. Abaixo do limiar não há 75%, não há coluna de 816 (era 864 antes da #96) e não há cadeia a fechar — mas a regra continuava valendo, e o texto encostava na borda da viewport sem uma segunda declaração. Até a #96 quem dava zero ali era a conta do `<main>` (`gutter − 16`, que no estreito é `16 − 16`); a #96 tirou o preenchimento horizontal do `<main>` de vez — ver §1 —, e o resultado no estreito é o mesmo zero, só que agora por ausência de declaração, não por conta que zera. Medido a 390: eyebrow, título e cada parágrafo em `x=0`, encostados na borda da viewport. **O `.col` recupera o preenchimento no estreito**, e ele recupera pelo token — nunca pelo valor que o Infima por acaso também usa. A faixa de tabs, essa sim, some sozinha do outro lado do mesmo limiar;
-- **o TOC móvel sai.** É o único lugar onde o critério *"mais perto da âncora"* **remove** uma peça de navegação, e por isso ele é uma **declaração** e não uma omissão: se um dia doer, é uma linha que se apaga. O leitor troca o índice colapsado pela rolagem, e o que ele ganha é a página começando no conteúdo.
+- **o TOC móvel sai.** É o único lugar onde o critério *"mais perto da âncora"* **remove** uma peça de navegação, e por isso ele é uma **declaração** e não uma omissão: se um dia doer, é uma linha que se apaga. O leitor troca o índice colapsado pela rolagem, e o que ele ganha é a página começando no conteúdo;
+- **o par "Copiar página" sai junto, e pelo mesmo critério.** Na âncora ele desaparece quando o cabeçalho fica mais estreito que 520px, por container query; aqui o limiar é o do projeto, que é a lista fechada que o portão 1 cobra. É a segunda peça a sair por *"a página começa no conteúdo"*, e a primeira que sai levando função embora — o `.md` continua alcançável pelo link do rodapé (§8.3), que é o caminho que ele já tinha.
 
 **A linha do footer quebra e não empilha**, revertendo deliberadamente o Infima. Ele transforma cada link em bloco, o que faz *uma linha* virar cinco — e "uma linha" é a decisão inteira do rodapé.
 
@@ -559,6 +686,7 @@ A tolerância é parte do alvo, e não um detalhe do script: `exato` é para o q
 | TOC `border-left` | `0px` | exato |
 | Navbar altura | `112px` | ±1 |
 | Margem direita | `52px` | ±1 |
+| Corredor | `43,2px` | exato |
 | A 1920, margem esquerda | `256px` | ±1 |
 | A 1920, margem direita | `256px` | ±1 |
 | TOC visível a 1100 | `não` | exato |
@@ -597,6 +725,9 @@ A âncora abre a página com três faixas e **sem banda cinza**: sobrancelha, t�
 | Sobrancelha peso | `600` | exato |
 | Subtítulo tamanho | `18px` | exato |
 | Subtítulo entrelinha | `28px` | exato |
+| Copiar página altura | `34px` | ±1 |
+| Copiar página raio | `12px` | exato |
+| Copiar página corpo | `14px` | exato |
 
 **O título não tem linha aqui.** Ele é o `h1`, e o `h1` já tem alvo na escala de tipo de [`tokens.md`](tokens.md) §13. Publicá-lo nos dois lugares criaria duas verdades sobre o mesmo número — que é o defeito que este instrumento inteiro existe para não repetir.
 
@@ -611,6 +742,12 @@ O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | **O alvo medido do §11** | **medido em referência** | as três medições de primeira mão da âncora, em `research/paridade-devin` §4 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
+| **O corredor de §1.7, em 43,2** | **medido em referência** | medição de primeira mão da âncora, a 1024 e a 1512, pelo mesmo instrumento CDP de `npm run paridade`: o conteúdo dela abre `pl-[5.7rem]` sobre um `-ml-12`, e o líquido é o mesmo nas duas larguras. O número que ele substitui não era decisão — era o resto da centralização da prosa, 47,6 numa largura e zero em toda a faixa de laptop |
+| **O padding lateral do quadro em 32** | **medido em referência (correção)** | a regra do wrapper da âncora que o §11 já publicava para derivar as margens a 1920 — `max-width: 1472`, `padding-inline: 32`. Estava implementada só pela metade de dentro (`max-width: 1408`), que é idêntica a partir de 1472 e cai a zero abaixo dela. Confirmado em navegador: nenhuma das 62 sondas de paridade se moveu |
+| **A `.row` a 4/3 abaixo de 1280** | **origem própria (implementação)** | `docItemCol` crava `max-width: 75% !important` numa classe hasheada, e o `!important` não se vence sem escrever outro. `calc(-100% / 3)` é o complemento exato de 75%, derivado do próprio teto — `0,75 × 4/3 = 1` —, não um número escolhido. A faixa vazia que ele fecha foi medida: 180px a 1024, 244px a 1279 |
+| **A barra fina da sidebar** | **medido em referência + origem própria (medição)** | `.thin-scrollbar` do Infima declara `scrollbar-width: thin` dentro de `@media (pointer: fine)`, e sem a condição o navegador dá a barra larga. Medido no mesmo Chromium, no mesmo elemento: 15px contra 10. O respiro de 32 da lista é da âncora (`pr-8`); a subtração da goteira é o que faz o número fechar nela em vez de ultrapassá-la |
+| **A anatomia do par "Copiar página" (§6.4)** | **medido em referência** | medição de primeira mão do cabeçalho da âncora a 1512, pelo mesmo instrumento: altura 34, raio 12, corpo 14/500, vão 8, menu 276,7 × raio 16. A cor do rótulo bate exato com `--sd-text-body` — `rgb(64, 66, 70)`, o mesmo `#404246` que o §5.1 já registrava |
+| **O menu em `popover` nativo** | **origem própria (consequência)** | o quinto zero — um autor de modelo de interação no projeto inteiro. A primeira escrita autorava tecla e reprovou; o substrato entrega `Escape`, light dismiss e devolução de foco sem uma linha. Ver [`README.md`](README.md) §7.1 |
 | **As margens a 1920 do §11** | **origem própria (consequência)** | a regra do wrapper medida a 1512 (`max-width 1472`, `margin-inline auto`, `padding-inline 32`), estendida à largura maior |
 | **O limiar sondado a 1100** | **origem própria (implementação)** | o número redondo põe âncora e produto de acordo e não mede nada; a sonda tem que cair dentro da faixa onde discordam. *Eram dois: a sonda a 1010 saiu com a linha da sidebar — §11, S3-7* |
 | Container, coluna, TOC, prosa | herdado + origem própria (consequência) | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50), [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) |
