@@ -81,6 +81,49 @@ constante fixada no código. É por isso que ele serve de prova de que o pacote
 chegou inteiro, em vez de ser só um texto que estava lá dentro.
 :::
 
+## O primeiro uso, fim a fim
+
+Três linhas, na ordem, e cada uma responde uma coisa. Rode dentro de um
+repositório git.
+
+```bash
+# 1. o que existe para instalar
+uvx overpower@latest list
+
+# 2. o plano, sem escrever nada
+uvx overpower@latest install --skill panlabs-python-standards \
+  --runtime claude-code --dry-run
+
+# 3. a escrita, com a confirmação que ela pede
+uvx overpower@latest install --skill panlabs-python-standards \
+  --runtime claude-code
+```
+
+O passo 2 é o que faz o 3 ser sem surpresa: o `--dry-run` resolve tudo, imprime
+todo destino e quem o lê, espelha o código de saída real e não escreve nada, nem
+um diretório vazio. O que ele imprimir é o que o passo 3 escreve.
+
+Depois, a conferência:
+
+```bash
+uvx overpower@latest doctor
+```
+
+Ele sai `0` quando as cinco conferências passam e `3` quando alguma acha
+problema, e nunca `1` por relatório ruim. É isso que o torna encadeável numa
+esteira:
+
+```bash
+uvx overpower@latest install --skill panlabs-python-standards \
+  --runtime claude-code --yes && uvx overpower@latest doctor
+```
+
+:::note
+Se você omitir o `--runtime` num terminal, a linha não recusa: ela abre o
+assistente no passo que faltou. Num cano, a mesma linha sai `2`. A diferença
+está em [Comandos](/ferramentas/bibliotecas/overpower/comandos/indice).
+:::
+
 ## Sempre `@latest`
 
 O catálogo não é buscado pela rede nem na instalação nem na execução. Ele vem

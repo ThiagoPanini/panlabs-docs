@@ -27,6 +27,31 @@ formas diferentes.
 | Rede de segurança | `git status` revela e desfaz | nenhuma, e é por isso que `--force` existe |
 | Destino ocupado | sobrescreve, porque o git mostra | pergunta num terminal; recusa com saída `3` sem terminal, sob `--yes` ou sob `--dry-run`; `--force` sobrescreve sem perguntar |
 
+### Os dois escopos, vistos do disco
+
+A tabela acima diz a regra; isto é o que ela produz. Uma skill instalada para
+dois runtimes que compartilham a mesma pasta:
+
+```
+# escopo de projeto, dentro do repositório
+.claude/skills/panlabs-python-standards/
+├── SKILL.md
+└── references/...
+
+# escopo de máquina, sob o diretório do usuário
+~/.claude/skills/panlabs-python-standards/     ← cópia real, o primeiro destino
+~/.agents/skills/panlabs-python-standards  ->  ../../.claude/skills/panlabs-python-standards
+```
+
+O segundo destino em diante é **link relativo**, e relativo de propósito: um
+diretório de usuário que muda de caminho, ou que é sincronizado entre máquinas,
+continua resolvendo.
+
+O `doctor` conhece a diferença e a lê dos dois lados. Um link que aponta para o
+vazio é `dangling link`; um link que virou arquivo de texto, porque alguém
+copiou a pasta sem preservar links, é `link virado texto`. Os dois são achado, e
+achado reprova.
+
 Em escopo de **projeto**, toda aterrissagem é cópia real, nunca link simbólico.
 Isso é deliberado: sob `core.symlinks=false`, um valor de configuração do git que
 um clone pode herdar calado, um link commitado é conferido como arquivo de texto

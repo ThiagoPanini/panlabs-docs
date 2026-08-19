@@ -26,6 +26,30 @@ differently.
 | Safety net | `git status` reveals and undoes | none, which is why `--force` exists |
 | Occupied destination | overwritten, because git shows it | asks in a terminal; refused with exit `3` off a terminal, under `--yes` or under `--dry-run`; `--force` overwrites without asking |
 
+### The two scopes, seen from disk
+
+The table above gives the rule; this is what it produces. One skill installed for
+two runtimes that share the same folder:
+
+```
+# project scope, inside the repository
+.claude/skills/panlabs-python-standards/
+├── SKILL.md
+└── references/...
+
+# machine scope, under the home directory
+~/.claude/skills/panlabs-python-standards/     ← real copy, the first destination
+~/.agents/skills/panlabs-python-standards  ->  ../../.claude/skills/panlabs-python-standards
+```
+
+The second destination onward is a **relative link**, and relative on purpose: a
+home directory that moves, or that is synced across machines, keeps resolving.
+
+`doctor` knows the difference and reads it from both sides. A link pointing at
+nothing is a `dangling link`; a link that turned into a text file, because
+someone copied the folder without preserving links, is a `link turned into
+text`. Both are findings, and a finding fails.
+
 In **project** scope, every landing is a real copy, never a symlink. This is
 deliberate: under `core.symlinks=false`, a git config value a clone can inherit
 silently, a committed symlink checks out as an ordinary text file instead of a

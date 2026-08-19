@@ -82,6 +82,49 @@ a constant baked into the source. That is what makes it evidence the package
 landed intact, rather than just a string that happened to be in there.
 :::
 
+## The first use, end to end
+
+Three lines, in order, each answering one thing. Run inside a git repository.
+
+```bash
+# 1. what there is to install
+uvx overpower@latest list
+
+# 2. the plan, writing nothing
+uvx overpower@latest install --skill panlabs-python-standards \
+  --runtime claude-code --dry-run
+
+# 3. the write, with the confirmation it asks for
+uvx overpower@latest install --skill panlabs-python-standards \
+  --runtime claude-code
+```
+
+Step 2 is what makes step 3 unsurprising: `--dry-run` resolves everything,
+prints every destination and who reads it, mirrors the real exit code, and
+writes nothing, not even an empty directory. What it prints is what step 3
+writes.
+
+Then the check:
+
+```bash
+uvx overpower@latest doctor
+```
+
+It exits `0` when the five checks pass and `3` when one finds a problem, and
+never `1` for an unhealthy report. That is what makes it chainable in a
+pipeline:
+
+```bash
+uvx overpower@latest install --skill panlabs-python-standards \
+  --runtime claude-code --yes && uvx overpower@latest doctor
+```
+
+:::note
+If you leave out `--runtime` in a terminal, the line does not refuse: it opens
+the wizard on the step that was missing. In a pipe, the same line exits `2`. The
+difference is in [Commands](/ferramentas/bibliotecas/overpower/comandos/indice).
+:::
+
 ## Always `@latest`
 
 The catalog is not fetched over the network at install time or at run time. It is
