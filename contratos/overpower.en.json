@@ -1,0 +1,210 @@
+{
+  "contrato": "assinatura",
+  "versao": 1,
+  "biblioteca": {
+    "modulo": "overpower"
+  },
+  "rotulos": {
+    "aplicacao": "Application",
+    "comando": "Command",
+    "comandos": "Commands",
+    "opcoesGlobais": "Global options",
+    "opcoes": "Options",
+    "codigosDeSaida": "Exit codes",
+    "semRetorno": "The exit codes are the application's.",
+    "erros": "Errors",
+    "colunaErro": "Error",
+    "colunaQuando": "When",
+    "colunaNome": "Name",
+    "colunaEspecie": "Kind",
+    "colunaResumo": "What it does",
+    "veja": "The fields are on the command page:"
+  },
+  "entradas": [
+    {
+      "id": "overpower",
+      "especie": "aplicacao",
+      "titulo": "overpower",
+      "qualificado": "overpower",
+      "assinatura": "overpower [--help] [--version] &lt;command&gt;",
+      "resumo": "The root of the command line, with the options that hold in any position and the table of four exit codes the three commands share.",
+      "descricao": "Every invocation of overpower answers one of exactly three questions, and each question is a command. Typed bare, overpower prints a banner and the top-level help, and exits `0`; under a pipe the banner is dropped and only the help goes through, so a `grep` or a redirect gets something worth reading.\n\nThe catalog overpower installs from is embedded in the package, so the version of the tool is the version of the catalog. That is why every line on this site pins `@latest`, and it is what `--version` proves.",
+      "exporta": ["list", "install", "doctor"],
+      "fluxo": ["list", "install", "doctor"],
+      "parametros": [
+        {
+          "nome": "--help",
+          "tipo": "flag",
+          "descricao": "Prints the help for the level it appears at and exits `0`. At the root, it is the same screen bare overpower already shows."
+        },
+        {
+          "nome": "--version",
+          "tipo": "flag",
+          "descricao": "Prints the version read from the installed package's own metadata, rather than from a constant baked into the source. It is the cheapest available check that the package arrived whole."
+        }
+      ],
+      "retorno": {
+        "tipo": "int",
+        "descricao": "The exit code is the line's answer, and it means the same across the three commands. The axis between `2` and `3` is whose defect it is, and that distinction is what makes both usable inside a script.",
+        "campos": [
+          {
+            "nome": "0",
+            "tipo": "int",
+            "descricao": "Did what was asked."
+          },
+          {
+            "nome": "1",
+            "tipo": "int",
+            "descricao": "Could not run. A failure the product does not recognise as one of its own refusals becomes an error panel and leaves through here, which is itself a claim, that the defect is overpower's."
+          },
+          {
+            "nome": "2",
+            "tipo": "int",
+            "descricao": "The invocation is wrong. The value you typed exists nowhere, and the message prints the whole closed list."
+          },
+          {
+            "nome": "3",
+            "tipo": "int",
+            "descricao": "Ran, and the answer is no. The line was well formed, the value was real, and what does not exist is the pairing you asked for."
+          }
+        ]
+      },
+      "erros": []
+    },
+    {
+      "id": "list",
+      "especie": "comando",
+      "titulo": "overpower list",
+      "qualificado": "overpower list",
+      "assinatura": "overpower list [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;]",
+      "resumo": "Answers what is there. Bare, it prints the embedded catalog in four blocks; with a selector, it opens exactly one item, in full.",
+      "descricao": "Every entry prints with its size, its file count and its description in full, never truncated, because the description is the thing the decision to install is actually made on. Under it sits the line that installs the item, with no prompt in front, so that copying and pasting hands back something that runs.\n\n`list` answers about one item at a time. Two selectors on the same line are a question with two answers, and the command refuses rather than silently picking one.",
+      "chamada": "overpower list",
+      "parametros": [
+        {
+          "nome": "--skill",
+          "tipo": "name",
+          "descricao": "Opens one pool skill in full. Takes the short form `-s`.",
+          "exemplo": "panlabs-python-standards"
+        },
+        {
+          "nome": "--bundle",
+          "tipo": "name",
+          "descricao": "Opens a bundle and lists the artifacts its manifest names. Takes the short form `-b`."
+        },
+        {
+          "nome": "--mcp",
+          "tipo": "name",
+          "descricao": "Opens an MCP server's recipe, with the transport, the fields the TOML itself spells, and the derived targets."
+        },
+        {
+          "nome": "--ai-framework",
+          "tipo": "name",
+          "descricao": "Opens an AI Framework and prints every artifact inside it. It is the one selector `--from` refuses."
+        },
+        {
+          "nome": "--from",
+          "tipo": "url",
+          "descricao": "Reads from a GitHub repository instead of the embedded catalog. Bare, it prints that repository's showcase."
+        }
+      ],
+      "retorno": null,
+      "erros": []
+    },
+    {
+      "id": "install",
+      "especie": "comando",
+      "titulo": "overpower install",
+      "qualificado": "overpower install",
+      "assinatura": "overpower install --runtime &lt;key&gt; [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;] [--global] [--force] [--yes] [--dry-run]",
+      "resumo": "Writes. It prints the plan, with every destination and who reads it, before touching disk, and asks before writing when there is a terminal on the other side.",
+      "descricao": "The four selectors mix freely on a single line, and each takes a comma-separated value, a repeated flag, or both. When a line resolves to writes across more than one unit, they always happen in the same order, framework, then bundle, then individual artifact, then MCP server, and the most specific unit is written last.\n\nIn a terminal, a line that does not close a plan opens the wizard instead of simply refusing. It only opens the steps your line left open, always in the same order, and whatever it collects becomes exactly the same request a hand-typed flag line would have built.",
+      "chamada": "overpower install",
+      "parametros": [
+        {
+          "nome": "--skill",
+          "tipo": "name",
+          "descricao": "One pool skill, installed on its own. Takes the short form `-s`.",
+          "exemplo": "panlabs-python-standards"
+        },
+        {
+          "nome": "--runtime",
+          "tipo": "key",
+          "obrigatorio": true,
+          "descricao": "Who receives what is installed. Takes keys from a closed table of 77 runtimes, and has no default. A line that names something to install and no runtime refuses rather than guessing.",
+          "exemplo": "claude-code"
+        },
+        {
+          "nome": "--bundle",
+          "tipo": "name",
+          "descricao": "A bundle, expanded into the pool artifacts its manifest names. Takes the short form `-b`."
+        },
+        {
+          "nome": "--mcp",
+          "tipo": "name",
+          "descricao": "One MCP server, grafted into the runtime's own configuration. Nothing is copied here; a key is added inside a document that is already yours."
+        },
+        {
+          "nome": "--ai-framework",
+          "tipo": "name",
+          "descricao": "An AI Framework, installed whole. It has no short form on purpose, because `-f` is already `--force` on this same command."
+        },
+        {
+          "nome": "--from",
+          "tipo": "url",
+          "descricao": "Installs from a GitHub repository, with no registration step. Once it is on the line, the embedded catalog is not consulted."
+        },
+        {
+          "nome": "--dry-run",
+          "tipo": "flag",
+          "descricao": "Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory."
+        },
+        {
+          "nome": "--yes",
+          "tipo": "flag",
+          "descricao": "Skips the confirmation, and nothing else. Takes the short form `-y`."
+        },
+        {
+          "nome": "--force",
+          "tipo": "flag",
+          "descricao": "Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`."
+        },
+        {
+          "nome": "--global",
+          "tipo": "flag",
+          "descricao": "Writes under the home directory instead of the current repository. Takes the short form `-g`."
+        }
+      ],
+      "retorno": null,
+      "erros": []
+    },
+    {
+      "id": "doctor",
+      "especie": "comando",
+      "titulo": "overpower doctor",
+      "qualificado": "overpower doctor",
+      "assinatura": "overpower doctor",
+      "resumo": "Answers whether what was written is still what was written. It reports the terminal and the integrity in a single output, across both scopes at once.",
+      "descricao": "The terminal half reports four facts, whether a TTY is attached, what colour system was detected, the terminal width, and whether `NO_COLOR` is set. It is the exact set that explains a screen that came out looking wrong, without needing a round trip to ask.\n\nThe integrity half reads the runtime table in both scopes and checks what it finds against what was actually installed. It reads both because a target carries no manifest of its own, so there is no way to check one scope that would mean anything. That is also why `doctor` has no `--global`, and why it still answers outside a git repository, reporting nothing for the half it cannot find.",
+      "chamada": "overpower doctor",
+      "parametros": [],
+      "retorno": {
+        "tipo": "int",
+        "descricao": "`doctor` uses two of the application's four codes, and the choice between them is what makes it usable as a CI gate. An unhealthy report is never `1`, because an unhealthy report is not a crash.",
+        "campos": [
+          {
+            "nome": "0",
+            "tipo": "int",
+            "descricao": "The three checks ran and none found a problem."
+          },
+          {
+            "nome": "3",
+            "tipo": "int",
+            "descricao": "Found a problem. The check ran correctly and computed a real answer that happens to be negative, so a script tells `the check ran and failed` apart from `the check itself broke` by exit code alone."
+          }
+        ]
+      },
+      "erros": []
+    }
+  ]
+}

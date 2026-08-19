@@ -1,7 +1,7 @@
 {
   "link.item.label.Changelog": {
     "message": "Changelog",
-    "description": "The label of footer link with label=Changelog linking to /ferramentas/bibliotecas/biblioteca-c/changelog"
+    "description": "The label of footer link with label=Changelog linking to /ferramentas/bibliotecas/overpower/publicacao/changelog"
   },
   "link.item.label.llms.txt": {
     "message": "llms.txt",

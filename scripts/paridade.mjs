@@ -97,7 +97,7 @@ async function esperarPor(tentar, {tentativas, intervalo}) {
    seria publicar um alvo que nunca reprova. */
 const ROTAS = {
   prosa: '/procedimentos/acessos/rotacionar-uma-chave',
-  codigo: '/ferramentas/bibliotecas/biblioteca-b',
+  codigo: '/ferramentas/bibliotecas/overpower/instalacao',
   /* A rota da tabela mudou na #114: o índice de `Bibliotecas` era a página que a
      renderizava, e ele morreu com a forma *índice de categoria* (ADR 10 §c). A
      herdeira é a fixture `tabela-como-pagina-inteira` — o tipo `Catálogo` com
@@ -106,9 +106,19 @@ const ROTAS = {
   /* O cartão morava na landing. A landing morreu e a raiz virou salto para a
      primeira doc, então a rota do cartão é a página que ainda o renderiza —
      sondar `/` daria `sem-medida` para sempre. */
-  cartao: '/ferramentas/bibliotecas/biblioteca-c/visao-geral',
+  /* **A rota é `/ferramentas` e não o caminho da página**, porque a folha que
+     renderiza o cartão é a que carrega `slug: /` (ADR 10 §h). Sondar o caminho
+     longo dava 404 e três `sem-medida` de uma vez. */
+  cartao: '/ferramentas',
   passos: '/procedimentos/acessos/assumir-um-papel-na-aws',
-  api: '/ferramentas/bibliotecas/biblioteca-c/referencia/esteira-gerar',
+  api: '/ferramentas/bibliotecas/overpower/comandos/install',
+  /* **O `<Expandable>` saiu do ramo gerado com o contrato de biblioteca**, e a
+     sonda dele mudou de cenário em vez de mudar de alvo. Ele aparecia nas
+     páginas de `Biblioteca C` porque um campo de retorno tinha campos dentro; o
+     contrato de CLI não aninha, porque um código de saída não tem subcampos. A
+     dona do componente é a fixture `aninhamento-profundo`, que sempre foi
+     autoral e sempre teve os quatro níveis. */
+  aninhamento: '/procedimentos/infraestrutura/o-output-de-um-modulo',
 };
 
 /* Um cenário é uma rota numa largura num tema. A largura de referência é a que
@@ -128,6 +138,7 @@ const CENARIOS = {
   'cartao@1512/escuro': {rota: ROTAS.cartao, largura: 1512, tema: 'dark'},
   'passos@1512/escuro': {rota: ROTAS.passos, largura: 1512, tema: 'dark'},
   'api@1512/escuro': {rota: ROTAS.api, largura: 1512, tema: 'dark'},
+  'aninhamento@1512/escuro': {rota: ROTAS.aninhamento, largura: 1512, tema: 'dark'},
 };
 
 /* Cada sonda diz onde olhar e o que ler. `medida` é uma das cinco formas:
@@ -255,23 +266,33 @@ const SONDAS = [
      e foi por isso que o +16px por nível sobreviveu duas issues sem ninguém
      notar que ele era o default do Infima e não a medição da âncora (ADR 10 §f).
 
-     Três sondas porque a rampa tem três degraus vivos — 16 · 16 · 28 —, e um
-     alvo que some dois deles num número só não reprova quando um dos dois anda.
-     O nível 2 medir o mesmo que o nível 1 é o ALVO, não redundância: separador e
-     primeiro nível ficam encostados, e é essa igualdade que a sonda trava.
+     Quatro sondas porque a rampa tem quatro degraus vivos — 16 · 16 · 28 · 40 —,
+     e um alvo que some dois deles num número só não reprova quando um dos dois
+     anda. O nível 2 medir o mesmo que o nível 1 é o ALVO, não redundância:
+     separador e primeiro nível ficam encostados, e é essa igualdade que a sonda
+     trava.
 
      O nível 1 é o SEPARADOR, e o seletor passou a dizer isso. Antes ele era
      `.menu__link` seco, que devolvia o mesmo elemento por acidente de ordem —
      `querySelector` dá o primeiro casamento — e não por escolha.
 
-     O nível 3 sonda no cenário `api`, e não em `prosa`: ele só existe em
-     `Ferramentas › Bibliotecas › Biblioteca C`, e o ramo nasce fechado. A rota
-     de `api` está DENTRO dele, então o Docusaurus abre o ramo sozinho e os nós
-     de nível 3 chegam ao DOM medíveis. Sondar de `prosa` daria `sem-medida`
-     para sempre. */
+     Os níveis 3 e 4 sondam no cenário `api`, e não em `prosa`: eles só existem
+     em `Ferramentas › Bibliotecas › overpower`, e o ramo nasce fechado. A rota de
+     `api` está DENTRO dele, no nível 4, então o Docusaurus abre a cadeia inteira
+     sozinho e os nós dos dois níveis chegam ao DOM medíveis. Sondar de `prosa`
+     daria `sem-medida` para sempre.
+
+     **O quarto degrau chegou com o `overpower`, e a sonda dele chegou junto.** A
+     rampa do ADR 10 §f) sempre publicou 40px no nível 4; o que não existia era o
+     nível, então o CSS parava no 3 e a rampa parava com ele. Com o teto em 4 as
+     13 folhas novas cairiam nos 16px base do Infima, e a fixture
+     `aninhamento-de-sidebar-maximo` provaria um número que ninguém escrevia. A
+     ordem é a que `chrome.md` §4.2 cobra: alvo publicado, regra escrita, sonda
+     medindo. */
   {sonda: 'sidebar.item.recuo', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link', medida: 'estilo:padding-left'},
   {sonda: 'sidebar.item.recuo.n2', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link-level-2 > .menu__link', medida: 'estilo:padding-left'},
   {sonda: 'sidebar.item.recuo.n3', cenario: 'api@1512/escuro', seletor: '.theme-doc-sidebar-item-link-level-3 > .menu__link', medida: 'estilo:padding-left'},
+  {sonda: 'sidebar.item.recuo.n4', cenario: 'api@1512/escuro', seletor: '.theme-doc-sidebar-item-link-level-4 > .menu__link', medida: 'estilo:padding-left'},
   /* O que gruda é a lista, não a coluna: `.col--3` é `static` e
      `.theme-doc-toc-desktop` é `sticky`. */
   {sonda: 'toc.topo', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-toc-desktop', medida: 'estilo:top'},
@@ -292,7 +313,7 @@ const SONDAS = [
   {sonda: 'codigo.raio', cenario: 'codigo@1512/escuro', seletor: '[data-sd-component="code-group"]', medida: 'estilo:border-radius'},
   {sonda: 'tabela.tamanho', cenario: 'tabela@1512/escuro', seletor: '[data-sd-component="table"] td', medida: 'estilo:font-size'},
   {sonda: 'passos.margem-topo', cenario: 'passos@1512/escuro', seletor: '[data-sd-component="steps"]', medida: 'estilo:margin-top'},
-  {sonda: 'expandable.raio', cenario: 'api@1512/escuro', seletor: '[data-sd-component="expandable"]', medida: 'estilo:border-radius'},
+  {sonda: 'expandable.raio', cenario: 'aninhamento@1512/escuro', seletor: '[data-sd-component="expandable"]', medida: 'estilo:border-radius'},
   // --- a moldura e o painel da página gerada (#99) -----------------------
   /* `article` é o único da rota `api`: sem TOC e sem admonition nesta
      fixture, o seletor por tipo não colide com nada — mesmo raciocínio de
@@ -378,6 +399,7 @@ const ALVOS = {
       ['Item de sidebar recuo nível 1', ['sidebar.item.recuo']],
       ['Item de sidebar recuo nível 2', ['sidebar.item.recuo.n2']],
       ['Item de sidebar recuo nível 3', ['sidebar.item.recuo.n3']],
+      ['Item de sidebar recuo nível 4', ['sidebar.item.recuo.n4']],
       ['TOC grudado em', ['toc.topo']],
     ],
   },
@@ -504,9 +526,20 @@ function servir(raiz) {
 
     let arquivo = path.normalize(path.join(raiz, rota));
     if (!arquivo.startsWith(raiz)) return void res.writeHead(403).end();
-    if (existsSync(arquivo) && statSync(arquivo).isDirectory()) arquivo = path.join(arquivo, 'index.html');
-    /* `trailingSlash: false` publica `/a/b`, e o arquivo é `a/b.html`. */
-    if (!existsSync(arquivo) && existsSync(`${arquivo}.html`)) arquivo = `${arquivo}.html`;
+    /* **A ordem das duas linhas abaixo é a correção, e ela custou três
+       `sem-medida`.** Com `trailingSlash: false` o Docusaurus publica `/a/b` como
+       `a/b.html`, e publica os filhos de `/a/b` dentro de `a/b/`. As duas coisas
+       coexistem: `build/ferramentas.html` é a página, `build/ferramentas/` é a
+       pasta dos filhos dela, e nenhum `index.html` mora lá.
+
+       A versão anterior via a pasta primeiro, apontava para um `index.html`
+       inexistente e devolvia 404 para toda rota nua de aba. Nada sondava rota nua
+       até o `slug: /` mudar de página no port do `overpower` — e aí a sonda do
+       cartão passou a apontar para `/ferramentas`, que é onde a folha com
+       `<CardGroup>` mora agora. O `.html` do irmão vem antes da pasta. */
+    const comHtml = `${arquivo}.html`;
+    if (existsSync(comHtml)) arquivo = comHtml;
+    else if (existsSync(arquivo) && statSync(arquivo).isDirectory()) arquivo = path.join(arquivo, 'index.html');
     if (!existsSync(arquivo)) return void res.writeHead(404).end('não achei');
 
     res.writeHead(200, {'content-type': TIPOS[path.extname(arquivo)] ?? 'application/octet-stream'});
@@ -745,7 +778,7 @@ const ESTOURO_LARGURAS = [390, 768, 997, 1280, 1366, 1408, 1512, 1920];
 const ESTOURO_ROTAS = {
   passos: ROTAS.passos, // `<Steps>` — a grade de duas colunas
   api: ROTAS.api, // a referência gerada — as duas colunas de flex
-  codigo: ROTAS.codigo, // bloco de código longo
+  codigo: ROTAS.codigo, // `<CodeGroup>` e bloco de código
   tabela: ROTAS.tabela, // tabela larga
   prosa: ROTAS.prosa, // o shell comum, como controle
 };

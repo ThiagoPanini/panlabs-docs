@@ -27,18 +27,18 @@ export const VERSAO = 1;
 /**
  * As espécies de entrada. Fechado.
  *
- * **Cinco é estado de passagem.** As três primeiras descrevem superfície de
- * biblioteca (ADR 8); `aplicacao` e `comando` descrevem superfície de CLI
- * (ADR 9 §a). Elas convivem porque esta é a fatia **expand** de um
- * expand–contract: a máquina aprende a espécie nova enquanto o contrato no ar
- * ainda é o de `Biblioteca C`, e o portão 5 continua diffando contra ele. O
- * ticket do port fecha o **contract** e devolve a lista a duas.
+ * **Duas, e o expand–contract fechou.** `modulo`, `tipo` e `funcao` descreviam
+ * superfície de biblioteca (ADR 8) e saíram com o `panlabs-esteira`, o contrato
+ * mockado que elas serviam; `aplicacao` e `comando` descrevem superfície de CLI
+ * (ADR 9 §a), e é o `overpower` que está no ar. A fatia **expand** ensinou as
+ * duas espécies novas à máquina enquanto o sujeito ainda era `Biblioteca C`;
+ * esta é a **contract**, e a lista volta ao tamanho que tinha.
  *
  * A lista continua **fechada e validada**, com a mesma recusa nomeada e o mesmo
  * JSON Pointer do nó ofensor — o que o ADR 9 §a) preserva não é o tamanho, é a
  * propriedade.
  */
-export const ESPECIES = ['modulo', 'tipo', 'funcao', 'aplicacao', 'comando'];
+export const ESPECIES = ['aplicacao', 'comando'];
 
 /**
  * O teto de aninhamento, calibrado e não redondo.

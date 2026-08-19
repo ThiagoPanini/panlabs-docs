@@ -9,7 +9,7 @@
  * uma pilha separada de desenhos** — é por isso que `package`, `layers`,
  * `workflow` e outros seis carregam duas tags e consomem um arquivo só.
  *
- *   19 sistema + 11 navegação + 40 autoria = 70 tags sobre 61 arquivos
+ *   19 sistema + 16 navegação + 40 autoria = 75 tags sobre 61 arquivos
  *
  * O teto é 64 — **teto, não meta**. Ele foi alcançado no mapa do `mint` e a
  * árvore do `panlabs` devolveu folga: **quatro cortes, quatro slots livres**.
@@ -88,11 +88,16 @@ const NAVEGACAO = [
  * definição da tag NÃO reverte com elas: `autoria` é *"o nome escrito como
  * string"*, e não *"o MDX do autor"* — a correção que a estabeleceu vale por si.
  *
- * **Nove entradas carregam a segunda tag `navegacao` e moram aqui.** Foram
- * escolhidas pela regra da porta lida ao contrário: a categoria ficava com o
- * glifo que nomeia o que ela guarda, e a porta ficava com um que nenhuma das
- * categorias dela usava. A regra fica sem sujeito, e a escolha que ela produziu
- * fica — desfazê-la seria remexer no manifesto sem medição que o peça.
+ * **Quatorze entradas carregam a segunda tag `navegacao` e moram aqui.** As
+ * cinco últimas chegaram com o `overpower`, e com elas a navegação passou de 11
+ * para 16 tags SEM um arquivo novo: as cinco seções do produto reaproveitam
+ * desenhos que já estavam no vocabulário do autor, e o teto de 64 não se move.
+ *
+ * As nove primeiras foram escolhidas pela regra da porta lida ao contrário: a
+ * categoria ficava com o glifo que nomeia o que ela guarda, e a porta ficava com
+ * um que nenhuma das categorias dela usava. A regra fica sem sujeito, e a escolha
+ * que ela produziu fica — desfazê-la seria remexer no manifesto sem medição que
+ * o peça.
  * @type {Entrada[]}
  */
 const AUTORIA = [
@@ -109,11 +114,13 @@ const AUTORIA = [
   // Objetos · 16
   {nome: 'file-text', papeis: ['autoria'], onde: 'vocabulário do autor e o item `Ver como Markdown`'},
   {nome: 'folder', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  // Era também a porta `Procedimentos` da landing, que saiu na #94.
-  {nome: 'terminal', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  // Era também a porta `Procedimentos` da landing, que saiu na #94. Hoje é o
+  // glifo de `Comandos`, que é o nome que ele já nomeava.
+  {nome: 'terminal', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Comandos · vocabulário do autor'},
   // Comprado pela porta `Ferramentas` da landing, que saiu na #94. Continua no
-  // vocabulário do autor, e hoje é o único nome de ferramenta do manifesto.
-  {nome: 'wrench', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  // vocabulário do autor, é o único nome de ferramenta do manifesto, e hoje
+  // nomeia também `Desenvolvimento`.
+  {nome: 'wrench', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Desenvolvimento · vocabulário do autor'},
   {nome: 'database', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'server', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Servidores MCP · vocabulário do autor'},
   {nome: 'cloud', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Infraestrutura · vocabulário do autor'},
@@ -122,9 +129,9 @@ const AUTORIA = [
   {nome: 'mail', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'calendar', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'users', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'globe', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'globe', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Alvos · vocabulário do autor'},
   {nome: 'package', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas · vocabulário do autor'},
-  {nome: 'rocket', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'rocket', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Publicação · vocabulário do autor'},
   {nome: 'shapes', papeis: ['autoria'], onde: 'vocabulário do autor'},
 
   // Estados e sinais · 7
@@ -143,10 +150,11 @@ const AUTORIA = [
   {nome: 'bot', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Skills · vocabulário do autor'},
   {nome: 'webhook', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'bell', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  // Era a porta `Jornadas` da landing, que saiu na #94. Ela deixou de violar a
-  // regra da porta no mesmo commit em que a árvore mudou: nos onze pares abaixo,
-  // `book-open` não é glifo de categoria nenhuma — e isso continua verdade.
-  {nome: 'book-open', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  // Era a porta `Jornadas` da landing, que saiu na #94. A regra da porta ficou
+  // sem sujeito quando a landing morreu, e é por isso que ele pôde virar glifo de
+  // categoria aqui: `Referência` é seção do `overpower`, e nenhuma porta a
+  // contém.
+  {nome: 'book-open', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Referência · vocabulário do autor'},
   {nome: 'repeat', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'undo-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
 ];
@@ -169,16 +177,21 @@ export const NOMES = ICONES.map((i) => i.nome);
 export const TETO = 64;
 
 /**
- * Os onze pares seção→ícone. A chave é o `id` da categoria de topo — o mesmo
- * que vira `sidebar-icone--<chave>` no `className` da sidebar.
+ * Os dezesseis pares seção→ícone. A chave vira `sidebar-icone--<chave>` no
+ * `className` da sidebar.
  *
- * Issue #97: o `className` mora na FOLHA, não na categoria — a âncora marca a
- * folha e nunca o cabeçalho de grupo. `Biblioteca C` não recebe ícone porque é
- * cabeçalho de grupo (categoria), em qualquer nível em que estivesse; as
- * folhas dela — autorais e geradas — herdam a chave da categoria de topo que
- * as contém (`bibliotecas`), não uma chave própria de nível 3.
+ * **A chave deixou de ser sempre a da categoria de topo.** Até o `overpower`
+ * entrar, toda folha herdava a chave do separador que a continha, porque nenhuma
+ * árvore tinha seção intermediária com identidade própria. As cinco últimas
+ * linhas abaixo são as seções dele, no nível 3, e as folhas de nível 4 herdam a
+ * chave da SEÇÃO em vez da do separador. A regra que vale é a do ADR 10 §e) e ela
+ * não fala de nível: nenhum ícone no separador de topo, ícone em tudo abaixo.
  *
- * As três tabs de navbar continuam sem ícone.
+ * O que continua da #97 é a metade que a medição sustentou: as três tabs de
+ * navbar seguem sem ícone, e o separador de topo também.
+ *
+ * **As cinco novas não custaram arquivo.** Elas reaproveitam desenhos que o
+ * manifesto já carregava como vocabulário do autor, e o teto de 64 não se move.
  */
 export const PARES_SECAO = {
   'api-owner': 'code-xml',
@@ -192,6 +205,11 @@ export const PARES_SECAO = {
   'modulos-terraform': 'puzzle',
   skills: 'bot',
   'servidores-mcp': 'server',
+  comandos: 'terminal',
+  alvos: 'globe',
+  referencia: 'book-open',
+  desenvolvimento: 'wrench',
+  publicacao: 'rocket',
 };
 
 /**

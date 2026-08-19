@@ -1,0 +1,37 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/overpower.pt-BR.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower list
+description: Responde o que existe. Nu, imprime o catálogo embutido em quatro blocos; com um seletor, abre um item só, por inteiro.
+api_exemplos: {"assinatura":"overpower list [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"}],"snippet":{"linguagem":"bash","modelo":"overpower list --skill \"{{--skill}}\""}}
+---
+
+# overpower list
+
+**Comando** · `overpower list`
+
+Cada entrada sai com o tamanho, a contagem de arquivos e a descrição por inteiro, nunca truncada, porque a descrição é aquilo sobre o que a decisão de instalar é de fato tomada. Abaixo dela vem a linha que instala o item, sem cifrão na frente, para que copiar e colar devolva algo que roda.
+
+`list` responde sobre um item de cada vez. Dois seletores na mesma linha são uma pergunta com duas respostas, e o comando recusa em vez de escolher uma calado.
+
+## Opções
+
+<ParamField name="--skill" type="name">
+Abre uma skill do pool por inteiro. Aceita a forma curta `-s`.
+</ParamField>
+
+<ParamField name="--bundle" type="name">
+Abre um bundle e lista os artefatos que o manifesto dele nomeia. Aceita a forma curta `-b`.
+</ParamField>
+
+<ParamField name="--mcp" type="name">
+Abre a receita de um servidor MCP, com o transporte, os campos que o TOML soletra e os alvos derivados.
+</ParamField>
+
+<ParamField name="--ai-framework" type="name">
+Abre um AI Framework e imprime cada artefato dentro dele. É o único seletor que `--from` recusa.
+</ParamField>
+
+<ParamField name="--from" type="url">
+Lê de um repositório do GitHub em vez do catálogo embutido. Nu, imprime a vitrine daquele repositório.
+</ParamField>

@@ -758,10 +758,16 @@ html.docs-doc-page .subtitulo {
   mask: var(--sd-sidebar-icone) center / contain no-repeat;
 }
 
-/* Os onze pares seção→ícone — inalterados desde a #97, só o consumidor mudou
-   duas vezes. `Biblioteca C` (nível 2) passou a marcar na #114 e herda
-   `--bibliotecas`: a família é a do separador que a contém, e o ícone não
-   reinicia por nível. */
+/* Os dezesseis pares seção→ícone. Os onze primeiros vêm inalterados da #97; os
+   cinco últimos chegaram com o `overpower` e são as seções dele, no nível 3.
+
+   **A herança tem dois degraus agora.** O nó do produto e as três folhas de
+   abertura dele herdam `--bibliotecas`, a família do separador que os contém; as
+   folhas de nível 4 herdam a família da SEÇÃO em que moram. Onde há seção com
+   identidade própria, ela é quem nomeia; onde não há, o separador é.
+
+   Nenhum arquivo novo em `static/icons/`: as cinco reaproveitam desenhos que o
+   manifesto já carregava, e o teto de 64 não se move. */
 .sidebar-icone--api-owner          { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
 .sidebar-icone--security-champion  { --sd-sidebar-icone: url('/icons/lock.svg'); }
 .sidebar-icone--ambiente           { --sd-sidebar-icone: url('/icons/layers.svg'); }
@@ -773,6 +779,11 @@ html.docs-doc-page .subtitulo {
 .sidebar-icone--modulos-terraform  { --sd-sidebar-icone: url('/icons/puzzle.svg'); }
 .sidebar-icone--skills             { --sd-sidebar-icone: url('/icons/bot.svg'); }
 .sidebar-icone--servidores-mcp     { --sd-sidebar-icone: url('/icons/server.svg'); }
+.sidebar-icone--comandos           { --sd-sidebar-icone: url('/icons/terminal.svg'); }
+.sidebar-icone--alvos              { --sd-sidebar-icone: url('/icons/globe.svg'); }
+.sidebar-icone--referencia         { --sd-sidebar-icone: url('/icons/book-open.svg'); }
+.sidebar-icone--desenvolvimento    { --sd-sidebar-icone: url('/icons/wrench.svg'); }
+.sidebar-icone--publicacao         { --sd-sidebar-icone: url('/icons/rocket.svg'); }
 
 /* Tipografia e raio — um corpo só, para tudo que é destino, em todo nível. A
    âncora usa peso normal com entrelinha maior, e reserva toda marcação de ativo
@@ -1014,7 +1025,7 @@ html.docs-doc-page .subtitulo {
   padding-left: 0;
 }
 
-/* A RAMPA DE RECUO É 16 · 16 · 28, e ela é medida, não derivada.
+/* A RAMPA DE RECUO É 16 · 16 · 28 · 40, e ela é medida, não derivada.
 
    O que havia antes era +16px por nível — 16 · 32 · 48. A #97 o escolheu para
    preservar *"o mesmo total que a soma antiga já dava"*, e essa soma era o
@@ -1029,15 +1040,24 @@ html.docs-doc-page .subtitulo {
    ramo do outro passa a ser o negrito do separador mais o ícone da folha — e é
    assim na âncora.
 
-   Só o nível 3 escreve linha. O 1 e o 2 já medem 16px sem regra:
+   Os níveis 3 e 4 escrevem linha. O 1 e o 2 já medem 16px sem regra:
    `--ifm-menu-link-padding-horizontal` é `--sd-space-4`, e o Infima o aplica a
    todo `.menu__link`. Uma regra que redeclara o valor herdado é uma segunda
    fonte para o mesmo número.
 
-   28px não é parada da escala de espaço — ela vai de 4 em 4 até 24 e salta para
-   32. `calc(var(--sd-space-1) * 7)` compõe do único literal da escala em vez de
-   abrir uma parada nova para um consumidor só; a sonda `sidebar.item.recuo.n3`
-   em `scripts/paridade.mjs` é quem confere o resultado contra o alvo publicado.
+   **O quarto degrau entrou com o `overpower`, e a ausência dele era defeito de
+   fato.** O teto de profundidade era 3, então o nível 4 não existia e a rampa
+   parava onde a árvore parava. Com o teto em 4 (ADR 10 §g) ele passou a existir,
+   e sem esta regra as 13 folhas de nível 4 caem nos 16px base do Infima — o
+   mesmo recuo do nível 1. A fixture `aninhamento-de-sidebar-maximo` prova
+   exatamente estes 40px, e uma fixture que provasse um número que o CSS não
+   escreve seria afirmação não conferida.
+
+   Nem 28 nem 40 são parada da escala de espaço — ela vai de 4 em 4 até 24 e
+   salta para 32. `calc(var(--sd-space-1) * 7)` e `* 10` compõem do único literal
+   da escala em vez de abrir duas paradas novas para um consumidor cada; as
+   sondas `sidebar.item.recuo.n3` e `.n4` em `scripts/paridade.mjs` são quem
+   conferem o resultado contra os alvos publicados.
 
    Os DOIS seletores por nível existem porque o nó abaixo do separador pode ser
    folha ou grupo, e as duas formas de DOM põem o link em lugares diferentes. O
@@ -1046,6 +1066,11 @@ html.docs-doc-page .subtitulo {
 .theme-doc-sidebar-item-link-level-3 > .menu__link,
 .theme-doc-sidebar-item-category-level-3 > .menu__list-item-collapsible > .menu__link {
   padding-left: calc(var(--sd-space-1) * 7);
+}
+
+.theme-doc-sidebar-item-link-level-4 > .menu__link,
+.theme-doc-sidebar-item-category-level-4 > .menu__list-item-collapsible > .menu__link {
+  padding-left: calc(var(--sd-space-1) * 10);
 }
 
 /* Falso-negrito no item ativo. Trocar o peso reflui o texto e faz o item pular

@@ -18,11 +18,11 @@
 # índices são teto de zero, e existem onde a alternativa era confiar em bom
 # senso.
 #
-# São treze cobranças: as **doze** que a árvore nova trouxe, mais a cobertura de
-# locale, que é a única sobrevivente da versão anterior deste portão — ela não é
-# acréscimo, é a linha que não foi jogada fora com o resto.
+# São quatorze cobranças: as **doze** que a árvore nova trouxe, mais a cobertura
+# de locale, que é a única sobrevivente da versão anterior deste portão, mais o
+# teto de profundidade, que entrou com o `overpower`.
 #
-#    1. o volume por aba e por categoria     12 · 16 · 17, e 45 no total
+#    1. o volume por aba e por categoria     12 · 16 · 26, e 54 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
 #    3. a regra de heading                    com UMA exceção nomeada
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
@@ -33,16 +33,17 @@
 #    8. o estado                              exatamente uma palavra na abertura
 #    9. o marcador de tradução                31 páginas, e nenhuma tradução
 #   10. `description`                         em 100% das páginas
-#   11. as onze fixtures                      por caminho nomeado
+#   11. as doze fixtures                      por caminho nomeado
 #   12. os dez tipos têm instância            e nenhum fica pendente
-#   13. a cobertura de locale                 17 em EN, e só `Ferramentas`
+#   13. a cobertura de locale                 26 em EN, e só `Ferramentas`
+#   14. o teto de profundidade                 4, alcançado, e confinado a um ramo
 #
 # **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
 # ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
 # ausência era DECLARADA aqui — declarar a pendência é o que impede uma lista de
-# dez de virar lista de nove sem ninguém notar. Agora ele tem seis, e o que este
-# portão passa a cobrar é o contrário: que as seis existam, e que continuem sendo
-# `.mdx` gerado em vez de `.md` escrito à mão. O portão 5 é quem confere que elas
+# dez de virar lista de nove sem ninguém notar. Agora ele tem quatro, e o que
+# este portão passa a cobrar é o contrário: que as quatro existam, e que
+# continuem sendo `.mdx` gerado em vez de `.md` escrito à mão. O portão 5 é quem confere que elas
 # são a projeção do contrato; aqui elas são CONTAGEM, que é o assunto deste.
 #
 # **O tipo mora AQUI, e não no conteúdo.** `informacao.md` §6 trava que tipo de
@@ -76,9 +77,14 @@ EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 # O ramo gerado, nos dois locales. Ele é contado à parte de toda contagem de
 # autoral: `.mdx` é o sinal greppável de *gerado, não editar*, e ele é o que
 # separa as duas posses sem uma lista de exceção a manter.
-GERADO_PT='conteudo/ferramentas/bibliotecas/biblioteca-c/referencia'
-GERADO_EN="${EN}/bibliotecas/biblioteca-c/referencia"
-GERADAS=6
+GERADO_PT='conteudo/ferramentas/bibliotecas/overpower/comandos'
+GERADO_EN="${EN}/bibliotecas/overpower/comandos"
+GERADAS=4
+
+# O ramo em que o teto de profundidade 4 vale, e o único. Ver a cobrança 14.
+RAMO_PROFUNDO='ferramentas/bibliotecas/overpower'
+TETO_DE_PROFUNDIDADE=4
+TETO_FORA_DO_RAMO=2
 
 # A única página que pode ficar abaixo do piso de heading sem que um gabarito o
 # autorize. Ver informacao.md §4.1.
@@ -94,14 +100,14 @@ reprova() {
 # `chave=valor` separados por espaço, lidos com `${par%%=*}` / `${par##*=}` —
 # o repo não tem bash 4 garantido, então nada de array associativo.
 #
-# **Estas contagens são de AUTORAL**, e são 11 para `Ferramentas`: a função conta
-# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 17 folhas na aba e 45 no
+# **Estas contagens são de AUTORAL**, e são 22 para `Ferramentas`: a função conta
+# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 26 folhas na aba e 54 no
 # site — é cobrada logo abaixo, com o número gerado somado por fora.
 VOLUME_JORNADAS='api-owner=7 security-champion=5'
 VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=3 infraestrutura=3 acessos=3 diagnostico=4'
-VOLUME_FERRAMENTAS='bibliotecas=6 modulos-terraform=2 skills=2 servidores-mcp=1'
+VOLUME_FERRAMENTAS='bibliotecas=17 modulos-terraform=2 skills=2 servidores-mcp=1'
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 39 autorais.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 50 autorais.
 #
 # **A forma `indice` MORREU com a issue #114**, e com ela sete páginas: o
 # conteúdo delas era *a lista do que está logo abaixo*, e a sidebar já é essa
@@ -142,12 +148,23 @@ procedimentos/diagnostico/indice-de-sintomas:troubleshooting
 procedimentos/diagnostico/monitoramento-e-alertas:conceitual
 procedimentos/diagnostico/o-mesmo-erro-em-tres-formas:troubleshooting
 procedimentos/diagnostico/o-diff-que-resolveu:troubleshooting
-ferramentas/bibliotecas/biblioteca-a:sdk
-ferramentas/bibliotecas/biblioteca-b:sdk
-ferramentas/bibliotecas/biblioteca-c/visao-geral:quickstart
-ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao:guia
-ferramentas/bibliotecas/biblioteca-c/tratamento-de-erros:conceitual
-ferramentas/bibliotecas/biblioteca-c/changelog:changelog
+ferramentas/bibliotecas/overpower/visao-geral:quickstart
+ferramentas/bibliotecas/overpower/instalacao:sdk
+ferramentas/bibliotecas/overpower/conceitos:conceitual
+ferramentas/bibliotecas/overpower/comandos/indice:conceitual
+ferramentas/bibliotecas/overpower/alvos/indice:catalogo
+ferramentas/bibliotecas/overpower/alvos/servidores-mcp:conceitual
+ferramentas/bibliotecas/overpower/alvos/from:guia
+ferramentas/bibliotecas/overpower/referencia/indice:conceitual
+ferramentas/bibliotecas/overpower/referencia/codigos-de-saida:conceitual
+ferramentas/bibliotecas/overpower/referencia/solucao-de-problemas:troubleshooting
+ferramentas/bibliotecas/overpower/desenvolvimento/indice:guia
+ferramentas/bibliotecas/overpower/desenvolvimento/testes:conceitual
+ferramentas/bibliotecas/overpower/desenvolvimento/telas:guia
+ferramentas/bibliotecas/overpower/publicacao/indice:conceitual
+ferramentas/bibliotecas/overpower/publicacao/curadoria:guia
+ferramentas/bibliotecas/overpower/publicacao/release:guia
+ferramentas/bibliotecas/overpower/publicacao/changelog:changelog
 ferramentas/modulos-terraform/modulo-de-bucket:guia
 ferramentas/modulos-terraform/modulo-de-papel-iam:guia
 ferramentas/skills/scaffold-de-esteira:receita
@@ -163,8 +180,10 @@ FIM
 DEZ_TIPOS='quickstart conceitual guia sdk referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
 TIPO_GERADO='referencia-de-api'
 
-# As onze fixtures, por caminho nomeado. Cada caso difícil tem exatamente uma
-# página dona — a spec aponta para o artefato em vez de descrever a hipótese, e
+# As doze fixtures, por caminho nomeado. A décima segunda,
+# `aninhamento-de-sidebar-maximo`, nasceu com o `overpower`: ela prova que os 40px
+# de recuo do nível 4, mais o ícone, mais o rótulo, cabem nos 288px da coluna.
+# Cada caso difícil tem exatamente uma página dona — a spec aponta para o artefato em vez de descrever a hipótese, e
 # quem implementa sabe onde olhar para saber se acertou.
 #
 # `fallback-de-locale` é a única que se prova por AUSÊNCIA: a página existe em
@@ -180,7 +199,8 @@ prosa-minima-codigo-maximo:ferramentas/skills/scaffold-de-esteira
 fallback-de-locale:jornadas/api-owner/a-politica-de-versao
 aninhamento-profundo:procedimentos/infraestrutura/o-output-de-um-modulo
 pagina-muito-longa:jornadas/api-owner/o-contrato-que-nao-existia
-painel-direito-vazio:ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao
+painel-direito-vazio:ferramentas/bibliotecas/overpower/comandos/indice
+aninhamento-de-sidebar-maximo:ferramentas/bibliotecas/overpower/referencia/solucao-de-problemas
 FIM
 )
 
@@ -192,7 +212,7 @@ FIM
 # `irmao-curto` é o quarto, e ele mora aqui e não em FIXTURES: o lado longo do
 # par prova *página muito longa* sozinho — TOC longo, `sticky`, scroll-spy —, e o
 # que o par prova junto é *comprimento desigual entre irmãos*, que é caso do
-# domínio. Contá-lo como fixture faria a lista fechar em doze, e são onze.
+# domínio. Contá-lo como fixture faria a lista fechar em treze, e são doze.
 CASOS_DO_DOMINIO=$(cat <<'FIM'
 saida-literal-de-terminal:jornadas/api-owner/o-schema-que-mudou-sem-aviso
 varias-linguagens-na-mesma-pagina:procedimentos/diagnostico/o-mesmo-erro-em-tres-formas
@@ -241,25 +261,25 @@ echo "1  volume por aba e por categoria"
 
 volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
 volume_da_aba "$PROCEDIMENTOS" 16 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
-volume_da_aba "$FERRAMENTAS" 11 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
+volume_da_aba "$FERRAMENTAS" 22 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
 
 autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
-[ "$autorais" = 39 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 39"
+[ "$autorais" = 50 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 50"
 
-# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 12, `Ferramentas`
-# em 17 e o site em 45 — os três números que a spec publica.
+# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 21, `Ferramentas`
+# em 26 e o site em 54 — os três números que a spec publica.
 geradas=$(find "$GERADO_PT" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas" = "$GERADAS" ] ||
   reprova "o ramo gerado tem ${geradas} páginas, esperado ${GERADAS}"
 
 bibliotecas=$(( $(find "${FERRAMENTAS}/bibliotecas" -name '*.md' | wc -l) + geradas ))
-[ "$bibliotecas" = 12 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 12"
+[ "$bibliotecas" = 21 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 21"
 
 folhas_ferramentas=$((total_ferramentas + geradas))
-[ "$folhas_ferramentas" = 17 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 17"
+[ "$folhas_ferramentas" = 26 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 26"
 
 total=$((autorais + geradas))
-[ "$total" = 45 ] || reprova "o site tem ${total} páginas, esperado 45"
+[ "$total" = 54 ] || reprova "o site tem ${total} páginas, esperado 54"
 
 echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${folhas_ferramentas} = ${total}"
 echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
@@ -526,7 +546,7 @@ echo
 #
 # **A regra apertou**, e é consequência de o locale ter fronteira: `<Untranslated
 # />` é sobre a página SÓ existir num locale, e isso só acontece em `Jornadas` e
-# `Procedimentos`. As 11 de `Ferramentas` nascem traduzidas, então marcá-las
+# `Procedimentos`. As 22 de `Ferramentas` nascem traduzidas, então marcá-las
 # seria carimbar um estado que elas nunca terão.
 echo "9  marcador de tradução"
 sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS") || true
@@ -568,8 +588,8 @@ else
 fi
 echo
 
-# --- 11. as onze fixtures, por caminho nomeado --------------------------------
-echo "11  as onze fixtures"
+# --- 11. as doze fixtures, por caminho nomeado --------------------------------
+echo "11  as doze fixtures"
 n_fixtures=0
 while IFS=: read -r caso caminho; do
   n_fixtures=$((n_fixtures + 1))
@@ -590,9 +610,9 @@ while IFS=: read -r caso caminho; do
 done <<< "$CASOS_DO_DOMINIO"
 
 n_casos=$(printf '%s\n' "$CASOS_DO_DOMINIO" | wc -l)
-[ "$n_fixtures" = 11 ] || reprova "${n_fixtures} fixtures declaradas, e a spec fecha em onze"
+[ "$n_fixtures" = 12 ] || reprova "${n_fixtures} fixtures declaradas, e a spec fecha em doze"
 [ "$n_casos" = 4 ] || reprova "${n_casos} casos do domínio declarados, e a spec fecha em quatro"
-echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio novo, todos por caminho nomeado"
+echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio, todos por caminho nomeado"
 echo
 
 # --- 12. os dez tipos têm instância -------------------------------------------
@@ -627,7 +647,7 @@ geradas_en=$(find "$GERADO_EN" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas_en" = "$geradas" ] ||
   reprova "EN: ${geradas_en} páginas geradas, e o pt-BR tem ${geradas} — o gerador escreve os dois"
 traduzidas=$((traduzidas + geradas_en))
-[ "$traduzidas" = 17 ] || reprova "EN: ${traduzidas} páginas, esperado 17"
+[ "$traduzidas" = 26 ] || reprova "EN: ${traduzidas} páginas, esperado 26"
 
 for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
   n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)
@@ -636,6 +656,51 @@ for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-co
 done
 
 echo "   ${traduzidas} traduzidas · ${marcadas} das ${autorais} autorais sem EN, de propósito"
+echo
+
+# --- 14. o teto de profundidade, e o ramo em que ele vale ---------------------
+#
+# **A cobrança mudou de forma com o ADR 10 §g).** Ela era *"o nível 3 é usado ao
+# menos uma vez"*, que é teto com consumidor mas sem fronteira: nada impedia um
+# terceiro nível aparecer em `Jornadas` no dia seguinte. Agora o teto é 4 e ele é
+# **confinado**, o que são duas cobranças e não uma: nada passa de 4 em lugar
+# nenhum, e nada passa de 2 fora do ramo do `overpower`.
+#
+# A régua é a PROFUNDIDADE DE CAMINHO, contada a partir do primeiro segmento
+# abaixo da aba. Ela é o teto superior do nível de sidebar e nunca o subestima: a
+# folha de abertura de uma categoria gasta um segmento de caminho a mais do que o
+# nível que ocupa na árvore, então `comandos/indice` mede 4 aqui e desenha 3 lá.
+# Cobrar o caminho é mais estrito que cobrar a árvore, e é o que este portão
+# consegue ler sem importar a sidebar.
+echo "14  o teto de profundidade, confinado a um ramo"
+profundidade_maxima=0
+fora_do_ramo=''
+while IFS= read -r arquivo; do
+  relativo="${arquivo#${CONTEUDO}/}"
+  sem_aba="${relativo#*/}"
+  nivel=$(printf '%s' "${sem_aba%.*}" | tr -cd '/' | wc -c)
+  nivel=$((nivel + 1))
+  [ "$nivel" -le "$profundidade_maxima" ] || profundidade_maxima=$nivel
+
+  if [ "$nivel" -gt "$TETO_DE_PROFUNDIDADE" ]; then
+    reprova "${relativo}: nível ${nivel}, e o teto é ${TETO_DE_PROFUNDIDADE}"
+  fi
+
+  case "$relativo" in
+    "${RAMO_PROFUNDO}"/*) ;;
+    *) [ "$nivel" -le "$TETO_FORA_DO_RAMO" ] || fora_do_ramo="${fora_do_ramo}${relativo} (nível ${nivel})"$'\n' ;;
+  esac
+done < <(find "$CONTEUDO" \( -name '*.md' -o -name '*.mdx' \) | sort)
+
+if [ -n "$fora_do_ramo" ]; then
+  reprova "o teto de ${TETO_DE_PROFUNDIDADE} é confinado a \`${RAMO_PROFUNDO}\`, e isto está fora:"
+  printf '%s' "$fora_do_ramo" | sed 's/^/    /'
+fi
+
+[ "$profundidade_maxima" = "$TETO_DE_PROFUNDIDADE" ] ||
+  reprova "a árvore chega ao nível ${profundidade_maxima}, e um teto de ${TETO_DE_PROFUNDIDADE} sem consumidor é teto que sobe sozinho"
+
+echo "   teto ${TETO_DE_PROFUNDIDADE}, alcançado, e confinado a ${RAMO_PROFUNDO}"
 echo
 
 if [ "$falhas" -gt 0 ]; then

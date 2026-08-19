@@ -5,7 +5,8 @@ description: Instalação, configuração, as três ferramentas de leitura que e
 
 # Servidor de catálogo MCP
 
-Expõe o catálogo interno como ferramentas MCP, sobre a Biblioteca A. Ele não tem
+Expõe o catálogo interno como ferramentas MCP, sobre o cliente Python do
+catálogo. Ele não tem
 credencial própria: repassa o papel do chamador, e é isso que faz a resposta ser
 a mesma que o terminal daria.
 
@@ -68,7 +69,7 @@ def listar_por_dono(equipe: str, limite: int = 50) -> list[Recurso]:
 
 ## Tratamento de erro
 
-O servidor traduz as exceções da Biblioteca A para mensagens que fazem sentido
+O servidor traduz as exceções do cliente para mensagens que fazem sentido
 para quem lê a resposta do assistente — e a tradução mantém a causa, que é o
 defeito descrito em
 [O mesmo erro em três formas](/procedimentos/diagnostico/o-mesmo-erro-em-tres-formas).

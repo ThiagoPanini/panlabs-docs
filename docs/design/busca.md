@@ -39,11 +39,11 @@ A fronteira é `setGlobalData`, e ela é estreita de propósito: o plugin não s
 | `x` | índice da aba |
 | `f` | presente só quando a página é fallback pt-BR sob o locale EN |
 
-As chaves são curtas porque cada uma se repete cinquenta e duas vezes por locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
+As chaves são curtas porque cada uma se repete cinquenta e quatro vezes por locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
 
 ### 2.2 A fonte é o MDX
 
-Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 6 páginas geradas de `Biblioteca C` entrarem pelo mesmo caminho das 39 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição.
+Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 4 páginas geradas de `overpower › Comandos` entrarem pelo mesmo caminho das 50 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição. Valeu de novo no port do `overpower`: o ramo trocou de contrato, de dona e de tamanho, e nem o plugin nem esta seção precisaram de um caso a mais.
 
 O que sai antes de indexar, e por quê:
 
@@ -64,20 +64,20 @@ O motivo é mecânico: o índice viaja no bundle principal de **toda página do 
 
 | Locale | Registros | Bytes | Folga sob os 64 KB |
 | --- | ---: | ---: | ---: |
-| `pt-BR` | 45 | 23 383 | 64% |
-| `en` | 45 | 23 636 | 64% |
+| `pt-BR` | 54 | 28 999 | 56% |
+| `en` | 54 | 29 022 | 56% |
 
-Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 17 páginas traduzidas ficam mais curtas em inglês, e as 28 de fallback entram em português com a marca `f` — os 253 bytes de diferença são o que sobra dessa troca.
+Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 26 páginas traduzidas ficam mais curtas em inglês, e as 28 de fallback entram em português com a marca `f` — os 23 bytes de diferença são o que sobra dessa troca.
 
-> **A medição do EN só vale no build de TODOS os locales, e a armadilha custa 3 bytes por página.** Medir com `docusaurus build --locale en` sozinho encurta o índice, e o erro é sistemático: sem o pt-BR no mesmo passe, o EN vira o único locale, o `baseUrl` perde o segmento `/en/`, e **cada permalink encurta três caracteres**. Com 52 páginas o desconto era 156 bytes; com 45, são 135. O índice medido assim é de um site que não se publica.
+> **A medição do EN só vale no build de TODOS os locales, e a armadilha custa 3 bytes por página.** Medir com `docusaurus build --locale en` sozinho encurta o índice, e o erro é sistemático: sem o pt-BR no mesmo passe, o EN vira o único locale, o `baseUrl` perde o segmento `/en/`, e **cada permalink encurta três caracteres**. Com 52 páginas o desconto era 156 bytes; com 54, são 162. O índice medido assim é de um site que não se publica.
 >
 > O pt-BR não denuncia a armadilha, e é isso que a torna cara: ele é o locale default, nunca carrega prefixo, e dá **o mesmo número pelos dois métodos**. Quem confere um locale só e vê o número bater conclui que o método está validado. **Meça sempre com `npm run build`**, e leia o `globalData.json` que ele deixa — ele é do último locale do passe, que é o EN.
 
-> **A folga voltou de 58% para 64%, e não foi otimização — foi conteúdo que saiu.** A #114 tirou sete páginas de índice de categoria do acervo, e com elas 4 233 bytes do índice pt-BR: **605 bytes por página de índice**, acima da média de uma página autoral, porque o corpo delas era uma lista de links com o vocabulário da seção repetido. A série é 35 612 bytes para as 73 páginas do Trilho, 24 894 para 46 páginas, 27 616 com o ramo gerado dentro (52), e 23 383 agora (45).
+> **A folga caiu de 64% para 56%, e foi conteúdo que entrou.** O port do `overpower` trocou 12 páginas por 21 e o acervo foi de 45 para 54; o índice pt-BR subiu 5 616 bytes, **624 bytes por página líquida acrescentada**. A série inteira é 35 612 bytes para as 73 páginas do Trilho, 24 894 para 46 páginas, 27 616 com o primeiro ramo gerado dentro (52), 23 383 depois que os sete índices de categoria saíram (45), e 28 999 agora (54).
 >
-> **A régua para a próxima vez continua sendo o custo por página gerada: 459 bytes**, medidos quando o ramo de `Biblioteca C` entrou. A folga atual comporta cerca de 92 páginas geradas a mais; comporta menos se elas forem maiores. Quem acrescentar um segundo ramo gerado mede antes, não depois — o teto não avisa, ele reprova o build.
+> **A régua para a próxima vez é o custo por página gerada: 499 bytes**, remedidos com o ramo do `overpower` no ar — eram 459 com o de `Biblioteca C`, e a diferença é a prosa mais longa das opções de CLI, não o formato. A folga atual comporta cerca de 73 páginas geradas a mais; comporta menos se elas forem maiores. Quem acrescentar um segundo ramo gerado mede antes, não depois — o teto não avisa, ele reprova o build.
 
-**A varredura também confere a aritmética do locale de graça:** dos 45 registros do índice EN, **28 carregam a marca de fallback**, que é exatamente a contagem que [`informacao.md`](informacao.md) §8 declara. Duas superfícies independentes chegando ao mesmo número é a forma mais barata de conferência que este projeto tem.
+**A varredura também confere a aritmética do locale de graça:** dos 54 registros do índice EN, **28 carregam a marca de fallback**, que é exatamente a contagem que [`informacao.md`](informacao.md) §8 declara. Duas superfícies independentes chegando ao mesmo número é a forma mais barata de conferência que este projeto tem.
 
 ### 2.4 O que fica de fora
 
@@ -135,22 +135,17 @@ O que ele trava: a propriedade de potências de dois, a ordem entre os sete degr
 
 ### 3.3 O que o corpus novo expôs
 
-Os 17 casos da régua passam sobre índices sintéticos. Sobre o corpus real eles não dizem nada — então a árvore fechada foi exercitada com uma varredura de fora do teste: **buscar cada uma das 45 páginas pelo próprio título, e conferir se ela vem em primeiro**. Duas não vêm.
+Os 17 casos da régua passam sobre índices sintéticos. Sobre o corpus real eles não dizem nada — então a árvore fechada é exercitada com uma varredura de fora do teste: **buscar cada uma das 54 páginas pelo próprio título, e conferir se ela vem em primeiro**. Remedido com o `overpower` no ar, nos dois locales: **as 54 vêm**.
 
-| Consulta | O que vem em 1º | Onde a própria página cai |
-| --- | --- | --- |
-| `Biblioteca B` | `Biblioteca A`, 128 pontos | 2ª, também com 128 |
-| `Esteira` | `Rodar a esteira localmente`, 64 pontos | 2ª, também com 64 |
-
-**Os dois são empate, não erro de ordem** — a escada põe as candidatas no mesmo degrau e o desempate de sidebar decide. E os dois nascem da mesma cegueira: **a escada não distingue casar a palavra inteira de casar o começo dela.** `esteira` casa `Esteira` e `esteira` dentro de outro título no mesmo degrau 64; `biblioteca` casa `Biblioteca A` e `Biblioteca B` no mesmo 64.
-
-É caso que o Trilho não produzia. Ele veio de duas coisas desta árvore: títulos que diferem por um sufixo de uma letra (`Biblioteca A`/`B`/`C`) e o vocabulário repetitivo do ramo gerado (`Esteira`, `Esteira.gerar`, `Esteira.trabalho`).
-
-> **Remedido na #114, e os dois casos trocaram de vencedor.** Antes, quem tomava o primeiro lugar era uma **página de índice de categoria** — `Bibliotecas` e `Esteiras` —, e as duas morreram com a forma (ver [`informacao.md`](informacao.md) §6.3). O empate não morreu com elas: quem ganhou o lugar foi uma folha irmã, e as duas páginas subiram de 3ª para 2ª. A perda é a mesma e o dono mudou, o que é a prova de que a causa nunca foi o índice — é a escada.
+> **Os dois empates que esta seção registrava morreram com o sujeito, e não com uma correção da escada.** Eram `Biblioteca B`, que perdia para `Biblioteca A` com 128 pontos, e `Esteira`, que perdia para `Rodar a esteira localmente` com 64. Os dois nasciam da mesma cegueira, **a escada não distingue casar a palavra inteira de casar o começo dela**, e os dois vinham de duas propriedades daquele acervo: títulos que diferiam por um sufixo de uma letra (`Biblioteca A`/`B`/`C`) e o vocabulário repetitivo de um ramo gerado de biblioteca (`Esteira`, `Esteira.gerar`, `Esteira.trabalho`).
 >
-> **O argumento que recusava o oitavo degrau caducou junto, e não é reescrito aqui.** Ele se apoiava em `Esteiras` ser *"o único título que casa `esteira` por prefixo"*, e esse título não existe mais. Reabrir o degrau exige medir de novo contra o corpus atual, não reciclar a conclusão anterior — a decisão de não redesenhar a escada nesta issue é de escopo, não de mérito.
+> **A cegueira continua lá.** O que sumiu foi o corpus que a expunha: os títulos do `overpower` não compartilham prefixo, e o ramo gerado agora é `overpower`, `overpower list`, `overpower install` e `overpower doctor`, onde a palavra repetida é a primeira e o que difere é o resto. Uma árvore futura com títulos irmãos por sufixo reabre o caso sem que uma linha de código mude.
 
-**Fica como perda nomeada, e a nomeação é o produto.** Um leitor que digita o título exato de uma página pode encontrá-la em segundo, quando o título dela é prefixo do título de outra ou aparece dentro dele. A saída de verdade não é degrau: é peso por especificidade — título curto valendo mais que título longo, ou casamento exato do título inteiro como critério. Nenhum dos dois cabe em *potências de dois com degraus fixos*, e comprar qualquer um deles é redesenhar a escada, não ajustá-la.
+> **A medição também cobrou uma decisão de conteúdo.** A primeira redação das cinco seções do `overpower` levava `title: Índice`, seguindo o nome do arquivo, e a varredura reprovou cinco páginas de uma vez: cinco registros com o mesmo título, indistinguíveis no painel, com a própria página caindo entre a 2ª e a 6ª posição. O acervo já resolvia isso e a redação nova não tinha reparado — `jornadas/api-owner/indice.md` se chama `API Owner`, e `procedimentos/ambiente/indice.md` se chama `Ambiente`. **O arquivo se chama `indice`; a página se chama como a seção.** Com o título alinhado ao `h1`, as cinco falhas foram a zero.
+
+**A perda nomeada fica escrita mesmo sem instância.** Um leitor que digita o título exato de uma página pode encontrá-la em segundo, quando o título dela é prefixo do título de outra ou aparece dentro dele. A saída de verdade não é degrau: é peso por especificidade — título curto valendo mais que título longo, ou casamento exato do título inteiro como critério. Nenhum dos dois cabe em *potências de dois com degraus fixos*, e comprar qualquer um deles é redesenhar a escada, não ajustá-la.
+
+> **O argumento que recusava o oitavo degrau caducou na #114 e não é reescrito aqui.** Ele se apoiava em `Esteiras` ser *"o único título que casa `esteira` por prefixo"*, e esse título não existe mais. Reabrir o degrau exige medir de novo contra o corpus atual, não reciclar a conclusão anterior.
 
 ---
 

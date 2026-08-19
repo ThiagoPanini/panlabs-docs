@@ -51,7 +51,7 @@
 # que é onde quem mexe na árvore vem parar:
 #
 #   pt-BR   /procedimentos/ambiente/preparar-a-maquina-local  ← o default abaixo
-#   en      /en/ferramentas/bibliotecas/biblioteca-b           ← argumento em deploy.yml
+#   en      /en/ferramentas/bibliotecas/overpower/conceitos    ← argumento em deploy.yml
 #
 # A rota do EN não é escolha de gosto: `Ferramentas` é a única aba traduzida
 # (`informacao.md` §8), e apontar para outra mediria a rota de FALLBACK em

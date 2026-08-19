@@ -56,11 +56,11 @@ jobs:
             - `inventario.yml` — registro semanal de procedência de imagem
 
             O `esteira.py` é a fonte; o YAML é gerado. Ver
-            https://panlabs.interno/ferramentas/bibliotecas/biblioteca-c/visao-geral
+            https://panlabs.interno/ferramentas/bibliotecas/overpower/visao-geral
           delete-branch: true
 ```
 
 A skill recusa rodar num repositório que já tem workflows: adotar num projeto
 existente é o procedimento de
-[Instalação e configuração](/ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao),
+[Instalação](/ferramentas/bibliotecas/overpower/instalacao),
 e ele é dois `pull requests` por um motivo que a skill não tem como julgar.

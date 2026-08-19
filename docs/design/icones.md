@@ -123,15 +123,17 @@ A palavra bate com `--sd-text-strong` no pixel, nos dois modos, e **não** bate 
 
 | Papel | tags | arquivos que carregam a tag |
 | --- | ---: | ---: |
-| Sistema — o componente escolhe, o autor nunca | 18 | 18 |
-| Navegação — um por nó de topo de sidebar | 11 | 11 |
+| Sistema — o componente escolhe, o autor nunca | 19 | 19 |
+| Navegação — um por seção de sidebar | 16 | 16 |
 | Autoria — o vocabulário escrito como string | 40 | 40 |
-| **Total de tags** | **69** | — |
-| **Total de arquivos** | — | **60** |
+| **Total de tags** | **75** | — |
+| **Total de arquivos** | — | **61** |
 
-A coluna de arquivos **soma mais que 60 de propósito**: são **nove** entradas com duas tags, e uma entrada com duas tags aparece nas duas linhas. 69 − 9 = 60, e é essa a aritmética inteira.
+A coluna de arquivos **soma mais que 61 de propósito**: são **quatorze** entradas com duas tags, e uma entrada com duas tags aparece nas duas linhas. 75 − 14 = 61, e é essa a aritmética inteira.
 
-As nove são `package`, `puzzle`, `bot`, `server`, `layers`, `workflow`, `cloud`, `key` e `lock`: todas moram na lista de **autoria** e carregam a segunda tag ali. Os dois pares restantes — `code-xml` e `activity` — são navegação pura e moram na lista de navegação.
+As quatorze moram todas na lista de **autoria** e carregam a segunda tag ali. Nove são as antigas — `package`, `puzzle`, `bot`, `server`, `layers`, `workflow`, `cloud`, `key` e `lock` —, e cinco chegaram com o `overpower`: `terminal`, `globe`, `book-open`, `wrench` e `rocket`. Os dois pares restantes, `code-xml` e `activity`, são navegação pura e moram na lista de navegação.
+
+> **As cinco últimas custaram zero arquivo, e essa é a prova de que a regra do papel-como-tag paga.** As cinco seções do `overpower` precisavam de glifo próprio; cada uma achou um desenho que o manifesto já carregava como vocabulário do autor, e o que entrou foi uma tag em cada. O teto de 64 não se moveu, e a folga continua em três.
 
 > **Correção de aritmética contra a resolução deste ticket.** Ela dizia *"sete reusam entrada de autoria com segunda tag, dois reempregam órfão de navegação"*, o que fecha em nove pares e não em onze. Contado contra a árvore: **oito** entradas de autoria ganham a segunda tag, **dois** órfãos de navegação são reempregados, e **um** — `package` — já carregava as duas. Oito mais dois mais um são os onze.
 
@@ -195,9 +197,9 @@ Os nomes são **semânticos** (`rocket`, `database`, `terminal`), nunca de marca
 
 O ponto de consumo de cada um está na entrada do manifesto. `chevron-right` é **um desenho, dois estados** — caret de accordion e de categoria de sidebar, rotacionado por CSS quando aberto.
 
-### Navegação · 11 tags sobre 11 arquivos
+### Navegação · 16 tags sobre 16 arquivos
 
-Os onze pares seção→ícone, **verbatim**:
+Os dezesseis pares seção→ícone, **verbatim**:
 
 | Jornadas | ícone | Procedimentos | ícone | Ferramentas | ícone |
 | --- | --- | --- | --- | --- | --- |
@@ -207,9 +209,19 @@ Os onze pares seção→ícone, **verbatim**:
 | | | Acessos | `key` * | Servidores MCP | `server` * |
 | | | Diagnóstico | `activity` | | |
 
+E as cinco seções de `Bibliotecas › overpower`, no nível 3:
+
+| Seção | ícone | Seção | ícone |
+| --- | --- | --- | --- |
+| Comandos | `terminal` * | Desenvolvimento | `wrench` * |
+| Alvos | `globe` * | Publicação | `rocket` * |
+| Referência | `book-open` * | | |
+
 \* reusa entrada de autoria e não consome arquivo.
 
-**`Biblioteca C` recebe ícone desde a #114.** Ela é o único nó colapsável do site, e a regra em vigor não abre exceção por nível: **nenhum ícone no separador de topo; ícone em tudo abaixo dele**. As duas redações anteriores lhe negavam o ícone por motivos opostos, e as duas precisavam ser reescritas a cada nível novo; ver §8.
+**A chave deixou de ser sempre a do separador de topo.** Até o `overpower`, toda folha herdava a família do separador que a continha, porque nenhuma árvore tinha seção intermediária com identidade própria. As cinco linhas acima são seções de nível 3, e as folhas de nível 4 herdam a família **delas** — o nó `overpower` e as três folhas de abertura dele ficam com `--bibliotecas`. O ícone é da seção; onde não há seção, é do separador.
+
+**Todo nó colapsável recebe ícone desde a #114.** A regra em vigor não abre exceção por nível: **nenhum ícone no separador de topo; ícone em tudo abaixo dele**. As duas redações anteriores negavam o ícone ao nó do meio por motivos opostos, e as duas precisavam ser reescritas a cada nível novo; ver §8. O `overpower` (#117) foi o primeiro teste real disso, com seis nós colapsáveis e um quarto nível, e a regra não precisou de uma quarta redação.
 
 > **Correção de fato — #97.** A regra acima é a de antes da #97. A âncora marca a **folha**, não o topo, e a #97 reescreveu de novo: **ícone em toda folha, nenhum em cabeçalho de grupo** — ver §8. `Biblioteca C` continua sem ícone, mas por outro motivo agora: ela é cabeçalho de grupo, não porque more no nível 2. As folhas dela — as três autorais e as seis geradas de `docs/design/referencia.md` §5 — ganham ícone pela primeira vez, herdando `--bibliotecas`, a família da categoria de topo que as contém.
 
@@ -217,7 +229,7 @@ Os onze pares seção→ícone, **verbatim**:
 
 #### As três portas da landing tinham ícone, e a régua que elas produziram fica
 
-A tab no navbar continua sem glifo. **O cartão de porta da landing tinha**, e a distinção era de superfície, não de inconsistência: a porta era um `<Card icon="…">`, escrito como string, contado na tag de **autoria**. A tag de navegação é 1:1 com os onze pares seção→ícone, e o vendorizador cobra essa igualdade — abrir a lista de navegação para a landing teria quebrado o único lugar onde a aritmética de ícone é conferida por máquina.
+A tab no navbar continua sem glifo. **O cartão de porta da landing tinha**, e a distinção era de superfície, não de inconsistência: a porta era um `<Card icon="…">`, escrito como string, contado na tag de **autoria**. A tag de navegação é 1:1 com os pares seção→ícone, e o vendorizador cobra essa igualdade — abrir a lista de navegação para a landing teria quebrado o único lugar onde a aritmética de ícone é conferida por máquina.
 
 As portas eram declaradas *"sem ícone, e é ritmo, não esquecimento"*. Elas ganharam glifo por decisão, sob uma regra:
 
@@ -231,13 +243,15 @@ Sem ela, o cartão e um quarto da aba leem a mesma hierarquia, e o leitor não s
 | Procedimentos | `terminal` | reuso, retagueado |
 | Ferramentas | **`wrench`** | **o único desenho novo** |
 
-> **A violação registrada no commit anterior morreu com a árvore, como estava previsto.** `book-open` era o glifo de `Documentação › Guias`, uma categoria dentro da tab que a porta `Jornadas` abre. Nos **onze pares** acima ele não é glifo de categoria nenhuma, e a regra volta a valer sem exceção. A colisão foi consequência da ordem escolhida, ficou dita antes de acontecer, e fechou no ticket que a spec disse que fecharia.
+> **A violação registrada no commit anterior morreu com a árvore, como estava previsto.** `book-open` era o glifo de `Documentação › Guias`, uma categoria dentro da tab que a porta `Jornadas` abre. A regra que a colisão violava era a **da porta**, e ela ficou sem sujeito quando a landing saiu ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) — é por isso que `book-open` pôde virar glifo de `Referência` na #117 sem reabrir nada: não há porta que o contenha.
 
 **`wrench` foi o único ponto de todo o esforço em que o teto comprou alguma coisa.** Na porta `Ferramentas`, todo glifo adequado do acervo — `package`, `puzzle`, `bot`, `server` — é uma das quatro famílias que aquela aba abre, e a regra acima os eliminava um a um. Não havia reuso disponível; havia o slot livre.
 
 > **Correção de fato: as três portas não existem mais, e nenhum dos três desenhos sai do manifesto.** A landing foi removida em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e com ela os três `<Card icon="…">` que davam consumidor nomeado a `book-open`, `terminal` e `wrench`. **A aritmética não se move:** os três já eram contados na tag de **autoria** — `terminal` e `wrench` em *Objetos*, `book-open` em *Conceitos* —, e autoria é *vocabulário do autor*, não *uso hoje*. **69 tags sobre 60 arquivos continuava sendo o número** até o `list` do §5.1 de [`chrome.md`](chrome.md) gastar o 61º slot, e a bijeção que o vendorizador cobra continua fechada nos três lados.
 >
-> **O que se perde é mais estreito, e é `wrench`.** Ele foi o único desenho do acervo comprado **por causa de um consumidor concreto** — a porta `Ferramentas` —, e esse consumidor deixou de existir. Ele não vira órfão de manifesto; ele vira **vocabulário de autoria como os outros 39**, e passa a valer o que qualquer um deles vale: está lá para quando alguém escrever `icon="wrench"`. Se o próximo corte de teto precisar de um slot, **é aqui que a régua manda olhar primeiro** — *sobrevive quem é neutro de domínio ou nomeia o cenário fixado*, e `wrench` nomeava a porta, não o cenário.
+> **O que se perdeu era mais estreito, e era `wrench`.** Ele foi o único desenho do acervo comprado **por causa de um consumidor concreto** — a porta `Ferramentas` —, e esse consumidor deixou de existir. Ele não virou órfão de manifesto; virou **vocabulário de autoria como os outros 39**, e ficou por um ticket como o primeiro nome a olhar num corte de teto.
+>
+> **A #117 lhe devolveu consumidor concreto**, e não por resgate: as cinco seções do `overpower` precisavam de glifo, `Desenvolvimento` é a que `wrench` nomeia sem forçar, e ele ganhou a segunda tag `navegacao` pelo mesmo mecanismo dos outros quatro. A régua que o punha em primeiro na fila — *sobrevive quem é neutro de domínio ou nomeia o cenário fixado* — continua valendo; o que mudou é que ele passou a nomear uma seção, e seção é cenário.
 >
 > **A regra da porta fica escrita e sem sujeito.** *A porta não pode repetir o glifo de nenhuma das categorias que ela abre* não tem hoje a que se aplicar. Fica porque ela não é regra de landing: é a regra de qualquer cartão que abra uma aba inteira, e o dia em que um índice de nível alto quiser esse cartão é o dia em que reescrevê-la do zero custaria o mesmo raciocínio outra vez — inclusive a colisão de `book-open`, que já foi paga uma vez.
 
@@ -249,7 +263,7 @@ Três pares merecem o motivo escrito:
 - **`code-xml` para `API Owner`**: o papel é dono de **contrato**, e o contrato é o artefato escrito. É o mesmo glifo que nomeava a Referência da API na árvore anterior, reempregado sem mudar de significado;
 - **`package` para `Bibliotecas`**: biblioteca é pacote que se instala. É a metáfora mais apertada disponível, e custa zero arquivo — a mesma que já servia `SDKs`.
 
-**As três abas são três barras laterais, vistas uma de cada vez.** Os onze nunca competem numa lista só; competem em listas de dois, cinco e quatro. A coerência é exigida **dentro** de cada aba, e o que segura as três juntas é a família.
+**As três abas são três barras laterais, vistas uma de cada vez.** Os dezesseis nunca competem numa lista só; competem em listas de dois, cinco e quatro, mais as cinco seções que só aparecem com o `overpower` aberto. A coerência é exigida **dentro** de cada aba, e o que segura as três juntas é a família.
 
 ### Autoria · 40 tags sobre 40 arquivos
 
@@ -372,7 +386,7 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | Compensação óptica por tamanho | origem própria | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §2 — habilitada pela escolha de SVGR |
 | Máscara na sidebar | **lacuna por restrição** | não há ponto `safe` para injetar componente em item de sidebar |
 | O papel é tag na entrada | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §4 |
-| 70 tags sobre 61 arquivos, folga três | **origem própria (correção)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — quatro cortes contra a árvore nova; a resolução dizia *sete mais dois* e a contagem fecha em *oito mais dois mais um*. **Um slot gasto depois**: `list`, para o título do TOC — o 61º arquivo, dentro do teto de 64 |
+| 75 tags sobre 61 arquivos, folga três | **origem própria (correção)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — quatro cortes contra a árvore nova; a resolução dizia *sete mais dois* e a contagem fecha em *oito mais dois mais um*. **Um slot gasto depois**: `list`, para o título do TOC — o 61º arquivo, dentro do teto de 64 |
 | O glifo do título do TOC | **herdado** | a âncora abre o índice com rótulo e glifo de lista; medido em navegador — `viewBox` 18, três traços, e o vão de 8px entre glifo e palavra. O nome é nosso (`list`) e o arquivo upstream é `text-align-start`, pelo mapa de uma linha que o manifesto já prevê |
 | **A marca fica só com a palavra** | **origem própria** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — o argumento da figura da landing, aplicado a uma superfície que aparece em toda página |
 | **A rota da marca é `navbar.title` no `.navbar__brand` nativo** | **origem própria (medição)** | a resolução a declarava *provável e não medida*; medida no artefato publicado, nos dois modos |
@@ -388,9 +402,10 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | A tag de autoria é *nome escrito como string*, não *MDX* | **origem própria (correção)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) — a landing usava `<Card icon="…">`, a mesma superfície; a redação antiga descrevia o único consumidor, não a regra. A definição **não volta atrás** com [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94): reverter para *MDX* recriaria a redação que já se mostrou estreita uma vez |
 | Ícone nas três portas da landing, sob a regra de não repetir glifo de categoria | **origem própria (consequência)** | [#80](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/80) decidiu, [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) **removeu o sujeito** — as portas saíram com a página. A regra fica escrita e sem consumidor: ela vale para qualquer cartão que abra uma aba inteira, e o raciocínio já foi pago, inclusive a colisão de `book-open` |
 | `wrench` como o único desenho novo | **origem própria (implementação)** | descoberto aplicando a regra da porta: em `Ferramentas` todo reuso adequado já é uma das quatro famílias que a aba abre |
-| **`wrench` perdeu o consumidor que o comprou, e fica no manifesto** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a porta `Ferramentas` era o único uso concreto dele; a tag de **autoria** já era a que ele carregava, então 69 sobre 60 e a bijeção não se movem. É o primeiro nome a olhar no próximo corte de teto: ele nomeava a porta, não o cenário |
+| **`wrench` perdeu o consumidor que o comprou, e ganhou outro** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a porta `Ferramentas` era o único uso concreto dele, e por um ticket ele foi *o primeiro nome a olhar no próximo corte de teto*. A [#117](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/117) lhe deu a segunda tag `navegacao`, em `overpower › Desenvolvimento`: ele volta a ter consumidor concreto e sai do topo da fila de corte |
 | `circle-check` fora | **delta deliberado** | consequência da variante morta na [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), pela regra de *sem consumidor* |
-| Os onze pares seção→ícone | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — `code-xml` e `activity` reempregados, os outros nove reusando entrada de autoria |
+| Os dezesseis pares seção→ícone | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — `code-xml` e `activity` reempregados, os outros nove reusando entrada de autoria; as cinco de #117 reusam pelo mesmo mecanismo |
+| **A família é da seção, e não só do separador** | **origem própria (correção)** | a árvore ganhou seção de nível 3 com identidade própria, e herdar a família do topo faria cinco seções lerem como uma |
 | **O registro sóbrio em vez do ilustrativo** | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — as quatro Mintlify (mesmo CSS) não convergem: três renderizam glifo preenchido (Font Awesome `regular`/`solid` v7.2.0), uma usa contorno (Tabler `outline`). A âncora mistura registro do mesmo jeito que mistura família (§2) — a mistura é acidente dela, não assinatura a herdar |
 | Nome inexistente quebra o build | origem própria | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §6 |
 | Regra de cor por superfície | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) e [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) |

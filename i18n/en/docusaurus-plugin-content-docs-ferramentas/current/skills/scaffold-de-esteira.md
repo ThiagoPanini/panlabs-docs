@@ -56,11 +56,11 @@ jobs:
             - `inventario.yml` — weekly record of image provenance
 
             `esteira.py` is the source; the YAML is generated. See
-            https://panlabs.interno/en/ferramentas/bibliotecas/biblioteca-c/visao-geral
+            https://panlabs.interno/en/ferramentas/bibliotecas/overpower/visao-geral
           delete-branch: true
 ```
 
 The skill refuses to run in a repository that already has workflows: adopting it
 in an existing project is the procedure in
-[Installation and setup](/ferramentas/bibliotecas/biblioteca-c/instalacao-e-configuracao),
+[Install](/ferramentas/bibliotecas/overpower/instalacao),
 and it is two pull requests for a reason the skill has no way to judge.

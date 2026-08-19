@@ -29,8 +29,24 @@ import {ESPECIES, RECUSAS, lerContrato, validar, validarPar} from './lib/assinat
 import {FORMA, contextoDe, corpoMdx, frontMatter} from './gerar-referencia.mjs';
 import {marcador, marcadoresDe, substituir} from '../src/theme/ApiDocItem/placeholder.mjs';
 
-const CONTRATO_PT = 'contratos/panlabs-esteira.pt-BR.json';
-const CONTRATO_EN = 'contratos/panlabs-esteira.en.json';
+const CONTRATO_PT = 'contratos/overpower.pt-BR.json';
+const CONTRATO_EN = 'contratos/overpower.en.json';
+
+/**
+ * Os índices do par commitado, por nome. Quatro entradas: a raiz e os três
+ * comandos.
+ *
+ * **Eles existem para que um caso diga o que exercita.** O par anterior tinha
+ * seis entradas e os casos as endereçavam por número cru, então trocar o
+ * contrato quebrava cada linha em silêncio, uma a uma, sem que o número dissesse
+ * qual propriedade tinha ido embora. `RAIZ` tem membros, opções globais e a
+ * tabela de saída; `SEM_OPCAO` é o comando sem `parametros`, que é a forma que o
+ * `sempre: false` da `FORMA` exercita.
+ */
+const RAIZ = 0;
+const LIST = 1;
+const INSTALL = 2;
+const SEM_OPCAO = 3;
 
 /** O contrato de verdade, relido do disco a cada caso para ninguém mutar o do vizinho. */
 const contrato = () => JSON.parse(fs.readFileSync(CONTRATO_PT, 'utf8'));
@@ -102,11 +118,12 @@ test('especie-fora-da-lista — a lista é fechada, e `classe` não está nela',
   assert.equal(recusa.ponteiro, '/entradas/1/especie');
 });
 
-// A fatia EXPAND do ADR 9: as duas espécies de CLI entram ao lado das três de
-// biblioteca, e a lista continua fechada em cinco. Quem a devolve a duas é o
-// ticket do port, quando o sujeito do contrato trocar.
-test('a lista fechada tem as cinco espécies, e nenhuma sexta', () => {
-  assert.deepEqual(ESPECIES, ['modulo', 'tipo', 'funcao', 'aplicacao', 'comando']);
+// A fatia CONTRACT do ADR 9: as três espécies de biblioteca saíram com o
+// contrato mockado que as pedia, e a lista volta a duas — o tamanho que ela tinha
+// antes do expand. O que o §a) preserva não é o tamanho, é a propriedade de ser
+// fechada e validada.
+test('a lista fechada tem as duas espécies de CLI, e nenhuma terceira', () => {
+  assert.deepEqual(ESPECIES, ['aplicacao', 'comando']);
 });
 
 test('as DUAS listas fechadas casam — validador e gerador não divergem', () => {
@@ -116,10 +133,10 @@ test('as DUAS listas fechadas casam — validador e gerador não divergem', () =
   assert.deepEqual(Object.keys(FORMA).sort(), [...ESPECIES].sort());
 });
 
-for (const especie of ['aplicacao', 'comando']) {
+for (const especie of ESPECIES) {
   test(`\`${especie}\` é espécie aceita, e o validador não a trata como caso especial`, () => {
     const c = contrato();
-    c.entradas[5].especie = especie;
+    c.entradas[SEM_OPCAO].especie = especie;
     assert.deepEqual(validar(c), []);
   });
 }
@@ -128,9 +145,9 @@ test('o detalhe da recusa não crava a contagem — ele lista a lista', () => {
   const c = contrato();
   c.entradas[1].especie = 'classe';
   const {detalhe} = primeira(c);
-  // A redação anterior dizia "não é uma das três". Com cinco espécies ela virou
-  // mentira, e uma recusa que mente sobre o próprio motivo custa a leitura de
-  // quem a recebe.
+  // A redação original dizia "não é uma das três". Ela virou mentira quando a
+  // lista foi a cinco, e voltaria a ser verdade agora que ela é duas — o caso
+  // fica assim mesmo, porque o que ele trava é a recusa NÃO depender do tamanho.
   assert.doesNotMatch(detalhe, /uma das (três|duas|quatro|cinco)/);
   for (const nomeada of ESPECIES) {
     assert.match(detalhe, new RegExp(nomeada));
@@ -139,34 +156,38 @@ test('o detalhe da recusa não crava a contagem — ele lista a lista', () => {
 
 test('descricao-ausente — em qualquer nó, e o ponteiro nomeia qual', () => {
   const c = contrato();
-  delete c.entradas[1].parametros[2].campos[1].descricao;
+  delete c.entradas[RAIZ].retorno.campos[1].descricao;
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.descricaoAusente);
-  assert.equal(recusa.ponteiro, '/entradas/1/parametros/2/campos/1');
+  assert.equal(recusa.ponteiro, `/entradas/${RAIZ}/retorno/campos/1`);
 });
 
 test('descricao-ausente — o `quando` de um erro é a prosa dele', () => {
+  // **O par commitado fecha `erros` em zero nas quatro entradas**, e é decisão:
+  // as recusas do `overpower` são mensagens, não identificadores, e uma coluna
+  // `Erro` com a frase inteira dentro de crase não é tabela que se leia. A perna
+  // do validador continua, e é este caso que a exercita.
   const c = contrato();
-  delete c.entradas[4].erros[0].quando;
+  c.entradas[LIST].erros = [{nome: 'RecusaQualquer'}];
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.descricaoAusente);
-  assert.equal(recusa.ponteiro, '/entradas/4/erros/0');
+  assert.equal(recusa.ponteiro, `/entradas/${LIST}/erros/0`);
 });
 
 test('assinatura-ausente — o painel não tem cabeçalho sem ela', () => {
   const c = contrato();
-  delete c.entradas[3].assinatura;
+  delete c.entradas[SEM_OPCAO].assinatura;
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.assinaturaAusente);
-  assert.equal(recusa.ponteiro, '/entradas/3/assinatura');
+  assert.equal(recusa.ponteiro, `/entradas/${SEM_OPCAO}/assinatura`);
 });
 
 test('exemplo-ambiguo — valor e código no mesmo nó não decidem o snippet', () => {
   const c = contrato();
-  c.entradas[1].parametros[0].exemploCodigo = 'padrao.python()';
+  c.entradas[LIST].parametros[0].exemploCodigo = 'overpower list';
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.exemploAmbiguo);
-  assert.equal(recusa.ponteiro, '/entradas/1/parametros/0');
+  assert.equal(recusa.ponteiro, `/entradas/${LIST}/parametros/0`);
 });
 
 /** Uma pilha de campos com exatamente `profundidade` níveis. */
@@ -182,31 +203,31 @@ const cadeia = (profundidade) => {
 
 test('aninhamento-acima-de-quatro — o quinto nível reprova antes de virar página ilegível', () => {
   const c = contrato();
-  c.entradas[1].retorno.campos = [cadeia(5)];
+  c.entradas[RAIZ].retorno.campos = [cadeia(5)];
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.aninhamentoAcimaDeQuatro);
-  assert.equal(recusa.ponteiro, '/entradas/1/retorno/campos/0/campos/0/campos/0/campos/0/campos/0');
+  assert.equal(recusa.ponteiro, `/entradas/${RAIZ}/retorno/campos/0/campos/0/campos/0/campos/0/campos/0`);
 });
 
 test('aninhamento-acima-de-quatro — quatro níveis passam, e é o teto calibrado', () => {
   const c = contrato();
-  c.entradas[1].retorno.campos = [cadeia(4)];
+  c.entradas[RAIZ].retorno.campos = [cadeia(4)];
   assert.deepEqual(validar(c), []);
 });
 
-test('mais-de-quatro-erros — quatro é o teto, e uma entrada já está nele', () => {
+test('mais-de-quatro-erros — quatro é o teto, e o quinto reprova', () => {
   const c = contrato();
-  c.entradas[4].erros.push({nome: 'UmQuinto', quando: 'nunca'});
+  c.entradas[LIST].erros = [1, 2, 3, 4, 5].map((n) => ({nome: `R${n}`, quando: 'nunca'}));
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.maisDeQuatroErros);
-  assert.equal(recusa.ponteiro, '/entradas/4/erros');
+  assert.equal(recusa.ponteiro, `/entradas/${LIST}/erros`);
 });
 
 test('referencia-morta — id citado e inexistente, em qualquer dos quatro campos', () => {
   for (const [indice, campo, ponteiro] of [
-    [0, 'exporta', '/entradas/0/exporta/0'],
-    [0, 'fluxo', '/entradas/0/fluxo/0'],
-    [3, 'receptor', '/entradas/3/receptor'],
+    [RAIZ, 'exporta', `/entradas/${RAIZ}/exporta/0`],
+    [RAIZ, 'fluxo', `/entradas/${RAIZ}/fluxo/0`],
+    [SEM_OPCAO, 'receptor', `/entradas/${SEM_OPCAO}/receptor`],
   ]) {
     const c = contrato();
     const entrada = c.entradas[indice];
@@ -219,18 +240,22 @@ test('referencia-morta — id citado e inexistente, em qualquer dos quatro campo
 
 test('referencia-morta — o `entrada` de um campo é link, e link quebrado quebra o build', () => {
   const c = contrato();
-  c.entradas[5].retorno.entrada = 'nao-existe';
+  c.entradas[SEM_OPCAO].retorno.entrada = 'nao-existe';
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.referenciaMorta);
-  assert.equal(recusa.ponteiro, '/entradas/5/retorno/entrada');
+  assert.equal(recusa.ponteiro, `/entradas/${SEM_OPCAO}/retorno/entrada`);
 });
 
 test('ciclo-de-receptor — o preâmbulo do snippet não fecha sem isto', () => {
+  // O contrato de CLI não usa `receptor`, e o campo continua sendo do contrato de
+  // assinatura: `emitirCadeia` o percorre e o validador o confere. Um par que
+  // deixasse de exercitá-lo tiraria duas das doze recusas do alcance do teste.
   const c = contrato();
-  c.entradas[1].receptor = 'esteira-gerar';
+  c.entradas[LIST].receptor = 'install';
+  c.entradas[INSTALL].receptor = 'list';
   const recusa = primeira(c);
   assert.equal(recusa.recusa, RECUSAS.cicloDeReceptor);
-  assert.equal(recusa.ponteiro, '/entradas/1/receptor');
+  assert.equal(recusa.ponteiro, `/entradas/${LIST}/receptor`);
 });
 
 // ---------------------------------------------------------------------------
@@ -240,10 +265,10 @@ test('ciclo-de-receptor — o preâmbulo do snippet não fecha sem isto', () => 
 test('contratos-incongruentes — divergência ESTRUTURAL reprova', () => {
   const pt = lerContrato(CONTRATO_PT);
   const en = lerContrato(CONTRATO_EN);
-  en.entradas[2].parametros[1].tipo = 'str';
+  en.entradas[INSTALL].parametros[1].tipo = 'str';
   const recusa = validarPar(pt, en)[0];
   assert.equal(recusa.recusa, RECUSAS.contratosIncongruentes);
-  assert.equal(recusa.ponteiro, '/entradas/2/parametros/1/tipo');
+  assert.equal(recusa.ponteiro, `/entradas/${INSTALL}/parametros/1/tipo`);
 });
 
 test('contratos-incongruentes — entrada a mais de um lado é divergência de forma', () => {
@@ -252,14 +277,13 @@ test('contratos-incongruentes — entrada a mais de um lado é divergência de f
   // Uma entrada que passa sozinha: o que reprova é ela existir de um lado só.
   en.entradas.push({
     id: 'so-em-en',
-    especie: 'funcao',
-    titulo: 'padrao.node',
-    qualificado: 'panlabs.esteira.padrao.node',
-    assinatura: 'padrao.node() -> list[Passo]',
+    especie: 'comando',
+    titulo: 'overpower nuke',
+    qualificado: 'overpower nuke',
+    assinatura: 'overpower nuke',
     resumo: 'r',
     descricao: 'd',
-    chamada: 'padrao.node',
-    resultado: 'passos',
+    chamada: 'overpower nuke',
     parametros: [],
     retorno: null,
     erros: [],
@@ -267,36 +291,42 @@ test('contratos-incongruentes — entrada a mais de um lado é divergência de f
   assert.deepEqual(validar(en), []);
   const recusa = validarPar(pt, en)[0];
   assert.equal(recusa.recusa, RECUSAS.contratosIncongruentes);
-  assert.equal(recusa.ponteiro, '/entradas/6');
+  assert.equal(recusa.ponteiro, '/entradas/4');
 });
 
 test('a espécie é ESTRUTURA, não prosa — trocá-la de um lado só reprova', () => {
   const pt = lerContrato(CONTRATO_PT);
   const en = lerContrato(CONTRATO_EN);
   // `aplicacao` é espécie válida, então o contrato do EN passa sozinho. O que
-  // reprova é o par: uma página que fosse `funcao` em pt-BR e `aplicacao` em EN
+  // reprova é o par: uma página que fosse `comando` em pt-BR e `aplicacao` em EN
   // teria seções diferentes nos dois locales.
-  en.entradas[5].especie = 'aplicacao';
+  en.entradas[SEM_OPCAO].especie = 'aplicacao';
   assert.deepEqual(validar(en), []);
   const recusa = validarPar(pt, en)[0];
   assert.equal(recusa.recusa, RECUSAS.contratosIncongruentes);
-  assert.equal(recusa.ponteiro, '/entradas/5/especie');
+  assert.equal(recusa.ponteiro, `/entradas/${SEM_OPCAO}/especie`);
 });
 
 test('a PROSA diverge de propósito — é o que faz o par ser monolíngue', () => {
   const pt = lerContrato(CONTRATO_PT);
   const en = lerContrato(CONTRATO_EN);
-  assert.notEqual(pt.entradas[1].descricao, en.entradas[1].descricao);
-  assert.notEqual(pt.rotulos.parametros, en.rotulos.parametros);
-  assert.notEqual(pt.entradas[2].erros[0].quando, en.entradas[2].erros[0].quando);
+  assert.notEqual(pt.entradas[LIST].descricao, en.entradas[LIST].descricao);
+  assert.notEqual(pt.rotulos.opcoes, en.rotulos.opcoes);
+  assert.notEqual(
+    pt.entradas[RAIZ].retorno.campos[0].descricao,
+    en.entradas[RAIZ].retorno.campos[0].descricao,
+  );
   assert.deepEqual(validarPar(pt, en), []);
 });
 
 test('o identificador NÃO diverge — nome de campo é contrato, não prosa', () => {
   const pt = lerContrato(CONTRATO_PT);
   const en = lerContrato(CONTRATO_EN);
-  assert.equal(pt.entradas[4].assinatura, en.entradas[4].assinatura);
-  assert.equal(pt.entradas[4].titulo, en.entradas[4].titulo);
+  // A assinatura de um comando é a linha que o leitor digita, e o metavariável
+  // dela é token da CLI: `&lt;name&gt;` não vira `&lt;nome&gt;` em pt-BR, pela
+  // mesma regra que mantém `--from` e `install` sem tradução.
+  assert.equal(pt.entradas[INSTALL].assinatura, en.entradas[INSTALL].assinatura);
+  assert.equal(pt.entradas[INSTALL].titulo, en.entradas[INSTALL].titulo);
   assert.deepEqual(
     pt.entradas.map((e) => e.id),
     en.entradas.map((e) => e.id),
@@ -337,12 +367,16 @@ test('substituir troca o conhecido e deixa o desconhecido — nunca apaga texto'
 
 test('nenhuma página gerada tem marcador sem argumento que o substitua', () => {
   const raizes = [
-    'conteudo/ferramentas/bibliotecas/biblioteca-c/referencia',
-    'i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/biblioteca-c/referencia',
+    'conteudo/ferramentas/bibliotecas/overpower/comandos',
+    'i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/overpower/comandos',
   ];
   let conferidas = 0;
   for (const raiz of raizes) {
-    for (const arquivo of fs.readdirSync(raiz)) {
+    // A pasta hospeda também a folha AUTORAL que abre a categoria, e ela não tem
+    // `api_exemplos` — é exatamente essa ausência que faz dela a fixture de painel
+    // direito vazio. O filtro é a extensão, que é o mesmo sinal que o portão 4 usa
+    // para contar as duas posses em separado.
+    for (const arquivo of fs.readdirSync(raiz).filter((n) => n.endsWith('.mdx'))) {
       const painel = painelDoTexto(fs.readFileSync(`${raiz}/${arquivo}`, 'utf8'));
       const nomes = painel.parametros.map((p) => p.nome);
       for (const marca of marcadoresDe(painel.snippet.modelo)) {
@@ -351,18 +385,19 @@ test('nenhuma página gerada tem marcador sem argumento que o substitua', () => 
       conferidas += 1;
     }
   }
-  assert.equal(conferidas, 12);
+  assert.equal(conferidas, 8);
 });
 
 // ---------------------------------------------------------------------------
 // As duas espécies de CLI, e a página que o gerador emite delas
 //
-// **Nenhum contrato de CLI está no disco ainda**, e é isso que obriga o par
-// sintético a morar aqui. Esta é a fatia EXPAND do ADR 9: a máquina aprende
-// `aplicacao` e `comando` enquanto o sujeito no ar continua sendo
-// `Biblioteca C`, então o único lugar onde os ramos novos rodam é o teste. Sem
-// ele, as duas espécies entrariam na lista fechada sem uma linha que as
-// exercitasse — que é o mesmo defeito que este arquivo existe para não ter.
+// **O par sintético fica, e agora o de disco existe ao lado dele.** Ele nasceu na
+// fatia EXPAND, quando nenhum contrato de CLI estava commitado; o port trouxe o
+// do `overpower`, e mesmo assim os dois não se substituem. O sintético exercita o
+// que o contrato real de propósito NÃO tem: flag booleana ligada e desligada,
+// rótulo de seção removido, raiz sem tabela de saída. Trocá-lo pelo real
+// significaria ou perder esses caminhos, ou encher o contrato publicado de dado
+// que só existe para o teste.
 // ---------------------------------------------------------------------------
 
 const ROTULOS_CLI_PT = {
@@ -616,25 +651,33 @@ test('a flag booleana entra nua quando verdadeira, e some quando falsa', () => {
   assert.doesNotMatch(painelDe(desligada, 1).snippet.modelo, /--json/);
 });
 
-test('a espécie de biblioteca não trocou de dialeto — o painel dela continua python', () => {
-  const c = lerContrato(CONTRATO_PT);
-  const painel = painelDe(c, 5, CONTRATO_PT);
-  assert.equal(painel.snippet.linguagem, 'python');
-  assert.match(painel.snippet.modelo, /^from panlabs\.esteira import /);
+test('o par de disco emite bash nos dois locales — o dialeto é da espécie', () => {
+  // O contrato deixou de descrever biblioteca, e com ele saiu o dialeto Python.
+  // Este caso é o que trava que a saída do par COMMITADO é a de shell, e não só a
+  // do par sintético logo acima.
+  for (const caminho of [CONTRATO_PT, CONTRATO_EN]) {
+    const c = lerContrato(caminho);
+    for (const indice of [RAIZ, LIST, INSTALL, SEM_OPCAO]) {
+      const painel = painelDe(c, indice, caminho);
+      assert.equal(painel.snippet.linguagem, 'bash');
+      assert.match(painel.snippet.modelo, /^overpower /);
+      assert.doesNotMatch(painel.snippet.modelo, /^import |^from /m);
+    }
+  }
 });
 
-test('o módulo NÃO ganhou tabela de erros ao virar tabela — a forma antiga é a mesma', () => {
-  // `corpoMdx` deixou de sair cedo no módulo e passou a percorrer as seções por
-  // `FORMA`. A saída não mudou porque a entrada commitada tem `erros: []` — e
-  // *isso* é acidente do dado, não garantia da forma. Este caso trava a
-  // garantia: quem levanta erro são as funções do módulo, cada uma na página
-  // dela, e o portão 5 não pegaria a diferença porque o contrato no ar não
-  // exercita o caminho.
+test('a raiz de disco traz os quatro códigos, e o comando sem retorno não os repete', () => {
+  // A raiz é a única dona da tabela, e é ela que os três comandos referenciam.
+  // O portão 5 diffaria a saída contra ela mesma se isto mudasse; aqui a
+  // propriedade fica escrita.
   const c = lerContrato(CONTRATO_PT);
-  c.entradas[0].erros = [{nome: 'ErroQualquer', quando: 'nunca'}];
-  const corpo = corpoMdx(c.entradas[0], contextoDe(c, CONTRATO_PT));
-  assert.doesNotMatch(corpo, /## Erros/);
-  assert.doesNotMatch(corpo, /ErroQualquer/);
+  const raiz = corpoMdx(c.entradas[RAIZ], contextoDe(c, CONTRATO_PT));
+  for (const codigo of ['0', '1', '2', '3']) {
+    assert.match(raiz, new RegExp(`<ResponseField name="${codigo}" type="int">`));
+  }
+  const list = corpoMdx(c.entradas[LIST], contextoDe(c, CONTRATO_PT));
+  assert.doesNotMatch(list, /## Códigos de saída/);
+  assert.match(list, /## Opções\n/);
 });
 
 test('a raiz sem códigos de saída PARA — ela é a única dona da tabela', () => {

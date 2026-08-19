@@ -68,13 +68,13 @@ Os **dez ADRs**, em [`../adr/`](../adr/), nesta ordem. Eles não são leitura de
 | --- | --- |
 | [`principios.md`](principios.md) | a âncora Mintlify, o que se herda calado, a varredura que esvaziou o carimbo de delta, a régua de coerência e as sete classes de procedência |
 | [`tokens.md`](tokens.md) | as três camadas, a superfície de troca, a rampa, a tipografia, o espaço, a elevação, o adaptador do Infima e as suas quatro exceções |
-| [`informacao.md`](informacao.md) | o acervo, as três tabs, a árvore, os dez tipos de página, os orçamentos, as onze fixtures, a regra de locale e os artefatos AI-era |
+| [`informacao.md`](informacao.md) | o acervo, as três tabs, a árvore, os dez tipos de página, os orçamentos, as doze fixtures, a regra de locale e os artefatos AI-era |
 | [`chrome.md`](chrome.md) | a cadeia de proporções, navbar, sidebar, TOC, breadcrumb, paginação, footer e o comportamento no estreito |
 | [`foco.md`](foco.md) | `:focus-visible` universal, `:active`, o piso de alvo no toque, e o portão que impede `outline: none` |
 | [`motion.md`](motion.md) | as quatro durações, as duas curvas, os sete movimentos nomeados e o reduced-motion resolvido na camada de token |
-| [`icones.md`](icones.md) | o manifesto de 60 nomes com teto de 64 e folga quatro, os dois renderizadores, a marca sem glifo e os onze pares seção→ícone |
+| [`icones.md`](icones.md) | o manifesto de 61 nomes com teto de 64 e folga três, os dois renderizadores, a marca sem glifo e os dezesseis pares seção→ícone |
 | [`swizzle.md`](swizzle.md) | o ledger vivo, os três significados de `src/theme/`, as perdas nomeadas e a disciplina de registro |
-| [`referencia.md`](referencia.md) | a ruptura de layout — o contrato de assinatura, o gerador de fragmento e as três colunas |
+| [`referencia.md`](referencia.md) | a ruptura de layout — o contrato de superfície de comando, o gerador de fragmento e as três colunas |
 | [`busca.md`](busca.md) | o índice local, a escada de pontuação, o modal `<dialog>` e o ARIA por citação do APG |
 
 ### 3.2 O catálogo — dezoito arquivos
@@ -507,4 +507,4 @@ Cinco categorias, varridas no fecho:
 
 **A entrada de ledger sem assunto era `.navbar__brand:empty`.** Ela escondia o link vazio que o upstream renderiza quando não há `navbar.title` — e o `title` voltou com a marca sem glifo. O próprio `chrome.css` já dizia, em comentário, que a declaração não existia mais; o ledger é que não tinha sido lido contra o arquivo. **É a morte exata que esta varredura existe para pegar**: nenhum build reclamaria de uma linha de tabela descrevendo CSS que ninguém escreve.
 
-> **A varredura também corrigiu um número que envelheceu calado.** O ledger justificava o override de `h1` dizendo *"61 de 61 páginas escrevem o próprio `# Título`"*. Eram **73** — 52 em pt-BR e 21 em EN —, e são **62** desde a #114 — 45 e 17. A condição continua valendo em todas, e o número já envelheceu duas vezes: ele conta páginas, e toda issue que mexe na árvore o move. A contagem certa exige ignorar blocos cercados, porque comentário de shell abre com a mesma marca: contada crua, a varredura acusa 35 páginas com dois títulos e nenhuma delas tem.
+> **A varredura também corrigiu um número que envelheceu calado.** O ledger justificava o override de `h1` dizendo *"61 de 61 páginas escrevem o próprio `# Título`"*. Eram **73** — 52 em pt-BR e 21 em EN —, foram **62** com a #114, e são **80** desde a #117 — 54 e 26. A condição continua valendo em todas, e o número já envelheceu duas vezes: ele conta páginas, e toda issue que mexe na árvore o move. A contagem certa exige ignorar blocos cercados, porque comentário de shell abre com a mesma marca: contada crua, a varredura acusa 35 páginas com dois títulos e nenhuma delas tem.

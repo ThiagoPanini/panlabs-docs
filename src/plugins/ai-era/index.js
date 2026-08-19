@@ -204,9 +204,16 @@ export default function pluginAiEra(context, options) {
  * O preâmbulo global — o mesmo nos dois artefatos.
  *
  * Ele existe para dizer à máquina o que ela tem em mãos antes do primeiro
- * documento: quantas páginas, por qual eixo estão divididas, e que o conteúdo é
- * ficção. A última linha não é modéstia: sem ela, um assistente responde sobre
- * as ferramentas do `panlabs` como se elas existissem.
+ * documento: quantas páginas, por qual eixo estão divididas, e o que dentro
+ * delas é ficção. A última linha não é modéstia: sem ela, um assistente responde
+ * sobre as ferramentas do `panlabs` como se todas existissem.
+ *
+ * **Ela deixou de dizer *nada existe* e passou a nomear a exceção**, porque o
+ * acervo virou misto: o `overpower` é real, MIT, publicado no PyPI, e uma linha
+ * que o declarasse fictício mandaria a máquina desmentir uma ferramenta que
+ * existe. A regra é a mesma de antes lida com um item a menos — o que não é
+ * nomeado aqui não existe —, e o custo de mantê-la é uma linha por ferramenta
+ * real que entrar.
  *
  * **Ele sai em pt-BR nos dois locales, e é a mesma regra do resto do site.** As
  * 28 páginas sem contraparte em inglês também saem em português sob `/en/`
@@ -225,6 +232,6 @@ function preambulo({paginas, abas, rotulos, locale}) {
     '',
     `Toda página deste site também é servida como Markdown: acrescente \`.md\` à URL dela.`,
     '',
-    `O \`panlabs\` é **ficção**, e esta documentação é conteúdo de demonstração de um projeto de estrutura e customização visual em Docusaurus. As bibliotecas, módulos e skills descritos não existem, e a empresa em que eles teriam sido escritos nunca é nomeada.`,
+    `O \`panlabs\` é **ficção**, e esta documentação é conteúdo de demonstração de um projeto de estrutura e customização visual em Docusaurus. O acervo é **misto**: o \`overpower\` é uma ferramenta real, MIT, publicada no PyPI, e a documentação dele descreve a ferramenta de verdade. Todo o resto — os módulos, as skills e os servidores MCP descritos — não existe, e a empresa em que eles teriam sido escritos nunca é nomeada.`,
   ].join('\n');
 }

@@ -12,9 +12,9 @@
  *
  *   · ausente  → delega para `@theme/DocItem`, sem tocar em mais nada. Coluna
  *                864 + TOC 288 — idêntica a qualquer página de doc. É o ramo que
- *                `Ferramentas › Bibliotecas › Biblioteca C › Instalação e
- *                configuração` exercita: o painel direito fica **inalcançável,
- *                não vazio**, e a fixture é irmã de sidebar das seis geradas.
+ *                `Ferramentas › Bibliotecas › overpower › Comandos › Índice`
+ *                exercita: o painel direito fica **inalcançável, não vazio**, e
+ *                a fixture é a folha que ABRE a categoria das quatro geradas.
  *   · presente → layout próprio: prosa 577 + trilho 511 — mais estreita que a
  *                prosa comum (720), de propósito: a página gerada troca a coluna
  *                do TOC por um trilho bem mais largo. A aritmética é exata —

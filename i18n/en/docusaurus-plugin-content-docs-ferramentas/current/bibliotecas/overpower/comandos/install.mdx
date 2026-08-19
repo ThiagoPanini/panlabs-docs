@@ -1,0 +1,57 @@
+---
+# GERADO por scripts/gerar-referencia.mjs a partir de contratos/overpower.en.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower install
+description: Writes. It prints the plan, with every destination and who reads it, before touching disk, and asks before writing when there is a terminal on the other side.
+api_exemplos: {"assinatura":"overpower install --runtime &lt;key&gt; [--skill &lt;name&gt;] [--bundle &lt;name&gt;] [--mcp &lt;name&gt;] [--ai-framework &lt;name&gt;] [--from &lt;url&gt;] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
+---
+
+# overpower install
+
+**Command** · `overpower install`
+
+The four selectors mix freely on a single line, and each takes a comma-separated value, a repeated flag, or both. When a line resolves to writes across more than one unit, they always happen in the same order, framework, then bundle, then individual artifact, then MCP server, and the most specific unit is written last.
+
+In a terminal, a line that does not close a plan opens the wizard instead of simply refusing. It only opens the steps your line left open, always in the same order, and whatever it collects becomes exactly the same request a hand-typed flag line would have built.
+
+## Options
+
+<ParamField name="--skill" type="name">
+One pool skill, installed on its own. Takes the short form `-s`.
+</ParamField>
+
+<ParamField name="--runtime" type="key" required>
+Who receives what is installed. Takes keys from a closed table of 77 runtimes, and has no default. A line that names something to install and no runtime refuses rather than guessing.
+</ParamField>
+
+<ParamField name="--bundle" type="name">
+A bundle, expanded into the pool artifacts its manifest names. Takes the short form `-b`.
+</ParamField>
+
+<ParamField name="--mcp" type="name">
+One MCP server, grafted into the runtime's own configuration. Nothing is copied here; a key is added inside a document that is already yours.
+</ParamField>
+
+<ParamField name="--ai-framework" type="name">
+An AI Framework, installed whole. It has no short form on purpose, because `-f` is already `--force` on this same command.
+</ParamField>
+
+<ParamField name="--from" type="url">
+Installs from a GitHub repository, with no registration step. Once it is on the line, the embedded catalog is not consulted.
+</ParamField>
+
+<ParamField name="--dry-run" type="flag">
+Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory.
+</ParamField>
+
+<ParamField name="--yes" type="flag">
+Skips the confirmation, and nothing else. Takes the short form `-y`.
+</ParamField>
+
+<ParamField name="--force" type="flag">
+Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`.
+</ParamField>
+
+<ParamField name="--global" type="flag">
+Writes under the home directory instead of the current repository. Takes the short form `-g`.
+</ParamField>

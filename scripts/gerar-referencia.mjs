@@ -1,17 +1,19 @@
 /**
- * O gerador da referência de biblioteca — lê o par de contratos de assinatura,
- * valida, e escreve as seis páginas `.mdx` nos dois locales mais o **fragmento**
- * de sidebar que `sidebars-ferramentas.js` importa.
+ * O gerador da referência — lê o par de contratos de assinatura, valida, e
+ * escreve as quatro páginas `.mdx` nos dois locales mais o **fragmento** de
+ * sidebar que `sidebars-ferramentas.js` importa.
  *
- * **O nome não é `gerar-api`.** O contrato deixou de falar HTTP: ele descreve
- * assinatura de função, tipo e módulo, e um script chamado `gerar-api` sobre ele
- * mentiria no nome do arquivo.
+ * **O nome não é `gerar-api`.** O contrato deixou de falar HTTP na ADR 8 e
+ * deixou de falar biblioteca na ADR 9; hoje ele descreve **superfície de
+ * comando**. `gerar-referencia` não mentiu em nenhuma das três, e é por isso que
+ * ele não troca de nome a cada troca de sujeito.
  *
  * **Fragmento, não árvore.** O gerador anterior emitia a sidebar inteira da
  * instância dele. Aqui a instância é `ferramentas`, a sidebar dela é escrita à
- * mão, e o ramo gerado é um sub-ramo de `Bibliotecas › Biblioteca C` — no nível
- * 3, que é o teto. Emitir a árvore inteira daria ao gerador a posse de quinze
- * folhas autorais que ele não conhece.
+ * mão, e o ramo gerado mora dentro da categoria `Comandos`, no nível 4, que é o
+ * teto. Emitir a árvore inteira daria ao gerador a posse de vinte e duas folhas
+ * autorais que ele não conhece — a categoria `Comandos` inclusive, cujo rótulo e
+ * cuja folha de abertura são nossos.
  *
  * **Fora do build, saída commitada.** Ele não entra no `docusaurus.config.js`:
  * roda à mão (`npm run gerar:referencia`), e o portão 5 regenera e reprova em
@@ -19,15 +21,15 @@
  * mesmo contrato produz bytes idênticos; se não produzir, o contrato mudou sem o
  * gerador rodar, ou alguém editou a saída à mão.
  *
- * **Zero snippet escrito à mão.** O texto do exemplo em Python é COMPOSTO: a
- * linha de import sai dos símbolos que a cadeia usa, o preâmbulo sai da entrada
- * que liga o receptor, e a chamada sai da assinatura com os exemplos dos
- * parâmetros. Nenhuma das seis entradas tem snippet próprio — é a mesma
+ * **Zero snippet escrito à mão.** A linha de comando do exemplo é COMPOSTA: a
+ * raiz percorre o `fluxo` dos membros, o membro emite a própria cadeia, e cada
+ * opção com exemplo entra com o valor dela ou com o marcador que o painel
+ * substitui. Nenhuma das quatro entradas tem snippet próprio — é a mesma
  * disciplina de zero-segunda-fonte que motivou o gerador inteiro.
  *
  * Uso: node scripts/gerar-referencia.mjs
  *
- * Procedência: docs/adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md ·
+ * Procedência: docs/adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md ·
  * docs/design/referencia.md.
  */
 
@@ -42,28 +44,42 @@ import {lerContrato, validarPar} from './lib/assinatura.mjs';
 import {marcador, marcadoresDe} from '../src/theme/ApiDocItem/placeholder.mjs';
 
 const CONTRATOS = {
-  'pt-BR': 'contratos/panlabs-esteira.pt-BR.json',
-  en: 'contratos/panlabs-esteira.en.json',
+  'pt-BR': 'contratos/overpower.pt-BR.json',
+  en: 'contratos/overpower.en.json',
 };
 
 /** Onde cada locale escreve. O EN é a árvore de tradução da instância `ferramentas`. */
 const DESTINOS = {
-  'pt-BR': 'conteudo/ferramentas/bibliotecas/biblioteca-c/referencia',
-  en: 'i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/biblioteca-c/referencia',
+  'pt-BR': 'conteudo/ferramentas/bibliotecas/overpower/comandos',
+  en: 'i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/overpower/comandos',
 };
 
 /** O prefixo de id de documento — o mesmo nos dois locales. */
-const PREFIXO = 'bibliotecas/biblioteca-c/referencia';
+const PREFIXO = 'bibliotecas/overpower/comandos';
 
 const FRAGMENTO = 'sidebars-referencia.js';
+
+/**
+ * A família de ícone das folhas geradas.
+ *
+ * **Ela deixou de ser a do vizinho e passou a ser a da seção.** Enquanto o ramo
+ * gerado morava espalhado entre as folhas autorais de uma biblioteca, herdar
+ * `--bibliotecas` era o que fazia a fileira ler como uma coisa só; com o ADR 9
+ * §d) o ramo ganhou categoria própria, `Comandos`, e a família passa a ser a
+ * dela. O gerador precisa saber o slug porque o contrato de assinatura não
+ * carrega posição na sidebar.
+ */
+const FAMILIA_DE_ICONE = 'comandos';
 
 /**
  * O que cada espécie emite — a tabela que existe no lugar do `if (especie ===)`.
  *
  * O gerador do ADR 8 roteava por três comparações de string espalhadas em dois
- * arquivos-função; com cinco espécies isso vira dez. A tabela troca ramo por
- * DADO: a espécie nova se declara aqui e cai nos mesmos caminhos, que é o que
- * faz a fatia expand deste ticket caber sem duplicar renderizador.
+ * arquivos-função. A tabela troca ramo por DADO: a espécie se declara aqui e cai
+ * nos mesmos caminhos, e foi isso que fez a fatia expand caber sem duplicar
+ * renderizador. É também o que faz a fatia **contract** ser uma deleção de dado
+ * em vez de uma cirurgia de fluxo — as três espécies de biblioteca saíram com o
+ * contrato mockado que as pedia, e nenhum caminho de emissão precisou mudar.
  *
  * Os campos:
  *
@@ -82,18 +98,12 @@ const FRAGMENTO = 'sidebars-referencia.js';
  * espécie que entrasse na lista do validador sem forma aqui não daria recusa
  * nomeada, daria `TypeError` no meio da emissão.
  *
- * `ParamField` lê como parâmetro nas três primeiras e como **opção** nas duas
- * últimas; `ResponseField`, como retorno e como **código de saída**. Nenhum dos
- * dois muda, e é a leitura que muda (ADR 9 §c): eles nunca foram específicos de
- * protocolo nem de linguagem, que é por que sobreviveram à morte do `VerbBadge`.
+ * `ParamField` lê aqui como **opção** e `ResponseField` como **código de
+ * saída**. Nenhum dos dois muda, e é a leitura que muda (ADR 9 §c): eles nunca
+ * foram específicos de protocolo nem de linguagem, que é por que sobreviveram à
+ * morte do `VerbBadge` e à do contrato de biblioteca.
  */
 export const FORMA = {
-  // O módulo lista o que exporta e para aí. Ele não tem parâmetro, não devolve
-  // valor e **não levanta erro** — quem levanta são as funções dele, cada uma na
-  // própria página.
-  modulo: {membros: 'exportacoes', campos: null, retorno: null, erros: false, dialeto: 'python'},
-  tipo: {membros: null, campos: 'parametros', retorno: {rotulo: 'atributos', sempre: true}, erros: true, dialeto: 'python'},
-  funcao: {membros: null, campos: 'parametros', retorno: {rotulo: 'retorno', sempre: true}, erros: true, dialeto: 'python'},
   // A raiz da CLI: as opções globais e a tabela dos códigos de saída que valem
   // para todos os comandos. Ela SEMPRE traz a tabela, porque é o único lugar
   // onde ela mora.
@@ -117,30 +127,8 @@ export const FORMA = {
 };
 
 // ---------------------------------------------------------------------------
-// Python, a partir de JSON
+// A linha de comando, a partir de JSON
 // ---------------------------------------------------------------------------
-
-/** Um valor JSON escrito como literal de Python. */
-function literal(valor) {
-  if (valor === null) {
-    return 'None';
-  }
-  if (typeof valor === 'boolean') {
-    return valor ? 'True' : 'False';
-  }
-  if (typeof valor === 'number') {
-    return String(valor);
-  }
-  if (typeof valor === 'string') {
-    return `"${valor.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-  }
-  if (Array.isArray(valor)) {
-    return `[${valor.map(literal).join(', ')}]`;
-  }
-  return `{${Object.entries(valor)
-    .map(([chave, dentro]) => `${literal(chave)}: ${literal(dentro)}`)
-    .join(', ')}}`;
-}
 
 /**
  * O parâmetro é editável?
@@ -154,15 +142,13 @@ const editavel = (parametro) =>
   typeof parametro.exemplo === 'string' || typeof parametro.exemplo === 'number';
 
 /**
- * O que o parâmetro vale dentro da chamada — placeholder quando ele é editável
- * aqui, e o literal do dialeto quando não.
+ * O que o parâmetro vale dentro da linha — placeholder quando ele é editável
+ * aqui, e o literal do shell quando não.
  *
- * O `escrever` entra por parâmetro porque `True` é Python e `true` não é nada
- * numa linha de shell. O resto da regra — código cru vence, editável vira
- * marcador, string ganha aspas — é a mesma nos dois, e é a que casa com o que o
- * painel substitui.
+ * A regra — código cru vence, editável vira marcador, string ganha aspas — é a
+ * que casa com o que o painel substitui.
  */
-function valorDe(parametro, comPlaceholder, escrever) {
+function valorDe(parametro, comPlaceholder) {
   if (parametro.exemploCodigo !== undefined) {
     return parametro.exemploCodigo;
   }
@@ -171,29 +157,19 @@ function valorDe(parametro, comPlaceholder, escrever) {
       ? `"${marcador(parametro.nome)}"`
       : marcador(parametro.nome);
   }
-  return escrever(parametro.exemplo);
+  return literalDeComando(parametro.exemplo);
 }
 
 const temExemplo = (parametro) =>
   parametro.exemplo !== undefined || parametro.exemploCodigo !== undefined;
 
-/** A linha de chamada de uma entrada, com atribuição quando ela devolve valor. */
-function chamadaPython(entrada, comPlaceholder) {
-  const argumentos = (entrada.parametros ?? [])
-    .filter(temExemplo)
-    .map((parametro) => `${parametro.nome}=${valorDe(parametro, comPlaceholder, literal)}`);
-  const atribuicao = entrada.resultado ? `${entrada.resultado} = ` : '';
-  return `${atribuicao}${entrada.chamada}(${argumentos.join(', ')})`;
-}
-
 /**
  * Um valor JSON escrito como palavra de uma linha de shell.
  *
  * Dentro de aspas duplas o shell ainda expande `$`, executa crase e consome a
- * contrabarra, e esta é a linha que o leitor copia para o terminal dele. O
- * gêmeo em Python escapa a contrabarra antes das aspas pela mesma razão, e a
- * ordem importa nos dois: escapar `\\` depois de `"` escaparia a barra que
- * acabou de ser inserida.
+ * contrabarra, e esta é a linha que o leitor copia para o terminal dele. A
+ * ordem importa: escapar `\\` depois de `"` escaparia a barra que acabou de ser
+ * inserida.
  */
 const literalDeComando = (valor) =>
   typeof valor === 'string'
@@ -213,56 +189,26 @@ function chamadaComando(entrada, comPlaceholder) {
     if (typeof parametro.exemplo === 'boolean') {
       return parametro.exemplo ? [parametro.nome] : [];
     }
-    return [`${parametro.nome} ${valorDe(parametro, comPlaceholder, literalDeComando)}`];
+    return [`${parametro.nome} ${valorDe(parametro, comPlaceholder)}`];
   });
   return [entrada.chamada, ...opcoes].join(' ');
-}
-
-/** O identificador que abre uma expressão — `padrao.python(…)` devolve `padrao`. */
-const raizDe = (expressao) => String(expressao).trim().split(/[^A-Za-z0-9_]/)[0];
-
-/**
- * Os símbolos que a cadeia de uma entrada importa.
- *
- * Entrada com receptor NÃO contribui a raiz da própria chamada: `esteira.gerar`
- * abre com a variável que o preâmbulo ligou, não com um nome importado.
- */
-function simbolosDe(entrada, porId, dentro = new Set()) {
-  if (entrada.receptor) {
-    simbolosDe(porId.get(entrada.receptor), porId, dentro);
-  } else if (entrada.chamada) {
-    dentro.add(raizDe(entrada.chamada));
-  }
-  for (const parametro of entrada.parametros ?? []) {
-    if (parametro.exemploCodigo !== undefined) {
-      dentro.add(raizDe(parametro.exemploCodigo));
-    }
-  }
-  return dentro;
 }
 
 /**
  * Quem compõe o snippet do painel, por dialeto.
  *
- * **O dialeto é da espécie, não do contrato.** Uma entrada `funcao` sempre se
- * usa a partir de Python e uma `comando` sempre a partir do shell; não há
- * contrato que troque isso, então não há campo de contrato a inventar para
- * dizê-lo. `bash` é a linguagem que o Prism já carrega
+ * **O dialeto é da espécie, não do contrato.** Uma entrada `comando` sempre se
+ * usa a partir do shell; não há contrato que troque isso, então não há campo de
+ * contrato a inventar para dizê-lo. `bash` é a linguagem que o Prism já carrega
  * (`docusaurus.config.js` § `additionalLanguages`), então o painel a pinta sem
  * dependência nova.
+ *
+ * **A tabela ficou com uma linha, e a tabela fica.** O `python` saiu com as três
+ * espécies de biblioteca; o que ele provava — que a espécie escolhe o dialeto em
+ * vez de o contrato declarar um — continua sendo o que dispensa um campo novo no
+ * JSON no dia em que a segunda linha voltar.
  */
 const DIALETOS = {
-  python: {
-    linguagem: 'python',
-    chamada: chamadaPython,
-    // A linha 1 do módulo É a assinatura dele — o que se escreve para alcançar
-    // o módulo é o `import`, e ter duas fontes para a mesma linha era o convite
-    // a elas divergirem.
-    preambulo: (entrada, {contrato, simbolos, forma}) =>
-      forma.membros
-        ? entrada.assinatura
-        : `from ${contrato.biblioteca.modulo} import ${[...simbolos].sort().join(', ')}`,
-  },
   cli: {
     linguagem: 'bash',
     chamada: chamadaComando,
@@ -272,7 +218,15 @@ const DIALETOS = {
   },
 };
 
-/** As linhas de uso, com o preâmbulo de receptor emitido uma vez só. */
+/**
+ * As linhas de uso, com o receptor emitido uma vez só, antes de quem o usa.
+ *
+ * **O `receptor` continua aqui, e o contrato de CLI não o usa.** Ele é campo do
+ * contrato de assinatura, e o validador o confere em duas das doze recusas
+ * nomeadas — `referencia-morta` e `ciclo-de-receptor`. Tirá-lo daqui deixaria o
+ * validador cobrando um campo que a emissão ignora, que é a divergência entre as
+ * duas listas fechadas que o `npm test` existe para não ter.
+ */
 function emitirCadeia(entrada, porId, vistos, linhas, comPlaceholder, dialeto) {
   if (vistos.has(entrada.id)) {
     return;
@@ -290,27 +244,18 @@ function snippetDe(entrada, {contrato, porId}) {
   const dialeto = DIALETOS[forma.dialeto];
   const vistos = new Set();
   const linhas = [];
-  const simbolos = new Set();
 
   // A raiz mostra o fluxo dos membros e não a si mesma: o que se digita para
-  // usar um módulo é a função dele, e o que se digita para usar uma CLI é um
-  // comando dela. Ter membros é ser raiz.
+  // usar uma CLI é um comando dela. Ter membros é ser raiz.
   if (forma.membros) {
     for (const id of entrada.fluxo ?? []) {
-      const alvo = porId.get(id);
-      emitirCadeia(alvo, porId, vistos, linhas, false, dialeto);
-      for (const simbolo of simbolosDe(alvo, porId)) {
-        simbolos.add(simbolo);
-      }
+      emitirCadeia(porId.get(id), porId, vistos, linhas, false, dialeto);
     }
   } else {
     emitirCadeia(entrada, porId, vistos, linhas, true, dialeto);
-    for (const simbolo of simbolosDe(entrada, porId)) {
-      simbolos.add(simbolo);
-    }
   }
 
-  const preambulo = dialeto.preambulo(entrada, {contrato, simbolos, forma});
+  const preambulo = dialeto.preambulo(entrada, {contrato, forma});
   return (preambulo === null ? linhas : [preambulo, '', ...linhas]).join('\n');
 }
 
@@ -538,9 +483,10 @@ export function frontMatter(entrada, contexto) {
  * O contexto de emissão — o contrato de UM locale, indexado por id.
  *
  * Ele sai de `escreverLocale` porque a régua de máquina precisa emitir uma
- * página sem escrever no disco: as duas espécies de CLI ainda não têm contrato
- * commitado, então o único lugar onde os ramos delas rodam é o teste, e um teste
- * que tivesse de chamar o gerador inteiro reescreveria o ramo de `Biblioteca C`
+ * página sem escrever no disco. O par de disco existe e o teste o lê, mas ele
+ * também monta pares sintéticos para exercitar o que o contrato publicado de
+ * propósito não tem — flag booleana, rótulo ausente, raiz sem tabela de saída —,
+ * e um teste que tivesse de chamar o gerador inteiro reescreveria o ramo gerado
  * para conferir uma string.
  */
 export function contextoDe(contrato, caminhoDoContrato) {
@@ -568,8 +514,18 @@ function escreverLocale(locale, contrato) {
     );
   }
 
+  // **A varredura de órfão só alcança `.mdx`**, e o recorte é o que separa as
+  // duas posses agora que elas dividem uma pasta. Com o ADR 9 §d) o ramo gerado
+  // ganhou categoria própria, e a folha autoral que a abre, `Comandos › Índice`,
+  // mora aqui dentro por decisão: ela é a dona da fixture `painel-direito-vazio`,
+  // e o contraste que a fixture prova só existe entre irmãs.
+  //
+  // Apagar tudo que não foi escrito nesta rodada era correto enquanto a pasta era
+  // inteiramente do gerador; agora seria o gerador tomando posse de arquivo que
+  // não é dele. A extensão já é o sinal greppável de *gerado, não editar*, e ela
+  // é o mesmo teste que o portão 4 usa para contar as duas posses em separado.
   for (const orfao of fs.readdirSync(destino)) {
-    if (!escritos.has(orfao)) {
+    if (orfao.endsWith('.mdx') && !escritos.has(orfao)) {
       fs.rmSync(path.join(destino, orfao), {recursive: true});
     }
   }
@@ -583,34 +539,34 @@ function escreverFragmento(contrato) {
     '// @ts-check',
     '',
     '/**',
-    ' * O ramo gerado de `Ferramentas › Bibliotecas › Biblioteca C` — **fragmento**,',
-    ' * não árvore.',
+    ' * O ramo gerado de `Ferramentas › Bibliotecas › overpower › Comandos` —',
+    ' * **fragmento**, não árvore.',
     ' *',
     ' * GERADO por scripts/gerar-referencia.mjs. Não edite à mão: o portão 5 regenera',
     ' * e reprova em `git diff --exit-code`.',
     ' *',
     ' * Ele é uma LISTA DE ITENS DE FOLHA e nada além. A árvore da aba é escrita à',
     ' * mão em `sidebars-ferramentas.js`, que importa esta lista e a espalha dentro',
-    ' * de `Biblioteca C` — no nível 3, que é o teto de profundidade. Emitir a',
-    ' * árvore inteira daria ao gerador a posse das folhas autorais da aba, que ele',
-    ' * não conhece.',
+    ' * da categoria `Comandos` — no nível 4, que é o teto de profundidade desde o',
+    ' * ADR 10 §g). Emitir a árvore inteira daria ao gerador a posse da categoria e',
+    ' * da folha autoral que a abre, `Comandos › Índice`, que ele não conhece.',
     ' *',
     ' * Cada item carrega `className: \'sidebar-icone sidebar-icone--' +
-      'bibliotecas\'` — a mesma família das três folhas autorais vizinhas de',
-    ' * `Biblioteca C`. A regra é a de docs/design/icones.md §8 — *nenhum ícone no',
+      `${FAMILIA_DE_ICONE}'\` — a família da SEÇÃO que as hospeda, e não a do`,
+    ' * vizinho. A regra é a de docs/design/icones.md §8 — *nenhum ícone no',
     ' * separador de topo; ícone em tudo abaixo dele* —, e folha gerada não abre',
     ' * exceção. O gerador precisa saber o slug da família porque o contrato de',
     ' * assinatura não carrega posição na sidebar.',
     ' *',
     ' * Procedência: docs/design/referencia.md §5 · docs/design/icones.md §8 ·',
-    ' * docs/adr/0008 · docs/adr/0010.',
+    ' * docs/adr/0009 · docs/adr/0010.',
     ' *',
     ' * @type {import(\'@docusaurus/plugin-content-docs\').SidebarItemConfig[]}',
     ' */',
     'const referencia = [',
     ...contrato.entradas.map(
       (entrada) =>
-        `  {type: 'doc', id: '${PREFIXO}/${entrada.id}', className: 'sidebar-icone sidebar-icone--bibliotecas'},`,
+        `  {type: 'doc', id: '${PREFIXO}/${entrada.id}', className: 'sidebar-icone sidebar-icone--${FAMILIA_DE_ICONE}'},`,
     ),
     '];',
     '',
@@ -674,9 +630,9 @@ function ehOComando() {
 }
 
 // **Só roda quando é o comando, nunca quando é importado.** `npm test` importa
-// `corpoMdx` e `frontMatter` daqui para exercitar as espécies que ainda não têm
-// contrato no disco; sem esta guarda, um `node --test` reescreveria o ramo
-// gerado de `Biblioteca C` como efeito colateral de conferir uma string.
+// `corpoMdx` e `frontMatter` daqui para exercitar as formas que o contrato
+// publicado não tem; sem esta guarda, um `node --test` reescreveria o ramo
+// gerado como efeito colateral de conferir uma string.
 if (ehOComando()) {
   principal();
 }

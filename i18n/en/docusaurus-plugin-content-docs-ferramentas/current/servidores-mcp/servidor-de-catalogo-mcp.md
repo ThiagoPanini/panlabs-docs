@@ -5,7 +5,8 @@ description: Installation, configuration, the three read tools it exposes, and w
 
 # MCP catalogue server
 
-Exposes the internal catalogue as MCP tools, on top of Library A. It has no
+Exposes the internal catalogue as MCP tools, on top of the catalogue's Python
+client. It has no
 credentials of its own: it passes the caller's role through, and that is what
 makes the answer the same one the terminal would give.
 
@@ -68,7 +69,7 @@ def listar_por_dono(equipe: str, limite: int = 50) -> list[Recurso]:
 
 ## Error handling
 
-The server translates Library A's exceptions into messages that make sense to
+The server translates the client's exceptions into messages that make sense to
 whoever reads the assistant's answer — and the translation keeps the cause, which
 is the defect described in
 [The same error in three shapes](/procedimentos/diagnostico/o-mesmo-erro-em-tres-formas).
