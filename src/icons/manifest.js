@@ -48,11 +48,11 @@ const SISTEMA = [
   {nome: 'lightbulb', papeis: ['sistema'], onde: 'callout `tip`'},
   {nome: 'triangle-alert', papeis: ['sistema'], onde: 'callout `warning`'},
   {nome: 'pencil-line', papeis: ['sistema'], onde: 'callout `note`'},
-  {nome: 'chevron-right', papeis: ['sistema'], onde: 'caret de `Accordion` e de categoria de sidebar'},
-  {nome: 'check', papeis: ['sistema'], onde: 'passo concluído em `Steps`'},
-  {nome: 'copy', papeis: ['sistema'], onde: 'botão copiar do bloco de código'},
+  {nome: 'chevron-right', papeis: ['sistema'], onde: 'caret de `Accordion`, de categoria de sidebar e — girado — do par `Copiar página`'},
+  {nome: 'check', papeis: ['sistema'], onde: 'passo concluído em `Steps` e confirmação de `Copiar página`'},
+  {nome: 'copy', papeis: ['sistema'], onde: 'botão copiar do bloco de código e o par `Copiar página`'},
   {nome: 'wrap-text', papeis: ['sistema'], onde: 'toggle de quebra de linha do bloco de código', lucide: 'text-wrap'},
-  {nome: 'external-link', papeis: ['sistema'], onde: 'link externo'},
+  {nome: 'external-link', papeis: ['sistema'], onde: 'link externo e os itens de assistente de `Copiar página`'},
   {nome: 'search', papeis: ['sistema'], onde: 'busca'},
   {nome: 'x', papeis: ['sistema'], onde: 'fechar modal'},
   {nome: 'menu', papeis: ['sistema'], onde: 'hambúrguer de tela estreita'},
@@ -107,7 +107,7 @@ const AUTORIA = [
   {nome: 'filter', papeis: ['autoria'], onde: 'vocabulário do autor', lucide: 'funnel'},
 
   // Objetos · 16
-  {nome: 'file-text', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'file-text', papeis: ['autoria'], onde: 'vocabulário do autor e o item `Ver como Markdown`'},
   {nome: 'folder', papeis: ['autoria'], onde: 'vocabulário do autor'},
   // Era também a porta `Procedimentos` da landing, que saiu na #94.
   {nome: 'terminal', papeis: ['autoria'], onde: 'vocabulário do autor'},

@@ -88,9 +88,27 @@ echo
 # um script de analytics entrando de carona por config.
 echo "3  zero serviço externo"
 rede="$(codigo src | grep -E 'fetch\(|XMLHttpRequest|new WebSocket|EventSource\(' || true)"
-if [ -n "$rede" ]; then
-  echo "   REPROVOU — chamada de rede no nosso código:"
-  echo "$rede" | sed 's/^/     /'
+
+# A LISTA FECHADA de chamadas de rede à PRÓPRIA origem, e ela é a definição
+# operante de "externo" nesta perna — o mesmo idioma de `DEPS_ESPERADAS` acima.
+#
+# A régua era *"nada em `src/` chama a rede"*, e ela pegava demais: o zero se
+# chama zero serviço EXTERNO, e a segunda perna, dez linhas abaixo, já sabe
+# distinguir a nossa origem da de terceiro — ela exclui `panlabs-tech.github.io`
+# da varredura de recurso carregado. Buscar uma rota do próprio site não
+# acrescenta serviço nenhum: se o site está no ar, a rota está no ar, no mesmo
+# deploy e no mesmo host.
+#
+# Uma linha só mora aqui hoje, e ela carrega o alvo escrito. Chamada de rede
+# nova reprova até alguém declará-la — que é o que uma lista fechada compra
+# sobre uma exceção genérica.
+REDE_PROPRIA='src/theme/MDXComponents/CopiarPagina.js'  # `permalink + .md`, a rota que o plugin ai-era publica
+externa="$(printf '%s' "$rede" | grep -vE "^(${REDE_PROPRIA})" || true)"
+comEsquema="$(printf '%s' "$rede" | grep -E 'fetch\(\s*.?(https?:)?//' || true)"
+
+if [ -n "$externa" ] || [ -n "$comEsquema" ]; then
+  echo "   REPROVOU — chamada de rede fora da lista da própria origem:"
+  printf '%s\n%s\n' "$externa" "$comEsquema" | grep -v '^$' | sort -u | sed 's/^/     /'
   falhas=$((falhas + 1))
 elif [ ! -d build ]; then
   echo "   src/ limpo. O HTML publicado NÃO foi conferido — rode \`npm run build\` antes."
@@ -109,7 +127,13 @@ else
     echo "$carregados" | sed 's/^/     /'
     falhas=$((falhas + 1))
   else
-    echo "   src/ sem chamada de rede; o HTML publicado não carrega nada de fora."
+    echo "   nenhuma chamada de rede a outra origem; o HTML publicado não carrega nada de fora."
+    # A nuance vai IMPRESSA, como no zero 5: uma afirmação limpa que esconde um
+    # fato é pior que uma afirmação com nota de rodapé.
+    if [ -n "$rede" ]; then
+      echo "   à própria origem, declarada:"
+      printf '%s\n' "$rede" | sed 's/^/     · /'
+    fi
     echo "   (origens citadas em link de navegação, que o leitor clica: $(printf '%s' "$externos" | tr '\n' ' '))"
   fi
 fi

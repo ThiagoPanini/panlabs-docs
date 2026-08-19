@@ -52,9 +52,29 @@
    margens simétricas de `chrome.md` §11 exigem. `--sd-container-width` caiu
    para 1120 para fechar a conta: `288 + 1120 = 1408`. Ver `tokens.css`. */
 
+/* O PADDING LATERAL É DA ÂNCORA, e ele não muda um pixel do que já fechava.
+
+   O §11 publica a regra do wrapper dela desde sempre — `max-width: 1472`,
+   `margin-inline: auto`, `padding-inline: 32` — e usa essa regra para DERIVAR
+   as margens a 1920. O que estava implementado era só a metade de dentro:
+   `max-width: 1408`, que é exatamente `1472 − 2 × 32`. As duas formas
+   entregam o MESMO número em toda largura a partir de 1472 — a 1512, `(1512 −
+   1472) ÷ 2 + 32 = 52`, e a 1408 `(1512 − 1408) ÷ 2 = 52`, o alvo publicado.
+   Elas só divergem ABAIXO de 1472: a de dentro deixa a margem cair a zero e
+   encosta a sidebar na borda da viewport, a da âncora trava em 32.
+
+   O congelamento não muda de valor: ele continua sendo `sidebar + container`,
+   e continua sendo o que a caixa entrega POR DENTRO do preenchimento. */
+
 html.docs-doc-page div:has(> main) {
-  max-width: var(--sd-congelamento);
+  max-width: calc(var(--sd-congelamento) + 2 * var(--sd-space-8));
   margin-inline: auto;
+}
+
+@media (min-width: 997px) {
+  html.docs-doc-page div:has(> main) {
+    padding-inline: var(--sd-space-8);
+  }
 }
 
 /* Ela fecha em três declarações, e as três existem por um motivo mecânico:
@@ -120,6 +140,80 @@ html.docs-doc-page main > .container > .row > .col {
 
 html.docs-doc-page main > .container > .row > .col.col--3 {
   padding-inline: var(--sd-space-6) 0;
+}
+
+/* -----------------------------------------------------------------------------
+   1.7 O CORREDOR, e os 25% que o `docItemCol` reserva para um índice escondido
+
+   Duas correções que respondem à mesma queixa — *o texto está colado na
+   sidebar, e apertado* — e as duas só se enxergam MEDINDO fora de 1512.
+
+   (1) O CORREDOR ERA ACIDENTE. A distância entre a borda da sidebar e o texto
+       nunca foi declarada: ela era o que sobrasse do `margin-inline: auto` do
+       `<article>` dentro de uma coluna maior que a prosa. A 1512 sobravam 47,6
+       — perto dos 43,2 da âncora por coincidência aritmética, e foi por isso
+       que passou. Entre 997 e 1408 a coluna encolhe até caber na prosa, não
+       sobra nada para dividir, e a distância medida é **zero**: o `h1` começa
+       no mesmo `x` em que a sidebar termina. O corredor passa a ser
+       declarado, no número medido na âncora, e o `<article>` deixa de
+       centralizar — ancora à esquerda e devolve a sobra ao lado do índice,
+       que é o que a âncora faz.
+
+   (2) OS 25% MORTOS. `docItemCol` é `max-width: 75% !important` numa classe
+       hasheada de CSS Module, e o `!important` não se vence sem escrever
+       outro — que este projeto não faz. Ele existe para abrir lugar ao TOC;
+       abaixo de 1280 o TOC está `display: none` por decisão nossa (§1.6) e o
+       quarto reservado vira faixa vazia: **180px a 1024, 244px a 1279**,
+       medidos. O teto não se derruba — muda-se a BASE dele. `max-width: 75%`
+       resolve contra a `.row`, então uma `.row` de 4/3 do container faz 75%
+       dela valer o container inteiro. `calc(-100% / 3)` é o complemento
+       exato de 75%, não um número escolhido: `0,75 × 4/3 = 1`.
+
+   `min-width: 0` é obrigatório e não é enfeite: item de flex não encolhe
+   abaixo do próprio conteúdo mínimo, e com o corredor entrando a coluna
+   passava a não caber ao lado do TOC — a `.row` do Infima é `flex-wrap: wrap`
+   e o índice CAÍA para baixo do texto. Medido a 1280, antes de `min-width`.
+
+   `overflow-x: clip` paga a `.row` que transborda 1/3 à direita. É `clip` e
+   não `hidden` de propósito: `hidden` cria caixa de rolagem e mataria o
+   `position: sticky` do TOC dentro dela. Conferido depois de rolar 1200px —
+   o índice continua grudando em 152, o alvo de §11. A âncora clipa no mesmo
+   lugar e pelo mesmo motivo (`lg:overflow-x-clip`, sobre o `-ml-12` dela).
+
+   TUDO ESCOPADO A 997: abaixo do limiar não há sidebar, não há corredor a
+   abrir e não há quarto reservado — a `.row` alargada ali só produzia estouro
+   horizontal, medido em 45px a 390 e 247px a 996 antes do escopo.
+
+   A REFERÊNCIA DA API FICA DE FORA, e é lacuna nomeada: a `.row` dela não tem
+   `.col` — o filho é o CSS Module do `ApiDocItem` —, então nenhum destes
+   seletores a alcança. Dar-lhe o corredor encolheria a prosa dela, que tem
+   alvo medido próprio em `referencia.md` §8, e o número teria de ser remedido
+   na âncora antes. Ver `chrome.md` §1.7.
+   ----------------------------------------------------------------------------- */
+
+@media (min-width: 997px) {
+  html.docs-doc-page main {
+    overflow-x: clip;
+  }
+
+  html.docs-doc-page main > .container > .row:has(> .col:not(.col--3)) {
+    margin-right: calc(-100% / 3);
+  }
+
+  html.docs-doc-page main > .container > .row > .col:not(.col--3) {
+    min-width: 0;
+    padding-left: var(--sd-corredor);
+  }
+}
+
+/* A partir de 1280 o TOC volta a ocupar o quarto que é dele, e a `.row`
+   devolve a margem negativa do Infima. O valor não é lido de `--ifm-*` — o
+   adaptador é de mão única —, é o token que ALIMENTA `--ifm-spacing-horizontal`
+   em `tokens.css`, que é o mesmo número por construção. */
+@media (min-width: 1280px) {
+  html.docs-doc-page main > .container > .row:has(> .col:not(.col--3)) {
+    margin-right: calc(var(--sd-space-4) * -1);
+  }
 }
 
 /* -----------------------------------------------------------------------------
@@ -191,9 +285,14 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    #96 muda não é o número da prosa com TOC; é ela deixar de ser o único
    número que existe. Sem TOC visível, a prosa acompanha a coluna inteira —
    `--sd-container-width` — e é aí que ela cresce. */
+/* `margin-inline: 0 auto` — ancorado à esquerda, e a mudança é de MECANISMO,
+   não de métrica. Enquanto o `auto` valia dos dois lados, a distância até a
+   sidebar era o resto de uma divisão: metade da sobra da coluna, que a 1512
+   dava 47,6 e entre 997 e 1408 dava zero. Com o corredor declarado em §1.7 a
+   sobra tem dono — ela vai inteira para o lado do índice, como na âncora. */
 html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
   max-width: var(--sd-container-width);
-  margin-inline: auto;
+  margin-inline: 0 auto;
 }
 
 @media (min-width: 1280px) {
@@ -283,10 +382,39 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
 
    Peso e cor não são declarados, e isso é fiel: na âncora o subtítulo herda o
    bloco de prosa. O que ele declara é o corpo, que é o único que foi medido.
+
+   A LINHA DO TÍTULO entrou entre os dois quando o par "Copiar página" chegou:
+   o `h1` deixou de ser irmão adjacente do subtítulo e passou a ser filho de
+   `.titulo-linha`, que é quem tem o subtítulo por irmão agora. O mecanismo do
+   recuo não mudou — quem colapsa continua sendo margem de irmãos —, mudou de
+   quem é a margem que precisa sair da frente. As DUAS regras ficam: a antiga
+   ainda vale para qualquer página cujo `h1` não esteja na linha, e nenhuma
+   delas cobra a outra.
    ----------------------------------------------------------------------------- */
 
-html.docs-doc-page h1:has(+ .subtitulo) {
+html.docs-doc-page h1:has(+ .subtitulo),
+html.docs-doc-page .titulo-linha:has(+ .subtitulo) > h1 {
   margin-bottom: 0;
+}
+
+/* A LINHA DO TÍTULO — o `h1` e o par segmentado, um ao lado do outro.
+
+   `align-items: center` alinha os dois pelo meio, que é o que a âncora faz
+   (medido: `h1` em y=184 com 40 de altura, botão em y=187 com 34 — os dois
+   centrados em 204). `margin-inline-start: auto` no par é o que o empurra
+   para a direita sem que o `h1` precise crescer.
+
+   `flex-wrap: wrap` é a saída para o título longo: em vez de espremer o botão
+   contra a última palavra, ele desce inteiro para a linha de baixo. */
+html.docs-doc-page .titulo-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sd-space-2);
+}
+
+html.docs-doc-page .titulo-linha > [data-sd-component='copiar-pagina'] {
+  margin-inline-start: auto;
 }
 
 html.docs-doc-page .subtitulo {
@@ -798,9 +926,25 @@ aside.theme-doc-sidebar-container {
    WebKit lê os pseudo-elementos `::-webkit-scrollbar-*` que o `.thin-scrollbar`
    do Infima já declara — e as duas citam os MESMOS tokens, para não haver uma
    segunda paleta de barra de rolagem no projeto. */
+/* A LARGURA DA BARRA É NOSSA, e antes ela era do Infima com uma condição
+   embutida. `.thin-scrollbar` declara `scrollbar-width: thin` DENTRO de
+   `@media (pointer: fine)` — quem chega sem apontador fino (toque, ou um
+   ambiente que não reporte o pointer) cai no `auto` do navegador, que é a
+   barra larga. Medido nesta máquina, no mesmo Chromium: **15px sem a
+   condição, 10 com ela**. Declarar aqui tira a espessura da barra da
+   dependência de um media query que não é nosso.
+
+   O RESPIRO DA LISTA vem da âncora, e ele é o que impede o texto de encostar
+   na barra: lá o item termina 32px antes da borda do painel (`pr-8`, com a
+   barra desenhada por dentro desse corredor). Aqui a goteira é do navegador e
+   soma por fora do preenchimento — medido: com `padding-right: 32` a lista
+   terminava a 42 da borda, não a 32. A subtração é o que faz o número fechar
+   no da âncora em vez de o ultrapassar por uma largura que não escolhemos. */
 .theme-doc-sidebar-container .thin-scrollbar {
   scrollbar-gutter: stable;
+  scrollbar-width: thin;
   scrollbar-color: transparent transparent;
+  padding-right: calc(var(--sd-space-8) - var(--sd-scrollbar-fina));
 }
 
 .theme-doc-sidebar-container .thin-scrollbar:hover {

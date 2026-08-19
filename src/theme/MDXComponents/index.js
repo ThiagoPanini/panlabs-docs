@@ -70,6 +70,8 @@ import Untranslated from '@site/src/components/Untranslated';
 import Update from '@site/src/components/Update';
 import {ParamField, ResponseField} from '@site/src/components/Campo';
 
+import CopiarPagina from './CopiarPagina';
+
 /**
  * O SUBTÍTULO — a linha que toda página do site ganha abaixo do título.
  *
@@ -133,9 +135,27 @@ function Titulo(props) {
     );
   }
 
+  /* A LINHA DO TÍTULO passa a ter duas peças, e o `<div>` que as segura é o
+     único nó novo desta mudança. Ele é `flex`, e o botão vai para a direita
+     por `margin-inline-start: auto` — a mesma anatomia da âncora, medida:
+     `h1` e o par segmentado como irmãos, centrados um pelo outro.
+
+     O SUBTÍTULO CONTINUA IRMÃO DO `h1`? Não, e a diferença é conferível: ele
+     agora é irmão da LINHA. A regra que zerava a margem de baixo do `h1` por
+     `:has(+ .subtitulo)` mudou de alvo junto, em `chrome.css` §6 — margens de
+     irmãos adjacentes colapsam para a maior das duas, e o recuo medido do
+     subtítulo só aparece se o ar de baixo do título não vencer.
+
+     `.markdown h1:first-child` não se abala: ele é DESCENDENTE de `.markdown`
+     e primeiro filho do pai, e continua sendo as duas coisas dentro da linha —
+     é o seletor que carrega a escala de tipo do `h1`, e perdê-lo devolveria o
+     defeito que a #96 consertou. */
   return (
     <>
-      <H1Original {...props} />
+      <div className="titulo-linha">
+        <H1Original {...props} />
+        <CopiarPagina permalink={metadata.permalink} />
+      </div>
       <p className="subtitulo">{description}</p>
     </>
   );
