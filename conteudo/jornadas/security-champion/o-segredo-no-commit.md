@@ -11,14 +11,14 @@ Uma chave de integração apareceu num commit de uma branch de teste, achada pel
 própria varredura de segredos, dezoito minutos depois do push. A detecção
 funcionou; o que não funcionou foi o que veio depois. A pergunta *"quanto tempo
 até essa chave estar morta?"* não tinha resposta escrita, e a resposta medida
-naquele dia foi quarenta minutos — todos manuais, todos dependentes de uma
+naquele dia foi quarenta minutos, todos manuais, todos dependentes de uma
 pessoa específica estar disponível.
 
 ## O que os quarenta minutos eram
 
 Sete passos, e nenhum deles difícil: abrir o console, gerar a chave nova,
 atualizar o segredo no gerenciador, disparar o deploy do serviço que a lê,
-esperar, conferir, revogar a antiga. O custo não estava em nenhum passo — estava
+esperar, conferir, revogar a antiga. O custo não estava em nenhum passo; estava
 em serem sete, em sequência, com espera no meio.
 
 :::warning
@@ -46,7 +46,7 @@ não chega sozinha a quem a usa.
 ## A propagação, que é a parte que engana
 
 O gerenciador de segredos guarda a versão nova imediatamente. Quem lê o segredo
-em memória continua com a antiga até reiniciar — e é por isso que revogar a
+em memória continua com a antiga até reiniciar, e é por isso que revogar a
 antiga logo depois de rotacionar derruba o serviço.
 
 ```python
@@ -57,7 +57,7 @@ rotacao = Rotacao(segredo="prod/integracao/chave-externa", regiao="us-east-1")
 try:
     nova = rotacao.executar(propagar_para=["esteira", "runtime"], esperar=True)
 except PropagacaoParcial as erro:
-    # o runtime só relê no próximo deploy — a esteira já está na versão nova
+    # o runtime só relê no próximo deploy; a esteira já está na versão nova
     print(erro.pendentes, erro.versao_ativa)
 ```
 
@@ -67,7 +67,7 @@ deploy, e nomeá-lo é o que impede alguém de revogar a chave antiga cedo demai
 ## O que ficou
 
 A terceira vez que uma chave precisou ser rotacionada, o procedimento já era uma
-skill de esteira — está documentada em
+skill de esteira, documentada em
 [Rotação de segredo](/ferramentas/skills/rotacao-de-segredo). O tempo de
 detecção até revogação caiu de quarenta minutos para pouco mais de um deploy, e
 deixou de depender de quem está de plantão.

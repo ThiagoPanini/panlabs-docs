@@ -8,7 +8,7 @@ description: Três incidentes cuja correção coube em poucas linhas, com o diff
 <Untranslated />
 
 Nem toda correção é pequena, e as que são valem registradas com o diff exato. O
-valor não está na linha que mudou — está na regra que sobrou depois dela, porque
+valor não está na linha que mudou; está na regra que sobrou depois dela, porque
 é ela que impede o mesmo incidente de voltar com outra roupa.
 
 ## O health check que media a coisa errada
@@ -88,5 +88,5 @@ páginas seguintes.
 
 **A regra que ficou:** deslocamento promete ordenação estável entre chamadas, e
 essa promessa é cara demais para um catálogo que aceita escrita. Cursor opaco
-não promete — e é por isso que ele está no contrato desde a
+não promete, e é por isso que ele está no contrato desde a
 [primeira versão](/jornadas/api-owner/o-contrato-que-nao-existia).

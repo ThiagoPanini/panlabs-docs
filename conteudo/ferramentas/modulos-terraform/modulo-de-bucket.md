@@ -1,6 +1,6 @@
 ---
 title: Módulo de bucket
-description: O módulo que cria bucket privado, versionado e criptografado — as três variáveis, o output aninhado e o que ele decide por você.
+description: O módulo que cria bucket privado, versionado e criptografado, com as três variáveis, o output aninhado e o que ele decide por você.
 ---
 
 # Módulo de bucket
@@ -11,7 +11,7 @@ são obrigatórias.
 
 ## Antes de começar
 
-Sessão assumida no ambiente alvo e a versão do módulo escolhida. Fixe a versão —
+Sessão assumida no ambiente alvo e a versão do módulo escolhida. Fixe a versão:
 `source` sem `version` resolve para a mais recente a cada `init`.
 
 ## Os passos

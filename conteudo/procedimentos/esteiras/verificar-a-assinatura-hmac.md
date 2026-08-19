@@ -10,7 +10,7 @@ description: Como conferir que um evento chegou de quem diz tê-lo enviado, em P
 Todo evento entregue por webhook chega com um cabeçalho de assinatura, e ele é a
 única prova de origem que existe: o endereço de quem envia não é estável, o
 corpo é público, e o TLS prova o canal e não o remetente. Conferir a assinatura
-é obrigatório, e conferir errado é pior que não conferir — uma verificação que
+é obrigatório, e conferir errado é pior que não conferir: uma verificação que
 sempre passa dá a impressão de segurança sem entregá-la.
 
 ## Antes de começar
@@ -68,7 +68,7 @@ O segredo compartilhado está no gerenciador, sob `prod/webhook/<origem>`. Ele
 Os quatro passos num arquivo só, na forma em que ele é copiado.
 
 ```python
-"""Verificação de assinatura de webhook — panlabs.
+"""Verificação de assinatura de webhook (panlabs).
 
 Copiar inteiro. As quatro decisões que importam estão comentadas; mudar
 qualquer uma delas muda a garantia, e nenhuma é de estilo.
@@ -152,7 +152,7 @@ A mesma verificação roda contra um evento de exemplo em todo `pull request`, c
 o segredo vindo do gerenciador e nunca do repositório.
 
 ```yaml
-# .github/workflows/verificar.yml — trecho
+# .github/workflows/verificar.yml (trecho)
 - name: Conferir a verificação de assinatura
   env:
     SEGREDO_WEBHOOK: ${{ secrets.SEGREDO_WEBHOOK_TESTE }}
@@ -161,7 +161,7 @@ o segredo vindo do gerenciador e nunca do repositório.
 
 :::note
 O segredo do teste é um segredo próprio, e não o de produção. A verificação que
-está sendo testada é a do código, não a do valor — usar o segredo real aqui
+está sendo testada é a do código, não a do valor; usar o segredo real aqui
 compraria zero cobertura e um caminho a mais por onde ele vaza.
 :::
 
@@ -173,4 +173,4 @@ janela de aceitação dupla tem prazo e está descrita em
 [Rotacionar uma chave](/procedimentos/acessos/rotacionar-uma-chave).
 
 **Mais de um emissor.** O segredo é por origem, e a origem vem do próprio
-caminho da rota — nunca de um campo do corpo, que é escrito por quem envia.
+caminho da rota, nunca de um campo do corpo, que é escrito por quem envia.

@@ -1,6 +1,6 @@
 ---
 title: Assumir um papel na AWS
-description: O procedimento de todo dia — do login corporativo à sessão temporária, com MFA onde ele é exigido.
+description: O procedimento de todo dia, do login corporativo à sessão temporária, com MFA onde ele é exigido.
 ---
 
 # Assumir um papel na AWS
@@ -30,7 +30,7 @@ O CLI da casa instalado e o ambiente escolhido. Ver
 
   <Step title="Assumir o papel">
     O papel sai da configuração do projeto, e o comando não aceita um papel que
-    não esteja declarado — digitar o identificador à mão é como se assume o
+    não esteja declarado; digitar o identificador à mão é como se assume o
     papel de outra equipe por engano.
 
     ```bash
@@ -62,7 +62,7 @@ aws sts get-caller-identity --query Arn --output text
 
 :::warning
 `assumed-role` no identificador é a parte que importa. `arn:aws:iam::…:user/…`
-significa credencial pessoal ativa — e ela não deveria existir na máquina.
+significa credencial pessoal ativa, e ela não deveria existir na máquina.
 Rode `panlabs doutor` para achar de onde ela está vindo.
 :::
 

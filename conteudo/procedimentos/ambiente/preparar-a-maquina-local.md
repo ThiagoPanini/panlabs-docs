@@ -8,7 +8,7 @@ description: Os quatro passos entre uma máquina nova e o primeiro comando que f
 <Untranslated />
 
 O objetivo é chegar até `panlabs ambiente atual` respondendo `dev`. Nada aqui
-exige privilégio de administrador, e nada instala pacote do sistema — o
+exige privilégio de administrador, e nada instala pacote do sistema: o
 ambiente inteiro mora no diretório do projeto, que é o que torna o
 procedimento repetível e descartável.
 
@@ -22,7 +22,7 @@ login não está propagado ainda.
 
 <Steps>
   <Step title="Criar o ambiente virtual">
-    Dentro do diretório do projeto, sempre com o nome `.venv` — a esteira e os
+    Dentro do diretório do projeto, sempre com o nome `.venv`: a esteira e os
     editores procuram por esse nome.
 
     ```bash
@@ -70,7 +70,7 @@ panlabs catalogo listar --limite 1
 
 :::tip
 `panlabs ambiente atual` não faz chamada de rede: ele lê a configuração local. É
-por isso que ele responde rápido e é por isso que ele **não** prova acesso — quem
+por isso que ele responde rápido e é por isso que ele **não** prova acesso; quem
 prova é o comando de listagem.
 :::
 
@@ -82,7 +82,7 @@ subcomandos vão faltar, e o de ambiente funciona.
 
 **Mais de um projeto na mesma máquina.** Cada projeto tem o próprio `.venv` e a
 própria configuração de ambiente. O `panlabs ambiente usar` escreve no diretório
-do projeto, nunca no diretório do usuário — trocar de projeto troca de ambiente
+do projeto, nunca no diretório do usuário: trocar de projeto troca de ambiente
 sozinho.
 
 :::warning

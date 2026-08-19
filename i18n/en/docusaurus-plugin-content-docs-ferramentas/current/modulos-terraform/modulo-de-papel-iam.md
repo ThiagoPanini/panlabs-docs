@@ -6,7 +6,7 @@ description: The module that creates a role with the permission boundary applied
 # IAM role module
 
 Creates a role with the house permission boundary already applied. The boundary
-is what stops a role from granting more than whoever created it holds — and it is
+is what stops a role from granting more than whoever created it holds, and it is
 applied by the module precisely so it does not depend on someone remembering.
 
 ## Before you start
@@ -33,7 +33,7 @@ nobody to assume it is a dead resource that shows up in every audit.
   </Step>
 
   <Step title="Attach managed policies">
-    Only ARNs of existing policies. Inline policies are rejected — see below.
+    Only ARNs of existing policies. Inline policies are rejected: see below.
 
     ```hcl
       politicas = [
@@ -55,7 +55,7 @@ nobody to assume it is a dead resource that shows up in every audit.
 ## Verification
 
 The role exists, has the boundary attached, and the trust policy names the
-repository and the branch — never `*`:
+repository and the branch, never `*`:
 
 ```bash
 panlabs infra conferir papel publicacao
@@ -77,7 +77,7 @@ isolation. In an audit, it is the thing nobody finds.
 
 :::warning
 `branch` in `assumido_por` is not optional for a repository. Without it, the
-trust policy accepts any reference from the repository — including a pull request
+trust policy accepts any reference from the repository, including a pull request
 from a fork, which is the known path to stealing the publishing role.
 :::
 

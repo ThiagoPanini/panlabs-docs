@@ -18,9 +18,11 @@
 # índices são teto de zero, e existem onde a alternativa era confiar em bom
 # senso.
 #
-# São quatorze cobranças: as **doze** que a árvore nova trouxe, mais a cobertura
-# de locale, que é a única sobrevivente da versão anterior deste portão, mais o
-# teto de profundidade, que entrou com o `overpower`.
+# São quinze cobranças: as **doze** que a árvore nova trouxe; a cobertura de
+# locale, que é a única sobrevivente da versão anterior deste portão — ela não é
+# acréscimo, é a linha que não foi jogada fora com o resto; a varredura de
+# travessão, a única que olha o caractere em vez da estrutura; e o teto de
+# profundidade, que entrou com o `overpower`.
 #
 #    1. o volume por aba e por categoria     12 · 16 · 26, e 54 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
@@ -36,7 +38,8 @@
 #   11. as doze fixtures                      por caminho nomeado
 #   12. os dez tipos têm instância            e nenhum fica pendente
 #   13. a cobertura de locale                 26 em EN, e só `Ferramentas`
-#   14. o teto de profundidade                 4, alcançado, e confinado a um ramo
+#   14. o travessão                           zero nas três superfícies
+#   15. o teto de profundidade                4, alcançado, e confinado a um ramo
 #
 # **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
 # ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
@@ -73,6 +76,11 @@ JORNADAS='conteudo/jornadas'
 PROCEDIMENTOS='conteudo/procedimentos'
 FERRAMENTAS='conteudo/ferramentas'
 EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
+
+# As três superfícies do conteúdo publicado, para a varredura de travessão. `EN`
+# não serve aqui: ele aponta uma aba, e a régua é sobre tudo o que sai no site.
+I18N='i18n'
+CONTRATOS='contratos'
 
 # O ramo gerado, nos dois locales. Ele é contado à parte de toda contagem de
 # autoral: `.mdx` é o sinal greppável de *gerado, não editar*, e ele é o que
@@ -658,7 +666,46 @@ done
 echo "   ${traduzidas} traduzidas · ${marcadas} das ${autorais} autorais sem EN, de propósito"
 echo
 
-# --- 14. o teto de profundidade, e o ramo em que ele vale ---------------------
+# --- 14. o travessão fora do conteúdo publicado -------------------------------
+#
+# O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um
+# site que se olha. Português tem pontuação para tudo o que ele faz — vírgula,
+# dois-pontos, parênteses, ponto final — e nenhuma dessas denuncia a origem.
+#
+# **A régua cobra a ausência, nunca a substituição.** Travessão é pontuação
+# legítima, e cada ocorrência cai numa saída diferente: a que vira vírgula não é
+# a que vira dois-pontos, e algumas exigem reescrever a frase. Por isso o portão
+# aponta arquivo e linha e para por aí; quem decide é quem escreve.
+#
+# `docs/` fica de fora, e por decisão: a spec não é produto, ninguém a navega
+# como página, e `invariantes.sh` EXIGE o literal `Livre — <dono>` lá dentro.
+# Varrê-la aqui seria uma régua de máquina reprovando o que a outra obriga.
+#
+# **As três raízes são conferidas antes da varredura.** `grep` sobre caminho
+# inexistente devolve vazio, e vazio AQUI é aprovação: das quinze, esta é a
+# única cuja forma de passar é não achar nada. Sem a guarda, um diretório
+# renomeado transformaria a cobrança num carimbo.
+echo "14  travessão em \`conteudo\`, \`i18n\` e \`contratos\`"
+faltando=''
+for raiz in "$CONTEUDO" "$I18N" "$CONTRATOS"; do
+  [ -d "$raiz" ] || faltando="${faltando}${raiz} "
+done
+
+if [ -n "$faltando" ]; then
+  reprova "superfície ausente, e sem ela a varredura passaria calada: ${faltando% }"
+else
+  com_travessao=$(grep -Rn '—' "$CONTEUDO" "$I18N" "$CONTRATOS") || true
+  if [ -n "$com_travessao" ]; then
+    reprova "travessão no conteúdo publicado; reescreva a frase, em vez de trocar o caractere:"
+    echo "$com_travessao" | sed 's/^/    /'
+  else
+    varridos=$(find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f | wc -l)
+    echo "   ${varridos} arquivos varridos, e nenhum travessão"
+  fi
+fi
+echo
+
+# --- 15. o teto de profundidade, e o ramo em que ele vale ---------------------
 #
 # **A cobrança mudou de forma com o ADR 10 §g).** Ela era *"o nível 3 é usado ao
 # menos uma vez"*, que é teto com consumidor mas sem fronteira: nada impedia um
@@ -672,7 +719,7 @@ echo
 # nível que ocupa na árvore, então `comandos/indice` mede 4 aqui e desenha 3 lá.
 # Cobrar o caminho é mais estrito que cobrar a árvore, e é o que este portão
 # consegue ler sem importar a sidebar.
-echo "14  o teto de profundidade, confinado a um ramo"
+echo "15  o teto de profundidade, confinado a um ramo"
 profundidade_maxima=0
 fora_do_ramo=''
 while IFS= read -r arquivo; do

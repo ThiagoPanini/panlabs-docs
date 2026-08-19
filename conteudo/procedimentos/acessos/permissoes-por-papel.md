@@ -15,7 +15,7 @@ não do papel.
 
 **Papel** é o sufixo, sem o prefixo da equipe: `leitura` é
 `papel-<equipe>-leitura-<ambiente>`. **Condição** é o que restringe a permissão
-além do ambiente — sem condição, ela vale para todo recurso do serviço.
+além do ambiente: sem condição, ela vale para todo recurso do serviço.
 
 ## A matriz
 
@@ -25,9 +25,9 @@ além do ambiente — sem condição, ela vale para todo recurso do serviço.
 | leitura | s3 | `ListBucket` | dev · stg · prd | prefixo da equipe |
 | leitura | logs | `FilterLogEvents` | dev · stg · prd | grupo da equipe |
 | leitura | logs | `GetLogEvents` | dev · stg · prd | grupo da equipe |
-| leitura | cloudwatch | `GetMetricData` | dev · stg · prd | — |
+| leitura | cloudwatch | `GetMetricData` | dev · stg · prd | sem condição |
 | leitura | ecr | `BatchGetImage` | dev · stg · prd | repositório da equipe |
-| leitura | secretsmanager | `ListSecrets` | dev | — |
+| leitura | secretsmanager | `ListSecrets` | dev | sem condição |
 | leitura | sqs | `GetQueueAttributes` | dev · stg · prd | fila da equipe |
 | escrita | s3 | `PutObject` | dev · stg | prefixo da equipe |
 | escrita | s3 | `DeleteObject` | dev | prefixo da equipe |
@@ -56,7 +56,7 @@ além do ambiente — sem condição, ela vale para todo recurso do serviço.
 | plantao | logs | `StartQuery` | prd | qualquer grupo |
 | plantao | ecs | `ExecuteCommand` | prd | 1 h · justificativa |
 | plantao | ecs | `StopTask` | prd | serviço da equipe |
-| plantao | rds | `DescribeDBInstances` | prd | — |
+| plantao | rds | `DescribeDBInstances` | prd | sem condição |
 | plantao | secretsmanager | `GetSecretValue` | prd | 1 h · justificativa |
 | auditoria | cloudtrail | `LookupEvents` | prd | somente leitura |
 | auditoria | iam | `GetAccountAuthorizationDetails` | prd | somente leitura |
@@ -66,12 +66,12 @@ além do ambiente — sem condição, ela vale para todo recurso do serviço.
 
 **`PassRole` é a linha mais perigosa da tabela.** Quem pode passar um papel a um
 serviço pode escalar até esse papel. A condição `papéis da equipe` é o que a
-segura, e ela é conferida por política de limite — nunca só pelo nome.
+segura, e ela é conferida por política de limite, nunca só pelo nome.
 
 **`plantao` tem prazo, e ele é de uma hora.** Duas linhas exigem justificativa
 escrita, que vai para o registro de auditoria junto com a sessão. O papel não é
 concedido: ele é assumido sob demanda e expira sozinho.
 
 **`auditoria` é o único papel que atravessa equipes**, e é o único somente
-leitura em todas as linhas. Ele não pode ler segredo nem objeto — só metadado de
+leitura em todas as linhas. Ele não pode ler segredo nem objeto: só metadado de
 configuração e de acesso.

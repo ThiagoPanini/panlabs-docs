@@ -70,7 +70,7 @@ def listar_por_dono(equipe: str, limite: int = 50) -> list[Recurso]:
 ## Tratamento de erro
 
 O servidor traduz as exceções do cliente para mensagens que fazem sentido
-para quem lê a resposta do assistente — e a tradução mantém a causa, que é o
+para quem lê a resposta do assistente, e a tradução mantém a causa, que é o
 defeito descrito em
 [O mesmo erro em três formas](/procedimentos/diagnostico/o-mesmo-erro-em-tres-formas).
 

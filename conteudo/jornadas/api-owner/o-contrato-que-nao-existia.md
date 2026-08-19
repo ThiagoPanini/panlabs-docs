@@ -11,7 +11,7 @@ O serviço de catálogo interno subiu num sprint, respondeu bem, e ficou seis
 meses sem que ninguém escrevesse o que ele promete. Não era descuido: enquanto o
 único consumidor era o time que o escreveu, o contrato morava na cabeça de quem
 o mantinha, e ler o código era mais rápido que ler qualquer documento. O
-problema apareceu quando o terceiro consumidor entrou — um time de outra
+problema apareceu quando o terceiro consumidor entrou, um time de outra
 diretoria, que não tinha acesso ao repositório e não tinha a quem perguntar. A
 partir dali, cada mudança passou a ser uma aposta sobre quem ia quebrar.
 
@@ -20,7 +20,7 @@ partir dali, cada mudança passou a ser uma aposta sobre quem ia quebrar.
 Três coisas faziam o papel, e as três mentiam de formas diferentes.
 
 O **código** era a fonte mais precisa e a menos útil. Ele descreve o que o
-serviço faz hoje, não o que ele promete continuar fazendo — e a diferença entre
+serviço faz hoje, não o que ele promete continuar fazendo, e a diferença entre
 as duas é exatamente o contrato. Um campo que existe por acidente de
 implementação lê igual a um campo que é promessa.
 
@@ -49,7 +49,7 @@ distinguir promessa de acidente.**
 Uma função pública que devolve um dicionário com sete chaves gera sete chaves no
 contrato. Três delas são promessa; duas existem porque o dicionário interno
 vazou; e duas são detalhe de implementação que o autor teria removido se
-alguém tivesse perguntado. Publicado, o contrato passa a prometer as sete — e a
+alguém tivesse perguntado. Publicado, o contrato passa a prometer as sete, e a
 partir daí remover qualquer uma é mudança de contrato, mesmo as que nunca
 deveriam ter entrado.
 
@@ -63,7 +63,7 @@ O contrato virou um pacote Python versionado, publicado no índice interno, com
 os tipos e nada mais. Sem cliente HTTP, sem lógica: só o vocabulário.
 
 ```python
-# panlabs_catalogo_contrato/v1.py — o que o serviço promete, e só isso
+# panlabs_catalogo_contrato/v1.py: o que o serviço promete, e só isso
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -91,7 +91,7 @@ rotatividade, e é ele que responde quando o recurso quebra.
 
 **`proximo` é o cursor opaco, não o número da página.** Página numerada obriga o
 serviço a prometer estabilidade de ordenação entre chamadas, que é uma promessa
-muito mais cara do que ela parece — qualquer escrita concorrente a quebra.
+muito mais cara do que ela parece: qualquer escrita concorrente a quebra.
 
 ## Como o contrato passou a ser cobrado
 
@@ -125,7 +125,7 @@ jobs:
 
 O segundo passo é o que dá dente ao primeiro. Ele compara os tipos publicados
 com os do `main` e reprova quando um campo muda de forma sem que a versão do
-pacote suba junto — e a mensagem dele nomeia o campo, porque uma reprovação que
+pacote suba junto, e a mensagem dele nomeia o campo, porque uma reprovação que
 diz *"o contrato mudou"* não diz o que fazer.
 
 ## O que ficou
@@ -138,7 +138,7 @@ registrados, e o terceiro foi o inesperado.
 `--diff-contra` passa, sobe. Se não passa, a mudança é de contrato, e aí a
 conversa é sobre versão.
 
-**O número de perguntas no canal caiu**, mas não a zero — e as que sobraram
+**O número de perguntas no canal caiu**, mas não a zero, e as que sobraram
 mudaram de natureza. Deixaram de ser *"esse campo sempre vem?"* e viraram
 *"vocês pretendem suportar X?"*, que é a pergunta que vale a pena responder.
 

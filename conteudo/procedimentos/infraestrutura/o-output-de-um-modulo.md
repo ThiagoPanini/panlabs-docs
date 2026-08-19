@@ -17,7 +17,7 @@ e deixa de ser na primeira mudança.
 
 Um módulo que publica `bucket_nome`, `bucket_arn`, `bucket_regiao` e
 `bucket_kms_arn` obriga cada consumidor a saber os quatro nomes. Acrescentar um
-quinto é aditivo, mas renomear qualquer um é quebra — e a chance de renomear
+quinto é aditivo, mas renomear qualquer um é quebra, e a chance de renomear
 cresce com o número de nomes no escopo raiz.
 
 Um objeto único move o vocabulário para dentro de uma chave, e o consumidor
@@ -48,7 +48,7 @@ teto declarado é o que impede o output de virar um mapa do provedor inteiro.
     </ResponseField>
 
     <ResponseField name="criptografia" type="object">
-      A chave e o modo. Sempre presente — o módulo não cria bucket sem
+      A chave e o modo. Sempre presente: o módulo não cria bucket sem
       criptografia.
 
       <Expandable title="campos">

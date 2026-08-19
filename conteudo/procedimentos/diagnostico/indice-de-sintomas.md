@@ -30,7 +30,7 @@ antes de pedir acesso a alguém:
 
 ```bash
 aws sts get-caller-identity
-# An error occurred (ExpiredToken) — é isto, e não falta de permissão
+# An error occurred (ExpiredToken): é isto, e não falta de permissão
 ```
 
 A correção é `panlabs assumir <papel>`. Se ela reaparece em minutos, o ambiente
@@ -43,14 +43,14 @@ não uma permissão faltando no papel de escrita.
 
 ```bash
 aws sts get-caller-identity --query Arn --output text
-# …assumed-role/papel-<equipe>-leitura-dev/… — o papel é o de leitura
+# …assumed-role/papel-<equipe>-leitura-dev/… (o papel é o de leitura)
 ```
 
 ## Só no runner {#so-no-runner}
 
 Reproduza localmente antes de investigar o log. Ver
 [Rodar a esteira localmente](/procedimentos/esteiras/rodar-a-esteira-localmente).
-Quando `make ambiente` local e o do runner concordam, a diferença é de estado —
+Quando `make ambiente` local e o do runner concordam, a diferença é de estado:
 cache ou arquivo não versionado.
 
 ## Sobe e volta {#sobe-e-volta}

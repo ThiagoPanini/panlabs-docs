@@ -228,7 +228,7 @@ function preambulo({paginas, abas, rotulos, locale}) {
     .map((aba, i) => `${paginas.filter((pagina) => pagina.aba === aba).length} em ${rotulos[i]}`)
     .join(', ');
   return [
-    `\`panlabs\` — o acervo de aprendizado de um desenvolvedor. ${paginas.length} páginas (${contagem}), locale \`${locale}\`.`,
+    `\`panlabs\`: o acervo de aprendizado de um desenvolvedor. ${paginas.length} páginas (${contagem}), locale \`${locale}\`.`,
     '',
     `Toda página deste site também é servida como Markdown: acrescente \`.md\` à URL dela.`,
     '',

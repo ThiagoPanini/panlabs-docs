@@ -9,7 +9,7 @@ description: O caso mais comum de provisionamento, do módulo à primeira escrit
 
 Quase todo pedido de armazenamento é o mesmo pedido: um bucket privado, com
 versionamento, criptografado, com expiração de versão antiga. O módulo já decide
-tudo isso — o que a composição precisa dizer é o nome e para que serve.
+tudo isso: o que a composição precisa dizer é o nome e para que serve.
 
 ## Antes de começar
 
@@ -46,7 +46,7 @@ Ver [Preparar a máquina local](/procedimentos/ambiente/preparar-a-maquina-local
   </Step>
 
   <Step title="Aplicar">
-    Em `dev`, direto. Em `staging` e `prod`, pela esteira — o `apply` local é
+    Em `dev`, direto. Em `staging` e `prod`, pela esteira: o `apply` local é
     recusado pelo papel.
 
     ```bash

@@ -23,7 +23,7 @@ autenticação é por identidade federada do próprio runner.
 <Steps>
   <Step title="Marcar a versão">
     A versão sai da tag, e a tag é a única fonte. Nada de editar número em
-    arquivo — dois lugares divergem no dia em que alguém esquece um.
+    arquivo: dois lugares divergem no dia em que alguém esquece um.
 
     ```bash
     git tag -a v2.4.0 -m "cursor opaco na listagem"
@@ -60,7 +60,7 @@ autenticação é por identidade federada do próprio runner.
 ## Verificação
 
 O pacote aparece no índice em menos de um minuto. O teste real é instalá-lo
-numa máquina que não é a sua — ou num container limpo, que é mais rápido:
+numa máquina que não é a sua, ou num container limpo, que é mais rápido:
 
 ```bash
 docker run --rm python:3.12-slim \
@@ -75,7 +75,7 @@ publicação falhou.
 
 ## Variações
 
-**Pré-lançamento.** Tag com sufixo — `v2.5.0rc1` — publica normalmente e o
+**Pré-lançamento.** Tag com sufixo (`v2.5.0rc1`) publica normalmente e o
 índice a marca como pré-lançamento; `pip` só a instala com `--pre`.
 
 **Republicar a mesma versão.** Não existe. O índice recusa sobrescrita, e é
@@ -84,5 +84,5 @@ que já o baixou.
 
 :::warning
 Apagar uma tag publicada não despublica o pacote. A saída é publicar uma versão
-nova, sempre — inclusive quando a anterior tem duas horas de vida.
+nova, sempre, inclusive quando a anterior tem duas horas de vida.
 :::

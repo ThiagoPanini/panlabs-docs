@@ -11,7 +11,7 @@ Remover o endpoint de busca por nome era decisão fácil: ele tinha substituto
 melhor havia um ano e custava um índice inteiro para manter. A primeira
 tentativa de removê-lo foi anunciada no changelog do pacote, com três meses de
 prazo. No dia do corte, duas das cinco equipes que o usavam não sabiam que ele
-existia — o código que chamava era herdado, e ninguém do time atual o havia
+existia: o código que chamava era herdado, e ninguém do time atual o havia
 escrito.
 
 ## Por que o changelog não alcança
@@ -50,7 +50,7 @@ descobrir o substituto para quem foi avisado.
 
 :::warning
 Prazo sem data é prazo que não existe. `Sunset` carrega uma data absoluta, nunca
-*"em seis meses"* — a frase relativa é lida meses depois de ter sido escrita, e
+*"em seis meses"*: a frase relativa é lida meses depois de ter sido escrita, e
 aí ela não diz nada.
 :::
 
@@ -69,7 +69,7 @@ DeprecationWarning: /catalogo/buscar-por-nome sai em 2026-09-01.
 ## O que ficou
 
 Seis meses, e não três. O prazo dobrou porque a medição do primeiro corte
-mostrou que o gargalo não era a mudança de código — era a janela de deploy de
+mostrou que o gargalo não era a mudança de código, era a janela de deploy de
 quem consome, e times com deploy mensal precisam de mais de um ciclo para
 descobrir, corrigir, testar e subir.
 
