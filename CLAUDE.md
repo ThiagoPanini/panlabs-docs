@@ -19,6 +19,7 @@ Numa implementação, `.claude/context-economy-protocol.md` entra no contexto co
 | --- | --- |
 | vocabulário, axiomas, o que é o projeto | `docs/agents/domain.md` § Vocabulário, § Axiomas |
 | como o trabalho anda aqui; o que é portão | `docs/agents/workflow.md` § Do problema à execução, § Portões |
+| entregar sozinho: branch, PR, merge; o que a `main` aceita | `docs/agents/workflow.md` § Modo de implementação autônoma |
 | issue, sub-issue, dependência, label | `docs/agents/issue-tracker.md` § Convenções, § Wayfinding operations |
 | índice da spec, os sete portões, as invariantes | `docs/design/README.md` § 3. O índice, § 5. Os sete portões |
 | árvore, abas, tipo de página, heading, locale | `docs/design/informacao.md` § 3. A árvore, § 6. Tipos de página, § 8. Locale |
