@@ -38,6 +38,25 @@ como `‹marcador›`.
 | `` `--from` names where to look, and no --skill and no --mcp name what to look for `` | `2` | acrescente um seletor, ou rode num terminal e deixe a vitrine abrir |
 | `` `--from` on `list` shows skills, MCP servers and bundles `` | `2` | tire o `--ai-framework`; um framework é pasta da wheel, e não existe remotamente |
 
+### As recusas por nome de classe
+
+A tabela acima é indexada pela mensagem, que é o que você vê. Quando o que você
+tem é o nome da exceção, vindo de um traceback, de um relatório de CI ou da
+leitura do fonte, entre por aqui:
+
+| Classe | Saída | A mensagem que ela imprime |
+| --- | --- | --- |
+| `TooManySelectorsError` | `2` | `list shows one item at a time, and got ‹as flags›` |
+| `MixedClassesWithoutRuntimeError` | `2` | `a skill and an MCP server on one line need --runtime named explicitly` |
+| `NothingToSearchForError` | `2` | `` `--from` names where to look, and no --skill and no --mcp name what to look for `` |
+| `UnsupportedRemoteListUnitError` | `2` | `` `--from` on `list` shows skills, MCP servers and bundles `` |
+| `UnsupportedRemoteUnitError` | `2` | `` `--from` installs skills, MCP servers and bundles `` |
+| `OutsideRepositoryError` | `2` | `not inside a git repository: pass --global to write under the home directory` |
+| `NothingSelectedError` | `2` | `nothing to install: name at least one --skill, --ai-framework, --bundle or --mcp` |
+
+As três últimas linhas da tabela por mensagem, e as três primeiras desta, são a
+mesma recusa vista pelos dois lados.
+
 ### As três mensagens que carregam travessão
 
 Três recusas trazem travessão literal, e a tabela acima as abrevia porque uma

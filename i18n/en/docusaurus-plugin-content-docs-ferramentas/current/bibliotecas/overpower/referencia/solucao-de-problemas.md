@@ -37,6 +37,25 @@ typed, the scope, a path, it appears here as `‹placeholder›`.
 | `` `--from` names where to look, and no --skill and no --mcp name what to look for `` | `2` | add a selector, or run in a terminal and let the showcase open |
 | `` `--from` on `list` shows skills, MCP servers and bundles `` | `2` | drop `--ai-framework`; a framework is a folder of the wheel, and does not exist remotely |
 
+### The refusals by class name
+
+The table above is indexed by the message, which is what you see. When what you
+have is the exception name, from a traceback, a CI report, or reading the
+source, come in here:
+
+| Class | Exit | The message it prints |
+| --- | --- | --- |
+| `TooManySelectorsError` | `2` | `list shows one item at a time, and got ‹every flag›` |
+| `MixedClassesWithoutRuntimeError` | `2` | `a skill and an MCP server on one line need --runtime named explicitly` |
+| `NothingToSearchForError` | `2` | `` `--from` names where to look, and no --skill and no --mcp name what to look for `` |
+| `UnsupportedRemoteListUnitError` | `2` | `` `--from` on `list` shows skills, MCP servers and bundles `` |
+| `UnsupportedRemoteUnitError` | `2` | `` `--from` installs skills, MCP servers and bundles `` |
+| `OutsideRepositoryError` | `2` | `not inside a git repository: pass --global to write under the home directory` |
+| `NothingSelectedError` | `2` | `nothing to install: name at least one --skill, --ai-framework, --bundle or --mcp` |
+
+The last three rows of the message table, and the first three of this one, are the
+same refusal seen from both sides.
+
 ### The three messages that carry an em dash
 
 Three refusals carry a literal em dash, and the table above abbreviates them

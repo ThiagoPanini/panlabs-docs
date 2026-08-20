@@ -85,6 +85,10 @@ EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 # As três superfícies do conteúdo publicado, para a varredura de travessão. `EN`
 # não serve aqui: ele aponta uma aba, e a régua é sobre tudo o que sai no site.
 I18N='i18n'
+# O espelho de conteúdo da aba `Ferramentas`, que é a única traduzida. Ele é
+# mais fundo que `$I18N`, e as duas raízes NÃO são intercambiáveis: `$I18N`
+# cobre também os rótulos de UI, que não têm contraparte em `conteudo/`.
+ESPELHO_EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 CONTRATOS='contratos'
 
 # O ramo gerado, nos dois locales. Ele é contado à parte de toda contagem de
@@ -856,11 +860,26 @@ echo "16  a \`Verificação\` verifica"
 verificacoes=0
 while IFS=: read -r relativo tipo; do
   [ "$tipo" = 'guia' ] || continue
+  # **`$I18N` é a raiz de `i18n/`, e não a do espelho de conteúdo.** A primeira
+  # versão desta cobrança montou o caminho do EN a partir dela e nunca achou
+  # arquivo nenhum: a varredura passava calada na metade que ela anunciava
+  # varrer. O espelho mora fundo, sob a instância de `ferramentas`.
   for par in "${CONTEUDO}/${relativo}.md:Verificação" \
-             "${I18N}/${relativo#ferramentas/}.md:Checking it"; do
+             "${ESPELHO_EN}/${relativo#ferramentas/}.md:Checking it"; do
     arquivo="${par%:*}"
     heading="${par##*:}"
     [ -f "$arquivo" ] || continue
+    # **A ausência da seção não é o que esta cobrança pega**, e o limite é
+    # deliberado. A régua da #133 é sobre o CONTEÚDO da seção; exigir que ela
+    # exista alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`,
+    # que é da aba `Procedimentos` e está fora do escopo daquele ticket. O buraco
+    # fica registrado aqui, nomeado, para o ticket que o fechar.
+    #
+    # **O guarda vem ANTES do contador**, e a ordem é o conserto de um defeito
+    # desta própria cobrança: contando antes, ela somava ARQUIVO varrido e
+    # imprimia o número como se fosse SEÇÃO varrida. Numa régua que nasceu contra
+    # promessa quebrada, era exatamente a promessa quebrada.
+    grep -q "^## ${heading}\$" "$arquivo" || continue
     verificacoes=$((verificacoes + 1))
     # Da linha do heading até o próximo `##`, e conta cerca dentro da fatia.
     cercas=$(awk -v h="## ${heading}" '
@@ -869,12 +888,6 @@ while IFS=: read -r relativo tipo; do
       dentro && /^[[:space:]]*```/ { n++ }
       END { print n + 0 }
     ' "$arquivo")
-    # **A ausência da seção não é o que esta cobrança pega**, e o limite é
-    # deliberado. A régua da #133 é sobre o CONTEÚDO da seção; exigir que ela
-    # exista alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`,
-    # que é da aba `Procedimentos` e está fora do escopo daquele ticket. O buraco
-    # fica registrado aqui, nomeado, para o ticket que o fechar.
-    grep -q "^## ${heading}\$" "$arquivo" || continue
     if [ "$((cercas / 2))" -lt 1 ]; then
       reprova "${arquivo}: \`${heading}\` sem bloco cercado — nada a rodar, e nada a comparar"
     fi
@@ -897,6 +910,13 @@ echo
 #
 # O casamento é por `**<termo>**`, que é como a página marca uma definição. Casar
 # a palavra solta acharia toda menção e a lista nunca reprovaria.
+#
+# **Ela varre só o pt-BR, e isso é decisão, não esquecimento.** A lista carrega os
+# termos em português; o `conceitos.md` do EN usa as palavras dele, e cobri-lo
+# exigiria uma segunda lista para uma página que é tradução da primeira. Quem
+# confere que a tradução acompanha é a paridade de árvore da cobrança 13, mais a
+# varredura da ADR 11. A cobrança 16, ao lado, varre os dois — lá o heading é
+# fixo por locale e não há vocabulário a traduzir.
 echo "17  o vocabulário do ramo está definido"
 TERMOS='conteudo/ferramentas/bibliotecas/overpower/conceitos.md'
 LISTA='scripts/termos-overpower.txt'

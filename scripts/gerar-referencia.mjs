@@ -21,11 +21,12 @@
  * mesmo contrato produz bytes idênticos; se não produzir, o contrato mudou sem o
  * gerador rodar, ou alguém editou a saída à mão.
  *
- * **Zero snippet escrito à mão.** A linha de comando do exemplo é COMPOSTA: a
- * raiz percorre o `fluxo` dos membros, o membro emite a própria cadeia, e cada
- * opção com exemplo entra com o valor dela ou com o marcador que o painel
- * substitui. Nenhuma das quatro entradas tem snippet próprio — é a mesma
- * disciplina de zero-segunda-fonte que motivou o gerador inteiro.
+ * **Zero snippet escrito à mão, e desde a #133 zero snippet congelado.** A raiz
+ * percorre o `fluxo` dos membros e emite linhas estáticas; a página de um comando
+ * não recebe texto nenhum, e sim o MODELO, e quem compõe a linha é `linha.mjs`,
+ * dos dois lados. Nenhuma das quatro entradas tem snippet próprio, e a
+ * `assinatura` também deixou de ser escrita — é a mesma disciplina de
+ * zero-segunda-fonte que motivou o gerador inteiro.
  *
  * Uso: node scripts/gerar-referencia.mjs
  *
@@ -41,7 +42,7 @@ import {lerContrato, validarPar} from './lib/assinatura.mjs';
 // O modelo de linha vem do MESMO arquivo que o painel lê, e é o que faz a
 // assinatura emitida aqui e a linha montada lá não poderem divergir: são a mesma
 // função sobre o mesmo campo. Ver o cabeçalho de `linha.mjs`.
-import {assinaturaDe} from '../src/theme/MDXComponents/linha.mjs';
+import {aspasDeShell, assinaturaDe} from '../src/theme/MDXComponents/linha.mjs';
 
 const CONTRATOS = {
   'pt-BR': 'contratos/overpower.pt-BR.json',
@@ -186,15 +187,16 @@ const temExemplo = (parametro) =>
 /**
  * Um valor JSON escrito como palavra de uma linha de shell.
  *
- * Dentro de aspas duplas o shell ainda expande `$`, executa crase e consome a
- * contrabarra, e esta é a linha que o leitor copia para o terminal dele. A
- * ordem importa: escapar `\\` depois de `"` escaparia a barra que acabou de ser
- * inserida.
+ * **O escape vem de `linha.mjs`, e não de uma cópia daqui.** As duas linhas que
+ * este projeto emite — a de exemplo da raiz, composta no build, e a editada no
+ * painel, composta no cliente — precisam escapar igual, e um leitor que copia as
+ * duas espera o mesmo texto. Duas cópias da regra divergiriam sem que nenhum
+ * portão visse: o 5 regenera e diffa a saída contra ela mesma.
+ *
+ * O que sobra aqui é a única diferença real: número não leva aspas.
  */
 const literalDeComando = (valor) =>
-  typeof valor === 'string'
-    ? `"${valor.replace(/[\\$`"]/g, (c) => `\\${c}`)}"`
-    : String(valor);
+  typeof valor === 'string' ? aspasDeShell(valor) : String(valor);
 
 /**
  * A linha de uso de um comando — `overpower install --from "…"`.
@@ -528,8 +530,11 @@ export function frontMatter(entrada, contexto) {
     painel.modelo = {
       chamada: entrada.chamada ?? entrada.qualificado,
       qualificado: entrada.qualificado,
-      // O contexto que a página abre. `sem-terminal` é o que fecha a linha
-      // sozinha, e é o que um leitor copiando para um script precisa ver.
+      // O contexto em que a página abre o painel: o **primeiro** `minimo` do
+      // contrato, e a ordem ali é a decisão. Para `install` ele é `terminal`,
+      // porque `overpower install` nu é linha completa num terminal e é a que a
+      // maioria digita; a linha de pipe continua no modelo, e o leitor a alcança
+      // ligando as flags que ela exige.
       contexto: (entrada.minimo ?? [{contexto: 'sempre'}])[0].contexto,
       parametros: (entrada.parametros ?? []).map((parametro) => ({
         nome: parametro.nome,

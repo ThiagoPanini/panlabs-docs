@@ -106,14 +106,14 @@ const NAVEGACAO = [
  */
 const AUTORIA = [
   // Ações · 8
-  {nome: 'play', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Desenvolvimento › Telas · vocabulário do autor'},
+  {nome: 'play', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Telas · vocabulário do autor'},
   {nome: 'download', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › overpower › Instalação · vocabulário do autor'},
-  {nome: 'upload', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Publicação › Release · vocabulário do autor'},
+  {nome: 'upload', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › O release-ready · vocabulário do autor'},
   {nome: 'refresh-cw', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Solução de problemas · vocabulário do autor'},
   {nome: 'send', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › O atalho op · vocabulário do autor'},
   {nome: 'trash-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'plus', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower install · vocabulário do autor'},
-  {nome: 'filter', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Publicação › Curadoria · vocabulário do autor', lucide: 'funnel'},
+  {nome: 'filter', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Curadoria · vocabulário do autor', lucide: 'funnel'},
 
   // Objetos · 16
   {nome: 'file-text', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Mapa de módulos · vocabulário do autor'},
@@ -123,7 +123,8 @@ const AUTORIA = [
   {nome: 'terminal', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Comandos · vocabulário do autor'},
   // Comprado pela porta `Ferramentas` da landing, que saiu na #94. Continua no
   // vocabulário do autor, é o único nome de ferramenta do manifesto, e hoje
-  // nomeia também `Desenvolvimento`.
+  // nomeia também `Contribuir › Arquitetura` — ele vestia `Desenvolvimento`, que
+  // fundiu em `Contribuir` na #133.
   {nome: 'wrench', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Arquitetura · vocabulário do autor'},
   {nome: 'database', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower list · vocabulário do autor'},
   {nome: 'server', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Servidores MCP · vocabulário do autor'},
@@ -139,12 +140,12 @@ const AUTORIA = [
   // ninguém mais a declara, e par sem declarante é o que `npm run icones`
   // reprova. O separador `Bibliotecas` nunca teve ícone — ADR 10 §e).
   {nome: 'package', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Alvos › O bundle federado · vocabulário do autor'},
-  {nome: 'rocket', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Publicação · vocabulário do autor'},
+  {nome: 'rocket', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Release · vocabulário do autor'},
   {nome: 'shapes', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › overpower › Conceitos · vocabulário do autor'},
 
   // Estados e sinais · 7
   {nome: 'zap', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower · vocabulário do autor'},
-  {nome: 'clock', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Publicação › Changelog · vocabulário do autor'},
+  {nome: 'clock', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Changelog · vocabulário do autor'},
   {nome: 'circle-alert', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Códigos de saída · vocabulário do autor'},
   {nome: 'circle-help', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower · vocabulário do autor', lucide: 'circle-question-mark'},
   {nome: 'sparkles', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Critérios de catálogo · vocabulário do autor'},
@@ -163,7 +164,7 @@ const AUTORIA = [
   // categoria aqui: `Referência` é seção do `overpower`, e nenhuma porta a
   // contém.
   {nome: 'book-open', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Referência · vocabulário do autor'},
-  {nome: 'repeat', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Desenvolvimento › Testes · vocabulário do autor'},
+  {nome: 'repeat', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Testes · vocabulário do autor'},
   {nome: 'undo-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
 ];
 

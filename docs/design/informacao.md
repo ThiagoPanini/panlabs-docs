@@ -224,8 +224,8 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 | 13 | **a cobertura de locale** — 32 páginas em EN, e só `Ferramentas` |
 | 14 | **zero travessão** em `conteudo/`, `i18n/` e `contratos/` — a mensagem aponta arquivo e linha, e a exceção de citação abaixo é a única |
 | 15 | **o teto de profundidade** — 4, alcançado, e confinado a um ramo |
-| 16 | **a `Verificação` verifica** — página typed `guia` cuja seção existe e não tem bloco cercado |
-| 17 | **o vocabulário do ramo está definido** — termo de `scripts/termos-overpower.txt` sem entrada em `conceitos.md` |
+| 16 | **a `Verificação` verifica** — página typed `guia` cuja seção existe e não tem bloco cercado, **nos dois locales** |
+| 17 | **o vocabulário do ramo está definido** — termo de `scripts/termos-overpower.txt` sem entrada em `conceitos.md`, **só em pt-BR** |
 
 As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>` citado dentro de um trecho de código contariam.
 
@@ -234,6 +234,8 @@ As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>
 **As cobranças 16 e 17 nasceram na [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133), e as duas cobram uma promessa, não uma contagem.** A 16 mede o que uma seção chamada `Verificação` de fato contém: nas cinco páginas typed `guia` do ramo `overpower` ela não trazia comando nenhum, e sim justificativa de desenho. A 17 mede a declaração de abertura de `conceitos.md`, que diz ser onde a definição mora: `achado` e `enxerto` eram usados em três páginas como se conhecidos, e definidos em zero.
 
 **A 16 não cobra a AUSÊNCIA da seção, e o limite é deliberado.** Exigi-la alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`, que é de outra aba e estava fora do escopo do ticket. O buraco fica nomeado no comentário do portão, para o ticket que o fechar.
+
+**A 16 varre os dois locales; a 17, só o pt-BR.** A assimetria tem razão: o heading da 16 é fixo por locale (`## Verificação` e `## Checking it`) e não há o que traduzir na régua, enquanto a lista de termos da 17 carrega palavras em português e cobrir o EN exigiria uma segunda lista para uma página que é tradução da primeira.
 
 **A 17 cobra uma direção só, e a outra é da skill.** Termo listado e não definido é varredura; termo usado na prosa e não listado é juízo, porque nenhuma varredura distingue vocabulário de produto de palavra comum. A segunda metade mora na `varredura-overpower`, e sem as duas a lista vira carimbo.
 

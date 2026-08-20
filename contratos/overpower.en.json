@@ -342,7 +342,6 @@
           "tipo": "desliga",
           "precedencia": 3,
           "quando": "--from",
-          "desligada": null,
           "classe": "RemoteSkillNotFoundError",
           "exit": 3,
           "literal": false,

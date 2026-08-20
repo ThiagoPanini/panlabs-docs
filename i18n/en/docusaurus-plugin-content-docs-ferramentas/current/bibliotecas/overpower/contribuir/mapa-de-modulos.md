@@ -53,7 +53,7 @@ the tool. Add the row, with the responsibility written from the point of view of
 someone looking for where to make a change.
 :::
 
-## The boundaries the map draws
+## Where to start, by the question you have
 
 Three names in the table are boundaries, not just files. `planning.py` is the one
 place a destination is decided, so a question about *where this lands* starts

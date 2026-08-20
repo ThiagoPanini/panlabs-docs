@@ -53,7 +53,7 @@ da ferramenta. Acrescente a linha, com a responsabilidade escrita do ponto de
 vista de quem procura onde mexer.
 :::
 
-## As fronteiras que o mapa desenha
+## Por onde começar, conforme a pergunta
 
 Três nomes da tabela são fronteira, e não só arquivo. `planning.py` é o único
 lugar onde um destino é decidido, então uma pergunta sobre *onde isto vai cair*

@@ -20,6 +20,9 @@
 
 import fs from 'node:fs';
 
+// A conta de exclusividade é a MESMA que o painel usa. Ver `membrosEmConflito`.
+import {membrosEmConflito} from '../../src/theme/MDXComponents/linha.mjs';
+
 /** O par nome/versão que este validador conhece. Fechado. */
 export const CONTRATO = 'assinatura';
 export const VERSAO = 2;
@@ -251,7 +254,6 @@ export function validar(contrato) {
       conferirNome(restricao?.guarda, `${ponteiro}/guarda`);
       conferirNome(restricao?.quando, `${ponteiro}/quando`);
       conferirNome(restricao?.proibida, `${ponteiro}/proibida`);
-      conferirNome(restricao?.desligada, `${ponteiro}/desligada`);
     }
 
     for (const [i, minimo] of (entrada.minimo ?? []).entries()) {
@@ -264,18 +266,12 @@ export function validar(contrato) {
       // uma invocação que não roda.
       const presentes = new Set(flags);
       for (const restricao of restricoes) {
-        if (restricao?.tipo !== 'exclusivo' || (restricao.guarda && presentes.has(restricao.guarda))) {
-          continue;
-        }
-        const membros = (restricao.membros ?? []).filter((nome) => presentes.has(nome));
-        const blocos = restricao.particao
-          ? new Set(
-              membros.map((nome) =>
-                restricao.particao.findIndex((bloco) => bloco.includes(nome)),
-              ),
-            )
-          : new Set(membros);
-        if (blocos.size >= 2) {
+        // A conta de colisão vem de `linha.mjs`, e não de uma cópia aqui: o
+        // validador e o painel precisam concordar sobre o que é linha válida, e
+        // duas implementações da mesma partição divergiriam em silêncio — o
+        // validador aprovaria um mínimo que o painel recusa.
+        const membros = membrosEmConflito(restricao, presentes);
+        if (membros.length >= 2) {
           recusar(
             RECUSAS.exclusivaObrigatoria,
             `${ponteiro}/flags`,

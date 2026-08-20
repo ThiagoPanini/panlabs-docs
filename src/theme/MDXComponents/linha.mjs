@@ -33,17 +33,19 @@
  */
 
 /**
- * A forma do valor de um parâmetro dentro da linha.
+ * Uma palavra de shell entre aspas duplas, escapada.
  *
  * Dentro de aspas duplas o shell ainda expande `$`, executa crase e consome a
  * contrabarra, e esta é a linha que o leitor copia para o terminal dele. A ordem
  * importa: escapar `\\` depois de `"` escaparia a barra recém-inserida.
  *
- * É a mesma regra de `literalDeComando` no gerador, e é intencional que seja: o
- * gerador escreve a linha de exemplo e o painel escreve a linha editada, e um
- * leitor que copia as duas espera o mesmo escape.
+ * **Ela é exportada porque o gerador a usa também**, e ter duas cópias da mesma
+ * regra é exatamente o defeito que este módulo existe para não repetir: o
+ * gerador escreve a linha de exemplo da raiz e o painel escreve a linha editada,
+ * e um leitor que copia as duas espera o mesmo escape. Duas cópias divergem, e
+ * nenhum portão veria — o 5 regenera e diffa a saída contra ela mesma.
  */
-const aspas = (valor) => `"${String(valor).replace(/[\\$`"]/g, (c) => `\\${c}`)}"`;
+export const aspasDeShell = (valor) => `"${String(valor).replace(/[\\$`"]/g, (c) => `\\${c}`)}"`;
 
 /** Uma flag booleana entra nua; `--dry-run true` não é linha que alguém digite. */
 const ehBooleana = (parametro) => parametro.tipo === 'flag';
@@ -121,6 +123,34 @@ const ligadas = (entrada, estado) =>
     .map((parametro) => parametro.nome);
 
 /**
+ * Os membros de um grupo exclusivo que colidem no conjunto dado, ou vazio.
+ *
+ * **A partição é o que separa `list` de `install`.** Em `list` os quatro
+ * seletores se excluem dois a dois; em `install` a fronteira é entre a classe
+ * MCP e as outras três, e duas flags do MESMO lado convivem. Um grupo plano
+ * erraria os dois comandos.
+ *
+ * **Ela é exportada porque o validador a usa também.** A recusa
+ * `exclusiva-obrigatoria` de `scripts/lib/assinatura.mjs` pergunta exatamente
+ * isto sobre as flags de um `minimo`, e uma segunda implementação da mesma conta
+ * é a divergência que este módulo existe para não ter: o validador aprovaria uma
+ * linha mínima que o painel recusa, ou o contrário.
+ */
+export function membrosEmConflito(restricao, presentes) {
+  if (restricao?.tipo !== 'exclusivo') {
+    return [];
+  }
+  if (restricao.guarda && presentes.has(restricao.guarda)) {
+    return [];
+  }
+  const membros = (restricao.membros ?? []).filter((nome) => presentes.has(nome));
+  const blocos = restricao.particao
+    ? new Set(membros.map((nome) => restricao.particao.findIndex((b) => b.includes(nome))))
+    : new Set(membros);
+  return blocos.size < 2 ? [] : membros;
+}
+
+/**
  * Se ligar `candidata` violaria a restrição, e com que mensagem.
  *
  * Devolve `null` quando não viola. A avaliação é sempre sobre o estado *com* a
@@ -136,19 +166,8 @@ function violacao(entrada, restricao, presentes) {
   }
 
   if (restricao.tipo === 'exclusivo') {
-    const membros = (restricao.membros ?? []).filter((nome) => presentes.has(nome));
-    // A partição é o que separa `list` de `install`. Em `list` os quatro
-    // seletores se excluem dois a dois; em `install` a fronteira é entre a
-    // classe MCP e as outras três, e duas flags do MESMO lado convivem.
-    const blocos = restricao.particao
-      ? new Set(
-          membros.map((nome) =>
-            restricao.particao.findIndex((bloco) => bloco.includes(nome)),
-          ),
-        )
-      : new Set(membros);
-
-    if (blocos.size < 2) {
+    const membros = membrosEmConflito(restricao, presentes);
+    if (membros.length === 0) {
       return null;
     }
     const ordem = ordemDe(entrada);
@@ -183,6 +202,16 @@ function violacao(entrada, restricao, presentes) {
  * A ordem de avaliação é a `precedencia` do contrato, e ela importa porque
  * decide **qual mensagem o leitor vê** quando duas regras batem na mesma linha.
  * A CLI avalia numa ordem; o painel a copia em vez de escolher a sua.
+ */
+/**
+ * O veredito carrega `classe`, e ela tem dois consumidores nomeados.
+ *
+ * A tela não a mostra — o leitor quer a mensagem, não o nome da exceção Python.
+ * Quem a lê é a **régua** (`scripts/linha.test.mjs` afirma qual restrição
+ * disparou, e sem isso uma falha diria só *a flag foi recusada*) e a **varredura
+ * do overpower**, que instancia a classe no fonte da ferramenta e compara
+ * `str(Erro(...))` com a `mensagem` do contrato, byte a byte. Sem o nome da
+ * classe essa conferência não teria por onde começar.
  */
 export function avaliar(entrada, estado) {
   const restricoes = [...(entrada.restricoes ?? [])].sort(
@@ -232,7 +261,7 @@ export function montar(entrada, estado) {
       return [parametro.nome];
     }
     const valor = String(campo.valor ?? '').trim();
-    return valor === '' ? [] : [`${parametro.nome} ${aspas(valor)}`];
+    return valor === '' ? [] : [`${parametro.nome} ${aspasDeShell(valor)}`];
   });
 
   return [entrada.chamada ?? entrada.qualificado, ...opcoes].join(' ');
