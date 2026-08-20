@@ -9,7 +9,7 @@ Reverse chronology, one entry per published version. Entries are not written by
 hand: every pull request that changes behaviour drops a fragment into
 `changelog.d/`, and the release assembles them. Since the project is `0.x`, a break
 does not promote the first digit, and the whole rule is on
-[Releasing](release).
+[Releasing](../contribuir/release).
 
 The groupings by minor exist for the navigation column. A list of thirty entries
 with no heading is a list nobody walks.

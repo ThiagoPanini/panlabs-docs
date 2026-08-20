@@ -24,7 +24,7 @@
 # travessão, a única que olha o caractere em vez da estrutura; e o teto de
 # profundidade, que entrou com o `overpower`.
 #
-#    1. o volume por aba e por categoria     12 · 16 · 26, e 54 no total
+#    1. o volume por aba e por categoria     12 · 16 · 32, e 60 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
 #    3. a regra de heading                    com UMA exceção nomeada
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
@@ -36,8 +36,8 @@
 #    9. o marcador de tradução                31 páginas, e nenhuma tradução
 #   10. `description`                         em 100% das páginas
 #   11. as doze fixtures                      por caminho nomeado
-#   12. os dez tipos têm instância            e nenhum fica pendente
-#   13. a cobertura de locale                 26 em EN, e só `Ferramentas`
+#   12. os onze tipos têm instância           e nenhum fica pendente
+#   13. a cobertura de locale                 32 em EN, e só `Ferramentas`
 #   14. o travessão                           zero nas três superfícies
 #   15. o teto de profundidade                4, alcançado, e confinado a um ramo
 #
@@ -108,14 +108,17 @@ reprova() {
 # `chave=valor` separados por espaço, lidos com `${par%%=*}` / `${par##*=}` —
 # o repo não tem bash 4 garantido, então nada de array associativo.
 #
-# **Estas contagens são de AUTORAL**, e são 22 para `Ferramentas`: a função conta
-# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 26 folhas na aba e 54 no
+# **Estas contagens são de AUTORAL**, e são 28 para `Ferramentas`: a função conta
+# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 32 folhas na aba e 60 no
 # site — é cobrada logo abaixo, com o número gerado somado por fora.
+#
+# `bibliotecas` foi de 17 para 23 na #133: seis páginas nasceram de recorte do
+# que já existia, e nenhuma delas trouxe prosa nova.
 VOLUME_JORNADAS='api-owner=7 security-champion=5'
 VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=3 infraestrutura=3 acessos=3 diagnostico=4'
-VOLUME_FERRAMENTAS='bibliotecas=17 modulos-terraform=2 skills=2 servidores-mcp=1'
+VOLUME_FERRAMENTAS='bibliotecas=23 modulos-terraform=2 skills=2 servidores-mcp=1'
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 50 autorais.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 56 autorais.
 #
 # **A forma `indice` MORREU com a issue #114**, e com ela sete páginas: o
 # conteúdo delas era *a lista do que está logo abaixo*, e a sidebar já é essa
@@ -158,21 +161,27 @@ procedimentos/diagnostico/o-mesmo-erro-em-tres-formas:troubleshooting
 procedimentos/diagnostico/o-diff-que-resolveu:troubleshooting
 ferramentas/bibliotecas/overpower/visao-geral:quickstart
 ferramentas/bibliotecas/overpower/instalacao:sdk
+ferramentas/bibliotecas/overpower/o-atalho-op:conceitual
 ferramentas/bibliotecas/overpower/conceitos:conceitual
-ferramentas/bibliotecas/overpower/comandos/indice:conceitual
+ferramentas/bibliotecas/overpower/comandos/indice:referencia
 ferramentas/bibliotecas/overpower/alvos/indice:catalogo
 ferramentas/bibliotecas/overpower/alvos/servidores-mcp:conceitual
 ferramentas/bibliotecas/overpower/alvos/from:guia
-ferramentas/bibliotecas/overpower/referencia/indice:conceitual
+ferramentas/bibliotecas/overpower/alvos/bundle-federado:conceitual
+ferramentas/bibliotecas/overpower/referencia/indice:referencia
 ferramentas/bibliotecas/overpower/referencia/codigos-de-saida:conceitual
 ferramentas/bibliotecas/overpower/referencia/solucao-de-problemas:troubleshooting
-ferramentas/bibliotecas/overpower/desenvolvimento/indice:guia
-ferramentas/bibliotecas/overpower/desenvolvimento/testes:conceitual
-ferramentas/bibliotecas/overpower/desenvolvimento/telas:guia
-ferramentas/bibliotecas/overpower/publicacao/indice:conceitual
-ferramentas/bibliotecas/overpower/publicacao/curadoria:guia
-ferramentas/bibliotecas/overpower/publicacao/release:guia
-ferramentas/bibliotecas/overpower/publicacao/changelog:changelog
+ferramentas/bibliotecas/overpower/referencia/changelog:changelog
+ferramentas/bibliotecas/overpower/contribuir/indice:guia
+ferramentas/bibliotecas/overpower/contribuir/arquitetura:conceitual
+ferramentas/bibliotecas/overpower/contribuir/mapa-de-modulos:catalogo
+ferramentas/bibliotecas/overpower/contribuir/hooks:conceitual
+ferramentas/bibliotecas/overpower/contribuir/testes:conceitual
+ferramentas/bibliotecas/overpower/contribuir/telas:guia
+ferramentas/bibliotecas/overpower/contribuir/curadoria:guia
+ferramentas/bibliotecas/overpower/contribuir/criterios-de-catalogo:conceitual
+ferramentas/bibliotecas/overpower/contribuir/release:guia
+ferramentas/bibliotecas/overpower/contribuir/release-ready:catalogo
 ferramentas/modulos-terraform/modulo-de-bucket:guia
 ferramentas/modulos-terraform/modulo-de-papel-iam:guia
 ferramentas/skills/scaffold-de-esteira:receita
@@ -185,7 +194,7 @@ FIM
 # décimo, `referencia-de-api`, é o único que não aparece no manifesto acima: o
 # gabarito dele é *a saída do gerador*, e a instância dele é contada do disco —
 # declará-lo no manifesto seria escrever à mão o que o contrato decide.
-DEZ_TIPOS='quickstart conceitual guia sdk referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
+ONZE_TIPOS='quickstart conceitual guia sdk referencia referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
 TIPO_GERADO='referencia-de-api'
 
 # As doze fixtures, por caminho nomeado. A décima segunda,
@@ -269,25 +278,25 @@ echo "1  volume por aba e por categoria"
 
 volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
 volume_da_aba "$PROCEDIMENTOS" 16 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
-volume_da_aba "$FERRAMENTAS" 22 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
+volume_da_aba "$FERRAMENTAS" 28 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
 
 autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
-[ "$autorais" = 50 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 50"
+[ "$autorais" = 56 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 56"
 
-# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 21, `Ferramentas`
-# em 26 e o site em 54 — os três números que a spec publica.
+# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 27, `Ferramentas`
+# em 32 e o site em 60 — os três números que a spec publica.
 geradas=$(find "$GERADO_PT" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas" = "$GERADAS" ] ||
   reprova "o ramo gerado tem ${geradas} páginas, esperado ${GERADAS}"
 
 bibliotecas=$(( $(find "${FERRAMENTAS}/bibliotecas" -name '*.md' | wc -l) + geradas ))
-[ "$bibliotecas" = 21 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 21"
+[ "$bibliotecas" = 27 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 27"
 
 folhas_ferramentas=$((total_ferramentas + geradas))
-[ "$folhas_ferramentas" = 26 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 26"
+[ "$folhas_ferramentas" = 32 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 32"
 
 total=$((autorais + geradas))
-[ "$total" = 54 ] || reprova "o site tem ${total} páginas, esperado 54"
+[ "$total" = 60 ] || reprova "o site tem ${total} páginas, esperado 60"
 
 echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${folhas_ferramentas} = ${total}"
 echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
@@ -341,6 +350,13 @@ while IFS=: read -r relativo tipo; do
     sdk)            exigir '<CodeGroup>' "$codegroups" 1; exigir 'blocos' "$blocos" 4 ;;
     receita)        exigir 'blocos' "$blocos" 1 ;;
     catalogo)       exigir 'tabelas' "$tabelas" 1 ;;
+    # O DÉCIMO PRIMEIRO tipo, nascido na #133. A taxonomia não tinha slot para
+    # referência autoral, então toda página assim era empurrada para
+    # `conceitual` — e `comandos/indice` media 83,3% Referência sob esse
+    # carimbo. O gabarito é *o que é, a tabela ou lista que se consulta, e as
+    # notas de uso*; o que a máquina cobra dele é a tabela, porque é ela que
+    # separa referência de argumento.
+    referencia)     exigir 'tabelas' "$tabelas" 1 ;;
     troubleshooting) exigir 'tabelas' "$tabelas" 1 ;;
     changelog)      exigir 'entradas <Update>' "$(contar "$arquivo" '^<Update ')" 6 ;;
     # O gabarito do capítulo: 2 blocos e 1 `:::`. A espinha de 3 a 6 `##` e a
@@ -628,9 +644,9 @@ n_casos=$(printf '%s\n' "$CASOS_DO_DOMINIO" | wc -l)
 echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio, todos por caminho nomeado"
 echo
 
-# --- 12. os dez tipos têm instância -------------------------------------------
-echo "12  os dez tipos têm instância"
-for tipo in $DEZ_TIPOS; do
+# --- 12. os onze tipos têm instância -------------------------------------------
+echo "12  os onze tipos têm instância"
+for tipo in $ONZE_TIPOS; do
   n=$(printf '%s\n' "$TIPOS" | grep -c ":${tipo}$" || true)
   if [ "$tipo" = "$TIPO_GERADO" ]; then
     # A instância do décimo tipo é contada do DISCO, e ela é `.mdx`. Uma linha
@@ -644,7 +660,7 @@ for tipo in $DEZ_TIPOS; do
   fi
   [ "$n" -ge 1 ] || reprova "o tipo \`${tipo}\` não tem nenhuma instância no artefato"
 done
-echo "   os dez com instância — \`${TIPO_GERADO}\` com as ${geradas} do ramo gerado, e nenhum pendente"
+echo "   os onze com instância — \`${TIPO_GERADO}\` com as ${geradas} do ramo gerado, e nenhum pendente"
 echo
 
 # --- 13. a cobertura de locale ------------------------------------------------
@@ -660,7 +676,7 @@ geradas_en=$(find "$GERADO_EN" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas_en" = "$geradas" ] ||
   reprova "EN: ${geradas_en} páginas geradas, e o pt-BR tem ${geradas} — o gerador escreve os dois"
 traduzidas=$((traduzidas + geradas_en))
-[ "$traduzidas" = 26 ] || reprova "EN: ${traduzidas} páginas, esperado 26"
+[ "$traduzidas" = 32 ] || reprova "EN: ${traduzidas} páginas, esperado 32"
 
 for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
   n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)

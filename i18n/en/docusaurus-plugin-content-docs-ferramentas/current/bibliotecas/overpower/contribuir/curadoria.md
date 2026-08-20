@@ -59,46 +59,30 @@ scheduled job.
 
 ## Checking it
 
+Confirm the new item shows up in the catalog and opens in full:
+
+```bash
+uvx overpower@latest list
+```
+
+```bash
+uvx overpower@latest list --skill <name>
+```
+
+Bare `list` prints the catalog in four blocks, and the new item has to sit in the
+block for its class. With the selector, the output carries the size, the file
+count and the whole description, never truncated, plus the line that installs the
+item.
+
+:::warning
 A gate blocks what this repository controls. What depends on a third party is
 verified here, by hand, because automating a check against someone else's
 repository would put a third party's availability and stability inside this
 project's CI, which was measured unstable and rejected for exactly that reason.
+:::
 
 :::note
 That last step is no longer something to remember. `src/overpower/content/` is
 inside the wheel, so `release-ready` refuses the pull request until the bump
 happens.
 :::
-
-## What earns a place in the catalog
-
-Three gates decide whether a candidate becomes an AI Framework, and the first one
-that fails ends the evaluation.
-
-The first is **legal, and it is a veto**. The content has to be redistributable
-inside the wheel. Anything not MIT requires a composed SPDX expression in the
-metadata, otherwise the package would misrepresent itself to exactly the audience
-deciding whether it clears a corporate licence allow-list.
-
-The second is **being self-contained**. What lands has to work without tooling
-overpower cannot guarantee on the target. Failing here is not *this framework was
-rejected*, it is *this is not an AI Framework under this model*, because being
-self-contained is identity, not a quality bar to clear.
-
-The third is that **transformation happens at curation**. If what ships is not the
-tree exactly as versioned upstream, the transformation happens during curation,
-with the transformed output vendored. The product itself never transforms content
-at install time.
-
-:::warning
-The criterion lives in the curator's judgement, not in a field on the catalog. A
-field that recorded *this passed* would just be a constant, since the catalog only
-ever contains things that already passed.
-:::
-
-A graft reads the tooling clause differently, and without that difference the whole
-class would be stillborn: nearly every stdio server launches through `uvx`, `npx`
-or `docker`, and refusing anything that needs external tooling would refuse all of
-them. The distinction is what actually lands. A copy puts content on disk that only
-works with some tool; a graft puts nothing but a declaration on disk, and the recipe
-names what it needs as a precondition, which overpower checks itself before writing.

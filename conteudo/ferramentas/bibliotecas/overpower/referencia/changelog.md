@@ -9,7 +9,7 @@ Cronologia reversa, uma entrada por versão publicada. As entradas não são
 escritas à mão: cada pull request que muda comportamento deixa um fragmento em
 `changelog.d/`, e o lançamento os monta. Como o projeto está em `0.x`, uma quebra
 não promove o primeiro dígito, e a régua inteira está em
-[Release](release).
+[Release](../contribuir/release).
 
 Os agrupamentos por minor existem para a coluna de navegação. Uma lista de trinta
 entradas sem heading é uma lista que ninguém percorre.

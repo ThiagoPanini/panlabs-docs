@@ -336,7 +336,7 @@ const config = {
         // `target="_blank"` SOZINHO em tudo que ele lê como externo, e a decisão
         // do rodapé é que nenhum link abre em nova aba.
         links: [
-          {label: 'Changelog', to: '/ferramentas/bibliotecas/overpower/publicacao/changelog'},
+          {label: 'Changelog', to: '/ferramentas/bibliotecas/overpower/referencia/changelog'},
           {label: 'llms.txt', href: 'pathname:///llms.txt', target: '_self'},
         ],
         copyright: '© 2026 panlabs',
