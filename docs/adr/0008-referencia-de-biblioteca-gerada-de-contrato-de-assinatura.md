@@ -171,7 +171,7 @@ de volta para estrutura, que é um interpretador dentro de um site estático.
    único dos dez sem instância, e a ausência estava declarada no portão 4. Ele
    passa a ter seis, e o portão passa a cobrar o número cheio: `Ferramentas`
    fecha em **21** folhas e o site em **52**.
-4. **`data-sd-part="meta"` continua publicada, e a condição virou conferência.**
+4. **`data-pd-part="meta"` continua publicada, e a condição virou conferência.**
    Ela é a única entrada do catálogo que a régua estreita não obrigaria, e o que
    a segura é a rota gerada nomeá-la no contrato de partes dela. O portão 5 casa
    os dois elos da cadeia — a página gerada consome o campo, e o campo nomeia a
@@ -228,6 +228,6 @@ apontando para cá e o conteúdo intacto.
 | `api_exemplos` em front matter, não marcador em MDX | herdado | [ADR 5](0005-referencia-da-api-gerada-de-contrato.md) d) — `position: sticky` exige ancestral com contexto de rolagem previsível |
 | Zero snippet escrito à mão | herdado | [ADR 5](0005-referencia-da-api-gerada-de-contrato.md) — os três snippets de lá também eram templados |
 | Editável é argumento escalar com exemplo | **origem própria (implementação)** | porte da regra de caminho/consulta; estrutura num campo de texto exigiria um parser |
-| A condição de `data-sd-part="meta"` vira conferência | **origem própria (implementação)** | o literal não pode aparecer no MDX — quem escreve o atributo é o componente, e a página escreve a tag; o portão casa a cadeia |
+| A condição de `data-pd-part="meta"` vira conferência | **origem própria (implementação)** | o literal não pode aparecer no MDX — quem escreve o atributo é o componente, e a página escreve a tag; o portão casa a cadeia |
 | Supersessão em vez de edição | origem própria | `docs/adr/README.md` — os ADRs são numerados e imutáveis |
 | O dissenso da opção rejeitada | origem própria | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) — ela custava menos e preservava um componente inteiro já especificado |

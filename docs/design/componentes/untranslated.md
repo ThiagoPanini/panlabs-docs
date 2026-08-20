@@ -14,7 +14,7 @@ exercita esse estado não decidiu nada sobre ele; só não esbarrou nele**.
 ## Anatomia
 
 ```html
-<aside data-sd-component="untranslated">
+<aside data-pd-component="untranslated">
   <svg …>                            <!-- alcançável por tipo -->
   <p>…</p>                           <!-- alcançável por tipo -->
 </aside>
@@ -55,10 +55,10 @@ em que houver. **Sem lista para manter, sem flag, sem divergência possível.**
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-border-subtle`, `--sd-text-muted`.
+Camada 2: `--pd-border-default`, `--pd-border-subtle`, `--pd-text-muted`.
 
-Camada 1: `--sd-space-3`, `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
-`--sd-radius-md`, `--sd-type-sm`.
+Camada 1: `--pd-space-3`, `--pd-space-4`, `--pd-space-6`, `--pd-border-width`,
+`--pd-radius-md`, `--pd-type-sm`.
 
 ## Light e dark
 

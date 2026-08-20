@@ -1,5 +1,5 @@
 /**
- * `sd-busca` — o índice local, sem serviço externo.
+ * `pd-busca` — o índice local, sem serviço externo.
  *
  * O índice viaja como **dado global**, não como JSON no `outDir`. A alternativa
  * seria `postBuild` gravando um arquivo e o cliente buscando com `fetch()`, e
@@ -111,7 +111,7 @@ function aTextoPlano(texto) {
  */
 export default function pluginBusca(context, options) {
   return {
-    name: 'sd-busca',
+    name: 'pd-busca',
 
     async allContentLoaded({allContent, actions}) {
       const {i18n, siteDir} = context;

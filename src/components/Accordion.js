@@ -26,7 +26,7 @@ import estilos from './catalogo.module.css';
 
 export function AccordionGroup({children}) {
   return (
-    <div className={estilos.accordionGroup} data-sd-component="accordion-group">
+    <div className={estilos.accordionGroup} data-pd-component="accordion-group">
       {children}
     </div>
   );
@@ -36,17 +36,17 @@ export default function Accordion({title, description, icon, defaultOpen, childr
   return (
     <details
       className={estilos.accordion}
-      data-sd-component="accordion"
+      data-pd-component="accordion"
       // Não controlado: quem guarda o estado é o elemento. `undefined` remove o
       // atributo, e é o `[open]` do DOM que o CSS e a skin leem.
       open={defaultOpen ? true : undefined}>
       <summary className={estilos.accordionSummary}>
         {icon ? <Icon name={icon} size="sm" /> : null}
-        <span className={estilos.accordionTitle} data-sd-part="title">
+        <span className={estilos.accordionTitle} data-pd-part="title">
           {title}
         </span>
         {description ? (
-          <span className={estilos.accordionDescription} data-sd-part="description">
+          <span className={estilos.accordionDescription} data-pd-part="description">
             {description}
           </span>
         ) : null}

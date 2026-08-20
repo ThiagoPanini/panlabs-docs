@@ -20,7 +20,7 @@
 
 # --- referencia.md §8 — SAIU na #118 -----------------------------------------
 # `api.painel.largura` morava aqui: alvo 448, medido 511 (Δ +63), porque a
-# âncora media 576,81 + 448 e este projeto publicava `--sd-api-prosa-width`
+# âncora media 576,81 + 448 e este projeto publicava `--pd-api-prosa-width`
 # (577) e derivava o trilho do que sobrava do container.
 #
 # O gatilho escrito era *"quando o trilho deixar de ser o resto dela"*, e foi o

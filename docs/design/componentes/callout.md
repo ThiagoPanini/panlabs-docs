@@ -19,10 +19,10 @@ lateral, sem faixa de título e sem MAIÚSCULA — nada disso existe porque nada
 disso é escrito.
 
 ```html
-<div data-sd-component="callout" data-sd-variant="warning">
+<div data-pd-component="callout" data-pd-variant="warning">
   <svg …>                                  <!-- alcançável por tipo -->
   <div>                                    <!-- único <div> filho -->
-    <p data-sd-part="title">…</p>          <!-- só quando há título -->
+    <p data-pd-part="title">…</p>          <!-- só quando há título -->
     …
   </div>
 </div>
@@ -62,10 +62,10 @@ Quatro, e nenhuma prop além de título e corpo.
 
 | Variante | Cor-base | Ícone | Tamanho | Papel |
 | --- | --- | --- | --- | --- |
-| `note` | `--sd-state-info` | `pencil-line` | `sm` | o contexto que o leitor não pediu |
+| `note` | `--pd-state-info` | `pencil-line` | `sm` | o contexto que o leitor não pediu |
 | `info` | **nenhuma** — neutra | `info` | `md` | a nota lateral sem carga |
-| `tip` | `--sd-state-success` | `lightbulb` | `md` | a sugestão, e a confirmação |
-| `warning` | `--sd-state-warn` | `triangle-alert` | `md` | o que muda o que ele ia fazer |
+| `tip` | `--pd-state-success` | `lightbulb` | `md` | a sugestão, e a confirmação |
+| `warning` | `--pd-state-warn` | `triangle-alert` | `md` | o que muda o que ele ia fazer |
 
 **`info` é a variante neutra e `note` é a azul.** A inversão contra a convenção é
 deliberada, e é ela que faz o sistema ler como a âncora.
@@ -114,20 +114,20 @@ branco em volta. Isto era lacuna declarada e foi medido no artefato deste slice.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-state-info`, `--sd-state-success`, `--sd-state-warn` e os
-`*-fill` e `*-edge` correspondentes; `--sd-border-subtle`, `--sd-border-default`,
-`--sd-text-strong` na variante neutra; `--sd-text-body`.
+Camada 2: `--pd-state-info`, `--pd-state-success`, `--pd-state-warn` e os
+`*-fill` e `*-edge` correspondentes; `--pd-border-subtle`, `--pd-border-default`,
+`--pd-text-strong` na variante neutra; `--pd-text-body`.
 
-Camada 1: `--sd-space-3`, `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
-`--sd-radius`, `--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`.
+Camada 1: `--pd-space-3`, `--pd-space-4`, `--pd-space-6`, `--pd-border-width`,
+`--pd-radius`, `--pd-type-sm`, `--pd-weight-ui`, `--pd-leading-ui`.
 
-Camada 3, declarados no escopo do componente: `--sd-callout-fill`,
-`--sd-callout-edge`, `--sd-callout-ink`. **É a variante que os move, e é só isso
+Camada 3, declarados no escopo do componente: `--pd-callout-fill`,
+`--pd-callout-edge`, `--pd-callout-ink`. **É a variante que os move, e é só isso
 que a variante faz.**
 
-`--sd-callout-ink` pinta **o ícone e o título** — é a perna de *texto* da
+`--pd-callout-ink` pinta **o ícone e o título** — é a perna de *texto* da
 derivação, e ela existe porque a medição achou ícone e título na mesma cor
-sólida. **O corpo fica fora dela**, em `--sd-text-body`: é esse o par que a
+sólida. **O corpo fica fora dela**, em `--pd-text-body`: é esse o par que a
 tabela de contraste verificou sobre fundo de callout, e o par que sustenta a
 leitura longa.
 
@@ -174,4 +174,4 @@ texto ao lado, e anunciá-lo seria repetição.
 | `:::` dentro de children de JSX funciona | **origem própria (medição)** | lacuna declarada pela [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15), medida no artefato deste slice |
 | Ícone maior em `tip`/`warning`/`info` que em `note` | **origem própria (consequência)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 mede `tip` em `18px`; a escala fechada de três tamanhos de [`icon.md`](icon.md) não tem esse degrau, e `md` (`20px`) é o mais perto. Divergência por ajuste à escala existente, não medição exata — a versão anterior renderizava as quatro no mesmo tamanho. **Recarimbada em S9-2:** era `delta deliberado`, classe que [`principios.md`](../principios.md) §3 declara **fechada em zero**. É o mesmo caso que [`busca.md`](../busca.md) §Procedência já resolveu no lote seguinte, para o raio de 14px que a escala não tem — e lá a linha diz, literalmente, *"não é `delta deliberado`"* |
 | `danger` também está fora da âncora, não só do uso medido | **origem própria** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 buscou a tag nos `.md` da âncora e não achou; classificação distinta e adicional à linha de uso zero da [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) acima. Decidir se `danger` entra fica fora deste ticket — ele permanece removível a uma linha em `Types.js`, sem código morto no meio tempo |
-| Raio 16, corpo 14 | **origem própria (correção)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — o alvo medido da `## Anatomia` já dizia isso desde a [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93); `npm run paridade` mediu `--sd-radius-md` (12px) e corpo herdando 16px da prosa ambiente. Achado ao rodar o comparador contra o build deste slice, não por leitura de CSS |
+| Raio 16, corpo 14 | **origem própria (correção)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — o alvo medido da `## Anatomia` já dizia isso desde a [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93); `npm run paridade` mediu `--pd-radius-md` (12px) e corpo herdando 16px da prosa ambiente. Achado ao rodar o comparador contra o build deste slice, não por leitura de CSS |

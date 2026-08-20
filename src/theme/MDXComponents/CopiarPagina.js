@@ -184,12 +184,12 @@ export default function CopiarPagina({permalink}) {
   ];
 
   return (
-    <div className={estilos.par} data-sd-component="copiar-pagina">
+    <div className={estilos.par} data-pd-component="copiar-pagina">
       <button
         type="button"
         className={estilos.copiar}
-        data-sd-part="copiar"
-        data-sd-estado={estado}
+        data-pd-part="copiar"
+        data-pd-estado={estado}
         onClick={copiar}>
         <Icon name={estado === 'copiado' ? 'check' : 'copy'} size="sm" />
         {/* Os três rótulos empilhados: o que está em cena e os que só seguram a
@@ -200,7 +200,7 @@ export default function CopiarPagina({permalink}) {
             <span
               key={qual}
               className={estilos.rotulo}
-              data-sd-visivel={qual === estado ? 'sim' : 'nao'}
+              data-pd-visivel={qual === estado ? 'sim' : 'nao'}
               aria-hidden={qual === estado ? undefined : 'true'}>
               {texto}
             </span>
@@ -215,7 +215,7 @@ export default function CopiarPagina({permalink}) {
       <button
         type="button"
         className={estilos.mais}
-        data-sd-part="mais"
+        data-pd-part="mais"
         popovertarget={idDoMenu}
         aria-expanded={aberto}
         aria-label={translate({
@@ -231,7 +231,7 @@ export default function CopiarPagina({permalink}) {
         id={idDoMenu}
         popover="auto"
         className={estilos.menu}
-        data-sd-part="menu"
+        data-pd-part="menu"
         onToggle={(evento) => setAberto(evento.newState === 'open')}>
         {acoes.map(({chave, icone, titulo, apoio, href, externo, aoAtivar}) => {
           const conteudo = (

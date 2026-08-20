@@ -93,7 +93,7 @@ function Painel({exemplos}) {
   const duplicada = texto.trim() === assinatura.trim();
 
   return (
-    <div className={estilos.painel} data-sd-component="api-painel">
+    <div className={estilos.painel} data-pd-component="api-painel">
       {/* A assinatura é o cabeçalho do painel porque é a única linha que
           responde *como se chama isto* sem o leitor descer para a prosa. */}
       {!duplicada && (

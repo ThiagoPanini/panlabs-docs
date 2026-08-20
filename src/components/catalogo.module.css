@@ -8,12 +8,12 @@
      a skin corporativa repinta por ATRIBUTO      (0,2,0)
 
    e ela vence sem um único `!important`. Isso só se sustenta enquanto **nenhuma
-   regra deste arquivo lê `data-sd-*`** — se lesse, as duas camadas empatariam e
+   regra deste arquivo lê `data-pd-*`** — se lesse, as duas camadas empatariam e
    a ordem de carga passaria a decidir. Variante e parte entram no DOM duas
    vezes: classe para nós, atributo para eles.
 
    Atributo de ESTADO é outra coisa e aparece aqui à vontade — `[open]`,
-   `[aria-selected]`. A skin sempre soma `data-sd-component` ao mesmo estado, o
+   `[aria-selected]`. A skin sempre soma `data-pd-component` ao mesmo estado, o
    que a deixa um degrau acima por construção.
 
    Onde um contexto precisa sobrescrever um componente, o seletor usa `:where()`,
@@ -44,18 +44,18 @@
 }
 
 .iconSm {
-  inline-size: var(--sd-space-4);
-  block-size: var(--sd-space-4);
+  inline-size: var(--pd-space-4);
+  block-size: var(--pd-space-4);
 }
 
 .iconMd {
-  inline-size: var(--sd-space-5);
-  block-size: var(--sd-space-5);
+  inline-size: var(--pd-space-5);
+  block-size: var(--pd-space-5);
 }
 
 .iconLg {
-  inline-size: var(--sd-space-6);
-  block-size: var(--sd-space-6);
+  inline-size: var(--pd-space-6);
+  block-size: var(--pd-space-6);
 }
 
 /* -----------------------------------------------------------------------------
@@ -77,20 +77,20 @@
 .untranslated {
   /* O default é a variante NEUTRA — `info`. Ela não tem classe própria porque
      não tem o que sobrescrever. */
-  --sd-callout-fill: var(--sd-border-subtle);
-  --sd-callout-edge: var(--sd-border-default);
-  --sd-callout-ink: var(--sd-text-strong);
+  --pd-callout-fill: var(--pd-border-subtle);
+  --pd-callout-edge: var(--pd-border-default);
+  --pd-callout-ink: var(--pd-text-strong);
 
   display: flex;
-  gap: var(--sd-space-3);
-  margin-block: var(--sd-space-6);
-  padding: var(--sd-space-4);
-  border: var(--sd-border-width) solid var(--sd-callout-edge);
-  border-radius: var(--sd-radius);
-  background-color: var(--sd-callout-fill);
-  color: var(--sd-text-body);
-  font-size: var(--sd-type-sm);
-  line-height: var(--sd-leading-ui);
+  gap: var(--pd-space-3);
+  margin-block: var(--pd-space-6);
+  padding: var(--pd-space-4);
+  border: var(--pd-border-width) solid var(--pd-callout-edge);
+  border-radius: var(--pd-radius);
+  background-color: var(--pd-callout-fill);
+  color: var(--pd-text-body);
+  font-size: var(--pd-type-sm);
+  line-height: var(--pd-leading-ui);
 }
 
 /* Filho DIRETO: um ícone que o autor escreva dentro do corpo não é alcançado.
@@ -98,8 +98,8 @@
    `1lh` é a altura da linha do próprio elemento. */
 .callout > svg,
 .untranslated > svg {
-  margin-block-start: calc((1lh - var(--sd-space-4)) / 2);
-  color: var(--sd-callout-ink);
+  margin-block-start: calc((1lh - var(--pd-space-4)) / 2);
+  color: var(--pd-callout-ink);
 }
 
 .calloutContent {
@@ -111,36 +111,36 @@
    derivação. O corpo não: ele fica na tinta de leitura, que é o par de
    contraste que o arquivo de tokens verificou sobre fundo de callout. */
 .calloutTitle {
-  margin-block-end: var(--sd-space-2);
-  color: var(--sd-callout-ink);
-  font-weight: var(--sd-weight-ui);
-  line-height: var(--sd-leading-ui);
+  margin-block-end: var(--pd-space-2);
+  color: var(--pd-callout-ink);
+  font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-ui);
 }
 
 .calloutNote {
-  --sd-callout-fill: var(--sd-state-info-fill);
-  --sd-callout-edge: var(--sd-state-info-edge);
-  --sd-callout-ink: var(--sd-state-info);
+  --pd-callout-fill: var(--pd-state-info-fill);
+  --pd-callout-edge: var(--pd-state-info-edge);
+  --pd-callout-ink: var(--pd-state-info);
 }
 
 .calloutTip {
-  --sd-callout-fill: var(--sd-state-success-fill);
-  --sd-callout-edge: var(--sd-state-success-edge);
-  --sd-callout-ink: var(--sd-state-success);
+  --pd-callout-fill: var(--pd-state-success-fill);
+  --pd-callout-edge: var(--pd-state-success-edge);
+  --pd-callout-ink: var(--pd-state-success);
 }
 
 .calloutWarning {
-  --sd-callout-fill: var(--sd-state-warn-fill);
-  --sd-callout-edge: var(--sd-state-warn-edge);
-  --sd-callout-ink: var(--sd-state-warn);
+  --pd-callout-fill: var(--pd-state-warn-fill);
+  --pd-callout-edge: var(--pd-state-warn-edge);
+  --pd-callout-ink: var(--pd-state-warn);
 }
 
 /* O marcador de não-traduzido é o callout neutro com o ar de cima removido —
    ele mora logo abaixo do título da página. */
 .untranslated {
-  margin-block: 0 var(--sd-space-6);
-  color: var(--sd-text-muted);
-  font-size: var(--sd-type-sm);
+  margin-block: 0 var(--pd-space-6);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-sm);
 }
 
 .untranslated p {
@@ -151,7 +151,7 @@
    card e card-group
 
    A grade é UMA declaração, e o valor dela mora em `tokens.css` como
-   `--sd-card-grid`, para a landing citar o mesmo nome em vez de repetir a
+   `--pd-card-grid`, para a landing citar o mesmo nome em vez de repetir a
    lista de faixas. Zero prop de colunas, zero media query, zero container
    query.
 
@@ -168,10 +168,10 @@
 
 .cardGroup {
   display: grid;
-  column-gap: var(--sd-space-4);
+  column-gap: var(--pd-space-4);
   row-gap: 0;
-  grid-template-columns: var(--sd-card-grid);
-  margin-block: var(--sd-space-6);
+  grid-template-columns: var(--pd-card-grid);
+  margin-block: var(--pd-space-6);
 }
 
 /* Borda e não superfície — e a justificativa MUDOU quando o cartão morreu, para
@@ -182,31 +182,31 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: var(--sd-space-2);
-  padding: var(--sd-space-5);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius);
-  color: var(--sd-text-body);
-  transition: border-color var(--sd-move-state);
+  gap: var(--pd-space-2);
+  padding: var(--pd-space-5);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius);
+  color: var(--pd-text-body);
+  transition: border-color var(--pd-move-state);
 }
 
 /* O ícone do cartão é o detalhe que mais define a aparência dele, e é o único
    do catálogo pintado com a cor de marca. */
 .card > svg {
-  color: var(--sd-accent);
+  color: var(--pd-accent);
 }
 
 .cardTitle {
-  color: var(--sd-text-strong);
-  font-weight: var(--sd-weight-ui);
-  line-height: var(--sd-leading-ui);
+  color: var(--pd-text-strong);
+  font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-ui);
 }
 
 .card > p {
   margin-block: 0;
-  color: var(--sd-text-muted);
-  font-size: var(--sd-type-sm);
-  line-height: var(--sd-leading-ui);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-sm);
+  line-height: var(--pd-leading-ui);
 }
 
 /* O hover é a BORDA VIRANDO COR DE MARCA, e nada mais. Nada se move e nenhum
@@ -217,7 +217,7 @@
    tap, porque no toque não existe ponteiro para tirar de cima. */
 @media (hover: hover) {
   a.card:hover {
-    border-color: var(--sd-accent);
+    border-color: var(--pd-accent);
     text-decoration: none;
   }
 }
@@ -227,7 +227,7 @@
    segundo. O `transition: none` que o torna instantâneo é universal e mora em
    `foco.css`. */
 a.card:active {
-  border-color: var(--sd-accent);
+  border-color: var(--pd-accent);
 }
 
 /* -----------------------------------------------------------------------------
@@ -239,11 +239,11 @@ a.card:active {
    ----------------------------------------------------------------------------- */
 
 .steps {
-  --sd-step-marker: var(--sd-space-6);
+  --pd-step-marker: var(--pd-space-6);
 
   counter-reset: passo;
   list-style: none;
-  margin-block: var(--sd-space-10) var(--sd-space-6);
+  margin-block: var(--pd-space-10) var(--pd-space-6);
   padding-inline-start: 0;
 }
 
@@ -257,10 +257,10 @@ a.card:active {
      Medido antes: 388px de estouro a 390 de viewport, 53px a 997. Depois: zero
      nas duas. A sonda de `documentElement.scrollWidth` em `paridade.mjs` é a
      rede que impede isto de regredir calado. */
-  grid-template-columns: var(--sd-step-marker) minmax(0, 1fr);
-  gap: var(--sd-space-4);
+  grid-template-columns: var(--pd-step-marker) minmax(0, 1fr);
+  gap: var(--pd-space-4);
   counter-increment: passo;
-  padding-block-end: var(--sd-space-6);
+  padding-block-end: var(--pd-space-6);
 }
 
 /* O fio que liga um marcador ao próximo. Ele nasce embaixo do marcador e não
@@ -268,9 +268,9 @@ a.card:active {
 .step:not(:last-child)::before {
   content: '';
   position: absolute;
-  inset-block: var(--sd-step-marker) 0;
-  inset-inline-start: calc(var(--sd-step-marker) / 2);
-  border-inline-start: var(--sd-border-width) solid var(--sd-border-default);
+  inset-block: var(--pd-step-marker) 0;
+  inset-inline-start: calc(var(--pd-step-marker) / 2);
+  border-inline-start: var(--pd-border-width) solid var(--pd-border-default);
 }
 
 /* O último passo não aponta para lugar nenhum, mas o fio continua existindo
@@ -279,11 +279,11 @@ a.card:active {
 .step:last-child::before {
   content: '';
   position: absolute;
-  inset-block-start: var(--sd-step-marker);
-  inset-inline-start: calc(var(--sd-step-marker) / 2);
-  inline-size: var(--sd-border-width);
-  block-size: var(--sd-space-6);
-  background: linear-gradient(to bottom, var(--sd-border-default), transparent);
+  inset-block-start: var(--pd-step-marker);
+  inset-inline-start: calc(var(--pd-step-marker) / 2);
+  inline-size: var(--pd-border-width);
+  block-size: var(--pd-space-6);
+  background: linear-gradient(to bottom, var(--pd-border-default), transparent);
 }
 
 .step:last-child {
@@ -293,13 +293,13 @@ a.card:active {
 .stepMarker {
   display: grid;
   place-items: center;
-  inline-size: var(--sd-step-marker);
-  block-size: var(--sd-step-marker);
-  border-radius: var(--sd-radius-full);
-  background-color: var(--sd-border-subtle);
-  color: var(--sd-text-strong);
-  font-size: var(--sd-type-xs);
-  font-weight: var(--sd-weight-ui);
+  inline-size: var(--pd-step-marker);
+  block-size: var(--pd-step-marker);
+  border-radius: var(--pd-radius-full);
+  background-color: var(--pd-border-subtle);
+  color: var(--pd-text-strong);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
   font-variant-numeric: tabular-nums;
 }
 
@@ -314,10 +314,10 @@ a.card:active {
 }
 
 .stepTitle {
-  margin-block: 0 var(--sd-space-2);
-  color: var(--sd-text-strong);
-  font-weight: var(--sd-weight-ui);
-  line-height: var(--sd-leading-ui);
+  margin-block: 0 var(--pd-space-2);
+  color: var(--pd-text-strong);
+  font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-ui);
 }
 
 /* -----------------------------------------------------------------------------
@@ -333,15 +333,15 @@ a.card:active {
    ----------------------------------------------------------------------------- */
 
 .accordionGroup {
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-md);
-  margin-block: var(--sd-space-6);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-md);
+  margin-block: var(--pd-space-6);
 }
 
 .accordion {
-  margin-block: var(--sd-space-4);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius);
+  margin-block: var(--pd-space-4);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius);
 }
 
 /* `:where()` não soma especificidade, então estas regras EMPATAM com
@@ -355,17 +355,17 @@ a.card:active {
 }
 
 .accordionGroup :where(.accordion:not(:last-child)) {
-  border-bottom: var(--sd-border-width) solid var(--sd-border-subtle);
+  border-bottom: var(--pd-border-width) solid var(--pd-border-subtle);
 }
 
 .accordionSummary,
 .expandableSummary {
   display: flex;
   align-items: center;
-  gap: var(--sd-space-2);
+  gap: var(--pd-space-2);
   cursor: pointer;
-  font-weight: var(--sd-weight-ui);
-  line-height: var(--sd-leading-ui);
+  font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-ui);
   /* Mata o triângulo nativo. As duas formas são necessárias: a keyword no
      Firefox, o pseudo-elemento no WebKit. */
   list-style: none;
@@ -395,7 +395,7 @@ a.card:active {
    animação de rotação. O caret do expandable, que o alvo não cobra, mantém o
    giro. */
 .expandableSummary::before {
-  transition: rotate var(--sd-move-expand);
+  transition: rotate var(--pd-move-expand);
 }
 
 .accordion[open] > .accordionSummary::after,
@@ -404,21 +404,21 @@ a.card:active {
 }
 
 .accordionSummary {
-  padding: var(--sd-space-3) var(--sd-space-4);
-  color: var(--sd-text-strong);
+  padding: var(--pd-space-3) var(--pd-space-4);
+  color: var(--pd-text-strong);
 }
 
 @media (hover: hover) {
   .accordionSummary:hover {
-    background-color: var(--sd-border-subtle);
+    background-color: var(--pd-border-subtle);
   }
 }
 
 .accordionSummary::after {
   margin-inline-start: auto;
-  inline-size: var(--sd-space-4);
-  block-size: var(--sd-space-4);
-  background-color: var(--sd-text-muted);
+  inline-size: var(--pd-space-4);
+  block-size: var(--pd-space-4);
+  background-color: var(--pd-text-muted);
 }
 
 .accordionTitle {
@@ -426,32 +426,32 @@ a.card:active {
 }
 
 .accordionDescription {
-  color: var(--sd-text-muted);
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-body);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-body);
 }
 
 .accordionBody {
-  padding: 0 var(--sd-space-4) var(--sd-space-4);
+  padding: 0 var(--pd-space-4) var(--pd-space-4);
 }
 
 .expandable {
-  margin-block: var(--sd-space-3);
-  border-inline-start: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-md);
-  padding-inline-start: var(--sd-space-4);
+  margin-block: var(--pd-space-3);
+  border-inline-start: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-md);
+  padding-inline-start: var(--pd-space-4);
 }
 
 .expandableSummary {
-  color: var(--sd-accent);
-  font-size: var(--sd-type-sm);
+  color: var(--pd-accent);
+  font-size: var(--pd-type-sm);
 }
 
 /* Caret ANTES do rótulo, ao contrário do accordion: aqui ele não fecha uma
    moldura, abre uma linha. */
 .expandableSummary::before {
-  inline-size: var(--sd-space-3);
-  block-size: var(--sd-space-3);
+  inline-size: var(--pd-space-3);
+  block-size: var(--pd-space-3);
   background-color: currentColor;
 }
 
@@ -460,8 +460,8 @@ a.card:active {
   block-size: 0;
   overflow: hidden;
   transition:
-    block-size var(--sd-move-expand),
-    content-visibility var(--sd-move-expand);
+    block-size var(--pd-move-expand),
+    content-visibility var(--pd-move-expand);
   transition-behavior: allow-discrete;
 }
 
@@ -491,8 +491,8 @@ a.card:active {
    fundo, sem zebra. */
 .field {
   position: relative;
-  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
-  padding-block: var(--sd-space-4);
+  border-block-end: var(--pd-border-width) solid var(--pd-border-subtle);
+  padding-block: var(--pd-space-4);
 }
 
 .field:last-child {
@@ -503,19 +503,19 @@ a.card:active {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--sd-space-2);
+  gap: var(--pd-space-2);
   margin-block: 0;
 }
 
-/* No acento, e não em `--sd-text-strong` — medido na âncora (§10, #99): o
+/* No acento, e não em `--pd-text-strong` — medido na âncora (§10, #99): o
    nome do campo é a única coisa da linha pintada com a cor de marca. */
 .fieldHead > code {
   border: 0;
   padding: 0;
   background: none;
-  color: var(--sd-accent);
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-ui);
+  color: var(--pd-accent);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
 }
 
 /* A âncora de linha — invisível até o hover ou o foco do campo, e só a
@@ -524,7 +524,7 @@ a.card:active {
    reprova qualquer outro). */
 .fieldAncora {
   display: none;
-  color: var(--sd-text-muted);
+  color: var(--pd-text-muted);
   text-decoration: none;
   opacity: 0;
 }
@@ -536,16 +536,16 @@ a.card:active {
 @media (min-width: 997px) {
   .fieldAncora {
     position: absolute;
-    top: var(--sd-space-1);
-    /* `--sd-space-10` (40) — a mesma respiração que o topo do conteúdo já usa
+    top: var(--pd-space-1);
+    /* `--pd-space-10` (40) — a mesma respiração que o topo do conteúdo já usa
        abaixo do topo grudado, não um literal novo; bate com o vão medido na
        âncora (§10, #99). */
-    left: calc(-1 * var(--sd-space-10));
+    left: calc(-1 * var(--pd-space-10));
     display: grid;
     place-items: center;
-    inline-size: var(--sd-space-6);
-    block-size: var(--sd-space-6);
-    border-radius: var(--sd-radius-sm);
+    inline-size: var(--pd-space-6);
+    block-size: var(--pd-space-6);
+    border-radius: var(--pd-radius-sm);
   }
 }
 
@@ -559,17 +559,17 @@ a.card:active {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--sd-space-2);
-  color: var(--sd-text-muted);
-  font-family: var(--sd-font-mono);
-  font-size: var(--sd-type-xs);
+  gap: var(--pd-space-2);
+  color: var(--pd-text-muted);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
 }
 
 .fieldMeta code {
   border: 0;
   padding: 0;
   background: none;
-  color: var(--sd-text-body);
+  color: var(--pd-text-body);
   font-size: inherit;
 }
 
@@ -577,27 +577,27 @@ a.card:active {
    (raio, preenchimento), tinta neutra em vez de perigo: medido na âncora
    (§10, #99), que distingue as duas famílias só pela cor. */
 .fieldChip {
-  border-radius: var(--sd-radius-xs);
-  padding-inline: var(--sd-space-1);
-  background-color: var(--sd-border-subtle);
-  color: var(--sd-text-muted);
+  border-radius: var(--pd-radius-xs);
+  padding-inline: var(--pd-space-1);
+  background-color: var(--pd-border-subtle);
+  color: var(--pd-text-muted);
 }
 
 .fieldMeta strong {
-  border-radius: var(--sd-radius-xs);
-  padding-inline: var(--sd-space-1);
-  background-color: var(--sd-state-danger-fill);
-  color: var(--sd-state-danger);
-  font-weight: var(--sd-weight-ui);
+  border-radius: var(--pd-radius-xs);
+  padding-inline: var(--pd-space-1);
+  background-color: var(--pd-state-danger-fill);
+  color: var(--pd-state-danger);
+  font-weight: var(--pd-weight-ui);
 }
 
 .fieldBody {
-  color: var(--sd-text-body);
-  font-size: var(--sd-type-sm);
+  color: var(--pd-text-body);
+  font-size: var(--pd-type-sm);
 }
 
 .fieldBody > :first-child {
-  margin-block-start: var(--sd-space-2);
+  margin-block-start: var(--pd-space-2);
 }
 
 /* `deprecated` continua tachado mais texto apagado, e SEM cor — a conclusão não
@@ -606,7 +606,7 @@ a.card:active {
    segundo significado sobre o mesmo matiz, na mesma linha do mesmo campo, é
    ambiguidade. */
 .fieldDeprecated > .fieldHead > code {
-  color: var(--sd-text-muted);
+  color: var(--pd-text-muted);
   text-decoration: line-through;
 }
 
@@ -620,26 +620,26 @@ a.card:active {
    ----------------------------------------------------------------------------- */
 
 .update {
-  border-block-start: var(--sd-border-width) solid var(--sd-border-subtle);
-  padding-block: var(--sd-space-6);
+  border-block-start: var(--pd-border-width) solid var(--pd-border-subtle);
+  padding-block: var(--pd-space-6);
 }
 
 .updateHead {
   display: flex;
   align-items: center;
-  gap: var(--sd-space-2);
-  margin-block-end: var(--sd-space-3);
-  color: var(--sd-text-muted);
-  font-family: var(--sd-font-mono);
-  font-size: var(--sd-type-sm);
+  gap: var(--pd-space-2);
+  margin-block-end: var(--pd-space-3);
+  color: var(--pd-text-muted);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-sm);
 }
 
 .updateTag {
-  border-radius: var(--sd-radius-xs);
-  padding-inline: var(--sd-space-2);
-  background-color: var(--sd-surface-wash);
-  color: var(--sd-text-strong);
-  font-size: var(--sd-type-xs);
+  border-radius: var(--pd-radius-xs);
+  padding-inline: var(--pd-space-2);
+  background-color: var(--pd-surface-wash);
+  color: var(--pd-text-strong);
+  font-size: var(--pd-type-xs);
 }
 
 /* -----------------------------------------------------------------------------
@@ -653,7 +653,7 @@ a.card:active {
    transparência, e enquadrando diagrama perde a razão de ser.
 
    O PALCO É TINGIDO, e é o mesmo defeito que o bloco de código tinha: ele
-   declarava `--sd-surface-page`, que é a cor exata do que está atrás dele.
+   declarava `--pd-surface-page`, que é a cor exata do que está atrás dele.
    Enquanto havia cartão, a moldura assentava sobre o cartão e a página tingia
    por dentro; sem cartão, uma moldura da cor da página é uma borda em volta de
    nada. A âncora confirma: o `Frame` dela tem fundo tingido, não o fundo da
@@ -662,18 +662,18 @@ a.card:active {
    ----------------------------------------------------------------------------- */
 
 .frame {
-  margin-block: var(--sd-space-6);
+  margin-block: var(--pd-space-6);
 }
 
 .frameStage {
   position: relative;
   display: flex;
   justify-content: center;
-  padding: var(--sd-space-2);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius);
-  background-color: var(--sd-surface-raised);
-  color: var(--sd-text-body);
+  padding: var(--pd-space-2);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius);
+  background-color: var(--pd-surface-raised);
+  color: var(--pd-text-body);
   overflow: hidden;
 }
 
@@ -687,10 +687,10 @@ a.card:active {
   border-radius: inherit;
   background-image: radial-gradient(
     circle,
-    var(--sd-border-default) var(--sd-border-width),
-    transparent var(--sd-border-width)
+    var(--pd-border-default) var(--pd-border-width),
+    transparent var(--pd-border-width)
   );
-  background-size: var(--sd-space-4) var(--sd-space-4);
+  background-size: var(--pd-space-4) var(--pd-space-4);
   mask-image: linear-gradient(to bottom, black, transparent);
   pointer-events: none;
 }
@@ -699,7 +699,7 @@ a.card:active {
   position: relative;
   max-inline-size: 100%;
   block-size: auto;
-  border-radius: var(--sd-radius-md);
+  border-radius: var(--pd-radius-md);
 }
 
 /* -----------------------------------------------------------------------------
@@ -713,7 +713,7 @@ a.card:active {
 
 .table {
   overflow-x: auto;
-  margin-block: var(--sd-space-6);
+  margin-block: var(--pd-space-6);
 }
 
 .table > table {
@@ -721,9 +721,9 @@ a.card:active {
   inline-size: 100%;
   margin-block-end: 0;
   overflow: visible;
-  font-size: var(--sd-type-sm);
+  font-size: var(--pd-type-sm);
   font-variant-numeric: tabular-nums;
-  line-height: var(--sd-leading-ui);
+  line-height: var(--pd-leading-ui);
 }
 
 /* O UA stylesheet centraliza `<th>` por default — nem o Infima nem o adaptador
@@ -738,11 +738,11 @@ a.card:active {
    ----------------------------------------------------------------------------- */
 
 .codeGroup {
-  margin-block: var(--sd-space-6);
-  padding: calc(var(--sd-border-width) * 2);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius);
-  background-color: var(--sd-surface-raised);
+  margin-block: var(--pd-space-6);
+  padding: calc(var(--pd-border-width) * 2);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius);
+  background-color: var(--pd-surface-raised);
 }
 
 /* -----------------------------------------------------------------------------

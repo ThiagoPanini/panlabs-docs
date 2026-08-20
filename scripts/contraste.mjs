@@ -135,7 +135,7 @@ const css = readFileSync(CSS, 'utf8');
    crua acharia o comentário primeiro.
 
    O escuro precisa de uma SEGUNDA âncora, e a necessidade nasceu quando a ilha
-   de espetáculo saiu (issue #94). O bloco abria com `:root,\n[data-sd-showcase]`
+   de espetáculo saiu (issue #94). O bloco abria com `:root,\n[data-pd-showcase]`
    e esse par era único no arquivo. Hoje ele abre com `:root`, e há QUATRO blocos
    assim — a camada 1, este, o da sombra e o adaptador. Casar só o seletor
    recortaria o primeiro deles e passaria a medir a camada errada EM SILÊNCIO:
@@ -164,7 +164,7 @@ const ESCURO = recorte(':root', 'color-scheme: dark;');
 const CLARO = recorte(":root\\[data-theme='light'\\]");
 
 /* A declaração vale a do bloco do modo; se ela não estiver lá, vale a da raiz.
-   É a mesma cascata que o navegador aplica, e é o que faz `--sd-shadow-lip` e as
+   É a mesma cascata que o navegador aplica, e é o que faz `--pd-shadow-lip` e as
    onze paradas da rampa serem achadas de qualquer um dos dois modos. */
 function declaracao(nome, bloco) {
   const buscar = (texto) => texto.match(new RegExp(`^\\s+${nome}:\\s*([^;]+);`, 'm'))?.[1];
@@ -205,9 +205,9 @@ function canal(txt, origem, dono, bloco) {
   const t = txt.trim();
   if (t in herdado) return herdado[t];
 
-  /* Raiz numérica citada por nome — hoje só os quatro `--sd-hue-*`. Resolvê-la
+  /* Raiz numérica citada por nome — hoje só os quatro `--pd-hue-*`. Resolvê-la
      aqui é o que impede este arquivo de guardar uma segunda cópia do ângulo. */
-  const referencia = t.match(/^var\((--sd-[a-z0-9-]+)\)$/);
+  const referencia = t.match(/^var\((--pd-[a-z0-9-]+)\)$/);
   if (referencia) return numero(declaracao(referencia[1], bloco), referencia[1]);
 
   const chamada = t.match(/^(max|min|calc|clamp)\((.*)\)$/s);
@@ -247,7 +247,7 @@ function resolver(valor, bloco, dono = valor, profundidade = 0) {
 
   if (v.startsWith('#')) return [...hexParaRgb(v), 1];
 
-  const referencia = v.match(/^var\((--sd-[a-z0-9-]+)\)$/);
+  const referencia = v.match(/^var\((--pd-[a-z0-9-]+)\)$/);
   if (referencia) {
     return resolver(declaracao(referencia[1], bloco), bloco, referencia[1], profundidade + 1);
   }
@@ -298,40 +298,40 @@ function medir(chave) {
   const {bloco} = MODOS[chave];
   const cor = (nome) => resolver(`var(${nome})`, bloco);
 
-  const page = cor('--sd-surface-page');
-  const raised = cor('--sd-surface-raised');
-  const code = cor('--sd-surface-code');
-  const acento = cor('--sd-accent');
-  const wash = sobre(cor('--sd-surface-wash'), page);
-  const fill = Object.fromEntries(ESTADOS.map((n) => [n, sobre(cor(`--sd-state-${n}-fill`), raised)]));
-  const codigo = Object.fromEntries(PAPEIS_CODIGO.map((p) => [p, cor(`--sd-code-${p}`)]));
+  const page = cor('--pd-surface-page');
+  const raised = cor('--pd-surface-raised');
+  const code = cor('--pd-surface-code');
+  const acento = cor('--pd-accent');
+  const wash = sobre(cor('--pd-surface-wash'), page);
+  const fill = Object.fromEntries(ESTADOS.map((n) => [n, sobre(cor(`--pd-state-${n}-fill`), raised)]));
+  const codigo = Object.fromEntries(PAPEIS_CODIGO.map((p) => [p, cor(`--pd-code-${p}`)]));
 
   const pares = {
-    'text-strong sobre levantada': [cor('--sd-text-strong'), raised],
-    'text-strong sobre página': [cor('--sd-text-strong'), page],
-    'text-body sobre levantada': [cor('--sd-text-body'), raised],
-    'text-body sobre página': [cor('--sd-text-body'), page],
-    'text-muted sobre levantada': [cor('--sd-text-muted'), raised],
-    'text-muted sobre página': [cor('--sd-text-muted'), page],
+    'text-strong sobre levantada': [cor('--pd-text-strong'), raised],
+    'text-strong sobre página': [cor('--pd-text-strong'), page],
+    'text-body sobre levantada': [cor('--pd-text-body'), raised],
+    'text-body sobre página': [cor('--pd-text-body'), page],
+    'text-muted sobre levantada': [cor('--pd-text-muted'), raised],
+    'text-muted sobre página': [cor('--pd-text-muted'), page],
     'acento como link, sobre levantada': [acento, raised],
     'acento como link, sobre página': [acento, page],
-    'text-inverse sobre preenchimento de acento': [cor('--sd-text-inverse'), acento],
-    'anel de foco vs levantada': [cor('--sd-focus-ring'), raised],
-    'anel de foco vs página': [cor('--sd-focus-ring'), page],
-    'anel de foco vs pastilha de código': [cor('--sd-focus-ring'), code],
-    'text-strong sobre o wash do item ativo': [cor('--sd-text-strong'), wash],
-    'anel de foco vs wash do item ativo': [cor('--sd-focus-ring'), wash],
+    'text-inverse sobre preenchimento de acento': [cor('--pd-text-inverse'), acento],
+    'anel de foco vs levantada': [cor('--pd-focus-ring'), raised],
+    'anel de foco vs página': [cor('--pd-focus-ring'), page],
+    'anel de foco vs pastilha de código': [cor('--pd-focus-ring'), code],
+    'text-strong sobre o wash do item ativo': [cor('--pd-text-strong'), wash],
+    'anel de foco vs wash do item ativo': [cor('--pd-focus-ring'), wash],
     ...Object.fromEntries(
-      ESTADOS.map((n) => [`anel de foco vs fundo de callout ${n}`, [cor('--sd-focus-ring'), fill[n]]]),
+      ESTADOS.map((n) => [`anel de foco vs fundo de callout ${n}`, [cor('--pd-focus-ring'), fill[n]]]),
     ),
     ...Object.fromEntries(
-      ESTADOS.map((n) => [`corpo sobre fundo de callout ${n}`, [cor('--sd-text-body'), fill[n]]]),
+      ESTADOS.map((n) => [`corpo sobre fundo de callout ${n}`, [cor('--pd-text-body'), fill[n]]]),
     ),
     ...Object.fromEntries(
-      ESTADOS.map((n) => [`ícone de estado ${n} sobre o próprio fundo`, [cor(`--sd-state-${n}`), fill[n]]]),
+      ESTADOS.map((n) => [`ícone de estado ${n} sobre o próprio fundo`, [cor(`--pd-state-${n}`), fill[n]]]),
     ),
-    'text-faint sobre levantada (reprovação declarada)': [cor('--sd-text-faint'), raised],
-    'text-faint sobre página (reprovação declarada)': [cor('--sd-text-faint'), page],
+    'text-faint sobre levantada (reprovação declarada)': [cor('--pd-text-faint'), raised],
+    'text-faint sobre página (reprovação declarada)': [cor('--pd-text-faint'), page],
   };
 
   return {
@@ -350,7 +350,7 @@ function medir(chave) {
 const medido = {dark: medir('dark'), light: medir('light')};
 
 const rampa = Object.fromEntries(
-  [...css.matchAll(/^\s+(--sd-gray-\d+):/gm)].map(([, nome]) => [nome, hexDe(resolver(`var(${nome})`, ESCURO))]),
+  [...css.matchAll(/^\s+(--pd-gray-\d+):/gm)].map(([, nome]) => [nome, hexDe(resolver(`var(${nome})`, ESCURO))]),
 );
 
 /* ---------------------------------------------------------------------------
@@ -386,7 +386,7 @@ const naoTextual = (nome) => nome.startsWith('anel de foco') || nome.startsWith(
 const reprovacaoDeclarada = (nome) => nome.startsWith('text-faint');
 
 if (process.argv[2] !== '--verificar') {
-  const marca = resolver(declaracao('--sd-brand', ESCURO), ESCURO, '--sd-brand');
+  const marca = resolver(declaracao('--pd-brand', ESCURO), ESCURO, '--pd-brand');
   const [, c, h] = rgbParaOklch(marca);
   console.log(`\nMarca ${hexDe(marca)} — oklch c ${tresCasas(c)} h ${h.toFixed(1)}\n`);
 

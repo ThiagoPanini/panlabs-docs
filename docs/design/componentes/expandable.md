@@ -18,7 +18,7 @@ mesma leitura de "isto pertence ao de cima" que a indentação daria, sem gastar
 indentação.
 
 ```html
-<details data-sd-component="expandable" open>
+<details data-pd-component="expandable" open>
   <summary>…</summary>              <!-- alcançável por tipo -->
   <div>…</div>                      <!-- único div filho de details -->
 </details>
@@ -74,11 +74,11 @@ De 1 a 12.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-accent`, `--sd-border-default`.
+Camada 2: `--pd-accent`, `--pd-border-default`.
 
-Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-4`, `--sd-border-width`,
-`--sd-radius-md`, `--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`,
-`--sd-move-expand`.
+Camada 1: `--pd-space-2`, `--pd-space-3`, `--pd-space-4`, `--pd-border-width`,
+`--pd-radius-md`, `--pd-type-sm`, `--pd-weight-ui`, `--pd-leading-ui`,
+`--pd-move-expand`.
 
 ## Light e dark
 
@@ -86,7 +86,7 @@ Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-4`, `--sd-border-width`,
 
 ## Motion / reduced-motion
 
-`--sd-move-expand`, na altura do conteúdo e na rotação do caret — o mesmo
+`--pd-move-expand`, na altura do conteúdo e na rotação do caret — o mesmo
 movimento e o mesmo mecanismo do [`accordion`](accordion.md). Herda o resto.
 
 ## A11y

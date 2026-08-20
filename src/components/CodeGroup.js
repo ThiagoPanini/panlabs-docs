@@ -82,7 +82,7 @@ export default function CodeGroup({groupId, queryString, children}) {
   }
 
   return (
-    <div className={estilos.codeGroup} data-sd-component="code-group">
+    <div className={estilos.codeGroup} data-pd-component="code-group">
       <Tabs groupId={groupId} queryString={queryString}>
         {cercas.map((cerca, indice) => {
           const props = conteudoDaCerca(cerca);

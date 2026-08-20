@@ -4,9 +4,9 @@ O manifesto, os dois renderizadores, a marca e o teto duro.
 
 **Nenhum valor numérico de desenho aparece neste documento.** Os números que aparecem aqui são **contagens** — quantos arquivos, quantas tags, qual o teto — e a espessura de traço da tabela de compensação óptica, que é prop de componente e não token de CSS.
 
-> **De onde sai o tamanho de um ícone, dito porque a primeira redação errou.** Ela mandava procurar em [`tokens.md`](tokens.md), e **não há token de tamanho de ícone lá** — nem `--sd-icon-*` nem equivalente. O ponteiro apontava para o vazio, e o teste de reconstrução ([`README.md`](README.md) §6) tropeçou exatamente aqui.
+> **De onde sai o tamanho de um ícone, dito porque a primeira redação errou.** Ela mandava procurar em [`tokens.md`](tokens.md), e **não há token de tamanho de ícone lá** — nem `--pd-icon-*` nem equivalente. O ponteiro apontava para o vazio, e o teste de reconstrução ([`README.md`](README.md) §6) tropeçou exatamente aqui.
 >
-> A regra é: **ícone de chrome se dimensiona pela escala de espaço**, e o par em uso na sidebar é `--sd-space-4` para o quadrado e `--sd-space-2` para o afastamento do rótulo. Não é derivação falsa: um ícone de sidebar é um item de lista ao lado de texto, e o que o alinha ao ritmo da lista é a mesma escala que dá o `gap` dela.
+> A regra é: **ícone de chrome se dimensiona pela escala de espaço**, e o par em uso na sidebar é `--pd-space-4` para o quadrado e `--pd-space-2` para o afastamento do rótulo. Não é derivação falsa: um ícone de sidebar é um item de lista ao lado de texto, e o que o alinha ao ritmo da lista é a mesma escala que dá o `gap` dela.
 >
 > Ícone **dentro** de componente do catálogo é outra conta, e ela é prop — ver a tabela de compensação óptica do §4.
 
@@ -87,9 +87,9 @@ A parte elegante: o estado ativo já pinta o texto, e a máscara é pintada com 
 
 **A marca fica só com a palavra**, e nenhum desenho assume o lugar de `train-track`.
 
-O argumento é o mesmo que matou a figura da landing, **com força maior**: a marca aparece em **toda página**, e a landing aparecia em uma. Ela fica **monocromática**, em `--sd-text-strong` — tingir uma palavra de acento no canto superior esquerdo é o enfeite que a régua recusa, e é o tipo de decisão que se justifica sozinha uma vez e se paga em todas as rotas. O argumento sobreviveu à página que o produziu: a landing saiu depois ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)) e a marca continua sem glifo, porque o que decide aqui é *em quantas rotas o enfeite se paga*, e a resposta para a marca continua sendo *todas*.
+O argumento é o mesmo que matou a figura da landing, **com força maior**: a marca aparece em **toda página**, e a landing aparecia em uma. Ela fica **monocromática**, em `--pd-text-strong` — tingir uma palavra de acento no canto superior esquerdo é o enfeite que a régua recusa, e é o tipo de decisão que se justifica sozinha uma vez e se paga em todas as rotas. O argumento sobreviveu à página que o produziu: a landing saiu depois ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)) e a marca continua sem glifo, porque o que decide aqui é *em quantas rotas o enfeite se paga*, e a resposta para a marca continua sendo *todas*.
 
-**A tipografia da palavra não mudou**, e é isso que torna a decisão barata: `--sd-text-strong` já era a tinta dela. O que saiu foi o glifo, que era a única coisa aqui a consumir `--sd-accent`.
+**A tipografia da palavra não mudou**, e é isso que torna a decisão barata: `--pd-text-strong` já era a tinta dela. O que saiu foi o glifo, que era a única coisa aqui a consumir `--pd-accent`.
 
 **A rota é `themeConfig.navbar.title` renderizando no `.navbar__brand` nativo** — degrau 2, opção pública. Sem `logo`, o upstream emite `<b class="navbar__title">` dentro do link, que é tipo puro: nenhum `<img>`, e portanto nenhum dos problemas de `currentColor` que empurraram a marca para o degrau 3 na primeira redação deste documento.
 
@@ -100,7 +100,7 @@ Quatro coisas ficam **sem assunto** de uma vez, e o parágrafo existe para que n
 - a declaração `.navbar__brand:empty`, que escondia o link vazio que o upstream renderizava sem `title`. Ele não é mais vazio;
 - o caso `mobile` de lista de menu, que existia porque a marca era item de navbar. Ela agora é a marca do próprio painel.
 
-**Nenhum token de cor é consumido pela marca.** `--sd-accent` perdeu este consumidor.
+**Nenhum token de cor é consumido pela marca.** `--pd-accent` perdeu este consumidor.
 
 **A rota foi medida, e é isso que a resolução deste ticket registrava como não medido.** Medida em Chrome headless, nas duas preferências de esquema de cor:
 
@@ -110,10 +110,10 @@ Quatro coisas ficam **sem assunto** de uma vez, e o parágrafo existe para que n
 | `<svg>` dentro dele | **0** | **0** |
 | `<img>` dentro dele | **0** | **0** |
 | cor da palavra, em sRGB | `250,242,249` | `15,10,15` |
-| `--sd-text-strong` resolvido | `250,242,249` | `15,10,15` |
-| `--sd-accent` resolvido | `219,124,212` | `147,57,141` |
+| `--pd-text-strong` resolvido | `250,242,249` | `15,10,15` |
+| `--pd-accent` resolvido | `219,124,212` | `147,57,141` |
 
-A palavra bate com `--sd-text-strong` no pixel, nos dois modos, e **não** bate com o acento em nenhum. O carimbo sobe de `origem própria` para **`origem própria (medição)`**.
+A palavra bate com `--pd-text-strong` no pixel, nos dois modos, e **não** bate com o acento em nenhum. O carimbo sobe de `origem própria` para **`origem própria (medição)`**.
 
 ---
 
@@ -332,9 +332,9 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 | Ícone de sidebar | `currentColor` — herda ativo, hover e modo **de graça** |
 | Ícone de `Callout` | a cor da variante |
 | Ícones de sistema | a rampa de cinzas, **sem tingimento** |
-| Ícone do título do TOC | `--sd-text-body`, o mesmo do rótulo — pintado por `background-color` sob `mask`, porque não há elemento a herdar `currentColor` de |
+| Ícone do título do TOC | `--pd-text-body`, o mesmo do rótulo — pintado por `background-color` sob `mask`, porque não há elemento a herdar `currentColor` de |
 
-> **Correção de fato.** A linha dos ícones de sistema dizia *"a rampa de cinzas **tingida com o matiz da marca**"*, e isso deixou de ser verdade na [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95): a rampa parou de ler `--sd-brand` e passou a valer os hex medidos direto na âncora, fixos qualquer que seja a marca colada. Ver [`tokens.md`](tokens.md) §5 e [`principios.md`](principios.md) §2. A afirmação sobreviveu duas trocas de matiz sem ser conferida.
+> **Correção de fato.** A linha dos ícones de sistema dizia *"a rampa de cinzas **tingida com o matiz da marca**"*, e isso deixou de ser verdade na [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95): a rampa parou de ler `--pd-brand` e passou a valer os hex medidos direto na âncora, fixos qualquer que seja a marca colada. Ver [`tokens.md`](tokens.md) §5 e [`principios.md`](principios.md) §2. A afirmação sobreviveu duas trocas de matiz sem ser conferida.
 
 ---
 

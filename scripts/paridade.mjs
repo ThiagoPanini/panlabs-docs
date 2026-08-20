@@ -195,7 +195,7 @@ const SONDAS = [
   {sonda: 'tipo.sidebar.entrelinha', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link > .menu__link', medida: 'estilo:line-height'},
   {sonda: 'tipo.sidebar.peso', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-link > .menu__link', medida: 'estilo:font-weight'},
   /* O SEPARADOR tem peso próprio e alvo próprio, e é a única linha da sidebar
-     que não usa `--sd-weight-body`. Sem sonda, o negrito que agrupa a árvore
+     que não usa `--pd-weight-body`. Sem sonda, o negrito que agrupa a árvore
      inteira seria a única decisão de tipografia do chrome sem régua. */
   {sonda: 'tipo.separador.peso', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link', medida: 'estilo:font-weight'},
   {sonda: 'tipo.toc.tamanho', cenario: 'prosa@1512/escuro', seletor: '.table-of-contents__link', medida: 'estilo:font-size'},
@@ -244,9 +244,9 @@ const SONDAS = [
      sonda: ele é `popover`, e medi-lo exigiria um cenário que o abre — o
      número dele fica publicado em §6.4, sem linha nesta tabela, porque alvo
      que o instrumento não alcança vira `sem-medida` para sempre. */
-  {sonda: 'artigo.copiar.altura', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="copiar"]', medida: 'caixa:height'},
-  {sonda: 'artigo.copiar.raio', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="copiar"]', medida: 'estilo:border-top-left-radius'},
-  {sonda: 'artigo.copiar.tamanho', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="copiar"]', medida: 'estilo:font-size'},
+  {sonda: 'artigo.copiar.altura', cenario: 'prosa@1512/escuro', seletor: '[data-pd-part="copiar"]', medida: 'caixa:height'},
+  {sonda: 'artigo.copiar.raio', cenario: 'prosa@1512/escuro', seletor: '[data-pd-part="copiar"]', medida: 'estilo:border-top-left-radius'},
+  {sonda: 'artigo.copiar.tamanho', cenario: 'prosa@1512/escuro', seletor: '[data-pd-part="copiar"]', medida: 'estilo:font-size'},
   /* O título do artigo NÃO é sondado aqui: ele é o `h1`, e o `h1` já tem alvo
      na escala de tipo. Publicá-lo duas vezes criaria duas verdades sobre o
      mesmo número, que é exatamente o defeito que este instrumento existe para
@@ -298,22 +298,22 @@ const SONDAS = [
   {sonda: 'toc.topo', cenario: 'prosa@1512/escuro', seletor: '.theme-doc-toc-desktop', medida: 'estilo:top'},
 
   // --- busca: controle e painel -----------------------------------------
-  {sonda: 'busca.controle.largura', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="gatilho"]', medida: 'caixa:width'},
-  {sonda: 'busca.controle.altura', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="gatilho"]', medida: 'caixa:height'},
-  {sonda: 'busca.controle.raio', cenario: 'prosa@1512/escuro', seletor: '[data-sd-part="gatilho"]', medida: 'estilo:border-radius'},
+  {sonda: 'busca.controle.largura', cenario: 'prosa@1512/escuro', seletor: '[data-pd-part="gatilho"]', medida: 'caixa:width'},
+  {sonda: 'busca.controle.altura', cenario: 'prosa@1512/escuro', seletor: '[data-pd-part="gatilho"]', medida: 'caixa:height'},
+  {sonda: 'busca.controle.raio', cenario: 'prosa@1512/escuro', seletor: '[data-pd-part="gatilho"]', medida: 'estilo:border-radius'},
   {sonda: 'busca.painel.largura', cenario: 'busca@1512/escuro', seletor: 'dialog[open]', medida: 'caixa:width'},
   {sonda: 'busca.painel.topo', cenario: 'busca@1512/escuro', seletor: 'dialog[open]', medida: 'caixa:top'},
   {sonda: 'busca.painel.raio', cenario: 'busca@1512/escuro', seletor: 'dialog[open]', medida: 'estilo:border-radius'},
 
   // --- componentes -------------------------------------------------------
-  {sonda: 'card.raio', cenario: 'cartao@1512/escuro', seletor: '[data-sd-component="card"]', medida: 'estilo:border-radius'},
-  {sonda: 'card.borda', cenario: 'cartao@1512/escuro', seletor: '[data-sd-component="card"]', medida: 'estilo:border-top-width'},
-  {sonda: 'callout.raio', cenario: 'prosa@1512/escuro', seletor: '[data-sd-component="callout"]', medida: 'estilo:border-radius'},
-  {sonda: 'callout.tamanho', cenario: 'prosa@1512/escuro', seletor: '[data-sd-component="callout"]', medida: 'estilo:font-size'},
-  {sonda: 'codigo.raio', cenario: 'codigo@1512/escuro', seletor: '[data-sd-component="code-group"]', medida: 'estilo:border-radius'},
-  {sonda: 'tabela.tamanho', cenario: 'tabela@1512/escuro', seletor: '[data-sd-component="table"] td', medida: 'estilo:font-size'},
-  {sonda: 'passos.margem-topo', cenario: 'passos@1512/escuro', seletor: '[data-sd-component="steps"]', medida: 'estilo:margin-top'},
-  {sonda: 'expandable.raio', cenario: 'aninhamento@1512/escuro', seletor: '[data-sd-component="expandable"]', medida: 'estilo:border-radius'},
+  {sonda: 'card.raio', cenario: 'cartao@1512/escuro', seletor: '[data-pd-component="card"]', medida: 'estilo:border-radius'},
+  {sonda: 'card.borda', cenario: 'cartao@1512/escuro', seletor: '[data-pd-component="card"]', medida: 'estilo:border-top-width'},
+  {sonda: 'callout.raio', cenario: 'prosa@1512/escuro', seletor: '[data-pd-component="callout"]', medida: 'estilo:border-radius'},
+  {sonda: 'callout.tamanho', cenario: 'prosa@1512/escuro', seletor: '[data-pd-component="callout"]', medida: 'estilo:font-size'},
+  {sonda: 'codigo.raio', cenario: 'codigo@1512/escuro', seletor: '[data-pd-component="code-group"]', medida: 'estilo:border-radius'},
+  {sonda: 'tabela.tamanho', cenario: 'tabela@1512/escuro', seletor: '[data-pd-component="table"] td', medida: 'estilo:font-size'},
+  {sonda: 'passos.margem-topo', cenario: 'passos@1512/escuro', seletor: '[data-pd-component="steps"]', medida: 'estilo:margin-top'},
+  {sonda: 'expandable.raio', cenario: 'aninhamento@1512/escuro', seletor: '[data-pd-component="expandable"]', medida: 'estilo:border-radius'},
   // --- a moldura e o painel da página gerada (#99) -----------------------
   /* A rota `api` tinha QUATRO sondas e tem uma, e as três que saíram mediam o
      layout de duas colunas: `article` para a prosa estreita, e o `<aside>` do
@@ -326,10 +326,10 @@ const SONDAS = [
      Ver docs/design/referencia.md §8.
 
      O que fica é o raio do painel, e o seletor dele nunca dependeu do layout:
-     `[data-sd-component="api-painel"]` é o atributo que o componente escreve,
+     `[data-pd-component="api-painel"]` é o atributo que o componente escreve,
      e ele atravessou a mudança de casa sem mudar de nome. */
-  {sonda: 'api.painel.raio', cenario: 'api@1512/escuro', seletor: '[data-sd-component="api-painel"]', medida: 'estilo:border-radius'},
-  {sonda: 'grupo-cartoes.vao', cenario: 'cartao@1512/escuro', seletor: '[data-sd-component="card-group"]', medida: 'estilo:column-gap'},
+  {sonda: 'api.painel.raio', cenario: 'api@1512/escuro', seletor: '[data-pd-component="api-painel"]', medida: 'estilo:border-radius'},
+  {sonda: 'grupo-cartoes.vao', cenario: 'cartao@1512/escuro', seletor: '[data-pd-component="card-group"]', medida: 'estilo:column-gap'},
   /* Accordion, Tabs, Frame e Mermaid não têm sonda porque **não são
      renderizados em página nenhuma** do site construído. Publicar alvo para
      eles daria linha que nunca mede — o instrumento diria `sem-medida` para
@@ -546,7 +546,7 @@ function servir(raiz) {
 // --- driver de CDP -----------------------------------------------------------
 
 async function abrirChrome() {
-  const perfil = mkdtempSync(path.join(tmpdir(), 'sd-paridade-'));
+  const perfil = mkdtempSync(path.join(tmpdir(), 'pd-paridade-'));
   const proc = spawn(
     acharChrome(),
     [
@@ -868,7 +868,7 @@ async function medir() {
         await irPara(sessao, url, cenario.largura, cenario.tema);
 
         if (cenario.abrirBusca) {
-          await avaliar(sessao, `document.querySelector('[data-sd-part="gatilho"]')?.click()`);
+          await avaliar(sessao, `document.querySelector('[data-pd-part="gatilho"]')?.click()`);
           await dormir(ESPERA.modal);
         }
 

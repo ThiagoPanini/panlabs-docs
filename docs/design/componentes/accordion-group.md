@@ -14,7 +14,7 @@ a noção de conjunto é nossa.
 ## Anatomia
 
 ```html
-<div data-sd-component="accordion-group">
+<div data-pd-component="accordion-group">
   …sanfonas…
 </div>
 ```
@@ -63,14 +63,14 @@ Não. Crie outra, com a mesma `referencia_externa`.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-border-subtle`.
+Camada 2: `--pd-border-default`, `--pd-border-subtle`.
 
-Camada 1: `--sd-space-6`, `--sd-border-width`, `--sd-radius-md`.
+Camada 1: `--pd-space-6`, `--pd-border-width`, `--pd-radius-md`.
 
 ## Light e dark
 
 **Não se aplica.** A borda do grupo e o separador entre filhos consomem token
-semântico (`--sd-border-default`, `--sd-border-subtle`) e não conhecem modo.
+semântico (`--pd-border-default`, `--pd-border-subtle`) e não conhecem modo.
 
 ## Motion / reduced-motion
 

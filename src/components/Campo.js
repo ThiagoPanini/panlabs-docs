@@ -47,21 +47,21 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
   return (
     <div
       id={id}
-      // Classe de módulo para o nosso CSS (0,1,0); `data-sd-variant` para a
-      // skin (0,2,0). Nosso CSS nunca lê `data-sd-*`.
+      // Classe de módulo para o nosso CSS (0,1,0); `data-pd-variant` para a
+      // skin (0,2,0). Nosso CSS nunca lê `data-pd-*`.
       className={clsx(estilos.field, deprecated && estilos.fieldDeprecated)}
-      data-sd-component={especie}
-      data-sd-variant={deprecated ? 'deprecated' : undefined}>
+      data-pd-component={especie}
+      data-pd-variant={deprecated ? 'deprecated' : undefined}>
       <p className={estilos.fieldHead}>
         {/* A âncora de linha, no vão esquerdo — mesma ideia do `.hash-link` de
             heading (Infima), implementação própria porque aqui não há
             `remark-plugin` gerando o link: é um campo, não um heading. Parte
-            publicada (`data-sd-part="ancora"`) para o fallback de toque em
+            publicada (`data-pd-part="ancora"`) para o fallback de toque em
             `foco.css` alcançar sem depender do hash de CSS Module. */}
         <a
           href={`#${id}`}
           className={estilos.fieldAncora}
-          data-sd-part="ancora"
+          data-pd-part="ancora"
           aria-label={translate(
             {
               id: 'panlabs-docs.campo.ancora',
@@ -81,7 +81,7 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
             afirmada: o portão 5 casa esta linha com as páginas geradas de tipo e
             função — a do módulo não tem parâmetro nem retorno —, e reprova se o
             ramo gerado deixar de consumir o campo. */}
-        <span className={estilos.fieldMeta} data-sd-part="meta">
+        <span className={estilos.fieldMeta} data-pd-part="meta">
           <span className={estilos.fieldChip}>{type}</span>
           {padrao === undefined ? null : (
             <span className={estilos.fieldChip}>

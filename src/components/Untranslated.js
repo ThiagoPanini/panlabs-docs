@@ -37,7 +37,7 @@ export default function Untranslated() {
   }
 
   return (
-    <aside className={estilos.untranslated} data-sd-component="untranslated">
+    <aside className={estilos.untranslated} data-pd-component="untranslated">
       <Icon name="languages" size="sm" />
       <p>
         <Translate

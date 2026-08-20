@@ -12,7 +12,7 @@
 #
 # A varredura cobre `src/` INTEIRO, inclusive o arquivo de tokens — e isso não é
 # mais estrito por acaso. O bloco de vocabulário sobrevive porque ele declara
-# TOKENS (`--sd-dur-*`, `--sd-ease-*`, `--sd-move-*`), não declarações
+# TOKENS (`--pd-dur-*`, `--pd-ease-*`, `--pd-move-*`), não declarações
 # `transition:` ou `animation:`. "Fora do bloco de vocabulário" e "em toda
 # parte" coincidem por construção, e um `transition: color 200ms` escrito dentro
 # do próprio arquivo de tokens reprova como qualquer outro.
@@ -38,7 +38,7 @@ if [ -n "$achados" ]; then
   echo
   echo "$achados"
   echo
-  echo "Use um dos sete movimentos: --sd-move-{flip,state,enter,expand,showcase,reveal,ambient}."
+  echo "Use um dos sete movimentos: --pd-move-{flip,state,enter,expand,showcase,reveal,ambient}."
   exit 1
 fi
 
@@ -51,7 +51,7 @@ fi
 # afirmação de pé e a régua ausente.
 #
 # A primeira perna não a pega, e a razão é que a violação seria LEGÍTIMA por
-# ela: `transition: color var(--sd-move-state)` no `:root` compõe do vocabulário
+# ela: `transition: color var(--pd-move-state)` no `:root` compõe do vocabulário
 # certinho e passaria. O que reprova aqui é o SELETOR, não o valor.
 #
 # A varredura é de duas passadas porque a declaração e o seletor estão em linhas

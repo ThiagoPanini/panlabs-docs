@@ -32,7 +32,7 @@ da resposta que o nome prometeu.
 ## Anatomia
 
 ```html
-<div data-sd-component="card-group">
+<div data-pd-component="card-group">
   …cartões…
 </div>
 ```
@@ -44,8 +44,8 @@ A regra inteira:
 
 ```css
 display: grid;
-gap: var(--sd-space-4);
-grid-template-columns: var(--sd-card-grid);
+gap: var(--pd-space-4);
+grid-template-columns: var(--pd-card-grid);
 ```
 
 **A lista de faixas mora em [`tokens.md`](../tokens.md), não aqui.** Ela era o
@@ -54,7 +54,7 @@ superfícies citavam o mesmo nome em vez de repetir a mesma lista. Com uma
 superfície só, **o token fica pelo argumento que restou**: ele é valor composto,
 e valor composto mora na camada 1 pelo precedente da escada de elevação, não pelo
 número de quem o cita. Ela é
-`repeat(auto-fit, minmax(min(var(--sd-card-min), 100%), 1fr))`, e `--sd-card-min`
+`repeat(auto-fit, minmax(min(var(--pd-card-min), 100%), 1fr))`, e `--pd-card-min`
 é **derivado do limiar da âncora a três colunas**.
 
 **`min(…, 100%)` não é enfeite.** Sem ele, um contêiner menor que o piso estoura
@@ -114,7 +114,7 @@ largura disponível, não decisão dele.
 
 ## Tokens consumidos
 
-Camada 1: `--sd-card-grid`, `--sd-card-min`, `--sd-space-4`, `--sd-space-6`.
+Camada 1: `--pd-card-grid`, `--pd-card-min`, `--pd-space-4`, `--pd-space-6`.
 
 Nenhum token de cor: o grupo não pinta nada.
 
@@ -147,8 +147,8 @@ cheia.
 | `auto-fit` no lugar da container query | **origem própria (medição)** | [#83](https://github.com/ThiagoPanini/panlabs-docs/issues/83) — medido: a âncora usa `repeat(var(--cols), minmax(0,1fr))` com `--cols` do autor, não `auto-fit`; o teto de 4 é limite de produto (*"supports one to four columns"*), não reflow de grid. A medição tinha um segundo endereço em `landing.md`, e ele saiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — esta linha passa a ser o único |
 | A fila incompleta fica incompleta | herdado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §2 — a âncora não trata a última fila |
 | Vão de linha zero, separado do de coluna | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — a prosa da `## Anatomia` já citava o alvo desde a medição original; `gap` uniforme não o implementava, e a sonda (que só cobre coluna) não pegava a divergência |
-| `--sd-card-min` na camada 1 | origem própria | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) — o piso é derivado e compartilhado |
-| A lista de faixas também na camada 1, como `--sd-card-grid` | **origem própria (implementação)** | o motivo era *"uma declaração serve a landing e o MDX"*, só conferível se a declaração morar num lugar que as duas citem. **Metade dele caiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**: sobrou um consumidor. O token fica pela metade que restou — o precedente é a escada de elevação, que é valor composto e mora na camada 1 pelo mesmo motivo |
-| **O motivo do `--sd-card-grid` perdeu metade, e o token fica** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — *duas superfícies citando um nome* virou *uma*; a justificativa que sobrevive é *valor composto na camada 1*, e ela sozinha já bastava. Registrado em vez de reescrito calado, porque a próxima superfície que quiser a mesma grade precisa saber que o argumento do compartilhamento está vago |
+| `--pd-card-min` na camada 1 | origem própria | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) — o piso é derivado e compartilhado |
+| A lista de faixas também na camada 1, como `--pd-card-grid` | **origem própria (implementação)** | o motivo era *"uma declaração serve a landing e o MDX"*, só conferível se a declaração morar num lugar que as duas citem. **Metade dele caiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**: sobrou um consumidor. O token fica pela metade que restou — o precedente é a escada de elevação, que é valor composto e mora na camada 1 pelo mesmo motivo |
+| **O motivo do `--pd-card-grid` perdeu metade, e o token fica** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — *duas superfícies citando um nome* virou *uma*; a justificativa que sobrevive é *valor composto na camada 1*, e ela sozinha já bastava. Registrado em vez de reescrito calado, porque a próxima superfície que quiser a mesma grade precisa saber que o argumento do compartilhamento está vago |
 | Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | O nome `CardGroup` fica, com a âncora já em `Columns` | **origem própria** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — `Columns` é nomeado pela contagem de colunas que este componente recusa ter; adotar o nome sem a prop publicaria um contrato que a implementação não honra |

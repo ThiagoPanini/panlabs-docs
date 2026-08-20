@@ -20,25 +20,25 @@ Uma cadeia, e cada elo deriva do anterior. **Ou os números fecham na tela, ou n
 
 | Elo | Token | Valor | Como sai |
 | --- | --- | ---: | --- |
-| **Congelamento** | `--sd-congelamento` | **1408** | derivado — `sidebar + container`. Consumidor desde a #96: o `max-width` do grupo que centraliza sidebar + conteúdo + TOC, ver abaixo. Era 1472 (com um termo de gutter) até a #96 fechar as margens simétricas — ver a nota logo depois da tabela |
-| Container | `--sd-container-width` | 1120 | medido. Era 1152 até a #96; ver a nota abaixo |
-| Sidebar | `--sd-sidebar-width` | 288 | medido |
-| Coluna de conteúdo | `--sd-doc-width` | 816 | derivado, container − TOC — não é mais fração de grid. Era 864 antes da #96 (grid), depois 848 (container ainda em 1152), ver §1.2 |
-| Coluna do TOC | `--sd-toc-width` | 304 | **origem própria** — bate com a âncora desde a #96. Era 288, derivado do grid, até §1.2 |
-| **Corredor** | `--sd-corredor` | **43,2** | **medido em referência** — a distância entre a borda da sidebar e o texto. Era ACIDENTE até §1.7: o que sobrasse da centralização da prosa, 47,6 a 1512 e **zero** entre 997 e 1408 |
-| Separação do TOC | `--sd-space-6` | 24 | **origem própria** — inalterada; a lista muda de valor porque a caixa mudou, não a separação |
+| **Congelamento** | `--pd-congelamento` | **1408** | derivado — `sidebar + container`. Consumidor desde a #96: o `max-width` do grupo que centraliza sidebar + conteúdo + TOC, ver abaixo. Era 1472 (com um termo de gutter) até a #96 fechar as margens simétricas — ver a nota logo depois da tabela |
+| Container | `--pd-container-width` | 1120 | medido. Era 1152 até a #96; ver a nota abaixo |
+| Sidebar | `--pd-sidebar-width` | 288 | medido |
+| Coluna de conteúdo | `--pd-doc-width` | 816 | derivado, container − TOC — não é mais fração de grid. Era 864 antes da #96 (grid), depois 848 (container ainda em 1152), ver §1.2 |
+| Coluna do TOC | `--pd-toc-width` | 304 | **origem própria** — bate com a âncora desde a #96. Era 288, derivado do grid, até §1.2 |
+| **Corredor** | `--pd-corredor` | **43,2** | **medido em referência** — a distância entre a borda da sidebar e o texto. Era ACIDENTE até §1.7: o que sobrasse da centralização da prosa, 47,6 a 1512 e **zero** entre 997 e 1408 |
+| Separação do TOC | `--pd-space-6` | 24 | **origem própria** — inalterada; a lista muda de valor porque a caixa mudou, não a separação |
 | Lista do TOC | — | **280** | herdado — 304 − 24, era 264 quando a caixa era 288 |
-| Medida de prosa | `--sd-prose-width` / `--sd-container-width` | **720 / 1120** | **origem própria (correção, #96)** — duas larguras, não uma constante; ver §1.5. Com TOC visível o número NÃO mudou — a âncora já batia em 720 antes da #96 |
-| Navbar, linha 1 | `--sd-navbar-height` | 64 | herdado |
-| Faixa de tabs | `--sd-tabs-height` | 48 | herdado |
-| Topo grudado | `--sd-topo-grudado` | **112** | derivado — a soma dos dois acima |
-| Gutter | `--sd-gutter` | 16 → 32 | dobra a partir de 997 |
-| Topo do conteúdo | `--sd-space-10` | 40 | herdado — abaixo do topo grudado |
-| Recuo do subtítulo | `--sd-subtitulo-recuo` | 10 | herdado |
+| Medida de prosa | `--pd-prose-width` / `--pd-container-width` | **720 / 1120** | **origem própria (correção, #96)** — duas larguras, não uma constante; ver §1.5. Com TOC visível o número NÃO mudou — a âncora já batia em 720 antes da #96 |
+| Navbar, linha 1 | `--pd-navbar-height` | 64 | herdado |
+| Faixa de tabs | `--pd-tabs-height` | 48 | herdado |
+| Topo grudado | `--pd-topo-grudado` | **112** | derivado — a soma dos dois acima |
+| Gutter | `--pd-gutter` | 16 → 32 | dobra a partir de 997 |
+| Topo do conteúdo | `--pd-space-10` | 40 | herdado — abaixo do topo grudado |
+| Recuo do subtítulo | `--pd-subtitulo-recuo` | 10 | herdado |
 
 **Não há cartão, não há interior e não há breakout.** Os três morreram juntos — ver §2.
 
-**O congelamento ganhou consumidor na #96, e é o que fecha a queixa central da issue-pai #92: a sidebar colada em `x=0` com toda a folga indo para a direita.** `html.docs-doc-page div:has(> main) { max-width: var(--sd-congelamento); margin-inline: auto }` centraliza o par sidebar+`<main>` como um bloco só. O seletor é estrutural, não nominal: o elemento que precisa do `max-width` é o flex que envolve os dois — hoje uma classe hasheada de CSS Module, sem nome estável —, mas `<main>` é landmark HTML5 e é sempre filho direto dele. `:has(> main)` alcança o pai sem citar o hash, e sem custar `unsafe`. **Provado em protótipo antes da implementação**, por exigência da issue — o protótipo usou 1472 como valor de teste, ainda sem a correção de container que vem a seguir, e confirmou só o MECANISMO: `div:has(> main)` casa exatamente um elemento na página, a centralização funciona, e o TOC continua `sticky`. Veredito e evidência na branch descartável `prototype/96-centralizacao`.
+**O congelamento ganhou consumidor na #96, e é o que fecha a queixa central da issue-pai #92: a sidebar colada em `x=0` com toda a folga indo para a direita.** `html.docs-doc-page div:has(> main) { max-width: var(--pd-congelamento); margin-inline: auto }` centraliza o par sidebar+`<main>` como um bloco só. O seletor é estrutural, não nominal: o elemento que precisa do `max-width` é o flex que envolve os dois — hoje uma classe hasheada de CSS Module, sem nome estável —, mas `<main>` é landmark HTML5 e é sempre filho direto dele. `:has(> main)` alcança o pai sem citar o hash, e sem custar `unsafe`. **Provado em protótipo antes da implementação**, por exigência da issue — o protótipo usou 1472 como valor de teste, ainda sem a correção de container que vem a seguir, e confirmou só o MECANISMO: `div:has(> main)` casa exatamente um elemento na página, a centralização funciona, e o TOC continua `sticky`. Veredito e evidência na branch descartável `prototype/96-centralizacao`.
 
 **O congelamento e o container encolheram DEPOIS do protótipo, e por um motivo que só apareceu medindo o site inteiro.** `sidebar(288) + container(1152) = 1440` não cabe num quadro de 1408 — que é o que as margens simétricas da âncora exigem em §11 (52px a 1512, 256px a 1920) somado ao próprio `<main>` perder o preenchimento horizontal que tinha (ver a nota depois da tabela de §1.1). Container caiu para 1120 para fechar a conta: `288 + 1120 = 1408`, e o congelamento é essa soma direta — sem termo de gutter, porque o gutter deixou de ter algo a completar. Confirmado em navegador, não só em álgebra: a 1920, `sidebar.left = 256` e `viewport − TOC.right = 256`, os dois iguais, batendo com o alvo de §11.
 
@@ -64,9 +64,9 @@ O congelamento é a largura a partir da qual **nada mais se mexe na tela**. Até
 
 **A coluna do TOC dava 288 contra os 304 da âncora.** Ela era 25% de um grid de doze que não se mexia, e mover isso exigiria quebrar o 75/25 — que vivia numa classe hasheada de CSS Module e custaria `unsafe` em `DocItem/Layout`.
 
-**A lista, que é o que se vê, já batia exato.** A separação do TOC é o único número desta tabela escolhido em vez de medido, e ela foi escolhida para isso: `--sd-space-6` no lugar do `--sd-space-8` anterior derruba a lista de 256 para 264. Isso não mudou.
+**A lista, que é o que se vê, já batia exato.** A separação do TOC é o único número desta tabela escolhido em vez de medido, e ela foi escolhida para isso: `--pd-space-6` no lugar do `--pd-space-8` anterior derruba a lista de 256 para 264. Isso não mudou.
 
-> **Correção de fato — #96.** O parágrafo acima descrevia uma restrição real, não uma decisão, e a restrição morreu com o grid de doze que a criava. `main > .container > .row` continua `display: flex` do Infima — não se toca —, mas `.col--3` deixou de ler fração de 12 e passa a ler `--sd-toc-width` direto, um comprimento explícito (`chrome.css` §1). Uma largura explícita não tem 75/25 a quebrar: **a coluna do TOC agora É 304**, o valor da âncora, sem custar `unsafe` em lugar nenhum — `DocItem/Layout` continua intocado, e o portão 7 passa com a largura nova montada. O elo que não fechava fechou porque a premissa que o prendia (grid percentual) deixou de existir, não porque alguém pagou o `unsafe` que a redação original temia.
+> **Correção de fato — #96.** O parágrafo acima descrevia uma restrição real, não uma decisão, e a restrição morreu com o grid de doze que a criava. `main > .container > .row` continua `display: flex` do Infima — não se toca —, mas `.col--3` deixou de ler fração de 12 e passa a ler `--pd-toc-width` direto, um comprimento explícito (`chrome.css` §1). Uma largura explícita não tem 75/25 a quebrar: **a coluna do TOC agora É 304**, o valor da âncora, sem custar `unsafe` em lugar nenhum — `DocItem/Layout` continua intocado, e o portão 7 passa com a largura nova montada. O elo que não fechava fechou porque a premissa que o prendia (grid percentual) deixou de existir, não porque alguém pagou o `unsafe` que a redação original temia.
 
 É a diferença entre divergir na caixa e divergir na tinta — e agora não diverge em nenhuma das duas.
 
@@ -80,7 +80,7 @@ O Infima tem duas: uma normal e uma `-xl`, e **a segunda assume acima de 1440px*
 
 **(a) O gutter mora no `<main>`, não no `.container`.** A margem negativa da `.row` é calibrada contra o preenchimento do container, e o `.col` de 75% mede a row. Trocar o preenchimento do container quebra os três de uma vez.
 
-**(b) O `.col` perde o preenchimento horizontal, e só onde a cadeia existe.** Sem isso a coluna de conteúdo nasce com a largura pretendida **menos** duas vezes o preenchimento de coluna do Infima, e a conta não fecha — verdade tanto quando a largura era 75% do grid quanto agora, que é `--sd-doc-width` explícito ou o `flex: 1 0` da coluna nua. Os dois lados são cobrados por dentro da largura, não por fora. **Abaixo do limiar a regra se inverte** — não há largura pretendida a fechar, e mantê-la encosta o texto na borda da viewport. Ver §9.
+**(b) O `.col` perde o preenchimento horizontal, e só onde a cadeia existe.** Sem isso a coluna de conteúdo nasce com a largura pretendida **menos** duas vezes o preenchimento de coluna do Infima, e a conta não fecha — verdade tanto quando a largura era 75% do grid quanto agora, que é `--pd-doc-width` explícito ou o `flex: 1 0` da coluna nua. Os dois lados são cobrados por dentro da largura, não por fora. **Abaixo do limiar a regra se inverte** — não há largura pretendida a fechar, e mantê-la encosta o texto na borda da viewport. Ver §9.
 
 **(c) A coluna do TOC recebe a separação de um lado só.** Com preenchimento nos dois, a borda direita do TOC não fecha com a borda direita do container e sobra uma faixa vazia.
 
@@ -88,9 +88,9 @@ O Infima tem duas: uma normal e uma `-xl`, e **a segunda assume acima de 1440px*
 
 ### 1.5 A medida da prosa acompanha o TOC, como na âncora
 
-> **Correção de fato — #96.** Até aqui esta seção dizia *"`--sd-prose-width` sempre, tenha a página TOC ou não"*, e classificava a oscilação da âncora como *"efeito colateral, não desenho"*. A frase não sai — o raciocínio de então era honesto com o que o grid de doze permitia —, mas a decisão que ela produziu está revertida: a #96 mata o grid, e a medida constante era filha dele tanto quanto o elo do TOC em §1.2 era.
+> **Correção de fato — #96.** Até aqui esta seção dizia *"`--pd-prose-width` sempre, tenha a página TOC ou não"*, e classificava a oscilação da âncora como *"efeito colateral, não desenho"*. A frase não sai — o raciocínio de então era honesto com o que o grid de doze permitia —, mas a decisão que ela produziu está revertida: a #96 mata o grid, e a medida constante era filha dele tanto quanto o elo do TOC em §1.2 era.
 
-**A prosa agora tem DUAS larguras, e a que aparece depende do TOC estar no DOM E visível — as duas condições, não uma.** Com TOC visível (`.col--3` presente e acima do limiar de 1280, §1.6): `--sd-prose-width`, **720** — o MESMO número de antes da #96, porque a âncora já batia em 720 com o TOC presente; o que a #96 muda não é esse número, é ele deixar de ser o único. Sem TOC visível — página sem subtítulos, página com `hide_table_of_contents`, ou viewport entre 997 e 1279 onde o TOC existe mas está escondido: `--sd-container-width`, **1120**. É a MESMA oscilação da âncora, pela mesma causa que ela tem — a largura do texto depende de a página ter subtítulos visíveis —, e não mais um efeito colateral recusado.
+**A prosa agora tem DUAS larguras, e a que aparece depende do TOC estar no DOM E visível — as duas condições, não uma.** Com TOC visível (`.col--3` presente e acima do limiar de 1280, §1.6): `--pd-prose-width`, **720** — o MESMO número de antes da #96, porque a âncora já batia em 720 com o TOC presente; o que a #96 muda não é esse número, é ele deixar de ser o único. Sem TOC visível — página sem subtítulos, página com `hide_table_of_contents`, ou viewport entre 997 e 1279 onde o TOC existe mas está escondido: `--pd-container-width`, **1120**. É a MESMA oscilação da âncora, pela mesma causa que ela tem — a largura do texto depende de a página ter subtítulos visíveis —, e não mais um efeito colateral recusado.
 
 **Uma configuração não alcança nem uma largura nem outra.** Página sem heading e sem `hide_table_of_contents` aciona `docItemCol` (`max-width: 75% !important`, hasheada) mesmo sem `.col--3` ao lado, e o `!important` não se vence sem escrever outro — o que este projeto não faz. Essa configuração fica em **840** — 75% de 1120, o container depois da correção de §1 —, entre as duas larguras declaradas. Não é meio-termo escolhido: é o teto que o upstream impõe sem ponto de fuga por CSS. Ver `chrome.css`, comentário do "cartão morreu", configuração B.
 
@@ -128,7 +128,7 @@ Entre 997 e 1408 a coluna encolhe até caber na prosa, não sobra nada para divi
 
 **A âncora não divide sobra — ela declara a distância.** O conteúdo dela abre `pl-[5.7rem]` (91,2) sobre um `-ml-12` (−48), e o líquido é **43,2 em qualquer largura**: medido a 1024 e a 1512, o mesmo número nas duas. Ela também não centraliza a prosa: ancora o texto e deixa a sobra do lado do índice.
 
-O corredor passa a ser `--sd-corredor`, `padding-left` da coluna de conteúdo, e o `<article>` passa a `margin-inline: 0 auto`. **É mudança de mecanismo, não de métrica** — a mesma classe de correção da #97, que moveu o recuo da sidebar da lista para o link sem mexer no total.
+O corredor passa a ser `--pd-corredor`, `padding-left` da coluna de conteúdo, e o `<article>` passa a `margin-inline: 0 auto`. **É mudança de mecanismo, não de métrica** — a mesma classe de correção da #97, que moveu o recuo da sidebar da lista para o link sem mexer no total.
 
 #### Os 25% mortos
 
@@ -166,7 +166,7 @@ O congelamento não muda de valor. Ele continua sendo `sidebar + container`, e c
 
 A 1024 o texto passa a abrir em **363**, que é o pixel exato em que a âncora o abre nessa largura.
 
-**Dissenso.** Abaixo de 1280 a prosa fica **mais larga** que antes — 594 contra 541 a 1024 —, e §1.5 declara que sem TOC visível a medida é `--sd-container-width`. Alguém pode ler o quarto vazio como respiro deliberado em vez de defeito. A resposta é que ele nunca foi declarado em lugar nenhum desta spec, que a âncora não o tem, e que ele cresce com a janela — respiro que aumenta 64px entre 1024 e 1279 não é decisão, é sobra. **Reabre quando** alguém medir a âncora numa largura dessa faixa e achar uma coluna de conteúdo que não ocupa o que a janela dá.
+**Dissenso.** Abaixo de 1280 a prosa fica **mais larga** que antes — 594 contra 541 a 1024 —, e §1.5 declara que sem TOC visível a medida é `--pd-container-width`. Alguém pode ler o quarto vazio como respiro deliberado em vez de defeito. A resposta é que ele nunca foi declarado em lugar nenhum desta spec, que a âncora não o tem, e que ele cresce com a janela — respiro que aumenta 64px entre 1024 e 1279 não é decisão, é sobra. **Reabre quando** alguém medir a âncora numa largura dessa faixa e achar uma coluna de conteúdo que não ocupa o que a janela dá.
 
 > **A referência da CLI era lacuna nomeada aqui, e a lacuna FECHOU na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118).** A `.row` dela não tinha `.col` — o filho era o CSS Module do `ApiDocItem` —, então nenhum destes seletores a alcançava, e dar-lhe o corredor encolheria uma prosa que tinha alvo medido próprio. O componente saiu, a página passou a montar a mesma `.row > .col` de qualquer página de doc, e o corredor a alcança sem exceção a escrever. O alvo próprio saiu junto — ver [`referencia.md`](referencia.md) §8.
 
@@ -180,17 +180,17 @@ O que sobrevive do cartão é o `max-width`, e ele **muda de dono**: sobe do cor
 
 ```css
 html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
-  max-width: var(--sd-container-width);
+  max-width: var(--pd-container-width);
   margin-inline: auto;
 }
 
 @media (min-width: 1280px) {
   html.docs-doc-page main > .container > .row:has(> .col--3) > .col:not(.col--3) {
-    max-width: var(--sd-doc-width);
+    max-width: var(--pd-doc-width);
   }
 
   html.docs-doc-page main > .container > .row:has(> .col--3) > .col:not(.col--3) :is(article, .pagination-nav) {
-    max-width: var(--sd-doc-width);
+    max-width: var(--pd-doc-width);
   }
 }
 ```
@@ -211,16 +211,16 @@ A classe de 75% é aplicada sempre que `hide_table_of_contents` **não** está n
 
 | configuração | coluna de conteúdo | coluna do TOC | o que a caixa invisível faz |
 | --- | --- | --- | --- |
-| com heading, TOC visível (≥ 1280) | 816 | renderizada | **inerte** — o `flex: 1 0` da coluna nua já entrega 816 sozinho, `--sd-doc-width` só confirma |
+| com heading, TOC visível (≥ 1280) | 816 | renderizada | **inerte** — o `flex: 1 0` da coluna nua já entrega 816 sozinho, `--pd-doc-width` só confirma |
 | com heading, TOC no DOM mas escondido (997–1279) | **menos que 840** — 75% do que a viewport dá | presente, sem efeito visível | **não alcança**, e o teto **também não morde**: `max-width: 75%` é percentual da largura real, e nessa faixa o layout ainda não congelou. O 840 é inalcançável aqui |
-| sem heading (as **3** páginas sem `##`), a partir de 1408 | 840, e o `<article>` mede **797** | ausente | **não alcança** — `docItemCol` aplica `max-width: 75% !important` (840, 75% de `--sd-container-width`) antes de qualquer regra nossa rodar, e `!important` não se vence sem escrever outro. Os 43,2 que faltam para o `<article>` são o corredor de §1.7, cobrado por dentro da coluna |
+| sem heading (as **3** páginas sem `##`), a partir de 1408 | 840, e o `<article>` mede **797** | ausente | **não alcança** — `docItemCol` aplica `max-width: 75% !important` (840, 75% de `--pd-container-width`) antes de qualquer regra nossa rodar, e `!important` não se vence sem escrever outro. Os 43,2 que faltam para o `<article>` são o corredor de §1.7, cobrado por dentro da coluna |
 | `hide_table_of_contents: true` | 1120 | ausente | **não trava mais** — a #96 removeu o `:not(:has(> .col--3))` da lista de exceções; ver §1.5 |
 
 Verificado no fonte **e no artefato**: com `hide_table_of_contents: true` a coluna sai do build com `class="col"` e mais nada — a classe hasheada não é aplicada, então não há `!important` a vencer, e a coluna cresce para o container inteiro. Medido em navegador nessa configuração: **coluna em 1120, prosa em 1120** — a mais larga das três, de propósito, desde a #96.
 
 O 840 não é escolha: é o que sobra depois de `docItemCol` vencer. Fica **entre** as duas larguras que a #96 declarou (816 e 1120), e a spec registra o número em vez de fingir que não existe.
 
-> **Estas duas linhas eram uma só, e a fusão escondia que o 840 vale numa perna e não na outra.** A redação anterior lia *"com heading, TOC no DOM mas escondido (997–1279), **ou** sem heading"* e cravava 840 nas duas. **Em 997–1279 o 840 é inalcançável:** o teto é um percentual, o layout só congela em 1408 (`--sd-congelamento`), e até lá 75% da largura real é sempre menos que 840 — o `!important` está lá, mas não tem o que cortar. **Na perna sem heading o 840 vale**, e vale a partir de 1408, que é onde o container para de crescer. Um `ou` juntando uma faixa em que o número não acontece com outra em que ele acontece é o tipo de linha que passa em revisão e falha em medição.
+> **Estas duas linhas eram uma só, e a fusão escondia que o 840 vale numa perna e não na outra.** A redação anterior lia *"com heading, TOC no DOM mas escondido (997–1279), **ou** sem heading"* e cravava 840 nas duas. **Em 997–1279 o 840 é inalcançável:** o teto é um percentual, o layout só congela em 1408 (`--pd-congelamento`), e até lá 75% da largura real é sempre menos que 840 — o `!important` está lá, mas não tem o que cortar. **Na perna sem heading o 840 vale**, e vale a partir de 1408, que é onde o container para de crescer. Um `ou` juntando uma faixa em que o número não acontece com outra em que ele acontece é o tipo de linha que passa em revisão e falha em medição.
 >
 > A perna sem heading tem **três** páginas medidas no build, e não é hipótese: `procedimentos/ambiente/indice`, `ferramentas/skills/rotacao-de-segredo` e `ferramentas/skills/scaffold-de-esteira` — as únicas 3 das 39 autorais sem um `##`. A primeira é a mesma que serve de fixture de página curta em [`informacao.md`](informacao.md).
 
@@ -230,7 +230,7 @@ O 840 não é escolha: é o que sobra depois de `docItemCol` vencer. Fica **entr
 
 É a regra que uma reprodução ingênua erraria. O Infima escala o ar de cima com o tamanho do título — `h2` a duas vezes o leading, `h3` a uma vez e meia —, o que é o gesto intuitivo e o errado: **o que separa uma seção da anterior não tem relação com o corpo do título dela.**
 
-Ela resgata `--sd-space-12`, que perderia os **dois** consumidores que tinha — o preenchimento do cartão e a metade dele no estreito — e ficaria órfão, que é o defeito do Infima que este projeto nomeou.
+Ela resgata `--pd-space-12`, que perderia os **dois** consumidores que tinha — o preenchimento do cartão e a metade dele no estreito — e ficaria órfão, que é o defeito do Infima que este projeto nomeou.
 
 A regra vence por especificidade, sem `!important` e **sem reescrever `--ifm-*-vertical-rhythm-*` fora do adaptador** — o que abriria uma sexta exceção com escopo contra a lista fechada de cinco do [ADR 1](../adr/0001-doutrina-de-css.md).
 
@@ -262,13 +262,13 @@ A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa d
 
 **O sangramento saiu na #96.** Era a quarta peça: parada dura de `linear-gradient` no próprio `.navbar`, pintando uma faixa cinza atrás das tabs. A issue-pai chamou a faixa de invenção sem par na âncora — *"a faixa em cinza não caiu bem"* —, e ela sai sem substituto de superfície: a linha de tabs lê **transparente sobre o fundo da página**, como o resto do `<nav>`. O que fecha a separação agora é um HAIRLINE de 1px no rodapé do `.navbar` inteiro — as duas linhas, não só a de baixo —, e o item ativo ganha sublinhado em vez de a faixa ganhar fundo. Ver `chrome.css` §2.
 
-**São DUAS linhas, e a segunda entrou depois.** A âncora não desenha um hairline — desenha dois, e eles têm recuos diferentes de propósito. O de baixo, descrito acima, sangra de ponta a ponta da viewport. O outro fecha o rodapé da **fileira do topo** e para exatamente onde a marca começa e onde o último ícone da direita termina — Δ zero nas duas bordas, medido na âncora e confirmado por varredura de pixel, não só por caixa. O panlabs-docs tinha só o de ponta a ponta; a linha da fileira entrou por `::before` no `.navbar__inner`, com a altura de `--sd-navbar-height` e a mesma cor e espessura do outro.
+**São DUAS linhas, e a segunda entrou depois.** A âncora não desenha um hairline — desenha dois, e eles têm recuos diferentes de propósito. O de baixo, descrito acima, sangra de ponta a ponta da viewport. O outro fecha o rodapé da **fileira do topo** e para exatamente onde a marca começa e onde o último ícone da direita termina — Δ zero nas duas bordas, medido na âncora e confirmado por varredura de pixel, não só por caixa. O panlabs-docs tinha só o de ponta a ponta; a linha da fileira entrou por `::before` no `.navbar__inner`, com a altura de `--pd-navbar-height` e a mesma cor e espessura do outro.
 
 A escolha do `.navbar__inner` como dono não é conveniência: **essa caixa já é, por medição, a identidade que a âncora pede** — o `.navbar__brand` começa no mesmo x em que ela começa, e o alternador de tema termina no mesmo x em que ela termina, acima do congelamento. E é pseudo-elemento absoluto, não borda na fileira, porque **a fileira 1 não é um elemento**: ela são dois — a marca e o cluster da direita —, e uma borda em cada um daria dois segmentos com o vão do meio aberto entre eles. O escopo de 997 é obrigatório: abaixo do limiar a navbar tem uma fileira só, e o `.navbar__inner` volta a `position: static`, o que subiria o containing block até o `<nav>` e desmancharia o recuo.
 
 **Acrescenta, não move.** Mover o hairline de baixo para o `.navbar__inner` foi testado em página viva antes de escolher: a linha de ponta a ponta encurta de cada lado e deixa de sangrar — que é exatamente a propriedade que a âncora mantém.
 
-**O `.navbar__inner` passa a centralizar no MESMO container que agrupa sidebar, conteúdo e TOC** — mesmo `max-width: var(--sd-congelamento)`, mesmo `margin-inline: auto`. Sem isso a marca ficaria alinhada ao viewport enquanto o cabeçalho de grupo da sidebar se move com o congelamento (ver §1), e os dois se desencontrariam a partir da primeira largura em que o grupo centraliza. O preenchimento horizontal do `.navbar` (herdado, intocado) é o que põe a marca na mesma vertical da sidebar — ver §4.1 —, e essa conta só fecha se os dois lados tiverem o mesmo inset esquerdo.
+**O `.navbar__inner` passa a centralizar no MESMO container que agrupa sidebar, conteúdo e TOC** — mesmo `max-width: var(--pd-congelamento)`, mesmo `margin-inline: auto`. Sem isso a marca ficaria alinhada ao viewport enquanto o cabeçalho de grupo da sidebar se move com o congelamento (ver §1), e os dois se desencontrariam a partir da primeira largura em que o grupo centraliza. O preenchimento horizontal do `.navbar` (herdado, intocado) é o que põe a marca na mesma vertical da sidebar — ver §4.1 —, e essa conta só fecha se os dois lados tiverem o mesmo inset esquerdo.
 
 > **Correção medida.** A frase acima dizia *"na mesma vertical do **preenchimento** da sidebar"*, e isso não se sustenta em largura nenhuma sozinha: o alvo troca de lado no congelamento. Acima dele a marca casa com a **borda da caixa** da sidebar, e o **texto** do item cai um recuo à direita; abaixo dele é o inverso — o texto casa e a caixa não. O que este bloco entrega é o inset esquerdo comum entre navbar e **caixa** da sidebar acima do congelamento, e é dele que a linha da fileira do topo depende. Alinhar a vertical do **texto** é outro ticket: mexeria no recuo do item, não aqui.
 
@@ -280,20 +280,20 @@ A escolha do `.navbar__inner` como dono não é conveniência: **essa caixa já 
 - a sobrescrita de token precisa casar **`:root[data-theme]`** — (0,2,0) contra (0,1,0). Escrever em `:root` não pega, e é a armadilha de especificidade do [ADR 1](../adr/0001-doutrina-de-css.md) reencontrada em campo;
 - o escopo **`@media (min-width: 997px)` é obrigatório** — sem ele, `.navbar-sidebar__brand` e `.navbar-sidebar__items` leem o token novo e o cabeçalho do drawer infla no estreito.
 
-`--sd-tabs-height` nasce **literal e não derivado de `--sd-space-12`**, ainda que os dois entreguem 48: altura de chrome não tem relação com escala de espaço, e derivar por coincidência de número é a derivação falsa que o bloco de foco de `tokens.md` já recusa por escrito.
+`--pd-tabs-height` nasce **literal e não derivado de `--pd-space-12`**, ainda que os dois entreguem 48: altura de chrome não tem relação com escala de espaço, e derivar por coincidência de número é a derivação falsa que o bloco de foco de `tokens.md` já recusa por escrito.
 
 ### 3.2 O que a faixa custa — três perdas nomeadas
 
 1. **A ordem de foco passa a divergir da leitura visual.** Medido: `marca@y0 → 3 tabs@y64 → Buscar@y16 → PT → GitHub → tema`. O `Tab` desce para a faixa e **volta a subir**, porque o DOM tem dois blocos — esquerda inteira, depois direita inteira — enquanto a faixa distribui a esquerda em duas linhas. **Não é contornável nesta rota**, e é **o único ponto do projeto onde a conta do `unsafe` voltaria à mesa**. Ver [`foco.md`](foco.md) §10.
-2. **A largura útil das tabs é a do `.navbar__inner`, não a da viewport.** Isto não mudou de fato desde a #96 — mudou de causa: antes, era o fundo sangrando por trás de um conteúdo mais estreito; hoje não há mais fundo a sangrar, e o limite é o `max-width: var(--sd-congelamento)` do próprio `.navbar__inner`. As tabs alinham à coluna de conteúdo, não ao viewport, nas duas versões.
+2. **A largura útil das tabs é a do `.navbar__inner`, não a da viewport.** Isto não mudou de fato desde a #96 — mudou de causa: antes, era o fundo sangrando por trás de um conteúdo mais estreito; hoje não há mais fundo a sangrar, e o limite é o `max-width: var(--pd-congelamento)` do próprio `.navbar__inner`. As tabs alinham à coluna de conteúdo, não ao viewport, nas duas versões.
 3. **São 48px de chrome vertical em toda página.**
 
 ### 3.3 O que foi conferido em navegador, com a faixa montada
 
 | Ponto | Medido |
 | --- | --- |
-| Hairline de baixo | 1px, `--sd-border-subtle`, no rodapé do `.navbar` inteiro — abaixo das duas fileiras, sangrando de ponta a ponta da viewport |
-| Hairline da fileira do topo | 1px, `--sd-border-subtle`, `::before` no `.navbar__inner`, altura `--sd-navbar-height` — começa no `left` da marca e termina no `right` do alternador de tema, Δ **0px** nas duas bordas, conferido a 1512, 1280 e 1100 |
+| Hairline de baixo | 1px, `--pd-border-subtle`, no rodapé do `.navbar` inteiro — abaixo das duas fileiras, sangrando de ponta a ponta da viewport |
+| Hairline da fileira do topo | 1px, `--pd-border-subtle`, `::before` no `.navbar__inner`, altura `--pd-navbar-height` — começa no `left` da marca e termina no `right` do alternador de tema, Δ **0px** nas duas bordas, conferido a 1512, 1280 e 1100 |
 | As duas linhas juntas | recuos diferentes de propósito: a de cima acompanha a caixa do conteúdo, a de baixo ignora e sangra. É o que a âncora desenha |
 | Hairline da fileira abaixo de 997 | **não existe** — uma fileira só, e o `.navbar__inner` é `position: static` |
 | Aba ativa | sublinhado de acento, `border-block-end` de 2px, sem somar altura ao chrome |
@@ -318,7 +318,7 @@ Um transplante corporativo que remova a busca não deixa buraco no navbar: o `Se
 
 ## 4. Sidebar
 
-Largura `--sd-sidebar-width`, e **nada aqui custa swizzle**.
+Largura `--pd-sidebar-width`, e **nada aqui custa swizzle**.
 
 **O número é medido, não default.** *Dissenso registrado, e ele caiu:* a nota dizia que aprofundar a árvore reabriria este número, porque o Docusaurus indenta por nível e ainda há um ícone à esquerda. **Medido:** a sidebar do `docs.devin.ai` e a do `docs.windsurf.com` têm `w-[18rem]` — os mesmos 288px —, e o windsurf, também tema `mint`, segura **cinco níveis** dentro deles. O Mintlify não declara teto numérico de aninhamento. O 288 não reabre; ver [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md).
 
@@ -351,11 +351,11 @@ A hierarquia sai de `theme-doc-sidebar-item-category-level-<n>` e `theme-doc-sid
 
 **O recuo por nível mora inteiro no link, não na lista — issue #97.** Até aquela issue o Docusaurus somava dois mecanismos: a lista aninhada (`.menu__list` dentro de `.menu__list`) ganhava `padding-left` por nível, e o próprio link tinha o seu — a soma dos dois é que produzia o degrau visual. A âncora não divide assim, e copiar o resultado sem copiar a decisão produz recuo que parece certo no nível 2 e se desfaz no nível 3. A #97 zera o `padding-left` da lista aninhada e escreve o recuo inteiro no link.
 
-**A rampa é 16 · 16 · 28 · 40, e o passo é medido — issue #114, quarto degrau na #117.** A #97 moveu o mecanismo e preservou a métrica: `--sd-space-4` (16px) por degrau, *"o mesmo total que a soma antiga já dava"*. Essa soma era o **default do Infima**. O `16px` publicado como alvo `exato` é o BASE, e ele bate com a âncora; o PASSO por nível não tinha sonda de paridade nenhuma, e por isso sobreviveu duas issues sem ninguém notar de onde vinha. Medido no `docs.devin.ai` e no `docs.windsurf.com`, o `padding-left` inline por nível é **16 · 16 · 28 · 40 · 52**: separador e primeiro nível **encostados**, e +12px por degrau daí em diante.
+**A rampa é 16 · 16 · 28 · 40, e o passo é medido — issue #114, quarto degrau na #117.** A #97 moveu o mecanismo e preservou a métrica: `--pd-space-4` (16px) por degrau, *"o mesmo total que a soma antiga já dava"*. Essa soma era o **default do Infima**. O `16px` publicado como alvo `exato` é o BASE, e ele bate com a âncora; o PASSO por nível não tinha sonda de paridade nenhuma, e por isso sobreviveu duas issues sem ninguém notar de onde vinha. Medido no `docs.devin.ai` e no `docs.windsurf.com`, o `padding-left` inline por nível é **16 · 16 · 28 · 40 · 52**: separador e primeiro nível **encostados**, e +12px por degrau daí em diante.
 
 Consequência que vale declarar: em `Jornadas` e `Procedimentos` as folhas descem de 32px para 16px e ficam **alinhadas** com o separador. Quem separa um ramo do outro passa a ser o negrito do separador mais o ícone da folha — e é assim na âncora.
 
-Os níveis 3 e 4 escrevem regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-link-padding-horizontal` é `--sd-space-4`, e o Infima o aplica a todo `.menu__link`. As quatro sondas de recuo do §11 travam os quatro degraus — quatro alvos e não um, porque um número que soma dois degraus não reprova quando só um deles anda.
+Os níveis 3 e 4 escrevem regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-link-padding-horizontal` é `--pd-space-4`, e o Infima o aplica a todo `.menu__link`. As quatro sondas de recuo do §11 travam os quatro degraus — quatro alvos e não um, porque um número que soma dois degraus não reprova quando só um deles anda.
 
 > **O quarto degrau só existiu depois do `overpower`, e a ausência dele era defeito.** A rampa medida sempre teve cinco números; o CSS escrevia até onde a árvore chegava, e ela parava no nível 3. Quando o teto subiu para 4 ([`informacao.md`](informacao.md) §3.1), as 13 folhas novas passaram a cair nos 16px base do Infima, com o mesmo recuo do nível 1 — e a fixture `aninhamento-de-sidebar-maximo` teria provado um número que o CSS não escrevia. A regra do nível 4 e a sonda `… nível 4` entraram junto com ela, que é a ordem que este documento cobra: alvo publicado, regra escrita, sonda medindo.
 
@@ -371,7 +371,7 @@ Os níveis 3 e 4 escrevem regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-l
 
 **A geometria é 1:1 com o arquivo.** O alvo medido na âncora é *traço 2, 8px de largura*; o `chevron-right.svg` vendorizado é um lucide de `viewBox="0 0 24 24"` com `stroke-width="2"` e `d="m9 18 6-6-6-6"` — o traço cobre de x=8 a x=16, que são exatamente 8 unidades de largura com traço 2. Renderizar a máscara a `mask-size: 24px` entrega os dois números do alvo sem escalar nada. A **caixa** é 16px e não 8: `rotate` gira o elemento, não a máscara, e numa caixa de 8px a seta aberta transbordaria. O gap ao rótulo é **12px**, e o `padding-left` do botão paga 8 — o desenho nasce centrado na caixa de 16, então 4px de folga já vêm de dentro.
 
-**Fechada é rotação zero; aberta é `rotate: 90deg`, em 75ms.** O Infima escreve `transform: rotate(180deg)` no estado base e `rotateZ(90deg)` no colapsado, girando um glifo que apontava para cima; nosso desenho já aponta para a direita. Zerar o `transform` e usar a propriedade `rotate` independente deixa os dois estados legíveis pelo valor, e não pela soma de duas rotações herdadas. Os 75ms são `--sd-move-flip`, o sétimo movimento do vocabulário (ver [`motion.md`](motion.md) §2) — a parada de duração `--sd-dur-0` entrou com ele e existe por esta medição.
+**Fechada é rotação zero; aberta é `rotate: 90deg`, em 75ms.** O Infima escreve `transform: rotate(180deg)` no estado base e `rotateZ(90deg)` no colapsado, girando um glifo que apontava para cima; nosso desenho já aponta para a direita. Zerar o `transform` e usar a propriedade `rotate` independente deixa os dois estados legíveis pelo valor, e não pela soma de duas rotações herdadas. Os 75ms são `--pd-move-flip`, o sétimo movimento do vocabulário (ver [`motion.md`](motion.md) §2) — a parada de duração `--pd-dur-0` entrou com ele e existe por esta medição.
 
 **Sem trilho vertical ligando os filhos ao pai.** A âncora não desenha um, e este projeto nunca desenhou. O que separa um ramo do vizinho é o recuo e o negrito do separador.
 
@@ -379,7 +379,7 @@ Os níveis 3 e 4 escrevem regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-l
 
 **O item ativo ganha falso-negrito por `text-shadow`, não por `font-weight`.** Trocar o peso reflui o texto e faz o item **pular de largura** no instante em que o leitor navega. Peso e entrelinha são uniformes entre tudo que é **destino** — 400 · 24px, ver [`tokens.md`](tokens.md) §13.
 
-**O separador é a exceção, e ela usa peso de verdade.** Ele nasce em `--sd-weight-heading` (600) e em `--sd-text-strong`, com o falso-negrito do ativo apagado por cima. Os dois mecanismos resolvem problemas diferentes: o `text-shadow` existe onde o peso MUDA, e o separador nunca muda de peso — não há reflow a evitar, e uma sombra de 0,4px seria uma aproximação onde cabe o desenho certo. O alvo está publicado no §11 como `Separador de sidebar peso`.
+**O separador é a exceção, e ela usa peso de verdade.** Ele nasce em `--pd-weight-heading` (600) e em `--pd-text-strong`, com o falso-negrito do ativo apagado por cima. Os dois mecanismos resolvem problemas diferentes: o `text-shadow` existe onde o peso MUDA, e o separador nunca muda de peso — não há reflow a evitar, e uma sombra de 0,4px seria uma aproximação onde cabe o desenho certo. O alvo está publicado no §11 como `Separador de sidebar peso`.
 
 **O respiro entre grupos não mudou na #97, e é lacuna nomeada, não folga silenciosa.** A issue pede que ele bata com o da âncora, mas nenhum documento desta spec publica o número — nem esta tabela, nem `tokens.md` §13 — e inventar um aqui seria exatamente o que o axioma 5 proíbe: procedência de medição, não de decisão de quem implementa. O que fica em pé é o `margin-top: 0,25rem` que o Infima já cravava entre categorias antes desta issue, inalterado. Fechar este critério pede uma medição de primeira mão contra a âncora — o mesmo processo que produziu a tabela do §11 —, e fica pendente para quem fizer essa medição.
 
@@ -397,9 +397,9 @@ Os níveis 3 e 4 escrevem regra. O 1 e o 2 já medem 16px sem uma: `--ifm-menu-l
 
 A declaração passa a ser nossa, sem media query. A espessura da barra da sidebar deixa de depender de uma condição que não escrevemos e que nem sempre é verdadeira.
 
-**O respiro da lista vem da âncora, e é ele que impede o texto de encostar na barra.** Lá o item termina **32px** antes da borda do painel — `pr-8` no elemento que rola, com a barra desenhada por dentro desse corredor. Aqui a barra é nativa e a goteira soma **por fora** do preenchimento: medido, com `padding-right: 32` a lista terminava a 42 da borda, não a 32. Por isso o preenchimento é `--sd-space-8` **menos** `--sd-scrollbar-fina`, e o resultado fecha no número da âncora em vez de ultrapassá-lo por uma largura que não escolhemos.
+**O respiro da lista vem da âncora, e é ele que impede o texto de encostar na barra.** Lá o item termina **32px** antes da borda do painel — `pr-8` no elemento que rola, com a barra desenhada por dentro desse corredor. Aqui a barra é nativa e a goteira soma **por fora** do preenchimento: medido, com `padding-right: 32` a lista terminava a 42 da borda, não a 32. Por isso o preenchimento é `--pd-space-8` **menos** `--pd-scrollbar-fina`, e o resultado fecha no número da âncora em vez de ultrapassá-lo por uma largura que não escolhemos.
 
-`--sd-scrollbar-fina` é o único número deste projeto que outro navegador pode desmentir — ele é o que o Chromium reserva para `thin`. Está declarado uma vez, citado uma vez, e a consequência de ele estar errado é 2 ou 3px de respiro, nunca layout quebrado.
+`--pd-scrollbar-fina` é o único número deste projeto que outro navegador pode desmentir — ele é o que o Chromium reserva para `thin`. Está declarado uma vez, citado uma vez, e a consequência de ele estar errado é 2 ou 3px de respiro, nunca layout quebrado.
 
 **Medido depois:** a lista termina em 288 num painel que vai até 320, e o item ativo com ela. Exatamente os 32 da âncora.
 
@@ -409,13 +409,13 @@ A declaração passa a ser nossa, sem media query. A espessura da barra da sideb
 
 ## 5. TOC
 
-A largura é `--sd-toc-width`, **explícita** — não é mais fração de grid desde a #96. O que se escolhe é a **separação**, e ela continua sendo o único número da cadeia escolhido em vez de medido: ver §1.2.
+A largura é `--pd-toc-width`, **explícita** — não é mais fração de grid desde a #96. O que se escolhe é a **separação**, e ela continua sendo o único número da cadeia escolhido em vez de medido: ver §1.2.
 
 O comportamento sticky vem do upstream. O **mecanismo** não se toca — `position: sticky` no slot, sem swizzle — mas o **offset** foi reescrito, e a distinção é o que a linha `TOC grudado em` do §11 cobra.
 
 > **Correção de fato — S3-3.** Esta seção dizia que o sticky *"se realinhou sozinho ao topo grudado novo, porque lê `--ifm-navbar-height`"*. Ele realinhou-se ao topo grudado e **parou ali**: a folha do `theme-classic` declara `top: calc(var(--ifm-navbar-height) + 1rem)`, o que dava **128** medido — os 112 do topo grudado mais a respiração de 16 que o upstream escolheu. O alvo do §11 é **152**, que é onde a prosa ao lado abre. `npm run paridade` acusava `Δ −24` desde que a linha foi publicada.
 >
-> O offset agora é `--sd-topo-conteudo` — `--sd-topo-grudado` mais `--sd-space-10`, a mesma respiração que o `<main>` já dá ao `<article>` (§1.1). O índice deixa de subir acima do texto que ele indexa. O `max-height` veio junto por obrigação aritmética: o do upstream é `100vh − 144`, e com o topo em 152 a caixa ultrapassaria a viewport em 8px numa janela curta.
+> O offset agora é `--pd-topo-conteudo` — `--pd-topo-grudado` mais `--pd-space-10`, a mesma respiração que o `<main>` já dá ao `<article>` (§1.1). O índice deixa de subir acima do texto que ele indexa. O `max-height` veio junto por obrigação aritmética: o do upstream é `100vh − 144`, e com o topo em 152 a caixa ultrapassaria a viewport em 8px numa janela curta.
 >
 > **O número não foi escolhido: ele fecha por duas medições da âncora publicadas separadamente.** O §11 mede o navbar dela em `112px`; o §12 registra o ritmo vertical dela como *"40 do navbar ao cabeçalho"*. 112 + 40 = 152, e é o mesmo 152 que `referencia.md` §8 cobra do trilho. Três leituras independentes da mesma medição, e nenhuma delas foi editada para fechar.
 >
@@ -431,7 +431,7 @@ A âncora abre o índice com um rótulo e um glifo de lista. O panlabs-docs não
 
 **A rota de swizzle está fechada.** `TOC`, `TOCItems` e `DocItem/TOC/Desktop` são todos `unsafe` no catálogo congelado, e [`swizzle.md`](swizzle.md) §2 lê `unsafe` como proibido. O §10 registrava isto como a **perda 3** e já dizia a saída na própria linha: *"estilo e profundidade seguem alcançáveis"*. O título é o estilo alcançando — dois pseudo-elementos na caixa do TOC, com o **mesmo mecanismo do ícone da sidebar**: `mask` e cor herdada sobre uma caixa vazia, adotado lá pelo mesmo motivo, que é não existir ponto de swizzle `safe` onde injetar React ([`icones.md`](icones.md) §3).
 
-**Todo valor medido na âncora já era token deste projeto.** A cor do rótulo é `--sd-text-body` nos **dois** modos, e isso não é aproximação: a âncora mede `#404246` no claro e `#cfd1d5` no escuro, que é exatamente o que o token resolve. O corpo é `--sd-type-sm`, o peso é `--sd-weight-ui`, o vão entre glifo e palavra é `--sd-space-2` e o glifo mede `--sd-space-4`, o tamanho de ícone de chrome que [`icones.md`](icones.md) §1 já fixa. **Zero valor novo entrou.** A âncora também não põe borda, fundo nem separador sob o rótulo, e aqui não há.
+**Todo valor medido na âncora já era token deste projeto.** A cor do rótulo é `--pd-text-body` nos **dois** modos, e isso não é aproximação: a âncora mede `#404246` no claro e `#cfd1d5` no escuro, que é exatamente o que o token resolve. O corpo é `--pd-type-sm`, o peso é `--pd-weight-ui`, o vão entre glifo e palavra é `--pd-space-2` e o glifo mede `--pd-space-4`, o tamanho de ícone de chrome que [`icones.md`](icones.md) §1 já fixa. **Zero valor novo entrou.** A âncora também não põe borda, fundo nem separador sob o rótulo, e aqui não há.
 
 **O recuo fecha por coincidência, e ela merece registro.** O texto do item de TOC começa a duas vezes o preenchimento horizontal do índice — metade do `<ul>`, metade do `<li>`, as duas do Infima. Glifo mais vão dão o mesmo número. Por isso o rótulo alinha com o texto dos itens **e** o glifo encosta na borda da caixa, como na âncora, sem que nenhum dos dois ceda.
 
@@ -445,7 +445,7 @@ A âncora abre o índice com um rótulo e um glifo de lista. O panlabs-docs não
 
 ## 6. O subtítulo — a linha que toda página ganha
 
-Toda página do site ganha uma linha abaixo do `h1`: **`--sd-type-lg`, num bloco de prosa próprio, a `--sd-subtitulo-recuo` do título**, saindo do `description` do front matter.
+Toda página do site ganha uma linha abaixo do `h1`: **`--pd-type-lg`, num bloco de prosa próprio, a `--pd-subtitulo-recuo` do título**, saindo do `description` do front matter.
 
 **A fonte é uma só.** O mesmo campo já alimenta o `<meta name="description">`, o `llms.txt` e o índice de busca. Um componente aqui obrigaria o autor a digitar a mesma frase duas vezes e criaria a possibilidade de o subtítulo e o `<meta>` divergirem.
 
@@ -501,7 +501,7 @@ A âncora abre a página com um par segmentado à direita do título: um botão 
 | Título do item de menu | `14px`, peso `500` |
 | Apoio do item de menu | `12px`, peso `400` |
 
-**Zero valor novo entrou na paleta e na escala:** o corpo é `--sd-type-sm`, o peso é `--sd-weight-ui`, o vão é `--sd-space-2`, o raio das pontas é `--sd-radius-md` — o mesmo do item de sidebar — e o raio do menu é `--sd-radius`. A cor do rótulo é `--sd-text-body`, e ela **bate exato**: a âncora mede `rgb(64, 66, 70)`, que é `#404246`, o mesmo valor que o §5.1 já registrou para o rótulo do índice. Só a altura (34) e a largura do menu (277) viraram token próprio, porque nenhuma das duas cai na escala de espaço.
+**Zero valor novo entrou na paleta e na escala:** o corpo é `--pd-type-sm`, o peso é `--pd-weight-ui`, o vão é `--pd-space-2`, o raio das pontas é `--pd-radius-md` — o mesmo do item de sidebar — e o raio do menu é `--pd-radius`. A cor do rótulo é `--pd-text-body`, e ela **bate exato**: a âncora mede `rgb(64, 66, 70)`, que é `#404246`, o mesmo valor que o §5.1 já registrou para o rótulo do índice. Só a altura (34) e a largura do menu (277) viraram token próprio, porque nenhuma das duas cai na escala de espaço.
 
 **As duas metades se encostam sem borda dupla:** a da esquerda não desenha a borda direita, a da direita desenha as quatro. Medido na âncora, `border-width: 1px 0 1px 1px` e `1px`.
 
@@ -561,7 +561,7 @@ Consequência medida e aceita: **numa página que É a visão geral da categoria
 
 A causa é a mesma nos dois: o Infima declara a propriedade **direto no seletor do elemento** — `.breadcrumbs__link { font-size: calc(1rem * var(--ifm-breadcrumb-size-multiplier)) }`, `.markdown h1:first-child` e `.markdown > h2` redeclarando a custom property de tamanho —, e herança perde para declaração direta no mesmo elemento, **independente de quão específico for o seletor de onde o valor deveria vir**. A resposta é redeclarar a propriedade normal (`font-size`) no MESMO seletor que o Infima usa, carregado depois: especificidade igual, ordem de carga desempata, sem `!important`, sem tocar `--ifm-*` fora do adaptador.
 
-**A eyebrow ganha, junto, corpo maior — 14px, que já era o alvo —, peso forte (`--sd-weight-heading`, 600) e cor de acento**, revertendo `--sd-text-muted`. É a leitura da âncora: sobrancelha em acento, acima de um título que segue neutro. Alvo em §12.
+**A eyebrow ganha, junto, corpo maior — 14px, que já era o alvo —, peso forte (`--pd-weight-heading`, 600) e cor de acento**, revertendo `--pd-text-muted`. É a leitura da âncora: sobrancelha em acento, acima de um título que segue neutro. Alvo em §12.
 
 ### 7.3 A paginação é plana
 
@@ -620,7 +620,7 @@ O terceiro caso tem uma nota: a porta fica **fechada na spec**, porque `links` �
 
 O `<Footer/>` é **irmão do `main-wrapper`**, não filho da página de doc — isto não mudou na #96. O que mudou é o quadro de referência dos dois lados.
 
-> **Correção de fato — #96.** Esta seção dizia que a correção "soma o gutter" numa declaração de `padding-left` no `<footer>`, compensando o `.container` dele centrar na viewport enquanto o da doc centrava em `100% − sidebar`. A regra existia porque a doc, antes da #96, tinha exatamente ESSE desalinho — sidebar sem centralização própria, toda a folga indo para a direita (a queixa central da issue-pai). A #96 remove a causa em vez de compensar o sintoma: agora o `.container` do rodapé usa o MESMO `max-width: var(--sd-congelamento)` e o MESMO `margin-inline: auto` do grupo que centraliza sidebar + conteúdo + TOC (§1). O que falta depois disso não é mais compensação de um desalinho: é só o que a doc tem antes do texto e o rodapé não.
+> **Correção de fato — #96.** Esta seção dizia que a correção "soma o gutter" numa declaração de `padding-left` no `<footer>`, compensando o `.container` dele centrar na viewport enquanto o da doc centrava em `100% − sidebar`. A regra existia porque a doc, antes da #96, tinha exatamente ESSE desalinho — sidebar sem centralização própria, toda a folga indo para a direita (a queixa central da issue-pai). A #96 remove a causa em vez de compensar o sintoma: agora o `.container` do rodapé usa o MESMO `max-width: var(--pd-congelamento)` e o MESMO `margin-inline: auto` do grupo que centraliza sidebar + conteúdo + TOC (§1). O que falta depois disso não é mais compensação de um desalinho: é só o que a doc tem antes do texto e o rodapé não.
 
 > **Correção de fato — S3-8: *"coincidem sempre"* era a afirmação, e ela não fechava em largura nenhuma exceto uma.** Este parágrafo dizia que os dois insets *"coincidem sempre, não só na largura em que alguém mediu"*, e que o termo que faltava era `sidebar + gutter`. Medido em sete larguras, comparando a borda esquerda do primeiro link do rodapé com a do `<article>`:
 >
@@ -638,7 +638,7 @@ O `<Footer/>` é **irmão do `main-wrapper`**, não filho da página de doc — 
 >
 > **Qual borda é o alvo: a prosa.** A coluna de doc é caixa invisível por construção (§2) — alinhar com ela seria alinhar com uma borda que a tela não tem. O que o leitor compara é o texto que acabou de ler com o texto do rodapé.
 >
-> **As duas causas, e as duas foram consertadas.** *(1)* O termo estava errado: o que separa a sidebar da **prosa** não é o gutter (32), é a metade da folga da caixa invisível — `(--sd-doc-width − --sd-prose-width) / 2` = 48 —, porque o `<article>` é centralizado dentro da coluna. O número do rodapé era o de antes da #96 ter criado essa folga. *(2)* O `<footer>` paga `padding-inline: var(--sd-gutter)` que o grupo de doc não paga: abaixo de 1472 isso empurra o container 32 para dentro enquanto a sidebar cola em 0. Acima do congelamento o `margin-inline: auto` ultrapassa os 32 e o defeito some sozinho — que é exatamente por que ele nunca apareceu na largura de referência de 1512. O eixo esquerdo passou para o `.container`; o direito fica no `<footer>`, porque é ele que impede o copyright de encostar na borda, e o fio de ponta a ponta continua fora de qualquer preenchimento.
+> **As duas causas, e as duas foram consertadas.** *(1)* O termo estava errado: o que separa a sidebar da **prosa** não é o gutter (32), é a metade da folga da caixa invisível — `(--pd-doc-width − --pd-prose-width) / 2` = 48 —, porque o `<article>` é centralizado dentro da coluna. O número do rodapé era o de antes da #96 ter criado essa folga. *(2)* O `<footer>` paga `padding-inline: var(--pd-gutter)` que o grupo de doc não paga: abaixo de 1472 isso empurra o container 32 para dentro enquanto a sidebar cola em 0. Acima do congelamento o `margin-inline: auto` ultrapassa os 32 e o defeito some sozinho — que é exatamente por que ele nunca apareceu na largura de referência de 1512. O eixo esquerdo passou para o `.container`; o direito fica no `<footer>`, porque é ele que impede o copyright de encostar na borda, e o fio de ponta a ponta continua fora de qualquer preenchimento.
 >
 > **Medido depois: Δ = 0 em 1408, 1440, 1512 e 1920.** Entre 997 e o congelamento ele cai de +64 para **+48** a 997 e **+24** a 1360. E **abaixo de 997 ele já era zero e continua**: no estreito não há sidebar nem coluna, e rodapé e artigo partem da mesma borda — medido a 390, 768 e 996, os dois abrem em `16`.
 >
@@ -777,31 +777,31 @@ O ritmo vertical da âncora — 40 do navbar ao cabeçalho, 2 até a sobrancelha
 | **O alvo medido do §11** | **medido em referência** | as três medições de primeira mão da âncora, em `research/paridade-devin` §4 — [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93) |
 | **O nível de topo é separador — sem link, sem colapso, sem seta, sem ícone** | herdado | `docs.devin.ai` — `<h3 class="sidebar-title">` sem link nem `aria-expanded`; e `mintlify.com/docs/organize/navigation`, *"Top-level groups always expand and you cannot collapse them"* |
 | **A rampa de recuo 16 · 16 · 28** | **herdado (medição)** | `docs.devin.ai` e `docs.windsurf.com`, `padding-left` inline por nível; o passo de +16px anterior era o default do Infima e não tinha sonda de paridade |
-| **`--sd-sidebar-width` não reabre com a profundidade** | **herdado (medição)** | `w-[18rem]` = 288px nos dois sites medidos, e o `docs.windsurf.com` segura cinco níveis dentro deles — o dissenso registrado no §4 cai |
+| **`--pd-sidebar-width` não reabre com a profundidade** | **herdado (medição)** | `w-[18rem]` = 288px nos dois sites medidos, e o `docs.windsurf.com` segura cinco níveis dentro deles — o dissenso registrado no §4 cai |
 | **A seta colada ao rótulo: traço 2, 8px, `currentColor`, `rotate: 90deg` ao abrir em 75ms, sem trilho vertical** | herdado | `docs.devin.ai` — chevron depois do rótulo a `gap-x-3` |
 | **A pílula migra para `.menu__list-item-collapsible`** | **herdado (implementação)** | na âncora a linha inteira é um `<button>` só; é o que faz o link parar de crescer e a seta encostar no texto |
-| **O separador em `--sd-weight-heading` e `--sd-text-strong`** | **origem própria** | é a única linha da sidebar que não é destino, e a diferença de peso sozinha não a separa de um link apagado |
+| **O separador em `--pd-weight-heading` e `--pd-text-strong`** | **origem própria** | é a única linha da sidebar que não é destino, e a diferença de peso sozinha não a separa de um link apagado |
 | **O corredor de §1.7, em 43,2** | **medido em referência** | medição de primeira mão da âncora, a 1024 e a 1512, pelo mesmo instrumento CDP de `npm run paridade`: o conteúdo dela abre `pl-[5.7rem]` sobre um `-ml-12`, e o líquido é o mesmo nas duas larguras. O número que ele substitui não era decisão — era o resto da centralização da prosa, 47,6 numa largura e zero em toda a faixa de laptop |
 | **O padding lateral do quadro em 32** | **medido em referência (correção)** | a regra do wrapper da âncora que o §11 já publicava para derivar as margens a 1920 — `max-width: 1472`, `padding-inline: 32`. Estava implementada só pela metade de dentro (`max-width: 1408`), que é idêntica a partir de 1472 e cai a zero abaixo dela. Confirmado em navegador: nenhuma das 62 sondas de paridade se moveu |
 | **A `.row` a 4/3 abaixo de 1280** | **origem própria (implementação)** | `docItemCol` crava `max-width: 75% !important` numa classe hasheada, e o `!important` não se vence sem escrever outro. `calc(-100% / 3)` é o complemento exato de 75%, derivado do próprio teto — `0,75 × 4/3 = 1` —, não um número escolhido. A faixa vazia que ele fecha foi medida: 180px a 1024, 244px a 1279 |
 | **A barra fina da sidebar** | **medido em referência + origem própria (medição)** | `.thin-scrollbar` do Infima declara `scrollbar-width: thin` dentro de `@media (pointer: fine)`, e sem a condição o navegador dá a barra larga. Medido no mesmo Chromium, no mesmo elemento: 15px contra 10. O respiro de 32 da lista é da âncora (`pr-8`); a subtração da goteira é o que faz o número fechar nela em vez de ultrapassá-la |
-| **A anatomia do par "Copiar página" (§6.4)** | **medido em referência** | medição de primeira mão do cabeçalho da âncora a 1512, pelo mesmo instrumento: altura 34, raio 12, corpo 14/500, vão 8, menu 276,7 × raio 16. A cor do rótulo bate exato com `--sd-text-body` — `rgb(64, 66, 70)`, o mesmo `#404246` que o §5.1 já registrava |
+| **A anatomia do par "Copiar página" (§6.4)** | **medido em referência** | medição de primeira mão do cabeçalho da âncora a 1512, pelo mesmo instrumento: altura 34, raio 12, corpo 14/500, vão 8, menu 276,7 × raio 16. A cor do rótulo bate exato com `--pd-text-body` — `rgb(64, 66, 70)`, o mesmo `#404246` que o §5.1 já registrava |
 | **O menu em `popover` nativo** | **origem própria (consequência)** | o quinto zero — um autor de modelo de interação no projeto inteiro. A primeira escrita autorava tecla e reprovou; o substrato entrega `Escape`, light dismiss e devolução de foco sem uma linha. Ver [`README.md`](README.md) §7.1 |
 | **As margens a 1920 do §11** | **origem própria (consequência)** | a regra do wrapper medida a 1512 (`max-width 1472`, `margin-inline auto`, `padding-inline 32`), estendida à largura maior |
 | **O limiar sondado a 1100** | **origem própria (implementação)** | o número redondo põe âncora e produto de acordo e não mede nada; a sonda tem que cair dentro da faixa onde discordam. *Eram dois: a sonda a 1010 saiu com a linha da sidebar — §11, S3-7* |
 | Container, coluna, TOC, prosa | herdado + origem própria (consequência) | [#50](https://github.com/ThiagoPanini/panlabs-docs/issues/50), [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) |
-| **O congelamento em 1408** | **origem própria (correção)** | 1472 até a #96 — o *"shell total"* ignorava o preenchimento do `<main>`, medido em navegador. A #96 encolheu para 1408 (com `--sd-container-width` indo a 1120) para as margens simétricas de §11 fecharem exatas, confirmado em navegador a 1512 e 1920 |
-| **A separação do TOC em `--sd-space-6`** | **origem própria** | escolhida para a lista cair em 264, que é o número medido |
-| **A aba do navbar e a lista do TOC na escala de UI** | **origem própria (correção)** | **S9-8** — as duas divergiam do alvo de `14px` de [`tokens.md`](tokens.md) §13 por mecanismos opostos do Infima: a aba **não tinha declaração** e herdava os 16 do `<html>` (`Δ +2`); a lista do TOC tinha declaração cravada no filho, `.table-of-contents { font-size: 0.8rem }`, que vencia o `--sd-type-sm` do slot em volta (`Δ −1,2`, com o slot medindo 14 certinho — falso verde). Ausência de declaração no upstream não aparece em `grep`; foi `npm run paridade` que apontou |
-| **O offset de sticky do TOC em `--sd-topo-conteudo`** | **origem própria (correção)** | **S3-3** — o `theme-classic` declara `top: calc(var(--ifm-navbar-height) + 1rem)`, que dá 128; o §11 cobra 152 e `npm run paridade` acusava `Δ −24`. O número não foi movido: `112 + 40` são o navbar do §11 e o ritmo vertical do §12, medidos na âncora em separado. O `max-height` veio junto por aritmética — o do upstream é `100vh − 144` e transbordaria 8px. Ver §5 |
+| **O congelamento em 1408** | **origem própria (correção)** | 1472 até a #96 — o *"shell total"* ignorava o preenchimento do `<main>`, medido em navegador. A #96 encolheu para 1408 (com `--pd-container-width` indo a 1120) para as margens simétricas de §11 fecharem exatas, confirmado em navegador a 1512 e 1920 |
+| **A separação do TOC em `--pd-space-6`** | **origem própria** | escolhida para a lista cair em 264, que é o número medido |
+| **A aba do navbar e a lista do TOC na escala de UI** | **origem própria (correção)** | **S9-8** — as duas divergiam do alvo de `14px` de [`tokens.md`](tokens.md) §13 por mecanismos opostos do Infima: a aba **não tinha declaração** e herdava os 16 do `<html>` (`Δ +2`); a lista do TOC tinha declaração cravada no filho, `.table-of-contents { font-size: 0.8rem }`, que vencia o `--pd-type-sm` do slot em volta (`Δ −1,2`, com o slot medindo 14 certinho — falso verde). Ausência de declaração no upstream não aparece em `grep`; foi `npm run paridade` que apontou |
+| **O offset de sticky do TOC em `--pd-topo-conteudo`** | **origem própria (correção)** | **S3-3** — o `theme-classic` declara `top: calc(var(--ifm-navbar-height) + 1rem)`, que dá 128; o §11 cobra 152 e `npm run paridade` acusava `Δ −24`. O número não foi movido: `112 + 40` são o navbar do §11 e o ritmo vertical do §12, medidos na âncora em separado. O `max-height` veio junto por aritmética — o do upstream é `100vh − 144` e transbordaria 8px. Ver §5 |
 | **A linha `Sidebar visível a 1010` sai do §11** | **lacuna por restrição** | **S3-7** — alvo `exato` que a paridade media `sim` e que o §10 já classificava como perda 6; o `windowSize` do React lê 996 hardcoded e não há rota sem `unsafe`. Ver §11 |
 | **A coluna do TOC bate com a âncora, em 304** | **origem própria (correção)** | era 25% de um grid de doze; o grid morreu, e a largura virou explícita — ver §1.2 |
 | Largura da sidebar, prosa, navbar, faixa | herdado | medido |
-| **`--sd-tabs-height` literal, não derivado** | **origem própria** | altura de chrome não deriva de escala de espaço; a coincidência de número seria derivação falsa |
+| **`--pd-tabs-height` literal, não derivado** | **origem própria** | altura de chrome não deriva de escala de espaço; a coincidência de número seria derivação falsa |
 | **A linha da fileira do topo, recuada** | **herdado** | a âncora desenha **duas** linhas na navbar, com recuos diferentes; a de cima para no `left` da marca e no `right` do último ícone, Δ 0 nas duas bordas. Medida de primeira mão em navegador, por caixa **e** por varredura de pixel do screenshot, nos dois temas e com e sem rolagem. O panlabs-docs tinha só a de baixo |
 | **O dono da linha ser o `.navbar__inner`, e não a fileira** | **origem própria (implementação)** | a fileira 1 não é um elemento — são dois, com o vão do meio entre eles, e uma borda em cada daria dois segmentos. O `.navbar__inner` já é a caixa marca→último ícone por medição (Δ 0 a 1512, 1280 e 1100), então o pseudo-elemento absoluto herda a identidade sem número novo |
 | **O escopo de 997 da linha da fileira** | **origem própria (consequência)** | cai de duas regras que a spec já carregava: abaixo do limiar a navbar tem uma fileira só (§3.1), e o `.navbar__inner` volta a `position: static`, o que subiria o containing block até o `<nav>` |
-| **O título do TOC, com rótulo e glifo** | **herdado** | a âncora abre o índice com um rótulo e um ícone de lista, e o panlabs-docs não tinha nenhum dos dois por herança calada do `theme-classic`. Medido em navegador: corpo 14, peso 500, sem caixa-alta, sem borda, sem fundo, vão de 8 entre glifo e palavra, e a cor do rótulo mais forte que a dos itens nos dois modos. Os dois hexes medidos são, byte a byte, o que `--sd-text-body` já resolvia aqui |
+| **O título do TOC, com rótulo e glifo** | **herdado** | a âncora abre o índice com um rótulo e um ícone de lista, e o panlabs-docs não tinha nenhum dos dois por herança calada do `theme-classic`. Medido em navegador: corpo 14, peso 500, sem caixa-alta, sem borda, sem fundo, vão de 8 entre glifo e palavra, e a cor do rótulo mais forte que a dos itens nos dois modos. Os dois hexes medidos são, byte a byte, o que `--pd-text-body` já resolvia aqui |
 | **O título sair por pseudo-elemento em vez de swizzle** | **lacuna por restrição** | `TOC`, `TOCItems` e `DocItem/TOC/Desktop` são `unsafe`, e o orçamento é zero. A perda 3 do §10 previa o caso e dizia *"estilo e profundidade seguem alcançáveis"* — o estilo alcançou; o **comportamento** não: na âncora o rótulo colapsa o índice, e aqui é texto inerte. Reabre com a plataforma, não com a régua |
 | **O rolador descer da caixa para a lista** | **origem própria (consequência)** | cai de duas regras que a spec já carregava: o rótulo é pseudo-elemento da caixa (acima), e a caixa é quem rola (upstream) — logo o rótulo rolaria junto, e na âncora ele fica fora da área que rola. `flex` em coluna resolve sem número novo |
 | **O rótulo em EN por `html[lang]`** | **origem própria (implementação)** | `content` não alcança o i18n do Docusaurus, e não há `<Translate>` chamável de dentro do CSS. Descoberto escrevendo: `html[lang]` é a única junta sem swizzle, e como não existe portão de tradução de string de UI, a regra é a própria régua |

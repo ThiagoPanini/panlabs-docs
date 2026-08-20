@@ -49,8 +49,8 @@
    ----------------------------------------------------------------------------- */
 
 :focus-visible {
-  outline: var(--sd-focus-width) solid var(--sd-focus-ring);
-  outline-offset: var(--sd-focus-offset);
+  outline: var(--pd-focus-width) solid var(--pd-focus-ring);
+  outline-offset: var(--pd-focus-offset);
 }
 
 /* -----------------------------------------------------------------------------
@@ -101,8 +101,8 @@ main:focus-visible,
 }
 
 .theme-code-block:has(pre:focus-visible) {
-  outline: var(--sd-focus-width) solid var(--sd-focus-ring);
-  outline-offset: var(--sd-focus-offset);
+  outline: var(--pd-focus-width) solid var(--pd-focus-ring);
+  outline-offset: var(--pd-focus-offset);
 }
 
 /* -----------------------------------------------------------------------------
@@ -151,11 +151,11 @@ main:focus-visible,
 
 button.theme-back-to-top-button {
   transition:
-    opacity var(--sd-move-state),
-    transform var(--sd-move-state),
-    visibility var(--sd-move-state),
-    background-color var(--sd-move-state),
-    box-shadow var(--sd-move-state);
+    opacity var(--pd-move-state),
+    transform var(--pd-move-state),
+    visibility var(--pd-move-state),
+    background-color var(--pd-move-state),
+    box-shadow var(--pd-move-state);
 }
 
 /* -----------------------------------------------------------------------------
@@ -169,7 +169,7 @@ button.theme-back-to-top-button {
    ----------------------------------------------------------------------------- */
 
 a[href='#__docusaurus_skipToContent_fallback'] {
-  border-radius: var(--sd-radius-sm);
+  border-radius: var(--pd-radius-sm);
 }
 
 /* -----------------------------------------------------------------------------
@@ -207,24 +207,24 @@ a[href='#__docusaurus_skipToContent_fallback'] {
    Foi conferido no fonte do Infima, uma superfície de cada vez. */
 .menu__link:active,
 .menu__caret:active {
-  background: var(--sd-border-subtle);
+  background: var(--pd-border-subtle);
 }
 
 .navbar__link:active {
-  color: var(--sd-text-strong);
+  color: var(--pd-text-strong);
 }
 
 .table-of-contents__link:active,
 .footer__link-item:active {
-  color: var(--sd-accent);
+  color: var(--pd-accent);
 }
 
 .breadcrumbs__link:active {
-  background: var(--sd-surface-wash);
+  background: var(--pd-surface-wash);
 }
 
 .pagination-nav__link:active {
-  border-color: var(--sd-accent);
+  border-color: var(--pd-accent);
 }
 
 /* -----------------------------------------------------------------------------
@@ -257,12 +257,12 @@ a[href='#__docusaurus_skipToContent_fallback'] {
 
   /* A terceira âncora que morreria em silêncio no toque, mesma família das
      duas acima — a âncora de linha do campo de API (Campo.js, #99). A parte
-     publicada (`data-sd-part="ancora"`) alcança sem custar o hash do CSS
+     publicada (`data-pd-part="ancora"`) alcança sem custar o hash do CSS
      Module, pelo mesmo motivo do `.hash-link`: se fosse hasheada, o conserto
      custaria uma decisão cara. Continua atrás do limiar de 997px de
      `catalogo.module.css` — abaixo dele o elemento nem monta com posição
      própria. */
-  [data-sd-part='ancora'] {
+  [data-pd-part='ancora'] {
     opacity: 1;
   }
 
@@ -280,7 +280,7 @@ a[href='#__docusaurus_skipToContent_fallback'] {
   summary,
   [role='tab'],
   [role='option'] {
-    min-height: var(--sd-target-min);
+    min-height: var(--pd-target-min);
     align-content: center;
   }
 
@@ -318,8 +318,8 @@ a[href='#__docusaurus_skipToContent_fallback'] {
     inset-block-start: 50%;
     inset-inline-start: 50%;
     translate: -50% -50%;
-    inline-size: var(--sd-target-min);
-    block-size: var(--sd-target-min);
+    inline-size: var(--pd-target-min);
+    block-size: var(--pd-target-min);
   }
 
   /* A exceção, e é a única: link inline na prosa. A própria SC 2.5.8 o isenta, e

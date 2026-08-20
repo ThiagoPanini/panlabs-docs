@@ -20,14 +20,14 @@ referenciada. Ver [`referencia.md`](../referencia.md) §5.3.
 ## Anatomia
 
 Idêntica à de [`param-field`](param-field.md), com uma diferença: o valor de
-`data-sd-component`.
+`data-pd-component`.
 
 ```html
 <div id="campo-response-field-…">
   <p>
-    <a href="#campo-response-field-…" data-sd-part="ancora">#</a>
+    <a href="#campo-response-field-…" data-pd-part="ancora">#</a>
     <code>…</code>
-    <span data-sd-part="meta">…</span>
+    <span data-pd-part="meta">…</span>
   </p>
   <div>…descrição, e a recursão…</div>
 </div>
@@ -75,11 +75,11 @@ O nó ofensor, em caminho pontilhado.
 
 ## Tokens consumidos
 
-Os mesmos de [`param-field`](param-field.md) — camada 2: `--sd-border-subtle`,
-`--sd-text-body`, `--sd-text-muted`, `--sd-text-strong`, `--sd-accent`; camada 1:
-`--sd-space-1`, `--sd-space-2`, `--sd-space-4`, `--sd-space-6`, `--sd-space-10`,
-`--sd-border-width`, `--sd-radius-xs`, `--sd-radius-sm`, `--sd-type-xs`,
-`--sd-type-sm`, `--sd-font-mono`, `--sd-weight-ui`.
+Os mesmos de [`param-field`](param-field.md) — camada 2: `--pd-border-subtle`,
+`--pd-text-body`, `--pd-text-muted`, `--pd-text-strong`, `--pd-accent`; camada 1:
+`--pd-space-1`, `--pd-space-2`, `--pd-space-4`, `--pd-space-6`, `--pd-space-10`,
+`--pd-border-width`, `--pd-radius-xs`, `--pd-radius-sm`, `--pd-type-xs`,
+`--pd-type-sm`, `--pd-font-mono`, `--pd-weight-ui`.
 
 ## Light e dark
 

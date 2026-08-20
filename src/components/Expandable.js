@@ -24,7 +24,7 @@ export default function Expandable({title, defaultOpen, children}) {
   return (
     <details
       className={estilos.expandable}
-      data-sd-component="expandable"
+      data-pd-component="expandable"
       open={defaultOpen ? true : undefined}>
       <summary className={estilos.expandableSummary}>{title}</summary>
       <div className={estilos.expandableBody}>{children}</div>

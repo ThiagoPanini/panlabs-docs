@@ -27,17 +27,17 @@
 .painel {
   display: flex;
   flex-direction: column;
-  gap: var(--sd-space-6);
+  gap: var(--pd-space-6);
   /* A respiração vertical é a de um bloco de MDX, não a de uma coluna de
      grade: ele tem prosa em cima e prosa embaixo, e as duas precisam da mesma
      distância. */
-  margin-block: var(--sd-space-8);
-  padding: var(--sd-space-6);
+  margin-block: var(--pd-space-8);
+  padding: var(--pd-space-6);
   /* O fio que era o anel `0 0 0 1px` da sombra, agora borda de verdade. */
-  border: var(--sd-border-width) solid var(--sd-border-subtle);
-  border-radius: var(--sd-radius);
-  background-color: var(--sd-surface-raised);
-  box-shadow: var(--sd-shadow-raised);
+  border: var(--pd-border-width) solid var(--pd-border-subtle);
+  border-radius: var(--pd-radius);
+  background-color: var(--pd-surface-raised);
+  box-shadow: var(--pd-shadow-raised);
 }
 
 /* O `CodeBlock` do Infima traz `margin-bottom` própria, pensada para prosa: ele
@@ -62,15 +62,15 @@
    estourar a caixa numa tela estreita.
 
    O fio embaixo é a chrome de cabeçalho da âncora, portada sem o segundo
-   literal de preenchimento que ela tem: aqui é um `--sd-space-6` só, e o fio é
+   literal de preenchimento que ela tem: aqui é um `--pd-space-6` só, e o fio é
    o que separa a linha do que vem depois dentro dele. */
 .painelCabecalho {
   margin: 0;
-  padding-block-end: var(--sd-space-4);
-  border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
-  font-family: var(--sd-font-mono);
-  font-size: var(--sd-type-sm);
-  color: var(--sd-text-body);
+  padding-block-end: var(--pd-space-4);
+  border-block-end: var(--pd-border-width) solid var(--pd-border-subtle);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-sm);
+  color: var(--pd-text-body);
   overflow-wrap: anywhere;
 }
 
@@ -82,25 +82,25 @@
    **Em fluxo, os campos cabem lado a lado.** No trilho de 511 eles eram uma
    pilha porque não havia largura para outra coisa; na coluna da prosa há, e a
    grade automática usa a que houver sem media query própria — `auto-fit` com um
-   piso em `--sd-campo-min` empilha sozinha na tela estreita.
+   piso em `--pd-campo-min` empilha sozinha na tela estreita.
    ----------------------------------------------------------------------------- */
 .painelParametros {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(var(--sd-campo-min), 1fr));
-  gap: var(--sd-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(var(--pd-campo-min), 1fr));
+  gap: var(--pd-space-3);
 }
 
 .painelCampo {
   display: flex;
   align-items: center;
-  gap: var(--sd-space-2);
-  font-size: var(--sd-type-xs);
-  color: var(--sd-text-muted);
+  gap: var(--pd-space-2);
+  font-size: var(--pd-type-xs);
+  color: var(--pd-text-muted);
 }
 
 .painelCampo span {
   flex: 0 0 auto;
-  font-family: var(--sd-font-mono);
+  font-family: var(--pd-font-mono);
 }
 
 .painelCampo input {
@@ -109,12 +109,12 @@
   /* Piso de alvo de toque — o contrato de estado de entrada (ADR 4) cobre foco
      e press sozinho; a altura mínima é a única coisa que este campo precisa
      declarar por conta própria. */
-  min-height: var(--sd-target-min);
-  padding-inline: var(--sd-space-3);
-  border: var(--sd-border-width) solid var(--sd-border-default);
-  border-radius: var(--sd-radius-sm);
-  background-color: var(--sd-surface-page);
-  color: var(--sd-text-strong);
-  font-family: var(--sd-font-mono);
-  font-size: var(--sd-type-sm);
+  min-height: var(--pd-target-min);
+  padding-inline: var(--pd-space-3);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-sm);
+  background-color: var(--pd-surface-page);
+  color: var(--pd-text-strong);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-sm);
 }

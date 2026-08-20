@@ -18,7 +18,7 @@ import estilos from './catalogo.module.css';
 
 export default function Update({label, tag, children}) {
   return (
-    <section className={estilos.update} data-sd-component="update">
+    <section className={estilos.update} data-pd-component="update">
       <header className={estilos.updateHead}>
         {label}
         {tag ? <span className={estilos.updateTag}>{tag}</span> : null}

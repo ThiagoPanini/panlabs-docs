@@ -34,8 +34,8 @@ import estilos from './catalogo.module.css';
  *
  * A variante entra no DOM duas vezes, e é de propósito. Como classe de módulo,
  * porque é assim que o nosso CSS pinta — especificidade (0,1,0). Como
- * `data-sd-variant`, porque é assim que a skin corporativa repinta — (0,2,0),
- * que vence sem um único `!important`. Nosso CSS nunca lê `data-sd-*`: se lesse,
+ * `data-pd-variant`, porque é assim que a skin corporativa repinta — (0,2,0),
+ * que vence sem um único `!important`. Nosso CSS nunca lê `data-pd-*`: se lesse,
  * as duas camadas empatariam e a ordem de carga passaria a decidir.
  *
  * `info` não tem classe porque ela é a variante NEUTRA, e neutro é o default
@@ -59,16 +59,16 @@ export default function Callout({variant, title, children}) {
   return (
     <div
       className={clsx(estilos.callout, classe)}
-      data-sd-component="callout"
-      data-sd-variant={variant}>
+      data-pd-component="callout"
+      data-pd-variant={variant}>
       <Icon name={glifo} size={tamanho} />
-      {/* Sem `data-sd-part` no corpo: ele é o único `<div>` filho, e o irmão é
+      {/* Sem `data-pd-part` no corpo: ele é o único `<div>` filho, e o irmão é
           um `<svg>` — a skin alcança por `> div`. O título, não: ele é um `<p>`
           entre os `<p>` que o autor escreve, e nenhum seletor de tipo o separa
           deles. */}
       <div className={estilos.calloutContent}>
         {title ? (
-          <p className={estilos.calloutTitle} data-sd-part="title">
+          <p className={estilos.calloutTitle} data-pd-part="title">
             {title}
           </p>
         ) : null}

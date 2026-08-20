@@ -48,7 +48,7 @@ refeita contra a cadeia nova.
 > O texto antigo fica registrado abaixo, pela mesma regra do resto da spec.
 
 **Não há aritmética a publicar, e essa é a decisão.** A página de comando usa
-`--sd-prose-width` (720) e a coluna do TOC (304), como toda página de doc deste
+`--pd-prose-width` (720) e a coluna do TOC (304), como toda página de doc deste
 site. Não há grade própria, não há gutter próprio, não há coluna que precise ser
 o resto de uma conta.
 
@@ -67,7 +67,7 @@ A conta teve três justificativas ao longo da vida, e as três caíram:
    apresentada como aritmética, não gosto. Era verdade enquanto a grade era a
    premissa; a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) derrubou a premissa, e o TOC voltou sem ninguém precisar
    arrumar espaço para ele.
-3. **`--sd-api-prosa-width` porta a proporção da âncora** (#99): §10 de
+3. **`--pd-api-prosa-width` porta a proporção da âncora** (#99): §10 de
    `research/paridade-devin` mede a âncora com prosa estreita e trilho largo
    nesta rota. Esta é a única que não caiu por defeito de raciocínio — ela caiu
    por decisão, e a decisão está no §7.
@@ -149,7 +149,7 @@ declarações saíram juntas, e com elas o limiar de 997px que virava a grade de
 
 **O que sobrevive é a regra geral, e ela vale para o TOC**, que é o único
 elemento grudado que restou no corpo de uma página: quem gruda precisa de altura
-própria menor que a do irmão, e o offset dele lê `--sd-topo-conteudo`. Ver
+própria menor que a do irmão, e o offset dele lê `--pd-topo-conteudo`. Ver
 `chrome.md` §11.
 
 ## 4. A ordem das seções da página gerada
@@ -294,7 +294,7 @@ um campo cujo tipo é outra entrada **não aninha — ele linka**, e profundidad
 não existe não precisa de reset. O link vai em caminho de arquivo (`./passo.mdx`),
 que é a forma que `onBrokenMarkdownLinks: 'throw'` confere no build.
 
-### 5.4 A parte `data-sd-part="meta"` continua publicada, e a condição virou conferência
+### 5.4 A parte `data-pd-part="meta"` continua publicada, e a condição virou conferência
 
 `meta` é a única entrada do contrato de partes do catálogo que a régua estreita
 **não obrigaria** — ela é o único `<span>` do cabeçalho do campo, e uma skin a
@@ -308,7 +308,7 @@ um módulo não tem parâmetro nem retorno — e a exclusão sai do próprio con
 não de uma lista de exceção a manter.
 
 **Por que a cobrança não é um `grep` no `.mdx`.** A instrução herdada diz *"o
-gerador nomeia `data-sd-part="meta"`"*, e o literal **não pode** aparecer na saída
+gerador nomeia `data-pd-part="meta"`"*, e o literal **não pode** aparecer na saída
 do gerador: quem escreve o atributo é o componente, e a página escreve a **tag**.
 Grepar a string no MDX conferiria uma coisa que nenhum renderizador lê.
 
@@ -505,11 +505,11 @@ junto com o alvo.
 > o mesmo fato medido na âncora, não coincidência tratada como derivação.
 >
 > A correção S3-3 nasceu daí: este documento publicava `152` como alvo e, 245
-> linhas antes, `top: var(--sd-topo-grudado)` como mecanismo, que resolve em
+> linhas antes, `top: var(--pd-topo-grudado)` como mecanismo, que resolve em
 > **112**; do outro lado, o TOC herdava `calc(var(--ifm-navbar-height) + 1rem)`
 > do `theme-classic` e dava **128**. *"O mesmo topo fixo"* eram **dois**
-> números, e nenhum era o alvo. Os dois passaram a ler `--sd-topo-conteudo`
-> (`tokens.css`), que é `--sd-topo-grudado` mais `--sd-space-10`.
+> números, e nenhum era o alvo. Os dois passaram a ler `--pd-topo-conteudo`
+> (`tokens.css`), que é `--pd-topo-grudado` mais `--pd-space-10`.
 >
 > **O TOC continua lendo esse token**, e é por isso que a correção sobrevive à
 > saída do trilho: ela nunca foi sobre o painel, foi sobre haver um número só
@@ -523,7 +523,7 @@ junto com o alvo.
 | **Front matter em vez de prop na tag** | **origem própria (correção)** | a razão era `position: sticky` exigir ancestral com contexto de rolagem previsível, e ela saiu com o `sticky`. A decisão fica com razão nova, mais forte: prop seria segunda cópia do `api_exemplos`, e o portão 5 não veria as duas divergirem — ele diffa a saída contra ela mesma |
 | Nenhuma página da instância carrega `hide_table_of_contents` | origem própria (correção) | era segunda fonte para uma decisão do comutador; sem comutador, o TOC segue a regra do site — aparece quando há heading |
 | **A fixture do painel inalcançável trocou de dona** | **origem própria** | `overpower › Comandos › Índice` é irmã de sidebar das geradas **e** a folha que abre a categoria delas, o que torna a prova mais forte que a anterior |
-| Offset do sticky em `--sd-topo-conteudo` | **origem própria (correção)** | duas correções na mesma linha: era `--sd-navbar-height`, que passou a medir só a linha 1 quando a faixa de tabs entrou, e virou `--sd-topo-grudado`; **S3-3** mostrou que `--sd-topo-grudado` (112) contradizia o alvo de 152 publicado no §8 deste mesmo documento. Medido por `npm run paridade`, `Δ −40` |
+| Offset do sticky em `--pd-topo-conteudo` | **origem própria (correção)** | duas correções na mesma linha: era `--pd-navbar-height`, que passou a medir só a linha 1 quando a faixa de tabs entrou, e virou `--pd-topo-grudado`; **S3-3** mostrou que `--pd-topo-grudado` (112) contradizia o alvo de 152 publicado no §8 deste mesmo documento. Medido por `npm run paridade`, `Δ −40` |
 | A ordem das seções da página gerada | origem própria (implementação) | decidida ao escrever `scripts/gerar-referencia.mjs` |
 | **A espécie e o nome qualificado no lugar da pílula** | **origem própria** | sem verbo não há duas categorias para pintar, e um chip de três variações é enfeite |
 | **O painel perde as abas de linguagem e de resposta** | **origem própria (consequência)** | uma linguagem real no cenário fixado, e uma forma de resultado por chamada de função |
@@ -537,7 +537,7 @@ junto com o alvo.
 | **A décima perda foi paga** | **origem própria** | [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — o painel saiu da coluna do TOC e o TOC voltou; o número não se reaproveita |
 | **O que segura a décima perda mudou de argumento** | **origem própria (correção)** | não é o gerador emitir duas seções — ele emite até quatro; é cada página documentar uma entrada |
 | **O dissenso da opção rejeitada** | origem própria | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) — ela custava menos e preservava o `VerbBadge` inteiro |
-| **A aritmética do §1 corrigida para o container de 1120** | **origem própria (correção)** | a #96 derrubou `--sd-container-width` de 1152 para 1120 e este documento não veio junto; o painel real já dava 368, não 400 |
+| **A aritmética do §1 corrigida para o container de 1120** | **origem própria (correção)** | a #96 derrubou `--pd-container-width` de 1152 para 1120 e este documento não veio junto; o painel real já dava 368, não 400 |
 | **O fio sob o cabeçalho do painel** | **herdado + origem própria** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a chrome de cabeçalho da âncora portada sem o segundo nível de preenchimento que ela tem, pela mesma simplificação já registrada em `estilos.module.css` |
 | A seção "Alvo medido" (§8) | origem própria | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — mesmo padrão de [`chrome.md`](chrome.md) §11; números de `research/paridade-devin` §10 |
 | **O painel desce para o fluxo, logo depois da linha do comando** | **origem própria** | [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — a linha diz *como isto se chama*, e a pergunta seguinte numa página de CLI é *como isto se digita*; prosa entre as duas obrigaria a rolar para achar a linha copiável |

@@ -40,7 +40,7 @@ cor do texto **e** no sublinhado. O hover de uma aba inativa revela um fio no
 tom de borda padrão; não toca a cor do texto, que já estava no tom final.
 
 **Este componente é a exceção declarada do contrato de partes**, e é a única. Ele
-não emite `data-sd-component`, porque o DOM não é nosso. O contrato de skin dele
+não emite `data-pd-component`, porque o DOM não é nosso. O contrato de skin dele
 são as classes do Infima e o ARIA que o Docusaurus já emite.
 
 Consequência que vale escrita: para ele, a skin corporativa engancha nas **mesmas
@@ -88,10 +88,10 @@ Docusaurus falha alto se faltar.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-accent`, `--sd-border-default`, `--sd-text-strong`.
+Camada 2: `--pd-accent`, `--pd-border-default`, `--pd-text-strong`.
 
-Camada 1: `--sd-space-1`, `--sd-space-2`, `--sd-space-3`, `--sd-border-width`,
-`--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`, `--sd-move-state`.
+Camada 1: `--pd-space-1`, `--pd-space-2`, `--pd-space-3`, `--pd-border-width`,
+`--pd-type-sm`, `--pd-weight-ui`, `--pd-leading-ui`, `--pd-move-state`.
 
 ## Light e dark
 
@@ -99,7 +99,7 @@ Camada 1: `--sd-space-1`, `--sd-space-2`, `--sd-space-3`, `--sd-border-width`,
 
 ## Motion / reduced-motion
 
-`--sd-move-state`, em cor de texto e cor do sublinhado. Herda o resto — inclusive
+`--pd-move-state`, em cor de texto e cor do sublinhado. Herda o resto — inclusive
 o que o próprio Docusaurus anima, porque o adaptador de mão única escreve as
 variáveis de transição do Infima a partir da nossa escala.
 
@@ -130,5 +130,5 @@ O anel de foco é universal e mora em [`foco.md`](../foco.md); a aba é um
 | Estado lido do ARIA | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | Seletor com tipo de elemento | **origem própria (implementação)** | empate de especificidade com a skin e com o framework resolvido sem depender de ordem de carga |
 | Sem abas esticadas | origem própria | este slice |
-| Inativa em tom forte, e não em tom mudo | **origem própria (correção)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 mede o texto inativo igual ao ativo em repouso; a implementação anterior partia de `--sd-text-muted` e só subia ao tom forte no hover, sem medição atrás |
+| Inativa em tom forte, e não em tom mudo | **origem própria (correção)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 mede o texto inativo igual ao ativo em repouso; a implementação anterior partia de `--pd-text-muted` e só subia ao tom forte no hover, sem medição atrás |
 | Ativa no acento (texto), hover inativo só no fio | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 |

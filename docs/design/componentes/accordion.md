@@ -14,11 +14,11 @@ esbarrou nela.
 `<details>` e `<summary>` nativos, dentro de uma moldura com fio e raio.
 
 ```html
-<details data-sd-component="accordion" open>
+<details data-pd-component="accordion" open>
   <summary>                                  <!-- alcançável por tipo -->
     <svg …>                                  <!-- alcançável por tipo -->
-    <span data-sd-part="title">…</span>
-    <span data-sd-part="description">…</span>
+    <span data-pd-part="title">…</span>
+    <span data-pd-part="description">…</span>
   </summary>
   <div>…</div>                               <!-- único div filho de details -->
 </details>
@@ -35,7 +35,7 @@ desenho é o mesmo do caret de categoria da sidebar — um desenho, dois estados
 rotacionado quando aberto.
 
 **Estado não vira atributo.** `[open]` já está no DOM porque o elemento é nativo,
-e duplicá-lo num `data-sd-state` criaria duas fontes de verdade.
+e duplicá-lo num `data-pd-state` criaria duas fontes de verdade.
 
 **Alvo medido**, do `docs.devin.ai` a 1512, em `research/paridade-devin` §11.
 Sem espécime publicado no catálogo de conteúdo, `npm run paridade` ainda não
@@ -49,7 +49,7 @@ mede este componente — a tabela é o alvo para quando um exemplo entrar.
 
 **Fundo aberto e fechado são idênticos** — nenhuma regra desta folha muda o
 fundo em `[open]`. **Hover no sumário muda só o fundo**, para
-`--sd-border-subtle` — o mesmo papel que sidebar e dropdown já usam para hover.
+`--pd-border-subtle` — o mesmo papel que sidebar e dropdown já usam para hover.
 
 **O marcador continua a girar o mesmo SVG do caret de sidebar, e não ganha um
 segundo arquivo.** `chevron-right` é um desenho, dois estados
@@ -89,12 +89,12 @@ Um accordion pode nascer aberto.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-border-subtle`, `--sd-text-strong`,
-`--sd-text-muted`.
+Camada 2: `--pd-border-default`, `--pd-border-subtle`, `--pd-text-strong`,
+`--pd-text-muted`.
 
-Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-4`, `--sd-border-width`,
-`--sd-radius`, `--sd-type-sm`, `--sd-weight-ui`, `--sd-weight-body`,
-`--sd-leading-ui`, `--sd-move-expand`.
+Camada 1: `--pd-space-2`, `--pd-space-3`, `--pd-space-4`, `--pd-border-width`,
+`--pd-radius`, `--pd-type-sm`, `--pd-weight-ui`, `--pd-weight-body`,
+`--pd-leading-ui`, `--pd-move-expand`.
 
 ## Light e dark
 
@@ -102,7 +102,7 @@ Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-4`, `--sd-border-width`,
 
 ## Motion / reduced-motion
 
-`--sd-move-expand`, em duas coisas: a altura do conteúdo e a rotação do caret.
+`--pd-move-expand`, em duas coisas: a altura do conteúdo e a rotação do caret.
 
 A altura anima por `::details-content` com `interpolate-size: allow-keywords`,
 que mora em `:root` junto do vocabulário e **serve todos os componentes de
@@ -145,5 +145,5 @@ acessibilidade.
 | Caret por máscara em vez de segundo `<svg>` | **origem própria (implementação)** | dois SVG irmãos quebrariam o alcance por tipo e obrigariam a publicar mais uma parte |
 | Duas partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | Raio 16, e fundo idêntico aberto/fechado | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 |
-| Hover no sumário, com `--sd-border-subtle` | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 |
+| Hover no sumário, com `--pd-border-subtle` | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 |
 | Marcador sem transição de rotação, e não um segundo glifo | **origem própria (consequência)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — o alvo mede troca de glifo; `chevron-right` é um desenho, dois estados, partilhado com a sidebar ([`icones.md`](../icones.md) §4), e bifurcar o ícone não se paga para uma diferença que some no pixel final. **Recarimbada em S9-2:** era `delta deliberado`, e [`principios.md`](../principios.md) §3 declara essa classe **fechada em zero**. O valor não é escolha contra a âncora — ele cai do orçamento de ícones que `icones.md` §5 já fecha, que é a definição de `(consequência)` em §5.1 |

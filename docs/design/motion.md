@@ -18,30 +18,30 @@ Tudo aqui é obrigatório, salvo bloco marcado `Livre`.
 
 | Movimento | Papel | Termina sozinho? |
 | --- | --- | --- |
-| `--sd-move-flip` | gira um glifo no próprio eixo: o caret de categoria de sidebar | sim |
-| `--sd-move-state` | muda em lugar: cor, borda, sombra, opacidade | sim |
-| `--sd-move-enter` | aparece: o modal de busca | sim |
-| `--sd-move-expand` | muda de tamanho: `<details>`, sidebar em tela estreita | sim |
-| `--sd-move-showcase` | entrada da ilha de espetáculo — **sem consumidor**, ver §5 | sim |
-| `--sd-move-reveal` | reveal por rolagem — **sem consumidor**, ver §5 | **não** — dirigido por rolagem |
-| `--sd-move-ambient` | respiração do glow — **sem consumidor**, ver §5 | **não** — infinito |
+| `--pd-move-flip` | gira um glifo no próprio eixo: o caret de categoria de sidebar | sim |
+| `--pd-move-state` | muda em lugar: cor, borda, sombra, opacidade | sim |
+| `--pd-move-enter` | aparece: o modal de busca | sim |
+| `--pd-move-expand` | muda de tamanho: `<details>`, sidebar em tela estreita | sim |
+| `--pd-move-showcase` | entrada da ilha de espetáculo — **sem consumidor**, ver §5 | sim |
+| `--pd-move-reveal` | reveal por rolagem — **sem consumidor**, ver §5 | **não** — dirigido por rolagem |
+| `--pd-move-ambient` | respiração do glow — **sem consumidor**, ver §5 | **não** — infinito |
 
 > **Três dos sete não têm consumidor hoje, e continuam declarados.** A ilha de espetáculo saiu com a landing ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)), levando os três `@keyframes` que os consumiam. **O vocabulário continua fechado**, e é o **portão 2** que o define assim: ele reprova toda duração ou curva cravada e manda usar um destes nomes. Um vocabulário de três deixaria a próxima faixa que precisasse de um movimento longo sem nome para pedir — e o que ela escreveria é o número cravado que o portão existe para impedir. **Órfão com motivo escrito é decisão registrada; órfão sem motivo é o defeito do Infima que este projeto nomeia para não copiar.** O motivo está escrito aqui, no §5 e ao lado das três linhas em `tokens.css`.
 
 Cada um é um **token completo** — duração mais easing —, e o componente consome por nome:
 
 ```css
-transition: background-color var(--sd-move-state);
+transition: background-color var(--pd-move-state);
 ```
 
-Funciona porque custom property substitui **fluxo de tokens**, não valor. O **mesmo** token serve `animation: sd-abre var(--sd-move-enter)`, e é essa propriedade que torna a forma econômica.
+Funciona porque custom property substitui **fluxo de tokens**, não valor. O **mesmo** token serve `animation: pd-abre var(--pd-move-enter)`, e é essa propriedade que torna a forma econômica.
 
 **Cada movimento compõe da escala de duração em vez de cravar o número.** Isso não é higiene: é o mecanismo inteiro do §3.
 
 ### As duas curvas, nomeadas por intenção
 
-- **`--sd-ease-settle`** — o que responde ao leitor e assenta.
-- **`--sd-ease-inout`** — o que tem início e fim na tela.
+- **`--pd-ease-settle`** — o que responde ao leitor e assenta.
+- **`--pd-ease-inout`** — o que tem início e fim na tela.
 
 **Não há `ease-in`.** Nada neste site sai da tela: tudo ou entra, ou muda em lugar. Um terceiro easing sem consumidor seria variável inerte, que é o defeito do Infima que este projeto nomeou para não copiar.
 
@@ -53,11 +53,11 @@ As curvas próprias de uma das referências medidas **não entram**: dela se tom
 
 | Movimento | Onde |
 | --- | --- |
-| `--sd-move-flip` | **só** o caret de categoria de sidebar — o único nó colapsável do site |
-| `--sd-move-state` | link, item de sidebar, aba, cartão, botão de cópia, borda |
-| `--sd-move-expand` | os componentes com `<details>`, e a sidebar em tela estreita |
-| `--sd-move-enter` | **só** o modal de busca |
-| `--sd-move-showcase` · `--sd-move-reveal` · `--sd-move-ambient` | **nada** — a licença está suspensa; ver §5 |
+| `--pd-move-flip` | **só** o caret de categoria de sidebar — o único nó colapsável do site |
+| `--pd-move-state` | link, item de sidebar, aba, cartão, botão de cópia, borda |
+| `--pd-move-expand` | os componentes com `<details>`, e a sidebar em tela estreita |
+| `--pd-move-enter` | **só** o modal de busca |
+| `--pd-move-showcase` · `--pd-move-reveal` · `--pd-move-ambient` | **nada** — a licença está suspensa; ver §5 |
 
 **Tudo o mais é instantâneo por omissão, não por proibição escrita.** Silêncio é obrigação nesta spec; só a liberdade se marca.
 
@@ -82,7 +82,7 @@ A implementação inteira redefine as **três paradas de duração** dentro de `
 
 **As duas exceções são removidas, não encurtadas.** Encurtar uma animação infinita produz estroboscópio, que é o oposto exato do que `reduce` pede; e animação dirigida por rolagem não tem duração para encurtar. **A classificação é do movimento, não da superfície**, e é por isso que ela sobrevive ao consumidor: os dois que se classificam assim são os do §5, e nenhum tem consumidor hoje.
 
-> **As duas rotas de remoção estão descritas e nenhuma está montada.** Enquanto a ilha existiu, o reveal sumia por **não entrar** no `@media (prefers-reduced-motion: no-preference)` que o envolvia — a regra morava no CSS Module da página —, e a respiração saía por um `animation: none` no bloco `reduce` do arquivo de tokens. As duas caíram com a landing ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)), e **o arquivo de tokens voltou a ter zero declaração `animation:`**. Ficam escritas, aqui e no comentário do próprio bloco `reduce`, porque são as duas formas conhecidas de remover em vez de encurtar: **a de dentro da guarda positiva e a do `animation: none` com gancho `data-sd-part`.** Quem trouxer o próximo loop ambiente escolhe entre elas, não redescobre as duas.
+> **As duas rotas de remoção estão descritas e nenhuma está montada.** Enquanto a ilha existiu, o reveal sumia por **não entrar** no `@media (prefers-reduced-motion: no-preference)` que o envolvia — a regra morava no CSS Module da página —, e a respiração saía por um `animation: none` no bloco `reduce` do arquivo de tokens. As duas caíram com a landing ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)), e **o arquivo de tokens voltou a ter zero declaração `animation:`**. Ficam escritas, aqui e no comentário do próprio bloco `reduce`, porque são as duas formas conhecidas de remover em vez de encurtar: **a de dentro da guarda positiva e a do `animation: none` com gancho `data-pd-part`.** Quem trouxer o próximo loop ambiente escolhe entre elas, não redescobre as duas.
 
 **Nenhum componente escreve `@media (prefers-reduced-motion)` próprio, para sempre.** A seção `## Motion / reduced-motion` de um arquivo de componente **só nomeia o movimento**. Se um componente precisar dizer qualquer coisa além de *"herda"*, o desenho está errado.
 
@@ -102,7 +102,7 @@ O argumento é do projeto, não genérico, e ele tinha **duas metades**. A prime
 >
 > **O número, e como ele foi obtido.** Varrendo `document.querySelectorAll('*')` na rota de prosa a 1512 e contando o elemento cuja `transition-property` inclui uma propriedade que a troca de tema muda (`color`, `background-color`, `border-*-color`, `box-shadow`, `fill`) com duração maior que zero: **33 elementos**. E a interpolação foi provada, não inferida — trocando `data-theme` e amostrando a cor computada de um `.table-of-contents__link`, ela caminha por seis valores intermediários de `rgb(160,162,166)` a `rgb(81,83,87)` ao longo de 200ms, em vez de saltar.
 >
-> **De onde elas vêm importa mais que quantas são.** Quase todas são do **upstream**: `.navbar__link`, `.table-of-contents__link`, `.breadcrumbs__link`, `.menu__link`, `.footer__link-item`, `.pagination-nav__link` e os dez `<svg>` do chrome declaram `transition: color 0.2s` no Infima. O tempo e a curva são nossos só porque o adaptador escreve `--ifm-transition-fast: var(--sd-dur-1)` — o que o projeto controla é **quanto**, não **se**. Nossas próprias declarações de `--sd-move-state` são dez, e nenhuma delas está entre as que a troca de tema alcança na rota medida.
+> **De onde elas vêm importa mais que quantas são.** Quase todas são do **upstream**: `.navbar__link`, `.table-of-contents__link`, `.breadcrumbs__link`, `.menu__link`, `.footer__link-item`, `.pagination-nav__link` e os dez `<svg>` do chrome declaram `transition: color 0.2s` no Infima. O tempo e a curva são nossos só porque o adaptador escreve `--ifm-transition-fast: var(--pd-dur-1)` — o que o projeto controla é **quanto**, não **se**. Nossas próprias declarações de `--pd-move-state` são dez, e nenhuma delas está entre as que a troca de tema alcança na rota medida.
 >
 > **A decisão é reescrever a afirmação, não suprimir a transição.** Suprimir custaria uma de duas coisas, e as duas são piores que o que compram:
 >
@@ -113,13 +113,13 @@ O argumento é do projeto, não genérico, e ele tinha **duas metades**. A prime
 >
 > **Dissenso.** Quem lê *"o que nunca anima"* espera uma lista de resultados, não de seletores; dizer *"o `:root` e o `body` não animam"* e deixar 33 elementos esmaeçando é cumprir a letra. A resposta é que a alternativa medida é pior, e que uma lista fechada que promete o que a plataforma não entrega é o defeito que este documento inteiro existe para não ter. **Reabre quando** o zero de JS de interação for gasto por outro motivo — nesse dia a classe de supressão custa três linhas —, ou quando alguém medir o esmaecimento como defeito na avaliação visual, que é o juiz declarado.
 
-**A régua saiu desta linha e virou a segunda perna do portão 2 — §7.** Ela varre `src/` e reprova `transition` de cor declarada sobre `html`, `body` ou `:root`. Nasceu desta correção: a nota *"verificado na implementação"* estava aqui desde o slice 1 e ninguém a verificava desde então, o que é a definição de afirmação que envelhece calada. **A primeira perna não a pegaria** — `transition: color var(--sd-move-state)` no `:root` compõe do vocabulário certinho e passaria verde; o que a segunda cobra é o **seletor**, não o valor.
+**A régua saiu desta linha e virou a segunda perna do portão 2 — §7.** Ela varre `src/` e reprova `transition` de cor declarada sobre `html`, `body` ou `:root`. Nasceu desta correção: a nota *"verificado na implementação"* estava aqui desde o slice 1 e ninguém a verificava desde então, o que é a definição de afirmação que envelhece calada. **A primeira perna não a pegaria** — `transition: color var(--pd-move-state)` no `:root` compõe do vocabulário certinho e passaria verde; o que a segunda cobra é o **seletor**, não o valor.
 
 **Troca de rota: nada.** O leitor clicou para chegar; qualquer fade atrasa exatamente o conteúdo pedido — e envolver `Root`/`Layout` gastaria degrau da escada do [ADR 2](../adr/0002-politica-de-swizzle.md) para comprar atraso.
 
 **Rolagem: salta, não desliza.** `scroll-behavior: auto` **declarado explicitamente**, não herdado. Âncora de TOC numa página longa com rolagem suave é a viagem mais desorientadora do site. Declarado em vez de herdado porque a medição mostrou que **nem o Infima nem o `theme-classic` declaram `scroll-behavior` em lugar nenhum** — não é que a âncora decidiu `auto`; ela não decide nada, e herdar uma ausência não é herdar (ver [`principios.md`](principios.md) §5.3).
 
-**Anel de foco: instantâneo.** Anel que esmaece é anel que não está lá quando a tecla é pressionada. Consequência que fecha uma porta para o contrato de foco: o anel **não** entra na sombra multi-camada como camada animada, porque a sombra do cartão transiciona em `--sd-move-state` e o anel não pode transicionar.
+**Anel de foco: instantâneo.** Anel que esmaece é anel que não está lá quando a tecla é pressionada. Consequência que fecha uma porta para o contrato de foco: o anel **não** entra na sombra multi-camada como camada animada, porque a sombra do cartão transiciona em `--pd-move-state` e o anel não pode transicionar.
 
 **Nada desloca texto que o leitor está lendo.** Vale nos dois lados — é o critério que sustenta o §5 também.
 
@@ -127,19 +127,19 @@ O argumento é do projeto, não genérico, e ele tinha **duas metades**. A prime
 
 ## 5. Landing e ilha — a licença suspensa
 
-**A licença do *"wow"* existiu, foi exercida uma vez e hoje está suspensa.** A fronteira dela nunca foi a landing: era a **ilha** — a região marcada por `[data-sd-showcase]`, hero mais laje de código, uma no site inteiro. `--sd-move-showcase` e `--sd-move-ambient` só tinham consumidor dentro dela; `--sd-move-reveal` era o único que pertencia à *rota* landing em vez da ilha, por morar no CSS Module dela.
+**A licença do *"wow"* existiu, foi exercida uma vez e hoje está suspensa.** A fronteira dela nunca foi a landing: era a **ilha** — a região marcada por `[data-pd-showcase]`, hero mais laje de código, uma no site inteiro. `--pd-move-showcase` e `--pd-move-ambient` só tinham consumidor dentro dela; `--pd-move-reveal` era o único que pertencia à *rota* landing em vez da ilha, por morar no CSS Module dela.
 
-**A ilha saiu com a página, em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94).** Saíram juntos os **cinco tokens de brilho** da camada 3 — os dois gradientes, a caixa da luz e o par de amplitude da respiração —, o `[data-sd-showcase]` que os escopava, a regra do bloco `reduce` que desligava a respiração, os três `@keyframes` da folha global e o CSS Module que os consumia.
+**A ilha saiu com a página, em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94).** Saíram juntos os **cinco tokens de brilho** da camada 3 — os dois gradientes, a caixa da luz e o par de amplitude da respiração —, o `[data-pd-showcase]` que os escopava, a regra do bloco `reduce` que desligava a respiração, os três `@keyframes` da folha global e o CSS Module que os consumia.
 
-**O que não saiu foram os três movimentos.** `--sd-move-showcase`, `--sd-move-reveal` e `--sd-move-ambient` continuam declarados na camada 1, sem consumidor e com o motivo escrito ao lado: **o vocabulário é fechado em seis, e quem o fecha é o portão 2** (§7). Ele reprova toda duração ou curva cravada e manda usar um destes nomes — cortar três deixaria o portão apontando para um vocabulário que não cobre movimento longo, movimento dirigido por rolagem nem loop infinito, e a próxima superfície que precisasse de um deles escreveria o número cravado que o portão existe para impedir. É a mesma leitura da rampa de cinza: **escala se declara inteira, e buraco no meio custa mais que a parada a mais.**
+**O que não saiu foram os três movimentos.** `--pd-move-showcase`, `--pd-move-reveal` e `--pd-move-ambient` continuam declarados na camada 1, sem consumidor e com o motivo escrito ao lado: **o vocabulário é fechado em seis, e quem o fecha é o portão 2** (§7). Ele reprova toda duração ou curva cravada e manda usar um destes nomes — cortar três deixaria o portão apontando para um vocabulário que não cobre movimento longo, movimento dirigido por rolagem nem loop infinito, e a próxima superfície que precisasse de um deles escreveria o número cravado que o portão existe para impedir. É a mesma leitura da rampa de cinza: **escala se declara inteira, e buraco no meio custa mais que a parada a mais.**
 
 > **Suspensa não é revogada, e a diferença é conferível.** Nada aqui virou proibição: a lista do §4 é a do que **nunca** anima, e nenhum dos três entrou nela. O que a licença perdeu foi o único lugar onde podia ser exercida. Reabri-la é ter ilha outra vez — uma região marcada por atributo, que apareça em **uma** rota e não em toda página —, e as regras abaixo são o preço já pago dessa reabertura. Elas ficam escritas e sem sujeito, e é assim que devem ser lidas.
 
-> **Correção de fato, medida ao implementar a landing, e ela sobrevive à página.** A redação original dizia que `--sd-move-showcase` e `--sd-move-ambient` eram *"camada 3, declarados dentro do escopo da ilha, exatamente como `--sd-glow`"*. **Não eram, e não podiam ser:** os seis movimentos são camada 1 e moram no bloco de vocabulário — é isso que faz reduced-motion alcançar todos de uma vez pela escala de duração, e é isso que o portão do §7 pressupõe. O que de fato era camada 3 no escopo da ilha eram `--sd-glow`, o **par de amplitude** da respiração e o **loop inteiro**. **É esta correção que explica por que os três movimentos sobreviveram à remoção e os `--sd-glow*` não:** o que estava confinado à ilha era o consumo, não o vocabulário, e a remoção levou exatamente o que era dela.
+> **Correção de fato, medida ao implementar a landing, e ela sobrevive à página.** A redação original dizia que `--pd-move-showcase` e `--pd-move-ambient` eram *"camada 3, declarados dentro do escopo da ilha, exatamente como `--pd-glow`"*. **Não eram, e não podiam ser:** os seis movimentos são camada 1 e moram no bloco de vocabulário — é isso que faz reduced-motion alcançar todos de uma vez pela escala de duração, e é isso que o portão do §7 pressupõe. O que de fato era camada 3 no escopo da ilha eram `--pd-glow`, o **par de amplitude** da respiração e o **loop inteiro**. **É esta correção que explica por que os três movimentos sobreviveram à remoção e os `--pd-glow*` não:** o que estava confinado à ilha era o consumo, não o vocabulário, e a remoção levou exatamente o que era dela.
 
 ### A entrada da ilha
 
-`--sd-move-showcase` era a **entrada da ilha**, e o consumidor dele era a camada decorativa do hero: a luz subia uma vez, no carregamento, e terminava. Nenhum texto, nenhuma borda e nenhuma caixa se mexia — a mesma regra da respiração, aplicada a um movimento que acaba.
+`--pd-move-showcase` era a **entrada da ilha**, e o consumidor dele era a camada decorativa do hero: a luz subia uma vez, no carregamento, e terminava. Nenhum texto, nenhuma borda e nenhuma caixa se mexia — a mesma regra da respiração, aplicada a um movimento que acaba.
 
 Ele **encurta** sob reduced-motion em vez de sumir, e sem uma linha a mais: compõe da escala, como os outros três que terminam sozinhos. Isso continua valendo sem consumidor — é propriedade do token, não da regra que o consumia.
 
@@ -167,9 +167,9 @@ Um elemento vivo num sistema imóvel lê como intenção; o mesmo elemento num s
 - **O que respira é a luz, nunca a matéria.** A camada animada era decorativa, atrás do conteúdo, `pointer-events: none`. Nenhum texto, nenhuma borda e nenhuma caixa se mexia.
 - **Só `opacity` e `transform`.** Nada de animar `filter` ou `blur`, que repintam em vez de compor.
 - **Respiração, não pulso.** A amplitude era par declarado sobre o alfa do glow, não número novo.
-- **O período é o único loop ambiente medido na amostra inteira**, e ele continua sendo o valor de `--sd-move-ambient` — a medição não expira com o consumidor.
+- **O período é o único loop ambiente medido na amostra inteira**, e ele continua sendo o valor de `--pd-move-ambient` — a medição não expira com o consumidor.
 
-> **O gancho da reabertura está escolhido, e é `data-sd-part`.** Enquanto a ilha existiu, a respiração era desligada por uma regra no bloco `reduce` que alcançava o elemento por esse atributo — a única regra de elemento do arquivo de tokens fora do adaptador. Ela existia porque `animation: none` **não tem como ser entregue por token** (ver a correção do §6): a classe do módulo é hasheada, a camada de token não a conhece, e o contrato de partes é o gancho que sobra. A regra saiu com a página; **o comentário no bloco `reduce` de `tokens.css` guarda o endereço**, e a promessa de *nenhum componente escreve a própria media query* segue literal — quem escreveria é a camada de token.
+> **O gancho da reabertura está escolhido, e é `data-pd-part`.** Enquanto a ilha existiu, a respiração era desligada por uma regra no bloco `reduce` que alcançava o elemento por esse atributo — a única regra de elemento do arquivo de tokens fora do adaptador. Ela existia porque `animation: none` **não tem como ser entregue por token** (ver a correção do §6): a classe do módulo é hasheada, a camada de token não a conhece, e o contrato de partes é o gancho que sobra. A regra saiu com a página; **o comentário no bloco `reduce` de `tokens.css` guarda o endereço**, e a promessa de *nenhum componente escreve a própria media query* segue literal — quem escreveria é a camada de token.
 
 ---
 
@@ -189,12 +189,12 @@ CSS Modules manglam o nome do `@keyframes` que o módulo **define**; um keyframe
 > A forma correta é `global(…)` dentro do valor, **sem dois-pontos**, que é outra sintaxe e não casa:
 >
 > ```css
-> animation: global(sd-revela) var(--sd-move-reveal) both;
+> animation: global(pd-revela) var(--pd-move-reveal) both;
 > ```
 >
 > Ela resolve os dois de uma vez: o nome chega inteiro ao CSS emitido, e o minificador passa a enxergar a referência.
 >
-> O exemplo é o que foi de fato medido, e `sd-revela` **não existe mais** — ele saiu com a landing em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94). A linha fica verbatim porque a correção é sobre os **dois plugins**, não sobre o keyframe: o próximo módulo que referenciar um keyframe global cai nos mesmos dois mecanismos, e reescrever o exemplo com um nome vivo trocaria uma medição por uma paráfrase.
+> O exemplo é o que foi de fato medido, e `pd-revela` **não existe mais** — ele saiu com a landing em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94). A linha fica verbatim porque a correção é sobre os **dois plugins**, não sobre o keyframe: o próximo módulo que referenciar um keyframe global cai nos mesmos dois mecanismos, e reescrever o exemplo com um nome vivo trocaria uma medição por uma paráfrase.
 >
 > **Consequência que fecha uma porta:** nome de `@keyframes` **não viaja dentro de custom property**. Nenhum dos dois plugins varre valor de custom property, então o keyframe volta a ser apagado; e se não fosse, `postcss-reduce-idents` renomearia o `@keyframes` sem renomear o token. É por isso que a respiração do glow é desligada por uma **regra** no bloco `reduce`, e não por um token que valha `none`.
 
@@ -208,7 +208,7 @@ Sobram pouquíssimos, porque o vocabulário é transição. **Hoje sobra um: a e
 >
 > **Consequência para o vocabulário: entrada a partir de `display: none` é `@keyframes`, não `@starting-style`.** A saída continua sendo transição — ela não precisa de estado de partida, e `allow-discrete` já a cobre.
 >
-> Nota de conferência: `sd-busca-abre` e `sd-acende` eram byte a byte iguais — `from { opacity: 0 }` —, e o `postcss-merge-idents` fundia as duas num `@keyframes` só no bundle. Isso era correto e não era colisão: o que separa dois movimentos é o **token**, que carrega duração e curva, e não o nome do keyframe. `sd-acende` saiu com a landing e a fusão deixou de acontecer; **a leitura fica porque ela é a que autoriza declarar dois keyframes idênticos sem chamar isso de duplicação** — e é a primeira coisa que alguém questiona ao ver o CSS emitido.
+> Nota de conferência: `pd-busca-abre` e `pd-acende` eram byte a byte iguais — `from { opacity: 0 }` —, e o `postcss-merge-idents` fundia as duas num `@keyframes` só no bundle. Isso era correto e não era colisão: o que separa dois movimentos é o **token**, que carrega duração e curva, e não o nome do keyframe. `pd-acende` saiu com a landing e a fusão deixou de acontecer; **a leitura fica porque ela é a que autoriza declarar dois keyframes idênticos sem chamar isso de duplicação** — e é a primeira coisa que alguém questiona ao ver o CSS emitido.
 
 `interpolate-size: allow-keywords` é declaração de `:root` e mora junto do vocabulário, não dentro do componente que a consome — é ela que habilita `<details>` a transicionar para altura automática, e serve todos os componentes de `<details>` de uma vez.
 
@@ -248,7 +248,7 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | Escala de duração e o período do loop | herdado | [#3](https://github.com/ThiagoPanini/panlabs-docs/issues/3) — medidos nas sete referências |
-| **A parada `--sd-dur-0`, 75ms, e o movimento `--sd-move-flip`** | **herdado (medição)** | `docs.devin.ai` — o caret de categoria gira em 75ms ao abrir; é o único alvo publicado abaixo de `--sd-dur-1`, e arredondá-lo para 200ms trocaria a medição por conveniência de vocabulário. Ver [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) |
+| **A parada `--pd-dur-0`, 75ms, e o movimento `--pd-move-flip`** | **herdado (medição)** | `docs.devin.ai` — o caret de categoria gira em 75ms ao abrir; é o único alvo publicado abaixo de `--pd-dur-1`, e arredondá-lo para 200ms trocaria a medição por conveniência de vocabulário. Ver [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) |
 | A curva de `flip` é `settle`, e não `inout` | **origem própria (consequência)** | o giro responde ao clique e assenta; não tem começo próprio na tela — a mesma leitura que põe `state` e `enter` em `settle` |
 | Duas curvas de easing | herdado | [#3](https://github.com/ThiagoPanini/panlabs-docs/issues/3) §1.5 — base dos quatro sites do alvo |
 | Descarte do default do framework de utilitários | herdado | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §1 — default herdado, não aplicado |
@@ -257,7 +257,7 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Reduced-motion na camada de token, alcançando o Infima | herdado + origem própria (implementação) | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5); [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §2 |
 | Menor valor perceptível em vez de zero | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §2 — `useCollapsible` anima altura em JS |
 | Remover, não encurtar, o que não termina sozinho | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §2 |
-| `--sd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) corrigindo a [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) |
+| `--pd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) corrigindo a [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) |
 | Hover sob `@media (hover: hover)` | herdado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) — feature já em uso no Infima |
 | Estado nunca anima geometria | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §3, sobre a assinatura da [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) |
 | Troca de tema: a superfície não anima | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §4 — consequência da ilha inerte da [#13](https://github.com/ThiagoPanini/panlabs-docs/issues/13). **A ilha saiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**; a decisão fica pela outra metade do argumento, o custo de repintar o documento inteiro |
@@ -268,14 +268,14 @@ A varredura cobre `src/` inteiro, **inclusive o arquivo de tokens**, e isso não
 | Anel de foco instantâneo | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §4, entregue ao contrato de foco da [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) |
 | Reveal por `animation-timeline: view()` | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §5a — decisão do dono do projeto; não medido em nenhuma das sete. **Sem consumidor desde [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**: a regra morava no CSS Module da landing |
 | Guarda dupla que falha para visível e parado | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §5a — **sem consumidor desde [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**; a forma fica descrita como cláusula da licença suspensa |
-| Respiração do glow, e as regras de parcimônia | herdado + origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §5b — **o uso saiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**; o período medido continua sendo o valor de `--sd-move-ambient`, porque medição não expira com o consumidor |
+| Respiração do glow, e as regras de parcimônia | herdado + origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §5b — **o uso saiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**; o período medido continua sendo o valor de `--pd-move-ambient`, porque medição não expira com o consumidor |
 | `@keyframes` na folha global | herdado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) — CSS Modules manglam o nome |
 | Portão de varredura de motion | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §2 |
 | Os seis movimentos são camada 1, e o que é camada 3 é o consumo | **origem própria (correção)** | a redação do §5 dava dois deles como camada 3; medido ao implementar a landing |
 | `global(…)` para referenciar keyframe global de dentro de módulo | **origem própria (correção)** | medido no CSS emitido do slice da landing; a regra original dava a referência como livre |
 | `@media` por fora, `@supports` por dentro na guarda dupla | **origem própria (implementação)** | o `postcss-sort-media-queries` do preset de minificação destrói o aninhamento inverso |
-| Respiração desligada por regra no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | nome de keyframe não sobrevive dentro de custom property, e a classe do módulo é hasheada. **A regra saiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**; o gancho continua escolhido, e o comentário do bloco `reduce` guarda o endereço |
-| Entrada da ilha como consumidor de `--sd-move-showcase` | **origem própria (implementação)** | o movimento estava licenciado e sem consumidor, e a entrada da ilha o gastou. **Revertida por [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**: o consumidor saiu e o movimento voltou a ser órfão — desta vez com motivo escrito, que é a linha abaixo |
+| Respiração desligada por regra no bloco `reduce`, com gancho `data-pd-part` | **origem própria (implementação)** | nome de keyframe não sobrevive dentro de custom property, e a classe do módulo é hasheada. **A regra saiu com [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**; o gancho continua escolhido, e o comentário do bloco `reduce` guarda o endereço |
+| Entrada da ilha como consumidor de `--pd-move-showcase` | **origem própria (implementação)** | o movimento estava licenciado e sem consumidor, e a entrada da ilha o gastou. **Revertida por [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)**: o consumidor saiu e o movimento voltou a ser órfão — desta vez com motivo escrito, que é a linha abaixo |
 | **Os três movimentos ficam declarados sem consumidor** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o vocabulário é fechado em seis e é o **portão 2** que o define assim; cortar três deixaria sem nome o movimento longo, o dirigido por rolagem e o loop, e a próxima superfície escreveria o valor cravado que o portão existe para impedir. Órfão **com** motivo escrito é o que a régua do projeto admite; sem motivo é o defeito do Infima |
 | Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna por restrição** | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) |
 | A curva da seta do `summary` deixa de ser perda | **origem própria (correção)** | a exceção 2 do adaptador substitui o valor inteiro, não só a duração |

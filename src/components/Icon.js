@@ -22,7 +22,7 @@ import estilos from './catalogo.module.css';
  *
  * `traco` é a tabela de compensação óptica de `icones.md` §2.1, e ela é **prop,
  * nunca token de CSS** — o valor precisa restilizar o interior do desenho.
- * `classe` é como o nosso CSS dimensiona; `data-sd-variant` é o gancho da skin.
+ * `classe` é como o nosso CSS dimensiona; `data-pd-variant` é o gancho da skin.
  */
 const TAMANHOS = {
   sm: {traco: 2.25, classe: estilos.iconSm},
@@ -47,8 +47,8 @@ export default function Icon({name, size = 'sm'}) {
   // call site junto; sem call site ela não tem como ser conferida.
   return (
     <Desenho
-      data-sd-component="icon"
-      data-sd-variant={size}
+      data-pd-component="icon"
+      data-pd-variant={size}
       className={clsx(estilos.icon, classe)}
       strokeWidth={traco}
       focusable="false"
