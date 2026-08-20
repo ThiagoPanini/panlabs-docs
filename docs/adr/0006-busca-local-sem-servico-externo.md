@@ -69,11 +69,11 @@ A terceira é a única que exige entender o projeto, e ela é uma linha e um dir
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Índice local, sem serviço externo | origem própria | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19); o motivo jurídico e de rede é do alvo de replicação |
+| Índice local, sem serviço externo | origem própria | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19); o motivo jurídico e de rede é do alvo de replicação |
 | Dado global em vez de JSON no `outDir` | **origem própria (verificação)** | rota ausente devolve 200 com o shell da SPA, e `fetch().json()` estoura em parse |
 | `allContentLoaded` em vez de `contentLoaded` | **origem própria (correção)** | medido em `server/plugins/actions.js@3.10.2`: os dois ganchos recebem o mesmo objeto de ações, e só `allContentLoaded` enxerga o conteúdo das outras instâncias |
 | A fonte é o MDX | origem própria | consequência do axioma 2 — indexar HTML custaria `cheerio` |
-| Teto de 64 KB autoenforçado | origem própria | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) — teto, não meta, e sem portão novo |
+| Teto de 64 KB autoenforçado | origem própria | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) — teto, não meta, e sem portão novo |
 | Normalização NFD nos dois lados | origem própria | o erro mais comum do leitor brasileiro |
 | Nota de migração de três edições | origem própria | a arquitetura não amarra; o custo de sair vai escrito |
 | `⌘K` / `Ctrl K` e nada mais | herdado | as quatro referências medidas usam o mesmo atalho |

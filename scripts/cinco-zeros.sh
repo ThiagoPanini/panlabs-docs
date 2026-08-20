@@ -94,7 +94,7 @@ rede="$(codigo src | grep -E 'fetch\(|XMLHttpRequest|new WebSocket|EventSource\(
 #
 # A régua era *"nada em `src/` chama a rede"*, e ela pegava demais: o zero se
 # chama zero serviço EXTERNO, e a segunda perna, dez linhas abaixo, já sabe
-# distinguir a nossa origem da de terceiro — ela exclui `panlabs-tech.github.io`
+# distinguir a nossa origem da de terceiro — ela exclui `thiagopanini.github.io`
 # da varredura de recurso carregado. Buscar uma rota do próprio site não
 # acrescenta serviço nenhum: se o site está no ar, a rota está no ar, no mesmo
 # deploy e no mesmo host.
@@ -114,14 +114,14 @@ elif [ ! -d build ]; then
   echo "   src/ limpo. O HTML publicado NÃO foi conferido — rode \`npm run build\` antes."
 else
   externos="$(grep -rhoE '(src|href)="https?://[^"]+"' build --include='*.html' \
-    | grep -vE '"https?://(panlabs-tech\.github\.io|schema\.org|www\.w3\.org)' \
+    | grep -vE '"https?://(thiagopanini\.github\.io|schema\.org|www\.w3\.org)' \
     | sed -E 's/^(src|href)="//; s/"$//' \
     | sed -E 's|(https?://[^/]+).*|\1|' | sort -u)"
   # Sobram os links de conteúdo — o GitHub do rodapé, o status fictício. Link é
   # navegação do leitor, não requisição da página. O que importa é `src` e
   # `href` de folha de estilo, e é isso que a segunda varredura isola.
   carregados="$(grep -rhoE '<(script|link)[^>]+(src|href)="https?://[^"]+"' build --include='*.html' \
-    | grep -vE 'panlabs-tech\.github\.io' || true)"
+    | grep -vE 'thiagopanini\.github\.io' || true)"
   if [ -n "$carregados" ]; then
     echo "   REPROVOU — o HTML publicado carrega recurso de outra origem:"
     echo "$carregados" | sed 's/^/     /'

@@ -82,8 +82,8 @@ O contrato de estado de entrada mora em [`foco.md`](../foco.md).
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Componente do zero | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — ausente no Docusaurus, e muito usado numa das referências |
-| Ele tem consumidor: o changelog | herdado | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) — versão por cabeçalho, changelog em `Operação` |
-| Uma coluna em qualquer largura | **origem própria (implementação)** | duas colunas exigiriam uma largura que a cadeia de proporções da [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20) não tem |
-| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Componente do zero | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — ausente no Docusaurus, e muito usado numa das referências |
+| Ele tem consumidor: o changelog | herdado | [#16](https://github.com/ThiagoPanini/panlabs-docs/issues/16) — versão por cabeçalho, changelog em `Operação` |
+| Uma coluna em qualquer largura | **origem própria (implementação)** | duas colunas exigiriam uma largura que a cadeia de proporções da [#20](https://github.com/ThiagoPanini/panlabs-docs/issues/20) não tem |
+| Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | `<section>` sem nome acessível, de propósito | origem própria | este slice |

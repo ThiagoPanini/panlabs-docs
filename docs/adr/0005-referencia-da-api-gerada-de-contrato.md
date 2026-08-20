@@ -153,7 +153,7 @@ escrito para produzir front matter válido.
 | Gerador fora do build, saída commitada | origem própria | issue #38 — "mais vanilla que a rota vanilla" |
 | `.mdx` como sinal de "gerado, não editar" | origem própria (implementação) | mesma doutrina do marcador `<Untranslated />` — convenção de uma linha, greppável |
 | O validador e a lista de recusas | origem própria | issue #38, critério de aceite |
-| O teto de quatro níveis, calibrado em `cobranca.pagamento.cartao.verificacoes` | delta deliberado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §5 — três é o limite medido; a fixture do domínio precisa de quatro |
+| O teto de quatro níveis, calibrado em `cobranca.pagamento.cartao.verificacoes` | delta deliberado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §5 — três é o limite medido; a fixture do domínio precisa de quatro |
 | O reset de nível em `$ref` para schema nomeado | origem própria (correção) | medido implementando o gerador: sem o reset, o mesmo objeto lia com orçamentos de aninhamento diferentes em duas páginas |
 | `api_exemplos` em front matter, não marcador em MDX | origem própria | `position: sticky` exige ancestral com contexto de rolagem previsível |
 | Portão 5 como regeneração mais diff | origem própria | é o único portão que não é varredura de texto — o gerador é determinístico, e diff é a checagem que essa propriedade compra |

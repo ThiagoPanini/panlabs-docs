@@ -41,7 +41,7 @@ export default function Untranslated() {
       <Icon name="languages" size="sm" />
       <p>
         <Translate
-          id="shinydoc.untranslated.aviso"
+          id="panlabs-docs.untranslated.aviso"
           description="Aviso no topo de uma página que ainda não foi traduzida">
           Esta página ainda não foi traduzida. O conteúdo abaixo está em português.
         </Translate>

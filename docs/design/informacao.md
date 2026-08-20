@@ -57,7 +57,7 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 ### 2.1 `Ferramentas` não declara mais `docItemComponent`, e nenhuma folha muda de layout
 
-**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **26 folhas** — 22 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
+**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **26 folhas** — 22 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
 
 É a segunda instância do projeto a usar a opção, e ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle. Ver [ADR 2](../adr/0002-politica-de-swizzle.md).
 
@@ -165,8 +165,8 @@ Hoje o único nó de nível 2 é `Bibliotecas › overpower`, que aponta para `V
 | escrito | `Jornadas` inteira — 2 folhas de abertura e 10 capítulos | este ticket |
 | escrito | `Procedimentos` inteira — 2 folhas de abertura e 14 folhas | este ticket |
 | escrito | as **11 folhas autorais** de `Ferramentas`, nos dois locales | este ticket |
-| escrito | as **4 páginas geradas** de `overpower › Comandos` e o fragmento de sidebar | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) |
-| removido | as **7 páginas de índice de categoria**, e a forma com elas | [#114](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/114) |
+| escrito | as **4 páginas geradas** de `overpower › Comandos` e o fragmento de sidebar | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) |
+| removido | as **7 páginas de índice de categoria**, e a forma com elas | [#114](https://github.com/ThiagoPanini/panlabs-docs/issues/114) |
 
 **O ramo gerado não é escrito à mão.** Ele sai de um contrato de superfície de comando — uma aplicação e três comandos —, e o gerador emite também o fragmento de sidebar que `sidebars-ferramentas.js` importa; escrevê-lo à mão seria exatamente a segunda fonte de verdade que o gerador existe para impedir. Ver [ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md), que supera o [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md), que superou o [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md).
 
@@ -268,7 +268,7 @@ São dez, todos **convenção de conteúdo e zero layout**: sem front matter de 
 
 > **O site inteiro tem exatamente uma ruptura de layout:** o ramo gerado de `overpower › Comandos`. **Nenhuma segunda nasce de um tipo.**
 >
-> *Correção de contagem.* **Eram duas**; a outra era a landing, e ela saiu em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). O número caiu por subtração de página, e não por afrouxamento: o que a frase proíbe continua sendo que um **tipo** produza layout próprio, e nenhum dos dez produz. A raiz não recompõe o par — ela é um salto para o índice da primeira jornada, e salto não tem layout a romper.
+> *Correção de contagem.* **Eram duas**; a outra era a landing, e ela saiu em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94). O número caiu por subtração de página, e não por afrouxamento: o que a frase proíbe continua sendo que um **tipo** produza layout próprio, e nenhum dos dez produz. A raiz não recompõe o par — ela é um salto para o índice da primeira jornada, e salto não tem layout a romper.
 
 ### 6.1 Os dez gabaritos
 
@@ -589,13 +589,13 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| O acervo e as três regras | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — o `panlabs` substitui o produto anterior, e a empresa nunca é nomeada |
+| O acervo e as três regras | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — o `panlabs` substitui o produto anterior, e a empresa nunca é nomeada |
 | Nome próprio como título | **lacuna por restrição** | `title` e `tagline` não são traduzíveis no Docusaurus |
-| O cenário fecha em três strings | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — GitHub Actions, AWS e Python; o resto cai delas somadas às categorias |
+| O cenário fecha em três strings | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — GitHub Actions, AWS e Python; o resto cai delas somadas às categorias |
 | O custo de gabarito sobe sem convenção conhecida | **origem própria (consequência)** | o gênero público do domínio anterior era o que segurava a coerência; sem ele, quem segura é o gabarito |
 | Três tabs, três instâncias | origem própria | `routeBasePath` e versionamento são por instância |
-| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) junto com o `ApiDocItem`; as 26 folhas da instância usam o `@theme/DocItem` do upstream |
-| Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) §árvore |
+| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 26 folhas da instância usam o `@theme/DocItem` do upstream |
+| Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) §árvore |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |
 | Categoria clicável | origem própria | três fatos verificados na fonte — **superada na #114**; dois dos três eram mecânica do Docusaurus e o terceiro era opinião escrita como fato |
@@ -610,7 +610,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | **50 autorais mais 4 geradas, e 26 em EN** | **origem própria (correção)** | a resolução contava as geradas fora do pt-BR e dentro do EN; com o `overpower` no ar (#117) o pt-BR fecha em 54 e o EN em 26 |
 | **Quinze guias** | **origem própria (medição)** | contado contra o manifesto do portão 4: 8 em `Procedimentos` e 7 em `Ferramentas`, cinco delas do `overpower` |
 | `Instalação` é SDK, e `Alvos › Índice` é Catálogo | **origem própria** | o gabarito de SDK é *instalação em `<CodeGroup>` por gerenciador*, e é o que `uvx`/`uv tool`/`pipx` é; a abertura de seção pode carregar tipo, no precedente do §6.3 |
-| O décimo tipo, e o gabarito dele | herdado | [#57](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/57) — o gabarito encoda a condição que salva o tipo com mais precisão que prosa |
+| O décimo tipo, e o gabarito dele | herdado | [#57](https://github.com/ThiagoPanini/panlabs-docs/issues/57) — o gabarito encoda a condição que salva o tipo com mais precisão que prosa |
 | `<CardGroup>` proibido no índice de jornada | **origem própria** | grade não tem ordem, e o traço do tipo é ordenar por tempo |
 | `<Steps>` proibido em `Jornadas` | **origem própria** | a fronteira entre duas abas, escrita como regra conferível |
 | Proibição por localização como classe de regra | **origem própria** | é a primeira; até aqui gabarito exigia e limitava |
@@ -620,7 +620,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | A cerca indentada conta | **origem própria (correção)** | as duas regras de cerca do portão discordavam, e o `<Steps>` da árvore nova expôs a diferença |
 | A exceção de heading é o índice de `Ambiente` | **origem própria** | a fixture trocou de dona porque a antiga morreu com a árvore; custo zero em página |
 | Quando a fixture e o orçamento discordam, ganha a fixture | **origem própria** | e a segunda exceção não tem sucessora, porque o conflito deixou de existir |
-| As doze fixtures com dona nomeada | herdado | [#59](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/59), reatribuídas contra a árvore nova |
+| As doze fixtures com dona nomeada | herdado | [#59](https://github.com/ThiagoPanini/panlabs-docs/issues/59), reatribuídas contra a árvore nova |
 | **O teto de profundidade é 4 e é confinado** | **origem própria (implementação)** | o [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) §g decidiu o número e a condição; o portão 4 passa a cobrar as duas, e `usado uma vez` sai |
 | **`Aninhamento de sidebar máximo` é a décima segunda fixture** | **origem própria** | teto que sobe é a única coisa que faz fixture nascer, e o recuo de 40px não tinha prova |
 | Os quatro casos do domínio novo não são fixture | **origem própria** | fixture nasce de teto de layout; estes nascem de o domínio ter mais textura |
@@ -647,6 +647,6 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | O rótulo da seção vem do navbar | **origem própria (correção)** | `translateThemeConfig` roda antes de `allContentLoaded` |
 | O preâmbulo em pt-BR nos dois locales | **origem própria** | a mesma regra do §8; a rota de tradução do plugin fica registrada e não comprada |
 | `pathname://` no link do footer | herdado | escotilha pública do Docusaurus para arquivo que não é rota — degrau 2 |
-| **Uma ruptura de layout, e não duas** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a landing saiu; sobra o ramo gerado de `overpower › Comandos`, e a proibição de o tipo romper layout não muda |
-| **A raiz é um salto, não uma página** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — sem landing, a raiz leva ao índice da primeira jornada, que é o primeiro destino declarado em `sidebars-jornadas.js`. *Dissenso registrado, e ele é sobre uma palavra.* O critério do ticket dizia *"a primeira **folha** declarada na primeira sidebar"*, e **`folha` é termo definido deste projeto: ele exclui índice.** O §3 conta `Procedimentos` como *"5 índices + 14 folhas"*, e o verbete de `docs/agents/domain.md` diz *"Capítulo: a folha"*. Lido ao pé da letra, o destino seria `api-owner/o-contrato-que-nao-existia`, o primeiro item de `items`. **Vence o índice mesmo assim, por três razões e com o custo da troca declarado.** Primeira: o corpo do mesmo ticket diz *"a raiz dela redireciona para a primeira **doc**"*, e o índice é doc — é `{type: 'doc'}` no `link` da categoria. Segunda: o comportamento que o ticket manda copiar é o da âncora, e o que a raiz dela serve é a página de abertura, cujo análogo aqui é o índice, não o capítulo 1. Terceira: o índice é o décimo tipo de página e é o destino do rótulo da categoria — mandar a raiz ao capítulo 1 pularia a abertura da jornada, que é a página escrita para ser lida primeiro, e a deixaria alcançável só por quem clicar no rótulo. **Trocar é uma linha** — a constante `DESTINO` de `src/pages/index.js` |
-| **O redirecionamento da raiz é `meta refresh` mais `<Redirect>`, não 308** | **lacuna por restrição** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a âncora responde **308** na raiz; o host é o GitHub Pages, que não emite redirecionamento de servidor configurável. A divergência é de host, não de desenho |
+| **Uma ruptura de layout, e não duas** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a landing saiu; sobra o ramo gerado de `overpower › Comandos`, e a proibição de o tipo romper layout não muda |
+| **A raiz é um salto, não uma página** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — sem landing, a raiz leva ao índice da primeira jornada, que é o primeiro destino declarado em `sidebars-jornadas.js`. *Dissenso registrado, e ele é sobre uma palavra.* O critério do ticket dizia *"a primeira **folha** declarada na primeira sidebar"*, e **`folha` é termo definido deste projeto: ele exclui índice.** O §3 conta `Procedimentos` como *"5 índices + 14 folhas"*, e o verbete de `docs/agents/domain.md` diz *"Capítulo: a folha"*. Lido ao pé da letra, o destino seria `api-owner/o-contrato-que-nao-existia`, o primeiro item de `items`. **Vence o índice mesmo assim, por três razões e com o custo da troca declarado.** Primeira: o corpo do mesmo ticket diz *"a raiz dela redireciona para a primeira **doc**"*, e o índice é doc — é `{type: 'doc'}` no `link` da categoria. Segunda: o comportamento que o ticket manda copiar é o da âncora, e o que a raiz dela serve é a página de abertura, cujo análogo aqui é o índice, não o capítulo 1. Terceira: o índice é o décimo tipo de página e é o destino do rótulo da categoria — mandar a raiz ao capítulo 1 pularia a abertura da jornada, que é a página escrita para ser lida primeiro, e a deixaria alcançável só por quem clicar no rótulo. **Trocar é uma linha** — a constante `DESTINO` de `src/pages/index.js` |
+| **O redirecionamento da raiz é `meta refresh` mais `<Redirect>`, não 308** | **lacuna por restrição** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a âncora responde **308** na raiz; o host é o GitHub Pages, que não emite redirecionamento de servidor configurável. A divergência é de host, não de desenho |

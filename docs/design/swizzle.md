@@ -52,9 +52,9 @@ src/theme/Admonition/Types.js            registro            (degrau 3)
 src/theme/SearchBar/                     SWIZZLE, --eject    (degrau 5)
 ```
 
-**O degrau 2 ficou vazio na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118)**, e é a segunda entrada que este ledger já removeu. `ApiDocItem` era o `docItemComponent` da instância `ferramentas` e comutava o layout da página de comando por front matter; o painel dele desceu para o fluxo e virou `<PainelComando />`, um registro de `MDXComponents`. Sem layout a comutar, o componente da rota era `@theme/DocItem` chamando `@theme/DocItem` — e componente de tema próprio que não substitui nada não é degrau 2, é indireção. Ver [`referencia.md`](referencia.md) §2.
+**O degrau 2 ficou vazio na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118)**, e é a segunda entrada que este ledger já removeu. `ApiDocItem` era o `docItemComponent` da instância `ferramentas` e comutava o layout da página de comando por front matter; o painel dele desceu para o fluxo e virou `<PainelComando />`, um registro de `MDXComponents`. Sem layout a comutar, o componente da rota era `@theme/DocItem` chamando `@theme/DocItem` — e componente de tema próprio que não substitui nada não é degrau 2, é indireção. Ver [`referencia.md`](referencia.md) §2.
 
-**São dez arquivos.** A conta subiu e desceu quatro vezes: onze, dez quando `NavbarItem/Marca.js` saiu inteiro, onze de novo com o `placeholder.mjs` do painel, dez quando `NavbarItem/ComponentTypes.js` saiu pelo §3.1, e dez de novo depois da [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — o diretório `ApiDocItem/` levou três arquivos e o registro devolveu três, `PainelComando.js`, `painel.module.css` e o `placeholder.mjs` que mudou de casa junto. Os três caem na mesma linha que `SearchBar/escada.mjs`: submódulo de um componente que já tem endereço, e o portão 7 os casa por ela.
+**São dez arquivos.** A conta subiu e desceu quatro vezes: onze, dez quando `NavbarItem/Marca.js` saiu inteiro, onze de novo com o `placeholder.mjs` do painel, dez quando `NavbarItem/ComponentTypes.js` saiu pelo §3.1, e dez de novo depois da [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — o diretório `ApiDocItem/` levou três arquivos e o registro devolveu três, `PainelComando.js`, `painel.module.css` e o `placeholder.mjs` que mudou de casa junto. Os três caem na mesma linha que `SearchBar/escada.mjs`: submódulo de um componente que já tem endereço, e o portão 7 os casa por ela.
 
 O `SearchBar` entrou no slice 7 e é o **primeiro e único** swizzle do repositório. Ele tem uma propriedade que nenhum outro degrau 5 teria: ver §3.
 
@@ -167,7 +167,7 @@ referência gerada precisar de linguagem fora do que `additionalLanguages` cobre
 
 **Vazio, e é resultado, não coincidência.**
 
-**A reserva que ele carregava foi cancelada, e não gasta.** Este parágrafo dizia que a faixa de tabs de largura total *"sairia por envolver `DocSidebar` (`wrap: safe`)"*. Duas coisas estavam erradas nessa frase, e as duas foram medidas na [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51):
+**A reserva que ele carregava foi cancelada, e não gasta.** Este parágrafo dizia que a faixa de tabs de largura total *"sairia por envolver `DocSidebar` (`wrap: safe`)"*. Duas coisas estavam erradas nessa frase, e as duas foram medidas na [#51](https://github.com/ThiagoPanini/panlabs-docs/issues/51):
 
 - **`DocSidebar` não alcançaria.** Ele é a sidebar de docs, e não tem como emitir uma faixa dentro do `<nav>`. A rota reservada nunca teria funcionado;
 - **a faixa não precisa de degrau 4 nenhum.** Ela sai de degraus 0, 1 e 2, e está montada.
@@ -176,7 +176,7 @@ O degrau 4 continua vazio, e agora por um motivo mais forte que antes: não é q
 
 **Continuou vazio depois do slice da landing, e ali ele teve a segunda chance de ser gasto.** Um footer com variante para aquela rota — outra tinta, outra anatomia, ou a faixa escura descendo até o fim da página — sairia por envolver `Footer`, que é `safe` nas duas ações. Não foi comprado: **o footer da landing era o mesmo da doc, sem variante**, e o motivo estava escrito na spec dela — ilha que aparece em toda página deixa de ser ilha.
 
-> **A página saiu, e o degrau continua vazio.** A [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) removeu a landing, e a remoção **não estornou nada** a este ledger: o degrau que não foi gasto não tinha o que devolver. O parágrafo acima fica, no passado, porque a chance foi real e a recusa foi decisão — apagá-lo trocaria uma escolha registrada por silêncio, que é exatamente o que a §4 deste documento existe para impedir.
+> **A página saiu, e o degrau continua vazio.** A [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) removeu a landing, e a remoção **não estornou nada** a este ledger: o degrau que não foi gasto não tinha o que devolver. O parágrafo acima fica, no passado, porque a chance foi real e a recusa foi decisão — apagá-lo trocaria uma escolha registrada por silêncio, que é exatamente o que a §4 deste documento existe para impedir.
 
 ### Degrau 5 — `--eject`
 
@@ -208,7 +208,7 @@ O slice do catálogo era o que tinha mais chance de gastar o orçamento, e não 
 
 **O slice da landing não acrescentou uma linha a este ledger, e isso era o resultado esperado.** Uma landing inteira — quatro seções, faixa de espetáculo de dois focos, três camadas de profundidade, um loop ambiente e um reveal por rolagem — saía de uma rota em `src/pages/`, um CSS Module e três `@keyframes` na folha global. Nada disso é customização de componente do tema: `plugin-content-pages` já vem no preset, e uma rota própria não envolve, não substitui e não ejeta nada. O único gancho que ela usava fora do CSS dela era `data-sd-component`, que é **contrato nosso**, publicado pelo catálogo.
 
-**E o slice que a removeu custou o mesmo: zero.** A [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) apagou a rota, o CSS Module e três `@keyframes`, trocou `src/pages/index.js` por um salto para a primeira doc, e o `swizzle --list` congelado não mudou uma linha. A simetria é o parágrafo acima lido pelo outro lado: **o que não custou degrau para nascer não cobra degrau para morrer.** Esta é a leitura mais barata que o ledger já produziu de uma reversão inteira.
+**E o slice que a removeu custou o mesmo: zero.** A [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) apagou a rota, o CSS Module e três `@keyframes`, trocou `src/pages/index.js` por um salto para a primeira doc, e o `swizzle --list` congelado não mudou uma linha. A simetria é o parágrafo acima lido pelo outro lado: **o que não custou degrau para nascer não cobra degrau para morrer.** Esta é a leitura mais barata que o ledger já produziu de uma reversão inteira.
 
 ---
 
@@ -233,7 +233,7 @@ O zero cobra um preço, e cada linha é perda escrita — não silêncio.
 
 ### A perda 4 sai, e não por ter sido comprada
 
-Ela era **fato errado**. O ledger dizia que a faixa de tabs de largura total exigia reestruturar `Navbar/*`; a [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) mediu num Docusaurus 3.10.2 real e a faixa sai de **degraus 0, 1 e 2** — dois tokens do Infima, quatro regras sobre classes estáveis e um item de config.
+Ela era **fato errado**. O ledger dizia que a faixa de tabs de largura total exigia reestruturar `Navbar/*`; a [#51](https://github.com/ThiagoPanini/panlabs-docs/issues/51) mediu num Docusaurus 3.10.2 real e a faixa sai de **degraus 0, 1 e 2** — dois tokens do Infima, quatro regras sobre classes estáveis e um item de config.
 
 `Navbar/Layout` e `Navbar/Content` **continuam `unsafe` nas duas ações**, e continuam **intocados**. O detalhe que muda como se lê o rótulo: o `getSwizzleConfig` do `theme-classic` não tem entrada nenhuma para eles — caem no default `unsafe` do CLI. É **ausência de declaração**, não aviso deliberado, e é o que explica a vizinhança inteira do navbar ser `Unsafe` em bloco.
 
@@ -340,27 +340,27 @@ Um item **sai** quando a customização é removida. Sair do ledger sem sair do 
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| A escada de seis degraus | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §1 — vive no ADR 2 |
-| Os três significados de `src/theme/` | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §0 |
-| Orçamento `unsafe` zero | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2 |
-| As perdas de chrome | **lacuna por restrição** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §4 |
-| **A perda 4 sai, e a numeração não é remendada** | **origem própria (correção)** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medido num 3.10.2 real, com o portão 7 verde e a faixa montada; renumerar quebraria citação |
-| **O subtítulo por override de `h1`** | **origem própria (verificação)** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) §2 — a rota já estava registrada na nota da perda 10; 73/73 confere a condição |
+| A escada de seis degraus | origem própria | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §1 — vive no ADR 2 |
+| Os três significados de `src/theme/` | origem própria | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §0 |
+| Orçamento `unsafe` zero | origem própria | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §2 |
+| As perdas de chrome | **lacuna por restrição** | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §4 |
+| **A perda 4 sai, e a numeração não é remendada** | **origem própria (correção)** | [#51](https://github.com/ThiagoPanini/panlabs-docs/issues/51) — medido num 3.10.2 real, com o portão 7 verde e a faixa montada; renumerar quebraria citação |
+| **O subtítulo por override de `h1`** | **origem própria (verificação)** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) §2 — a rota já estava registrada na nota da perda 10; 73/73 confere a condição |
 | **A eyebrow por subtração encolhe a perda 2** | **origem própria (implementação)** | três `display: none` sobre classes do Infima; o mecanismo continua fora de alcance |
-| As perdas 8 e 9 | **lacuna por restrição** | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §8 e §15 |
-| A perda 10, e a rota `safe` registrada | **origem própria** | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2.1 |
-| A disciplina de registro | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5), consolidado em [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §6 |
-| **A marca desce para o degrau 2, e a entrada de degrau 3 é aposentada** | **origem própria (medição)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — sem glifo não há `<img>` no caminho, e `navbar.title` alcança; medida no artefato publicado, contra a resolução que a declarava não medida |
+| As perdas 8 e 9 | **lacuna por restrição** | [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §8 e §15 |
+| A perda 10, e a rota `safe` registrada | **origem própria** | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §2.1 |
+| A disciplina de registro | herdado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5), consolidado em [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §6 |
+| **A marca desce para o degrau 2, e a entrada de degrau 3 é aposentada** | **origem própria (medição)** | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — sem glifo não há `<img>` no caminho, e `navbar.title` alcança; medida no artefato publicado, contra a resolução que a declarava não medida |
 | **A primeira linha removida deste ledger** | **origem própria (implementação)** | a regra §6 já dizia *um item sai quando a customização é removida*; esta é a primeira vez que ela é exercida |
 | Degrau 4 vazio | origem própria | resultado da política, não meta |
 | `verb-badge` fora do registro de `MDXComponents` | **origem própria (consequência)** | o catálogo caiu para dezessete quando o contrato deixou de falar HTTP |
-| `MDXComponents` no degrau 3 | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §3 pré-autorizou; exercido pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §4 |
-| `Admonition/Types` no degrau 3, sem tocar em `Layout` | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), reconciliando a resolução original com a escada da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) — o degrau 3 alcança, então o 5 não se compra |
-| `code-block` fora da coluna de swizzle | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) — a aparência que falta é CSS sobre classe estável mais opção pública |
+| `MDXComponents` no degrau 3 | herdado | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §3 pré-autorizou; exercido pela [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §4 |
+| `Admonition/Types` no degrau 3, sem tocar em `Layout` | **origem própria (correção)** | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15), reconciliando a resolução original com a escada da [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) — o degrau 3 alcança, então o 5 não se compra |
+| `code-block` fora da coluna de swizzle | **origem própria (correção)** | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) — a aparência que falta é CSS sobre classe estável mais opção pública |
 | Os cinco `Admonition/Icon/*` saem sem serem gastos | **origem própria (implementação)** | o callout desenha os glifos do manifesto no DOM próprio; o degrau 5 pré-autorizado se resolveu no 3 |
-| `SearchBar` no degrau 5 | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) pré-autorizou; exercido pela [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) |
+| `SearchBar` no degrau 5 | herdado | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) pré-autorizou; exercido pela [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) |
 | O degrau 5 sem dívida de reconciliação | **origem própria (verificação)** | o `SearchBar` do `theme-classic` é `export {default} from '@docusaurus/Noop'` — não há upstream a reconciliar |
-| O portão 7, com as duas pernas | **origem própria** | a perna 1 é a [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §6; a perna 2 é o que a torna útil — arquivo sem endereço **é** o código morto que a perna 1 detecta |
+| O portão 7, com as duas pernas | **origem própria** | a perna 1 é a [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §6; a perna 2 é o que a torna útil — arquivo sem endereço **é** o código morto que a perna 1 detecta |
 | O portão do `swizzle --list` é o 7 e não o 5 | **origem própria (correção)** | o número 5 foi gasto pelo portão do gerador da API, citado pelo [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md) |
 | O artefato normalizado, sem a coluna de descrição | **origem própria (implementação)** | descrição é prosa; uma vírgula nova reflui a tabela e produz diff sem mudança de contrato |
 | Desvio 2 de `--typescript`, no `SearchBar` | **origem própria (medição)** | os dois consumidores montam `<SearchBar />` sem props, e o repositório não tem `typescript` — a flag entregaria a forma da garantia sem a garantia |

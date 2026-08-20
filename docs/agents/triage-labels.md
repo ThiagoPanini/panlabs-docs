@@ -12,6 +12,6 @@ Este repo usa o **vocabulário canônico verbatim**: sem aliases e sem namespace
 | `ready-for-human` | `ready-for-human`   | Requer decisão ou implementação humana        |
 | `wontfix`         | `wontfix`           | Não será tratada                              |
 
-> **O vocabulário é um slot, não um invariante.** A anatomia panlabs obriga que todo repo **declare** seu vocabulário neste arquivo; não obriga que declare *este* vocabulário. Outros repos da org usam dialetos diferentes e são igualmente conformes.
+> **O vocabulário é um slot, não um invariante.** A anatomia panlabs obriga que todo repo **declare** seu vocabulário neste arquivo; não obriga que declare *este* vocabulário. O declarado aqui é o da tabela acima.
 >
 > Consequência para qualquer script de frota, incluindo o checker de conformidade: **leia o valor declarado, nunca crave o label no código.**

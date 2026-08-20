@@ -1,4 +1,4 @@
-# shinydoc-docusaurus
+# panlabs-docs
 
 Documentação de referência em Docusaurus. Conteúdo mockado; o produto é **estrutura e customização visual**, para transplante a um ambiente corporativo com Docusaurus obrigatório e espaço de dependências apertado.
 

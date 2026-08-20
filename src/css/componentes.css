@@ -1,5 +1,5 @@
 /* =============================================================================
-   shinydoc — os dois componentes do catálogo que vêm prontos do Docusaurus
+   panlabs-docs — os dois componentes do catálogo que vêm prontos do Docusaurus
 
    `code-block` e `tabs` são as duas entradas do catálogo cujo DOM **não é
    nosso**. Nenhum dos dois é swizzle: um é CSS sobre classe estável mais opção

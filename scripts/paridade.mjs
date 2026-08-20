@@ -49,7 +49,7 @@ import {comparar, formatar, lerAbertas, lerAlvos, triar} from './lib/paridade.mj
 
 const RAIZ = path.resolve(import.meta.dirname, '..');
 const BUILD = path.join(RAIZ, 'build');
-const BASE_URL = '/shinydoc-docusaurus';
+const BASE_URL = '/panlabs-docs';
 
 /* A porta de depuração é fixa, ao contrário da do servidor de arquivos, que é
    efêmera: o Chrome só anuncia o endereço do WebSocket depois de abrir a porta,

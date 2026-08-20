@@ -8,7 +8,7 @@
 >
 > A consequência 4 diz que a **faixa de tabs de largura total abaixo do navbar** *"exigiria reestruturar `Navbar/*`"*. **Não exige.**
 >
-> Medido num Docusaurus 3.10.2 real pela [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) e montado em produção pela [#78](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/78): a faixa sai de **degraus 0, 1 e 2** — dois tokens do Infima, quatro regras sobre classes estáveis e um item de `themeConfig.navbar.items`. `Navbar/Layout` e `Navbar/Content` continuam `unsafe` nas duas ações e continuam **intocados**, e o portão 7 passa **com a faixa montada**.
+> Medido num Docusaurus 3.10.2 real pela [#51](https://github.com/ThiagoPanini/panlabs-docs/issues/51) e montado em produção pela [#78](https://github.com/ThiagoPanini/panlabs-docs/issues/78): a faixa sai de **degraus 0, 1 e 2** — dois tokens do Infima, quatro regras sobre classes estáveis e um item de `themeConfig.navbar.items`. `Navbar/Layout` e `Navbar/Content` continuam `unsafe` nas duas ações e continuam **intocados**, e o portão 7 passa **com a faixa montada**.
 >
 > Consequência para a política, e ela é a favor dela: o zero de `unsafe` custava uma peça de chrome a menos do que este documento cobrava. **Um item que a lista dava por perdido era alcançável o tempo todo** — que é exatamente o resultado que a última coluna do ledger existe para produzir, e o motivo de a escada mandar descer um degrau só quando o de cima *comprovadamente* não alcança.
 >
@@ -36,7 +36,7 @@ Duas correções precederam qualquer política, e as duas valem mais que a lista
 
 Chamar um componente de tema próprio de swizzle o faria parecer dívida, quando é a técnica de menor acoplamento do projeto inteiro.
 
-> **O exemplo saiu; a distinção fica.** `ApiDocItem` era o componente de tema próprio deste repositório, via `docItemComponent`, e foi removido na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — o layout que ele comutava deixou de existir. A categoria continua no vocabulário porque ela é sobre **acoplamento**, não sobre quem a ocupa: o degrau 2 está vazio hoje e volta a valer no dia em que alguma rota precisar de componente próprio de novo. Ver [`swizzle.md`](../design/swizzle.md) §2.
+> **O exemplo saiu; a distinção fica.** `ApiDocItem` era o componente de tema próprio deste repositório, via `docItemComponent`, e foi removido na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — o layout que ele comutava deixou de existir. A categoria continua no vocabulário porque ela é sobre **acoplamento**, não sobre quem a ocupa: o degrau 2 está vazio hoje e volta a valer no dia em que alguma rota precisar de componente próprio de novo. Ver [`swizzle.md`](../design/swizzle.md) §2.
 
 ## Decisão
 
@@ -109,11 +109,11 @@ E uma boa notícia que reduz o escopo: a assinatura visual mais reconhecível do
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Escada de seis degraus | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §1, sobre os números medidos na [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
-| Três significados de `src/theme/` | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §0 |
-| Opção pública acima de `--wrap` | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) — `docItemComponent` vira o `component` da rota |
-| Orçamento `unsafe` zero | origem própria | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) §2, generalizando a regra de estética da [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) |
+| Escada de seis degraus | origem própria | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §1, sobre os números medidos na [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) |
+| Três significados de `src/theme/` | origem própria | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §0 |
+| Opção pública acima de `--wrap` | herdado | [#6](https://github.com/ThiagoPanini/panlabs-docs/issues/6) — `docItemComponent` vira o `component` da rota |
+| Orçamento `unsafe` zero | origem própria | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §2, generalizando a regra de estética da [#10](https://github.com/ThiagoPanini/panlabs-docs/issues/10) |
 | `unsafe` como licença de quebra em minor | herdado | doc oficial do Docusaurus; três exercícios medidos dentro do v3 |
-| `swizzle --list` congelado | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — a falha de componente renomeado é silenciosa |
-| Cabeçalho de versão em arquivo ejetado | herdado | o gerador remove o cabeçalho de licença ao ejetar ([#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5)) |
-| `--typescript` sempre | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
+| `swizzle --list` congelado | herdado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) — a falha de componente renomeado é silenciosa |
+| Cabeçalho de versão em arquivo ejetado | herdado | o gerador remove o cabeçalho de licença ao ejetar ([#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5)) |
+| `--typescript` sempre | herdado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) |

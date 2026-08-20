@@ -87,8 +87,8 @@ de estado de entrada mora em [`foco.md`](../foco.md).
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| O grupo existe, e a primitiva não o tem | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — *"falta grupo, ícone, descrição"* |
-| Sempre sem props | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — superfície mínima medida |
-| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| `:where()` na regra de contexto | **origem própria (implementação)** | preserva o degrau de especificidade que a [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 desenhou |
-| Grupo como moldura (raio 12, borda 1px), filhos achatados e separados por fio | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11. Substitui o desenho anterior (pilha solta por `gap`, cada sanfona com borda própria), que não tinha medição atrás |
+| O grupo existe, e a primitiva não o tem | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — *"falta grupo, ícone, descrição"* |
+| Sempre sem props | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — superfície mínima medida |
+| Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| `:where()` na regra de contexto | **origem própria (implementação)** | preserva o degrau de especificidade que a [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 desenhou |
+| Grupo como moldura (raio 12, borda 1px), filhos achatados e separados por fio | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11. Substitui o desenho anterior (pilha solta por `gap`, cada sanfona com borda própria), que não tinha medição atrás |

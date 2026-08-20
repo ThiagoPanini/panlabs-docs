@@ -65,7 +65,7 @@ literalmente *o CSS não alcança por tipo de elemento*. E os dois
 implementação.
 
 > **Correção de fato.** A landing saiu em
-> [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e com ela
+> [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), e com ela
 > a camada decorativa, o `glow` e o bloco `reduce` que o alcançava. **O contrato
 > voltou a ter exatamente os dezessete consumidores**, e a régua perdeu o único
 > exemplo vivo de aplicação fora do MDX. O que sobrevive é o **precedente**, e é
@@ -87,7 +87,7 @@ dois passou a saber em que modo está.
 > **Zero sombra no catálogo, e é conferível por varredura.** Nenhum dos dezessete
 > escreve `box-shadow`, e `src/css/componentes.css` também não. A profundidade
 > saiu do conteúdo por medição — a
-> [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) achou zero
+> [#50](https://github.com/ThiagoPanini/panlabs-docs/issues/50) achou zero
 > componentes de conteúdo com sombra em seis páginas da âncora. A tabela de quem
 > ainda carrega sombra está em [`tokens.md`](../tokens.md) §6.
 >
@@ -220,17 +220,17 @@ queria:
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| O catálogo tem dezessete e é fechado | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — uso zero em 1.740 páginas; [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) fecha o inventário |
-| **`verb-badge` sai, e sem carimbo vazio** | **origem própria (consequência)** | [#81](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/81) — o contrato deixou de falar HTTP e os ~50 consumidores morreram com o Trilho; diferente de `circle-check`, não há estado plausível que o peça de volta |
-| O décimo sétimo é `untranslated` | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16), aceito pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
-| Todos globais, nenhum importado | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — zero imports de snippet medidos |
-| Sem válvula de escape | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §1 — veto do dono do projeto |
-| Zero JS de interação | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
-| Contrato de partes estreito | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| **O consumidor de fora do catálogo morreu, e o precedente fica** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — o `data-sd-part="glow"` da landing era a única aplicação da régua fora do MDX; nada foi despublicado, porque ele nunca esteve na tabela dos dezessete |
-| Nenhum componente conhece modo de cor | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §7 |
-| Os treze cortados | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) |
-| **Nove nomes ausentes da âncora por busca de tag** — dica flutuante, distintivo, `danger`, colunas autorais, componente de diagrama, trecho, fórmula, faixa, playground de API | **origem própria** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 buscou a tag nos `.md` da âncora mais sondagem no DOM renderizado; não achou nenhum. Classificação por metodologia distinta da linha acima (aquela é uso zero em produção, medido pela #4); decidir se cada um fica ou sai do catálogo continua fora de escopo — aqui só a classificação fecha |
-| Toda a superfície de swizzle são dois registros de degrau 3 | herdado | [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) pré-autorizou; [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) corrigiu a rota do callout e do `code-block` |
-| O gabarito de nove seções | herdado | [#9](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/9) §4 |
-| Inicial maiúscula na autoria | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6), ratificado pela [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §1 |
+| O catálogo tem dezessete e é fechado | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — uso zero em 1.740 páginas; [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) fecha o inventário |
+| **`verb-badge` sai, e sem carimbo vazio** | **origem própria (consequência)** | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — o contrato deixou de falar HTTP e os ~50 consumidores morreram com o Trilho; diferente de `circle-check`, não há estado plausível que o peça de volta |
+| O décimo sétimo é `untranslated` | origem própria | [#16](https://github.com/ThiagoPanini/panlabs-docs/issues/16), aceito pela [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) |
+| Todos globais, nenhum importado | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — zero imports de snippet medidos |
+| Sem válvula de escape | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §1 — veto do dono do projeto |
+| Zero JS de interação | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
+| Contrato de partes estreito | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| **O consumidor de fora do catálogo morreu, e o precedente fica** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o `data-sd-part="glow"` da landing era a única aplicação da régua fora do MDX; nada foi despublicado, porque ele nunca esteve na tabela dos dezessete |
+| Nenhum componente conhece modo de cor | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §7 |
+| Os treze cortados | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) |
+| **Nove nomes ausentes da âncora por busca de tag** — dica flutuante, distintivo, `danger`, colunas autorais, componente de diagrama, trecho, fórmula, faixa, playground de API | **origem própria** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 buscou a tag nos `.md` da âncora mais sondagem no DOM renderizado; não achou nenhum. Classificação por metodologia distinta da linha acima (aquela é uso zero em produção, medido pela #4); decidir se cada um fica ou sai do catálogo continua fora de escopo — aqui só a classificação fecha |
+| Toda a superfície de swizzle são dois registros de degrau 3 | herdado | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) pré-autorizou; [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) corrigiu a rota do callout e do `code-block` |
+| O gabarito de nove seções | herdado | [#9](https://github.com/ThiagoPanini/panlabs-docs/issues/9) §4 |
+| Inicial maiúscula na autoria | herdado | [#6](https://github.com/ThiagoPanini/panlabs-docs/issues/6), ratificado pela [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §1 |

@@ -6,7 +6,7 @@
 >
 > **A decisão não muda.** O adaptador de mão única, a proibição de `@layer`, o escuro no fallback e a regra de linha morta ficam inteiros, e nada aqui é supersedido. O que esta errata corrige é **um número**, e ele envelheceu.
 >
-> Duas consequências dizem *"cinco pontos do Docusaurus não são alcançáveis de `:root`"*. **São quatro**, desde a [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79): a exceção de `--docusaurus-tag-list-border` saiu por não ter superfície viva — nenhuma página deste site declara `tags:`, e o front matter da âncora não tem o campo.
+> Duas consequências dizem *"cinco pontos do Docusaurus não são alcançáveis de `:root`"*. **São quatro**, desde a [#79](https://github.com/ThiagoPanini/panlabs-docs/issues/79): a exceção de `--docusaurus-tag-list-border` saiu por não ter superfície viva — nenhuma página deste site declara `tags:`, e o front matter da âncora não tem o campo.
 >
 > **Errata e não supersessão**, e o próprio texto abaixo diz por quê: ele delega a lista — *"a lista é fechada e vive em `docs/design/tokens.md`"*. O número aqui sempre foi um retrato de uma lista que mora noutro lugar, e é lá que ele se confere. O que a doutrina afirma continua verdadeiro palavra por palavra: **existem** pontos inalcançáveis de `:root`, a lista deles é **fechada**, e **nenhum** deles exige swizzle.
 
@@ -85,9 +85,9 @@ Duas regras que saem junto:
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| `:root[data-theme='light']` como forma obrigatória | origem própria | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) mediu a armadilha; [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) inverteu o par de blocos |
-| `@layer` fora | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — zero uso no Infima e no theme-classic |
-| Adaptador de mão única | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11), derivado das armadilhas medidas na [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) |
-| Seletor `:root, :root[data-theme]` | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §4 |
-| `future.v4` desligado por causa de `useCssCascadeLayers` | origem própria | verificado no fonte da 3.10.2 ao implementar o slice 1 — o flag não existia quando a [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) mediu |
-| Nenhum utilitário de espaçamento do Infima | herdado | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
+| `:root[data-theme='light']` como forma obrigatória | origem própria | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) mediu a armadilha; [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) inverteu o par de blocos |
+| `@layer` fora | herdado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) — zero uso no Infima e no theme-classic |
+| Adaptador de mão única | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11), derivado das armadilhas medidas na [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) |
+| Seletor `:root, :root[data-theme]` | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §4 |
+| `future.v4` desligado por causa de `useCssCascadeLayers` | origem própria | verificado no fonte da 3.10.2 ao implementar o slice 1 — o flag não existia quando a [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) mediu |
+| Nenhum utilitário de espaçamento do Infima | herdado | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §2 |

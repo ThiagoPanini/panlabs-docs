@@ -96,7 +96,7 @@ nenhuma.
 
 A regra passa a ser **nenhum ícone no separador; ícone em tudo abaixo, em
 qualquer nível, folha ou grupo**. Ela substitui a redação da
-[#97](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/97) — *toda
+[#97](https://github.com/ThiagoPanini/panlabs-docs/issues/97) — *toda
 folha, nenhum cabeçalho de grupo* —, que dava ícone à folha e negava ao nó
 intermediário.
 
@@ -125,7 +125,7 @@ Quatro, e o portão 4 deixa de cobrar *"usado uma vez"* — passa a cobrar
 **confinado a um ramo**. O ramo será `Ferramentas › Bibliotecas › overpower`,
 com 13 folhas no nível 4.
 
-> **§g é prospectivo, e é o único desta ADR que é.** A [#114](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/114)
+> **§g é prospectivo, e é o único desta ADR que é.** A [#114](https://github.com/ThiagoPanini/panlabs-docs/issues/114)
 > implementou §a a §f e §h, e deixou o teto em **3**: teto de 4 sem nenhum uso é
 > teto sem consumidor, que é o defeito que este próprio parágrafo nomeia dois
 > parágrafos abaixo. A subida viaja com o port do `overpower`, e até lá o

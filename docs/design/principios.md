@@ -10,7 +10,7 @@ Este documento não decide um pixel. Ele decide **como se decide** — e é por 
 
 ## 1. A âncora é o Mintlify
 
-O shinydoc herda o sistema visual do **Mintlify**, e a herança não é o default — é a regra inteira: **o valor da âncora vale sem discussão em tudo o que se vê.** O §3 mostra por que não sobrou exceção.
+O panlabs-docs herda o sistema visual do **Mintlify**, e a herança não é o default — é a regra inteira: **o valor da âncora vale sem discussão em tudo o que se vê.** O §3 mostra por que não sobrou exceção.
 
 Isso não é gosto declarado depois do fato. A medição das sete referências em produção — FastMCP, Devin, Perplexity, Vapi, Neon, Clerk, Trigger.dev — produziu um achado que decidiu a âncora sozinho:
 
@@ -36,7 +36,7 @@ Herança calada é herança que **não vira linha de spec**. Ela existe, ela dec
 | **Densidade de UI** | o valor mais unânime da amostra inteira. Quatro sistemas, um número |
 | **Tipografia** | não é delta: é **parâmetro que a própria âncora expõe**. Trocar a pilha de fonte é re-marcar, não redesenhar — por isso ela está na superfície de troca |
 | **Escala de espaço** | base 4, múltiplos de 8. Consenso de indústria antes de ser consenso da amostra |
-| **Rampa de cinzas, forma e matiz** | as onze paradas são hex medidos direto na âncora (Devin). Até a [#95](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/95) só a forma era herdada — média das quatro rampas Mintlify medidas — e o matiz vinha da marca; hoje a rampa inteira é herdada e não lê `--sd-brand` |
+| **Rampa de cinzas, forma e matiz** | as onze paradas são hex medidos direto na âncora (Devin). Até a [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95) só a forma era herdada — média das quatro rampas Mintlify medidas — e o matiz vinha da marca; hoje a rampa inteira é herdada e não lê `--sd-brand` |
 
 **Herdado calado ainda é herdado**, e continua carimbado na tabela de procedência de cada documento. O que "calado" significa é que não há seção de justificativa — a fonte é a medição, e a medição está no ticket.
 
@@ -44,7 +44,7 @@ Herança calada é herança que **não vira linha de spec**. Ela existe, ela dec
 
 ## 3. A âncora manda em tudo o que se vê
 
-**Zero deltas deliberados.** Não há uma dimensão em que o shinydoc divirja do Mintlify **por escolha**. O que existe de divergência é **por restrição** — onde o Docusaurus recusa —, e isso é outra coisa, registrada como tal no §3.1.
+**Zero deltas deliberados.** Não há uma dimensão em que o panlabs-docs divirja do Mintlify **por escolha**. O que existe de divergência é **por restrição** — onde o Docusaurus recusa —, e isso é outra coisa, registrada como tal no §3.1.
 
 Esta seção dizia o contrário até o mapa do `mint`: *"quatro dimensões, e só quatro"* — motion, profundidade, forma, bloco de código. A afirmação nova é mais forte que a antiga por um motivo de forma, e não de conteúdo: **a antiga não tinha recibo, e esta tem.** Quem duvidar roda o `grep` do carimbo e reclassifica linha a linha.
 
@@ -80,13 +80,13 @@ Esta seção dizia o contrário até o mapa do `mint`: *"quatro dimensões, e s�
 
 **Dos tickets que restam, nenhum pode produzir um membro.** Cor de marca e ícone são **skin**, o mesmo argumento que já vale para tipografia — e skin não diverge, se troca.
 
-> **O segundo pilar deste fecho mudou de forma, e ficou mais firme.** Ele dizia que *"a landing não tem âncora com que divergir — a raiz da âncora responde 308 e a porta de entrada dela mora no host irmão"*. A landing saiu na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) e a raiz passou a fazer **o que a âncora faz**: levar à primeira doc. O que era ausência de âncora virou convergência com ela, e o argumento não depende mais de um ticket que deixou de existir. O que resta é diferença de **mecanismo** — a âncora responde 308 do servidor, e o GitHub Pages não emite redirecionamento configurável, então aqui a raiz é uma página com `meta http-equiv="refresh"` mais o roteador do núcleo. Diferença imposta pela plataforma é `lacuna por restrição` (§3.1), nunca delta: ninguém escolheu isto.
+> **O segundo pilar deste fecho mudou de forma, e ficou mais firme.** Ele dizia que *"a landing não tem âncora com que divergir — a raiz da âncora responde 308 e a porta de entrada dela mora no host irmão"*. A landing saiu na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) e a raiz passou a fazer **o que a âncora faz**: levar à primeira doc. O que era ausência de âncora virou convergência com ela, e o argumento não depende mais de um ticket que deixou de existir. O que resta é diferença de **mecanismo** — a âncora responde 308 do servidor, e o GitHub Pages não emite redirecionamento configurável, então aqui a raiz é uma página com `meta http-equiv="refresh"` mais o roteador do núcleo. Diferença imposta pela plataforma é `lacuna por restrição` (§3.1), nunca delta: ninguém escolheu isto.
 
 ### 3.1 Divergência por restrição não é delta
 
 Existe uma terceira categoria, e confundi-la com delta seria dar crédito de escolha a uma limitação:
 
-> **Divergência por restrição** é onde o shinydoc não faz o que a âncora faz porque o Docusaurus não permite sem `unsafe`.
+> **Divergência por restrição** é onde o panlabs-docs não faz o que a âncora faz porque o Docusaurus não permite sem `unsafe`.
 
 O breadcrumb reestruturado, o footer dentro da coluna de prosa, a proporção conteúdo/painel da referência gerada — os três são isso. Eles têm classe própria na tabela de procedência (`lacuna por restrição`, §5) e estão inventariados em [`chrome.md`](chrome.md) §8 e [`swizzle.md`](swizzle.md) §4.
 
@@ -94,7 +94,7 @@ O breadcrumb reestruturado, o footer dentro da coluna de prosa, a proporção co
 
 **A diferença importa no upgrade.** Delta deliberado é decisão e não se reabre sem argumento; lacuna por restrição **reabre com a plataforma** — o dia em que o Docusaurus expuser o ponto, o item sobe de degrau sozinho.
 
-**Esta seção ganhou peso quando o §3 esvaziou, em vez de perder.** Com zero deltas, `lacuna por restrição` passa a ser a **única categoria de divergência do projeto** — e ela é a categoria que reabre sozinha. É a leitura certa do que o projeto é: o shinydoc não escolhe ser diferente do Mintlify; ele é diferente onde o Docusaurus recusa.
+**Esta seção ganhou peso quando o §3 esvaziou, em vez de perder.** Com zero deltas, `lacuna por restrição` passa a ser a **única categoria de divergência do projeto** — e ela é a categoria que reabre sozinha. É a leitura certa do que o projeto é: o panlabs-docs não escolhe ser diferente do Mintlify; ele é diferente onde o Docusaurus recusa.
 
 ---
 
@@ -184,7 +184,7 @@ As classes são sete e continuam sete. O que os documentos acrescentam é **qual
 | `origem própria (consequência)` | **deduzir de uma regra que a spec já carregava** — o valor não é medido nem descoberto: ele cai de uma decisão anterior |
 | `origem própria com âncora normativa` | não tem medição atrás, mas tem **norma** (uma SC do WCAG, um padrão do APG) |
 
-**O de `consequência` entrou nesta tabela depois de já estar em uso**, e a demora vale registrada: ele nasceu no slice do catálogo, em [`componentes/frame.md`](componentes/frame.md), e ficou fora da lista até a [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) precisar dele num segundo documento. Um qualificador em uso e fora da lista fechada é o mesmo defeito que a lista existe para fechar.
+**O de `consequência` entrou nesta tabela depois de já estar em uso**, e a demora vale registrada: ele nasceu no slice do catálogo, em [`componentes/frame.md`](componentes/frame.md), e ficou fora da lista até a [#79](https://github.com/ThiagoPanini/panlabs-docs/issues/79) precisar dele num segundo documento. Um qualificador em uso e fora da lista fechada é o mesmo defeito que a lista existe para fechar.
 
 **`lacuna por restrição` é a que mais se confunde com a vizinha**, e por isso ela vale um parágrafo. Ela **não** é dimensão não medida: é dimensão **medida e não alcançável** — a plataforma recusa. Ela reabre com a **plataforma**, não com a régua, e é a classe de todas as divergências do §3.1.
 
@@ -194,17 +194,17 @@ As classes são sete e continuam sete. O que os documentos acrescentam é **qual
 
 `origem própria` é a que um revisor deve atacar primeiro, e a spec a carimba de propósito para facilitar o ataque. Uma spec que escondesse a fragilidade sob prosa confiante seria mais agradável de ler e impossível de auditar.
 
-> **Reavaliada quando a landing saiu, e ela NÃO esvaziou.** A pergunta é obrigatória porque a página removida na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) carregava a procedência mais frágil do sistema, e uma classe que perdesse todos os membros teria de ser declarada vazia em vez de ficar pendurada — é o que o §3 faz com `delta deliberado` e o §5.3 com `lacuna de medição`. **A medição, com a metodologia junto, porque contagem sem método não se reproduz:** conta-se uma linha de tabela dentro de uma seção `## Procedência` de `docs/design/` ou `docs/adr/` cuja **coluna de classe** — o segundo campo, não a de fonte — nomeia a classe. Por essa régua, `landing.md` levou **39** membros consigo, e restam **367**. Ela continua sendo, de longe, a classe mais populosa do projeto — o que é o resultado esperado, e não um alívio: `origem própria` é o carimbo do que ninguém mediu, e um sistema que o usa 367 vezes tem 367 lugares por onde ser contestado.
+> **Reavaliada quando a landing saiu, e ela NÃO esvaziou.** A pergunta é obrigatória porque a página removida na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) carregava a procedência mais frágil do sistema, e uma classe que perdesse todos os membros teria de ser declarada vazia em vez de ficar pendurada — é o que o §3 faz com `delta deliberado` e o §5.3 com `lacuna de medição`. **A medição, com a metodologia junto, porque contagem sem método não se reproduz:** conta-se uma linha de tabela dentro de uma seção `## Procedência` de `docs/design/` ou `docs/adr/` cuja **coluna de classe** — o segundo campo, não a de fonte — nomeia a classe. Por essa régua, `landing.md` levou **39** membros consigo, e restam **367**. Ela continua sendo, de longe, a classe mais populosa do projeto — o que é o resultado esperado, e não um alívio: `origem própria` é o carimbo do que ninguém mediu, e um sistema que o usa 367 vezes tem 367 lugares por onde ser contestado.
 
 > **Duas contagens ficam divergentes sob essa mesma régua, e a divergência é conhecida.** Ela devolve **10** membros para `delta deliberado` e **2** para `lacuna de medição`, e o §3 e o §5.3 declaram as duas **vazias**. Não é contradição nova nem defeito desta remoção: são os carimbos que ainda não foram recarimbados, e o §3 já diz que *"as demais viajam com a reescrita do documento que as hospeda"* — hoje elas moram em [`chrome.md`](chrome.md) e [`icones.md`](icones.md). A régua acima é publicada com o número que ela devolve, e não com o número que a spec gostaria: uma metodologia que só reproduz o resultado esperado não é metodologia.
 
-> **A régua cobrou, e cobrou rápido — S9-2.** Quatro linhas entraram nas duas classes depois deste parágrafo ser escrito, todas na [#105](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/105): duas em `delta deliberado` ([`componentes/accordion.md`](componentes/accordion.md), [`componentes/callout.md`](componentes/callout.md)) e duas em `lacuna de medição` ([`componentes/steps.md`](componentes/steps.md), [`tokens.md`](tokens.md)). Rodada contra `d51a37f^` a régua devolvia **10 e 2**; contra `9daa325`, **12 e 4**.
+> **A régua cobrou, e cobrou rápido — S9-2.** Quatro linhas entraram nas duas classes depois deste parágrafo ser escrito, todas na [#105](https://github.com/ThiagoPanini/panlabs-docs/issues/105): duas em `delta deliberado` ([`componentes/accordion.md`](componentes/accordion.md), [`componentes/callout.md`](componentes/callout.md)) e duas em `lacuna de medição` ([`componentes/steps.md`](componentes/steps.md), [`tokens.md`](tokens.md)). Rodada contra `d51a37f^` a régua devolvia **10 e 2**; contra `9daa325`, **12 e 4**.
 >
 > **A distinção que decide é a do §3, e ela já estava escrita:** *"Quem encontrar um `delta deliberado` na spec e não achá-lo lá tem um defeito nas mãos, não uma dívida conhecida."* As dez de `delta deliberado` estão na lista nominal da varredura dos 21; as duas novas **não estavam** — elas nasceram depois dela. Dívida conhecida tem razão escrito; carimbo novo em classe fechada é só carimbo errado.
 >
 > **As quatro foram recarimbadas, e os números voltaram a 10 e 2 sem que este parágrafo fosse editado.** Duas viraram `origem própria (consequência)` porque o valor cai de uma escala fechada que a spec já carregava; a de `steps.md` também, com medição junto; a da citação idem. **A dívida do §3 fica intacta de propósito** — recarimbá-la aqui derrubaria os dez para nove e obrigaria a reescrever esta contagem, trocando o número da varredura por um número de conveniência.
 >
-> **O precedente certo existia no mesmo lote de trabalho.** A [#108](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/108) carimbou o raio de 14px da busca como `origem própria (implementação)` e escreveu, na própria linha, *"não é `delta deliberado` — `principios.md` §3 fecha essa classe em zero"*. A #105 é três PRs anterior e não tinha a nota. **Ler o vizinho recente não substitui ler a regra.**
+> **O precedente certo existia no mesmo lote de trabalho.** A [#108](https://github.com/ThiagoPanini/panlabs-docs/issues/108) carimbou o raio de 14px da busca como `origem própria (implementação)` e escreveu, na própria linha, *"não é `delta deliberado` — `principios.md` §3 fecha essa classe em zero"*. A #105 é três PRs anterior e não tinha a nota. **Ler o vizinho recente não substitui ler a regra.**
 
 ### 5.3 Herdar uma ausência não é herdar
 
@@ -220,7 +220,7 @@ Duas coisas mais saíram da mesma medição, e as duas cortam contra adotar o pa
 
 > **Por que ela é a mais frágil.** A regra depende de uma leitura, e a leitura contrária é defensável: se alguém decidir que herdar a ausência **é** herdar, esta posição cai inteira e a paleta de sintaxe cai com ela. É também a primeira vez no projeto em que a âncora foi **medida e não seguida** — exatamente o formato de brecha que o axioma 5 existe para fechar. Fica escrita aqui, e não escondida na tabela de procedência de um documento, para que o ataque seja barato.
 
-**A classe `lacuna de medição` esvaziou depois, na [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83).** No momento em que esta seção foi escrita, os quatro matizes de estado e a base da escala de espaço continuavam nela — junto de mais seis membros noutros documentos, oito ao todo. A #83 mediu os oito contra a âncora (Chrome headless mais fonte primária): dois viraram `herdado` (matizes de estado; busca em `<details>` fechado, que é comportamento de especificação e não da âncora Mintlify), e seis viraram `origem própria (medição)` — a medição aconteceu, mas ou a âncora não decide o ponto (escala de espaço, `scroll-behavior` — herdar uma ausência não é herdar), ou decide diferente do que sustentaríamos (foco: 1px falha a SC 2.4.13 que já governamos; ícone de sidebar: registro misto na própria âncora), ou simplesmente não faz o que se supunha (`auto-fit`: a âncora usa `repeat(var(--cols))` com teto de produto, não grid reflexivo). **Zero membros hoje**, e o carimbo desta frase é histórico: registra que a classe existiu cheia antes de existir vazia, o que uma reescrita que apagasse o parágrafo esconderia.
+**A classe `lacuna de medição` esvaziou depois, na [#83](https://github.com/ThiagoPanini/panlabs-docs/issues/83).** No momento em que esta seção foi escrita, os quatro matizes de estado e a base da escala de espaço continuavam nela — junto de mais seis membros noutros documentos, oito ao todo. A #83 mediu os oito contra a âncora (Chrome headless mais fonte primária): dois viraram `herdado` (matizes de estado; busca em `<details>` fechado, que é comportamento de especificação e não da âncora Mintlify), e seis viraram `origem própria (medição)` — a medição aconteceu, mas ou a âncora não decide o ponto (escala de espaço, `scroll-behavior` — herdar uma ausência não é herdar), ou decide diferente do que sustentaríamos (foco: 1px falha a SC 2.4.13 que já governamos; ícone de sidebar: registro misto na própria âncora), ou simplesmente não faz o que se supunha (`auto-fit`: a âncora usa `repeat(var(--cols))` com teto de produto, não grid reflexivo). **Zero membros hoje**, e o carimbo desta frase é histórico: registra que a classe existiu cheia antes de existir vazia, o que uma reescrita que apagasse o parágrafo esconderia.
 
 ---
 
@@ -228,7 +228,7 @@ Duas coisas mais saíram da mesma medição, e as duas cortam contra adotar o pa
 
 > **Uma documentação `mint` fiel, entregue inteira por uma arquitetura de token que a âncora não tem.**
 
-**A frase tinha três orações, e as três morreram** — a última na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). A redação original dizia *"cartão escuro elevado por anel de sombra sobre página mais escura, tipografia sóbria em coluna de medida constante, e uma única faixa de espetáculo"*. O anel deixou de existir — ele virou borda de verdade, e a profundidade virou herança medida, não divergência. A medida constante deixou de ser divergência porque a âncora foi remedida e o número dela é o nosso. **E a faixa de espetáculo saiu com a landing**, que era a única região do site a hospedá-la.
+**A frase tinha três orações, e as três morreram** — a última na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94). A redação original dizia *"cartão escuro elevado por anel de sombra sobre página mais escura, tipografia sóbria em coluna de medida constante, e uma única faixa de espetáculo"*. O anel deixou de existir — ele virou borda de verdade, e a profundidade virou herança medida, não divergência. A medida constante deixou de ser divergência porque a âncora foi remedida e o número dela é o nosso. **E a faixa de espetáculo saiu com a landing**, que era a única região do site a hospedá-la.
 
 **A consequência é grande o bastante para ser dita em voz alta: a assinatura visual deste projeto não é mais visual.** O que resta da frase é a arquitetura de token — e ela não aparece numa captura de tela. Um leitor que abra o site publicado ao lado da âncora vê fidelidade, não assinatura; a diferença mora em como o sistema é construído, não em como ele se parece. Isso é coerente com o que o projeto entrega — estrutura e customização visual para transplante —, mas é uma perda real, e chamá-la de simplificação seria maquiagem.
 
@@ -250,7 +250,7 @@ Cada linha aqui é uma coisa que a medição entregou e que a spec **não** usou
 | **A mistura de famílias de ícone da âncora** | é acidente dela, não desenho. O manifesto é de família única, contorno e geometria consistentes |
 | **O par padrão de realce de código da âncora** | ela declina de tematizar código, então não há decisão para herdar — ver §5.3. E as duas medidas cortam contra: ele **regride** os pisos de contraste deste projeto e fica **mais berrante** no claro |
 | **As seis partes por componente que o Mintlify publica** | ele é multi-tenant e o cliente **não pode tocar no React dele**. O transplante corporativo é dono do arquivo — copiar aquela superfície seria herdar uma restrição de arquitetura que não é a nossa |
-| **Alternância de faixas escuro/claro** *(medida quando havia landing)* | exige a **ilha clara**, descartada por escrito. E a alternância sumiria inteira no modo escuro, que é o canônico: o ritmo existiria só no modo secundário. Hoje o descarte é duplo — a página que a hospedaria saiu na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) |
+| **Alternância de faixas escuro/claro** *(medida quando havia landing)* | exige a **ilha clara**, descartada por escrito. E a alternância sumiria inteira no modo escuro, que é o canônico: o ritmo existiria só no modo secundário. Hoje o descarte é duplo — a página que a hospedaria saiu na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) |
 | **`Content-Disposition: inline` como exigência literal do portão 6** | as referências mandam o cabeçalho; o GitHub Pages não manda nenhum. Ausente **não é** `attachment` — pela RFC 6266 a disposição default é inline. Exigir o literal reprovaria um host onde o recurso funciona, e portão que reprova o que funciona é portão que alguém desliga |
 | **DocSearch, do próprio ecossistema Docusaurus** | três conversas corporativas — dependência, egresso de rede e conteúdo indexado fora do perímetro. A terceira não tem argumento técnico que a mova. Ver [ADR 6](../adr/0006-busca-local-sem-servico-externo.md) |
 | **Ranqueamento estatístico na busca** (TF-IDF, BM25) | a escada de degraus é **explicável em prosa e conferível por teste**; um score estatístico não é nenhum dos dois. Numa base de dois mil documentos essa recusa se inverte |
@@ -261,23 +261,23 @@ Cada linha aqui é uma coisa que a medição entregou e que a spec **não** usou
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| A âncora é o Mintlify | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2) — sete sites, quatro sistemas; a repetição decidiu |
+| A âncora é o Mintlify | herdado | [#2](https://github.com/ThiagoPanini/panlabs-docs/issues/2) — sete sites, quatro sistemas; a repetição decidiu |
 | Os quatro sistemas, e o colapso dos sete | **origem própria (medição)** | o CSS servido é byte a byte o mesmo em quatro dos sete |
-| O que se herda calado | herdado | [#2](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/2), [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
-| **Zero deltas deliberados** | **origem própria (verificação)** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — varredura dos 21 carimbos, contra as regras já escritas nos §1.1, §3 e §7 |
-| O carimbo fica definido e vazio, e fechado | **origem própria** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) e [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — carimbo vazio é resultado; o único candidato nomeado não produziu membro |
-| **Herdar uma ausência não é herdar** | **origem própria (medição)** | [#73](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/73) — o `"codeblocks"` da âncora foi medido e revelou não-decisão |
+| O que se herda calado | herdado | [#2](https://github.com/ThiagoPanini/panlabs-docs/issues/2), [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) |
+| **Zero deltas deliberados** | **origem própria (verificação)** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) — varredura dos 21 carimbos, contra as regras já escritas nos §1.1, §3 e §7 |
+| O carimbo fica definido e vazio, e fechado | **origem própria** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) e [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — carimbo vazio é resultado; o único candidato nomeado não produziu membro |
+| **Herdar uma ausência não é herdar** | **origem própria (medição)** | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) — o `"codeblocks"` da âncora foi medido e revelou não-decisão |
 | Divergência por restrição é categoria própria | **origem própria** | dar crédito de escolha a uma limitação seria mentir na tabela |
-| A regra de derivação | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §3 — mecânica de propósito |
-| Os três portões da régua | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §7, [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2, [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §11 |
-| As sete classes de procedência | herdado | [#10](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/10) — consolidadas aqui, num lugar só. **Eram cinco na tabela e sete no uso até a S9-3**: `lacuna por restrição` e `medido em referência` viviam fora dela |
+| A regra de derivação | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §3 — mecânica de propósito |
+| Os três portões da régua | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §7, [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §2, [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §11 |
+| As sete classes de procedência | herdado | [#10](https://github.com/ThiagoPanini/panlabs-docs/issues/10) — consolidadas aqui, num lugar só. **Eram cinco na tabela e sete no uso até a S9-3**: `lacuna por restrição` e `medido em referência` viviam fora dela |
 | **A paridade trava, e o que ela trava é distância não julgada** | **origem própria** | **S9-8** — o passo era o único `continue-on-error` da CI porque `--verificar` reprovava com qualquer diferença, e a paridade nunca fecha em zero. `scripts/paridade-abertas.txt` congela as divergências julgadas, no formato do `swizzle-list.txt`, e `--verificar` reprova nas duas direções: divergência fora da lista, e linha da lista que já fecha. O juiz do desenho continua humano. Ver [`README.md`](README.md) §5 |
 | **As três paradas de texto ficam abertas** | **origem própria (medição)** | **S9-8** — os hex-alvo do §12 de [`tokens.md`](tokens.md) existem na rampa byte a byte; o que diverge é o mapeamento papel → parada. Medido com as três trocadas: `text-strong` cai de 18,95 para 16,98 (claro) e de 17,03 para 14,18 (escuro), `text-body` de 12,05 para 7,21 (escuro), e o pior par de callout de **8,28 para 4,95** — acima do piso de 4,5 (SC 1.4.3) por 0,45, sem a folga AAA que o resto do site pratica. Nenhum piso cai: o impedimento não é técnico, é de juiz |
 | **A gramática do carimbo, e a invariante 6 que a cobra** | **origem própria (medição)** | **S9-3** — o censo pela régua do §5.2 devolveu **42 linhas** em **26 formas** distintas de carimbo, contra as cinco classes publicadas; **24** delas não cabiam em composição nenhuma das classes canônicas, e uma vigésima quinta nasceu no próprio PR. A gramática do §5.0 é a lista fechada que sobrou depois de recarimbar as 25, e a invariante 6 de `scripts/invariantes.sh` a confere |
-| Os qualificadores estreitam em vez de abrir uma sexta | **origem própria (implementação)** | os cinco nasceram do uso, nos slices 1 a 6; o de `consequência` só foi para a lista na [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) |
+| Os qualificadores estreitam em vez de abrir uma sexta | **origem própria (implementação)** | os cinco nasceram do uso, nos slices 1 a 6; o de `consequência` só foi para a lista na [#79](https://github.com/ThiagoPanini/panlabs-docs/issues/79) |
 | A assinatura numa frase | origem própria | síntese; não medida |
-| **A assinatura perdeu a metade visível** | **origem própria (consequência)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a faixa de espetáculo era a única região a hospedá-la, e saiu com a landing |
-| **A raiz redireciona para a primeira doc** | herdado | a raiz da âncora não serve página: ela leva à primeira doc, medido em [#92](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/92) |
+| **A assinatura perdeu a metade visível** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a faixa de espetáculo era a única região a hospedá-la, e saiu com a landing |
+| **A raiz redireciona para a primeira doc** | herdado | a raiz da âncora não serve página: ela leva à primeira doc, medido em [#92](https://github.com/ThiagoPanini/panlabs-docs/issues/92) |
 | **O redirecionamento é por página e roteador, não por servidor** | **lacuna por restrição** | o GitHub Pages não emite redirecionamento configurável; a âncora responde 308. Host medido no [ADR 7](../adr/0007-trailingslash-false.md) |
-| **`origem própria` foi reavaliada e não esvaziou** | **origem própria (verificação)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — varredura das tabelas `## Procedência` de `docs/design/` e `docs/adr/`, contando a coluna de classe: **39** membros saíram com `landing.md`, **367** restam. A metodologia está no §5.2, junto do número |
+| **`origem própria` foi reavaliada e não esvaziou** | **origem própria (verificação)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — varredura das tabelas `## Procedência` de `docs/design/` e `docs/adr/`, contando a coluna de classe: **39** membros saíram com `landing.md`, **367** restam. A metodologia está no §5.2, junto do número |
 | A tabela do que foi medido e descartado | **origem própria** | descarte anônimo é indistinguível de descuido |

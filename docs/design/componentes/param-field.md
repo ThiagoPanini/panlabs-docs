@@ -159,17 +159,17 @@ O contrato de estado de entrada mora em [`foco.md`](../foco.md).
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Componente do zero | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — ausente no Docusaurus |
-| Só `required` se marca | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §7.2 — `optional` não existe na âncora |
+| Componente do zero | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — ausente no Docusaurus |
+| Só `required` se marca | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §7.2 — `optional` não existe na âncora |
 | `deprecated` tachado, sem cor — **justificativa nova** | **origem própria (correção)** | a razão era *não dividir o âmbar com `PUT`*; o verbo morreu, e a razão passou a ser o vermelho do chip de obrigatório |
 | **Chip de obrigatório em vermelho, por extenso** | **herdado** | medido na âncora; o carimbo subiu de `origem própria (implementação)` quando o verbo liberou os dois matizes |
 | **`ParamField` descreve parâmetro de função** | **herdado (medição)** | o `ParamField` da âncora usa só `body=`, nunca `query`/`path`/`header` — ele nunca foi HTTP |
 | **A condição de `meta` é conferida pelo portão 5** | **origem própria (implementação)** | condição escrita só em prosa é condição que envelhece calada |
-| Aninhamento por `<details>`, zero JS | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) e [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
-| Implementação compartilhada com `response-field` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, nota de implementação |
-| Sem campo editável | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §4 — a interatividade fica no painel da rota |
-| Uma parte publicada | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, sobre a régua da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| **Divisor vira `border-block-end`, e a última linha não tem** | **origem própria (correção)** | medido na âncora ([#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99)) — a implementação anterior desenhava `border-block-start` em toda linha, o que também riscava acima da primeira; a forma nova não risca nem antes da primeira nem depois da última |
-| **Nome do campo no acento** | **herdado (medição)** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a âncora pinta o nome com a cor de marca; era `--sd-text-strong` |
-| **Tipo e padrão viram chip neutro, como o de obrigatório** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a âncora distingue as três famílias (tipo/padrão, obrigatório) só pela cor do mesmo chip; a tinta neutra reusa `--sd-border-subtle`/`--sd-text-muted`, sem cor nova |
-| **Âncora de linha, no vão esquerdo a partir do limiar único do projeto** | **origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — mesma ideia do `.hash-link` de heading, implementação própria porque o campo não é heading; abaixo do limiar não sobra vão à esquerda para revelar, e o `display: none` tira o link também da ordem de tabulação nessa faixa — não só do hover/toque —, o mesmo preço que o TOC já paga abaixo do limiar dele (`chrome.md` §5) |
+| Aninhamento por `<details>`, zero JS | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) e [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
+| Implementação compartilhada com `response-field` | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §8, nota de implementação |
+| Sem campo editável | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §4 — a interatividade fica no painel da rota |
+| Uma parte publicada | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §8, sobre a régua da [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| **Divisor vira `border-block-end`, e a última linha não tem** | **origem própria (correção)** | medido na âncora ([#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99)) — a implementação anterior desenhava `border-block-start` em toda linha, o que também riscava acima da primeira; a forma nova não risca nem antes da primeira nem depois da última |
+| **Nome do campo no acento** | **herdado (medição)** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a âncora pinta o nome com a cor de marca; era `--sd-text-strong` |
+| **Tipo e padrão viram chip neutro, como o de obrigatório** | **origem própria** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a âncora distingue as três famílias (tipo/padrão, obrigatório) só pela cor do mesmo chip; a tinta neutra reusa `--sd-border-subtle`/`--sd-text-muted`, sem cor nova |
+| **Âncora de linha, no vão esquerdo a partir do limiar único do projeto** | **origem própria** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — mesma ideia do `.hash-link` de heading, implementação própria porque o campo não é heading; abaixo do limiar não sobra vão à esquerda para revelar, e o `display: none` tira o link também da ordem de tabulação nessa faixa — não só do hover/toque —, o mesmo preço que o TOC já paga abaixo do limiar dele (`chrome.md` §5) |

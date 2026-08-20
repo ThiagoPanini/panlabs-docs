@@ -18,7 +18,7 @@ A construção do site Docusaurus é trabalho **posterior ao mapa**, disparado p
 
 São **sete**, todos de custo zero em dependência, e cada um nasce no slice que cria a superfície que ele protege — nenhum é bolado no fim. Os que já existem:
 
-> **Correção de contagem, registrada duas vezes.** A redação original dizia **seis**, e já estava vencida quando o slice 6 fechou: viraram **oito** com o portão 8, o da landing. **São sete** desde que a landing saiu ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e levou o portão que só ela ativava. A segunda correção não desfaz a primeira — o seis nunca descreveu o repo com a landing dentro. E o número 8 **não se reaproveita**: os sete que ficam vão de 1 a 7, e nenhum é renumerado, porque o ADR 5 cita o portão 5 pelo número.
+> **Correção de contagem, registrada duas vezes.** A redação original dizia **seis**, e já estava vencida quando o slice 6 fechou: viraram **oito** com o portão 8, o da landing. **São sete** desde que a landing saiu ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)) e levou o portão que só ela ativava. A segunda correção não desfaz a primeira — o seis nunca descreveu o repo com a landing dentro. E o número 8 **não se reaproveita**: os sete que ficam vão de 1 a 7, e nenhum é renumerado, porque o ADR 5 cita o portão 5 pelo número.
 
 | # | Portão | Comando | Cadência |
 | ---: | --- | --- | --- |
