@@ -1,4 +1,4 @@
-# shinydoc-docusaurus
+# panlabs-docs
 
 Projeto de **documentação de referência** construído com Docusaurus.
 
@@ -8,23 +8,23 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 
 ## Estado
 
-**Completo.** O [mapa de wayfinding](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/1) fechou — vinte e sete tickets, sete de pesquisa e vinte de decisão — e o colapso dele numa [spec executável](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/30) partiu o trabalho em **sete slices verticais**. Cada slice entregou uma superfície funcionando *e* o documento de design que a especifica, na mesma sentada.
+**Completo.** O [mapa de wayfinding](https://github.com/ThiagoPanini/panlabs-docs/issues/1) fechou — vinte e sete tickets, sete de pesquisa e vinte de decisão — e o colapso dele numa [spec executável](https://github.com/ThiagoPanini/panlabs-docs/issues/30) partiu o trabalho em **sete slices verticais**. Cada slice entregou uma superfície funcionando *e* o documento de design que a especifica, na mesma sentada.
 
 | Slice | O que entrega | Estado |
 | ---: | --- | --- |
-| 1 | [Bala traçante](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/34) — o site no ar com o sistema de tokens inteiro | feito |
-| 2 | [A página de documentação](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/35) — chrome, ícones, árvore | feito |
-| 3 | [O catálogo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/36) — os componentes de conteúdo | feito |
-| 4 | [O conteúdo](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/37) — as páginas autorais e o EN parcial | feito |
-| 5 | [A referência gerada](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/38) — contrato, gerador e três colunas | feito |
-| 6 | [A landing](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/39) — a ilha de espetáculo | feito, e a página **removida depois** ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) |
-| 7 | [Busca e artefatos AI-era](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/40) — e o fechamento da spec | feito |
+| 1 | [Bala traçante](https://github.com/ThiagoPanini/panlabs-docs/issues/34) — o site no ar com o sistema de tokens inteiro | feito |
+| 2 | [A página de documentação](https://github.com/ThiagoPanini/panlabs-docs/issues/35) — chrome, ícones, árvore | feito |
+| 3 | [O catálogo](https://github.com/ThiagoPanini/panlabs-docs/issues/36) — os componentes de conteúdo | feito |
+| 4 | [O conteúdo](https://github.com/ThiagoPanini/panlabs-docs/issues/37) — as páginas autorais e o EN parcial | feito |
+| 5 | [A referência gerada](https://github.com/ThiagoPanini/panlabs-docs/issues/38) — contrato, gerador e três colunas | feito |
+| 6 | [A landing](https://github.com/ThiagoPanini/panlabs-docs/issues/39) — a ilha de espetáculo | feito, e a página **removida depois** ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)) |
+| 7 | [Busca e artefatos AI-era](https://github.com/ThiagoPanini/panlabs-docs/issues/40) — e o fechamento da spec | feito |
 
-**O [mapa do `mint`](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita — e depois removida —, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. **A referência gerada está no ar**, sobre um contrato de assinatura de função, tipo e módulo: `Ferramentas` fecha em 21. Falta o fecho da spec.
+**O [mapa do `mint`](https://github.com/ThiagoPanini/panlabs-docs/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita — e depois removida —, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. **A referência gerada está no ar**, sobre um contrato de assinatura de função, tipo e módulo: `Ferramentas` fecha em 21. Falta o fecho da spec.
 
 **46 páginas autorais mais 6 geradas em três abas** — 52 no total —, mais 21 traduções, busca, artefatos AI-era e dois locales. A rota `/` não é página: ela **redireciona** para `/jornadas/api-owner/indice`, o primeiro destino declarado em `sidebars-jornadas.js`. A spec são vinte e nove arquivos mais oito ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
 
-> **Correção de contagem.** A landing saiu ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)) e levou junto o portão que só ela ativava: **eram oito portões, são sete**, e a spec caiu de **trinta arquivos para vinte e nove**. O número 8 **não se reaproveita** — o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração dos sete que ficam.
+> **Correção de contagem.** A landing saiu ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)) e levou junto o portão que só ela ativava: **eram oito portões, são sete**, e a spec caiu de **trinta arquivos para vinte e nove**. O número 8 **não se reaproveita** — o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração dos sete que ficam.
 
 **O axioma 6 foi cobrado, e não só declarado.** O [§6 da espinha](docs/design/README.md) registra o teste de reconstrução: uma sessão de agente limpa, com `docs/design/` e `docs/adr/` e nada mais, reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. **O build passou nos dois locales.**
 

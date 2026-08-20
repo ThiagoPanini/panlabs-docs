@@ -125,17 +125,17 @@ export default function CopiarPagina({permalink}) {
      tela em inglês devolveria o pulo que a técnica existe para evitar. */
   const rotulos = {
     ocioso: translate({
-      id: 'shinydoc.copiar.rotulo',
+      id: 'panlabs-docs.copiar.rotulo',
       message: 'Copiar página',
       description: 'Rótulo do botão que copia a página em Markdown',
     }),
     copiado: translate({
-      id: 'shinydoc.copiar.feito',
+      id: 'panlabs-docs.copiar.feito',
       message: 'Copiado',
       description: 'Confirmação de que a página foi copiada',
     }),
     erro: translate({
-      id: 'shinydoc.copiar.erro',
+      id: 'panlabs-docs.copiar.erro',
       message: 'Não copiou',
       description: 'Aviso de que a cópia falhou',
     }),
@@ -143,7 +143,7 @@ export default function CopiarPagina({permalink}) {
 
   const promptDoAssistente = translate(
     {
-      id: 'shinydoc.copiar.prompt',
+      id: 'panlabs-docs.copiar.prompt',
       message: 'Leia {url} para eu poder fazer perguntas sobre esta página da documentação.',
       description: 'Pergunta que o assistente externo recebe já escrita, com a URL do Markdown',
     },
@@ -155,31 +155,31 @@ export default function CopiarPagina({permalink}) {
       chave: 'copiar',
       icone: 'copy',
       aoAtivar: copiar,
-      titulo: <Translate id="shinydoc.copiar.menu.copiar" description="Item de menu que copia o Markdown">Copiar página</Translate>,
-      apoio: <Translate id="shinydoc.copiar.menu.copiar.apoio" description="Explicação do item que copia o Markdown">O Markdown desta página, para colar num assistente</Translate>,
+      titulo: <Translate id="panlabs-docs.copiar.menu.copiar" description="Item de menu que copia o Markdown">Copiar página</Translate>,
+      apoio: <Translate id="panlabs-docs.copiar.menu.copiar.apoio" description="Explicação do item que copia o Markdown">O Markdown desta página, para colar num assistente</Translate>,
     },
     {
       chave: 'ver',
       icone: 'file-text',
       href: rotaMd,
-      titulo: <Translate id="shinydoc.copiar.menu.ver" description="Item de menu que abre o Markdown">Ver como Markdown</Translate>,
-      apoio: <Translate id="shinydoc.copiar.menu.ver.apoio" description="Explicação do item que abre o Markdown">A mesma página em texto puro</Translate>,
+      titulo: <Translate id="panlabs-docs.copiar.menu.ver" description="Item de menu que abre o Markdown">Ver como Markdown</Translate>,
+      apoio: <Translate id="panlabs-docs.copiar.menu.ver.apoio" description="Explicação do item que abre o Markdown">A mesma página em texto puro</Translate>,
     },
     {
       chave: 'chatgpt',
       icone: 'external-link',
       href: `https://chatgpt.com/?q=${encodeURIComponent(promptDoAssistente)}`,
       externo: true,
-      titulo: <Translate id="shinydoc.copiar.menu.chatgpt" description="Item de menu que abre a página no ChatGPT">Abrir no ChatGPT</Translate>,
-      apoio: <Translate id="shinydoc.copiar.menu.assistente.apoio" description="Explicação dos itens que abrem a página num assistente">Perguntar sobre esta página</Translate>,
+      titulo: <Translate id="panlabs-docs.copiar.menu.chatgpt" description="Item de menu que abre a página no ChatGPT">Abrir no ChatGPT</Translate>,
+      apoio: <Translate id="panlabs-docs.copiar.menu.assistente.apoio" description="Explicação dos itens que abrem a página num assistente">Perguntar sobre esta página</Translate>,
     },
     {
       chave: 'claude',
       icone: 'external-link',
       href: `https://claude.ai/new?q=${encodeURIComponent(promptDoAssistente)}`,
       externo: true,
-      titulo: <Translate id="shinydoc.copiar.menu.claude" description="Item de menu que abre a página no Claude">Abrir no Claude</Translate>,
-      apoio: <Translate id="shinydoc.copiar.menu.assistente.apoio" description="Explicação dos itens que abrem a página num assistente">Perguntar sobre esta página</Translate>,
+      titulo: <Translate id="panlabs-docs.copiar.menu.claude" description="Item de menu que abre a página no Claude">Abrir no Claude</Translate>,
+      apoio: <Translate id="panlabs-docs.copiar.menu.assistente.apoio" description="Explicação dos itens que abrem a página num assistente">Perguntar sobre esta página</Translate>,
     },
   ];
 
@@ -219,7 +219,7 @@ export default function CopiarPagina({permalink}) {
         popovertarget={idDoMenu}
         aria-expanded={aberto}
         aria-label={translate({
-          id: 'shinydoc.copiar.mais',
+          id: 'panlabs-docs.copiar.mais',
           message: 'Mais formas de levar esta página',
           description: 'Nome acessível do botão que abre o menu ao lado de Copiar página',
         })}>

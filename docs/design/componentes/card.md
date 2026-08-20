@@ -139,14 +139,14 @@ O ícone é decorativo e sai da árvore de acessibilidade: o nome acessível do 
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
-| Cartão do zero | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — `DocCard` é dirigido por metadado |
-| `title` · `icon` · `href`, e nada mais | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — superfície mínima medida |
-| Ícone na cor de marca | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — *"o detalhe que mais define a aparência do card"* |
-| Ícone XOR imagem | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §8 |
-| Uma parte publicada | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| Borda em vez de superfície | **herdado** | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) — medição direta: fio de um pixel, sem sombra. **Sobe de classe:** era `origem própria (implementação)` pela regra de dois preenchimentos da [#20](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/20), e esse argumento morreu com o cartão |
-| O hover muda **só a borda** | **herdado** | [#50](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/50) — *"a borda virando cor de marca. Nada se move."* Este arquivo declarava borda **e** fundo; o fundo era nosso |
-| O elemento é `<a>`, e a âncora usa `<div role="link">` | **origem própria (correção)** | [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — foco, Enter, menu de contexto e nova aba de graça; adotar o `<div>` seria herdar um defeito. Ver [`principios.md`](../principios.md) §3 |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93) |
+| Cartão do zero | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — `DocCard` é dirigido por metadado |
+| `title` · `icon` · `href`, e nada mais | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — superfície mínima medida |
+| Ícone na cor de marca | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — *"o detalhe que mais define a aparência do card"* |
+| Ícone XOR imagem | herdado | [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §8 |
+| Uma parte publicada | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| Borda em vez de superfície | **herdado** | [#50](https://github.com/ThiagoPanini/panlabs-docs/issues/50) — medição direta: fio de um pixel, sem sombra. **Sobe de classe:** era `origem própria (implementação)` pela regra de dois preenchimentos da [#20](https://github.com/ThiagoPanini/panlabs-docs/issues/20), e esse argumento morreu com o cartão |
+| O hover muda **só a borda** | **herdado** | [#50](https://github.com/ThiagoPanini/panlabs-docs/issues/50) — *"a borda virando cor de marca. Nada se move."* Este arquivo declarava borda **e** fundo; o fundo era nosso |
+| O elemento é `<a>`, e a âncora usa `<div role="link">` | **origem própria (correção)** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — foco, Enter, menu de contexto e nova aba de graça; adotar o `<div>` seria herdar um defeito. Ver [`principios.md`](../principios.md) §3 |
 | Sem seta de chamada para ação | origem própria | o cartão inteiro é o link; duas afordâncias para uma ação |
-| Press com o token do hover | mecanismo emprestado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.1 |
+| Press com o token do hover | mecanismo emprestado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §4.1 |

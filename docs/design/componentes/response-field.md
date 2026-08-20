@@ -103,12 +103,12 @@ valores da referência gerada mora no painel da rota, então nem este nem
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Componente do zero, recursivo | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — *"`ResponseField` é recursivo"* |
+| Componente do zero, recursivo | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — *"`ResponseField` é recursivo"* |
 | **`ResponseField` descreve campo de retorno** | herdado | ele nunca foi HTTP: as cinco informações valem para o que uma chamada devolve e para o atributo de um tipo |
 | **Teto de quatro níveis, com dona nova** | **origem própria (correção)** | a dona era `cobranca.pagamento.cartao.verificacoes`, do domínio morto; é `Infraestrutura › O output de um módulo`. O carimbo era `delta deliberado` **até esta linha** — a varredura que zerou a lista de deltas em [`principios.md`](../principios.md) §3 não o alcançou, e o documento afirmava lista vazia enquanto esta linha ainda a carregava |
 | **Tipo que é outra entrada linka, não aninha** | **origem própria (consequência)** | o reset de profundidade do `$ref` saiu sem deixar buraco — ver [`referencia.md`](../referencia.md) §5.3 |
-| Recursão sem JavaScript | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) e [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
-| Implementação compartilhada com `param-field` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, nota de implementação |
-| Sem campo editável | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §4 |
-| Uma parte publicada | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8, sobre a régua da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Recursão sem JavaScript | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) e [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
+| Implementação compartilhada com `param-field` | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §8, nota de implementação |
+| Sem campo editável | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §4 |
+| Uma parte publicada | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §8, sobre a régua da [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | **Divisor, acento no nome, chip neutro e âncora de linha** | herdado + origem própria | as quatro linhas de [`param-field`](param-field.md) § Procedência valem aqui verbatim — implementação compartilhada, mesma decisão |

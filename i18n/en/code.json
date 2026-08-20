@@ -1,33 +1,33 @@
 {
-  "shinydoc.untranslated.aviso": {
+  "panlabs-docs.untranslated.aviso": {
     "message": "This page has not been translated yet. The content below is in Portuguese.",
     "description": "Aviso no topo de uma página que ainda não foi traduzida"
   },
-  "shinydoc.tabela.regiao": {
+  "panlabs-docs.tabela.regiao": {
     "message": "Table",
     "description": "Nome acessível da região rolável que envolve toda tabela"
   },
-  "shinydoc.campo.obrigatorio": {
+  "panlabs-docs.campo.obrigatorio": {
     "message": "required",
     "description": "Chip que marca um parâmetro obrigatório"
   },
-  "shinydoc.campo.padrao": {
+  "panlabs-docs.campo.padrao": {
     "message": "default",
     "description": "Rótulo do valor default de um campo de API"
   },
-  "shinydoc.campo.ancora": {
+  "panlabs-docs.campo.ancora": {
     "message": "Link to {nome}",
     "description": "Nome acessível da âncora de linha de um campo de API"
   },
-  "shinydoc.raiz.titulo": {
+  "panlabs-docs.raiz.titulo": {
     "message": "Documentation",
     "description": "Título da rota raiz, que redireciona para a primeira doc"
   },
-  "shinydoc.raiz.aviso": {
+  "panlabs-docs.raiz.aviso": {
     "message": "This page takes you to the documentation.",
     "description": "Aviso da rota raiz quando o redirecionamento não acontece sozinho"
   },
-  "shinydoc.raiz.link": {
+  "panlabs-docs.raiz.link": {
     "message": "Open the documentation",
     "description": "Link manual para o destino da rota raiz"
   },
@@ -358,87 +358,87 @@
     "message": "Tags",
     "description": "The title of the tag list page"
   },
-  "shinydoc.busca.abrir": {
+  "panlabs-docs.busca.abrir": {
     "message": "Search",
     "description": "Rótulo do botão que abre a busca"
   },
-  "shinydoc.busca.campo": {
+  "panlabs-docs.busca.campo": {
     "message": "Search the documentation",
     "description": "Nome acessível do campo de busca"
   },
-  "shinydoc.busca.fechar": {
+  "panlabs-docs.busca.fechar": {
     "message": "Close search",
     "description": "Nome acessível do botão que fecha o modal de busca"
   },
-  "shinydoc.busca.resultados": {
+  "panlabs-docs.busca.resultados": {
     "message": "Results",
     "description": "Nome acessível da lista de resultados da busca"
   },
-  "shinydoc.busca.fallback": {
+  "panlabs-docs.busca.fallback": {
     "message": "in Portuguese",
     "description": "Marca de resultado cuja página ainda está em português"
   },
-  "shinydoc.busca.contagem": {
+  "panlabs-docs.busca.contagem": {
     "message": "{n} results",
     "description": "Anúncio do número de resultados, para leitor de tela"
   },
-  "shinydoc.busca.tecla.navegar": {
+  "panlabs-docs.busca.tecla.navegar": {
     "message": "navigate",
     "description": "Legenda das setas no rodapé do modal"
   },
-  "shinydoc.busca.tecla.abrir": {
+  "panlabs-docs.busca.tecla.abrir": {
     "message": "open",
     "description": "Legenda do Enter no rodapé do modal"
   },
-  "shinydoc.busca.tecla.fechar": {
+  "panlabs-docs.busca.tecla.fechar": {
     "message": "close",
     "description": "Legenda do Esc no rodapé do modal"
   },
-  "shinydoc.copiar.rotulo": {
+  "panlabs-docs.copiar.rotulo": {
     "message": "Copy page",
     "description": "Rótulo do botão que copia a página em Markdown"
   },
-  "shinydoc.copiar.feito": {
+  "panlabs-docs.copiar.feito": {
     "message": "Copied",
     "description": "Confirmação de que a página foi copiada"
   },
-  "shinydoc.copiar.erro": {
+  "panlabs-docs.copiar.erro": {
     "message": "Didn't copy",
     "description": "Aviso de que a cópia falhou"
   },
-  "shinydoc.copiar.prompt": {
+  "panlabs-docs.copiar.prompt": {
     "message": "Read {url} so I can ask questions about this documentation page.",
     "description": "Pergunta que o assistente externo recebe já escrita, com a URL do Markdown"
   },
-  "shinydoc.copiar.menu.copiar": {
+  "panlabs-docs.copiar.menu.copiar": {
     "message": "Copy page",
     "description": "Item de menu que copia o Markdown"
   },
-  "shinydoc.copiar.menu.copiar.apoio": {
+  "panlabs-docs.copiar.menu.copiar.apoio": {
     "message": "The Markdown of this page, to paste into an assistant",
     "description": "Explicação do item que copia o Markdown"
   },
-  "shinydoc.copiar.menu.ver": {
+  "panlabs-docs.copiar.menu.ver": {
     "message": "View as Markdown",
     "description": "Item de menu que abre o Markdown"
   },
-  "shinydoc.copiar.menu.ver.apoio": {
+  "panlabs-docs.copiar.menu.ver.apoio": {
     "message": "The same page as plain text",
     "description": "Explicação do item que abre o Markdown"
   },
-  "shinydoc.copiar.menu.chatgpt": {
+  "panlabs-docs.copiar.menu.chatgpt": {
     "message": "Open in ChatGPT",
     "description": "Item de menu que abre a página no ChatGPT"
   },
-  "shinydoc.copiar.menu.assistente.apoio": {
+  "panlabs-docs.copiar.menu.assistente.apoio": {
     "message": "Ask about this page",
     "description": "Explicação dos itens que abrem a página num assistente"
   },
-  "shinydoc.copiar.menu.claude": {
+  "panlabs-docs.copiar.menu.claude": {
     "message": "Open in Claude",
     "description": "Item de menu que abre a página no Claude"
   },
-  "shinydoc.copiar.mais": {
+  "panlabs-docs.copiar.mais": {
     "message": "More ways to take this page",
     "description": "Nome acessível do botão que abre o menu ao lado de Copiar página"
   }

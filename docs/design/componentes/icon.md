@@ -95,10 +95,10 @@ mora em [`foco.md`](../foco.md); o ícone não é focável em lugar nenhum.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| O componente existe, e a técnica é SVGR inline | herdado | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §3a |
-| Compensação óptica por tamanho | origem própria | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §2 — habilitada pela escolha de SVGR |
-| Nome inexistente quebra o build, com sugestão | origem própria | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §6 |
-| Cor por contexto, via `currentColor` | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) e [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §7 |
-| Decorativo por default | origem própria | [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §6 |
-| Três tamanhos, sobre a escala de espaço | **origem própria (implementação)** | a tabela de compensação da [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §2.1 tem quatro faixas; três paradas da escala as cobrem sem abrir token de tamanho |
-| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| O componente existe, e a técnica é SVGR inline | herdado | [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §3a |
+| Compensação óptica por tamanho | origem própria | [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §2 — habilitada pela escolha de SVGR |
+| Nome inexistente quebra o build, com sugestão | origem própria | [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §6 |
+| Cor por contexto, via `currentColor` | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) e [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §7 |
+| Decorativo por default | origem própria | [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §6 |
+| Três tamanhos, sobre a escala de espaço | **origem própria (implementação)** | a tabela de compensação da [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §2.1 tem quatro faixas; três paradas da escala as cobrem sem abrir token de tamanho |
+| Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |

@@ -85,9 +85,9 @@ significado inteiro. O contrato de estado de entrada mora em
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| O componente existe, e sinaliza tradução ausente | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16), aceito no inventário pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
-| Nome em inglês, texto em pt-BR pela camada de i18n | herdado | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §4 — política de idioma |
-| Ele não viola o *zero JS de interação* | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) — a regra é sobre modelo de interação; isto é renderização condicional |
-| Devolve nada no locale de origem | origem própria | [#16](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/16) — sem lista, sem flag, sem drift |
+| O componente existe, e sinaliza tradução ausente | origem própria | [#16](https://github.com/ThiagoPanini/panlabs-docs/issues/16), aceito no inventário pela [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) |
+| Nome em inglês, texto em pt-BR pela camada de i18n | herdado | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §4 — política de idioma |
+| Ele não viola o *zero JS de interação* | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) — a regra é sobre modelo de interação; isto é renderização condicional |
+| Devolve nada no locale de origem | origem própria | [#16](https://github.com/ThiagoPanini/panlabs-docs/issues/16) — sem lista, sem flag, sem drift |
 | Mesma anatomia do callout neutro | origem própria | este slice |
-| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |

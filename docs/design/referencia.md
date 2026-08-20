@@ -12,9 +12,9 @@ este documento é o desenho) —, e um único degrau de interatividade num paine
 > **Correção de contagem, duas vezes, e a segunda esvazia a primeira.** Esta
 > abertura dizia *"a primeira das duas rupturas de layout do site — a outra é a
 > landing"*. A landing saiu em
-> [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94), e o par
+> [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), e o par
 > virou uma só. Depois **a que sobrava também saiu**: na
-> [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) o
+> [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) o
 > `docItemComponent` foi removido e o painel desceu para o fluxo da prosa.
 >
 > **O site tem ZERO ruptura de layout.** As 26 folhas da aba `Ferramentas`
@@ -33,7 +33,7 @@ refeita contra a cadeia nova.
 
 ## 1. A página de comando mede o que qualquer página mede
 
-> **Correção de fato — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118), e ela derruba a seção inteira que estava aqui.**
+> **Correção de fato — [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118), e ela derruba a seção inteira que estava aqui.**
 > Este bloco publicava uma aritmética — `577 + 32 + 511 = 1120` — e o que ela
 > justificava era a ausência do TOC nesta rota. A conta fechava; o produto que
 > ela descrevia é que não se sustentou.
@@ -65,7 +65,7 @@ A conta teve três justificativas ao longo da vida, e as três caíram:
    o cartão de todas as páginas, e o endpoint deixou de existir.
 2. **Não sobra coluna para o TOC** — a décima perda nomeada da rota, e ela era
    apresentada como aritmética, não gosto. Era verdade enquanto a grade era a
-   premissa; a [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) derrubou a premissa, e o TOC voltou sem ninguém precisar
+   premissa; a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) derrubou a premissa, e o TOC voltou sem ninguém precisar
    arrumar espaço para ele.
 3. **`--sd-api-prosa-width` porta a proporção da âncora** (#99): §10 de
    `research/paridade-devin` mede a âncora com prosa estreita e trilho largo
@@ -80,7 +80,7 @@ nas duas. A conta saiu porque o layout saiu, não porque a técnica falhou.
 
 ## 2. Não há comutador, e nenhuma página desta instância muda de layout
 
-> **Correção de fato — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118).** Esta seção descrevia `ApiDocItem`, um
+> **Correção de fato — [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118).** Esta seção descrevia `ApiDocItem`, um
 > `docItemComponent` que lia `frontMatter.api_exemplos` e trocava o layout da
 > página inteira: a perna *ausente* delegava para `@theme/DocItem`, a perna
 > *presente* montava uma grade de duas colunas sem TOC. As duas pernas viraram
@@ -129,7 +129,7 @@ existe coluna direita além do TOC.
 
 ## 3. O `sticky` saiu, e com ele o erro nº 1
 
-> **Correção de fato — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118).** Esta seção era um aviso, e o aviso perdeu o
+> **Correção de fato — [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118).** Esta seção era um aviso, e o aviso perdeu o
 > assunto. Ela ficou porque o mecanismo que ela descreve é real e volta a
 > morder quem montar qualquer trilho grudado neste projeto.
 
@@ -252,7 +252,7 @@ pedaços, e os três saem do contrato:
 
 **O marcador `{{argumento}}` é declarado num lugar só, e os dois lados o leem de
 lá.** `src/theme/MDXComponents/placeholder.mjs` é submódulo do registro que
-hospeda o painel — ele mudou de casa junto com `PainelComando.js` na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — e
+hospeda o painel — ele mudou de casa junto com `PainelComando.js` na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — e
 o gerador o importa — o mesmo caminho que a régua da busca já usa sobre
 `SearchBar/escada.mjs`. **O portão 5 não pegaria a divergência**, e é por isso que
 ela precisa de arquivo: ele regenera e diffa, então um gerador que passasse a
@@ -369,14 +369,14 @@ de entender o que esta rota acrescenta.
 | 1 | Nó injetado dentro do corpo da página — eyebrow, bloco de feedback, CTA lateral |
 | 2 | Breadcrumb reestruturado como a eyebrow da âncora |
 | 3 | A proporção da âncora entre conteúdo e painel |
-| ~~4~~ | ~~Faixa de tabs de largura total abaixo do navbar~~ — **removida**; era fato errado, e a [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) mediu a faixa saindo de degraus 0, 1 e 2. A numeração não é remendada: ver [`swizzle.md`](swizzle.md) §4 |
+| ~~4~~ | ~~Faixa de tabs de largura total abaixo do navbar~~ — **removida**; era fato errado, e a [#51](https://github.com/ThiagoPanini/panlabs-docs/issues/51) mediu a faixa saindo de degraus 0, 1 e 2. A numeração não é remendada: ver [`swizzle.md`](swizzle.md) §4 |
 | 5 | TOC com anatomia nova — barra de progresso, seções extras |
 | 6 | Ícone preso dentro de componente `unsafe` mantém o desenho do Docusaurus |
 | 7 | Footer dentro da coluna de prosa, como a âncora faz |
 | 8 | Armadilha de foco na sidebar de tela estreita |
 | 9 | Posição do botão de voltar ao topo na ordem de tabulação |
 
-**A décima era desta rota, e ela foi PAGA na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118).** Ela dizia *a página gerada
+**A décima era desta rota, e ela foi PAGA na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118).** Ela dizia *a página gerada
 não tem TOC*, e o motivo era a aritmética do §1: a soma das três medidas fechava
 o container, e a coluna que o painel ocupava era justamente a do TOC. O painel
 desceu para o fluxo, a coluna vagou, e o TOC voltou — nas quatro páginas, sem
@@ -384,7 +384,7 @@ ninguém precisar abrir espaço para ele.
 
 | # | Perda | Estado |
 | ---: | --- | --- |
-| ~~10~~ | ~~A página gerada não tem TOC~~ | **paga** — o painel saiu da coluna do TOC na [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) |
+| ~~10~~ | ~~A página gerada não tem TOC~~ | **paga** — o painel saiu da coluna do TOC na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) |
 
 **Ela encolheu três vezes, e a terceira zerou.** Nasceu dizendo *"a página de
 endpoint não tem cartão nem breakout"*; a geometria `mint` tirou os dois de
@@ -419,7 +419,7 @@ de referência **não-HTTP** é a superfície que o projeto nunca tinha exercita
 O preço está pago à vista, e é este: um componente especificado morreu, um ADR foi
 superado, e um documento inteiro da spec foi reescrito.
 
-### 7.1 O trilho lateral, e por que ele saiu — [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118)
+### 7.1 O trilho lateral, e por que ele saiu — [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118)
 
 **A opção rejeitada é a que estava no produto**, e ela tinha uma medição
 sustentando: §10 de `research/paridade-devin` mede a âncora com prosa estreita e
@@ -475,7 +475,7 @@ mesma dos demais alvos do site.
 elas perderam o objeto.** `Trilho`, `Trilho grudado em` e `Coluna de texto`
 mediam o layout de duas colunas desta rota — prosa de 577 ao lado de um trilho
 grudado de 511. O trilho desceu para o fluxo na
-[#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) e virou
+[#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) e virou
 um bloco de MDX, e não existe mais elemento a medir: as duas sondas de trilho
 passariam a imprimir `sem-medida` em toda execução.
 
@@ -534,13 +534,13 @@ junto com o alvo.
 | **O reset de nível sai sem deixar buraco** | **origem própria (consequência)** | um campo cujo tipo é outra entrada linka em vez de aninhar |
 | **A condição de `meta` vira conferência de cadeia** | **origem própria (implementação)** | o literal não pode aparecer no MDX; quem escreve o atributo é o componente |
 | As nove perdas nomeadas, restatadas | herdado | [`swizzle.md`](swizzle.md) §4 |
-| **A décima perda foi paga** | **origem própria** | [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — o painel saiu da coluna do TOC e o TOC voltou; o número não se reaproveita |
+| **A décima perda foi paga** | **origem própria** | [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — o painel saiu da coluna do TOC e o TOC voltou; o número não se reaproveita |
 | **O que segura a décima perda mudou de argumento** | **origem própria (correção)** | não é o gerador emitir duas seções — ele emite até quatro; é cada página documentar uma entrada |
-| **O dissenso da opção rejeitada** | origem própria | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) — ela custava menos e preservava o `VerbBadge` inteiro |
+| **O dissenso da opção rejeitada** | origem própria | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) — ela custava menos e preservava o `VerbBadge` inteiro |
 | **A aritmética do §1 corrigida para o container de 1120** | **origem própria (correção)** | a #96 derrubou `--sd-container-width` de 1152 para 1120 e este documento não veio junto; o painel real já dava 368, não 400 |
-| **O fio sob o cabeçalho do painel** | **herdado + origem própria** | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — a chrome de cabeçalho da âncora portada sem o segundo nível de preenchimento que ela tem, pela mesma simplificação já registrada em `estilos.module.css` |
-| A seção "Alvo medido" (§8) | origem própria | [#99](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/99) — mesmo padrão de [`chrome.md`](chrome.md) §11; números de `research/paridade-devin` §10 |
-| **O painel desce para o fluxo, logo depois da linha do comando** | **origem própria** | [#118](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/118) — a linha diz *como isto se chama*, e a pergunta seguinte numa página de CLI é *como isto se digita*; prosa entre as duas obrigaria a rolar para achar a linha copiável |
+| **O fio sob o cabeçalho do painel** | **herdado + origem própria** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a chrome de cabeçalho da âncora portada sem o segundo nível de preenchimento que ela tem, pela mesma simplificação já registrada em `estilos.module.css` |
+| A seção "Alvo medido" (§8) | origem própria | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — mesmo padrão de [`chrome.md`](chrome.md) §11; números de `research/paridade-devin` §10 |
+| **O painel desce para o fluxo, logo depois da linha do comando** | **origem própria** | [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — a linha diz *como isto se chama*, e a pergunta seguinte numa página de CLI é *como isto se digita*; prosa entre as duas obrigaria a rolar para achar a linha copiável |
 | **`ApiDocItem` sai de `src/theme/`** | **origem própria (consequência)** | sem layout a comutar, o componente da rota era `@theme/DocItem` chamando `@theme/DocItem`; segunda entrada removida do ledger de [`swizzle.md`](swizzle.md) §2 |
 | **Três linhas de alvo saem do §8** | **origem própria** | o objeto medido deixou de existir; a régua é a que `paridade.mjs` já aplica a `Accordion` e `Tabs` — *alvo que não confere nada parece cobertura* |
 | **A assinatura deixa de sair escapada** | **origem própria (correção)** | o contrato guardava `&lt;key&gt;`, e quem renderiza é `<code>{assinatura}</code>`, que já escapa sozinho — a tela mostrava a entidade crua |

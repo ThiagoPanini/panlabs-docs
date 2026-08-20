@@ -27,7 +27,7 @@
 # mudança no `trailingSlash`.
 #
 # Uso: scripts/portao-6-rotas.sh <url-base> [caminho-da-rota]
-#      scripts/portao-6-rotas.sh https://panlabs-tech.github.io/shinydoc-docusaurus
+#      scripts/portao-6-rotas.sh https://thiagopanini.github.io/panlabs-docs
 #
 # **A rota default é a fixture de página curta**, e a escolha não é decorativa:
 # ela é a única página do acervo sem coluna de TOC, então o `.md` dela é o menor

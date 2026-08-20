@@ -99,15 +99,15 @@ O motivo é específico. Este contrato não morre por alguém desenhar um anel r
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| `outline` em vez de sombra | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §2 — argumento de composição |
-| Regra universal com lista de exceções | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §3.2, herdando o critério de modo de falhar da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
+| `outline` em vez de sombra | origem própria | [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §2 — argumento de composição |
+| Regra universal com lista de exceções | origem própria | [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §3.2, herdando o critério de modo de falhar da [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) |
 | As três exceções e o `:has()` do bloco de código | origem própria (verificação) | fonte de `theme-common@3.10.2` e `theme-classic@3.10.2` |
 | Espessura e afastamento | **origem própria com âncora normativa** | SC 2.4.13; as sete referências não foram medidas neste eixo |
-| Anel instantâneo | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 |
-| `:active` com os tokens do hover | mecanismo emprestado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.1, sobre o argumento do anel da [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) |
-| `(pointer: coarse)` como espelho de `(hover: hover)` | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.3 — o par já é usado pelo theme-classic |
+| Anel instantâneo | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §4 |
+| `:active` com os tokens do hover | mecanismo emprestado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §4.1, sobre o argumento do anel da [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) |
+| `(pointer: coarse)` como espelho de `(hover: hover)` | herdado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §4.3 — o par já é usado pelo theme-classic |
 | Piso de alvo de 44px | **origem própria com âncora normativa** | SC 2.5.5; as sete não foram medidas neste eixo |
 | Neutralizar o hover do Infima pelo adaptador | **origem própria (correção)** | varredura desta implementação: o Infima tem **zero** `(hover: hover)`, contra o que a decisão de motion supunha |
 | Ordem de tabulação | herdado | correta como o Docusaurus entrega; nada se toca |
-| Portão de varredura de `outline` | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §11 |
+| Portão de varredura de `outline` | origem própria | [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §11 |
 | Espessura e afastamento das referências | **lacuna de medição** | as sete não foram medidas em foco; reabre se alguém medir |

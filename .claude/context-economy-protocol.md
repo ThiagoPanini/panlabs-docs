@@ -48,7 +48,7 @@ O digest já é o plano — não redija plano em prosa antes de editar. Identifi
 
 **`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4 e 5 (~2,5s). A CI roda também o portão 7, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build` e `npm run zeros`. Verde local no bundle não é verde na CI.
 
-> **Correção de contagem.** **Eram oito portões, são sete** — o 8 morreu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)). O número **não se reaproveita**: os que ficam vão de 1 a 7 e nenhum é renumerado, porque o ADR 5 cita o portão 5 pelo número.
+> **Correção de contagem.** **Eram oito portões, são sete** — o 8 morreu com a landing ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)). O número **não se reaproveita**: os que ficam vão de 1 a 7 e nenhum é renumerado, porque o ADR 5 cita o portão 5 pelo número.
 
 ## 6. Narre comprimido
 

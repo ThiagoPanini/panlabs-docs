@@ -171,7 +171,7 @@ export default function SearchBar() {
         onClick={abrir}>
         <Icon name="search" size="sm" />
         <span className={estilos.rotulo}>
-          <Translate id="shinydoc.busca.abrir" description="Rótulo do botão que abre a busca">
+          <Translate id="panlabs-docs.busca.abrir" description="Rótulo do botão que abre a busca">
             Buscar
           </Translate>
         </span>
@@ -199,7 +199,7 @@ export default function SearchBar() {
             aria-autocomplete="list"
             aria-activedescendant={resultados.length > 0 ? idOpcao(ativo) : undefined}
             aria-label={translate({
-              id: 'shinydoc.busca.campo',
+              id: 'panlabs-docs.busca.campo',
               message: 'Buscar na documentação',
               description: 'Nome acessível do campo de busca',
             })}
@@ -215,7 +215,7 @@ export default function SearchBar() {
             className={estilos.fechar}
             onClick={fechar}
             aria-label={translate({
-              id: 'shinydoc.busca.fechar',
+              id: 'panlabs-docs.busca.fechar',
               message: 'Fechar a busca',
               description: 'Nome acessível do botão que fecha o modal de busca',
             })}>
@@ -228,7 +228,7 @@ export default function SearchBar() {
           role="listbox"
           className={estilos.lista}
           aria-label={translate({
-            id: 'shinydoc.busca.resultados',
+            id: 'panlabs-docs.busca.resultados',
             message: 'Resultados',
             description: 'Nome acessível da lista de resultados da busca',
           })}>
@@ -247,7 +247,7 @@ export default function SearchBar() {
               {r.f ? (
                 <span className={estilos.fallback}>
                   <Translate
-                    id="shinydoc.busca.fallback"
+                    id="panlabs-docs.busca.fallback"
                     description="Marca de resultado cuja página ainda está em português">
                     em português
                   </Translate>
@@ -263,7 +263,7 @@ export default function SearchBar() {
             ? ''
             : translate(
                 {
-                  id: 'shinydoc.busca.contagem',
+                  id: 'panlabs-docs.busca.contagem',
                   message: '{n} resultados',
                   description: 'Anúncio do número de resultados, para leitor de tela',
                 },
@@ -277,19 +277,19 @@ export default function SearchBar() {
         <footer className={estilos.rodape}>
           <span>
             ↑↓{' '}
-            <Translate id="shinydoc.busca.tecla.navegar" description="Legenda das setas no rodapé do modal">
+            <Translate id="panlabs-docs.busca.tecla.navegar" description="Legenda das setas no rodapé do modal">
               navegar
             </Translate>
           </span>
           <span>
             ↵{' '}
-            <Translate id="shinydoc.busca.tecla.abrir" description="Legenda do Enter no rodapé do modal">
+            <Translate id="panlabs-docs.busca.tecla.abrir" description="Legenda do Enter no rodapé do modal">
               abrir
             </Translate>
           </span>
           <span>
             esc{' '}
-            <Translate id="shinydoc.busca.tecla.fechar" description="Legenda do Esc no rodapé do modal">
+            <Translate id="panlabs-docs.busca.tecla.fechar" description="Legenda do Esc no rodapé do modal">
               fechar
             </Translate>
           </span>

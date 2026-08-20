@@ -59,7 +59,7 @@ desta mudança a célula do escuro era **1,000:1** — não "pouco contraste", e
 a mesma cor, duas vezes. É literalmente o defeito do Infima que este projeto
 nomeou.
 
-> **Dissenso registrado, herdado da [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56).**
+> **Dissenso registrado, herdado da [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56).**
 > O berço era **anatomia medida** das referências, e morre por argumento de
 > arquitetura. A parada 900 é o degrau imediatamente acima na rampa — a única
 > derivação honesta disponível, e **não uma medida**. Se ao vivo o bloco ficar
@@ -155,13 +155,13 @@ toque ele some sem erro, sem aviso e sem sintoma para quem testa no desktop.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Não é swizzle: CSS mais opção pública | **origem própria (correção)** | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15), corrigindo a rota de swizzle da raiz pela escada da [#14](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/14) |
-| Sem numeração, realce, foco, diff nem ícone | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — zero usos medidos |
-| ~~Pastilha dentro de berço~~ · **objeto preenchido um passo acima da página** | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — a moldura era o cartão aparecendo em volta, e com ele morreram a segunda tinta e o `--sd-code-berco` que a produzia |
-| A superfície do código sobe para a parada 900 no escuro | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — ela era o **mesmo valor** de `--sd-surface-page`, e o bloco sumia contra a página no modo canônico |
-| ~~O código afunda~~ · **nada afunda** | **origem própria (implementação)** | [#56](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/56) — afundar era relativo ao cartão; `--sd-shadow-sunken` morreu junto |
-| Paleta de sintaxe na camada 2 | herdado | [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) §9 |
-| Shim de config que só referencia token | origem própria | [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11) §2 |
+| Não é swizzle: CSS mais opção pública | **origem própria (correção)** | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15), corrigindo a rota de swizzle da raiz pela escada da [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) |
+| Sem numeração, realce, foco, diff nem ícone | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — zero usos medidos |
+| ~~Pastilha dentro de berço~~ · **objeto preenchido um passo acima da página** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — a moldura era o cartão aparecendo em volta, e com ele morreram a segunda tinta e o `--sd-code-berco` que a produzia |
+| A superfície do código sobe para a parada 900 no escuro | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ela era o **mesmo valor** de `--sd-surface-page`, e o bloco sumia contra a página no modo canônico |
+| ~~O código afunda~~ · **nada afunda** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — afundar era relativo ao cartão; `--sd-shadow-sunken` morreu junto |
+| Paleta de sintaxe na camada 2 | herdado | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §9 |
+| Shim de config que só referencia token | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §2 |
 | `--prism-background-color` só é alcançável pelo shim | **origem própria (correção)** | medido no fonte da versão em uso — estilo inline vence folha de estilo |
-| Botão de copiar visível sob ponteiro grosso | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.2 |
-| Raio 16 sozinho, 14 dentro do grupo | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--sd-radius-md` (12px) nos dois contextos, sem distinguir |
+| Botão de copiar visível sob ponteiro grosso | herdado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §4.2 |
+| Raio 16 sozinho, 14 dentro do grupo | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--sd-radius-md` (12px) nos dois contextos, sem distinguir |

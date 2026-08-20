@@ -259,7 +259,7 @@ O `:focus` do upstream **fica**. Ele controla posição, não indicador, e o lin
 
 **Uma regra de conteúdo sai daqui:** a **rota raiz** renderiza `<main>`. O alvo preferido é `main:first-of-type`; página de doc tem um pelo layout, página em `src/pages/` só tem se alguém escrever. Sem ele o skip link cai na reserva, que é o invólucro inteiro do layout — funciona, mas o marco de página fica errado.
 
-> **Correção de sujeito, não de regra.** A frase dizia *"a landing renderiza `<main>`"*, e a landing saiu em [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94). A regra sobreviveu à página porque ela nunca foi sobre a página: ela é sobre **`src/pages/`**, e sobrou exatamente uma rota ali — a raiz, que é um salto para a primeira doc. O `<main>` dela está escrito **por causa desta linha**, e o comentário de cabeçalho de `src/pages/index.js` cita esta seção para que a próxima reescrita da raiz não o remova por parecer supérfluo.
+> **Correção de sujeito, não de regra.** A frase dizia *"a landing renderiza `<main>`"*, e a landing saiu em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94). A regra sobreviveu à página porque ela nunca foi sobre a página: ela é sobre **`src/pages/`**, e sobrou exatamente uma rota ali — a raiz, que é um salto para a primeira doc. O `<main>` dela está escrito **por causa desta linha**, e o comentário de cabeçalho de `src/pages/index.js` cita esta seção para que a próxima reescrita da raiz não o remova por parecer supérfluo.
 
 **Um segundo skip link não entra.** *"Pular para a navegação"* só serve quando a navegação vem depois do conteúdo; aqui ela vem antes. Um link a mais no topo custa uma parada de Tab a todo mundo e não resolve nada.
 
@@ -346,26 +346,26 @@ A varredura cobre `src/` inteiro, inclusive CSS Module de componente: a regra un
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| `outline` em vez de camada de sombra | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §2 — argumento de composição, não de estética |
-| Regra universal com lista fechada de exceções | origem própria | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §3.2, herdando o critério de modo de falhar da [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) |
+| `outline` em vez de camada de sombra | origem própria | [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §2 — argumento de composição, não de estética |
+| Regra universal com lista fechada de exceções | origem própria | [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §3.2, herdando o critério de modo de falhar da [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) |
 | As três exceções, e o `:has()` do bloco de código | origem própria (verificação) | fonte de `theme-common@3.10.2` e `theme-classic@3.10.2` |
 | Espessura do anel | **origem própria com âncora normativa** | SC 2.4.13 — limiar de perímetro |
 | Afastamento do anel | **origem própria** | derivado do requisito do §3.1, não de medição |
-| Cor do anel = acento | **origem própria com âncora normativa** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) — o carimbo antigo media distância até o **Infima**, e divergir do Infima não é divergir da âncora; o piso é a SC 1.4.11 |
-| Anel instantâneo | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §4 |
-| Tabela de dezesseis combinações | origem própria (verificação) | [#23](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/23) §6, reproduzindo o modelo da [#12](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/12) |
+| Cor do anel = acento | **origem própria com âncora normativa** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) — o carimbo antigo media distância até o **Infima**, e divergir do Infima não é divergir da âncora; o piso é a SC 1.4.11 |
+| Anel instantâneo | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §4 |
+| Tabela de dezesseis combinações | origem própria (verificação) | [#23](https://github.com/ThiagoPanini/panlabs-docs/issues/23) §6, reproduzindo o modelo da [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) |
 | As dezesseis células saem de um comando | **origem própria (implementação)** | `node scripts/contraste.mjs` — a divergência com [`tokens.md`](tokens.md) §10 sobreviveu a uma auditoria porque as duas cópias eram transcritas |
-| `:active` com os tokens do hover | mecanismo emprestado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.1, sobre o argumento do anel |
-| `(pointer: coarse)` como espelho de `(hover: hover)` | herdado | [#28](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/28) §4.3 — o par já é usado pelo `theme-classic` |
+| `:active` com os tokens do hover | mecanismo emprestado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §4.1, sobre o argumento do anel |
+| `(pointer: coarse)` como espelho de `(hover: hover)` | herdado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §4.3 — o par já é usado pelo `theme-classic` |
 | Piso de alvo | **origem própria com âncora normativa** | SC 2.5.5 |
 | **A âncora de heading paga o piso, por `::after`, só sob `(pointer: coarse)`** | **origem própria (medição)** | **S2-3** — medido a 1512 com `(pointer: coarse)` emulado por CDP: `.hash-link` saía **22,48 × 29** com `min-height: 44px` computado, porque `display: inline` engole altura mínima. Depois do conserto, `elementFromPoint` devolve a âncora a ±21px nos dois eixos e a linha do `h2` continua em **31,98px**. Não é exceção nova ao §8.2 — é a regra dele passando a alcançar. Ver §8.2 |
 | `inline` ignora altura mínima, e o rodapé vira `inline-flex` | **origem própria (implementação)** | medido ao escrever o CSS do estreito |
 | **O escopo do link isento é `.markdown`** | **origem própria (correção)** | o site tem duas prosas desde a referência gerada, e só uma delas carrega `.theme-doc-markdown` |
-| Neutralizar o hover do framework pelo adaptador | **origem própria (correção)** | varredura desta implementação: o Infima tem zero `(hover: hover)`, contra o que a [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) supunha |
+| Neutralizar o hover do framework pelo adaptador | **origem própria (correção)** | varredura desta implementação: o Infima tem zero `(hover: hover)`, contra o que a [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) supunha |
 | Ordem de tabulação | herdado | correta como o Docusaurus entrega |
-| **A divergência entre ordem de foco e leitura visual** | **lacuna por restrição** | [#51](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/51) — medida com a faixa montada; o `Navbar/Content` emite dois blocos e a faixa distribui um deles em duas linhas |
+| **A divergência entre ordem de foco e leitura visual** | **lacuna por restrição** | [#51](https://github.com/ThiagoPanini/panlabs-docs/issues/51) — medida com a faixa montada; o `Navbar/Content` emite dois blocos e a faixa distribui um deles em duas linhas |
 | Skip link | herdado | WCAG G1 já implementado pelo upstream |
-| **O `<main>` obrigatório é da rota raiz, não da landing** | **origem própria (correção)** | [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94) — a regra é sobre `src/pages/`, e a raiz é a única rota que sobrou ali; o sujeito trocou, a obrigação não |
+| **O `<main>` obrigatório é da rota raiz, não da landing** | **origem própria (correção)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a regra é sobre `src/pages/`, e a raiz é a única rota que sobrou ali; o sujeito trocou, a obrigação não |
 | Comentário fora da varredura dos portões | **origem própria (implementação)** | o portão cobra declaração, e reprovar por prosa ensinaria a escrever comentário pobre |
 | Sidebar de tela estreita sem armadilha de foco | **lacuna por restrição** | `unsafe`; o fonte marca o ponto como workaround temporário |
-| Espessura e afastamento das referências | **origem própria (medição)** | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — a âncora usa `outline: 1px auto <cor de marca>; outline-offset: 1px`, idêntico em cinco sites Mintlify; as três não-Mintlify usam 2-3px `solid`. O 1px medido **não cobre** o piso da SC 2.4.13 que já governa a linha "Espessura do anel" desta mesma tabela — o valor foi medido e não adotado, não deixado por medir |
+| Espessura e afastamento das referências | **origem própria (medição)** | [#83](https://github.com/ThiagoPanini/panlabs-docs/issues/83) — a âncora usa `outline: 1px auto <cor de marca>; outline-offset: 1px`, idêntico em cinco sites Mintlify; as três não-Mintlify usam 2-3px `solid`. O 1px medido **não cobre** o piso da SC 2.4.13 que já governa a linha "Espessura do anel" desta mesma tabela — o valor foi medido e não adotado, não deixado por medir |

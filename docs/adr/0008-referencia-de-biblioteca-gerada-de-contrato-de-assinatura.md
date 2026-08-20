@@ -214,11 +214,11 @@ apontando para cá e o conteúdo intacto.
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | Gerar de contrato, saída commitada, portão de diff | herdado | [ADR 5](0005-referencia-da-api-gerada-de-contrato.md) — a decisão sobreviveu à troca de premissa |
-| O contrato descreve assinatura de função, tipo e módulo | origem própria | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) — o critério do dono é o que valida mais superfície |
+| O contrato descreve assinatura de função, tipo e módulo | origem própria | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) — o critério do dono é o que valida mais superfície |
 | Dois contratos, nunca bilíngue | herdado | [ADR 5](0005-referencia-da-api-gerada-de-contrato.md) a) |
 | A lista fechada do que pode divergir entre o par | **origem própria (implementação)** | descoberto escrevendo a congruência: sem a lista, "congruente" não é conferível |
 | JSON em vez de YAML | herdado | [ADR 5](0005-referencia-da-api-gerada-de-contrato.md) a) — consequência direta do axioma 2 |
-| `gerar-api` não sobrevive ao nome | origem própria | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) — o nome do arquivo mentiria |
+| `gerar-api` não sobrevive ao nome | origem própria | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) — o nome do arquivo mentiria |
 | Fragmento de sidebar em vez da árvore | origem própria | a instância tem quinze folhas autorais que o gerador não conhece |
 | Sem categoria própria para o ramo | **origem própria (consequência)** | seria o nível 4, e o teto é 3 — ver `docs/design/informacao.md` §3.1 |
 | A lista fechada de doze recusas, com JSON Pointer | herdado | [ADR 5](0005-referencia-da-api-gerada-de-contrato.md) c) — a régua sobreviveu, os membros não |
@@ -230,4 +230,4 @@ apontando para cá e o conteúdo intacto.
 | Editável é argumento escalar com exemplo | **origem própria (implementação)** | porte da regra de caminho/consulta; estrutura num campo de texto exigiria um parser |
 | A condição de `data-sd-part="meta"` vira conferência | **origem própria (implementação)** | o literal não pode aparecer no MDX — quem escreve o atributo é o componente, e a página escreve a tag; o portão casa a cadeia |
 | Supersessão em vez de edição | origem própria | `docs/adr/README.md` — os ADRs são numerados e imutáveis |
-| O dissenso da opção rejeitada | origem própria | [#82](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/82) — ela custava menos e preservava um componente inteiro já especificado |
+| O dissenso da opção rejeitada | origem própria | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) — ela custava menos e preservava um componente inteiro já especificado |

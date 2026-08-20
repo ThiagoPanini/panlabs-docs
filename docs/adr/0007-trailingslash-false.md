@@ -10,12 +10,12 @@
 
 | Consumidor | Origem |
 | --- | --- |
-| Mapeamento permalink → arquivo `.md` | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) |
-| Lista de links do `llms.txt` | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) |
-| Separador `--- [Document source](url) ---` do `llms-full.txt` | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) |
-| Ponteiro de volta injetado em cada `.md` | [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) |
-| Campo `u` do índice de busca | [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) |
-| Link `llms.txt` no footer | [#27](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/27) |
+| Mapeamento permalink → arquivo `.md` | [#8](https://github.com/ThiagoPanini/panlabs-docs/issues/8) |
+| Lista de links do `llms.txt` | [#8](https://github.com/ThiagoPanini/panlabs-docs/issues/8) |
+| Separador `--- [Document source](url) ---` do `llms-full.txt` | [#8](https://github.com/ThiagoPanini/panlabs-docs/issues/8) |
+| Ponteiro de volta injetado em cada `.md` | [#8](https://github.com/ThiagoPanini/panlabs-docs/issues/8) |
+| Campo `u` do índice de busca | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) |
+| Link `llms.txt` no footer | [#27](https://github.com/ThiagoPanini/panlabs-docs/issues/27) |
 
 ### `undefined` sai primeiro
 
@@ -90,7 +90,7 @@ Implementado em `scripts/portao-6-rotas.sh`. As rotas 1 e 3 rodam desde o slice 
 
 ### Medição do host, feita no slice 1
 
-O portão 6 rodou contra `https://panlabs-tech.github.io/shinydoc-docusaurus` assim que o site subiu, e uma sonda temporária mediu o `.md`. Os três resultados:
+O portão 6 rodou contra `https://thiagopanini.github.io/panlabs-docs` assim que o site subiu, e uma sonda temporária mediu o `.md`. Os três resultados:
 
 | Rota | Medido | Veredito |
 | ---: | --- | --- |
@@ -116,9 +116,9 @@ O portão 6 rodou contra `https://panlabs-tech.github.io/shinydoc-docusaurus` as
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| `trailingSlash: false` | herdado | canônica sem barra e `308` medidos nos dois sites Mintlify de referência ([#33](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/33)) |
+| `trailingSlash: false` | herdado | canônica sem barra e `308` medidos nos dois sites Mintlify de referência ([#33](https://github.com/ThiagoPanini/panlabs-docs/issues/33)) |
 | `undefined` descartado | delta deliberado | doutrina de saída determinada pela config; a doc do Docusaurus recomenda o mesmo para GitHub Pages |
 | Emissão dupla como alavanca | mecanismo emprestado | `slorber/trailing-slash-guide`, `docs/Solutions.md` |
 | Comportamento do host corporativo | **lacuna de medição** | nginx, Apache, IIS, S3+CloudFront e Artifactory ausentes do guia, com TODO explícito; dados de host de 2023-08-10 |
-| Portão de implantação de três `curl` | origem própria | [#33](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/33) §6; a rota 2 é a recomendação 7 da [#8](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/8) virando verificação |
-| `.md` no `outDir` em vez de `static/` | herdado | a régua da [#19](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/19) — commita-se o que muda por decisão, não por escrita |
+| Portão de implantação de três `curl` | origem própria | [#33](https://github.com/ThiagoPanini/panlabs-docs/issues/33) §6; a rota 2 é a recomendação 7 da [#8](https://github.com/ThiagoPanini/panlabs-docs/issues/8) virando verificação |
+| `.md` no `outDir` em vez de `static/` | herdado | a régua da [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) — commita-se o que muda por decisão, não por escrita |

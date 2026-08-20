@@ -6,11 +6,11 @@
 >
 > **A decisão não muda**, e a consequência que carrega o número continua verdadeira no que ela afirma: `--docusaurus-details-transition` **é** alcançada por seletor estrutural com escopo, e nem a duração nem a curva dela ficam de fora. Ela é a **exceção 2**, e não foi ela que saiu.
 >
-> A lista do adaptador caiu de cinco para quatro na [#79](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/79) — a de `--docusaurus-tag-list-border` saiu por não ter superfície viva. A lista fechada vive em [`docs/design/tokens.md`](../design/tokens.md) §7, e é lá que ela se confere membro a membro.
+> A lista do adaptador caiu de cinco para quatro na [#79](https://github.com/ThiagoPanini/panlabs-docs/issues/79) — a de `--docusaurus-tag-list-border` saiu por não ter superfície viva. A lista fechada vive em [`docs/design/tokens.md`](../design/tokens.md) §7, e é lá que ela se confere membro a membro.
 
 > ### Errata — a regra (d) ficou sem exemplo vivo
 >
-> **A decisão não muda, e a regra continua escrita como está.** O que mudou é que os **dois** movimentos que a demonstravam deixaram de existir: o *reveal* por rolagem e a respiração do glow eram consumidos só pelo CSS Module da landing, e a página saiu na [#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94).
+> **A decisão não muda, e a regra continua escrita como está.** O que mudou é que os **dois** movimentos que a demonstravam deixaram de existir: o *reveal* por rolagem e a respiração do glow eram consumidos só pelo CSS Module da landing, e a página saiu na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94).
 >
 > Onde o documento diz que *"as duas somem inteiras — o reveal por não entrar no `@media (prefers-reduced-motion: no-preference)` que o envolve, e a respiração do glow por `animation: none` no bloco `reduce`"*, leia-se **o mecanismo, não o inventário**. Os dois caminhos continuam sendo os caminhos certos, e o bloco `reduce` de `src/css/tokens.css` guarda o comentário que os descreve para quem trouxer o próximo movimento infinito.
 >
@@ -93,9 +93,9 @@ Um `grep` de uma linha, na cadência de commit: `transition:` ou `animation:` cu
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Reduced-motion na camada de token, alcançando o Infima | herdado + origem própria (implementação) | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) mediu que o Infima zera `--ifm-transition-*` sob a media query; [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
-| Movimento composto da escala, não com número cravado | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §1 |
-| `1ms` em vez de `0s` | origem própria | `useCollapsible` do theme-common anima altura em JS ([#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17)) |
-| Remover, não encurtar, o que não termina sozinho | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) §2 |
-| Portão de `grep` de motion | origem própria | idioma de invariante da [#11](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/11), aplicado por [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17) |
-| Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna por restrição** | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — literais fora do alcance de qualquer variável |
+| Reduced-motion na camada de token, alcançando o Infima | herdado + origem própria (implementação) | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) mediu que o Infima zera `--ifm-transition-*` sob a media query; [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §2 |
+| Movimento composto da escala, não com número cravado | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §1 |
+| `1ms` em vez de `0s` | origem própria | `useCollapsible` do theme-common anima altura em JS ([#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17)) |
+| Remover, não encurtar, o que não termina sozinho | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §2 |
+| Portão de `grep` de motion | origem própria | idioma de invariante da [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11), aplicado por [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) |
+| Os três `ease-in-out` do `navbar.pcss` como perda | **lacuna por restrição** | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) — literais fora do alcance de qualquer variável |

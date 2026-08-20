@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * shinydoc — configuração do Docusaurus.
+ * panlabs-docs — configuração do Docusaurus.
  *
  * Regra que atravessa este arquivo: NENHUM valor de cor entra aqui. A paleta de
  * sintaxe chega ao Prism por um shim que só referencia token; a fonte única de
@@ -86,10 +86,10 @@ const config = {
   tagline: 'O acervo de aprendizado de um desenvolvedor',
 
   // GitHub Pages, do próprio repositório.
-  url: 'https://panlabs-tech.github.io',
-  baseUrl: '/shinydoc-docusaurus/',
-  organizationName: 'panlabs-tech',
-  projectName: 'shinydoc-docusaurus',
+  url: 'https://thiagopanini.github.io',
+  baseUrl: '/panlabs-docs/',
+  organizationName: 'ThiagoPanini',
+  projectName: 'panlabs-docs',
 
   // URLs sem barra final. Ver ADR 7 — os seis consumidores, o preço de host e a
   // alavanca de emissão dupla, que é acionada se o portão 6 rota 1 reprovar.
@@ -294,7 +294,7 @@ const config = {
           {type: 'search', position: 'right'},
           {type: 'localeDropdown', position: 'right'},
           {
-            href: 'https://github.com/panlabs-tech/shinydoc-docusaurus',
+            href: 'https://github.com/ThiagoPanini/panlabs-docs',
             label: 'GitHub',
             position: 'right',
           },

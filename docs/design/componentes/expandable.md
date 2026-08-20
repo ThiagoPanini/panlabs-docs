@@ -107,11 +107,11 @@ O anel de foco e o piso de alvo de toque são universais e moram em
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido da anatomia** | **medido em referência** | medição de primeira mão da âncora, em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
-| Componente do zero, sobre `<details>` | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4); [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
-| Nível 1 aberto, 2+ fechado | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6), ratificado pela [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §7.3 |
-| Busca na página em `<details>` fechado | herdado | [#83](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/83) — comportamento de especificação (WHATWG, `beforematch`/find-in-page revelando `<details>` fechado): Chrome desde a versão 97 (jan/2022), Firefox desde a 139 (mai/2025), Safari desde a 26.2 (Interop 2025). As três engines convergem hoje; nenhum `keydown` nosso está envolvido |
-| Âncora de URL abre os ancestrais | herdado | comportamento de especificação, registrado pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
+| **O alvo medido da anatomia** | **medido em referência** | medição de primeira mão da âncora, em `research/paridade-devin` §11 — [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93) |
+| Componente do zero, sobre `<details>` | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4); [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
+| Nível 1 aberto, 2+ fechado | herdado | [#6](https://github.com/ThiagoPanini/panlabs-docs/issues/6), ratificado pela [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §7.3 |
+| Busca na página em `<details>` fechado | herdado | [#83](https://github.com/ThiagoPanini/panlabs-docs/issues/83) — comportamento de especificação (WHATWG, `beforematch`/find-in-page revelando `<details>` fechado): Chrome desde a versão 97 (jan/2022), Firefox desde a 139 (mai/2025), Safari desde a 26.2 (Interop 2025). As três engines convergem hoje; nenhum `keydown` nosso está envolvido |
+| Âncora de URL abre os ancestrais | herdado | comportamento de especificação, registrado pela [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
 | Fio à esquerda em vez de moldura | **origem própria (implementação)** | moldura a cada nível é moldura dentro de moldura, até quatro níveis. *A redação anterior dizia "cartão dentro de cartão"; `cartão` passou a significar só o componente* |
-| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| Raio 12 no fio à esquerda | **origem própria (correção)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — a sonda `expandable.raio` mede contra o alvo desde a [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93), mas a regra nunca declarou `border-radius`; ficava em `0px` computado |
+| Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| Raio 12 no fio à esquerda | **origem própria (correção)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — a sonda `expandable.raio` mede contra o alvo desde a [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93), mas a regra nunca declarou `border-radius`; ficava em `0px` computado |

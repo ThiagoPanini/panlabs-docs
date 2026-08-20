@@ -144,15 +144,15 @@ contrato de estado de entrada mora em [`foco.md`](../foco.md).
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/93) |
-| Compõe `Tabs` em vez de swizzlar | herdado | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §3 |
-| **Ele fica no catálogo** | **herdado** | [#55](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/55) e [#60](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/60) — a âncora usa `CodeGroup` cinco vezes, e o critério de corte é uso zero; o *"resolve com `Tabs`"* nunca foi contado, e 52 dos 105 `Tab` medidos lá embrulham `Frame` |
-| Abas e não dropdown | herdado | [#6](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/6) — a forma é função da contagem; [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 transforma isso em regra de contrato |
-| `groupId` e `queryString` | herdado | [#18](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/18) §8 |
+| **O alvo medido da `## Anatomia`** | **medido em referência** | medição de primeira mão da âncora em `research/paridade-devin` §11 — [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93) |
+| Compõe `Tabs` em vez de swizzlar | herdado | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §3 |
+| **Ele fica no catálogo** | **herdado** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) e [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — a âncora usa `CodeGroup` cinco vezes, e o critério de corte é uso zero; o *"resolve com `Tabs`"* nunca foi contado, e 52 dos 105 `Tab` medidos lá embrulham `Frame` |
+| Abas e não dropdown | herdado | [#6](https://github.com/ThiagoPanini/panlabs-docs/issues/6) — a forma é função da contagem; [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §8 transforma isso em regra de contrato |
+| `groupId` e `queryString` | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §8 |
 | Os dois nascem desligados | **origem própria (correção)** | ligar por default polui a escolha compartilhada quando as abas não são linguagens, e o defeito só aparece noutra página |
-| Rótulo repetido lança | **origem própria (implementação)** | mesma doutrina do registro de ícones da [#21](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/21) §6 |
-| O título sai da moldura e vira rótulo de aba | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — anatomia medida |
+| Rótulo repetido lança | **origem própria (implementação)** | mesma doutrina do registro de ícones da [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §6 |
+| O título sai da moldura e vira rótulo de aba | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — anatomia medida |
 | Rótulo nunca vazio, com dois fallbacks | **origem própria (implementação)** | aba sem nome não é reclicável |
-| Zero partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| Casca com fio, raio e fundo próprios | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11; a versão anterior só tinha margem, sem medição atrás |
-| Indicador de aba ativa em pílula, escopado ao grupo | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 distingue o indicador do grupo do sublinhado da aba de conteúdo |
+| Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| Casca com fio, raio e fundo próprios | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior só tinha margem, sem medição atrás |
+| Indicador de aba ativa em pílula, escopado ao grupo | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 distingue o indicador do grupo do sublinhado da aba de conteúdo |

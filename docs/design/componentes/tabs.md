@@ -123,12 +123,12 @@ O anel de foco é universal e mora em [`foco.md`](../foco.md); a aba é um
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| Consumido sem swizzle | herdado | [#5](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/5) — `Tabs` é `unsafe`, e a anatomia sai só de CSS |
-| Sublinhado puxado sobre a régua | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — anatomia medida |
-| `queryString` põe a escolha na URL | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — delta de outro sistema, aqui de graça |
-| Exceção declarada do contrato de partes | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| Estado lido do ARIA | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
+| Consumido sem swizzle | herdado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) — `Tabs` é `unsafe`, e a anatomia sai só de CSS |
+| Sublinhado puxado sobre a régua | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — anatomia medida |
+| `queryString` põe a escolha na URL | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — delta de outro sistema, aqui de graça |
+| Exceção declarada do contrato de partes | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| Estado lido do ARIA | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | Seletor com tipo de elemento | **origem própria (implementação)** | empate de especificidade com a skin e com o framework resolvido sem depender de ordem de carga |
 | Sem abas esticadas | origem própria | este slice |
-| Inativa em tom forte, e não em tom mudo | **origem própria (correção)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 mede o texto inativo igual ao ativo em repouso; a implementação anterior partia de `--sd-text-muted` e só subia ao tom forte no hover, sem medição atrás |
-| Ativa no acento (texto), hover inativo só no fio | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 |
+| Inativa em tom forte, e não em tom mudo | **origem própria (correção)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 mede o texto inativo igual ao ativo em repouso; a implementação anterior partia de `--sd-text-muted` e só subia ao tom forte no hover, sem medição atrás |
+| Ativa no acento (texto), hover inativo só no fio | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 |

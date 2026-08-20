@@ -64,7 +64,7 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
           data-sd-part="ancora"
           aria-label={translate(
             {
-              id: 'shinydoc.campo.ancora',
+              id: 'panlabs-docs.campo.ancora',
               message: 'Link para {nome}',
               description: 'Nome acessível da âncora de linha de um campo de API',
             },
@@ -85,7 +85,7 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
           <span className={estilos.fieldChip}>{type}</span>
           {padrao === undefined ? null : (
             <span className={estilos.fieldChip}>
-              <Translate id="shinydoc.campo.padrao" description="Rótulo do valor default de um campo de API">
+              <Translate id="panlabs-docs.campo.padrao" description="Rótulo do valor default de um campo de API">
                 padrão
               </Translate>{' '}
               <code>{padrao}</code>
@@ -94,7 +94,7 @@ function Campo({especie, name, type, required, deprecated, padrao, children}) {
           {required ? (
             <strong>
               <Translate
-                id="shinydoc.campo.obrigatorio"
+                id="panlabs-docs.campo.obrigatorio"
                 description="Chip que marca um parâmetro obrigatório">
                 obrigatório
               </Translate>

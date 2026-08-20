@@ -137,13 +137,13 @@ acessibilidade.
 
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
-| `<details>` nativo, zero JS | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
-| Grupo, ícone e descrição sobre a primitiva | herdado | [#4](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/4) — o Docusaurus tem a primitiva e não tem o resto |
-| Âncora de URL sem código | herdado | comportamento de especificação, registrado pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
-| Sem accordion exclusivo | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
-| Animação por `::details-content` | origem própria | [#17](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/17), consumida pela [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §6 |
+| `<details>` nativo, zero JS | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
+| Grupo, ícone e descrição sobre a primitiva | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — o Docusaurus tem a primitiva e não tem o resto |
+| Âncora de URL sem código | herdado | comportamento de especificação, registrado pela [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
+| Sem accordion exclusivo | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
+| Animação por `::details-content` | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17), consumida pela [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
 | Caret por máscara em vez de segundo `<svg>` | **origem própria (implementação)** | dois SVG irmãos quebrariam o alcance por tipo e obrigariam a publicar mais uma parte |
-| Duas partes publicadas | origem própria | [#15](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/15) §5 |
-| Raio 16, e fundo idêntico aberto/fechado | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 |
-| Hover no sumário, com `--sd-border-subtle` | herdado | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — `research/paridade-devin` §11 |
-| Marcador sem transição de rotação, e não um segundo glifo | **origem própria (consequência)** | [#100](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/100) — o alvo mede troca de glifo; `chevron-right` é um desenho, dois estados, partilhado com a sidebar ([`icones.md`](../icones.md) §4), e bifurcar o ícone não se paga para uma diferença que some no pixel final. **Recarimbada em S9-2:** era `delta deliberado`, e [`principios.md`](../principios.md) §3 declara essa classe **fechada em zero**. O valor não é escolha contra a âncora — ele cai do orçamento de ícones que `icones.md` §5 já fecha, que é a definição de `(consequência)` em §5.1 |
+| Duas partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
+| Raio 16, e fundo idêntico aberto/fechado | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 |
+| Hover no sumário, com `--sd-border-subtle` | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 |
+| Marcador sem transição de rotação, e não um segundo glifo | **origem própria (consequência)** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — o alvo mede troca de glifo; `chevron-right` é um desenho, dois estados, partilhado com a sidebar ([`icones.md`](../icones.md) §4), e bifurcar o ícone não se paga para uma diferença que some no pixel final. **Recarimbada em S9-2:** era `delta deliberado`, e [`principios.md`](../principios.md) §3 declara essa classe **fechada em zero**. O valor não é escolha contra a âncora — ele cai do orçamento de ícones que `icones.md` §5 já fecha, que é a definição de `(consequência)` em §5.1 |

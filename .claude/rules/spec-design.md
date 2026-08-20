@@ -33,4 +33,4 @@ Dois documentos não são livres — eles são projeção de um arquivo, e diver
 
 `docs/design/README.md` § 3. O índice, tem uma linha por documento, e § 5. Os sete portões, diz qual portão cobra o quê. As seções são numeradas: `grep -n '^## ' <arquivo>` devolve o sumário por menos que uma leitura — `tokens.md` passa de 1800 linhas e não se lê inteiro.
 
-> **Correção de contagem.** **Eram oito portões, são sete** — o 8 morreu com a landing ([#94](https://github.com/panlabs-tech/shinydoc-docusaurus/issues/94)), e o número **não se reaproveita**: o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração. A spec caiu de trinta arquivos para **vinte e nove** na mesma remoção.
+> **Correção de contagem.** **Eram oito portões, são sete** — o 8 morreu com a landing ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)), e o número **não se reaproveita**: o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração. A spec caiu de trinta arquivos para **vinte e nove** na mesma remoção.

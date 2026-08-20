@@ -80,7 +80,7 @@ export default function Raiz() {
 
       <Layout
         title={translate({
-          id: 'shinydoc.raiz.titulo',
+          id: 'panlabs-docs.raiz.titulo',
           message: 'Documentação',
           description: 'Título da rota raiz, que redireciona para a primeira doc',
         })}
@@ -88,14 +88,14 @@ export default function Raiz() {
         <main className="container margin-vert--xl">
           <p>
             <Translate
-              id="shinydoc.raiz.aviso"
+              id="panlabs-docs.raiz.aviso"
               description="Aviso da rota raiz quando o redirecionamento não acontece sozinho">
               Esta página leva à documentação.
             </Translate>
           </p>
           <Link to={DESTINO}>
             <Translate
-              id="shinydoc.raiz.link"
+              id="panlabs-docs.raiz.link"
               description="Link manual para o destino da rota raiz">
               Abrir a documentação
             </Translate>
