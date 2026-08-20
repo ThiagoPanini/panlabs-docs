@@ -14,7 +14,57 @@ does not promote the first digit, and the whole rule is on
 The groupings by minor exist for the navigation column. A list of thirty entries
 with no heading is a list nobody walks.
 
+## 0.27.x
+
+<Update label="0.27.0" tag="changed">
+  **The documentation left the tool's repository and now lives here.** The
+  nineteen pages that used to sit in `website/` are published in this collection,
+  in Portuguese and English, and the PyPI package declares this address under
+  `Homepage` and `Documentation`.
+
+  The old address, `thiagopanini.github.io/overpower`, was switched off rather
+  than left frozen: a site nobody updates and search keeps indexing is worse than
+  no site at all. What stayed behind is the project's engineering memory, the
+  ADRs, the agent documents and the research, none of which ever described the
+  product to the people who use it.
+</Update>
+
+## 0.26.x
+
+<Update label="0.26.0" tag="changed">
+  **The project left the organization and moved to the personal profile.** The
+  name is unchanged; the owner is not. The repository is `ThiagoPanini/overpower`,
+  and that is the address the package declares.
+
+  The old addresses survive as GitHub redirects, and the project does not treat a
+  redirect as an answer: all 420 references inside the tree were rewritten one by
+  one, from the issue format that stamps the owner into every future changelog
+  entry down to the links inside docstrings.
+</Update>
+
 ## 0.25.x
+
+<Update label="0.25.2" tag="fixed">
+  **`--yes` now says what it does.** Its help read *"skip the confirmation, and
+  nothing else"*, and that *nothing else* was carrying more than it admitted: in a
+  terminal, `-y` over an already occupied machine destination turned a question
+  that could have written into a refusal with exit 3.
+
+  The behaviour is unchanged, and deliberately so: what accepts an overwrite is
+  `--force`, and only `--force`, because a `-y` that deleted in silence would put
+  this command next to `apt-get` when it was built to stand next to `pip`. What
+  changed is that the screen you consult to find out what the options do now
+  names which of the two lifts the refusal.
+</Update>
+
+<Update label="0.25.2" tag="fixed">
+  **`install --help` now mentions the wizard.** `--runtime` announces *"no
+  default"* and *"not every runtime is in both tables"*, and together those read
+  as a hard requirement: the one screen you consult to learn what the options do
+  concluded that `overpower install --skill x` is refused. In a terminal it is
+  not, and the command's own description says so now, next to the sentence
+  recording that a line off a terminal is refused instead.
+</Update>
 
 <Update label="0.25.1" tag="fixed">
   **`doctor` no longer reports `0 artifacts · 0 places` over a repository whose

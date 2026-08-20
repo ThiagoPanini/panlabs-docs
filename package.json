@@ -11,7 +11,7 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "test": "node --test scripts/busca.test.mjs scripts/assinatura.test.mjs scripts/paridade.test.mjs",
+    "test": "node --test scripts/busca.test.mjs scripts/assinatura.test.mjs scripts/paridade.test.mjs scripts/pino.test.mjs",
     "portao:1": "./scripts/portao-1-literais.sh",
     "portao:2": "./scripts/portao-2-motion.sh",
     "portao:6": "./scripts/portao-6-rotas.sh",
@@ -26,7 +26,8 @@
     "zeros": "./scripts/cinco-zeros.sh",
     "icones": "node scripts/vendorizar-icones.mjs --conferir",
     "contraste": "node scripts/contraste.mjs --verificar",
-    "paridade": "node scripts/paridade.mjs"
+    "paridade": "node scripts/paridade.mjs",
+    "pino": "node scripts/pino.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

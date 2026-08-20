@@ -98,7 +98,7 @@ jobs:
       # varrível; a do validador de contrato, porque um validador que aceitasse
       # tudo passaria no portão 5 todos os dias. Lista fechada sem caso que a
       # exercite é prosa.
-      - name: As duas réguas — busca e contrato
+      - name: As réguas de `node --test` — busca, contrato, paridade e pino
         run: npm test
 
       # A bijeção manifesto ↔ `static/icons/`. Não é portão: não precisa de rede
@@ -174,3 +174,32 @@ jobs:
       # com a mensagem de como apontar (`CHROME=`).
       - name: Paridade com a âncora (triagem contra a lista de aceitas)
         run: npm run paridade -- --verificar
+
+      # O pino do overpower. Ele NÃO confere documentação: confere que nenhuma
+      # versão publicada da ferramenta passou sem que alguém olhasse a doc dela.
+      #
+      # A ADR 9, consequência 6, registrou esta lacuna em letra — "o portão 5
+      # confere que a página é a projeção do contrato, não que o contrato é a
+      # projeção da ferramenta", e concluía que "a varredura fica sendo humana".
+      # A ADR 11 reabre a decisão: a varredura passou a ser de máquina, e este
+      # passo é a metade dela que a CI sabe cobrar.
+      #
+      # A DIVISÃO IMPORTA, e ela é o assunto da ADR 11. Este passo não sabe se
+      # a varredura foi boa; nenhuma máquina sabe. Ele sabe se ela aconteceu.
+      # Contrato em dia e errado continua possível, e continua humano.
+      #
+      # A rede entra declarada. O PyPI é a definição operacional de "publicado"
+      # naquele repositório, onde publicar é mergear; a alternativa seria a tag
+      # no GitHub, que é o mesmo fato uma etapa antes e custa credencial. Já há
+      # rede neste job — o `paridade` acima dirige Chrome contra o site vivo da
+      # âncora, e o `portao:6` bate nas rotas publicadas depois do deploy.
+      #
+      # Falha de rede reprova com mensagem PRÓPRIA, separada de pino atrasado.
+      # Um portão que passa quando a rede cai é um portão que se silencia
+      # sozinho, e a lista de aceitas do `paridade` existe porque essa lição já
+      # foi paga uma vez aqui.
+      #
+      # Nenhuma dependência npm: `node:https` e `node:fs`, como o `contraste` e
+      # o `paridade`. O axioma 2 vale também para o instrumento.
+      - name: O pino do overpower (nenhuma versão publicada passou sem varredura)
+        run: npm run pino -- --verificar

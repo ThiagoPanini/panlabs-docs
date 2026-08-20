@@ -14,7 +14,57 @@ não promove o primeiro dígito, e a régua inteira está em
 Os agrupamentos por minor existem para a coluna de navegação. Uma lista de trinta
 entradas sem heading é uma lista que ninguém percorre.
 
+## 0.27.x
+
+<Update label="0.27.0" tag="mudança">
+  **A documentação saiu do repositório da ferramenta e passou a viver aqui.** As
+  dezenove páginas que moravam em `website/` foram publicadas neste acervo, em
+  português e em inglês, e o pacote no PyPI declara este endereço em `Homepage` e
+  em `Documentation`.
+
+  O endereço antigo, `thiagopanini.github.io/overpower`, foi desligado em vez de
+  ficar congelado: um site que ninguém atualiza e a busca continua indexando é
+  pior que site nenhum. O que ficou lá é a memória de engenharia do projeto, os
+  ADRs, os documentos de agente e a pesquisa, que nunca descreveram o produto
+  para quem o usa.
+</Update>
+
+## 0.26.x
+
+<Update label="0.26.0" tag="mudança">
+  **O projeto saiu da organização e passou para o perfil pessoal.** O nome não
+  mudou, o dono sim: o repositório é `ThiagoPanini/overpower`, e é esse endereço
+  que o pacote declara.
+
+  Os endereços antigos sobrevivem como redirecionamento do GitHub, e o projeto
+  não trata redirecionamento como resposta: as 420 referências dentro da árvore
+  foram reescritas uma a uma, do formato de issue que carimba o dono em toda
+  entrada futura de changelog até os links dentro de docstring.
+</Update>
+
 ## 0.25.x
+
+<Update label="0.25.2" tag="correção">
+  **O `--yes` passou a dizer o que faz.** A ajuda dele lia *"pula a confirmação, e
+  nada além disso"*, e esse *nada além disso* carregava mais do que admitia: num
+  terminal, `-y` sobre um destino de máquina já ocupado transformava uma pergunta
+  que poderia escrever numa recusa com saída 3.
+
+  O comportamento continua o mesmo, e por decisão: quem aceita a sobrescrita é o
+  `--force`, e só ele, porque um `-y` que apagasse em silêncio poria este comando
+  ao lado do `apt-get` quando ele foi construído para ficar ao lado do `pip`. O
+  que mudou é que a tela consultada para descobrir o que as opções fazem agora
+  nomeia qual das duas levanta a recusa.
+</Update>
+
+<Update label="0.25.2" tag="correção">
+  **O `install --help` passou a mencionar o assistente.** O `--runtime` anuncia
+  *"sem valor padrão"* e *"nem todo runtime está nas duas tabelas"*, e as duas
+  frases juntas leem como exigência: a única tela que se consulta para saber o
+  que as opções fazem concluía que `overpower install --skill x` é recusado. Num
+  terminal não é, e a descrição do comando diz isso agora, ao lado da frase que
+  registra que uma linha fora de terminal continua sendo recusada.
+</Update>
 
 <Update label="0.25.1" tag="correção">
   **O `doctor` deixou de reportar `0 artifacts · 0 places` num repositório cuja
