@@ -19,7 +19,14 @@
  *
  * Dois modos:
  *   `node scripts/pino.mjs`              relatório legível, sempre sai 0
- *   `node scripts/pino.mjs --verificar`  sai 1 se o pino estiver atrás do PyPI
+ *   `node scripts/pino.mjs --verificar`  sai 1 se o pino estiver atrás do PyPI,
+ *                                        e 2 se não tiver conseguido perguntar
+ *
+ * OS DOIS CÓDIGOS SÃO DIFERENTES DE PROPÓSITO. Para a CI dá no mesmo, porque
+ * qualquer saída não nula reprova o passo. Para o gatilho no repositório da
+ * ferramenta não dá: ele lê o código para decidir se lança a varredura, e rede
+ * caída não é dívida de varredura. Um `1` manda varrer; um `2` manda tentar
+ * de novo depois.
  *
  * A rede entra aqui, e entra declarada: o PyPI é a definição operacional de
  * "publicado" neste projeto, porque no `overpower` publicar é mergear. A
@@ -151,7 +158,7 @@ async function principal (argv) {
     console.error(`\x1b[31m✗\x1b[0m Não deu para perguntar ao PyPI: ${e.message}`)
     console.error('  Isto não é pino atrasado. É a régua sem conseguir medir.')
     console.error(`  Confira à mão: curl -s ${PYPI} | jq -r .info.version`)
-    return verificar ? 1 : 0
+    return verificar ? 2 : 0
   }
 
   const distancia = comparar(ultimo.versao, publicada)
@@ -179,6 +186,15 @@ async function principal (argv) {
   return verificar ? 1 : 0
 }
 
-if (realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
+// O guarda de execução direta. O `realpathSync` dos dois lados existe porque uma
+// invocação por symlink compararia caminhos diferentes para o mesmo arquivo, e o
+// script sairia calado — que foi como o portão 5 se apagou sozinho uma vez, e
+// está registrado no cabeçalho do `gerar-referencia.mjs`.
+//
+// `process.argv[1]` é `undefined` quando o módulo é importado em vez de
+// executado, e é isso que permite a um `node --test` exercitar `lerPino`,
+// `comparar` e `versaoPublicada` sem disparar a rede.
+const invocado = process.argv[1]
+if (invocado && realpathSync(invocado) === realpathSync(fileURLToPath(import.meta.url))) {
   principal(process.argv.slice(2)).then((codigo) => { process.exitCode = codigo })
 }

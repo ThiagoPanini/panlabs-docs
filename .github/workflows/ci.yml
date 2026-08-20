@@ -98,7 +98,7 @@ jobs:
       # varrível; a do validador de contrato, porque um validador que aceitasse
       # tudo passaria no portão 5 todos os dias. Lista fechada sem caso que a
       # exercite é prosa.
-      - name: As duas réguas — busca e contrato
+      - name: As réguas de `node --test` — busca, contrato, paridade e pino
         run: npm test
 
       # A bijeção manifesto ↔ `static/icons/`. Não é portão: não precisa de rede
