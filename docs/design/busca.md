@@ -43,7 +43,7 @@ As chaves são curtas porque cada uma se repete cinquenta e quatro vezes por loc
 
 ### 2.2 A fonte é o MDX
 
-Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 4 páginas geradas de `overpower › Comandos` entrarem pelo mesmo caminho das 50 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição. Valeu de novo no port do `overpower`: o ramo trocou de contrato, de dona e de tamanho, e nem o plugin nem esta seção precisaram de um caso a mais.
+Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 4 páginas geradas de `overpower › Comandos` entrarem pelo mesmo caminho das 56 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição. Valeu de novo no port do `overpower`: o ramo trocou de contrato, de dona e de tamanho, e nem o plugin nem esta seção precisaram de um caso a mais.
 
 O que sai antes de indexar, e por quê:
 
@@ -64,16 +64,16 @@ O motivo é mecânico: o índice viaja no bundle principal de **toda página do 
 
 | Locale | Registros | Bytes | Folga sob os 64 KB |
 | --- | ---: | ---: | ---: |
-| `pt-BR` | 54 | 28 999 | 56% |
-| `en` | 54 | 29 022 | 56% |
+| `pt-BR` | 60 | 32 101 | 51% |
+| `en` | 60 | 32 034 | 51% |
 
-Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 26 páginas traduzidas ficam mais curtas em inglês, e as 28 de fallback entram em português com a marca `f` — os 23 bytes de diferença são o que sobra dessa troca.
+Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 32 páginas traduzidas ficam mais curtas em inglês, e as 28 de fallback entram em português com a marca `f` — os 67 bytes de diferença são o que sobra dessa troca. **O EN saiu MENOR que o pt-BR desde a [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133)**, e a inversão é consequência da própria tradução: seis páginas novas entraram nos dois locales, e em inglês elas são mais curtas do que o prefixo `/en/` é caro.
 
-> **A medição do EN só vale no build de TODOS os locales, e a armadilha custa 3 bytes por página.** Medir com `docusaurus build --locale en` sozinho encurta o índice, e o erro é sistemático: sem o pt-BR no mesmo passe, o EN vira o único locale, o `baseUrl` perde o segmento `/en/`, e **cada permalink encurta três caracteres**. Com 52 páginas o desconto era 156 bytes; com 54, são 162. O índice medido assim é de um site que não se publica.
+> **A medição do EN só vale no build de TODOS os locales, e a armadilha custa 3 bytes por página.** Medir com `docusaurus build --locale en` sozinho encurta o índice, e o erro é sistemático: sem o pt-BR no mesmo passe, o EN vira o único locale, o `baseUrl` perde o segmento `/en/`, e **cada permalink encurta três caracteres**. Com 52 páginas o desconto era 156 bytes; com 60, são 180. O índice medido assim é de um site que não se publica.
 >
 > O pt-BR não denuncia a armadilha, e é isso que a torna cara: ele é o locale default, nunca carrega prefixo, e dá **o mesmo número pelos dois métodos**. Quem confere um locale só e vê o número bater conclui que o método está validado. **Meça sempre com `npm run build`**, e leia o `globalData.json` que ele deixa — ele é do último locale do passe, que é o EN.
 
-> **A folga caiu de 64% para 56%, e foi conteúdo que entrou.** O port do `overpower` trocou 12 páginas por 21 e o acervo foi de 45 para 54; o índice pt-BR subiu 5 616 bytes, **624 bytes por página líquida acrescentada**. A série inteira é 35 612 bytes para as 73 páginas do Trilho, 24 894 para 46 páginas, 27 616 com o primeiro ramo gerado dentro (52), 23 383 depois que os sete índices de categoria saíram (45), e 28 999 agora (54).
+> **A folga caiu de 64% para 51%, e foi conteúdo que entrou nas duas vezes.** O port do `overpower` trocou 12 páginas por 21 e o acervo foi de 45 para 54, com o índice pt-BR subindo 5 616 bytes; a [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133) acrescentou seis páginas e o levou de 54 para 60, subindo outros 3 102, **517 bytes por página acrescentada**. A série inteira é 35 612 bytes para as 73 páginas do Trilho, 24 894 para 46 páginas, 27 616 com o primeiro ramo gerado dentro (52), 23 383 depois que os sete índices de categoria saíram (45), 28 999 com o `overpower` (54), e 32 101 agora (60).
 >
 > **A régua para a próxima vez é o custo por página gerada: 499 bytes**, remedidos com o ramo do `overpower` no ar — eram 459 com o de `Biblioteca C`, e a diferença é a prosa mais longa das opções de CLI, não o formato. A folga atual comporta cerca de 73 páginas geradas a mais; comporta menos se elas forem maiores. Quem acrescentar um segundo ramo gerado mede antes, não depois — o teto não avisa, ele reprova o build.
 

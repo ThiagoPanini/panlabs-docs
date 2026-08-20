@@ -57,7 +57,7 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 ### 2.1 `Ferramentas` não declara mais `docItemComponent`, e nenhuma folha muda de layout
 
-**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **26 folhas** — 22 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
+**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **32 folhas** — 28 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
 
 É a segunda instância do projeto a usar a opção, e ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle. Ver [ADR 2](../adr/0002-politica-de-swizzle.md).
 
@@ -209,7 +209,7 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 
 | # | O que confere |
 | ---: | --- |
-| 1 | o volume por aba e por categoria — 12 · 16 · 26, e **54** no total |
+| 1 | o volume por aba e por categoria — 12 · 16 · 32, e **60** no total |
 | 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
 | 3 | a regra de heading, com a exceção nomeada acima como **única** |
 | 4 | **`<Steps>` ausente em toda `Jornadas`** |
@@ -469,7 +469,7 @@ A fronteira é **audiência do artefato**, e não infra pública contra corporat
 
 | Traduzido para EN | Só pt-BR |
 | --- | --- |
-| `Ferramentas` — **26**: 22 autorais e 4 geradas | `Jornadas` 12 · `Procedimentos` 16 |
+| `Ferramentas` — **32**: 28 autorais e 4 geradas | `Jornadas` 12 · `Procedimentos` 16 |
 | **26** | **28** |
 
 **28 páginas carregam o marcador de fallback**, e o número não se mexeu com o `overpower`: o port trocou o conteúdo de `Ferramentas`, que é a aba traduzida, e nenhuma página de `Jornadas` ou `Procedimentos` entrou ou saiu. *(Correção de aritmética anterior: a contagem dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes, e depois 31; a #114 tirou três índices de `Procedimentos` do acervo.)*
@@ -619,7 +619,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | O cenário fecha em três strings | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — GitHub Actions, AWS e Python; o resto cai delas somadas às categorias |
 | O custo de gabarito sobe sem convenção conhecida | **origem própria (consequência)** | o gênero público do domínio anterior era o que segurava a coerência; sem ele, quem segura é o gabarito |
 | Três tabs, três instâncias | origem própria | `routeBasePath` e versionamento são por instância |
-| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 26 folhas da instância usam o `@theme/DocItem` do upstream |
+| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 32 folhas da instância usam o `@theme/DocItem` do upstream |
 | Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) §árvore |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |
@@ -632,7 +632,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | **A forma *índice de categoria* morre** | **origem própria (consequência)** | sem categoria clicável não há destino a que o índice sirva |
 | Quatro índices sobrevivem como folha | **origem própria** | são as que carregam tipo ou fixture, e matá-las derrubaria quatro invariantes |
 | A rota nua resolve por `slug: /` | **origem própria (implementação)** | o `docSidebar` já leva à primeira doc; o que não resolve sozinho é a rota digitada |
-| **50 autorais mais 4 geradas, e 26 em EN** | **origem própria (correção)** | a resolução contava as geradas fora do pt-BR e dentro do EN; com o `overpower` no ar (#117) o pt-BR fecha em 54 e o EN em 26 |
+| **56 autorais mais 4 geradas, e 32 em EN** | **origem própria (correção)** | a resolução contava as geradas fora do pt-BR e dentro do EN; com o `overpower` no ar (#117) o pt-BR fecha em 54 e o EN em 26 |
 | **Quinze guias** | **origem própria (medição)** | contado contra o manifesto do portão 4: 8 em `Procedimentos` e 7 em `Ferramentas`, cinco delas do `overpower` |
 | `Instalação` é SDK, e `Alvos › Índice` é Catálogo | **origem própria** | o gabarito de SDK é *instalação em `<CodeGroup>` por gerenciador*, e é o que `uvx`/`uv tool`/`pipx` é; a abertura de seção pode carregar tipo, no precedente do §6.3 |
 | O décimo tipo, e o gabarito dele | herdado | [#57](https://github.com/ThiagoPanini/panlabs-docs/issues/57) — o gabarito encoda a condição que salva o tipo com mais precisão que prosa |

@@ -17,7 +17,7 @@ este documento é o desenho) —, e um único degrau de interatividade num paine
 > [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) o
 > `docItemComponent` foi removido e o painel desceu para o fluxo da prosa.
 >
-> **O site tem ZERO ruptura de layout.** As 26 folhas da aba `Ferramentas`
+> **O site tem ZERO ruptura de layout.** As 32 folhas da aba `Ferramentas`
 > passam pelo mesmo `@theme/DocItem`, e a exceção que
 > [`informacao.md`](informacao.md) §6 autorizava por nome deixou de ser usada —
 > ela continua autorizada, e ninguém a exerce. O que este documento descreve, de
@@ -87,7 +87,7 @@ nas duas. A conta saiu porque o layout saiu, não porque a técnica falhou.
 > uma. O componente saiu de `src/theme/`, e `docusaurus.config.js` não declara
 > mais `docItemComponent` nesta instância.
 
-As **26 páginas** da aba `Ferramentas` — 22 autorais e 4 geradas — passam pelo
+As **32 páginas** da aba `Ferramentas` — 28 autorais e 4 geradas — passam pelo
 mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O que distingue uma
 página de comando de uma página autoral é **o que está escrito nela**, não a
 moldura em volta.
