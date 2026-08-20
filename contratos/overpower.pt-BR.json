@@ -164,7 +164,7 @@
         {
           "nome": "--yes",
           "tipo": "flag",
-          "descricao": "Pula a confirmação antes da escrita. Aceita a forma curta `-y`. Fora de terminal ele é aceito e não faz nada, porque lá não há confirmação a pular. Num terminal ele tem um segundo efeito que a ajuda da ferramenta não anuncia: um destino já ocupado no escopo de máquina deixa de virar pergunta e vira recusa, com saída 3, onde a linha sem `-y` teria perguntado e podido escrever."
+          "descricao": "Pula a confirmação antes da escrita. Aceita a forma curta `-y`. Fora de terminal ele é aceito e não faz nada, porque lá não há confirmação a pular. Num terminal ele tem um segundo efeito: um destino já ocupado no escopo de máquina deixa de virar pergunta e vira recusa, com saída 3, onde a linha sem `-y` teria perguntado e podido escrever. Quem levanta essa recusa é `--force`, e só ele."
         },
         {
           "nome": "--force",

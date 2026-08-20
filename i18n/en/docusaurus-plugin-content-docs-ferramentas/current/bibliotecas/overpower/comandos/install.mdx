@@ -47,7 +47,7 @@ Resolves everything, prints the plan, mirrors the real exit code and writes noth
 </ParamField>
 
 <ParamField name="--yes" type="flag">
-Skips the confirmation before the write. Takes the short form `-y`. Off a terminal it is accepted and does nothing, because there is no confirmation to skip there. In a terminal it has a second effect the tool's own help does not announce: a destination already taken in machine scope stops being a question and becomes a refusal, exit 3, where the line without `-y` would have asked and could have written.
+Skips the confirmation before the write. Takes the short form `-y`. Off a terminal it is accepted and does nothing, because there is no confirmation to skip there. In a terminal it has a second effect: a destination already taken in machine scope stops being a question and becomes a refusal, exit 3, where the line without `-y` would have asked and could have written. What lifts that refusal is `--force`, and only `--force`.
 </ParamField>
 
 <ParamField name="--force" type="flag">

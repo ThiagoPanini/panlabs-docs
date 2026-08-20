@@ -26,7 +26,8 @@
     "zeros": "./scripts/cinco-zeros.sh",
     "icones": "node scripts/vendorizar-icones.mjs --conferir",
     "contraste": "node scripts/contraste.mjs --verificar",
-    "paridade": "node scripts/paridade.mjs"
+    "paridade": "node scripts/paridade.mjs",
+    "pino": "node scripts/pino.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

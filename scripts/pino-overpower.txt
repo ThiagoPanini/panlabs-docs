@@ -1,0 +1,32 @@
+# O PINO — a versão do `overpower` que a última varredura certificou.
+#
+# Uma linha de dados; `#` abre comentário. O formato é o de
+# `scripts/paridade-abertas.txt` e `scripts/swizzle-list.txt`, e pelo mesmo
+# motivo: um estado congelado que a máquina confere, versionado ao lado do
+# script que o confere.
+#
+# ISTO NÃO É UM NÚMERO DE VERSÃO. É a declaração de que alguém — ou alguma
+# coisa — leu a ferramenta naquela versão e disse o que a documentação daqui
+# precisava mudar. O veredito NEGATIVO é tão registro quanto o positivo: sem
+# ele, "varri e não achei nada" fica indistinguível de "nunca varri", que é a
+# forma exata da deriva que a ADR 11 existe para fechar.
+#
+# `node scripts/pino.mjs --verificar` reprova quando o pino está atrás da
+# versão publicada no PyPI. Ele NÃO confere se a varredura foi boa — nenhuma
+# máquina sabe fazer isso. Ele confere a única coisa que é conferível: que
+# nenhuma versão publicada passou sem ser olhada.
+#
+# COLUNAS, separadas por TAB:
+#
+#   versão     a versão do overpower que foi varrida
+#   data       quando, em ISO-8601
+#   veredito   `varrido`     a varredura achou deriva e ela foi corrigida
+#              `sem-deriva`  a varredura rodou e não achou nada a mudar
+#   nota       o que foi achado, ou por que nada foi
+#
+# Uma linha por varredura, a mais recente por último. O histórico fica: uma
+# sequência de `sem-deriva` seguida de um `varrido` grande é o sintoma de uma
+# triagem cega, e apagar as linhas apagaria o sintoma junto.
+
+0.25.1	2026-08-19	varrido	13 correções e 3 lacunas, à mão, na #118
+0.27.0	2026-08-20	varrido	o contrato mentia sobre `--yes` desde a 0.25.2; 3 versões entraram no changelog
