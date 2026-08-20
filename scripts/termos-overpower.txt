@@ -1,0 +1,45 @@
+# OS TERMOS DO RAMO `overpower` — o vocabulário que a doc usa como conhecido.
+#
+# Uma linha de dados; `#` abre comentário. O formato é o de
+# `scripts/pino-overpower.txt` e `scripts/swizzle-list.txt`, e pelo mesmo motivo:
+# um estado congelado que a máquina confere, versionado ao lado do script que o
+# confere.
+#
+# A COBRANÇA É DOS DOIS LADOS, e só um deles é de máquina:
+#
+#   · a cobrança 17 do portão 4 pega termo LISTADO AQUI que `conceitos.md` não
+#     define. É a metade barata, e é a que reprova no commit;
+#   · a skill `varredura-overpower` pega termo USADO na doc e não listado aqui.
+#     É a metade cara, e é juízo: nenhuma varredura sabe distinguir vocabulário
+#     de produto de palavra comum.
+#
+# Sem as duas metades a lista vira carimbo. Com só a primeira, um termo novo
+# entra na prosa e nunca é definido; com só a segunda, a definição some de
+# `conceitos.md` e nada reprova.
+#
+# COLUNAS, separadas por TAB:
+#
+#   termo    a palavra como `conceitos.md` a escreve em negrito, sem acento de
+#            plural e em minúscula. São os termos em **pt-BR**: o espelho EN usa
+#            as palavras dele, e casá-las exigiria uma segunda lista para uma
+#            página que é tradução da primeira
+#   onde     a seção de `conceitos.md` que o define, para a mensagem de recusa
+#            saber apontar
+#
+# O termo é casado por `**<termo>**`, que é como a página marca uma definição.
+# Casar a palavra solta acharia toda menção e a lista nunca reprovaria.
+
+artefato	As três unidades instaláveis
+ai framework	As três unidades instaláveis
+bundle	As três unidades instaláveis
+pool	De onde o conteúdo vem
+catálogo	De onde o conteúdo vem
+receita	De onde o conteúdo vem
+procedência	De onde o conteúdo vem
+enxerto	O vocabulário do enxerto de MCP
+slot	O vocabulário do enxerto de MCP
+precondição	O vocabulário do enxerto de MCP
+achado	O vocabulário do doctor
+aviso	O vocabulário do doctor
+runtime	O que decide onde as coisas caem
+escopo	O que decide onde as coisas caem

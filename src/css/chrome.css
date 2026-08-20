@@ -795,6 +795,7 @@ html.docs-doc-page .subtitulo {
 /* O ramo do `overpower` — uma por página, na ordem da árvore. */
 .sidebar-icone--overpower              { --pd-sidebar-icone: url('/icons/zap.svg'); }
 .sidebar-icone--instalacao             { --pd-sidebar-icone: url('/icons/download.svg'); }
+.sidebar-icone--atalho-op              { --pd-sidebar-icone: url('/icons/send.svg'); }
 .sidebar-icone--conceitos              { --pd-sidebar-icone: url('/icons/shapes.svg'); }
 
 .sidebar-icone--comandos               { --pd-sidebar-icone: url('/icons/terminal.svg'); }
@@ -806,19 +807,26 @@ html.docs-doc-page .subtitulo {
 .sidebar-icone--alvos                  { --pd-sidebar-icone: url('/icons/globe.svg'); }
 .sidebar-icone--alvo-mcp               { --pd-sidebar-icone: url('/icons/webhook.svg'); }
 .sidebar-icone--alvo-from              { --pd-sidebar-icone: url('/icons/folder.svg'); }
+.sidebar-icone--alvo-bundle            { --pd-sidebar-icone: url('/icons/package.svg'); }
 
 .sidebar-icone--referencia             { --pd-sidebar-icone: url('/icons/book-open.svg'); }
 .sidebar-icone--codigos-de-saida       { --pd-sidebar-icone: url('/icons/circle-alert.svg'); }
 .sidebar-icone--solucao-de-problemas   { --pd-sidebar-icone: url('/icons/refresh-cw.svg'); }
-
-.sidebar-icone--desenvolvimento        { --pd-sidebar-icone: url('/icons/wrench.svg'); }
-.sidebar-icone--telas                  { --pd-sidebar-icone: url('/icons/play.svg'); }
-.sidebar-icone--testes                 { --pd-sidebar-icone: url('/icons/repeat.svg'); }
-
-.sidebar-icone--publicacao             { --pd-sidebar-icone: url('/icons/rocket.svg'); }
 .sidebar-icone--changelog              { --pd-sidebar-icone: url('/icons/clock.svg'); }
+
+/* `contribuir/` nasceu na #133 da fusão de `desenvolvimento/` com `publicacao/`,
+   e herda os desenhos dos dois: a chave inglesa que era do primeiro passa ao nó,
+   e o foguete do segundo fica com o `release`. */
+.sidebar-icone--contribuir             { --pd-sidebar-icone: url('/icons/users.svg'); }
+.sidebar-icone--arquitetura            { --pd-sidebar-icone: url('/icons/wrench.svg'); }
+.sidebar-icone--mapa-de-modulos        { --pd-sidebar-icone: url('/icons/file-text.svg'); }
+.sidebar-icone--hooks                  { --pd-sidebar-icone: url('/icons/bell.svg'); }
+.sidebar-icone--testes                 { --pd-sidebar-icone: url('/icons/repeat.svg'); }
+.sidebar-icone--telas                  { --pd-sidebar-icone: url('/icons/play.svg'); }
 .sidebar-icone--curadoria              { --pd-sidebar-icone: url('/icons/filter.svg'); }
-.sidebar-icone--release                { --pd-sidebar-icone: url('/icons/upload.svg'); }
+.sidebar-icone--criterios-de-catalogo  { --pd-sidebar-icone: url('/icons/sparkles.svg'); }
+.sidebar-icone--release                { --pd-sidebar-icone: url('/icons/rocket.svg'); }
+.sidebar-icone--release-ready          { --pd-sidebar-icone: url('/icons/upload.svg'); }
 
 /* Tipografia e raio — um corpo só, para tudo que é destino, em todo nível. A
    âncora usa peso normal com entrelinha maior, e reserva toda marcação de ativo

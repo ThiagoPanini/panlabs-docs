@@ -45,7 +45,7 @@ catálogo embutido **é** a árvore de artefatos dentro do pacote, descoberta
 andando pelo sistema de arquivos em vez de lida de um arquivo de índice.
 
 **Receita** é a declaração lógica de um servidor MCP, com o transporte, como
-alcançá-lo, os slots dele e as preconditions. Uma receita nunca aterrissa em
+alcançá-lo, os slots dele e as precondições. Uma receita nunca aterrissa em
 disco como arquivo. O que aterrissa é o fragmento renderizado a partir dela
 dentro de um documento que já é seu.
 
@@ -54,6 +54,12 @@ foi obtido. Ela descreve a história do próprio catálogo, nunca o alvo em que 
 aterrissa.
 
 ## O vocabulário do enxerto de MCP
+
+**Enxerto** é o que o `overpower` escreve dentro de um documento que já é seu, em
+vez de um arquivo próprio. Ele é inserção cirúrgica: o resto do documento fica
+como estava, e o que entra é o fragmento renderizado a partir de uma receita. A
+cópia e o enxerto são as duas formas de aterrissar, e a diferença entre elas é de
+quem é o arquivo de destino.
 
 **Slot** é onde um segredo pertence dentro de uma receita, declarado como **nome
 e papel**, `env`, `header` ou `bearer`, e nunca como valor. O slot é exatamente
@@ -69,6 +75,24 @@ Uma receita só nomeia **o que** conferir. O código que executa a conferência 
 sempre do próprio `overpower`, nunca algo buscado e executado de onde quer que a
 receita tenha vindo.
 :::
+
+## O vocabulário do `doctor`
+
+O `doctor` fecha em dois vocabulários, e a diferença entre eles é o código de
+saída.
+
+**Achado** é um defeito no que aterrissou. Achado **reprova**: um só faz o
+`doctor` sair `3`. São cinco, e cada um está descrito em
+[solução de problemas](referencia/solucao-de-problemas).
+
+**Aviso** é uma observação sobre o ambiente, não sobre o que aterrissou. Aviso
+**não reprova**: uma execução só com avisos sai `0`. São dois, e eles viajam numa
+lista própria justamente para não somar ao veredito.
+
+| Vocabulário | Sobre o quê | O que faz com o código de saída |
+| --- | --- | --- |
+| achado | o que aterrissou | leva o `doctor` a `3` |
+| aviso | o ambiente em volta | nenhum; a saída continua `0` |
 
 ## O que decide onde as coisas caem
 

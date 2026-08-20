@@ -89,6 +89,7 @@ const sidebars = {
           link: {type: 'doc', id: 'bibliotecas/overpower/visao-geral'},
           items: [
             {type: 'doc', id: 'bibliotecas/overpower/instalacao', className: 'sidebar-icone sidebar-icone--instalacao'},
+            {type: 'doc', id: 'bibliotecas/overpower/o-atalho-op', className: 'sidebar-icone sidebar-icone--atalho-op'},
             {type: 'doc', id: 'bibliotecas/overpower/conceitos', className: 'sidebar-icone sidebar-icone--conceitos'},
             {
               // A seção que hospeda o ramo gerado. A folha de abertura dela é
@@ -109,6 +110,7 @@ const sidebars = {
               items: [
                 {type: 'doc', id: 'bibliotecas/overpower/alvos/servidores-mcp', className: 'sidebar-icone sidebar-icone--alvo-mcp'},
                 {type: 'doc', id: 'bibliotecas/overpower/alvos/from', className: 'sidebar-icone sidebar-icone--alvo-from'},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/bundle-federado', className: 'sidebar-icone sidebar-icone--alvo-bundle'},
               ],
             },
             {
@@ -122,27 +124,33 @@ const sidebars = {
                 // recuo mais o ícone mais o rótulo mais longo desta
                 // profundidade, tudo dentro dos 288px da coluna.
                 {type: 'doc', id: 'bibliotecas/overpower/referencia/solucao-de-problemas', className: 'sidebar-icone sidebar-icone--solucao-de-problemas'},
+                // O changelog é do lado do leitor, e não do de quem publica: ele
+                // responde *o que mudou na versão que eu tenho*, que é pergunta
+                // de quem usa. Ele morava sob `publicacao/` e mudou de casa na
+                // #133, junto com a fusão que criou o `contribuir/`.
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/changelog', className: 'sidebar-icone sidebar-icone--changelog'},
               ],
             },
             {
+              // **A fronteira entre quem usa e quem contribui é estrutural.**
+              // `desenvolvimento/` e `publicacao/` serviam os dois ao mesmo
+              // leitor, misturadas com as que servem quem instala, e nada na
+              // sidebar dizia qual era qual. A fusão num nó só põe a fronteira
+              // onde o leitor a vê antes de clicar (#133).
               type: 'category',
-              label: 'Desenvolvimento',
-              className: 'sidebar-icone sidebar-icone--desenvolvimento',
-              link: {type: 'doc', id: 'bibliotecas/overpower/desenvolvimento/indice'},
+              label: 'Contribuir',
+              className: 'sidebar-icone sidebar-icone--contribuir',
+              link: {type: 'doc', id: 'bibliotecas/overpower/contribuir/indice'},
               items: [
-                {type: 'doc', id: 'bibliotecas/overpower/desenvolvimento/testes', className: 'sidebar-icone sidebar-icone--testes'},
-                {type: 'doc', id: 'bibliotecas/overpower/desenvolvimento/telas', className: 'sidebar-icone sidebar-icone--telas'},
-              ],
-            },
-            {
-              type: 'category',
-              label: 'Publicação',
-              className: 'sidebar-icone sidebar-icone--publicacao',
-              link: {type: 'doc', id: 'bibliotecas/overpower/publicacao/indice'},
-              items: [
-                {type: 'doc', id: 'bibliotecas/overpower/publicacao/curadoria', className: 'sidebar-icone sidebar-icone--curadoria'},
-                {type: 'doc', id: 'bibliotecas/overpower/publicacao/release', className: 'sidebar-icone sidebar-icone--release'},
-                {type: 'doc', id: 'bibliotecas/overpower/publicacao/changelog', className: 'sidebar-icone sidebar-icone--changelog'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/arquitetura', className: 'sidebar-icone sidebar-icone--arquitetura'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/mapa-de-modulos', className: 'sidebar-icone sidebar-icone--mapa-de-modulos'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/hooks', className: 'sidebar-icone sidebar-icone--hooks'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/testes', className: 'sidebar-icone sidebar-icone--testes'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/telas', className: 'sidebar-icone sidebar-icone--telas'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/curadoria', className: 'sidebar-icone sidebar-icone--curadoria'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/criterios-de-catalogo', className: 'sidebar-icone sidebar-icone--criterios-de-catalogo'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release', className: 'sidebar-icone sidebar-icone--release'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release-ready', className: 'sidebar-icone sidebar-icone--release-ready'},
               ],
             },
           ],

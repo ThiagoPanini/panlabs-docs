@@ -54,41 +54,7 @@ motor das perguntas do assistente e a camada de teclado embaixo dele.
 O catálogo **não** é uma delas. Ele vem embutido no próprio pacote, e é por isso
 que a versão da ferramenta é a versão do catálogo.
 
-## O atalho `op` que você mesmo faz
-
-Digitar `overpower` por extenso, toda vez, é mais longo do que a maioria das
-pessoas quer. A correção óbvia é um alias de shell:
-
-```bash
-alias op='overpower'
-```
-
-O `overpower` não cria esse alias para você, e não publica um executável `op`.
-É omissão deliberada, não descuido. `op` já é o nome da CLI do 1Password, que
-mora em `/usr/local/bin/op` em muitas máquinas de desenvolvimento e costuma vir
-antes de `~/.local/bin` no `PATH`. Publicar um segundo `op` sombrearia calado uma
-ferramenta de credencial, e o `uv` recusa a instalação inteira assim que detecta
-colisão de nome entre ferramentas que ele gerencia, então até o modo de falha
-honesto custaria também o comando `overpower`.
-
-:::warning
-Se você já usa o `op` do 1Password, escolha um nome que não colida. Só você sabe
-o que ocupa esse nome na sua máquina, e é por isso que a decisão fica com você,
-como uma linha que se digita uma vez, em vez de embutida no que o pacote instala.
-
-```bash
-alias opw='uvx overpower@latest'
-```
-:::
-
-Um alias é conveniência de shell interativo e nada além. Ele não expande sob `sh
--c`, que é como um alvo de `Makefile` e vários runners de CI invocam um comando,
-então `op` dentro de um desses contextos falha com *command not found*
-independentemente do que o seu perfil define. Isso não custa nada na prática,
-porque a linha que um `Makefile`, um workflow de CI ou este próprio site
-escrevem é o `uvx overpower@latest` inteiro de qualquer forma.
-
-## `--version` como prova de que o pacote chegou inteiro
+## Conferir que o pacote chegou inteiro
 
 ```bash
 uvx overpower@latest --version

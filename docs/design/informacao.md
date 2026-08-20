@@ -57,7 +57,7 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 
 ### 2.1 `Ferramentas` não declara mais `docItemComponent`, e nenhuma folha muda de layout
 
-**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **26 folhas** — 22 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
+**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **32 folhas** — 28 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
 
 É a segunda instância do projeto a usar a opção, e ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle. Ver [ADR 2](../adr/0002-politica-de-swizzle.md).
 
@@ -83,23 +83,24 @@ Jornadas              Procedimentos        Ferramentas
                       ├ Acessos            │   │ └ overpower list ← nível 4
                       └ Diagnóstico        │   ├ Alvos
                                            │   ├ Referência
-                                           │   ├ Desenvolvimento
-                                           │   └ Publicação
+                                           │   └ Contribuir
                                            ├ Módulos Terraform
                                            ├ Skills
                                            └ Servidores MCP
 ```
 
-**Onze separadores no topo, e seis nós que colapsam — todos no mesmo ramo.** O nível de topo não é categoria: é **separador** — rótulo em negrito, sem página, sem seta e sem ícone, sempre aberto (§3.2). Os únicos nós do site que colapsam de verdade são `overpower`, no nível 2, e as cinco seções dele, no nível 3; é por isso que a seta só ganha desenho ali.
+**Onze separadores no topo, e cinco nós que colapsam — todos no mesmo ramo.** O nível de topo não é categoria: é **separador** — rótulo em negrito, sem página, sem seta e sem ícone, sempre aberto (§3.2). Os únicos nós do site que colapsam de verdade são `overpower`, no nível 2, e as quatro seções dele, no nível 3; é por isso que a seta só ganha desenho ali.
 
 | Aba | Separadores | Páginas pt-BR | EN |
 | --- | ---: | ---: | ---: |
 | `Jornadas` | 2 | **12** (2 folhas de abertura + 10 capítulos) | — |
 | `Procedimentos` | 5 | **16** (2 folhas de abertura + 14 folhas) | — |
-| `Ferramentas` | 4 | **26** (22 autorais + 4 geradas) | **26** |
-| | **11** | **54** | **26** |
+| `Ferramentas` | 4 | **32** (28 autorais + 4 geradas) | **32** |
+| | **11** | **60** | **32** |
 
-**A árvore está fechada: 50 autorais mais 4 geradas, e o EN em 26.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 21, `Ferramentas` em 26 e o site em **54**. O portão 4 cobra os quatro números.
+**A árvore está fechada: 56 autorais mais 4 geradas, e o EN em 32.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 27, `Ferramentas` em 32 e o site em **60**. O portão 4 cobra os quatro números.
+
+> **Correção de contagem — #133.** As seções do `overpower` eram **seis** e são **cinco**: `Desenvolvimento` e `Publicação` serviam ao mesmo leitor, quem contribui com a ferramenta, misturadas na sidebar com as que servem quem a instala, e nada ali dizia qual era qual. As duas fundiram em `Contribuir`, e o `changelog` mudou de lado junto, para `Referência`, porque *o que mudou na versão que eu tenho* é pergunta de quem usa. Seis páginas nasceram de recorte no mesmo movimento, e os números foram de 12 · 16 · 26 para 12 · 16 · 32.
 
 > **Correção de contagem — #117.** Os números anteriores eram 12 · 16 · 17, com 39 autorais, 45 no site e 17 em EN. `Biblioteca A`, `B` e `C` saíram inteiras, com o ramo gerado de assinatura junto, e no lugar entrou o `overpower`, com 17 páginas autorais e 4 geradas por locale. Demolição e construção foram o mesmo commit por obrigação de portão: `Biblioteca C` era a única instância de três dos dez tipos de página, e não havia corte que deixasse a cobrança 12 verde no meio do caminho.
 
@@ -204,11 +205,11 @@ Não é estilo. É a regra que produz as configurações de TOC que provam a med
 
 Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e contagem que só existe em prosa é contagem que envelhece calada. Uma página a mais em `Esteiras` não quebra build nenhum; ela só faz este documento passar a mentir.
 
-`scripts/portao-4-conteudo.sh` cobra **quatorze** coisas, na cadência de commit:
+`scripts/portao-4-conteudo.sh` cobra **dezessete** coisas, na cadência de commit:
 
 | # | O que confere |
 | ---: | --- |
-| 1 | o volume por aba e por categoria — 12 · 16 · 26, e **54** no total |
+| 1 | o volume por aba e por categoria — 12 · 16 · 32, e **60** no total |
 | 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
 | 3 | a regra de heading, com a exceção nomeada acima como **única** |
 | 4 | **`<Steps>` ausente em toda `Jornadas`** |
@@ -219,19 +220,39 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 | 9 | o marcador de tradução em **31** páginas, e em nenhuma tradução |
 | 10 | **`description` presente em 100%** das páginas |
 | 11 | **as doze fixtures existem**, por caminho nomeado |
-| 12 | **os dez tipos têm instância** — e nenhum fica pendente |
-| 13 | **a cobertura de locale** — 17 páginas em EN, e só `Ferramentas` |
-| 14 | **zero travessão** em `conteudo/`, `i18n/` e `contratos/` — a mensagem aponta arquivo e linha |
+| 12 | **os onze tipos têm instância** — e nenhum fica pendente |
+| 13 | **a cobertura de locale** — 32 páginas em EN, e só `Ferramentas` |
+| 14 | **zero travessão** em `conteudo/`, `i18n/` e `contratos/` — a mensagem aponta arquivo e linha, e a exceção de citação abaixo é a única |
+| 15 | **o teto de profundidade** — 4, alcançado, e confinado a um ramo |
+| 16 | **a `Verificação` verifica** — página typed `guia` cuja seção existe e não tem bloco cercado, **nos dois locales** |
+| 17 | **o vocabulário do ramo está definido** — termo de `scripts/termos-overpower.txt` sem entrada em `conceitos.md`, **só em pt-BR** |
 
 As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>` citado dentro de um trecho de código contariam.
 
 **A cerca indentada conta, e isso é correção de fato contra a versão anterior do portão.** Ela casava `^``` ` enquanto a função que rastreia *"estou dentro de uma cerca?"* casava `^[[:space:]]*``` `. Uma cerca dentro de `<Steps>` abria e fechava o estado sem nunca ser contada como bloco. O desacordo era inofensivo enquanto o `<Steps>` carregava pouco código; na árvore nova ele carrega quase todo o código dos guias, e a contagem saía pela metade. Indentar cerca dentro de JSX é seguro: **o MDX desliga o bloco de código por indentação**, que é exatamente o que permite indentar Markdown dentro de um componente.
+
+**As cobranças 16 e 17 nasceram na [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133), e as duas cobram uma promessa, não uma contagem.** A 16 mede o que uma seção chamada `Verificação` de fato contém: nas cinco páginas typed `guia` do ramo `overpower` ela não trazia comando nenhum, e sim justificativa de desenho. A 17 mede a declaração de abertura de `conceitos.md`, que diz ser onde a definição mora: `achado` e `enxerto` eram usados em três páginas como se conhecidos, e definidos em zero.
+
+**A 16 não cobra a AUSÊNCIA da seção, e o limite é deliberado.** Exigi-la alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`, que é de outra aba e estava fora do escopo do ticket. O buraco fica nomeado no comentário do portão, para o ticket que o fechar.
+
+**A 16 varre os dois locales; a 17, só o pt-BR.** A assimetria tem razão: o heading da 16 é fixo por locale (`## Verificação` e `## Checking it`) e não há o que traduzir na régua, enquanto a lista de termos da 17 carrega palavras em português e cobrir o EN exigiria uma segunda lista para uma página que é tradução da primeira.
+
+**A 17 cobra uma direção só, e a outra é da skill.** Termo listado e não definido é varredura; termo usado na prosa e não listado é juízo, porque nenhuma varredura distingue vocabulário de produto de palavra comum. A segunda metade mora na `varredura-overpower`, e sem as duas a lista vira carimbo.
 
 **Proibição por localização é classe de regra nova neste projeto.** Até aqui gabarito **exigia** e **limitava**; nenhum dizia *"aqui não entra"*. As linhas 4 e 5 são teto de zero, e existem onde a alternativa era confiar em bom senso.
 
 **O tipo de cada página mora no portão, e não no conteúdo.** O §6 trava que tipo é convenção de conteúdo e **zero layout** — sem front matter `type:`, sem classe CSS por tipo. Um manifesto de build não é nenhum dos dois: ele não toca a página nem o CSS, e não existe no artefato publicado.
 
 **O travessão sai do conteúdo publicado, e `docs/` fica de fora.** O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha; o português tem vírgula, dois-pontos, parênteses e ponto final para tudo o que ele faz. A cobrança 14 cobra a **ausência**, nunca a substituição: cada ocorrência cai numa saída diferente, e algumas exigem reescrever a frase — é por isso que o portão aponta arquivo e linha e para por aí, e é por isso que ela não vira `sed`. A spec não é varrida porque não é produto, ninguém a navega como página, e `scripts/invariantes.sh` **exige** o literal `Livre — <dono>` dentro de `docs/`: varrê-la seria uma régua de máquina reprovando o que a outra obriga.
+
+**A exceção é citação de saída de ferramenta, e ela nasceu de duas regras que colidiam ([#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133)).** `referencia/solucao-de-problemas.md` promete citar a mensagem de recusa **como a ferramenta a imprime**, e três das mensagens do `overpower` carregam travessão literal. Reescrever a frase falsificaria a citação: o leitor procuraria no terminal um texto que não existe. A saída reusa o padrão da invariante 2 — **quem carrega o literal declara no próprio preâmbulo que carrega** — e o travessão passa só dentro de região de citação:
+
+| Superfície | A declaração, nas 20 primeiras linhas | Onde o travessão passa |
+| --- | --- | --- |
+| `.md` e `.mdx` | `{/* cita-saida-de-ferramenta */}` | dentro de cerca de código, ou na linha `api_exemplos:` da página gerada |
+| `.json` de `contratos/` | `"citaSaidaDeFerramenta": true` | dentro de um valor `"mensagem"` |
+
+**O marcador é `{/* */}` e não `<!-- -->`, e isso é medição, não gosto.** Sob MDX 3 o comentário HTML não compila — *Unexpected character `!` (U+0021) before name* —, e toda página deste site passa pelo compilador MDX, `.md` inclusive, porque a config não declara `markdown.format`.
 
 **A linha 13 estava faltando nesta tabela, e a contagem dizia doze.** A cobertura de locale é cobrada pelo portão desde que ele foi reescrito com a árvore do `panlabs`, e a tabela nunca a listou. A #115 acertou os dois lados de uma vez, ao acrescentar a 14.
 
@@ -262,15 +283,15 @@ São, respectivamente, `alert alert--warning` e `badge badge--secondary` — **c
 
 ---
 
-## 6. Tipos de página — dez, todos convenção de conteúdo
+## 6. Tipos de página — onze, todos convenção de conteúdo
 
-São dez, todos **convenção de conteúdo e zero layout**: sem front matter de tipo, sem classe CSS por tipo, sem componente próprio.
+São onze, todos **convenção de conteúdo e zero layout**: sem front matter de tipo, sem classe CSS por tipo, sem componente próprio.
 
 > **O site inteiro tem exatamente uma ruptura de layout:** o ramo gerado de `overpower › Comandos`. **Nenhuma segunda nasce de um tipo.**
 >
-> *Correção de contagem.* **Eram duas**; a outra era a landing, e ela saiu em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94). O número caiu por subtração de página, e não por afrouxamento: o que a frase proíbe continua sendo que um **tipo** produza layout próprio, e nenhum dos dez produz. A raiz não recompõe o par — ela é um salto para o índice da primeira jornada, e salto não tem layout a romper.
+> *Correção de contagem.* **Eram duas**; a outra era a landing, e ela saiu em [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94). O número caiu por subtração de página, e não por afrouxamento: o que a frase proíbe continua sendo que um **tipo** produza layout próprio, e nenhum dos onze produz. A raiz não recompõe o par — ela é um salto para o índice da primeira jornada, e salto não tem layout a romper.
 
-### 6.1 Os dez gabaritos
+### 6.1 Os onze gabaritos
 
 | Tipo | Onde vive | Gabarito |
 | --- | --- | --- |
@@ -278,12 +299,17 @@ São dez, todos **convenção de conteúdo e zero layout**: sem front matter de 
 | **Conceitual** | Infraestrutura, Diagnóstico, `overpower` | definição → por que existe → como aparece no artefato → armadilhas em `callout` |
 | **Guia** | folhas de `Procedimentos` e `Ferramentas` | pré-requisitos → `<Steps>` → verificação → variações |
 | **SDK** | `overpower › Instalação` · `Servidor de catálogo MCP` | instalação em `<CodeGroup>` por gerenciador → configuração → uso → tratamento de erro |
+| **Referência** | `overpower › Comandos › Índice` · `overpower › Referência › Índice` | o que é → **a tabela ou a lista que se consulta** → as notas de uso |
 | **Referência de API** | `overpower › Comandos`, ramo gerado | **gerada** do contrato de superfície de comando — o gabarito é a saída do gerador |
 | **Receita** | `Skills` | o problema em uma frase → código completo copiável → no máximo 1 `##` |
 | **Catálogo** | `Ambiente`, `Acessos`, `overpower › Alvos` | intro curta → como ler a tabela → **a tabela larga** → notas |
 | **Troubleshooting** | `Diagnóstico`, `overpower › Referência` | tabela de sintomas → uma seção por sintoma: causa, comando que confirma |
-| **Changelog** | `overpower › Publicação › Changelog` | cronologia reversa, uma entrada por versão publicada |
+| **Changelog** | `overpower › Referência › Changelog` | cronologia reversa, uma entrada por versão publicada |
 | **Índice de jornada** | os 2 índices de `Jornadas` | ver §6.4 — o décimo tipo |
+
+**O décimo primeiro tipo nasceu na [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133), e ele fecha um buraco medido.** `comandos/indice.md` mede 83,3% Referência e `referencia/indice.md` mede 72,3%, e as duas estavam arquivadas como `Conceitual`. Não era acidente: a taxonomia não tinha slot para **referência autoral**, então toda página assim era empurrada para `Conceitual`, e passava a ser cobrada por um gabarito que pede *definição → por que existe → armadilhas* onde o corpo é uma tabela que se consulta. O tipo novo separa a tabela que se lê do argumento que se segue, e o que a máquina cobra dele é a tabela, porque é ela que faz a diferença.
+
+**`Referência` não é `Referência de API`, e a distância entre as duas é quem escreve.** A segunda é **gerada** e o gabarito dela é a saída do gerador; a primeira é autoral, e o gabarito é o desta linha. Um nome não abrevia o outro.
 
 **`Instalação` é SDK e não Guia, e a atribuição é de propósito.** O gabarito de SDK pede *instalação em `<CodeGroup>` por gerenciador*, e `uvx` contra `uv tool` contra `pipx` é exatamente isso. Sem ela o tipo cairia de três instâncias para uma, porque `Biblioteca A` e `B` eram duas delas. `Alvos › Índice` carrega tipo de verdade pelo mesmo mecanismo que `Diagnóstico › Índice de sintomas` já abriu (§6.3): a página de abertura de uma seção pode ser um tipo, e aqui ela é `Catálogo`, com os 77 runtimes.
 
@@ -296,24 +322,25 @@ São dez, todos **convenção de conteúdo e zero layout**: sem front matter de 
 | Tipo | Palavras | Estrutura mínima | Quantas neste artefato |
 | --- | --- | --- | ---: |
 | Quickstart | 500-700 | 1 `<Steps>` de 5 passos · 5 blocos · 2 `:::` · 1 `<CardGroup>` | 1 |
-| Conceitual | 700-1000 | 2 blocos · 1 `:::` · 1 tabela · 3-6 `##` | **9** |
+| Conceitual | 700-1000 | 2 blocos · 1 `:::` · 1 tabela · 3-6 `##` | **11** |
 | Guia | 600-900 | 1 `<Steps>` · 3 blocos · 2 `:::` | **15** |
 | SDK | 400-600 | 1 `<CodeGroup>` de instalação · 4 blocos | 2 |
 | Receita | 150-250 | 1 bloco **longo** · no máximo 1 `##` | 2 |
-| Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | 3 |
+| Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | **5** |
+| Referência | 300-600 | 1 tabela · 3-6 `##` | **2** |
 | Troubleshooting | 800-1200 | 1 tabela de sintomas · 3-8 `##` | 4 |
 | Changelog | — | 6-8 entradas em `<Update>` | 1 |
 | Referência de API | — | a saída do gerador | **4 — geradas** |
 | *índice de jornada* | 250-400 | ver §6.4 | 2 |
 | *capítulo de jornada* | 180-1800 | 3-6 `##` · 2 blocos · 1 `:::` · prosa antes do 1º `##` · **sem `<Steps>`** | 10 |
 | *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 1 |
-| | | **total autoral** | **50** |
+| | | **total autoral** | **56** |
 
 > **A linha *índice de categoria* saiu, e a da fixture curta passou a somar.** Eram **oito** índices de categoria, e a fixture de página curta — `Procedimentos › Ambiente › Índice` — era uma delas: a linha dela existia para nomear o **papel**, e contá-la de novo fazia a coluna somar 47 contra um total de 46. Com a #114 a forma morreu (§6.3): sete das oito páginas saíram, e a oitava é justamente a fixture, que agora tem linha própria na sidebar e conta uma vez, na linha dela.
 
-> **A coluna foi remedida com o `overpower` dentro, e nenhum número dela é escolha de redação:** os onze são a contagem do manifesto de `scripts/portao-4-conteudo.sh`, que é o que crava e reprova. As 17 páginas novas caem em sete dos dez tipos, e a distribuição não foi desenhada para encher a coluna — ela é o que a doc de origem já tinha, mapeada gabarito a gabarito. O `Guia` passou de 11 para 15 porque cinco das seis seções do `overpower` têm uma folha de procedimento, e o `Conceitual` de 3 para 9 pelo mesmo motivo, do outro lado.
+> **A coluna foi remedida com o `overpower` dentro, e nenhum número dela é escolha de redação:** os doze são a contagem do manifesto de `scripts/portao-4-conteudo.sh`, que é o que crava e reprova. As 17 páginas novas caem em sete dos onze tipos, e a distribuição não foi desenhada para encher a coluna — ela é o que a doc de origem já tinha, mapeada gabarito a gabarito. O `Guia` passou de 11 para 15 porque cinco das seis seções do `overpower` têm uma folha de procedimento, e o `Conceitual` de 3 para 9 pelo mesmo motivo, do outro lado.
 
-**Os dez tipos têm instância neste artefato**, e o décimo é o único gerado. O portão 4 cobra a pendência **pelo avesso**: as quatro existem, e nenhuma delas pode aparecer no manifesto de tipo — uma linha ali seria página escrita à mão sob o gabarito *a saída do gerador*, que é a incoerência que o §6.1 já adjudicou uma vez.
+**Os onze tipos têm instância neste artefato**, e `Referência de API` é o único gerado. O portão 4 cobra a pendência **pelo avesso**: as quatro existem, e nenhuma delas pode aparecer no manifesto de tipo — uma linha ali seria página escrita à mão sob o gabarito *a saída do gerador*, que é a incoerência que o §6.1 já adjudicou uma vez.
 
 ### 6.3 O índice de categoria era uma forma, e a forma morreu
 
@@ -444,7 +471,7 @@ A fronteira é **audiência do artefato**, e não infra pública contra corporat
 
 | Traduzido para EN | Só pt-BR |
 | --- | --- |
-| `Ferramentas` — **26**: 22 autorais e 4 geradas | `Jornadas` 12 · `Procedimentos` 16 |
+| `Ferramentas` — **32**: 28 autorais e 4 geradas | `Jornadas` 12 · `Procedimentos` 16 |
 | **26** | **28** |
 
 **28 páginas carregam o marcador de fallback**, e o número não se mexeu com o `overpower`: o port trocou o conteúdo de `Ferramentas`, que é a aba traduzida, e nenhuma página de `Jornadas` ou `Procedimentos` entrou ou saiu. *(Correção de aritmética anterior: a contagem dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes, e depois 31; a #114 tirou três índices de `Procedimentos` do acervo.)*
@@ -594,7 +621,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | O cenário fecha em três strings | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — GitHub Actions, AWS e Python; o resto cai delas somadas às categorias |
 | O custo de gabarito sobe sem convenção conhecida | **origem própria (consequência)** | o gênero público do domínio anterior era o que segurava a coerência; sem ele, quem segura é o gabarito |
 | Três tabs, três instâncias | origem própria | `routeBasePath` e versionamento são por instância |
-| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 26 folhas da instância usam o `@theme/DocItem` do upstream |
+| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 32 folhas da instância usam o `@theme/DocItem` do upstream |
 | Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) §árvore |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |
@@ -607,7 +634,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | **A forma *índice de categoria* morre** | **origem própria (consequência)** | sem categoria clicável não há destino a que o índice sirva |
 | Quatro índices sobrevivem como folha | **origem própria** | são as que carregam tipo ou fixture, e matá-las derrubaria quatro invariantes |
 | A rota nua resolve por `slug: /` | **origem própria (implementação)** | o `docSidebar` já leva à primeira doc; o que não resolve sozinho é a rota digitada |
-| **50 autorais mais 4 geradas, e 26 em EN** | **origem própria (correção)** | a resolução contava as geradas fora do pt-BR e dentro do EN; com o `overpower` no ar (#117) o pt-BR fecha em 54 e o EN em 26 |
+| **56 autorais mais 4 geradas, e 32 em EN** | **origem própria (correção)** | a resolução contava as geradas fora do pt-BR e dentro do EN; com o `overpower` no ar (#117) o pt-BR fecha em 54 e o EN em 26 |
 | **Quinze guias** | **origem própria (medição)** | contado contra o manifesto do portão 4: 8 em `Procedimentos` e 7 em `Ferramentas`, cinco delas do `overpower` |
 | `Instalação` é SDK, e `Alvos › Índice` é Catálogo | **origem própria** | o gabarito de SDK é *instalação em `<CodeGroup>` por gerenciador*, e é o que `uvx`/`uv tool`/`pipx` é; a abertura de seção pode carregar tipo, no precedente do §6.3 |
 | O décimo tipo, e o gabarito dele | herdado | [#57](https://github.com/ThiagoPanini/panlabs-docs/issues/57) — o gabarito encoda a condição que salva o tipo com mais precisão que prosa |

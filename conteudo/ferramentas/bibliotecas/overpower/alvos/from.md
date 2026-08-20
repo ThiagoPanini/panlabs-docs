@@ -55,6 +55,32 @@ tarball anônimo usando só a biblioteca padrão do Python.
 
 ## Verificação
 
+Rode a mesma linha com `--dry-run` antes de escrever qualquer coisa:
+
+```bash
+uvx overpower@latest install --from https://github.com/dono/repo --skill <nome> --dry-run
+```
+
+A saída lista o caminho de destino de cada arquivo e a procedência de cada um. A
+procedência deve apontar para o repositório que você nomeou; se ela citar o
+catálogo embutido, a URL não foi lida como raiz de busca.
+
+Depois de instalar, confirme o que aterrissou:
+
+```bash
+uvx overpower@latest doctor
+```
+
+O `doctor` fecha em **zero achado** quando a instalação está sã, e sai `0`.
+
+:::note
+Um nome que o repositório remoto não tem sai `3`, e não `2`. É a diferença que o
+`--from` faz no modelo de erro, e ela está em
+[códigos de saída](../referencia/codigos-de-saida).
+:::
+
+## O que o `--from` consulta
+
 O `--from` é **exclusivo**. Uma vez na linha, só o repositório remoto é
 consultado: o catálogo embutido não é procurado, e também não é fundido com o
 remoto. Isso resolve a questão de precedência entre os dois removendo-a, em vez
@@ -73,35 +99,3 @@ artefato chegam todos ao mesmo resultado. O `--bundle` e a vitrine nua estão
 **ancorados** na raiz do repositório, então a subpasta da URL não estreita nada:
 o que um repositório oferece, e o que ele compõe, são propriedades do repositório
 e não do caminho que você por acaso colou.
-
-## O bundle federado
-
-Um **bundle** é uma composição nomeada, e um repositório federa uma escrevendo
-`.overpower/catalog.yaml` na raiz dele.
-
-```yaml
-bundles:
-  api-python:
-    description: Tudo que é preciso para trabalhar na API em Python.
-    items:
-      - fastapi-conventions
-      - pytest-fixtures
-```
-
-Esse arquivo é lido pelo **mesmo leitor** que lê o catálogo que o `overpower`
-publica, então um manifesto malformado é recusado nomeando o mesmo campo dos dois
-lados, e não existe um segundo validador em lugar nenhum para discordar do
-primeiro. Os `items` são **nomes**, nunca caminhos, resolvidos contra as skills
-que aquele mesmo repositório oferece sob `skills/`. Eles não alcançam nem o
-catálogo embutido nem um terceiro repositório, e um nome que não resolve sai `3`
-dizendo qual nome.
-
-:::note
-Não há cache. Todo `--from` busca fresco, por decisão. Conteúdo remoto muda no
-calendário de outra pessoa, e uma cópia guardada localmente derrotaria em
-silêncio a razão inteira de o `--from` existir.
-:::
-
-O que muda no plano é só a [procedência](../conceitos). A confirmação, o
-`--dry-run` e a mecânica de escrita são as mesmas do conteúdo que vem do catálogo
-embutido.

@@ -124,16 +124,16 @@ A palavra bate com `--pd-text-strong` no pixel, nos dois modos, e **não** bate 
 | Papel | tags | arquivos que carregam a tag |
 | --- | ---: | ---: |
 | Sistema — o componente escolhe, o autor nunca | 19 | 19 |
-| Navegação — um por seção de sidebar | 16 | 16 |
+| Navegação — um por nó de sidebar que carrega ícone | 37 | 37 |
 | Autoria — o vocabulário escrito como string | 40 | 40 |
-| **Total de tags** | **75** | — |
+| **Total de tags** | **96** | — |
 | **Total de arquivos** | — | **61** |
 
-A coluna de arquivos **soma mais que 61 de propósito**: são **quatorze** entradas com duas tags, e uma entrada com duas tags aparece nas duas linhas. 75 − 14 = 61, e é essa a aritmética inteira.
+A coluna de arquivos **soma mais que 61 de propósito**: são **trinta e cinco** entradas com duas tags, e uma entrada com duas tags aparece nas duas linhas. 96 − 35 = 61, e é essa a aritmética inteira.
 
-As quatorze moram todas na lista de **autoria** e carregam a segunda tag ali. Nove são as antigas — `package`, `puzzle`, `bot`, `server`, `layers`, `workflow`, `cloud`, `key` e `lock` —, e cinco chegaram com o `overpower`: `terminal`, `globe`, `book-open`, `wrench` e `rocket`. Os dois pares restantes, `code-xml` e `activity`, são navegação pura e moram na lista de navegação.
+As trinta e cinco carregam `navegacao` e `autoria` juntas, e moram na lista de autoria. Os dois pares restantes da navegação, `code-xml` e `activity`, são navegação pura.
 
-> **As cinco últimas custaram zero arquivo, e essa é a prova de que a regra do papel-como-tag paga.** As cinco seções do `overpower` precisavam de glifo próprio; cada uma achou um desenho que o manifesto já carregava como vocabulário do autor, e o que entrou foi uma tag em cada. O teto de 64 não se moveu, e a folga continua em três.
+> **A navegação foi de 16 para 37 sem um arquivo novo, e essa é a prova de que a regra do papel-como-tag paga.** O ramo do `overpower` passou a exigir um glifo por PÁGINA, e não por seção: são 27 páginas ali, e cada uma achou um desenho que o manifesto já carregava como vocabulário do autor. O que entrou em cada caso foi **uma tag**, nunca um arquivo. A [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133) promoveu as seis últimas — `send`, `package`, `users`, `bell`, `sparkles` e `file-text` — para as seis páginas que ela criou. O teto de 64 não se moveu, e a folga continua em três.
 
 > **Correção de aritmética contra a resolução deste ticket.** Ela dizia *"sete reusam entrada de autoria com segunda tag, dois reempregam órfão de navegação"*, o que fecha em nove pares e não em onze. Contado contra a árvore: **oito** entradas de autoria ganham a segunda tag, **dois** órfãos de navegação são reempregados, e **um** — `package` — já carregava as duas. Oito mais dois mais um são os onze.
 

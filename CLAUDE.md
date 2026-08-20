@@ -47,7 +47,7 @@ O método de achar dentro de um arquivo: as seções são numeradas e o título 
 - **Link quebrado só aparece no `build`.** `onBrokenLinks: 'throw'` não roda em `docusaurus start`, que devolve 200 com o shell da SPA para qualquer rota.
 - **Nenhuma dependência npm nova.** `npm run zeros` reprova, e é axioma. O `package-lock.json` versionado é a régua.
 - **A paridade trava desde a S9-8.** `npm run paridade -- --verificar` reprova quando aparece divergência fora de `scripts/paridade-abertas.txt` **ou** quando uma linha de lá passa a fechar. Mexeu num alvo ou num número medido? Acerte a lista, com o número e o gatilho — o passo já não é `continue-on-error`.
-- **Contagem de página é cobrada.** O portão 4 crava 12 · 16 · 17 nas três abas de `conteudo/`, mais o ramo gerado. Acrescentar página sem acertar o portão reprova.
+- **Contagem de página é cobrada.** O portão 4 imprime `12 · 16 · 32 = 60` nas três abas de `conteudo/`, e são 56 autorais mais 4 geradas, com Bibliotecas fechando em 27. **O literal que ele confere para `Ferramentas` é 28**, a contagem AUTORAL: a função conta `.md` e o ramo gerado é `.mdx`, somado por fora. Acrescentar página sem acertar os dois números reprova.
 
 ## Idioma e voz
 
@@ -56,3 +56,5 @@ Prosa deste repo — docs, ADR, issue, commit, PR — em **pt-BR**. O conteúdo 
 A voz do conteúdo é **`você` + imperativo**, no site inteiro. **Zero primeira pessoa, sem exceção** — o acervo é pessoal pelo que escolhe documentar, não pela gramática. Detalhe em `docs/agents/domain.md` § Vocabulário.
 
 **Zero travessão no conteúdo publicado.** `conteudo/`, `i18n/` e `contratos/` fecham em zero `—`, e a saída é vírgula, dois-pontos, parênteses ou a frase reescrita, escolhida uma a uma. A cobrança 14 do portão 4 varre as três e reprova apontando arquivo e linha. `docs/` fica de fora, e por decisão: `invariantes.sh` exige o literal `Livre — <dono>` lá dentro.
+
+**A exceção é citação de saída de ferramenta.** Arquivo que declara `{/* cita-saida-de-ferramenta */}` (ou `"citaSaidaDeFerramenta": true`, em `contratos/`) nas 20 primeiras linhas pode ter `—` dentro de cerca de código, na linha `api_exemplos:` de página gerada, ou num valor `"mensagem"`. Fora dessas regiões reprova igual.

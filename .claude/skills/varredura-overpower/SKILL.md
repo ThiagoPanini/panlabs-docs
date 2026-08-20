@@ -30,7 +30,7 @@ Leia, e só isto:
 
 Decida: **vale varredura completa?** Registre a decisão com o motivo, seja qual for.
 
-**Filtro por caminho não serve, e há medição.** O PR que tirou a documentação do repositório do `overpower` (#151, versão 0.27.0) não tocou `src/` e não mudou flag nenhuma — e mudou o que as páginas de `publicacao/` descrevem, porque tirou um job da CI. Um gatilho que só olhasse `src/` teria perdido exatamente essa.
+**Filtro por caminho não serve, e há medição.** O PR que tirou a documentação do repositório do `overpower` (#151, versão 0.27.0) não tocou `src/` e não mudou flag nenhuma — e mudou o que as páginas de `contribuir/` descrevem, porque tirou um job da CI. Um gatilho que só olhasse `src/` teria perdido exatamente essa.
 
 **Se a triagem disser não**, vá para a etapa 5 com veredito `sem-deriva`. Antes, a onda adversarial.
 
@@ -38,15 +38,47 @@ Decida: **vale varredura completa?** Registre a decisão com o motivo, seja qual
 
 Isto é comparação de listas. Não peça opinião a ninguém, inclusive a você.
 
-Rode o `--help` real dos três comandos e da raiz, com `NO_COLOR=1` e `COLUMNS=200`, a partir do checkout irmão. Compare com `contratos/overpower.pt-BR.json` e `contratos/overpower.en.json`:
+**Não use o `--help` como fonte.** Ele esconde a aridade: `install --help` não diz que `--skill` acumula, e `list --help` não diz que ali a vírgula é caractere do nome. Foi essa omissão que produziu o contrato v1, com cinco opções declaradas e uma mostrada. A fonte é a introspecção do parser:
+
+```python
+import json, typer.main
+from overpower.cli import app
+
+def dump(p):
+    return {"opts": list(p.opts), "curtas": list(p.secondary_opts), "metavar": p.metavar,
+            "multiplo": p.multiple, "required": p.required, "flag": p.is_flag,
+            "default": repr(p.default)}
+
+cmd = typer.main.get_command(app)
+print(json.dumps({
+    "raiz": [dump(p) for p in cmd.params],
+    **{n: [dump(p) for p in sc.params] for n, sc in cmd.commands.items()},
+}, indent=1, ensure_ascii=False))
+```
+
+Rode com `uv run python` a partir do checkout irmão, ou com `uvx --from overpower==<versão> python`. Compare com `contratos/overpower.pt-BR.json` e `contratos/overpower.en.json`:
 
 | o que conferir | onde, no contrato |
 | --- | --- |
 | os comandos que existem | `entradas[].qualificado`, e `fluxo` da entrada raiz |
-| a assinatura de cada um | `entradas[].assinatura` |
-| nome, forma curta e obrigatoriedade de cada opção | `entradas[].parametros[]` |
+| a assinatura de cada um | **nada** — ela é derivada de `parametros` por `linha.mjs`, e escrevê-la é recusa |
+| nome, forma curta e metavar de cada opção | `entradas[].parametros[]` |
+| **se a opção acumula, e com que separador** | `entradas[].parametros[].aridade` |
+| **a linha mínima, por contexto** | `entradas[].minimo[]` |
+| **exclusividade, guarda, precedência e a mensagem literal** | `entradas[].restricoes[]` |
 | os quatro códigos de saída | `retorno.campos` da entrada raiz |
 | os erros nomeados | `entradas[].erros[]` |
+
+**A mensagem de `restricoes[].mensagem` é citação, e citação se confere byte a byte.** Instancie a classe de erro e compare com `str()`, em vez de ler a prosa do fonte:
+
+```python
+from overpower.cli import TooManySelectorsError
+assert str(TooManySelectorsError(["--skill", "--bundle"])) == "..."
+```
+
+Três delas carregam travessão literal. O contrato pode carregá-lo porque declara `"citaSaidaDeFerramenta": true` nas 20 primeiras linhas; a página que a cita precisa de `{/* cita-saida-de-ferramenta */}` e de cerca de código em volta. Ver a cobrança 14 do portão 4.
+
+**A cardinalidade de `--runtime` sai de `known_runtimes()`, nunca da prosa do fonte.** `planning.py` diz *76 in project, 74 in global* e está desatualizado desde a entrada do `vscode`; um contrato derivado da prosa nasce errado.
 
 E confira a **descrição** de cada opção contra o texto de ajuda real. Este é o achado que a máquina não pega e que aconteceu de verdade: na 0.25.2 a ajuda do `--yes` passou a anunciar o segundo efeito, e o contrato continuou afirmando que *"a ajuda da ferramenta não anuncia"*. O contrato estava bem formado, o portão 5 estava verde, e a frase era falsa.
 
@@ -56,7 +88,7 @@ E confira a **descrição** de cada opção contra o texto de ajuda real. Este �
 
 ## 3. O eixo de prosa — juízo, com prova
 
-As dezessete páginas escritas à mão, mais uma que mora fora da subárvore e que uma varredura por caminho perderia:
+As vinte e três páginas escritas à mão, mais uma que mora fora da subárvore e que uma varredura por caminho perderia:
 
     conteudo/ferramentas/skills/scaffold-de-esteira.md
 
@@ -71,6 +103,20 @@ As fontes de verdade, herdadas da #118:
 | o changelog publicado | `CHANGELOG.md` do `overpower` |
 | versão, entry point, dependências, endereços | `pyproject.toml` e `README.md` |
 | o fluxo de trabalho e o que trava merge | `docs/agents/workflow.md` do `overpower` |
+
+### O vocabulário, e ele é cobrado dos dois lados
+
+A cobrança 17 do portão 4 pega **termo listado e não definido**: todo termo de `scripts/termos-overpower.txt` precisa de entrada `**<termo>**` em `conceitos.md`. Essa metade é de máquina, e você não precisa fazer nada por ela.
+
+**A outra metade é sua, e é juízo:** termo **usado e não listado**. Varra a prosa do ramo procurando palavra que o texto trata como conhecida do produto, e confira contra a lista:
+
+```bash
+grep -rhoE '\*\*[A-ZÀ-Ú][a-zà-ú-]+\*\*' conteudo/ferramentas/bibliotecas/overpower/ | sort -u
+```
+
+Compare com `scripts/termos-overpower.txt`. Um negrito que nomeia conceito do produto e não está na lista é uma das duas coisas, e as duas exigem edição: ou ele entra na lista **e** ganha definição em `conceitos.md`, ou ele não é vocabulário e o negrito é enfeite. **Nenhuma varredura decide isso por você** — é exatamente por não haver régua que esta metade é trabalho de agente.
+
+Quando a ferramenta ganhar termo novo, o caminho é o mesmo, na outra direção: defina em `conceitos.md`, acrescente à lista, e o portão passa a cobrar.
 
 ### A regra de evidência
 

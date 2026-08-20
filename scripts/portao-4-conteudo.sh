@@ -18,13 +18,16 @@
 # índices são teto de zero, e existem onde a alternativa era confiar em bom
 # senso.
 #
-# São quinze cobranças: as **doze** que a árvore nova trouxe; a cobertura de
+# São dezessete cobranças: as **doze** que a árvore nova trouxe; a cobertura de
 # locale, que é a única sobrevivente da versão anterior deste portão — ela não é
 # acréscimo, é a linha que não foi jogada fora com o resto; a varredura de
-# travessão, a única que olha o caractere em vez da estrutura; e o teto de
-# profundidade, que entrou com o `overpower`.
+# travessão, a única que olha o caractere em vez da estrutura; o teto de
+# profundidade, que entrou com o `overpower`; e as **duas últimas**, que a #133
+# trouxe e que cobram uma promessa em vez de uma contagem — uma seção chamada
+# `Verificação` que de fato traz o que rodar, e um vocabulário que a página que
+# se declara dicionário de fato define.
 #
-#    1. o volume por aba e por categoria     12 · 16 · 26, e 54 no total
+#    1. o volume por aba e por categoria     12 · 16 · 32, e 60 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
 #    3. a regra de heading                    com UMA exceção nomeada
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
@@ -36,10 +39,12 @@
 #    9. o marcador de tradução                31 páginas, e nenhuma tradução
 #   10. `description`                         em 100% das páginas
 #   11. as doze fixtures                      por caminho nomeado
-#   12. os dez tipos têm instância            e nenhum fica pendente
-#   13. a cobertura de locale                 26 em EN, e só `Ferramentas`
+#   12. os onze tipos têm instância           e nenhum fica pendente
+#   13. a cobertura de locale                 32 em EN, e só `Ferramentas`
 #   14. o travessão                           zero nas três superfícies
 #   15. o teto de profundidade                4, alcançado, e confinado a um ramo
+#   16. a `Verificação` verifica            bloco cercado na seção, nos dois locales
+#   17. o vocabulário do ramo               termo listado, e definido em `conceitos.md`
 #
 # **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
 # ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
@@ -80,6 +85,10 @@ EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 # As três superfícies do conteúdo publicado, para a varredura de travessão. `EN`
 # não serve aqui: ele aponta uma aba, e a régua é sobre tudo o que sai no site.
 I18N='i18n'
+# O espelho de conteúdo da aba `Ferramentas`, que é a única traduzida. Ele é
+# mais fundo que `$I18N`, e as duas raízes NÃO são intercambiáveis: `$I18N`
+# cobre também os rótulos de UI, que não têm contraparte em `conteudo/`.
+ESPELHO_EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 CONTRATOS='contratos'
 
 # O ramo gerado, nos dois locales. Ele é contado à parte de toda contagem de
@@ -108,14 +117,17 @@ reprova() {
 # `chave=valor` separados por espaço, lidos com `${par%%=*}` / `${par##*=}` —
 # o repo não tem bash 4 garantido, então nada de array associativo.
 #
-# **Estas contagens são de AUTORAL**, e são 22 para `Ferramentas`: a função conta
-# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 26 folhas na aba e 54 no
+# **Estas contagens são de AUTORAL**, e são 28 para `Ferramentas`: a função conta
+# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 32 folhas na aba e 60 no
 # site — é cobrada logo abaixo, com o número gerado somado por fora.
+#
+# `bibliotecas` foi de 17 para 23 na #133: seis páginas nasceram de recorte do
+# que já existia, e nenhuma delas trouxe prosa nova.
 VOLUME_JORNADAS='api-owner=7 security-champion=5'
 VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=3 infraestrutura=3 acessos=3 diagnostico=4'
-VOLUME_FERRAMENTAS='bibliotecas=17 modulos-terraform=2 skills=2 servidores-mcp=1'
+VOLUME_FERRAMENTAS='bibliotecas=23 modulos-terraform=2 skills=2 servidores-mcp=1'
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 50 autorais.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 56 autorais.
 #
 # **A forma `indice` MORREU com a issue #114**, e com ela sete páginas: o
 # conteúdo delas era *a lista do que está logo abaixo*, e a sidebar já é essa
@@ -158,21 +170,27 @@ procedimentos/diagnostico/o-mesmo-erro-em-tres-formas:troubleshooting
 procedimentos/diagnostico/o-diff-que-resolveu:troubleshooting
 ferramentas/bibliotecas/overpower/visao-geral:quickstart
 ferramentas/bibliotecas/overpower/instalacao:sdk
+ferramentas/bibliotecas/overpower/o-atalho-op:conceitual
 ferramentas/bibliotecas/overpower/conceitos:conceitual
-ferramentas/bibliotecas/overpower/comandos/indice:conceitual
+ferramentas/bibliotecas/overpower/comandos/indice:referencia
 ferramentas/bibliotecas/overpower/alvos/indice:catalogo
 ferramentas/bibliotecas/overpower/alvos/servidores-mcp:conceitual
 ferramentas/bibliotecas/overpower/alvos/from:guia
-ferramentas/bibliotecas/overpower/referencia/indice:conceitual
+ferramentas/bibliotecas/overpower/alvos/bundle-federado:conceitual
+ferramentas/bibliotecas/overpower/referencia/indice:referencia
 ferramentas/bibliotecas/overpower/referencia/codigos-de-saida:conceitual
 ferramentas/bibliotecas/overpower/referencia/solucao-de-problemas:troubleshooting
-ferramentas/bibliotecas/overpower/desenvolvimento/indice:guia
-ferramentas/bibliotecas/overpower/desenvolvimento/testes:conceitual
-ferramentas/bibliotecas/overpower/desenvolvimento/telas:guia
-ferramentas/bibliotecas/overpower/publicacao/indice:conceitual
-ferramentas/bibliotecas/overpower/publicacao/curadoria:guia
-ferramentas/bibliotecas/overpower/publicacao/release:guia
-ferramentas/bibliotecas/overpower/publicacao/changelog:changelog
+ferramentas/bibliotecas/overpower/referencia/changelog:changelog
+ferramentas/bibliotecas/overpower/contribuir/indice:guia
+ferramentas/bibliotecas/overpower/contribuir/arquitetura:conceitual
+ferramentas/bibliotecas/overpower/contribuir/mapa-de-modulos:catalogo
+ferramentas/bibliotecas/overpower/contribuir/hooks:conceitual
+ferramentas/bibliotecas/overpower/contribuir/testes:conceitual
+ferramentas/bibliotecas/overpower/contribuir/telas:guia
+ferramentas/bibliotecas/overpower/contribuir/curadoria:guia
+ferramentas/bibliotecas/overpower/contribuir/criterios-de-catalogo:conceitual
+ferramentas/bibliotecas/overpower/contribuir/release:guia
+ferramentas/bibliotecas/overpower/contribuir/release-ready:catalogo
 ferramentas/modulos-terraform/modulo-de-bucket:guia
 ferramentas/modulos-terraform/modulo-de-papel-iam:guia
 ferramentas/skills/scaffold-de-esteira:receita
@@ -185,7 +203,7 @@ FIM
 # décimo, `referencia-de-api`, é o único que não aparece no manifesto acima: o
 # gabarito dele é *a saída do gerador*, e a instância dele é contada do disco —
 # declará-lo no manifesto seria escrever à mão o que o contrato decide.
-DEZ_TIPOS='quickstart conceitual guia sdk referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
+ONZE_TIPOS='quickstart conceitual guia sdk referencia referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
 TIPO_GERADO='referencia-de-api'
 
 # As doze fixtures, por caminho nomeado. A décima segunda,
@@ -269,25 +287,25 @@ echo "1  volume por aba e por categoria"
 
 volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
 volume_da_aba "$PROCEDIMENTOS" 16 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
-volume_da_aba "$FERRAMENTAS" 22 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
+volume_da_aba "$FERRAMENTAS" 28 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
 
 autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
-[ "$autorais" = 50 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 50"
+[ "$autorais" = 56 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 56"
 
-# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 21, `Ferramentas`
-# em 26 e o site em 54 — os três números que a spec publica.
+# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 27, `Ferramentas`
+# em 32 e o site em 60 — os três números que a spec publica.
 geradas=$(find "$GERADO_PT" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas" = "$GERADAS" ] ||
   reprova "o ramo gerado tem ${geradas} páginas, esperado ${GERADAS}"
 
 bibliotecas=$(( $(find "${FERRAMENTAS}/bibliotecas" -name '*.md' | wc -l) + geradas ))
-[ "$bibliotecas" = 21 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 21"
+[ "$bibliotecas" = 27 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 27"
 
 folhas_ferramentas=$((total_ferramentas + geradas))
-[ "$folhas_ferramentas" = 26 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 26"
+[ "$folhas_ferramentas" = 32 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 32"
 
 total=$((autorais + geradas))
-[ "$total" = 54 ] || reprova "o site tem ${total} páginas, esperado 54"
+[ "$total" = 60 ] || reprova "o site tem ${total} páginas, esperado 60"
 
 echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${folhas_ferramentas} = ${total}"
 echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
@@ -341,6 +359,13 @@ while IFS=: read -r relativo tipo; do
     sdk)            exigir '<CodeGroup>' "$codegroups" 1; exigir 'blocos' "$blocos" 4 ;;
     receita)        exigir 'blocos' "$blocos" 1 ;;
     catalogo)       exigir 'tabelas' "$tabelas" 1 ;;
+    # O DÉCIMO PRIMEIRO tipo, nascido na #133. A taxonomia não tinha slot para
+    # referência autoral, então toda página assim era empurrada para
+    # `conceitual` — e `comandos/indice` media 83,3% Referência sob esse
+    # carimbo. O gabarito é *o que é, a tabela ou lista que se consulta, e as
+    # notas de uso*; o que a máquina cobra dele é a tabela, porque é ela que
+    # separa referência de argumento.
+    referencia)     exigir 'tabelas' "$tabelas" 1 ;;
     troubleshooting) exigir 'tabelas' "$tabelas" 1 ;;
     changelog)      exigir 'entradas <Update>' "$(contar "$arquivo" '^<Update ')" 6 ;;
     # O gabarito do capítulo: 2 blocos e 1 `:::`. A espinha de 3 a 6 `##` e a
@@ -628,9 +653,9 @@ n_casos=$(printf '%s\n' "$CASOS_DO_DOMINIO" | wc -l)
 echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio, todos por caminho nomeado"
 echo
 
-# --- 12. os dez tipos têm instância -------------------------------------------
-echo "12  os dez tipos têm instância"
-for tipo in $DEZ_TIPOS; do
+# --- 12. os onze tipos têm instância -------------------------------------------
+echo "12  os onze tipos têm instância"
+for tipo in $ONZE_TIPOS; do
   n=$(printf '%s\n' "$TIPOS" | grep -c ":${tipo}$" || true)
   if [ "$tipo" = "$TIPO_GERADO" ]; then
     # A instância do décimo tipo é contada do DISCO, e ela é `.mdx`. Uma linha
@@ -644,7 +669,7 @@ for tipo in $DEZ_TIPOS; do
   fi
   [ "$n" -ge 1 ] || reprova "o tipo \`${tipo}\` não tem nenhuma instância no artefato"
 done
-echo "   os dez com instância — \`${TIPO_GERADO}\` com as ${geradas} do ramo gerado, e nenhum pendente"
+echo "   os onze com instância — \`${TIPO_GERADO}\` com as ${geradas} do ramo gerado, e nenhum pendente"
 echo
 
 # --- 13. a cobertura de locale ------------------------------------------------
@@ -660,7 +685,7 @@ geradas_en=$(find "$GERADO_EN" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas_en" = "$geradas" ] ||
   reprova "EN: ${geradas_en} páginas geradas, e o pt-BR tem ${geradas} — o gerador escreve os dois"
 traduzidas=$((traduzidas + geradas_en))
-[ "$traduzidas" = 26 ] || reprova "EN: ${traduzidas} páginas, esperado 26"
+[ "$traduzidas" = 32 ] || reprova "EN: ${traduzidas} páginas, esperado 32"
 
 for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
   n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)
@@ -687,9 +712,33 @@ echo
 # Varrê-la aqui seria uma régua de máquina reprovando o que a outra obriga.
 #
 # **As três raízes são conferidas antes da varredura.** `grep` sobre caminho
-# inexistente devolve vazio, e vazio AQUI é aprovação: das quinze, esta é a
+# inexistente devolve vazio, e vazio AQUI é aprovação: das dezessete, esta é a
 # única cuja forma de passar é não achar nada. Sem a guarda, um diretório
 # renomeado transformaria a cobrança num carimbo.
+#
+# ---------------------------------------------------------------------------
+# A EXCEÇÃO: citação de saída de ferramenta (#133)
+#
+# Duas regras deste repositório colidiam de frente. `solucao-de-problemas.md`
+# promete citar a mensagem de recusa **como a ferramenta a imprime**, e três das
+# mensagens do `overpower` carregam travessão literal — entre elas a que o painel
+# de `install` mostra. Reescrever a frase falsificaria a citação: o leitor
+# procuraria no terminal um texto que não existe.
+#
+# A saída reusa o padrão da invariante 2 de `invariantes.sh`: **quem carrega o
+# literal declara no próprio preâmbulo que carrega.** Sem declaração, nada muda;
+# com ela, o travessão passa **só dentro de região de citação**, que é onde a
+# ferramenta fala e o autor não.
+#
+#   markdown   `{/* cita-saida-de-ferramenta */}` nas 20 primeiras linhas, e o
+#              travessão dentro de cerca de código ou na linha `api_exemplos:`
+#              da página gerada
+#   json       `"citaSaidaDeFerramenta": true` nas 20 primeiras linhas, e o
+#              travessão dentro de um valor `"mensagem":`
+#
+# **O marcador é `{/* */}` e não `<!-- -->`.** Medido: sob MDX 3 o comentário
+# HTML não compila (*Unexpected character `!`*), e toda página deste site passa
+# pelo compilador MDX, `.md` inclusive, porque a config não declara `format`.
 echo "14  travessão em \`conteudo\`, \`i18n\` e \`contratos\`"
 faltando=''
 for raiz in "$CONTEUDO" "$I18N" "$CONTRATOS"; do
@@ -699,13 +748,47 @@ done
 if [ -n "$faltando" ]; then
   reprova "superfície ausente, e sem ela a varredura passaria calada: ${faltando% }"
 else
-  com_travessao=$(grep -Rn '—' "$CONTEUDO" "$I18N" "$CONTRATOS") || true
+  com_travessao=$(
+    find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f -print0 |
+      xargs -0 awk '
+        # **O arquivo é acumulado antes de ser julgado, e a razão é a ordem.** A
+        # declaração mora nas 20 primeiras linhas, e numa página gerada a linha
+        # com travessão é o `api_exemplos:` do front matter, que vem ANTES dela.
+        # Julgar em fluxo reprovaria a linha 6 por uma declaração que só se lê na
+        # 9. Guarda-se a ocorrência e decide-se no fim do arquivo.
+        function fechar(   i) {
+          for (i = 1; i <= n; i++) {
+            if (declarado && citavel[i]) continue
+            print achado[i]
+          }
+          n = 0
+        }
+        FNR == 1 { fechar(); declarado = 0; dentro = 0 }
+        FNR <= 20 && (/\{\/\* cita-saida-de-ferramenta \*\/\}/ ||
+                      /"citaSaidaDeFerramenta": true/) { declarado = 1 }
+        # A cerca alterna a região de citação. A própria linha da cerca não é
+        # prosa, então ela sai da varredura junto.
+        /^[ \t]*```/ { dentro = !dentro; next }
+        index($0, "—") == 0 { next }
+        {
+          n++
+          achado[n] = FILENAME ":" FNR ":" $0
+          # As três regiões em que quem fala é a ferramenta, e não o autor: a
+          # cerca de código, a linha de front matter que projeta o contrato, e o
+          # valor `"mensagem"` dentro do próprio contrato.
+          citavel[n] = (dentro || /^api_exemplos:/ || /"mensagem":/) ? 1 : 0
+        }
+        END { fechar() }
+      '
+  ) || true
   if [ -n "$com_travessao" ]; then
     reprova "travessão no conteúdo publicado; reescreva a frase, em vez de trocar o caractere:"
     echo "$com_travessao" | sed 's/^/    /'
   else
     varridos=$(find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f | wc -l)
-    echo "   ${varridos} arquivos varridos, e nenhum travessão"
+    citando=$(grep -rlE '\{/\* cita-saida-de-ferramenta \*/\}|"citaSaidaDeFerramenta": true' \
+      "$CONTEUDO" "$I18N" "$CONTRATOS" | wc -l)
+    echo "   ${varridos} arquivos varridos; travessão só onde a ferramenta fala, em ${citando} que declaram"
   fi
 fi
 echo
@@ -753,6 +836,102 @@ fi
   reprova "a árvore chega ao nível ${profundidade_maxima}, e um teto de ${TETO_DE_PROFUNDIDADE} sem consumidor é teto que sobe sozinho"
 
 echo "   teto ${TETO_DE_PROFUNDIDADE}, alcançado, e confinado a ${RAMO_PROFUNDO}"
+echo
+
+# --- 16. a `Verificação` verifica --------------------------------------------
+#
+# **A cobrança nasceu de uma medição, não de um princípio.** Nas cinco páginas
+# typed `guia` do ramo `overpower`, a seção `## Verificação` não continha nenhum
+# comando de verificação e nenhum resultado esperado: continha justificativa de
+# desenho. Sozinha, ela respondia por 51 das 273 linhas fora de modo do ramo
+# (#133).
+#
+# O gabarito de `guia` diz *pré-requisitos → `<Steps>` → verificação → variações*,
+# e uma seção chamada `Verificação` sem nada a rodar é a promessa quebrada mais
+# barata de escrever, porque ninguém a lê como quebrada: ela parece completa.
+#
+# **A régua é o bloco cercado, e ela é grosseira de propósito.** Nenhuma varredura
+# sabe se um comando de fato verifica; o que ela sabe é se existe algo a rodar. A
+# metade que julga se a verificação verifica é da revisão, e continua sendo.
+#
+# Os dois locales são varridos, com o heading de cada um: uma página que verifica
+# só em pt-BR deixa o leitor de EN com a mesma promessa quebrada.
+echo "16  a \`Verificação\` verifica"
+verificacoes=0
+while IFS=: read -r relativo tipo; do
+  [ "$tipo" = 'guia' ] || continue
+  # **`$I18N` é a raiz de `i18n/`, e não a do espelho de conteúdo.** A primeira
+  # versão desta cobrança montou o caminho do EN a partir dela e nunca achou
+  # arquivo nenhum: a varredura passava calada na metade que ela anunciava
+  # varrer. O espelho mora fundo, sob a instância de `ferramentas`.
+  for par in "${CONTEUDO}/${relativo}.md:Verificação" \
+             "${ESPELHO_EN}/${relativo#ferramentas/}.md:Checking it"; do
+    arquivo="${par%:*}"
+    heading="${par##*:}"
+    [ -f "$arquivo" ] || continue
+    # **A ausência da seção não é o que esta cobrança pega**, e o limite é
+    # deliberado. A régua da #133 é sobre o CONTEÚDO da seção; exigir que ela
+    # exista alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`,
+    # que é da aba `Procedimentos` e está fora do escopo daquele ticket. O buraco
+    # fica registrado aqui, nomeado, para o ticket que o fechar.
+    #
+    # **O guarda vem ANTES do contador**, e a ordem é o conserto de um defeito
+    # desta própria cobrança: contando antes, ela somava ARQUIVO varrido e
+    # imprimia o número como se fosse SEÇÃO varrida. Numa régua que nasceu contra
+    # promessa quebrada, era exatamente a promessa quebrada.
+    grep -q "^## ${heading}\$" "$arquivo" || continue
+    verificacoes=$((verificacoes + 1))
+    # Da linha do heading até o próximo `##`, e conta cerca dentro da fatia.
+    cercas=$(awk -v h="## ${heading}" '
+      $0 == h { dentro = 1; next }
+      dentro && /^## / { exit }
+      dentro && /^[[:space:]]*```/ { n++ }
+      END { print n + 0 }
+    ' "$arquivo")
+    if [ "$((cercas / 2))" -lt 1 ]; then
+      reprova "${arquivo}: \`${heading}\` sem bloco cercado — nada a rodar, e nada a comparar"
+    fi
+  done
+done <<< "$TIPOS"
+echo "   ${verificacoes} seções de verificação varridas, cada uma com o que rodar"
+echo
+
+# --- 17. o vocabulário do ramo está definido ---------------------------------
+#
+# **`conceitos.md` declara, na abertura, ser onde a definição mora.** A declaração
+# era falsa: `achado` é o vocabulário central do `doctor`, usado em três páginas
+# como se conhecido, e definido em zero. O mesmo valia para `enxerto` (#133).
+#
+# A régua confere UMA das duas direções, e é a barata: todo termo de
+# `scripts/termos-overpower.txt` tem definição em `conceitos.md`. A outra direção,
+# termo usado na prosa e ausente da lista, é juízo e mora na skill
+# `varredura-overpower` — nenhuma varredura distingue vocabulário de produto de
+# palavra comum.
+#
+# O casamento é por `**<termo>**`, que é como a página marca uma definição. Casar
+# a palavra solta acharia toda menção e a lista nunca reprovaria.
+#
+# **Ela varre só o pt-BR, e isso é decisão, não esquecimento.** A lista carrega os
+# termos em português; o `conceitos.md` do EN usa as palavras dele, e cobri-lo
+# exigiria uma segunda lista para uma página que é tradução da primeira. Quem
+# confere que a tradução acompanha é a paridade de árvore da cobrança 13, mais a
+# varredura da ADR 11. A cobrança 16, ao lado, varre os dois — lá o heading é
+# fixo por locale e não há vocabulário a traduzir.
+echo "17  o vocabulário do ramo está definido"
+TERMOS='conteudo/ferramentas/bibliotecas/overpower/conceitos.md'
+LISTA='scripts/termos-overpower.txt'
+if [ ! -f "$LISTA" ] || [ ! -f "$TERMOS" ]; then
+  reprova "a lista de termos ou \`conceitos.md\` sumiu, e sem os dois a cobrança passaria calada"
+else
+  definidos=0
+  while IFS="$(printf '\t')" read -r termo secao; do
+    case "$termo" in ''|\#*) continue ;; esac
+    definidos=$((definidos + 1))
+    grep -qi -- "\*\*${termo}\*\*" "$TERMOS" ||
+      reprova "o termo \`${termo}\` está na lista do ramo e \`conceitos.md\` não o define (§ ${secao})"
+  done < "$LISTA"
+  echo "   ${definidos} termos listados, e cada um com definição em \`conceitos.md\`"
+fi
 echo
 
 if [ "$falhas" -gt 0 ]; then

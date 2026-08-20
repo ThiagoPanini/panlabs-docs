@@ -23,6 +23,7 @@ São dez ao todo, e a numeração é a da spec — não a ordem em que os arquiv
 | 9 | [A referência de CLI é gerada de contrato de superfície de comando](0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md) — espécies `aplicacao` e `comando`, quatro entradas, a máquina do 8 inteira | escrito, **consequência 6 superada pelo 11** |
 | 10 | [A categoria de sidebar não é destino](0010-a-categoria-de-sidebar-nao-e-destino.md) — separador mudo no topo, nó colapsável abaixo, a forma *índice de categoria* morre, teto de profundidade 4 | escrito |
 | 11 | [A varredura do overpower deixa de ser humana](0011-a-varredura-do-overpower-e-de-maquina.md) — o pino como garantia, a skill como trabalho, o gatilho no repositório da ferramenta | escrito |
+| 12 | [O painel monta a linha a partir do modelo](0012-o-painel-monta-a-linha-do-modelo-do-contrato.md) — contrato v2 com `aridade`, `minimo` e `restricoes`; assinatura derivada; a exceção de citação de saída de ferramenta | escrito |
 
 **Os 1, 2, 3 e 7 nasceram juntos, e não por conveniência:** os quatro restringem tudo o que se escreve depois. Um agente que só descobre a política de swizzle no quinto slice já gastou degraus que não podia.
 

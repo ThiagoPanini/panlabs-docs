@@ -5,6 +5,8 @@ description: The common refusals organized by the message you actually saw, what
 
 # Troubleshooting
 
+{/* cita-saida-de-ferramenta */}
+
 This page is organized by the message you actually saw, quoted as overpower
 prints it, so you can find your line by matching text rather than by guessing the
 internal cause first. Wherever a message names a specific value, the runtime you
@@ -32,6 +34,40 @@ typed, the scope, a path, it appears here as `‹placeholder›`.
 | `‹name› is ambiguous under ‹source›: ‹the paths›` | `3` | point `--from` at one of them |
 | `no bundle named ‹name› in ‹source›` | `3` | same, for a bundle |
 | `the bundle ‹name› of ‹source› names ‹item›, which is not among the skills that repository offers` | `3` | the bundle manifest is broken on their side |
+| `` `--from` names where to look, and no --skill and no --mcp name what to look for `` | `2` | add a selector, or run in a terminal and let the showcase open |
+| `` `--from` on `list` shows skills, MCP servers and bundles `` | `2` | drop `--ai-framework`; a framework is a folder of the wheel, and does not exist remotely |
+
+### The refusals by class name
+
+The table above is indexed by the message, which is what you see. When what you
+have is the exception name, from a traceback, a CI report, or reading the
+source, come in here:
+
+| Class | Exit | The message it prints |
+| --- | --- | --- |
+| `TooManySelectorsError` | `2` | `list shows one item at a time, and got ‹every flag›` |
+| `MixedClassesWithoutRuntimeError` | `2` | `a skill and an MCP server on one line need --runtime named explicitly` |
+| `NothingToSearchForError` | `2` | `` `--from` names where to look, and no --skill and no --mcp name what to look for `` |
+| `UnsupportedRemoteListUnitError` | `2` | `` `--from` on `list` shows skills, MCP servers and bundles `` |
+| `UnsupportedRemoteUnitError` | `2` | `` `--from` installs skills, MCP servers and bundles `` |
+| `OutsideRepositoryError` | `2` | `not inside a git repository: pass --global to write under the home directory` |
+| `NothingSelectedError` | `2` | `nothing to install: name at least one --skill, --ai-framework, --bundle or --mcp` |
+
+The last three rows of the message table, and the first three of this one, are the
+same refusal seen from both sides.
+
+### The three messages that carry an em dash
+
+Three refusals carry a literal em dash, and the table above abbreviates them
+because a table row is not a quotation. They leave the terminal exactly like this:
+
+```text
+a skill and an MCP server on one line need --runtime named explicitly, or two separate commands — one per class
+
+`--from` on `list` shows skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those
+
+`--from` installs skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those
+```
 
 ## The three that confuse people most
 
@@ -70,6 +106,35 @@ overpower will not repair a file it does not own.
 Fix the file by hand first, then re-run the install. It refuses rather than
 repairs because repairing a document that is yours, on its own initiative, is not
 something an install is allowed to do.
+:::
+
+## The five findings of `doctor`
+
+A **finding** is a defect in what landed, and one alone takes `doctor` to exit
+`3`. There are five, and the list is closed.
+
+| Finding | What it means | What to do |
+| --- | --- | --- |
+| dangling link | a landed write points at something that is not there | reinstall the artifact, or remove what is left over |
+| link turned text | a file inside landed equipment is a link target and is spelled as content | reinstall; the copy lost the link on the way |
+| divergence | two copies of one artifact, in one scope, do not agree on content | reinstall to reconcile, and decide which scope owns it |
+| pending approval | a server was written into a graft Claude Code gates, and it has not approved it | approve the server in the runtime, outside overpower |
+| missing clone | a graft still names a `[source]` clone that is no longer on the machine | reinstall the server, or remove the graft |
+
+## The two notices of `doctor`
+
+A **notice** is an observation about the environment, not about what landed. It
+does **not** fail: a run carrying only notices exits `0`.
+
+| Notice | What it means | What to do |
+| --- | --- | --- |
+| unset slot | a graft reads a slot out of the environment, and this environment lacks it | set the variable, or accept that this server does not come up here |
+| orphan clone | a clone sits under the machine's `.overpower/mcp/` that no graft refers to | delete the directory, if you are sure nothing uses it |
+
+:::note
+Finding and notice are product vocabulary, and each definition lives in
+[concepts](../conceitos). What separates the two is the exit code, which is why
+they travel in separate lists.
 :::
 
 ## When the output comes out wrong

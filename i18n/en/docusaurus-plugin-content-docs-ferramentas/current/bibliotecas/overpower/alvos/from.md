@@ -55,6 +55,32 @@ standard library.
 
 ## Checking it
 
+Run the same line with `--dry-run` before writing anything:
+
+```bash
+uvx overpower@latest install --from https://github.com/owner/repo --skill <name> --dry-run
+```
+
+The output lists the destination path of every file and the provenance of each.
+The provenance should point at the repository you named; if it cites the embedded
+catalog, the URL was not read as a search root.
+
+After installing, confirm what landed:
+
+```bash
+uvx overpower@latest doctor
+```
+
+`doctor` closes at **zero findings** when the installation is sound, and exits `0`.
+
+:::note
+A name the remote repository does not have exits `3`, not `2`. That is the
+difference `--from` makes to the error model, and it lives in
+[exit codes](../referencia/codigos-de-saida).
+:::
+
+## What `--from` consults
+
 `--from` is **exclusive**. Once it is on the line, only the remote repository is
 consulted: the embedded catalog is not searched at all, and not merged with the
 remote either. That settles the question of precedence between the two by removing
@@ -73,34 +99,3 @@ folder all reach the same result. `--bundle` and the bare showcase are **anchore
 at the repository root, so the URL's subfolder narrows nothing: what a repository
 offers, and what it composes, are properties of the repository rather than of the
 path you happened to paste.
-
-## The federated bundle
-
-A **bundle** is a named composition, and a repository federates one by writing
-`.overpower/catalog.yaml` at its root.
-
-```yaml
-bundles:
-  api-python:
-    description: Everything needed to work on the Python API.
-    items:
-      - fastapi-conventions
-      - pytest-fixtures
-```
-
-That file is read by the **same reader** that reads the catalog overpower ships,
-so a malformed manifest is refused naming the same field on both sides and there
-is no second validator anywhere to disagree with the first. `items` are **names**,
-never paths, resolved against the skills that same repository offers under
-`skills/`. They reach neither the embedded catalog nor a third repository, and a
-name that does not resolve exits `3` and says which name.
-
-:::note
-There is no cache. Every `--from` run fetches fresh, by decision. Remote content
-changes on someone else's schedule, and a locally cached copy would silently
-defeat the entire reason `--from` exists.
-:::
-
-What changes about the plan is only [provenance](../conceitos). The confirmation,
-the `--dry-run` mirror and the write mechanics are the same as for content from
-the embedded catalog.

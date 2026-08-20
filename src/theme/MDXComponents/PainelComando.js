@@ -1,6 +1,6 @@
 /**
- * `PainelComando` — a assinatura, os argumentos editáveis e o snippet de uso,
- * **no fluxo da prosa**, logo abaixo da linha que nomeia o comando.
+ * `PainelComando` — a assinatura, os argumentos e o snippet de uso, **no fluxo
+ * da prosa**, logo abaixo da linha que nomeia o comando.
  *
  * **Ele era um trilho lateral, e a razão de deixar de ser é a largura.** O
  * layout anterior comutava a página inteira: prosa 577 + trilho 511, sem coluna
@@ -10,38 +10,40 @@
  * painel desce para o fluxo e a página volta a ser uma página de doc comum,
  * com a largura e o TOC que todas as outras têm. Ver docs/design/referencia.md §1.
  *
- * **O componente é de conteúdo, o layout é do tema.** Enquanto o painel morava
- * na grade, ele precisava ser irmão da prosa, e por isso o front matter comutava
- * o `docItemComponent`. Em fluxo ele é um bloco de MDX como `<Steps>` ou
- * `<CodeGroup>`, e a rota deixa de precisar de componente próprio: o gerador
- * emite `<PainelComando />` no corpo e o registro global de `MDXComponents` o
- * resolve. `position: sticky` some junto, e com ele o `align-self: start` que
- * era o erro nº 1 de quem reconstruía o layout — não há mais layout a reconstruir.
+ * **Ele era um substituidor de texto, e agora monta a linha.** Até a versão 1 do
+ * contrato o gerador congelava um template no build e este arquivo fazia
+ * `String.replace` de `{{marcador}}` sobre ele. Um template congelado não tem
+ * modelo de flag, e não sabia dizer três coisas que a ferramenta diz: que a flag
+ * é opcional — apagar o campo produzia `overpower list --skill ""`, que a CLI
+ * não aceita —, que dois seletores na mesma linha se excluem, e que a mesma flag
+ * acumula em `install` e não acumula em `list`. Agora o front matter carrega o
+ * MODELO e quem compõe a linha é `linha.mjs`, o mesmo módulo que o gerador usa
+ * para derivar a assinatura. Ver ADR 12.
+ *
+ * **O componente é de conteúdo, o layout é do tema.** Em fluxo ele é um bloco de
+ * MDX como `<Steps>` ou `<CodeGroup>`, e a rota deixa de precisar de componente
+ * próprio: o gerador emite `<PainelComando />` no corpo e o registro global de
+ * `MDXComponents` o resolve.
  *
  * **A fonte continua sendo o front matter**, lido por `useDoc()`. O componente
  * não recebe prop: um `<PainelComando />` sem atributo é o que o gerador
- * consegue emitir sem serializar JSON dentro do corpo do MDX, e a segunda fonte
- * que isso evitaria é a mesma que o `api_exemplos` já evita.
+ * consegue emitir sem serializar JSON dentro do corpo do MDX.
  *
  * **Território da rota, não do catálogo — e o endereço prova.** `ParamField` e
- * `ResponseField` (docs/design/componentes/param-field.md, response-field.md)
- * recusam explicitamente ter campo editável, e o zero 4 de `cinco-zeros.sh`
- * cobra isso por varredura: `src/components/` fecha em zero handler e zero
- * estado. Este arquivo guarda `useState` e ouve `onChange`, então ele **não
- * pode** morar lá — mora ao lado de `CopiarPagina.js`, que é o outro registro
- * de chrome desta pasta e já carrega a sua própria exceção nomeada no mesmo
- * script. A edição mora aqui, e só aqui.
+ * `ResponseField` recusam explicitamente ter campo editável, e o zero 4 de
+ * `cinco-zeros.sh` cobra isso por varredura: `src/components/` fecha em zero
+ * handler e zero estado. Este arquivo guarda `useState` e ouve `onChange`, então
+ * ele **não pode** morar lá — mora ao lado de `CopiarPagina.js`, que é o outro
+ * registro de chrome desta pasta e já carrega a sua própria exceção nomeada no
+ * mesmo script.
  *
- * **O que é editável, e nada além: argumento escalar com exemplo.** Um `dict`
- * ou uma lista dentro de um `<input type="text">` obrigaria este painel a
- * parsear texto de volta para estrutura, que é um interpretador dentro de um
- * site estático. Editar um argumento só troca texto no snippet, por
- * substituição de string; não existe chamada de rede.
- *
- * **A11y é a superfície mais estreita que existe: `<label>` mais
- * `<input type="text">` nativos.** Sem tecla, sem foco programático, sem
- * ARIA a descrever — o contrato de estado de entrada (docs/design/foco.md)
- * cobre o resto de graça, porque não há nada aqui que ele não já cubra.
+ * **A11y é a superfície mais estreita que existe, e ela não cresceu:**
+ * `<label>` com `<input type="checkbox">` e `<input type="text">` nativos. O
+ * zero 5 de `cinco-zeros.sh` proíbe autor novo de modelo de interação, e uma
+ * caixa de seleção não é um: é o controle que o HTML já tem para *ligar e
+ * desligar*, que é exatamente o que acrescentar uma flag é. Campo recusado usa
+ * o `disabled` nativo, e o motivo vai em texto ao lado, ligado por
+ * `aria-describedby` — sem tecla, sem foco programático, sem ARIA a inventar.
  *
  * Composição, não swizzle: `CodeBlock` é o mesmo bloco que `CodeGroup` usa para
  * o catálogo — mas o `CodeGroup` autoral lê cercas de código ESTÁTICAS do MDX, e
@@ -51,10 +53,10 @@
 import React, {useMemo, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import {useDoc} from '@docusaurus/plugin-content-docs/client';
-// O marcador é declarado num lugar só, e o outro leitor dele é o gerador. Ver o
-// cabeçalho de `placeholder.mjs`: o portão 5 regenera e diffa, e por isso NÃO
-// pegaria as duas sintaxes divergindo.
-import {substituir} from './placeholder.mjs';
+// O modelo de linha é lido do MESMO arquivo que o gerador importa. Ver o
+// cabeçalho de `linha.mjs`: a assinatura emitida no build e a linha montada aqui
+// são a mesma função sobre o mesmo campo, e por isso não podem divergir.
+import {avaliar, estadoInicial, montar} from './linha.mjs';
 import estilos from './painel.module.css';
 
 export default function PainelComando() {
@@ -71,25 +73,52 @@ export default function PainelComando() {
     );
   }
 
-  return <Painel exemplos={exemplos} />;
+  return exemplos.modelo ? <Montador exemplos={exemplos} /> : <Fluxo exemplos={exemplos} />;
 }
 
-function Painel({exemplos}) {
-  const {assinatura, parametros, snippet} = exemplos;
+/**
+ * A página da raiz: o fluxo dos membros, estático.
+ *
+ * Não há o que montar — o que se digita para usar uma CLI é um comando dela, e
+ * a raiz mostra quais são. Sem campo, o cabeçalho de assinatura é a única linha
+ * que diz *como isto se chama*, e ele fica.
+ */
+function Fluxo({exemplos}) {
+  const texto = exemplos.linhas.join('\n');
+  return (
+    <div className={estilos.painel} data-pd-component="api-painel">
+      <p className={estilos.painelCabecalho}>
+        <code>{exemplos.assinatura}</code>
+      </p>
+      <CodeBlock language={exemplos.linguagem}>{texto}</CodeBlock>
+    </div>
+  );
+}
 
-  const [valores, setValores] = useState(() => Object.fromEntries(parametros.map((p) => [p.nome, p.exemplo])));
+function Montador({exemplos}) {
+  const {assinatura, linguagem, modelo} = exemplos;
 
-  const texto = useMemo(() => substituir(snippet.modelo, valores), [snippet, valores]);
+  // **O estado inicial é derivado, e é por isso que o SSR bate.** O servidor
+  // pinta `estadoInicial(modelo, contexto)` e o cliente reidrata calculando a
+  // mesma função sobre o mesmo dado. Nada aqui lê o navegador.
+  const [estado, setEstado] = useState(() => estadoInicial(modelo, modelo.contexto));
+
+  const veredito = useMemo(() => avaliar(modelo, estado), [modelo, estado]);
+  const texto = useMemo(() => montar(modelo, estado), [modelo, estado]);
+
+  const alternar = (nome) =>
+    setEstado((atual) => ({...atual, [nome]: {...atual[nome], ligada: !atual[nome].ligada}}));
+
+  const digitar = (nome, valor) =>
+    setEstado((atual) => ({...atual, [nome]: {...atual[nome], valor}}));
 
   // **Um comando sem opção nenhuma tem assinatura igual ao snippet.** É o caso
   // do `doctor`: os dois dizem `overpower doctor`, e o painel os empilhava, um
   // sobre o outro, separados por um fio. Duas cópias da mesma linha não são
   // duas informações — são a mesma, e a segunda faz o leitor procurar a
-  // diferença que não existe. Quando elas coincidem, fica o snippet: ele é o
-  // que carrega o botão de copiar, e o cabeçalho não carrega nada que ele não
-  // tenha. A comparação é sobre o texto JÁ SUBSTITUÍDO, então editar um
-  // argumento faz o cabeçalho reaparecer sozinho, que é exatamente quando ele
-  // volta a dizer algo que o snippet não diz.
+  // diferença que não existe. A comparação é sobre o texto JÁ MONTADO, então
+  // ligar uma flag faz o cabeçalho reaparecer sozinho, que é exatamente quando
+  // ele volta a dizer algo que a linha não diz.
   const duplicada = texto.trim() === assinatura.trim();
 
   return (
@@ -102,22 +131,71 @@ function Painel({exemplos}) {
         </p>
       )}
 
-      {parametros.length > 0 && (
+      {modelo.parametros.length > 0 && (
         <div className={estilos.painelParametros}>
-          {parametros.map((p) => (
-            <label key={p.nome} className={estilos.painelCampo}>
-              <span>{p.nome}</span>
-              <input
-                type="text"
-                value={valores[p.nome] ?? ''}
-                onChange={(evento) => setValores((atual) => ({...atual, [p.nome]: evento.target.value}))}
-              />
-            </label>
+          {modelo.parametros.map((parametro) => (
+            <Campo
+              key={parametro.nome}
+              parametro={parametro}
+              campo={estado[parametro.nome]}
+              veredito={veredito[parametro.nome]}
+              onAlternar={() => alternar(parametro.nome)}
+              onDigitar={(valor) => digitar(parametro.nome, valor)}
+            />
           ))}
         </div>
       )}
 
-      <CodeBlock language={snippet.linguagem}>{texto}</CodeBlock>
+      <CodeBlock language={linguagem}>{texto}</CodeBlock>
+    </div>
+  );
+}
+
+/**
+ * Uma flag: a caixa que a liga, o campo do valor, e o motivo quando a linha não
+ * pode tê-la.
+ *
+ * **A recusa desabilita em vez de esconder.** Uma flag que some da tela quando
+ * outra é ligada faz o leitor procurar o que ele viu; uma que fica visível e
+ * desabilitada, com a mensagem que a ferramenta imprime, ENSINA a regra —
+ * que é a diferença entre um painel que impede o erro e um que o explica.
+ */
+function Campo({parametro, campo, veredito, onAlternar, onDigitar}) {
+  const permitida = veredito?.permitida !== false;
+  const idMotivo = `motivo-${parametro.nome.replace(/^-+/, '')}`;
+  const booleana = parametro.tipo === 'flag';
+
+  return (
+    <div className={estilos.painelCampo} data-recusada={permitida ? undefined : ''}>
+      <label className={estilos.painelRotulo}>
+        <input
+          type="checkbox"
+          checked={campo?.ligada ?? false}
+          disabled={!permitida}
+          aria-describedby={permitida ? undefined : idMotivo}
+          onChange={onAlternar}
+        />
+        <span>{parametro.nome}</span>
+      </label>
+
+      {!booleana && (
+        <input
+          type="text"
+          aria-label={parametro.nome}
+          value={campo?.valor ?? ''}
+          disabled={!permitida || !campo?.ligada}
+          onChange={(evento) => onDigitar(evento.target.value)}
+        />
+      )}
+
+      {/* A mensagem é a da CLI, byte a byte, e é o contrato que a carrega —
+          traduzi-la faria o leitor procurar no terminal um texto que não existe. */}
+      {!permitida && veredito.mensagem && (
+        <p className={estilos.painelMotivo} id={idMotivo}>
+          {veredito.mensagem}
+          {veredito.exit === undefined ? null : <> (exit {veredito.exit})</>}
+        </p>
+      )}
     </div>
   );
 }

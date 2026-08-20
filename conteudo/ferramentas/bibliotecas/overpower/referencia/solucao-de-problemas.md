@@ -5,6 +5,8 @@ description: As recusas comuns organizadas pela mensagem que você viu, o que ca
 
 # Solução de problemas
 
+{/* cita-saida-de-ferramenta */}
+
 Esta página é organizada pela mensagem que você de fato viu, citada como o
 `overpower` a imprime, para que você ache a sua linha casando texto em vez de
 adivinhar a causa interna primeiro. Onde uma mensagem nomeia um valor
@@ -33,6 +35,40 @@ como `‹marcador›`.
 | `‹nome› is ambiguous under ‹origem›: ‹os caminhos›` | `3` | aponte o `--from` para um deles |
 | `no bundle named ‹nome› in ‹origem›` | `3` | idem, para bundle |
 | `the bundle ‹nome› of ‹origem› names ‹item›, which is not among the skills that repository offers` | `3` | o manifesto do bundle está furado do lado de lá |
+| `` `--from` names where to look, and no --skill and no --mcp name what to look for `` | `2` | acrescente um seletor, ou rode num terminal e deixe a vitrine abrir |
+| `` `--from` on `list` shows skills, MCP servers and bundles `` | `2` | tire o `--ai-framework`; um framework é pasta da wheel, e não existe remotamente |
+
+### As recusas por nome de classe
+
+A tabela acima é indexada pela mensagem, que é o que você vê. Quando o que você
+tem é o nome da exceção, vindo de um traceback, de um relatório de CI ou da
+leitura do fonte, entre por aqui:
+
+| Classe | Saída | A mensagem que ela imprime |
+| --- | --- | --- |
+| `TooManySelectorsError` | `2` | `list shows one item at a time, and got ‹as flags›` |
+| `MixedClassesWithoutRuntimeError` | `2` | `a skill and an MCP server on one line need --runtime named explicitly` |
+| `NothingToSearchForError` | `2` | `` `--from` names where to look, and no --skill and no --mcp name what to look for `` |
+| `UnsupportedRemoteListUnitError` | `2` | `` `--from` on `list` shows skills, MCP servers and bundles `` |
+| `UnsupportedRemoteUnitError` | `2` | `` `--from` installs skills, MCP servers and bundles `` |
+| `OutsideRepositoryError` | `2` | `not inside a git repository: pass --global to write under the home directory` |
+| `NothingSelectedError` | `2` | `nothing to install: name at least one --skill, --ai-framework, --bundle or --mcp` |
+
+As três últimas linhas da tabela por mensagem, e as três primeiras desta, são a
+mesma recusa vista pelos dois lados.
+
+### As três mensagens que carregam travessão
+
+Três recusas trazem travessão literal, e a tabela acima as abrevia porque uma
+linha de tabela não é citação. Elas saem do terminal exatamente assim:
+
+```text
+a skill and an MCP server on one line need --runtime named explicitly, or two separate commands — one per class
+
+`--from` on `list` shows skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those
+
+`--from` installs skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those
+```
 
 ## As três que confundem mais
 
@@ -75,6 +111,35 @@ JSON inválido. O `overpower` não conserta arquivo que não é dele.
 Conserte o arquivo à mão primeiro, e só então rode a instalação de novo. Ele
 recusa em vez de reparar porque reparar um documento que é seu, por iniciativa
 própria dele, não é coisa que uma instalação tenha permissão de fazer.
+:::
+
+## Os cinco achados do `doctor`
+
+Um **achado** é um defeito no que aterrissou, e um só leva o `doctor` a sair `3`.
+São cinco, e a lista é fechada.
+
+| Achado | O que significa | O que fazer |
+| --- | --- | --- |
+| link pendurado | uma escrita que aterrissou aponta para algo que não está lá | reinstale o artefato, ou remova o que sobrou |
+| link virado texto | um arquivo dentro do equipamento aterrissado é alvo de um link e está grafado como conteúdo | reinstale; a cópia perdeu o link no caminho |
+| divergência | duas cópias de um artefato, no mesmo escopo, não concordam no conteúdo | reinstale para reconciliar, e decida qual escopo é o dono |
+| aprovação pendente | um servidor foi escrito num enxerto que o Claude Code controla, e ele não o aprovou | aprove o servidor no runtime, fora do `overpower` |
+| clone ausente | um enxerto ainda nomeia um clone `[source]` que não está mais na máquina | reinstale o servidor, ou tire o enxerto |
+
+## Os dois avisos do `doctor`
+
+Um **aviso** é observação sobre o ambiente, não sobre o que aterrissou. Ele
+**não** reprova: uma execução só com avisos sai `0`.
+
+| Aviso | O que significa | O que fazer |
+| --- | --- | --- |
+| slot sem valor | um enxerto lê um slot do ambiente, e este ambiente não o tem | ponha a variável, ou aceite que aquele servidor não sobe aqui |
+| clone órfão | há um clone sob o `.overpower/mcp/` da máquina a que nenhum enxerto se refere | apague o diretório, se tiver certeza de que nada o usa |
+
+:::note
+Achado e aviso são vocabulário do produto, e a definição de cada um mora em
+[conceitos](../conceitos). A diferença entre os dois é o código de saída, e é por
+isso que eles viajam em listas separadas.
 :::
 
 ## Quando a saída sai torta

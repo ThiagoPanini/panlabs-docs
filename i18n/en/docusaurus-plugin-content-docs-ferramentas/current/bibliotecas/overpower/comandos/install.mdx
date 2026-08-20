@@ -3,10 +3,12 @@
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: overpower install
 description: Writes. It prints the plan, with every destination and who reads it, before touching disk, and asks before writing when there is a terminal on the other side.
-api_exemplos: {"assinatura":"overpower install [--runtime <key>] [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"},{"nome":"--runtime","exemplo":"claude-code"}],"snippet":{"linguagem":"bash","modelo":"overpower install --skill \"{{--skill}}\" --runtime \"{{--runtime}}\""}}
+api_exemplos: {"assinatura":"overpower install [--runtime <key>] [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]","linguagem":"bash","modelo":{"chamada":"overpower install","qualificado":"overpower install","contexto":"terminal","parametros":[{"nome":"--runtime","tipo":"key","aridade":{"multiplo":true,"separador":","},"exemplo":"claude-code"},{"nome":"--skill","tipo":"name","aridade":{"multiplo":true,"separador":","},"exemplo":"panlabs-python-standards"},{"nome":"--bundle","tipo":"name","aridade":{"multiplo":true,"separador":","}},{"nome":"--mcp","tipo":"name","aridade":{"multiplo":true,"separador":","}},{"nome":"--ai-framework","tipo":"name","aridade":{"multiplo":true,"separador":","}},{"nome":"--from","tipo":"url","aridade":{"multiplo":false}},{"nome":"--global","tipo":"flag","aridade":{"multiplo":false}},{"nome":"--force","tipo":"flag","aridade":{"multiplo":false}},{"nome":"--yes","tipo":"flag","aridade":{"multiplo":false}},{"nome":"--dry-run","tipo":"flag","aridade":{"multiplo":false}}],"minimo":[{"contexto":"terminal","flags":[]},{"contexto":"sem-terminal","flags":["--skill","--runtime"]}],"restricoes":[{"tipo":"exclusivo","precedencia":1,"membros":["--mcp","--skill","--bundle","--ai-framework"],"particao":[["--mcp"],["--skill","--bundle","--ai-framework"]],"guarda":"--runtime","classe":"MixedClassesWithoutRuntimeError","exit":2,"literal":true,"mensagem":"a skill and an MCP server on one line need --runtime named explicitly, or two separate commands — one per class"},{"tipo":"proibe","precedencia":2,"quando":"--from","proibida":"--ai-framework","classe":"UnsupportedRemoteUnitError","exit":2,"literal":true,"mensagem":"`--from` installs skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those"},{"tipo":"desliga","precedencia":3,"quando":"--from","classe":"RemoteSkillNotFoundError","exit":3,"literal":false,"mensagem":"with `--from` a name the remote does not have is refused at exit 3, where the embedded catalog would have refused it at exit 2"}]}}
 ---
 
 # overpower install
+
+{/* cita-saida-de-ferramenta */}
 
 **Command** · `overpower install`
 
@@ -18,42 +20,52 @@ In a terminal, a line that does not close a plan opens the wizard instead of sim
 
 ## Options
 
-<ParamField name="--skill" type="name">
-One pool skill, installed on its own. Takes the short form `-s`.
-</ParamField>
-
 <ParamField name="--runtime" type="key">
 Who receives what is installed. Takes keys from a closed table of 77 runtimes, and has no default. What happens without it depends on there being a terminal: in one, a line that names something to install and no runtime opens the wizard on the step that was missing; off a terminal, it refuses with exit 2 rather than guessing. The exception is a line mixing a skill and an MCP server, which needs the runtime named in both cases.
+
+Repeatable, and accepts several names separated by commas.
+</ParamField>
+
+<ParamField name="--skill" type="name">
+One pool skill, installed on its own. Takes the short form `-s`.
+
+Repeatable, and accepts several names separated by commas.
 </ParamField>
 
 <ParamField name="--bundle" type="name">
 A bundle, expanded into the pool artifacts its manifest names. Takes the short form `-b`.
+
+Repeatable, and accepts several names separated by commas.
 </ParamField>
 
 <ParamField name="--mcp" type="name">
 One MCP server, grafted into the runtime's own configuration. Nothing is copied here; a key is added inside a document that is already yours.
+
+Repeatable, and accepts several names separated by commas.
 </ParamField>
 
 <ParamField name="--ai-framework" type="name">
 An AI Framework, installed whole. It has no short form on purpose, because `-f` is already `--force` on this same command.
+
+Repeatable, and accepts several names separated by commas.
 </ParamField>
 
 <ParamField name="--from" type="url">
-Installs from a GitHub repository, with no registration step. Once it is on the line, the embedded catalog is not consulted.
+Installs from a GitHub repository, with no registry step. Once it is on the line, the embedded catalog is not consulted. Bare, in a terminal, it opens that repository's showcase as a wizard step; off a terminal, a line with `--from` and no selector exits `2`, because there is no wizard to open.
 </ParamField>
 
-<ParamField name="--dry-run" type="flag">
-Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory.
-</ParamField>
-
-<ParamField name="--yes" type="flag">
-Skips the confirmation before the write. Takes the short form `-y`. Off a terminal it is accepted and does nothing, because there is no confirmation to skip there. In a terminal it has a second effect: a destination already taken in machine scope stops being a question and becomes a refusal, exit 3, where the line without `-y` would have asked and could have written. What lifts that refusal is `--force`, and only `--force`.
+<ParamField name="--global" type="flag">
+Writes under the home directory instead of the current repository. Takes the short form `-g`.
 </ParamField>
 
 <ParamField name="--force" type="flag">
 Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`.
 </ParamField>
 
-<ParamField name="--global" type="flag">
-Writes under the home directory instead of the current repository. Takes the short form `-g`.
+<ParamField name="--yes" type="flag">
+Skips the confirmation before the write. Takes the short form `-y`. Off a terminal it is accepted and does nothing, because there is no confirmation to skip there. In a terminal it has a second effect: a destination already taken in machine scope stops being a question and becomes a refusal, exit 3, where the line without `-y` would have asked and could have written. What lifts that refusal is `--force`, and only `--force`.
+</ParamField>
+
+<ParamField name="--dry-run" type="flag">
+Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory.
 </ParamField>

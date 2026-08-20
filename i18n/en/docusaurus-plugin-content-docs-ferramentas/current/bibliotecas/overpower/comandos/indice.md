@@ -9,7 +9,7 @@ Before any single command, two things hold across all of them. This page is what
 comes before the four pages beside it, which come out of the command surface
 contract rather than out of this prose.
 
-## Selectors compose
+## Compose selectors on one line
 
 `--ai-framework`, `--bundle`, `--skill` and `--mcp` are **selectors**, flags that
 name what a line is about. Every one of them accepts a comma-separated value, a
@@ -43,7 +43,7 @@ more than one selector on a `list` line is a question with two answers, and the
 command refuses rather than silently picking one.
 :::
 
-## The plan runs in one fixed order
+## The order the plan runs in
 
 When a line resolves to writes across more than one unit, a framework and an
 individual skill on the same `install`, say, the writes always happen in the same
@@ -64,7 +64,7 @@ most specific unit is written last, so its content is what survives on disk.
 overpower install --ai-framework matt-pocock --skill panlabs-python-standards --runtime claude-code
 ```
 
-## The wizard opens the gap, not the screen
+## When the wizard opens
 
 In a terminal, an `install` line that does not add up to a plan opens the wizard
 instead of refusing. The trigger is the **gap**, not the empty line: it is enough

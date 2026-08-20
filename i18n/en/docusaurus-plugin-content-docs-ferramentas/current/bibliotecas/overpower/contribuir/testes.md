@@ -85,3 +85,39 @@ The identity also drives the design, not just the test: the writer consumes the
 plan and nothing beyond it. A writer that recomputed a path could diverge from what
 the screen promised, and no later test would close that gap.
 :::
+
+## Structure in the gate, appearance in the snapshot
+
+A full-session recording is a diff nobody reads: a small, deliberate visual
+adjustment can touch half the bytes of a long capture, and a real regression can
+hide inside that noise.
+
+**The gate asserts structure**, with properties that carry meaning and that a
+border or spacing tweak has no business touching: piped output carries no ANSI
+codes at all, the banner is suppressed when there is no TTY, no description is
+truncated at either 80 or 60 columns, no rendered line exceeds the terminal width,
+and every path in the plan is also in the rendered output.
+
+**The snapshot pins appearance**, one file per screen, so a redesign that touches
+one screen shows up as a change to exactly one file.
+
+:::warning
+There is no snapshot plugin in this project. The comparator is small and lives in
+`tests/support/snapshots.py`, alongside `--snapshot-update`, declared in
+`conftest.py`. One dev dependency less, and the update path stays something you
+read in the test file.
+:::
+
+## What is not a snapshot
+
+The wizard's own selection screen, the list `questionary` draws for choosing
+artifacts, is largely not this project's to record: the lines a person picks from
+are drawn by `questionary`'s own `InquirerControl`, and recording someone else's
+rendering pins someone else's future change.
+
+What **is** this project's own drawing, the locked block, the viewport, the counter
+and the footer around that list, is asserted structurally instead: question, static
+block, viewport, counter and footer all have to fit within a real terminal's
+height, and the viewport itself can never fall below a floor of visible rows.
+Alongside that arithmetic, one PTY test proves that the surrounding chrome reaches
+a real terminal at all, the same split used everywhere else on this page.

@@ -55,42 +55,7 @@ it.
 The catalog is **not** one of them. It is embedded in the package itself, which
 is why the version of the tool is the version of the catalog.
 
-## The `op` shortcut you have to make yourself
-
-Typing `overpower` in full, every time, is longer than most people want. The
-obvious fix is a shell alias:
-
-```bash
-alias op='overpower'
-```
-
-overpower does not create this alias for you, and does not ship an `op`
-executable. That is a deliberate omission, not an oversight. `op` is already the
-name of the 1Password CLI, which lives at `/usr/local/bin/op` on a great many
-developer machines and typically sits ahead of `~/.local/bin` on `PATH`. Shipping
-a second `op` would silently shadow a credential tool, and `uv` will refuse the
-entire installation the moment it detects a name collision among tools it
-manages, so even the honest failure mode costs you the `overpower` command too.
-
-:::warning
-If you already use 1Password's `op`, pick a name that does not collide. Only you
-know what occupies that name on your machine, which is why the decision is left
-to you, as a line you type once, rather than baked into what the package
-installs.
-
-```bash
-alias opw='uvx overpower@latest'
-```
-:::
-
-An alias is a convenience of an interactive shell and nothing more. It does not
-expand under `sh -c`, which is how a Makefile target and many CI runners invoke a
-command, so `op` inside one of those contexts fails with *command not found*
-regardless of what your shell profile defines. That costs nothing in practice,
-because the line a Makefile, a CI workflow, or this site itself actually writes is
-the full `uvx overpower@latest` anyway.
-
-## `--version` as proof the package arrived whole
+## Check the package arrived whole
 
 ```bash
 uvx overpower@latest --version
