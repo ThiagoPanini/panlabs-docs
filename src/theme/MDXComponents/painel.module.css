@@ -75,9 +75,11 @@
 }
 
 /* -----------------------------------------------------------------------------
-   A fileira de argumentos editáveis — só existe quando a entrada tem parâmetro
-   escalar com exemplo. `<label>` mais `<input type="text">` nativos: zero tecla
-   própria, zero foco programático, zero ARIA a escrever.
+   A fileira de argumentos — uma célula por parâmetro que o comando declara, e
+   não mais só pelos que traziam exemplo escalar. A caixa liga a flag e o campo
+   dá o valor; `<label>`, `<input type="checkbox">` e `<input type="text">`
+   nativos, com zero tecla própria, zero foco programático e zero ARIA a
+   escrever além do `aria-describedby` que aponta o motivo de uma recusa.
 
    **Em fluxo, os campos cabem lado a lado.** No trilho de 511 eles eram uma
    pilha porque não havia largura para outra coisa; na coluna da prosa há, e a
@@ -92,18 +94,31 @@
 
 .painelCampo {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--pd-space-2);
   font-size: var(--pd-type-xs);
   color: var(--pd-text-muted);
 }
 
-.painelCampo span {
+/* A caixa que liga a flag, e o nome dela. **A caixa é `<input type="checkbox">`
+   nativa de propósito**: acrescentar uma flag é ligar e desligar, e esse é o
+   controle que o HTML já tem para isso. O zero 5 de `cinco-zeros.sh` proíbe
+   autor novo de modelo de interação, e trocar a caixa por um botão-alternador
+   próprio seria exatamente isso — com foco, tecla e ARIA a inventar. */
+.painelRotulo {
+  display: flex;
   flex: 0 0 auto;
+  align-items: center;
+  gap: var(--pd-space-2);
+  min-height: var(--pd-target-min);
+}
+
+.painelRotulo span {
   font-family: var(--pd-font-mono);
 }
 
-.painelCampo input {
+.painelCampo input[type='text'] {
   flex: 1 1 auto;
   min-width: 0;
   /* Piso de alvo de toque — o contrato de estado de entrada (ADR 4) cobre foco
@@ -117,4 +132,24 @@
   color: var(--pd-text-strong);
   font-family: var(--pd-font-mono);
   font-size: var(--pd-type-sm);
+}
+
+/* -----------------------------------------------------------------------------
+   O motivo de uma flag recusada.
+
+   **Ela desabilita em vez de sumir.** Uma flag que desaparece quando outra é
+   ligada faz o leitor procurar o que ele acabou de ver; uma que fica visível e
+   desabilitada, com a mensagem que a ferramenta imprime, ensina a regra. É a
+   diferença entre um painel que impede o erro e um que o explica.
+
+   A mensagem ocupa a linha inteira da célula porque é frase, não rótulo: ela é
+   o texto literal da CLI, e quebrar uma frase em coluna de grade a tornaria
+   ilegível justamente onde ela é a única explicação.
+   ----------------------------------------------------------------------------- */
+.painelMotivo {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: var(--pd-type-xs);
+  line-height: var(--pd-leading-ui);
+  color: var(--pd-text-muted);
 }

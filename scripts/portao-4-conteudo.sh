@@ -690,6 +690,30 @@ echo
 # inexistente devolve vazio, e vazio AQUI é aprovação: das quinze, esta é a
 # única cuja forma de passar é não achar nada. Sem a guarda, um diretório
 # renomeado transformaria a cobrança num carimbo.
+#
+# ---------------------------------------------------------------------------
+# A EXCEÇÃO: citação de saída de ferramenta (#133)
+#
+# Duas regras deste repositório colidiam de frente. `solucao-de-problemas.md`
+# promete citar a mensagem de recusa **como a ferramenta a imprime**, e três das
+# mensagens do `overpower` carregam travessão literal — entre elas a que o painel
+# de `install` mostra. Reescrever a frase falsificaria a citação: o leitor
+# procuraria no terminal um texto que não existe.
+#
+# A saída reusa o padrão da invariante 2 de `invariantes.sh`: **quem carrega o
+# literal declara no próprio preâmbulo que carrega.** Sem declaração, nada muda;
+# com ela, o travessão passa **só dentro de região de citação**, que é onde a
+# ferramenta fala e o autor não.
+#
+#   markdown   `{/* cita-saida-de-ferramenta */}` nas 20 primeiras linhas, e o
+#              travessão dentro de cerca de código ou na linha `api_exemplos:`
+#              da página gerada
+#   json       `"citaSaidaDeFerramenta": true` nas 20 primeiras linhas, e o
+#              travessão dentro de um valor `"mensagem":`
+#
+# **O marcador é `{/* */}` e não `<!-- -->`.** Medido: sob MDX 3 o comentário
+# HTML não compila (*Unexpected character `!`*), e toda página deste site passa
+# pelo compilador MDX, `.md` inclusive, porque a config não declara `format`.
 echo "14  travessão em \`conteudo\`, \`i18n\` e \`contratos\`"
 faltando=''
 for raiz in "$CONTEUDO" "$I18N" "$CONTRATOS"; do
@@ -699,13 +723,47 @@ done
 if [ -n "$faltando" ]; then
   reprova "superfície ausente, e sem ela a varredura passaria calada: ${faltando% }"
 else
-  com_travessao=$(grep -Rn '—' "$CONTEUDO" "$I18N" "$CONTRATOS") || true
+  com_travessao=$(
+    find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f -print0 |
+      xargs -0 awk '
+        # **O arquivo é acumulado antes de ser julgado, e a razão é a ordem.** A
+        # declaração mora nas 20 primeiras linhas, e numa página gerada a linha
+        # com travessão é o `api_exemplos:` do front matter, que vem ANTES dela.
+        # Julgar em fluxo reprovaria a linha 6 por uma declaração que só se lê na
+        # 9. Guarda-se a ocorrência e decide-se no fim do arquivo.
+        function fechar(   i) {
+          for (i = 1; i <= n; i++) {
+            if (declarado && citavel[i]) continue
+            print achado[i]
+          }
+          n = 0
+        }
+        FNR == 1 { fechar(); declarado = 0; dentro = 0 }
+        FNR <= 20 && (/\{\/\* cita-saida-de-ferramenta \*\/\}/ ||
+                      /"citaSaidaDeFerramenta": true/) { declarado = 1 }
+        # A cerca alterna a região de citação. A própria linha da cerca não é
+        # prosa, então ela sai da varredura junto.
+        /^[ \t]*```/ { dentro = !dentro; next }
+        index($0, "—") == 0 { next }
+        {
+          n++
+          achado[n] = FILENAME ":" FNR ":" $0
+          # As três regiões em que quem fala é a ferramenta, e não o autor: a
+          # cerca de código, a linha de front matter que projeta o contrato, e o
+          # valor `"mensagem"` dentro do próprio contrato.
+          citavel[n] = (dentro || /^api_exemplos:/ || /"mensagem":/) ? 1 : 0
+        }
+        END { fechar() }
+      '
+  ) || true
   if [ -n "$com_travessao" ]; then
     reprova "travessão no conteúdo publicado; reescreva a frase, em vez de trocar o caractere:"
     echo "$com_travessao" | sed 's/^/    /'
   else
     varridos=$(find "$CONTEUDO" "$I18N" "$CONTRATOS" -type f | wc -l)
-    echo "   ${varridos} arquivos varridos, e nenhum travessão"
+    citando=$(grep -rlE '\{/\* cita-saida-de-ferramenta \*/\}|"citaSaidaDeFerramenta": true' \
+      "$CONTEUDO" "$I18N" "$CONTRATOS" | wc -l)
+    echo "   ${varridos} arquivos varridos; travessão só onde a ferramenta fala, em ${citando} que declaram"
   fi
 fi
 echo

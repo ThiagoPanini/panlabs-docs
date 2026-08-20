@@ -3,10 +3,12 @@
 # Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
 title: overpower list
 description: Responde o que existe. Nu, imprime o catálogo embutido em quatro blocos; com um seletor, abre um item só, por inteiro.
-api_exemplos: {"assinatura":"overpower list [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>]","parametros":[{"nome":"--skill","exemplo":"panlabs-python-standards"}],"snippet":{"linguagem":"bash","modelo":"overpower list --skill \"{{--skill}}\""}}
+api_exemplos: {"assinatura":"overpower list [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>]","linguagem":"bash","modelo":{"chamada":"overpower list","qualificado":"overpower list","contexto":"sempre","parametros":[{"nome":"--skill","tipo":"name","aridade":{"multiplo":false},"exemplo":"panlabs-python-standards"},{"nome":"--bundle","tipo":"name","aridade":{"multiplo":false}},{"nome":"--mcp","tipo":"name","aridade":{"multiplo":false}},{"nome":"--ai-framework","tipo":"name","aridade":{"multiplo":false}},{"nome":"--from","tipo":"url","aridade":{"multiplo":false}}],"minimo":[{"contexto":"sempre","flags":[]}],"restricoes":[{"tipo":"exclusivo","precedencia":1,"membros":["--skill","--bundle","--mcp","--ai-framework"],"guarda":null,"classe":"TooManySelectorsError","exit":2,"literal":true,"mensagem":"`list` shows one item at a time, and got {flags}"},{"tipo":"proibe","precedencia":2,"quando":"--from","proibida":"--ai-framework","classe":"UnsupportedRemoteListUnitError","exit":2,"literal":true,"mensagem":"`--from` on `list` shows skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those"}]}}
 ---
 
 # overpower list
+
+{/* cita-saida-de-ferramenta */}
 
 **Comando** · `overpower list`
 

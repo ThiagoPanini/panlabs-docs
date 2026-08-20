@@ -1,6 +1,7 @@
 {
   "contrato": "assinatura",
-  "versao": 1,
+  "versao": 2,
+  "citaSaidaDeFerramenta": true,
   "biblioteca": {
     "modulo": "overpower"
   },
@@ -18,7 +19,8 @@
     "colunaNome": "Name",
     "colunaEspecie": "Kind",
     "colunaResumo": "What it does",
-    "veja": "The fields are on the command page:"
+    "veja": "The fields are on the command page:",
+    "aridadeMultipla": "Repeatable, and accepts several names separated by commas."
   },
   "entradas": [
     {
@@ -27,21 +29,34 @@
       "especie": "aplicacao",
       "titulo": "overpower",
       "qualificado": "overpower",
-      "assinatura": "overpower [--help] [--version] <command>",
       "resumo": "The root of the command line, with the options that hold in any position and the table of four exit codes the three commands share.",
       "descricao": "Every invocation of overpower answers one of exactly three questions, and each question is a command. Typed bare, overpower prints a banner and the top-level help, and exits `0`; under a pipe the banner is dropped and only the help goes through, so a `grep` or a redirect gets something worth reading.\n\nThe catalog overpower installs from is embedded in the package, so the version of the tool is the version of the catalog. That is why every line on this site pins `@latest`, and it is what `--version` proves.",
-      "exporta": ["list", "install", "doctor"],
-      "fluxo": ["list", "install", "doctor"],
+      "exporta": [
+        "list",
+        "install",
+        "doctor"
+      ],
+      "fluxo": [
+        "list",
+        "install",
+        "doctor"
+      ],
       "parametros": [
         {
           "nome": "--help",
           "tipo": "flag",
-          "descricao": "Prints the help for the level it appears at and exits `0`. At the root, it is the same screen bare overpower already shows."
+          "descricao": "Prints the help for the level it appears at and exits `0`. At the root, it is the same screen bare overpower already shows.",
+          "aridade": {
+            "multiplo": false
+          }
         },
         {
           "nome": "--version",
           "tipo": "flag",
-          "descricao": "Prints the version read from the installed package's own metadata, rather than from a constant baked into the source. It is the cheapest available check that the package arrived whole."
+          "descricao": "Prints the version read from the installed package's own metadata, rather than from a constant baked into the source. It is the cheapest available check that the package arrived whole.",
+          "aridade": {
+            "multiplo": false
+          }
         }
       ],
       "retorno": {
@@ -78,7 +93,6 @@
       "especie": "comando",
       "titulo": "overpower list",
       "qualificado": "overpower list",
-      "assinatura": "overpower list [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>]",
       "resumo": "Answers what is there. Bare, it prints the embedded catalog in four blocks; with a selector, it opens exactly one item, in full.",
       "descricao": "Every entry prints with its size, its file count and its description in full, never truncated, because the description is the thing the decision to install is actually made on. Under it sits the line that installs the item, with no prompt in front, so that copying and pasting hands back something that runs.\n\n`list` answers about one item at a time. Two selectors on the same line are a question with two answers, and the command refuses rather than silently picking one.",
       "chamada": "overpower list",
@@ -87,31 +101,81 @@
           "nome": "--skill",
           "tipo": "name",
           "descricao": "Opens one pool skill in full. Takes the short form `-s`.",
-          "exemplo": "panlabs-python-standards"
+          "exemplo": "panlabs-python-standards",
+          "aridade": {
+            "multiplo": false
+          },
+          "curta": "-s"
         },
         {
           "nome": "--bundle",
           "tipo": "name",
-          "descricao": "Opens a bundle and lists the artifacts its manifest names. Takes the short form `-b`."
+          "descricao": "Opens a bundle and lists the artifacts its manifest names. Takes the short form `-b`.",
+          "aridade": {
+            "multiplo": false
+          },
+          "curta": "-b"
         },
         {
           "nome": "--mcp",
           "tipo": "name",
-          "descricao": "Opens an MCP server's recipe, with the transport, the fields the TOML itself spells, and the derived targets."
+          "descricao": "Opens an MCP server's recipe, with the transport, the fields the TOML itself spells, and the derived targets.",
+          "aridade": {
+            "multiplo": false
+          }
         },
         {
           "nome": "--ai-framework",
           "tipo": "name",
-          "descricao": "Opens an AI Framework and prints every artifact inside it. It is the one selector `--from` refuses."
+          "descricao": "Opens an AI Framework and prints every artifact inside it. It is the one selector `--from` refuses.",
+          "aridade": {
+            "multiplo": false
+          }
         },
         {
           "nome": "--from",
           "tipo": "url",
-          "descricao": "Reads from a GitHub repository instead of the embedded catalog. Bare, it prints that repository's showcase."
+          "descricao": "Reads from a GitHub repository instead of the embedded catalog. Bare, it prints that repository's showcase.",
+          "aridade": {
+            "multiplo": false
+          }
         }
       ],
       "retorno": null,
-      "erros": []
+      "erros": [],
+      "minimo": [
+        {
+          "contexto": "sempre",
+          "flags": []
+        }
+      ],
+      "restricoes": [
+        {
+          "tipo": "exclusivo",
+          "precedencia": 1,
+          "membros": [
+            "--skill",
+            "--bundle",
+            "--mcp",
+            "--ai-framework"
+          ],
+          "guarda": null,
+          "classe": "TooManySelectorsError",
+          "exit": 2,
+          "literal": true,
+          "mensagem": "`list` shows one item at a time, and got {flags}"
+        },
+        {
+          "tipo": "proibe",
+          "precedencia": 2,
+          "quando": "--from",
+          "proibida": "--ai-framework",
+          "classe": "UnsupportedRemoteListUnitError",
+          "exit": 2,
+          "literal": true,
+          "mensagem": "`--from` on `list` shows skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those"
+        }
+      ]
     },
     {
       "id": "install",
@@ -119,66 +183,172 @@
       "especie": "comando",
       "titulo": "overpower install",
       "qualificado": "overpower install",
-      "assinatura": "overpower install [--runtime <key>] [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]",
       "resumo": "Writes. It prints the plan, with every destination and who reads it, before touching disk, and asks before writing when there is a terminal on the other side.",
       "descricao": "The four selectors mix freely on a single line, and each takes a comma-separated value, a repeated flag, or both. When a line resolves to writes across more than one unit, they always happen in the same order, framework, then bundle, then individual artifact, then MCP server, and the most specific unit is written last.\n\nIn a terminal, a line that does not close a plan opens the wizard instead of simply refusing. It only opens the steps your line left open, always in the same order, and whatever it collects becomes exactly the same request a hand-typed flag line would have built.",
       "chamada": "overpower install",
       "parametros": [
         {
-          "nome": "--skill",
-          "tipo": "name",
-          "descricao": "One pool skill, installed on its own. Takes the short form `-s`.",
-          "exemplo": "panlabs-python-standards"
-        },
-        {
           "nome": "--runtime",
           "tipo": "key",
           "descricao": "Who receives what is installed. Takes keys from a closed table of 77 runtimes, and has no default. What happens without it depends on there being a terminal: in one, a line that names something to install and no runtime opens the wizard on the step that was missing; off a terminal, it refuses with exit 2 rather than guessing. The exception is a line mixing a skill and an MCP server, which needs the runtime named in both cases.",
-          "exemplo": "claude-code"
+          "exemplo": "claude-code",
+          "aridade": {
+            "multiplo": true,
+            "separador": ","
+          },
+          "dominio": {
+            "tipo": "enum",
+            "fonte": "src/overpower/runtimes.py:608",
+            "autoridade": "known_runtimes(), src/overpower/runtimes.py:1015",
+            "cardinalidade": 77,
+            "tabela": "alvos/indice"
+          }
+        },
+        {
+          "nome": "--skill",
+          "tipo": "name",
+          "descricao": "One pool skill, installed on its own. Takes the short form `-s`.",
+          "exemplo": "panlabs-python-standards",
+          "aridade": {
+            "multiplo": true,
+            "separador": ","
+          },
+          "curta": "-s"
         },
         {
           "nome": "--bundle",
           "tipo": "name",
-          "descricao": "A bundle, expanded into the pool artifacts its manifest names. Takes the short form `-b`."
+          "descricao": "A bundle, expanded into the pool artifacts its manifest names. Takes the short form `-b`.",
+          "aridade": {
+            "multiplo": true,
+            "separador": ","
+          },
+          "curta": "-b"
         },
         {
           "nome": "--mcp",
           "tipo": "name",
-          "descricao": "One MCP server, grafted into the runtime's own configuration. Nothing is copied here; a key is added inside a document that is already yours."
+          "descricao": "One MCP server, grafted into the runtime's own configuration. Nothing is copied here; a key is added inside a document that is already yours.",
+          "aridade": {
+            "multiplo": true,
+            "separador": ","
+          }
         },
         {
           "nome": "--ai-framework",
           "tipo": "name",
-          "descricao": "An AI Framework, installed whole. It has no short form on purpose, because `-f` is already `--force` on this same command."
+          "descricao": "An AI Framework, installed whole. It has no short form on purpose, because `-f` is already `--force` on this same command.",
+          "aridade": {
+            "multiplo": true,
+            "separador": ","
+          }
         },
         {
           "nome": "--from",
           "tipo": "url",
-          "descricao": "Installs from a GitHub repository, with no registration step. Once it is on the line, the embedded catalog is not consulted."
-        },
-        {
-          "nome": "--dry-run",
-          "tipo": "flag",
-          "descricao": "Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory."
-        },
-        {
-          "nome": "--yes",
-          "tipo": "flag",
-          "descricao": "Skips the confirmation before the write. Takes the short form `-y`. Off a terminal it is accepted and does nothing, because there is no confirmation to skip there. In a terminal it has a second effect: a destination already taken in machine scope stops being a question and becomes a refusal, exit 3, where the line without `-y` would have asked and could have written. What lifts that refusal is `--force`, and only `--force`."
-        },
-        {
-          "nome": "--force",
-          "tipo": "flag",
-          "descricao": "Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`."
+          "descricao": "Installs from a GitHub repository, with no registration step. Once it is on the line, the embedded catalog is not consulted.",
+          "aridade": {
+            "multiplo": false
+          }
         },
         {
           "nome": "--global",
           "tipo": "flag",
-          "descricao": "Writes under the home directory instead of the current repository. Takes the short form `-g`."
+          "descricao": "Writes under the home directory instead of the current repository. Takes the short form `-g`.",
+          "aridade": {
+            "multiplo": false
+          },
+          "curta": "-g"
+        },
+        {
+          "nome": "--force",
+          "tipo": "flag",
+          "descricao": "Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`.",
+          "aridade": {
+            "multiplo": false
+          },
+          "curta": "-f"
+        },
+        {
+          "nome": "--yes",
+          "tipo": "flag",
+          "descricao": "Skips the confirmation before the write. Takes the short form `-y`. Off a terminal it is accepted and does nothing, because there is no confirmation to skip there. In a terminal it has a second effect: a destination already taken in machine scope stops being a question and becomes a refusal, exit 3, where the line without `-y` would have asked and could have written. What lifts that refusal is `--force`, and only `--force`.",
+          "aridade": {
+            "multiplo": false
+          },
+          "curta": "-y"
+        },
+        {
+          "nome": "--dry-run",
+          "tipo": "flag",
+          "descricao": "Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory.",
+          "aridade": {
+            "multiplo": false
+          }
         }
       ],
       "retorno": null,
-      "erros": []
+      "erros": [],
+      "minimo": [
+        {
+          "contexto": "terminal",
+          "flags": []
+        },
+        {
+          "contexto": "sem-terminal",
+          "flags": [
+            "--skill",
+            "--runtime"
+          ]
+        }
+      ],
+      "restricoes": [
+        {
+          "tipo": "exclusivo",
+          "precedencia": 1,
+          "membros": [
+            "--mcp",
+            "--skill",
+            "--bundle",
+            "--ai-framework"
+          ],
+          "particao": [
+            [
+              "--mcp"
+            ],
+            [
+              "--skill",
+              "--bundle",
+              "--ai-framework"
+            ]
+          ],
+          "guarda": "--runtime",
+          "classe": "MixedClassesWithoutRuntimeError",
+          "exit": 2,
+          "literal": true,
+          "mensagem": "a skill and an MCP server on one line need --runtime named explicitly, or two separate commands — one per class"
+        },
+        {
+          "tipo": "proibe",
+          "precedencia": 2,
+          "quando": "--from",
+          "proibida": "--ai-framework",
+          "classe": "UnsupportedRemoteUnitError",
+          "exit": 2,
+          "literal": true,
+          "mensagem": "`--from` installs skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those"
+        },
+        {
+          "tipo": "desliga",
+          "precedencia": 3,
+          "quando": "--from",
+          "desligada": null,
+          "classe": "RemoteSkillNotFoundError",
+          "exit": 3,
+          "literal": false,
+          "mensagem": "with `--from` a name the remote does not have is refused at exit 3, where the embedded catalog would have refused it at exit 2"
+        }
+      ]
     },
     {
       "id": "doctor",
@@ -186,7 +356,6 @@
       "especie": "comando",
       "titulo": "overpower doctor",
       "qualificado": "overpower doctor",
-      "assinatura": "overpower doctor",
       "resumo": "Answers whether what was written is still what was written. It reports the terminal and the integrity in a single output, across both scopes at once.",
       "descricao": "The terminal half reports four facts, whether a TTY is attached, what colour system was detected, the terminal width, and whether `NO_COLOR` is set. It is the exact set that explains a screen that came out looking wrong, without needing a round trip to ask.\n\nThe integrity half reads the runtime table in both scopes and checks what it finds against what was actually installed. It reads both because a target carries no manifest of its own, so there is no way to check one scope that would mean anything. That is also why `doctor` has no `--global`, and why it still answers outside a git repository, reporting nothing for the half it cannot find.",
       "chamada": "overpower doctor",
@@ -207,7 +376,13 @@
           }
         ]
       },
-      "erros": []
+      "erros": [],
+      "minimo": [
+        {
+          "contexto": "sempre",
+          "flags": []
+        }
+      ]
     }
   ]
 }

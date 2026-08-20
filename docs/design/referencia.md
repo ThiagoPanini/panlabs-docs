@@ -235,31 +235,46 @@ Três consequências, e as três são o motivo:
   mão: o rótulo dele e a folha que o abre são autorais, e o gerador não os
   conhece. O que o fragmento traz continua sendo só a lista de folhas.
 
-### 5.2 O snippet é composto, nunca escrito
+### 5.2 A linha é montada do modelo, nunca escrita
 
-Nenhuma das quatro entradas tem snippet próprio. O gerador o compõe em três
-pedaços, e os três saem do contrato:
+**O painel deixou de receber um template e passou a receber o modelo**, na
+[#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133). Até a versão 1
+do contrato o gerador congelava a linha no build, com um `{{marcador}}` em cada
+argumento editável, e o painel fazia `String.replace` a cada tecla. Um template
+congelado **não tem modelo de flag**, e não sabia dizer três coisas que a
+ferramenta diz: que a flag é opcional — apagar o campo produzia
+`overpower list --skill ""`, que a CLI não aceita —, que dois seletores na mesma
+linha se excluem, e que a mesma flag acumula em `install` e não acumula em `list`.
 
-1. **o preâmbulo de alcance** — **na espécie de CLI ele não existe**: não há o
-   que importar antes de digitar um comando, e uma linha em branco no topo do
-   bloco seria enfeite que o leitor copiaria junto (§5.5). Ele existia na espécie
-   de biblioteca, como a linha de `import` com os símbolos da cadeia, e saiu com
-   ela;
-2. **o preâmbulo** — a chamada da entrada que liga o receptor, com os exemplos
-   dela **congelados**. É recursivo, e o validador recusa ciclo;
-3. **a chamada** — a assinatura com os exemplos dos parâmetros, e um
-   `{{placeholder}}` em cada argumento editável.
+O que viaja agora no `api_exemplos` é o modelo: `parametros` com `aridade`,
+`minimo` por contexto e `restricoes` com guarda, precedência e a mensagem literal
+que a CLI imprime. Quem compõe a linha é
+`src/theme/MDXComponents/linha.mjs` — **submódulo puro, zero React e zero DOM**,
+na mesma linha que `SearchBar/escada.mjs` — e ele é importado pelos três lados:
+o gerador, o painel e a régua de `npm test`.
 
-**O marcador `{{argumento}}` é declarado num lugar só, e os dois lados o leem de
-lá.** `src/theme/MDXComponents/placeholder.mjs` é submódulo do registro que
-hospeda o painel — ele mudou de casa junto com `PainelComando.js` na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — e
-o gerador o importa — o mesmo caminho que a régua da busca já usa sobre
-`SearchBar/escada.mjs`. **O portão 5 não pegaria a divergência**, e é por isso que
-ela precisa de arquivo: ele regenera e diffa, então um gerador que passasse a
-escrever `${argumento}` contra um painel que ainda casasse `{{argumento}}`
-produziria diff limpo e marcador cru na tela. O que fecha o par é o `npm test`,
-que confere os doze `.mdx` emitidos: nenhum marcador sem argumento que o
-substitua.
+**A `assinatura` saiu do contrato e passou a ser derivada** pelo mesmo módulo.
+Ela era escrita à mão ao lado dos `parametros`, e nada obrigava as duas a
+concordarem: no contrato v1 elas já discordavam da ordem das flags de `install`,
+sem que nada no repositório pudesse notar. O validador agora **recusa** um
+contrato que a carregue (`assinatura-escrita-a-mao`).
+
+Só a raiz continua com linhas compostas e estáticas, porque ela não é montável: o
+que se digita para usar uma CLI é um comando dela, e a página mostra o fluxo dos
+membros, sem campo a editar.
+
+**O portão 5 não pegaria a divergência**, e é por isso que ela precisa de régua:
+ele regenera e diffa, então um modelo que o painel não soubesse consumir sairia
+byte a byte igual ao que o gerador acabou de produzir, com diff limpo e página
+quebrada no navegador. O que fecha o par é o `npm test`, que confere os oito
+`.mdx` emitidos — quatro por locale: cada um carrega modelo montável ou linhas
+estáticas, e nenhuma linha de abertura sai com aspas vazias.
+
+As quatro recusas de coerência do modelo — `grupo-exclusivo-de-um`,
+`modelo-nomeia-flag-inexistente`, `exclusiva-obrigatoria` e `aridade-incoerente` —
+existem pela mesma razão, e cobram o modelo contra si mesmo. O que elas não
+cobram é o modelo contra a ferramenta: nenhuma varredura de JSON descobre que a
+exclusividade da CLI é outra, e é isso que a varredura da [ADR 11](../adr/0011-a-varredura-do-overpower-e-de-maquina.md) existe para olhar.
 
 **Parâmetro sem exemplo não entra na chamada**, e é essa regra que mantém o
 snippet **válido** em vez de só completo. `Passo` tem `roda` e `usa` mutuamente
@@ -543,4 +558,8 @@ junto com o alvo.
 | **O painel desce para o fluxo, logo depois da linha do comando** | **origem própria** | [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) — a linha diz *como isto se chama*, e a pergunta seguinte numa página de CLI é *como isto se digita*; prosa entre as duas obrigaria a rolar para achar a linha copiável |
 | **`ApiDocItem` sai de `src/theme/`** | **origem própria (consequência)** | sem layout a comutar, o componente da rota era `@theme/DocItem` chamando `@theme/DocItem`; segunda entrada removida do ledger de [`swizzle.md`](swizzle.md) §2 |
 | **Três linhas de alvo saem do §8** | **origem própria** | o objeto medido deixou de existir; a régua é a que `paridade.mjs` já aplica a `Accordion` e `Tabs` — *alvo que não confere nada parece cobertura* |
+| **O `api_exemplos` carrega o modelo, e o painel monta a linha** | **origem própria** | [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133) e [ADR 12](../adr/0012-o-painel-monta-a-linha-do-modelo-do-contrato.md) — o template congelado produzia `overpower list --skill ""`, que a CLI não aceita |
+| **A `assinatura` é derivada, e o validador recusa escrevê-la** | **origem própria (correção)** | no contrato v1 ela e a ordem de `parametros` já discordavam em `install`, e nenhuma régua podia notar |
+| **O `placeholder.mjs` sai de `src/theme/`** | **origem própria (consequência)** | sem template não há marcador a sincronizar; terceira entrada removida do ledger de [`swizzle.md`](swizzle.md) §2, e `linha.mjs` entra no mesmo movimento |
+| **O painel abre nu, e o leitor acrescenta por escolha** | **origem própria (verificação)** | medido no build, em Chrome headless: `list` abre em `overpower list` com zero flag ligada, e ligar `--skill` desabilita os outros três com a mensagem literal da CLI |
 | **A assinatura deixa de sair escapada** | **origem própria (correção)** | o contrato guardava `&lt;key&gt;`, e quem renderiza é `<code>{assinatura}</code>`, que já escapa sozinho — a tela mostrava a entidade crua |

@@ -22,7 +22,7 @@ import fs from 'node:fs';
 
 /** O par nome/versão que este validador conhece. Fechado. */
 export const CONTRATO = 'assinatura';
-export const VERSAO = 1;
+export const VERSAO = 2;
 
 /**
  * As espécies de entrada. Fechado.
@@ -58,20 +58,32 @@ export const TETO_DE_ANINHAMENTO = 4;
 /** O teto de erros documentados por entrada. Uma entrada já está nele. */
 export const TETO_DE_ERROS = 4;
 
-/** As doze recusas. Acrescentar uma sem nomeá-la aqui reprova no `npm test`. */
+/**
+ * As dezesseis recusas. Acrescentar uma sem nomeá-la aqui reprova no `npm test`.
+ *
+ * **As quatro últimas são do modelo de linha, e chegaram com a versão 2.** Elas
+ * cobrem a classe de defeito que o portão 5 sozinho não pega: ele regenera e
+ * diffa, então um modelo internamente incoerente produz uma página byte a byte
+ * igual à que o gerador acabou de emitir, com um painel que monta linha que a
+ * ferramenta recusa. O diff fica limpo e a página fica errada.
+ */
 export const RECUSAS = {
   naoEJson: 'nao-e-json',
   contratoDesconhecido: 'contrato-desconhecido',
   idDuplicado: 'id-duplicado',
   especieForaDaLista: 'especie-fora-da-lista',
   descricaoAusente: 'descricao-ausente',
-  assinaturaAusente: 'assinatura-ausente',
+  assinaturaEscritaAMao: 'assinatura-escrita-a-mao',
   exemploAmbiguo: 'exemplo-ambiguo',
   aninhamentoAcimaDeQuatro: 'aninhamento-acima-de-quatro',
   maisDeQuatroErros: 'mais-de-quatro-erros',
   referenciaMorta: 'referencia-morta',
   cicloDeReceptor: 'ciclo-de-receptor',
   contratosIncongruentes: 'contratos-incongruentes',
+  grupoExclusivoDeUm: 'grupo-exclusivo-de-um',
+  modeloNomeiaFlagInexistente: 'modelo-nomeia-flag-inexistente',
+  exclusivaObrigatoria: 'exclusiva-obrigatoria',
+  aridadeIncoerente: 'aridade-incoerente',
 };
 
 /**
@@ -179,6 +191,102 @@ export function validar(contrato) {
     }
   }
 
+  /**
+   * A coerência interna do modelo de linha — as quatro recusas da versão 2.
+   *
+   * **Ela é sobre o modelo consigo mesmo, não sobre a ferramenta.** Nenhuma
+   * varredura de JSON descobre que a exclusividade da CLI é outra; o que ela
+   * descobre é um modelo que não fecha em si — um grupo exclusivo de um membro,
+   * uma restrição apontando para flag que não existe, um mínimo que exige duas
+   * flags que se excluem, um separador em campo que não acumula. Cada um desses
+   * produz painel quebrado com portão 5 verde.
+   */
+  function validarModeloDeLinha(entrada, raiz) {
+    const parametros = entrada.parametros ?? [];
+    const nomes = new Set(parametros.map((parametro) => parametro?.nome));
+
+    const conferirNome = (nome, ponteiro) => {
+      if (nome !== undefined && nome !== null && !nomes.has(nome)) {
+        recusar(
+          RECUSAS.modeloNomeiaFlagInexistente,
+          ponteiro,
+          `\`${nome}\` não está em \`parametros\` de \`${entrada.id}\``,
+        );
+      }
+    };
+
+    for (const [i, parametro] of parametros.entries()) {
+      const aridade = parametro?.aridade;
+      if (aridade?.separador !== undefined && !aridade?.multiplo) {
+        recusar(
+          RECUSAS.aridadeIncoerente,
+          `${raiz}${ponteiroDe('parametros', i)}/aridade`,
+          `\`${parametro?.nome}\` declara separador \`${aridade.separador}\` e não acumula, ` +
+            'então não há o que separar — em `list` a vírgula é caractere do nome',
+        );
+      }
+    }
+
+    const restricoes = entrada.restricoes ?? [];
+    for (const [i, restricao] of restricoes.entries()) {
+      const ponteiro = `${raiz}${ponteiroDe('restricoes', i)}`;
+
+      if (restricao?.tipo === 'exclusivo') {
+        const membros = restricao.membros ?? [];
+        if (membros.length < 2) {
+          recusar(
+            RECUSAS.grupoExclusivoDeUm,
+            `${ponteiro}/membros`,
+            `${membros.length} membro(s), e uma exclusividade de um só nunca dispara`,
+          );
+        }
+        membros.forEach((nome, j) => conferirNome(nome, `${ponteiro}${ponteiroDe('membros', j)}`));
+        for (const [j, bloco] of (restricao.particao ?? []).entries()) {
+          bloco.forEach((nome, k) =>
+            conferirNome(nome, `${ponteiro}${ponteiroDe('particao', j, k)}`),
+          );
+        }
+      }
+
+      conferirNome(restricao?.guarda, `${ponteiro}/guarda`);
+      conferirNome(restricao?.quando, `${ponteiro}/quando`);
+      conferirNome(restricao?.proibida, `${ponteiro}/proibida`);
+      conferirNome(restricao?.desligada, `${ponteiro}/desligada`);
+    }
+
+    for (const [i, minimo] of (entrada.minimo ?? []).entries()) {
+      const ponteiro = `${raiz}${ponteiroDe('minimo', i)}`;
+      const flags = minimo?.flags ?? [];
+      flags.forEach((nome, j) => conferirNome(nome, `${ponteiro}${ponteiroDe('flags', j)}`));
+
+      // O mínimo é uma linha que a ferramenta aceita. Se ele próprio viola uma
+      // restrição, o painel abriria já recusado — e a página estaria ensinando
+      // uma invocação que não roda.
+      const presentes = new Set(flags);
+      for (const restricao of restricoes) {
+        if (restricao?.tipo !== 'exclusivo' || (restricao.guarda && presentes.has(restricao.guarda))) {
+          continue;
+        }
+        const membros = (restricao.membros ?? []).filter((nome) => presentes.has(nome));
+        const blocos = restricao.particao
+          ? new Set(
+              membros.map((nome) =>
+                restricao.particao.findIndex((bloco) => bloco.includes(nome)),
+              ),
+            )
+          : new Set(membros);
+        if (blocos.size >= 2) {
+          recusar(
+            RECUSAS.exclusivaObrigatoria,
+            `${ponteiro}/flags`,
+            `o mínimo do contexto \`${minimo?.contexto}\` exige ${membros.join(' e ')}, ` +
+              'e a mesma restrição as declara mutuamente exclusivas',
+          );
+        }
+      }
+    }
+  }
+
   for (const [indice, entrada] of entradas.entries()) {
     const raiz = ponteiroDe('entradas', indice);
 
@@ -199,9 +307,20 @@ export function validar(contrato) {
       continue;
     }
 
-    if (typeof entrada.assinatura !== 'string' || entrada.assinatura === '') {
-      recusar(RECUSAS.assinaturaAusente, `${raiz}/assinatura`, 'o cabeçalho do painel sai deste campo');
+    // **A recusa inverteu de sinal na versão 2.** Até a 1 o campo era exigido:
+    // o cabeçalho do painel saía dele. Ele era escrito à mão ao lado dos
+    // `parametros`, e nada obrigava os dois a concordarem — estava certo por
+    // sorte. Agora `assinaturaDe` o deriva do modelo, e carregá-lo no JSON
+    // reabriria a segunda fonte de verdade que derivar existe para fechar.
+    if (entrada.assinatura !== undefined) {
+      recusar(
+        RECUSAS.assinaturaEscritaAMao,
+        `${raiz}/assinatura`,
+        'a assinatura é derivada de `parametros` por `linha.mjs`, e escrevê-la abre a segunda fonte',
+      );
     }
+
+    validarModeloDeLinha(entrada, raiz);
 
     for (const chave of ['resumo', 'descricao']) {
       if (typeof entrada[chave] !== 'string' || entrada[chave] === '') {

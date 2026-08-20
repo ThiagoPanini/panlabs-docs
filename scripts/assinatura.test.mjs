@@ -1,24 +1,23 @@
 /**
- * A régua de máquina do contrato de assinatura — o validador, e o marcador que
- * o gerador escreve para o painel ler.
+ * A régua de máquina do contrato de assinatura — o validador, e o modelo que o
+ * gerador emite para o painel montar.
  *
  * **As duas coisas que este arquivo cobre são as duas que o portão 5 não pega**,
  * e é isso que as junta aqui:
  *
  *   · ele confere que a SAÍDA não divergiu da fonte, não que o validador recusa
  *     o que promete recusar — um validador que aceitasse tudo passaria no portão
- *     todos os dias. As doze recusas são lista fechada, e lista fechada sem caso
- *     que a exercite é prosa;
- *   · ele regenera e diffa, então uma divergência de sintaxe entre quem ESCREVE
- *     o marcador (o gerador) e quem o LÊ (o painel) sairia com o diff limpo, e a
- *     página renderizaria o marcador cru na tela.
+ *     todos os dias. As dezesseis recusas são lista fechada, e lista fechada sem
+ *     caso que a exercite é prosa;
+ *   · ele regenera e diffa, então um `api_exemplos` que o painel não soubesse
+ *     consumir sairia com o diff limpo, e a página quebraria no navegador.
  *
  * **Zero dependência nova.** `node:test` e `node:assert` vêm no Node 20, que é o
  * piso do `engines` deste repositório.
  *
  * Roda com `npm test`. Cadência: commit.
  *
- * Procedência: docs/design/referencia.md §5 · docs/adr/0008.
+ * Procedência: docs/design/referencia.md §5 · docs/adr/0009 · docs/adr/0012.
  */
 
 import {test} from 'node:test';
@@ -27,7 +26,7 @@ import fs from 'node:fs';
 
 import {ESPECIES, RECUSAS, lerContrato, validar, validarPar} from './lib/assinatura.mjs';
 import {FORMA, contextoDe, corpoMdx, frontMatter} from './gerar-referencia.mjs';
-import {marcador, marcadoresDe, substituir} from '../src/theme/MDXComponents/placeholder.mjs';
+import {estadoInicial, montar} from '../src/theme/MDXComponents/linha.mjs';
 
 const CONTRATO_PT = 'contratos/overpower.pt-BR.json';
 const CONTRATO_EN = 'contratos/overpower.en.json';
@@ -67,7 +66,7 @@ test('o par commitado passa sem uma recusa', () => {
 
 test('a lista de recusas é fechada, e toda recusa emitida está nela', () => {
   const nomes = new Set(Object.values(RECUSAS));
-  assert.equal(nomes.size, 12);
+  assert.equal(nomes.size, 16);
   // Toda recusa que os casos abaixo produzem sai desta lista — a asserção mora
   // aqui para que acrescentar uma recusa nova sem nomeá-la reprove.
   for (const nome of nomes) {
@@ -76,7 +75,7 @@ test('a lista de recusas é fechada, e toda recusa emitida está nela', () => {
 });
 
 // ---------------------------------------------------------------------------
-// As doze recusas, uma a uma
+// As dezesseis recusas, uma a uma
 // ---------------------------------------------------------------------------
 
 test('nao-e-json — YAML cai pelo parser, sem regra em separado', () => {
@@ -94,11 +93,11 @@ test('nao-e-json — YAML cai pelo parser, sem regra em separado', () => {
 
 test('contrato-desconhecido — o par nome/versão é fechado', () => {
   const c = contrato();
-  c.versao = 2;
+  c.versao = 1;
   assert.deepEqual(primeira(c), {
     recusa: RECUSAS.contratoDesconhecido,
     ponteiro: '/versao',
-    detalhe: 'o par aceito é `assinatura` versão 1, e este é `assinatura` versão 2',
+    detalhe: 'o par aceito é `assinatura` versão 2, e este é `assinatura` versão 1',
   });
 });
 
@@ -174,11 +173,15 @@ test('descricao-ausente — o `quando` de um erro é a prosa dele', () => {
   assert.equal(recusa.ponteiro, `/entradas/${LIST}/erros/0`);
 });
 
-test('assinatura-ausente — o painel não tem cabeçalho sem ela', () => {
+test('assinatura-escrita-a-mao — derivada, e escrevê-la abre a segunda fonte', () => {
+  // A recusa inverteu de sinal na versão 2. Até a 1 o campo era exigido; agora
+  // `assinaturaDe` o deriva de `parametros`, e carregá-lo no JSON reabriria a
+  // divergência silenciosa que derivar existe para fechar — no contrato v1 a
+  // `assinatura` de `install` e a ordem de `parametros` já discordavam.
   const c = contrato();
-  delete c.entradas[SEM_OPCAO].assinatura;
+  c.entradas[SEM_OPCAO].assinatura = 'overpower doctor';
   const recusa = primeira(c);
-  assert.equal(recusa.recusa, RECUSAS.assinaturaAusente);
+  assert.equal(recusa.recusa, RECUSAS.assinaturaEscritaAMao);
   assert.equal(recusa.ponteiro, `/entradas/${SEM_OPCAO}/assinatura`);
 });
 
@@ -280,7 +283,6 @@ test('contratos-incongruentes — entrada a mais de um lado é divergência de f
     especie: 'comando',
     titulo: 'overpower nuke',
     qualificado: 'overpower nuke',
-    assinatura: 'overpower nuke',
     resumo: 'r',
     descricao: 'd',
     chamada: 'overpower nuke',
@@ -334,38 +336,18 @@ test('o identificador NÃO diverge — nome de campo é contrato, não prosa', (
 });
 
 // ---------------------------------------------------------------------------
-// O marcador de argumento editável — escrito pelo gerador, lido pelo painel
+// O modelo emitido e o modelo consumido — escrito pelo gerador, lido pelo painel
 //
 // **O portão 5 não pega esta divergência**, e é por isso que ela é teste. Ele
-// regenera e diffa: se o gerador passasse a escrever `${nome}` e o painel
-// continuasse casando `{{nome}}`, a saída seria idêntica à que o gerador acabou
-// de produzir, o diff ficaria limpo, e a página renderizaria o marcador cru.
+// regenera e diffa: um `api_exemplos` que o painel não consegue consumir sai
+// byte a byte igual ao que o gerador acabou de produzir, o diff fica limpo, e a
+// página quebra no navegador.
+//
+// Esta seção substitui a do marcador `{{nome}}`, que morreu com o template
+// congelado: não há mais texto a substituir, e sim modelo a montar.
 // ---------------------------------------------------------------------------
 
-test('quem escreve o marcador e quem o lê usam a mesma sintaxe', () => {
-  assert.deepEqual(marcadoresDe(marcador('versao')), ['versao']);
-  assert.deepEqual(marcadoresDe(`x=${marcador('a')}, y=${marcador('b')}`), ['a', 'b']);
-});
-
-test('o marcador aceita nome de opção de CLI — o traço não é fim de nome', () => {
-  // O argumento de um `comando` se chama `--from`, e o nome do argumento É a
-  // chave do marcador: o painel casa por `painel.parametros[].nome`. Com a
-  // sintaxe presa a `\\w+`, `{{--from}}` não casaria em NENHUM dos dois lados —
-  // `marcadoresDe` não o veria, a conferência de órfão passaria calada, e a
-  // página sairia com o marcador cru na tela.
-  assert.deepEqual(marcadoresDe(marcador('--from')), ['--from']);
-  assert.equal(substituir(`op ${marcador('--from')}`, {'--from': 'acervo/'}), 'op acervo/');
-  // E a classe não vai além do que os dois lados precisam combinar.
-  assert.deepEqual(marcadoresDe('{{a.b}}'), []);
-  assert.deepEqual(marcadoresDe('{{a b}}'), []);
-});
-
-test('substituir troca o conhecido e deixa o desconhecido — nunca apaga texto', () => {
-  assert.equal(substituir(`f(${marcador('n')})`, {n: '7'}), 'f(7)');
-  assert.equal(substituir(`f(${marcador('n')})`, {}), `f(${marcador('n')})`);
-});
-
-test('nenhuma página gerada tem marcador sem argumento que o substitua', () => {
+test('toda página gerada carrega um modelo que o painel consegue montar', () => {
   const raizes = [
     'conteudo/ferramentas/bibliotecas/overpower/comandos',
     'i18n/en/docusaurus-plugin-content-docs-ferramentas/current/bibliotecas/overpower/comandos',
@@ -378,9 +360,27 @@ test('nenhuma página gerada tem marcador sem argumento que o substitua', () => 
     // para contar as duas posses em separado.
     for (const arquivo of fs.readdirSync(raiz).filter((n) => n.endsWith('.mdx'))) {
       const painel = painelDoTexto(fs.readFileSync(`${raiz}/${arquivo}`, 'utf8'));
-      const nomes = painel.parametros.map((p) => p.nome);
-      for (const marca of marcadoresDe(painel.snippet.modelo)) {
-        assert.ok(nomes.includes(marca), `${raiz}/${arquivo}: \`${marca}\` sem argumento`);
+      const onde = `${raiz}/${arquivo}`;
+
+      assert.ok(painel.assinatura, `${onde}: sem assinatura`);
+      assert.ok(painel.linguagem, `${onde}: sem linguagem`);
+
+      if (painel.modelo) {
+        const {modelo} = painel;
+        const nomes = new Set(modelo.parametros.map((p) => p.nome));
+        for (const restricao of modelo.restricoes) {
+          for (const nome of restricao.membros ?? []) {
+            assert.ok(nomes.has(nome), `${onde}: restrição nomeia \`${nome}\`, que não é parâmetro`);
+          }
+        }
+        // A linha de abertura é montável e nunca sai com aspas vazias — que é o
+        // defeito exato que o template congelado produzia.
+        const linha = montar(modelo, estadoInicial(modelo, modelo.contexto));
+        assert.ok(linha.startsWith(modelo.chamada), `${onde}: a linha não começa na chamada`);
+        assert.doesNotMatch(linha, /""/, `${onde}: a linha abriu com aspas vazias`);
+      } else {
+        // A raiz não é montável: ela mostra o fluxo dos membros, estático.
+        assert.ok(Array.isArray(painel.linhas), `${onde}: sem \`modelo\` e sem \`linhas\``);
       }
       conferidas += 1;
     }
@@ -443,7 +443,7 @@ const ROTULOS_CLI_EN = {
  */
 const contratoDeCli = (rotulos, prosa) => ({
   contrato: 'assinatura',
-  versao: 1,
+  versao: 2,
   biblioteca: {modulo: 'overpower'},
   // CÓPIA, e não a referência: um caso que apaga um rótulo para provar a parada
   // do gerador apagaria do banco compartilhado, e os casos seguintes herdariam
@@ -455,7 +455,6 @@ const contratoDeCli = (rotulos, prosa) => ({
       especie: 'aplicacao',
       titulo: 'overpower',
       qualificado: 'overpower',
-      assinatura: 'overpower [--json] <comando>',
       resumo: prosa.resumoRaiz,
       descricao: prosa.descricaoRaiz,
       exporta: ['overpower-install'],
@@ -476,7 +475,6 @@ const contratoDeCli = (rotulos, prosa) => ({
       especie: 'comando',
       titulo: 'overpower install',
       qualificado: 'overpower install',
-      assinatura: 'overpower install [--from <path>]',
       resumo: prosa.resumoComando,
       descricao: prosa.descricaoComando,
       chamada: 'overpower install',
@@ -530,7 +528,10 @@ test('`aplicacao` é a raiz — comandos, opções globais e códigos de saída,
   const {pt} = parDeCli();
   const corpo = corpoMdx(pt.entradas[0], contextoDe(pt, CAMINHO_CLI));
 
-  assert.match(corpo, /^# overpower\n/);
+  // O corpo abre com o `h1` — o plugin `ai-era` reprova no build quem não abre —
+  // e a declaração que a cobrança 14 lê vem logo depois, ainda dentro das vinte
+  // primeiras linhas do arquivo.
+  assert.match(corpo, /^# overpower\n\n\{\/\* cita-saida-de-ferramenta \*\/\}\n/);
   assert.match(corpo, /\*\*Aplicação\*\* · `overpower`/);
   assert.ok(
     corpo.indexOf('## Comandos') < corpo.indexOf('## Opções globais') &&
@@ -578,8 +579,10 @@ test('as duas espécies saem nos dois locales, e o rótulo é o do locale', () =
   assert.match(comandoEn, /<ParamField name="--from" type="path">/);
   assert.doesNotMatch(comandoEn, /## Exit codes/);
 
-  // E o snippet do EN é o mesmo código: só a prosa é traduzida.
-  assert.equal(painelDe(pt, 1).snippet.modelo, painelDe(en, 1).snippet.modelo);
+  // E o modelo do EN é o mesmo código: só a prosa é traduzida. `rotulos` fica
+  // fora da comparação porque é o único nó cujos valores divergem por definição,
+  // e ele não entra no `api_exemplos`.
+  assert.deepEqual(painelDe(pt, 1).modelo, painelDe(en, 1).modelo);
 });
 
 test('rótulo de seção some do contrato → o gerador PARA, e nomeia a chave', () => {
@@ -606,29 +609,31 @@ test('rótulo de seção some do contrato → o gerador PARA, e nomeia a chave',
   }
 });
 
-test('o painel de um comando é bash, e o marcador casa com a opção', () => {
+test('o painel de um comando é bash, e leva o modelo em vez de um template', () => {
   const {pt} = parDeCli();
   const painel = painelDe(pt, 1);
 
-  assert.equal(painel.snippet.linguagem, 'bash');
-  assert.equal(painel.snippet.modelo, `overpower install --from "${marcador('--from')}"`);
-  assert.deepEqual(painel.parametros, [{nome: '--from', exemplo: 'acervo/'}]);
-  for (const marca of marcadoresDe(painel.snippet.modelo)) {
-    assert.ok(
-      painel.parametros.some((p) => p.nome === marca),
-      `\`${marca}\` sem argumento que o substitua`,
-    );
-  }
+  assert.equal(painel.linguagem, 'bash');
+  assert.equal(painel.assinatura, 'overpower install [--from <path>]');
+  // `aridade` some do JSON quando o contrato não a declara — esta fixture é
+  // sintética e mais magra que o par de disco, onde as quinze flags a trazem.
+  assert.deepEqual(painel.modelo.parametros, [{nome: '--from', tipo: 'path', exemplo: 'acervo/'}]);
+  // O exemplo do contrato semeia o campo, e a linha de abertura é montável.
+  assert.equal(
+    montar(painel.modelo, estadoInicial(painel.modelo, painel.modelo.contexto)),
+    'overpower install',
+  );
 });
 
-test('a raiz de CLI não tem linha de import, e a flag booleana sai nua', () => {
+test('a raiz de CLI não tem linha de import, e não é montável', () => {
   const {pt} = parDeCli();
   const painel = painelDe(pt, 0);
 
-  // A cadeia da raiz é a dos membros, sem marcador — igual à do módulo.
-  assert.equal(painel.snippet.modelo, 'overpower install --from "acervo/"');
-  assert.doesNotMatch(painel.snippet.modelo, /import/);
-  assert.deepEqual(painel.parametros, []);
+  // A cadeia da raiz é a dos membros, e ela é estática: o que se digita para
+  // usar uma CLI é um comando dela, e não há campo a editar.
+  assert.deepEqual(painel.linhas, ['overpower install --from "acervo/"']);
+  assert.equal(painel.modelo, undefined);
+  assert.doesNotMatch(painel.linhas.join('\n'), /import/);
 });
 
 test('a flag booleana entra nua quando verdadeira, e some quando falsa', () => {
@@ -639,16 +644,14 @@ test('a flag booleana entra nua quando verdadeira, e some quando falsa', () => {
     descricao: 'Saída em JSON.',
     exemplo: true,
   });
-  assert.match(painelDe(pt, 1).snippet.modelo, /--json$/);
+  // A flag booleana não recebe valor: ligada, ela entra nua na linha.
+  const ligado = painelDe(pt, 1).modelo;
+  const comJson = estadoInicial(ligado, ligado.contexto);
+  comJson['--json'] = {ligada: true, valor: ''};
+  assert.match(montar(ligado, comJson), /--json$/);
 
-  const desligada = parDeCli().pt;
-  desligada.entradas[1].parametros.push({
-    nome: '--json',
-    tipo: 'flag',
-    descricao: 'Saída em JSON.',
-    exemplo: false,
-  });
-  assert.doesNotMatch(painelDe(desligada, 1).snippet.modelo, /--json/);
+  // E desligada não entra, sem deixar `--json false` para trás.
+  assert.doesNotMatch(montar(ligado, estadoInicial(ligado, ligado.contexto)), /--json/);
 });
 
 test('o par de disco emite bash nos dois locales — o dialeto é da espécie', () => {
@@ -659,9 +662,12 @@ test('o par de disco emite bash nos dois locales — o dialeto é da espécie', 
     const c = lerContrato(caminho);
     for (const indice of [RAIZ, LIST, INSTALL, SEM_OPCAO]) {
       const painel = painelDe(c, indice, caminho);
-      assert.equal(painel.snippet.linguagem, 'bash');
-      assert.match(painel.snippet.modelo, /^overpower /);
-      assert.doesNotMatch(painel.snippet.modelo, /^import |^from /m);
+      assert.equal(painel.linguagem, 'bash');
+      const linha = painel.modelo
+        ? montar(painel.modelo, estadoInicial(painel.modelo, painel.modelo.contexto))
+        : painel.linhas.join('\n');
+      assert.match(linha, /^overpower /);
+      assert.doesNotMatch(linha, /^import |^from /m);
     }
   }
 });

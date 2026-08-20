@@ -38,10 +38,10 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import {lerContrato, validarPar} from './lib/assinatura.mjs';
-// O marcador de argumento editável vem do MESMO arquivo que o painel lê. Ver o
-// cabeçalho de `placeholder.mjs`: o portão 5 regenera e diffa, e uma divergência
-// de sintaxe entre as duas árvores passaria por ele com o diff limpo.
-import {marcador, marcadoresDe} from '../src/theme/MDXComponents/placeholder.mjs';
+// O modelo de linha vem do MESMO arquivo que o painel lê, e é o que faz a
+// assinatura emitida aqui e a linha montada lá não poderem divergir: são a mesma
+// função sobre o mesmo campo. Ver o cabeçalho de `linha.mjs`.
+import {assinaturaDe} from '../src/theme/MDXComponents/linha.mjs';
 
 const CONTRATOS = {
   'pt-BR': 'contratos/overpower.pt-BR.json',
@@ -165,20 +165,17 @@ const editavel = (parametro) =>
   typeof parametro.exemplo === 'string' || typeof parametro.exemplo === 'number';
 
 /**
- * O que o parâmetro vale dentro da linha — placeholder quando ele é editável
- * aqui, e o literal do shell quando não.
+ * O que o parâmetro vale dentro da linha: código cru vence, e o resto vira
+ * literal do shell.
  *
- * A regra — código cru vence, editável vira marcador, string ganha aspas — é a
- * que casa com o que o painel substitui.
+ * **A terceira perna saiu com o marcador.** Até a versão 1 do contrato havia um
+ * ramo `comPlaceholder` que trocava o valor por `{{nome}}` para o cliente
+ * substituir. Quem monta a linha editável agora é `linha.mjs`, e as únicas
+ * linhas que este arquivo ainda compõe são as da raiz, que são estáticas.
  */
-function valorDe(parametro, comPlaceholder) {
+function valorDe(parametro) {
   if (parametro.exemploCodigo !== undefined) {
     return parametro.exemploCodigo;
-  }
-  if (comPlaceholder && editavel(parametro)) {
-    return typeof parametro.exemplo === 'string'
-      ? `"${marcador(parametro.nome)}"`
-      : marcador(parametro.nome);
   }
   return literalDeComando(parametro.exemplo);
 }
@@ -207,12 +204,12 @@ const literalDeComando = (valor) =>
  * do contrato, traços e tudo, porque é ele que o leitor copia e é ele que o
  * painel usa como chave do marcador.
  */
-function chamadaComando(entrada, comPlaceholder) {
+function chamadaComando(entrada) {
   const opcoes = (entrada.parametros ?? []).filter(temExemplo).flatMap((parametro) => {
     if (typeof parametro.exemplo === 'boolean') {
       return parametro.exemplo ? [parametro.nome] : [];
     }
-    return [`${parametro.nome} ${valorDe(parametro, comPlaceholder)}`];
+    return [`${parametro.nome} ${valorDe(parametro)}`];
   });
   return [entrada.chamada, ...opcoes].join(' ');
 }
@@ -250,32 +247,33 @@ const DIALETOS = {
  * validador cobrando um campo que a emissão ignora, que é a divergência entre as
  * duas listas fechadas que o `npm test` existe para não ter.
  */
-function emitirCadeia(entrada, porId, vistos, linhas, comPlaceholder, dialeto) {
+function emitirCadeia(entrada, porId, vistos, linhas, dialeto) {
   if (vistos.has(entrada.id)) {
     return;
   }
   if (entrada.receptor) {
-    emitirCadeia(porId.get(entrada.receptor), porId, vistos, linhas, false, dialeto);
+    emitirCadeia(porId.get(entrada.receptor), porId, vistos, linhas, dialeto);
   }
   vistos.add(entrada.id);
-  linhas.push(dialeto.chamada(entrada, comPlaceholder));
+  linhas.push(dialeto.chamada(entrada));
 }
 
-/** O snippet inteiro de uma página — preâmbulo, receptor e chamada. */
+/**
+ * As linhas estáticas da raiz — preâmbulo, receptor e a chamada de cada membro.
+ *
+ * **Só a raiz passa por aqui.** A página de um comando não tem snippet
+ * congelado: ela carrega o modelo, e quem compõe a linha é o painel. A raiz
+ * mostra o fluxo dos membros e não a si mesma, porque o que se digita para usar
+ * uma CLI é um comando dela — ter membros é ser raiz.
+ */
 function snippetDe(entrada, {contrato, porId}) {
   const forma = FORMA[entrada.especie];
   const dialeto = DIALETOS[forma.dialeto];
   const vistos = new Set();
   const linhas = [];
 
-  // A raiz mostra o fluxo dos membros e não a si mesma: o que se digita para
-  // usar uma CLI é um comando dela. Ter membros é ser raiz.
-  if (forma.membros) {
-    for (const id of entrada.fluxo ?? []) {
-      emitirCadeia(porId.get(id), porId, vistos, linhas, false, dialeto);
-    }
-  } else {
-    emitirCadeia(entrada, porId, vistos, linhas, true, dialeto);
+  for (const id of entrada.fluxo ?? []) {
+    emitirCadeia(porId.get(id), porId, vistos, linhas, dialeto);
   }
 
   const preambulo = dialeto.preambulo(entrada, {contrato, forma});
@@ -329,6 +327,15 @@ function campoMdx(campo, tag, contexto, nivel) {
     `${campo.obrigatorio ? ' required' : ''}${campo.deprecated ? ' deprecated' : ''}>`;
 
   const corpo = [campo.descricao];
+
+  // **A aridade é do modelo, e a página a diz sozinha.** Cinco flags de
+  // `install` acumulam — repetir a flag e separar por vírgula chegam à mesma
+  // tupla — e nenhuma página dizia isso. Escrever a frase à mão em dez lugares,
+  // em dois locales, é a deriva que este gerador existe para não ter; escrevê-la
+  // aqui faz cada `<ParamField>` herdá-la do campo que a declara.
+  if (campo.aridade?.multiplo) {
+    corpo.push('', rotulo(rotulos, 'aridadeMultipla'));
+  }
 
   if (campo.entrada !== undefined) {
     corpo.push('', linkDaEntrada(campo.entrada, contexto));
@@ -398,6 +405,19 @@ export function corpoMdx(entrada, contexto) {
   const forma = FORMA[entrada.especie];
   const partes = [
     `# ${entrada.titulo}`,
+    '',
+    // A declaração que a cobrança 14 do portão 4 lê. Ela é **obrigatória em toda
+    // página gerada**, e não só nas duas que hoje carregam travessão: o
+    // `api_exemplos` é projeção do contrato, e uma mensagem de recusa que ganhe
+    // travessão amanhã reprovaria uma página que ninguém editou.
+    //
+    // **Ela entra DEPOIS do `h1`, e não antes.** O plugin `ai-era` reprova no
+    // build a página que não abre com `# título`, e o front matter gasta sete
+    // linhas — pôr a declaração na nona ainda a deixa dentro das vinte que a
+    // cobrança lê.
+    //
+    // `{/* */}` e não `<!-- -->`: sob MDX 3 o comentário HTML não compila.
+    '{/* cita-saida-de-ferramenta */}',
     '',
     `**${rotulo(rotulos, entrada.especie)}** · \`${entrada.qualificado}\``,
     '',
@@ -477,30 +497,49 @@ function linhasDoRetorno(entrada, contexto) {
   return linhas;
 }
 
-/** O front matter — dois campos de conteúdo, mais o comutador do painel. */
+/**
+ * O front matter — dois campos de conteúdo, mais o comutador do painel.
+ *
+ * **O painel deixou de receber um template e passou a receber o modelo.** Até a
+ * versão 1 do contrato o campo carregava `snippet.modelo`, uma linha congelada no
+ * build com `{{marcadores}}` que o cliente substituía a cada tecla. Um template
+ * congelado não sabe dizer *opcional*: apagar o campo produzia `--skill ""`, que
+ * não é linha que a CLI aceite. Agora vai o modelo — aridade, mínimo por contexto
+ * e restrições — e quem monta a linha é `linha.mjs`, dos dois lados.
+ *
+ * **A raiz não é montável, e continua sendo linhas.** O que se digita para usar
+ * uma CLI é um comando dela: a página da raiz mostra o fluxo dos membros, que é
+ * texto estático, e não tem campo a editar.
+ */
 export function frontMatter(entrada, contexto) {
-  // `editavel` já exige `exemplo` escalar, então ele implica `temExemplo`.
+  const forma = FORMA[entrada.especie];
+
   const painel = {
-    assinatura: entrada.assinatura,
-    parametros: (entrada.parametros ?? [])
-      .filter(editavel)
-      .map((parametro) => ({nome: parametro.nome, exemplo: String(parametro.exemplo)})),
-    snippet: {
-      linguagem: DIALETOS[FORMA[entrada.especie].dialeto].linguagem,
-      modelo: snippetDe(entrada, contexto),
-    },
+    // Derivada, nunca lida do contrato: a `assinatura` escrita à mão era a
+    // segunda fonte de verdade sobre a forma do comando, e ela e `parametros`
+    // já discordavam da ordem das flags sem que nada pudesse notar.
+    assinatura: assinaturaDe(entrada),
+    linguagem: DIALETOS[forma.dialeto].linguagem,
   };
 
-  // O casamento entre quem escreve o marcador e quem o substitui, conferido na
-  // emissão: um marcador sem argumento na lista chegaria à tela cru, e o portão
-  // 5 não o veria — ele diffa a saída contra ela mesma.
-  const orfaos = marcadoresDe(painel.snippet.modelo).filter(
-    (nome) => !painel.parametros.some((parametro) => parametro.nome === nome),
-  );
-  if (orfaos.length > 0) {
-    throw new Error(
-      `${entrada.id}: o snippet tem marcador sem argumento que o substitua — ${orfaos.join(', ')}.`,
-    );
+  if (forma.membros) {
+    painel.linhas = snippetDe(entrada, contexto).split('\n');
+  } else {
+    painel.modelo = {
+      chamada: entrada.chamada ?? entrada.qualificado,
+      qualificado: entrada.qualificado,
+      // O contexto que a página abre. `sem-terminal` é o que fecha a linha
+      // sozinha, e é o que um leitor copiando para um script precisa ver.
+      contexto: (entrada.minimo ?? [{contexto: 'sempre'}])[0].contexto,
+      parametros: (entrada.parametros ?? []).map((parametro) => ({
+        nome: parametro.nome,
+        tipo: parametro.tipo,
+        aridade: parametro.aridade,
+        ...(editavel(parametro) ? {exemplo: String(parametro.exemplo)} : {}),
+      })),
+      minimo: entrada.minimo ?? [],
+      restricoes: entrada.restricoes ?? [],
+    };
   }
 
   return [
