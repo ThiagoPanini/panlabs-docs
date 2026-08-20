@@ -9,7 +9,7 @@ O `release-ready` recusa um pull request que muda o que aterrissa na wheel sem
 também mover a versão, e a mensagem de falha dele imprime o nível que calculou e
 os dois comandos a rodar.
 
-## Dois portões, dois remédios diferentes
+## O que cada um dos dois portões quer dizer
 
 O `gate` e o `release-ready` são os dois obrigatórios em `main`, e ficam
 deliberadamente separados em vez de fundidos num só. O `gate` quer dizer *o código

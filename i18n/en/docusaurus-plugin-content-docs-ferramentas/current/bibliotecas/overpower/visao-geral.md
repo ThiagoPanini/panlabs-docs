@@ -62,7 +62,7 @@ runtime already knows how to read.
   </Step>
 </Steps>
 
-## Three commands, three questions
+## The three commands, and what each one answers
 
 Every invocation of overpower answers one of exactly three questions.
 
@@ -125,7 +125,7 @@ the wizard on the step that was missing. In a pipe, the same line exits `2`. The
 difference is in [Commands](/ferramentas/bibliotecas/overpower/comandos/indice).
 :::
 
-## Always `@latest`
+## Keeping the version current with `@latest`
 
 The catalog is not fetched over the network at install time or at run time. It is
 **embedded in the package**, and `list` reads it by walking the filesystem. That

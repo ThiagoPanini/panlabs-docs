@@ -54,6 +54,12 @@ in.
 
 ## The vocabulary of the MCP graft
 
+**Graft** is what overpower writes inside a document that is already yours, rather
+than a file of its own. It is surgical insertion: the rest of the document stays
+as it was, and what goes in is the fragment rendered from a recipe. Copy and graft
+are the two ways of landing, and what separates them is who owns the destination
+file.
+
 **Slot** is where a secret belongs in a recipe, declared as a **name and a
 role**, `env`, `header` or `bearer`, and never as a value. A slot is exactly what
 overpower refuses to write to disk; everything else a recipe declares, it writes
@@ -68,6 +74,23 @@ A recipe only ever names **what** to check. The code that performs the check is
 always overpower's own, never something fetched and executed from wherever the
 recipe came from.
 :::
+
+## The vocabulary of `doctor`
+
+`doctor` closes on two vocabularies, and what separates them is the exit code.
+
+**Finding** is a defect in what landed. A finding **fails**: one is enough to make
+`doctor` exit `3`. There are five, and each one is described in
+[troubleshooting](referencia/solucao-de-problemas).
+
+**Notice** is an observation about the environment, not about what landed. A
+notice **does not fail**: a run carrying only notices exits `0`. There are two,
+and they travel in a list of their own precisely so they do not add to the verdict.
+
+| Vocabulary | About what | What it does to the exit code |
+| --- | --- | --- |
+| finding | what landed | takes `doctor` to `3` |
+| notice | the surrounding environment | nothing; the exit stays `0` |
 
 ## What decides where things land
 

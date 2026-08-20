@@ -205,7 +205,7 @@ Não é estilo. É a regra que produz as configurações de TOC que provam a med
 
 Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e contagem que só existe em prosa é contagem que envelhece calada. Uma página a mais em `Esteiras` não quebra build nenhum; ela só faz este documento passar a mentir.
 
-`scripts/portao-4-conteudo.sh` cobra **quinze** coisas, na cadência de commit:
+`scripts/portao-4-conteudo.sh` cobra **dezessete** coisas, na cadência de commit:
 
 | # | O que confere |
 | ---: | --- |
@@ -224,10 +224,18 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 | 13 | **a cobertura de locale** — 32 páginas em EN, e só `Ferramentas` |
 | 14 | **zero travessão** em `conteudo/`, `i18n/` e `contratos/` — a mensagem aponta arquivo e linha, e a exceção de citação abaixo é a única |
 | 15 | **o teto de profundidade** — 4, alcançado, e confinado a um ramo |
+| 16 | **a `Verificação` verifica** — página typed `guia` cuja seção existe e não tem bloco cercado |
+| 17 | **o vocabulário do ramo está definido** — termo de `scripts/termos-overpower.txt` sem entrada em `conceitos.md` |
 
 As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>` citado dentro de um trecho de código contariam.
 
 **A cerca indentada conta, e isso é correção de fato contra a versão anterior do portão.** Ela casava `^``` ` enquanto a função que rastreia *"estou dentro de uma cerca?"* casava `^[[:space:]]*``` `. Uma cerca dentro de `<Steps>` abria e fechava o estado sem nunca ser contada como bloco. O desacordo era inofensivo enquanto o `<Steps>` carregava pouco código; na árvore nova ele carrega quase todo o código dos guias, e a contagem saía pela metade. Indentar cerca dentro de JSX é seguro: **o MDX desliga o bloco de código por indentação**, que é exatamente o que permite indentar Markdown dentro de um componente.
+
+**As cobranças 16 e 17 nasceram na [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133), e as duas cobram uma promessa, não uma contagem.** A 16 mede o que uma seção chamada `Verificação` de fato contém: nas cinco páginas typed `guia` do ramo `overpower` ela não trazia comando nenhum, e sim justificativa de desenho. A 17 mede a declaração de abertura de `conceitos.md`, que diz ser onde a definição mora: `achado` e `enxerto` eram usados em três páginas como se conhecidos, e definidos em zero.
+
+**A 16 não cobra a AUSÊNCIA da seção, e o limite é deliberado.** Exigi-la alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`, que é de outra aba e estava fora do escopo do ticket. O buraco fica nomeado no comentário do portão, para o ticket que o fechar.
+
+**A 17 cobra uma direção só, e a outra é da skill.** Termo listado e não definido é varredura; termo usado na prosa e não listado é juízo, porque nenhuma varredura distingue vocabulário de produto de palavra comum. A segunda metade mora na `varredura-overpower`, e sem as duas a lista vira carimbo.
 
 **Proibição por localização é classe de regra nova neste projeto.** Até aqui gabarito **exigia** e **limitava**; nenhum dizia *"aqui não entra"*. As linhas 4 e 5 são teto de zero, e existem onde a alternativa era confiar em bom senso.
 

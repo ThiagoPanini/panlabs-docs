@@ -246,7 +246,7 @@
         {
           "nome": "--from",
           "tipo": "url",
-          "descricao": "Installs from a GitHub repository, with no registration step. Once it is on the line, the embedded catalog is not consulted.",
+          "descricao": "Installs from a GitHub repository, with no registry step. Once it is on the line, the embedded catalog is not consulted. Bare, in a terminal, it opens that repository's showcase as a wizard step; off a terminal, a line with `--from` and no selector exits `2`, because there is no wizard to open.",
           "aridade": {
             "multiplo": false
           }

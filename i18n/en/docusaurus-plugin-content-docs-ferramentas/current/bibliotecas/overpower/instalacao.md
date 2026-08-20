@@ -55,7 +55,7 @@ it.
 The catalog is **not** one of them. It is embedded in the package itself, which
 is why the version of the tool is the version of the catalog.
 
-## `--version` as proof the package arrived whole
+## Check the package arrived whole
 
 ```bash
 uvx overpower@latest --version

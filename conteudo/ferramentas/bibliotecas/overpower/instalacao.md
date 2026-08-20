@@ -54,7 +54,7 @@ motor das perguntas do assistente e a camada de teclado embaixo dele.
 O catálogo **não** é uma delas. Ele vem embutido no próprio pacote, e é por isso
 que a versão da ferramenta é a versão do catálogo.
 
-## `--version` como prova de que o pacote chegou inteiro
+## Conferir que o pacote chegou inteiro
 
 ```bash
 uvx overpower@latest --version

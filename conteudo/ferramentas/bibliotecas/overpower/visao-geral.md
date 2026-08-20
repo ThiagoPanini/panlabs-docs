@@ -61,7 +61,7 @@ que um runtime já sabe ler.
   </Step>
 </Steps>
 
-## Três comandos, três perguntas
+## Os três comandos, e o que cada um responde
 
 Toda invocação do `overpower` responde a uma de exatamente três perguntas.
 
@@ -124,7 +124,7 @@ assistente no passo que faltou. Num cano, a mesma linha sai `2`. A diferença
 está em [Comandos](/ferramentas/bibliotecas/overpower/comandos/indice).
 :::
 
-## Sempre `@latest`
+## Manter a versão em dia com `@latest`
 
 O catálogo não é buscado pela rede nem na instalação nem na execução. Ele vem
 **embutido no pacote**, e o `list` o lê andando pelo sistema de arquivos. Disso

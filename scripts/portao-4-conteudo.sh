@@ -18,11 +18,14 @@
 # índices são teto de zero, e existem onde a alternativa era confiar em bom
 # senso.
 #
-# São quinze cobranças: as **doze** que a árvore nova trouxe; a cobertura de
+# São dezessete cobranças: as **doze** que a árvore nova trouxe; a cobertura de
 # locale, que é a única sobrevivente da versão anterior deste portão — ela não é
 # acréscimo, é a linha que não foi jogada fora com o resto; a varredura de
-# travessão, a única que olha o caractere em vez da estrutura; e o teto de
-# profundidade, que entrou com o `overpower`.
+# travessão, a única que olha o caractere em vez da estrutura; o teto de
+# profundidade, que entrou com o `overpower`; e as **duas últimas**, que a #133
+# trouxe e que cobram uma promessa em vez de uma contagem — uma seção chamada
+# `Verificação` que de fato traz o que rodar, e um vocabulário que a página que
+# se declara dicionário de fato define.
 #
 #    1. o volume por aba e por categoria     12 · 16 · 32, e 60 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
@@ -40,6 +43,8 @@
 #   13. a cobertura de locale                 32 em EN, e só `Ferramentas`
 #   14. o travessão                           zero nas três superfícies
 #   15. o teto de profundidade                4, alcançado, e confinado a um ramo
+#   16. a `Verificação` verifica            bloco cercado na seção, nos dois locales
+#   17. o vocabulário do ramo               termo listado, e definido em `conceitos.md`
 #
 # **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
 # ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
@@ -703,7 +708,7 @@ echo
 # Varrê-la aqui seria uma régua de máquina reprovando o que a outra obriga.
 #
 # **As três raízes são conferidas antes da varredura.** `grep` sobre caminho
-# inexistente devolve vazio, e vazio AQUI é aprovação: das quinze, esta é a
+# inexistente devolve vazio, e vazio AQUI é aprovação: das dezessete, esta é a
 # única cuja forma de passar é não achar nada. Sem a guarda, um diretório
 # renomeado transformaria a cobrança num carimbo.
 #
@@ -827,6 +832,86 @@ fi
   reprova "a árvore chega ao nível ${profundidade_maxima}, e um teto de ${TETO_DE_PROFUNDIDADE} sem consumidor é teto que sobe sozinho"
 
 echo "   teto ${TETO_DE_PROFUNDIDADE}, alcançado, e confinado a ${RAMO_PROFUNDO}"
+echo
+
+# --- 16. a `Verificação` verifica --------------------------------------------
+#
+# **A cobrança nasceu de uma medição, não de um princípio.** Nas cinco páginas
+# typed `guia` do ramo `overpower`, a seção `## Verificação` não continha nenhum
+# comando de verificação e nenhum resultado esperado: continha justificativa de
+# desenho. Sozinha, ela respondia por 51 das 273 linhas fora de modo do ramo
+# (#133).
+#
+# O gabarito de `guia` diz *pré-requisitos → `<Steps>` → verificação → variações*,
+# e uma seção chamada `Verificação` sem nada a rodar é a promessa quebrada mais
+# barata de escrever, porque ninguém a lê como quebrada: ela parece completa.
+#
+# **A régua é o bloco cercado, e ela é grosseira de propósito.** Nenhuma varredura
+# sabe se um comando de fato verifica; o que ela sabe é se existe algo a rodar. A
+# metade que julga se a verificação verifica é da revisão, e continua sendo.
+#
+# Os dois locales são varridos, com o heading de cada um: uma página que verifica
+# só em pt-BR deixa o leitor de EN com a mesma promessa quebrada.
+echo "16  a \`Verificação\` verifica"
+verificacoes=0
+while IFS=: read -r relativo tipo; do
+  [ "$tipo" = 'guia' ] || continue
+  for par in "${CONTEUDO}/${relativo}.md:Verificação" \
+             "${I18N}/${relativo#ferramentas/}.md:Checking it"; do
+    arquivo="${par%:*}"
+    heading="${par##*:}"
+    [ -f "$arquivo" ] || continue
+    verificacoes=$((verificacoes + 1))
+    # Da linha do heading até o próximo `##`, e conta cerca dentro da fatia.
+    cercas=$(awk -v h="## ${heading}" '
+      $0 == h { dentro = 1; next }
+      dentro && /^## / { exit }
+      dentro && /^[[:space:]]*```/ { n++ }
+      END { print n + 0 }
+    ' "$arquivo")
+    # **A ausência da seção não é o que esta cobrança pega**, e o limite é
+    # deliberado. A régua da #133 é sobre o CONTEÚDO da seção; exigir que ela
+    # exista alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`,
+    # que é da aba `Procedimentos` e está fora do escopo daquele ticket. O buraco
+    # fica registrado aqui, nomeado, para o ticket que o fechar.
+    grep -q "^## ${heading}\$" "$arquivo" || continue
+    if [ "$((cercas / 2))" -lt 1 ]; then
+      reprova "${arquivo}: \`${heading}\` sem bloco cercado — nada a rodar, e nada a comparar"
+    fi
+  done
+done <<< "$TIPOS"
+echo "   ${verificacoes} seções de verificação varridas, cada uma com o que rodar"
+echo
+
+# --- 17. o vocabulário do ramo está definido ---------------------------------
+#
+# **`conceitos.md` declara, na abertura, ser onde a definição mora.** A declaração
+# era falsa: `achado` é o vocabulário central do `doctor`, usado em três páginas
+# como se conhecido, e definido em zero. O mesmo valia para `enxerto` (#133).
+#
+# A régua confere UMA das duas direções, e é a barata: todo termo de
+# `scripts/termos-overpower.txt` tem definição em `conceitos.md`. A outra direção,
+# termo usado na prosa e ausente da lista, é juízo e mora na skill
+# `varredura-overpower` — nenhuma varredura distingue vocabulário de produto de
+# palavra comum.
+#
+# O casamento é por `**<termo>**`, que é como a página marca uma definição. Casar
+# a palavra solta acharia toda menção e a lista nunca reprovaria.
+echo "17  o vocabulário do ramo está definido"
+TERMOS='conteudo/ferramentas/bibliotecas/overpower/conceitos.md'
+LISTA='scripts/termos-overpower.txt'
+if [ ! -f "$LISTA" ] || [ ! -f "$TERMOS" ]; then
+  reprova "a lista de termos ou \`conceitos.md\` sumiu, e sem os dois a cobrança passaria calada"
+else
+  definidos=0
+  while IFS="$(printf '\t')" read -r termo secao; do
+    case "$termo" in ''|\#*) continue ;; esac
+    definidos=$((definidos + 1))
+    grep -qi -- "\*\*${termo}\*\*" "$TERMOS" ||
+      reprova "o termo \`${termo}\` está na lista do ramo e \`conceitos.md\` não o define (§ ${secao})"
+  done < "$LISTA"
+  echo "   ${definidos} termos listados, e cada um com definição em \`conceitos.md\`"
+fi
 echo
 
 if [ "$falhas" -gt 0 ]; then

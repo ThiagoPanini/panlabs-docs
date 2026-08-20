@@ -20,7 +20,7 @@ O portão 4 (`npm run portao:4`) transforma em varredura os critérios da arquit
 | `conteudo/procedimentos/` | 16 |
 | `conteudo/ferramentas/` | 28 |
 
-Mais o ramo gerado, somado por fora — **60 no site**, 56 autorais mais 4 geradas. Acrescentar ou remover página **exige acertar o portão 4 junto**. São quinze cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
+Mais o ramo gerado, somado por fora — **60 no site**, 56 autorais mais 4 geradas. Acrescentar ou remover página **exige acertar o portão 4 junto**. São dezessete cobranças ao todo; a lista está no cabeçalho de `scripts/portao-4-conteudo.sh`.
 
 ## Proibição por localização
 

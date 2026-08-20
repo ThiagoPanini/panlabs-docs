@@ -9,7 +9,7 @@ description: The check that refuses a pull request changing the wheel without mo
 without also moving the version, and its failure message prints the level it
 computed and the two commands to run.
 
-## Two gates, two different remedies
+## What each of the two gates means
 
 `gate` and `release-ready` are both required checks on `main`, and they are kept
 deliberately separate rather than merged into one. `gate` means *the code is

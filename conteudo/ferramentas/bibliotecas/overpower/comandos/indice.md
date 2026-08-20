@@ -9,7 +9,7 @@ Antes de qualquer comando isolado, duas coisas valem para todos eles. Esta
 página é o que vem antes das quatro páginas ao lado, que saem do contrato de
 superfície e não desta prosa.
 
-## Os seletores se compõem
+## Compor seletores numa linha
 
 `--ai-framework`, `--bundle`, `--skill` e `--mcp` são **seletores**, flags que
 nomeiam do que a linha trata. Cada um aceita valor separado por vírgula, a flag
@@ -43,7 +43,7 @@ mais de um seletor numa linha de `list` é uma pergunta com duas respostas, e o
 comando recusa em vez de escolher uma calado.
 :::
 
-## O plano roda numa ordem fixa
+## A ordem em que o plano roda
 
 Quando uma linha resolve para escritas em mais de uma unidade, um framework e uma
 skill avulsa no mesmo `install`, por exemplo, as escritas acontecem sempre na
@@ -65,7 +65,7 @@ disco.
 overpower install --ai-framework matt-pocock --skill panlabs-python-standards --runtime claude-code
 ```
 
-## O assistente abre a lacuna, não a tela
+## Quando o assistente abre
 
 Num terminal, uma linha de `install` que não fecha um plano abre o assistente em
 vez de recusar. O gatilho é a **lacuna**, e não a linha vazia: basta faltar o que
