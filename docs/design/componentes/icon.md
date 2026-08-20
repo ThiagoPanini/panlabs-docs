@@ -12,7 +12,7 @@ Um `<svg>` inline, vindo do registro de ícones. Não há invólucro: o elemento
 renderizado **é** o desenho.
 
 ```html
-<svg data-sd-component="icon" data-sd-variant="sm" aria-hidden="true" …>
+<svg data-pd-component="icon" data-pd-variant="sm" aria-hidden="true" …>
 ```
 
 **Zero partes publicadas.** Não há anatomia interna a publicar — o interior do
@@ -67,7 +67,7 @@ buracos.
 
 ## Tokens consumidos
 
-Camada 1: `--sd-space-4`, `--sd-space-5`, `--sd-space-6` — os três tamanhos.
+Camada 1: `--pd-space-4`, `--pd-space-5`, `--pd-space-6` — os três tamanhos.
 
 Nenhum token de cor: a tinta vem de `currentColor`.
 

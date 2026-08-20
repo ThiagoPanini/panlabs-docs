@@ -37,7 +37,7 @@ componente lê o título de cada cerca, monta as abas, e **remove o título do
 bloco** — mantê-lo desenharia a mesma palavra duas vezes, na aba e na moldura.
 
 ```html
-<div data-sd-component="code-group">
+<div data-pd-component="code-group">
   <ul role="tablist">…</ul>            <!-- do Docusaurus -->
   <div>
     <div class="theme-code-block">…</div>
@@ -66,11 +66,11 @@ por dentro — o de dentro está documentado em
 encosta na prosa.
 
 **A casca ganha fio, raio e fundo próprios — o grupo deixou de ser só
-margem.** `--sd-surface-raised`, o mesmo papel que o dropdown e a busca usam
+margem.** `--pd-surface-raised`, o mesmo papel que o dropdown e a busca usam
 para uma superfície que não é a página. A régua de abas por dentro troca o
 sublinhado da aba de conteúdo por uma pílula sob a aba ativa, para que as
 duas famílias de aba não se confundam quando aparecem juntas — o escopo é
-`[data-sd-component="code-group"]`, em `componentes.css`.
+`[data-pd-component="code-group"]`, em `componentes.css`.
 
 ## Variantes
 
@@ -115,10 +115,10 @@ separa bloco de bloco dentro de um componente.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-surface-raised`, `--sd-accent`.
+Camada 2: `--pd-border-default`, `--pd-surface-raised`, `--pd-accent`.
 
-Camada 1: `--sd-space-1`, `--sd-space-6`, `--sd-border-width`, `--sd-radius`,
-`--sd-radius-sm`, `--sd-radius-full`.
+Camada 1: `--pd-space-1`, `--pd-space-6`, `--pd-border-width`, `--pd-radius`,
+`--pd-radius-sm`, `--pd-radius-full`.
 
 O resto da régua de abas e da moldura de código é dos dois componentes que ele
 compõe: [`tabs`](tabs.md) e [`code-block`](code-block.md).
@@ -126,7 +126,7 @@ compõe: [`tabs`](tabs.md) e [`code-block`](code-block.md).
 ## Light e dark
 
 **Não se aplica.** A casca e o indicador de aba ativa consomem token
-semântico (`--sd-surface-raised`, `--sd-border-default`, `--sd-accent`) e não
+semântico (`--pd-surface-raised`, `--pd-border-default`, `--pd-accent`) e não
 conhecem modo.
 
 ## Motion / reduced-motion

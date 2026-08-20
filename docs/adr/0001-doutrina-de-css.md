@@ -52,7 +52,7 @@ Corolário de configuração: `future.v4` fica **desligado** em `docusaurus.conf
 
 **O sistema nunca lê `--ifm-*`. Só escreve.**
 
-Um bloco adaptador atribui `--ifm-*` a partir de `var(--sd-*)`. Nosso CSS lê `--sd-*`; o CSS do Infima lê `--ifm-*`; nada nosso depende da semântica de um nome do Infima.
+Um bloco adaptador atribui `--ifm-*` a partir de `var(--pd-*)`. Nosso CSS lê `--pd-*`; o CSS do Infima lê `--ifm-*`; nada nosso depende da semântica de um nome do Infima.
 
 O seletor do adaptador é `:root, :root[data-theme]`. Com o atributo presente ele é (0,2,0), que vence o `html[data-theme='dark']` (0,1,1) do Infima. O script inline do Docusaurus escreve `data-theme` antes da primeira pintura, então o seletor com atributo é o que vale sempre; o `:root` solto fecha o buraco de JavaScript desligado, onde o site degrada para o Infima cru — feio, mas legível.
 

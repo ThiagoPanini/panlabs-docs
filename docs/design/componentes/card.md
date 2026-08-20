@@ -15,9 +15,9 @@ v3 — território `unsafe`.
 ## Anatomia
 
 ```html
-<a data-sd-component="card" href="…">
+<a data-pd-component="card" href="…">
   <svg …>                                <!-- alcançável por tipo -->
-  <span data-sd-part="title">…</span>
+  <span data-pd-part="title">…</span>
   <p>…</p>                               <!-- alcançável por tipo -->
 </a>
 ```
@@ -94,13 +94,13 @@ silenciosa. Ver [`icones.md`](../icones.md).
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-accent`, `--sd-text-body`,
-`--sd-text-muted`, `--sd-text-strong`.
+Camada 2: `--pd-border-default`, `--pd-accent`, `--pd-text-body`,
+`--pd-text-muted`, `--pd-text-strong`.
 
-Camada 1: `--sd-space-2`, `--sd-space-5`, `--sd-border-width`, `--sd-radius`,
-`--sd-type-sm`, `--sd-weight-ui`, `--sd-leading-ui`, `--sd-move-state`.
+Camada 1: `--pd-space-2`, `--pd-space-5`, `--pd-border-width`, `--pd-radius`,
+`--pd-type-sm`, `--pd-weight-ui`, `--pd-leading-ui`, `--pd-move-state`.
 
-`--sd-border-subtle` saiu: ele era a tinta do fundo de hover, e o hover deixou de
+`--pd-border-subtle` saiu: ele era a tinta do fundo de hover, e o hover deixou de
 pintar fundo.
 
 ## Light e dark
@@ -109,7 +109,7 @@ pintar fundo.
 
 ## Motion / reduced-motion
 
-`--sd-move-state`, **em cor de borda e nada mais**. Herda o resto: as durações
+`--pd-move-state`, **em cor de borda e nada mais**. Herda o resto: as durações
 encurtam na camada de token, e o componente não escreve
 `@media (prefers-reduced-motion)`.
 

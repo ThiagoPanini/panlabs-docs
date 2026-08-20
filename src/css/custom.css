@@ -103,22 +103,22 @@ h4,
 h5,
 h6 {
   text-wrap: balance;
-  letter-spacing: var(--sd-tracking-tight);
+  letter-spacing: var(--pd-tracking-tight);
 }
 
-h1 { line-height: var(--sd-leading-h1); }
-h2 { line-height: var(--sd-leading-h2); }
-h3 { line-height: var(--sd-leading-h3); }
+h1 { line-height: var(--pd-leading-h1); }
+h2 { line-height: var(--pd-leading-h2); }
+h3 { line-height: var(--pd-leading-h3); }
 h4,
 h5,
-h6 { line-height: var(--sd-leading-h4); }
+h6 { line-height: var(--pd-leading-h4); }
 
 /* Código herda a própria entrelinha; o corpo do texto herda a da prosa. */
 code,
 kbd,
 pre,
 samp {
-  font-family: var(--sd-font-mono);
+  font-family: var(--pd-font-mono);
 }
 
 /* -----------------------------------------------------------------------------
@@ -135,11 +135,11 @@ samp {
    entrada da ilha, a respiração do glow e o reveal por rolagem — saíram com a
    landing (issue #94), porque eram consumidos só pelo CSS Module dela.
 
-   A respiração não ficou órfã, ficou QUEBRADA: ela lia `--sd-glow-vale` e
-   `--sd-glow-crista`, e esses dois saíram junto com a regra `[data-sd-showcase]`
+   A respiração não ficou órfã, ficou QUEBRADA: ela lia `--pd-glow-vale` e
+   `--pd-glow-crista`, e esses dois saíram junto com a regra `[data-pd-showcase]`
    da camada 3. Mantê-la seria um `@keyframes` animando para `opacity`
-   indefinido. Os tokens de movimento que as nomeavam — `--sd-move-showcase`,
-   `--sd-move-reveal`, `--sd-move-ambient` — continuam declarados em
+   indefinido. Os tokens de movimento que as nomeavam — `--pd-move-showcase`,
+   `--pd-move-reveal`, `--pd-move-ambient` — continuam declarados em
    `tokens.css`, e o motivo está escrito ao lado deles: o vocabulário de motion é
    fechado por portão, e um keyframe é implementação, enquanto o token é
    vocabulário.
@@ -163,7 +163,7 @@ samp {
    docs/design/motion.md §6 — aqui ficam as regras, não a demonstração.
    ----------------------------------------------------------------------------- */
 
-/* A entrada do modal de busca — `--sd-move-enter`.
+/* A entrada do modal de busca — `--pd-move-enter`.
 
    Ele nasceu de `@starting-style`, e `@starting-style` NÃO SOBREVIVE ao
    minificador: medido no CSS emitido, o bloco inteiro é descartado com o aviso
@@ -173,7 +173,7 @@ samp {
 
    `@keyframes` referenciado por `global(…)` é a forma que este projeto já sabe
    que atravessa o minificador inteira. Ver docs/design/motion.md §6. */
-@keyframes sd-busca-abre {
+@keyframes pd-busca-abre {
   from {
     opacity: 0;
   }
@@ -190,7 +190,7 @@ samp {
 
    Duas correções vieram junto com a mudança, e valem registro:
 
-   · a espessura era `calc(var(--sd-space-1) / 2)`. Dava 2px e passava em
+   · a espessura era `calc(var(--pd-space-1) / 2)`. Dava 2px e passava em
      qualquer varredura, mas era **derivação falsa** — espessura de anel não tem
      relação com escala de espaço. Virou literal declarado em `tokens.css`, com
      a procedência honesta escrita ao lado;

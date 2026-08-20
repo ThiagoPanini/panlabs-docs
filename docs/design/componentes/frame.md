@@ -54,7 +54,7 @@ razão de ser e sobra só o palco.
 ## Anatomia
 
 ```html
-<figure data-sd-component="frame">
+<figure data-pd-component="frame">
   <div>…o diagrama…</div>            <!-- único div filho de figure -->
 </figure>
 ```
@@ -65,7 +65,7 @@ estreito. **Sem `<figcaption>`** — o alvo não renderiza legenda, e o
 componente não tem mais prop para autor nenhuma.
 
 O palco centra o desenho, **declara a tinta** que ele herda e é **tingido**: ele
-consome `--sd-surface-raised`, com fio e sem sombra.
+consome `--pd-surface-raised`, com fio e sem sombra.
 
 **O palco era a superfície de página, e isso é o mesmo defeito do bloco de
 código.** Enquanto havia cartão, a moldura assentava sobre o cartão e a página
@@ -129,12 +129,12 @@ desenha dentro dela.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-surface-raised`, `--sd-text-body`.
+Camada 2: `--pd-border-default`, `--pd-surface-raised`, `--pd-text-body`.
 
-Camada 1: `--sd-space-2`, `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
-`--sd-radius`, `--sd-radius-md`.
+Camada 1: `--pd-space-2`, `--pd-space-4`, `--pd-space-6`, `--pd-border-width`,
+`--pd-radius`, `--pd-radius-md`.
 
-`--sd-radius` dá a moldura do palco; `--sd-radius-md`, um degrau abaixo, dá a
+`--pd-radius` dá a moldura do palco; `--pd-radius-md`, um degrau abaixo, dá a
 da mídia por dentro — o mesmo par que separa casca e código em
 [`code-group`](code-group.md).
 
@@ -185,11 +185,11 @@ estado de entrada mora em [`foco.md`](../foco.md).
 | Sem mídia binária — nem vídeo nem screenshot | origem própria | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — três razões que não dependem de o produto ser fictício; a de [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §3 dependia, e morreu com o Trilho |
 | O contrato de vídeo da âncora fica **medido e não exercido** | origem própria | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — registrado para ninguém remediar a ausência por intuição |
 | Sem fundo quadriculado | **origem própria (consequência)** | ele existe para imagem com transparência, que não é o caso. **As duas fontes discordam sobre ele e nenhuma explica a diferença:** está na medição de `mintlify.com/docs` e **não** na do `mint` do Devin. O palco tingido foi escolhido pelo segundo — escolha entre fontes, **não confirmação**. Se o quadriculado existir no `mint`, a ausência dele aqui passa a ser **divergência da âncora** |
-| O palco é tingido — `--sd-surface-raised` | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ele citava `--sd-surface-page`, e sem cartão isso é uma borda em volta de nada. Mesmo defeito do bloco de código, achado lá e não aqui |
+| O palco é tingido — `--pd-surface-raised` | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ele citava `--pd-surface-page`, e sem cartão isso é uma borda em volta de nada. Mesmo defeito do bloco de código, achado lá e não aqui |
 | Diagrama é SVG com `currentColor`, um arquivo para os dois modos | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §7 — exceção criada pela decisão acima |
 | Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | **Como o diagrama chega ao MDX** — SVG inline, nunca `<img>` | **origem própria (consequência)** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — `<img src="…svg">` não herda `currentColor`, então a rota de asset registrado é incompatível com a regra que o componente já carregava. A lacuna existia por ninguém ter ligado as duas pontas |
-| Preenchimento 8, raio 16 no palco, raio 12 na mídia interna | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--sd-space-6` e `--sd-radius-md` nos dois níveis, sem distinguir |
+| Preenchimento 8, raio 16 no palco, raio 12 na mídia interna | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--pd-space-6` e `--pd-radius-md` nos dois níveis, sem distinguir |
 | Grade de pontos, desvanecida em gradiente vertical | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11. Camada nova, independente da linha "sem fundo quadriculado" acima: quadriculado indicaria transparência de imagem, a grade é textura decorativa por trás do diagrama |
 | `radial-gradient` mais `mask-image` no lugar do SVG em data-URI da âncora | **origem própria (implementação)** | mesmo resultado visual, zero asset novo — o axioma 2 vale para decoração tanto quanto para dependência |
 | Sem `<figcaption>`, e a prop `caption` saiu do componente | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; zero uso em `conteudo/` no momento da remoção, então nenhuma página perdeu texto |

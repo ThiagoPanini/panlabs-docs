@@ -74,14 +74,14 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
    Três camadas, e o nome diz de que camada é:
 
-     1 — raiz         --sd-<coisa> · --sd-<escala>-<degrau>
+     1 — raiz         --pd-<coisa> · --pd-<escala>-<degrau>
                       o único lugar com literal. Duas regiões: o bloco de troca
                       delimitado por SKIN … /SKIN (o que o corporativo edita) e a
                       base (escalas e a forma da rampa).
-     2 — semântica    --sd-<papel>-<qualificador>, papel de LISTA FECHADA de oito:
+     2 — semântica    --pd-<papel>-<qualificador>, papel de LISTA FECHADA de oito:
                       surface · text · border · accent · shadow · focus · state · code
                       Só cor. É o ÚNICO ponto do sistema onde os modos divergem.
-     3 — componente   --sd-<componente>-<parte>, declarada no escopo do componente
+     3 — componente   --pd-<componente>-<parte>, declarada no escopo do componente
                       e nunca em :root.
 
    Cor sempre desce pela camada 2. Dimensão vem direto da camada 1.
@@ -113,7 +113,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    e é por isso que ela vale a errata em vez da reescrita silenciosa.)
 
    ---------------------------------------------------------------------------
-   A TIPAGEM `<color>` DE --sd-brand É CARGA ESTRUTURAL, NÃO DECORAÇÃO.
+   A TIPAGEM `<color>` DE --pd-brand É CARGA ESTRUTURAL, NÃO DECORAÇÃO.
 
    E o mecanismo é mais estreito do que a leitura fácil sugere. Medido em
    Chrome 148, arquivo a arquivo:
@@ -138,8 +138,8 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    alguém colar um valor torto.
    --------------------------------------------------------------------------- */
 
-@property --sd-brand  { syntax: '<color>';  inherits: true; initial-value: #BC461D; }
-@property --sd-radius { syntax: '<length>'; inherits: true; initial-value: 16px; }
+@property --pd-brand  { syntax: '<color>';  inherits: true; initial-value: #BC461D; }
+@property --pd-radius { syntax: '<length>'; inherits: true; initial-value: 16px; }
 
 /* =============================================================================
    CAMADA 1 — raiz
@@ -147,18 +147,18 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
 :root {
   /* SKIN — o que o corporativo edita para re-marcar. Nada além disto.
-     Tipadas com @property: --sd-brand, --sd-radius.
+     Tipadas com @property: --pd-brand, --pd-radius.
      São as duas linhas cuja entrega é literal — colagem inválida nelas cai no valor
      de fábrica. As outras cinco entregam referência ou pilha de fonte, que
      initial-value não sabe expressar: colagem inválida ali apaga o que a linha
      alimenta, à vista. */
-  --sd-brand:          #BC461D;
-  --sd-brand-on-dark:  oklch(from var(--sd-brand) max(l, 0.72) c h);
-  --sd-brand-on-light: oklch(from var(--sd-brand) min(l, 0.50) c h);
-  --sd-font-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --sd-font-heading:   var(--sd-font-body);
-  --sd-font-mono:      'Paper Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --sd-radius:         16px;
+  --pd-brand:          #BC461D;
+  --pd-brand-on-dark:  oklch(from var(--pd-brand) max(l, 0.72) c h);
+  --pd-brand-on-light: oklch(from var(--pd-brand) min(l, 0.50) c h);
+  --pd-font-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --pd-font-heading:   var(--pd-font-body);
+  --pd-font-mono:      'Paper Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --pd-radius:         16px;
   /* /SKIN */
 
   /* O `L` do hex da marca é INERTE: as duas travas de acento reescrevem `L` e
@@ -166,10 +166,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      mesmo matiz e cromaticidade produzem os dois acentos byte a byte
      idênticos — só o ÂNGULO do matiz importa.
 
-     A rampa NÃO lê `--sd-brand` mais. Issue #95: a tinta que ela herdava da
+     A rampa NÃO lê `--pd-brand` mais. Issue #95: a tinta que ela herdava da
      marca era mecanismo copiado de onde ele não se aplica — a âncora não
      pinta superfície com a rampa tingida, pinta com um cinza neutro à parte
-     (ver o bloco `--sd-neutral-*`, abaixo). `--sd-brand-tint` e o pin
+     (ver o bloco `--pd-neutral-*`, abaixo). `--pd-brand-tint` e o pin
      `c × tint = 0,0120` que o mantinham não têm mais o que travar, e saíram
      do sistema. Ver docs/design/tokens.md §5. */
 
@@ -182,15 +182,15 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      referencia a própria página, porque a âncora eleva cartão por borda, não
      por fundo (ver o bloco escuro, mais abaixo).
      --------------------------------------------------------------------------- */
-  --sd-neutral-page-dark:    #141414;
-  --sd-neutral-page-light:   #FCFCFC;
-  --sd-neutral-raised-light: #FFFFFF;
+  --pd-neutral-page-dark:    #141414;
+  --pd-neutral-page-light:   #FCFCFC;
+  --pd-neutral-raised-light: #FFFFFF;
 
   /* ---------------------------------------------------------------------------
      A rampa de onze cinzas — medida na âncora, fria, e não deriva de nada
 
      Até a issue #95, as onze paradas eram tingidas pelo matiz da marca. Agora
-     valem os hex medidos na âncora, fixos qualquer que seja `--sd-brand`: a
+     valem os hex medidos na âncora, fixos qualquer que seja `--pd-brand`: a
      FORMA da rampa continua geometria herdada, só que por valor copiado em
      vez de fórmula reaplicada — trocar a marca não move mais nenhum neutro do
      sistema.
@@ -207,17 +207,17 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      a mais. Parada é geometria, não consumidor — e o argumento não muda com o
      número de buracos.
      --------------------------------------------------------------------------- */
-  --sd-gray-50:  #F4F6FA;
-  --sd-gray-100: #EFF1F5;
-  --sd-gray-200: #DFE2E6;
-  --sd-gray-300: #CFD1D5;
-  --sd-gray-400: #A0A2A6;
-  --sd-gray-500: #717377;
-  --sd-gray-600: #515357;
-  --sd-gray-700: #404246;
-  --sd-gray-800: #26292D;
-  --sd-gray-900: #181A1E;
-  --sd-gray-950: #0B0D11;
+  --pd-gray-50:  #F4F6FA;
+  --pd-gray-100: #EFF1F5;
+  --pd-gray-200: #DFE2E6;
+  --pd-gray-300: #CFD1D5;
+  --pd-gray-400: #A0A2A6;
+  --pd-gray-500: #717377;
+  --pd-gray-600: #515357;
+  --pd-gray-700: #404246;
+  --pd-gray-800: #26292D;
+  --pd-gray-900: #181A1E;
+  --pd-gray-950: #0B0D11;
 
   /* ---------------------------------------------------------------------------
      Matizes de estado — camada 1, fora do bloco de troca.
@@ -236,10 +236,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      menos de 1,5° — ficaram como estavam. `info` (265,6°) e `warn` (61,9°)
      divergiam ~20°; os dois passam a ser o ângulo medido.
      --------------------------------------------------------------------------- */
-  --sd-hue-info:    266;
-  --sd-hue-success: 150;
-  --sd-hue-warn:     62;
-  --sd-hue-danger:   27;
+  --pd-hue-info:    266;
+  --pd-hue-success: 150;
+  --pd-hue-warn:     62;
+  --pd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
      Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-4xl)
@@ -255,10 +255,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      landing saiu. Ver docs/design/README.md §5.1 e a issue #94.
 
      A régua que decide isto está em docs/design/README.md, no fecho da
-     varredura: o que se remove é órfão SEM MOTIVO, não órfão. `--sd-gray-200`
+     varredura: o que se remove é órfão SEM MOTIVO, não órfão. `--pd-gray-200`
      fica porque é parada de uma rampa declarada inteira, e rampa com buraco é
-     pior de ler; `--sd-state-danger-edge` fica porque família de quatro não tem
-     buraco no meio. (O exemplo daqui ERA `--sd-toc-width`, e ele deixou de
+     pior de ler; `--pd-state-danger-edge` fica porque família de quatro não tem
+     buraco no meio. (O exemplo daqui ERA `--pd-toc-width`, e ele deixou de
      servir: a #96 lhe deu três consumidores — ver o bloco de chrome abaixo.
      Órfão que ganha consumidor sai da lista.) Um degrau de display não é elo de
      nada — ele já saltava o `5xl`
@@ -268,69 +268,69 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Consequência declarada: o degrau de display do projeto foi decidido três
      vezes, com três respostas — 48, 60, e nenhum.
      --------------------------------------------------------------------------- */
-  --sd-type-xs:    12px;
-  --sd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
-  --sd-type-base:  16px;    /* prosa */
-  --sd-type-lg:    18px;
-  --sd-type-xl:    20px;
-  --sd-type-2xl:   24px;
-  --sd-type-3xl:   30px;    /* título de página, até 996px */
-  --sd-type-4xl:   36px;    /* título de página, de 997px — o topo da escala */
+  --pd-type-xs:    12px;
+  --pd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
+  --pd-type-base:  16px;    /* prosa */
+  --pd-type-lg:    18px;
+  --pd-type-xl:    20px;
+  --pd-type-2xl:   24px;
+  --pd-type-3xl:   30px;    /* título de página, até 996px */
+  --pd-type-4xl:   36px;    /* título de página, de 997px — o topo da escala */
 
   /* Peso — três, nomeados por intenção. Nome de intenção não colide com o
      `semibold: 500` do Infima, que é a mesma palavra sobre outro número. */
-  --sd-weight-body:    400;
-  --sd-weight-ui:      500;
-  --sd-weight-heading: 600;
+  --pd-weight-body:    400;
+  --pd-weight-ui:      500;
+  --pd-weight-heading: 600;
 
   /* Entrelinha. h4 repete o valor de ui e mantém nome próprio: mesmo número
      hoje, intenções diferentes. */
-  --sd-leading-prose: 1.75;
-  --sd-leading-ui:    1.5;
-  --sd-leading-code:  1.7143;
-  --sd-leading-h1:    1.111;
-  --sd-leading-h2:    1.333;
-  --sd-leading-h3:    1.4;
-  --sd-leading-h4:    1.5;
+  --pd-leading-prose: 1.75;
+  --pd-leading-ui:    1.5;
+  --pd-leading-code:  1.7143;
+  --pd-leading-h1:    1.111;
+  --pd-leading-h2:    1.333;
+  --pd-leading-h3:    1.4;
+  --pd-leading-h4:    1.5;
 
   /* Letter-spacing — um só. O corpo usa o `normal` do navegador, que é keyword
      e não valor, então não precisa de token. */
-  --sd-tracking-tight: -0.025em;
+  --pd-tracking-tight: -0.025em;
 
   /* Falso-negrito — o realce do item ativo da sidebar, e ele não é enfeite.
      Trocar `font-weight` reflui o texto e o item PULA de largura no instante em
      que o leitor navega; meio pixel de sombra engrossa sem mexer na métrica.
      `currentColor` resolve no elemento, então o realce acompanha o acento sem
      par declarado e sem segundo valor para o modo claro. */
-  --sd-negrito-optico: 0 0 0.4px currentColor;
+  --pd-negrito-optico: 0 0 0.4px currentColor;
 
   /* ---------------------------------------------------------------------------
      Espaço — base 4px, escada por calc(). Um literal só.
      Toda dimensão que o projeto travou é múltiplo de 8; a base fica em 4 para o
      meio-passo que a densidade de 14px exige em chip, badge e ícone.
      --------------------------------------------------------------------------- */
-  --sd-space-1:  4px;   /* único literal da escala */
-  --sd-space-2:  calc(var(--sd-space-1) *  2);
-  --sd-space-3:  calc(var(--sd-space-1) *  3);
-  --sd-space-4:  calc(var(--sd-space-1) *  4);
-  --sd-space-5:  calc(var(--sd-space-1) *  5);
-  --sd-space-6:  calc(var(--sd-space-1) *  6);
-  --sd-space-8:  calc(var(--sd-space-1) *  8);
-  --sd-space-10: calc(var(--sd-space-1) * 10);
-  --sd-space-12: calc(var(--sd-space-1) * 12);
-  --sd-space-16: calc(var(--sd-space-1) * 16);
+  --pd-space-1:  4px;   /* único literal da escala */
+  --pd-space-2:  calc(var(--pd-space-1) *  2);
+  --pd-space-3:  calc(var(--pd-space-1) *  3);
+  --pd-space-4:  calc(var(--pd-space-1) *  4);
+  --pd-space-5:  calc(var(--pd-space-1) *  5);
+  --pd-space-6:  calc(var(--pd-space-1) *  6);
+  --pd-space-8:  calc(var(--pd-space-1) *  8);
+  --pd-space-10: calc(var(--pd-space-1) * 10);
+  --pd-space-12: calc(var(--pd-space-1) * 12);
+  --pd-space-16: calc(var(--pd-space-1) * 16);
 
   /* ---------------------------------------------------------------------------
      Forma — base 16px (a sétima e última linha do bloco de troca), escada por
      múltiplo.
-     Um número entra, a escada sai: trocar --sd-radius re-forma o site inteiro
+     Um número entra, a escada sai: trocar --pd-radius re-forma o site inteiro
      sem incoerência possível.
      --------------------------------------------------------------------------- */
-  --sd-radius-lg:   calc(var(--sd-radius) * 1.25);  /* painel da busca */
-  --sd-radius-md:   calc(var(--sd-radius) * 0.75);  /* bloco de código, callout, imagem, frame, controle e linha de resultado da busca */
-  --sd-radius-sm:   calc(var(--sd-radius) * 0.5);   /* botão, campo, aba, chip */
-  --sd-radius-xs:   calc(var(--sd-radius) * 0.25);  /* código inline, badge, pílula de verbo */
-  --sd-radius-full: 999px;                          /* marcador de Step, avatar, pílula */
+  --pd-radius-lg:   calc(var(--pd-radius) * 1.25);  /* painel da busca */
+  --pd-radius-md:   calc(var(--pd-radius) * 0.75);  /* bloco de código, callout, imagem, frame, controle e linha de resultado da busca */
+  --pd-radius-sm:   calc(var(--pd-radius) * 0.5);   /* botão, campo, aba, chip */
+  --pd-radius-xs:   calc(var(--pd-radius) * 0.25);  /* código inline, badge, pílula de verbo */
+  --pd-radius-full: 999px;                          /* marcador de Step, avatar, pílula */
 
   /* O fio. Um só, e agora ele é a separação de TODA superfície levantada — o
      anel `0 0 0 1px` saiu da composição da sombra e virou borda de verdade.
@@ -340,7 +340,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      inteiro com o vocabulário que já existe. Anel dentro de `box-shadow`
      obrigaria a sobrescrever a sombra de cada componente para desenhar uma
      linha. */
-  --sd-border-width: 1px;
+  --pd-border-width: 1px;
 
   /* ---------------------------------------------------------------------------
      Motion — escala de duração e vocabulário de easing. Camada 1, fora do bloco
@@ -355,27 +355,27 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      amostra; 300ms é a banda de mudança grande; 500ms é a banda de entrada
      grande; 5s é o único loop ambiente medido em qualquer uma das sete.
 
-     `--sd-dur-0` entrou na issue #114, e a parada é da âncora, não da escala:
+     `--pd-dur-0` entrou na issue #114, e a parada é da âncora, não da escala:
      75 não é 200 dividido por nada. Ela existe porque a rotação do caret é o
-     único movimento cujo alvo publicado fica abaixo de `--sd-dur-1`, e
+     único movimento cujo alvo publicado fica abaixo de `--pd-dur-1`, e
      arredondá-lo para 200ms trocaria uma medição por uma conveniência de
      vocabulário. Ver docs/adr/0010 — a linha da seta é `herdado`.
      --------------------------------------------------------------------------- */
-  --sd-dur-0: 75ms;
-  --sd-dur-1: 200ms;
-  --sd-dur-2: 300ms;
-  --sd-dur-3: 500ms;
-  --sd-dur-ambient: 5s;     /* período do loop; não é parada da escala — ver reduced-motion */
+  --pd-dur-0: 75ms;
+  --pd-dur-1: 200ms;
+  --pd-dur-2: 300ms;
+  --pd-dur-3: 500ms;
+  --pd-dur-ambient: 5s;     /* período do loop; não é parada da escala — ver reduced-motion */
 
   /* Duas curvas, nomeadas por intenção. Não há `ease-in`: nada neste site sai da
      tela, e variável sem consumidor é o defeito do Infima que não se copia. */
-  --sd-ease-settle: cubic-bezier(0, 0, 0.2, 1);   /* responde ao leitor e assenta */
-  --sd-ease-inout:  cubic-bezier(0.4, 0, 0.2, 1); /* tem início e fim na tela */
+  --pd-ease-settle: cubic-bezier(0, 0, 0.2, 1);   /* responde ao leitor e assenta */
+  --pd-ease-inout:  cubic-bezier(0.4, 0, 0.2, 1); /* tem início e fim na tela */
 
   /* Os sete movimentos. Cada um é um token COMPLETO — <duração> <easing> — que
      compõe da escala em vez de cravar número. É isso que faz reduced-motion
      alcançar o Infima que não escrevemos: o adaptador escreve
-     --ifm-transition-fast a partir de --sd-dur-1, e a redefinição atravessa.
+     --ifm-transition-fast a partir de --pd-dur-1, e a redefinição atravessa.
 
      Os cinco primeiros terminam sozinhos e ENCURTAM sob reduced-motion.
      Os dois últimos não terminam sozinhos — `reveal` é dirigido por rolagem,
@@ -384,7 +384,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
      OS TRÊS ÚLTIMOS ESTÃO SEM CONSUMIDOR desde que a landing saiu (issue #94), e
      ficam declarados de propósito. O motivo é o que a régua de órfãos pede — e
-     não é o mesmo do `--sd-type-6xl`, que saiu no mesmo movimento. O vocabulário
+     não é o mesmo do `--pd-type-6xl`, que saiu no mesmo movimento. O vocabulário
      de motion é FECHADO por portão: `scripts/portao-2-motion.sh` reprova toda
      duração ou curva cravada e manda usar um destes sete nomes. Remover três
      deixaria o portão apontando para um vocabulário que não cobre `showcase`,
@@ -403,13 +403,13 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      A curva de `flip` é `settle`, não `inout`: o giro responde ao clique do
      leitor e assenta — não tem começo próprio na tela. É a mesma leitura que
      põe `state` e `enter` em `settle`. */
-  --sd-move-flip:     var(--sd-dur-0) var(--sd-ease-settle);
-  --sd-move-state:    var(--sd-dur-1) var(--sd-ease-settle);
-  --sd-move-enter:    var(--sd-dur-1) var(--sd-ease-settle);
-  --sd-move-expand:   var(--sd-dur-2) var(--sd-ease-inout);
-  --sd-move-showcase: var(--sd-dur-3) var(--sd-ease-settle);
-  --sd-move-reveal:   var(--sd-dur-3) var(--sd-ease-settle);
-  --sd-move-ambient:  var(--sd-dur-ambient) var(--sd-ease-inout);
+  --pd-move-flip:     var(--pd-dur-0) var(--pd-ease-settle);
+  --pd-move-state:    var(--pd-dur-1) var(--pd-ease-settle);
+  --pd-move-enter:    var(--pd-dur-1) var(--pd-ease-settle);
+  --pd-move-expand:   var(--pd-dur-2) var(--pd-ease-inout);
+  --pd-move-showcase: var(--pd-dur-3) var(--pd-ease-settle);
+  --pd-move-reveal:   var(--pd-dur-3) var(--pd-ease-settle);
+  --pd-move-ambient:  var(--pd-dur-ambient) var(--pd-ease-inout);
 
   /* Habilita <details> a transicionar para height: auto. Mora aqui, junto do
      vocabulário, e não dentro do componente que a consome. */
@@ -419,10 +419,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Estado de entrada — camada 1, FORA do bloco de troca.
 
      Espessura de anel não é identidade de marca; a cor já é, e ela segue o
-     acento pela camada 2 (`--sd-focus-ring`).
+     acento pela camada 2 (`--pd-focus-ring`).
 
      Estes são o segundo e o terceiro literal do sistema, e não vão disfarçados.
-     `calc(var(--sd-space-1) / 2)` daria 2px e passaria em qualquer varredura —
+     `calc(var(--pd-space-1) / 2)` daria 2px e passaria em qualquer varredura —
      seria derivação FALSA: espessura de anel não tem relação com escala de
      espaço, e a régua deste projeto existe justamente para impedir número que
      só parece derivado. A procedência honesta é origem própria com âncora em
@@ -430,9 +430,9 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
      Contrato completo: docs/design/foco.md e ADR 4.
      --------------------------------------------------------------------------- */
-  --sd-focus-width:  2px;
-  --sd-focus-offset: 2px;
-  --sd-target-min:   44px;
+  --pd-focus-width:  2px;
+  --pd-focus-offset: 2px;
+  --pd-target-min:   44px;
 
   /* ---------------------------------------------------------------------------
      Dimensões do chrome — camada 1.
@@ -440,13 +440,13 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      que o adaptador precisa escrever, porque ele não pode escrever de lugar
      nenhum.
 
-     `--sd-tabs-height` é LITERAL, e não `var(--sd-space-12)`, ainda que os dois
+     `--pd-tabs-height` é LITERAL, e não `var(--pd-space-12)`, ainda que os dois
      entreguem 48. Altura de chrome não tem relação com escala de espaço, e
      derivar por coincidência de número é a derivação FALSA que o bloco de foco
      recusa em voz alta trinta linhas acima. A procedência honesta é a mesma dos
      outros comprimentos deste bloco: medida na âncora.
 
-     `--sd-toc-width` GANHOU consumidor na #96, e o valor mudou de 288 para
+     `--pd-toc-width` GANHOU consumidor na #96, e o valor mudou de 288 para
      304. A premissa que travava em 288 — *"a coluna é o quarto restante do
      grid 75/25 do upstream, alcançar 304 custaria `unsafe` em
      DocItem/Layout"* — era fato errado, não decisão: o grid de doze morreu
@@ -455,23 +455,23 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      correção está em docs/design/chrome.md §1.2, sem apagar o texto
      original — ver o bloco de errata lá.
      --------------------------------------------------------------------------- */
-  --sd-container-width: 1120px;  /* as DUAS variáveis de container do Infima recebem este — era 1152, ver nota abaixo */
-  --sd-sidebar-width:    288px;
-  --sd-navbar-height:     64px;  /* a LINHA 1 do topo, não o topo inteiro */
-  --sd-tabs-height:       48px;
-  --sd-toc-width:        304px;  /* bate com a âncora — §11 de chrome.md */
-  --sd-prose-width:      720px;
+  --pd-container-width: 1120px;  /* as DUAS variáveis de container do Infima recebem este — era 1152, ver nota abaixo */
+  --pd-sidebar-width:    288px;
+  --pd-navbar-height:     64px;  /* a LINHA 1 do topo, não o topo inteiro */
+  --pd-tabs-height:       48px;
+  --pd-toc-width:        304px;  /* bate com a âncora — §11 de chrome.md */
+  --pd-prose-width:      720px;
 
   /* O PISO DE UM CAMPO EDITÁVEL do painel de comando — a largura abaixo da
      qual a grade dele para de pôr dois campos lado a lado e empilha.
 
-     **Ele ocupa o slot que era `--sd-api-prosa-width` (577), e a troca conta
+     **Ele ocupa o slot que era `--pd-api-prosa-width` (577), e a troca conta
      uma decisão.** Aquele token existia para uma página de referência com
      prosa mais estreita que a comum, porque a âncora trocava a coluna do TOC
      por um trilho de amostras — medido em `research/paridade-devin` §10
      (576,81), citado pela #99. O trilho desceu para o fluxo na #118: a página
      de comando passou a medir o que qualquer página de doc mede, a prosa
-     voltou para `--sd-prose-width` e o TOC voltou a caber. Sem trilho não há
+     voltou para `--pd-prose-width` e o TOC voltou a caber. Sem trilho não há
      prosa estreita a declarar, e o token ficaria inerte — que é a mesma classe
      de defeito das variáveis mortas do Infima. O delta contra a âncora está
      registrado em `scripts/paridade-abertas.txt` e em `referencia.md` §8.
@@ -484,11 +484,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      regra das camadas manda camada 3 declarar no escopo do próprio componente;
      o portão 1 manda todo literal de comprimento morar aqui. As duas não podem
      valer ao mesmo tempo para um número que só um componente usa, e este bloco
-     já resolveu isso duas vezes antes, do mesmo jeito: `--sd-copiar-height` e
-     `--sd-copiar-menu-width` são medidas do par segmentado do cabeçalho, e
+     já resolveu isso duas vezes antes, do mesmo jeito: `--pd-copiar-height` e
+     `--pd-copiar-menu-width` são medidas do par segmentado do cabeçalho, e
      estão logo abaixo. O portão é a régua que reprova, e é ele que decide o
      empate. */
-  --sd-campo-min:        280px;
+  --pd-campo-min:        280px;
 
   /* O CORREDOR — a distância entre a borda direita da sidebar e o começo do
      texto, e até aqui ele existia por ACIDENTE.
@@ -502,17 +502,17 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      dentro da coluna: 47,6 a 1512, perto do número da âncora por coincidência
      aritmética, e ZERO em toda largura entre 997 e 1408 — que é onde um
      laptop vive. Ver `chrome.md` §1.7. */
-  --sd-corredor: 43.2px;
+  --pd-corredor: 43.2px;
 
   /* O PAR SEGMENTADO do cabeçalho — "Copiar página" e o menu ao lado.
 
      Os dois são medida da âncora e NÃO da escala: 34 não é múltiplo de 4 por
      acidente de arredondamento, é a altura que ela desenha, e 277 é a largura
      do menu dela (276,7 medido, arredondado ao inteiro como toda medida de
-     âncora deste bloco). Derivar qualquer um dos dois de `--sd-space-*` seria
+     âncora deste bloco). Derivar qualquer um dos dois de `--pd-space-*` seria
      coincidência de número, não parentesco. Ver `chrome.md` §6.4. */
-  --sd-copiar-height:      34px;
-  --sd-copiar-menu-width: 277px;
+  --pd-copiar-height:      34px;
+  --pd-copiar-menu-width: 277px;
 
   /* A GOTEIRA DA BARRA FINA — o que `scrollbar-width: thin` reserva, medido
      no Chromium 148 desta máquina: 15px com `auto`, 10 com `thin`.
@@ -521,17 +521,17 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      fechar nos 32 da âncora sem que ninguém tenha de medir de novo, e é o
      único número deste arquivo que outro navegador pode desmentir — por isso
      é citado uma vez só, em `chrome.css` §4. */
-  --sd-scrollbar-fina: 10px;
+  --pd-scrollbar-fina: 10px;
 
-  /* `--sd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
+  /* `--pd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
      própria — é consequência do congelamento abaixo perder o termo do
      gutter. As DUAS medições de margem simétrica da âncora (§11: 52px a
      1512, 256px a 1920) só fecham com `sidebar + container = 1408`; com
      container em 1152 sobravam 32px que nenhuma distribuição de padding
      resolve — provado por álgebra e conferido depois em navegador. A
-     coluna de conteúdo (`--sd-doc-width`) cai de 848 para 816 como
+     coluna de conteúdo (`--pd-doc-width`) cai de 848 para 816 como
      consequência direta; a prosa não muda, porque desde a #96 ela é
-     `--sd-prose-width` fixo com TOC (ver `chrome.md` §1.5), não a coluna
+     `--pd-prose-width` fixo com TOC (ver `chrome.md` §1.5), não a coluna
      inteira.
 
      O CONGELAMENTO — a largura a partir da qual o grupo sidebar + conteúdo +
@@ -545,19 +545,19 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      papel — ele soma zero agora, só o `padding-top` fica. O termo do gutter
      sai da fórmula porque o gutter não tem mais nada a completar aqui:
      `sidebar + container`, e mais nada. */
-  --sd-congelamento: calc(var(--sd-sidebar-width) + var(--sd-container-width));
+  --pd-congelamento: calc(var(--pd-sidebar-width) + var(--pd-container-width));
 
   /* O recuo do subtítulo sob o título. LITERAL pelo mesmo motivo da altura da
      faixa: é medida de chrome, não parada da escala de espaço, e escrevê-lo como
-     `--sd-space-2` mais meio passo daria o número sem comprar a derivação.
+     `--pd-space-2` mais meio passo daria o número sem comprar a derivação.
 
      Na âncora ele sai de um `mt-2` de 8 colapsando contra o `space-y-2.5` do
      contêiner. O que se copia é o RESULTADO medido, não a aritmética de um
      framework de utilitários que este projeto não tem. */
-  --sd-subtitulo-recuo:   10px;
+  --pd-subtitulo-recuo:   10px;
 
   /* A ENTRELINHA do subtítulo. Ela existe porque sem ela o subtítulo herdava
-     `--sd-leading-prose` (1,75) sobre 18px = 31,5px, contra os 28 que
+     `--pd-leading-prose` (1,75) sobre 18px = 31,5px, contra os 28 que
      `chrome.md` §12 publica com tolerância `exato`.
 
      COMPRIMENTO e não razão, de propósito: 28/18 é 1,5555…, que resolve para
@@ -566,9 +566,9 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      comprimento entrega o número medido sem resíduo.
 
      LITERAL pelo mesmo motivo do recuo acima: é medida de chrome, e a escala de
-     espaço não tem parada em 28 — ela pula de 24 (`--sd-space-6`) para 32
-     (`--sd-space-8`). */
-  --sd-subtitulo-entrelinha: 28px;
+     espaço não tem parada em 28 — ela pula de 24 (`--pd-space-6`) para 32
+     (`--pd-space-8`). */
+  --pd-subtitulo-entrelinha: 28px;
 
   /* O TOPO GRUDADO — a altura que o navbar de fato ocupa, e o offset de tudo o
      que gruda abaixo dele. Uma linha no estreito; duas de 997 para cima.
@@ -582,12 +582,12 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      faixa: `.navbar-sidebar__brand` e `.navbar-sidebar__items` leem o mesmo
      `--ifm-navbar-height`. Sem o escopo, o cabeçalho do drawer do estreito
      infla para a altura de duas linhas que ali não existem. */
-  --sd-topo-grudado: var(--sd-navbar-height);
+  --pd-topo-grudado: var(--pd-navbar-height);
 
   /* O TOPO DO CONTEÚDO — a linha em que o `<article>` abre, e o offset de tudo
      o que gruda ALINHADO com ele em vez de com a barra.
 
-     Ele não é um número novo: `--sd-topo-grudado` mais `--sd-space-10` já era
+     Ele não é um número novo: `--pd-topo-grudado` mais `--pd-space-10` já era
      calculado à mão em três lugares — o `padding-top` do `<main>`
      (`chrome.css` §1), o `max-height` do painel da referência e o comentário
      que o justifica (*"a mesma respiração que o topo do conteúdo já usa"*).
@@ -599,27 +599,27 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      que é o que §11 e `referencia.md` §8 cobram na linha `grudado em`.
 
      Medido aqui, a 1512: `article.getBoundingClientRect().top` = 152. */
-  --sd-topo-conteudo: calc(var(--sd-topo-grudado) + var(--sd-space-10));
+  --pd-topo-conteudo: calc(var(--pd-topo-grudado) + var(--pd-space-10));
 
   /* A coluna de conteúdo. Até a #96 ela era `.col--9` do grid de doze — 1152 ×
      0,75 = 864 —, e a #96 matou o grid: não há mais 75/25 a manter, só o
      container inteiro menos o que o TOC leva. A conta muda de forma
      (container − toc em vez de container × 0,75), e o número se move DUAS
-     vezes na mesma issue: primeiro para 848 (`--sd-toc-width` foi a 304, com
-     container ainda em 1152), depois para 816 (`--sd-container-width` foi a
+     vezes na mesma issue: primeiro para 848 (`--pd-toc-width` foi a 304, com
+     container ainda em 1152), depois para 816 (`--pd-container-width` foi a
      1120 — ver a nota dele, acima).
 
      Sem cartão, ela continua CAIXA INVISÍVEL na configuração sem TOC: o
      `max-width` da coluna segura a página no mesmo pixel quando `.col--3`
      não existe. Ver `chrome.css` §1. */
-  --sd-doc-width: calc(var(--sd-container-width) - var(--sd-toc-width));
+  --pd-doc-width: calc(var(--pd-container-width) - var(--pd-toc-width));
 
   /* A MEDIDA DO CÓDIGO morreu aqui, e vale a linha de lápide. A derivação dela
      era uma frase só — *"o interior do cartão de doc"* —, e o cartão está de
      saída. Cartão fora, derivação fora: sobraria o número 768 sem raiz, que é a
      derivação FALSA que este arquivo recusa em voz alta no bloco de foco.
 
-     Os consumidores reais passam a citar `--sd-prose-width`, pelo MESMO
+     Os consumidores reais passam a citar `--pd-prose-width`, pelo MESMO
      argumento que já estava escrito: *a medida que o leitor estava lendo quando
      apertou a tecla*. O argumento não enfraquece; ele fica verdadeiro, porque
      hoje ele erra por 96px.
@@ -641,11 +641,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      até a borda da viewport. Essa distância virou trabalho do
      `margin-inline: auto` do wrapper de `chrome.css` §1, o `<main>` perdeu o
      preenchimento horizontal, e o congelamento perdeu o termo do gutter — ver
-     `--sd-congelamento` acima. O que sobra para este token: o preenchimento
+     `--pd-congelamento` acima. O que sobra para este token: o preenchimento
      próprio do `<footer>`, o recuo do `.container` dele até a coluna de doc
      (`chrome.css`, alinhamento do rodapé), e o preenchimento do `.col` que
      volta no estreito. */
-  --sd-gutter: var(--sd-space-4);
+  --pd-gutter: var(--pd-space-4);
 
   /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7.
 
@@ -657,20 +657,20 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      de uma perna nova de portão.
 
      **Correção — a nota abaixo sobre a largura morreu na #98.** Ela dizia que a
-     largura não virava token porque era `--sd-prose-width`, citada por nome: o
+     largura não virava token porque era `--pd-prose-width`, citada por nome: o
      painel abria com a medida que o leitor já estava lendo. A #98 mede a âncora
-     centralizada em `640px` — um número que não coincide com `--sd-prose-width`
+     centralizada em `640px` — um número que não coincide com `--pd-prose-width`
      (720px), então citar por nome pararia de ser "o mesmo número" e viraria
      derivação falsa. Os quatro tokens abaixo saem daí: nenhum deriva da escala
-     de espaço pelo mesmo motivo que `--sd-tabs-height` não deriva dela — a
+     de espaço pelo mesmo motivo que `--pd-tabs-height` não deriva dela — a
      medida da âncora não tem relação com a escala, e coincidir por acidente é a
      derivação que este arquivo já recusa por escrito (ver a Forma, acima). Todos
      de consumidor único, como este. Procedência: docs/design/busca.md §10. */
-  --sd-busca-height: 60dvh;
-  --sd-busca-panel-width:      640px;
-  --sd-busca-panel-top:        54px;
-  --sd-busca-controle-width:   300.75px;
-  --sd-busca-controle-height:  36px;
+  --pd-busca-height: 60dvh;
+  --pd-busca-panel-width:      640px;
+  --pd-busca-panel-top:        54px;
+  --pd-busca-controle-width:   300.75px;
+  --pd-busca-controle-height:  36px;
 
   /* O TERCEIRO token medido contra a viewport, não o único — a nota acima
      mentia por omissão assim que este entrou. Mesmo buraco de portão 1, mesma
@@ -684,7 +684,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      quem o lê hoje é o teto do TOC em `chrome.css`, que tem a mesma conta e
      chegou depois. Um token com dois pedidos e um consumidor não é token
      inerte, é token com um consumidor. */
-  --sd-viewport-altura: 100dvh;
+  --pd-viewport-altura: 100dvh;
 
   /* ---------------------------------------------------------------------------
      Grade de cartões — camada 1, e a declaração serve o MDX.
@@ -698,7 +698,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      os dois gaps e dividido por três, sai o menor cartão que a âncora admite
      numa fila de três.
 
-     A CITAÇÃO A `--sd-prose-width` MORREU AQUI, e a lápide vale a linha. Ela
+     A CITAÇÃO A `--pd-prose-width` MORREU AQUI, e a lápide vale a linha. Ela
      valia enquanto a prosa media 672: os dois eram o MESMO `max-w-2xl` do
      framework de utilitários da âncora, aparecendo duas vezes, e citar o token
      era honesto. Sob o `mint` a prosa é 720 e o limiar de colapso continua 672
@@ -714,18 +714,18 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      consumidores — a grade de `card-group` dentro do MDX e a grade da landing
      —, e "uma declaração serve as duas" só era verdade se a declaração
      existisse num lugar que as duas citassem por nome. A escada de elevação
-     abriu o precedente: `--sd-shadow-raised` também é valor composto, e pelo
+     abriu o precedente: `--pd-shadow-raised` também é valor composto, e pelo
      mesmo motivo.
 
      A GRADE DA LANDING SAIU na issue #94, e a lista fica onde está. O argumento
      que a trouxe para cá perdeu metade, mas o que sobra basta: ela continua
      sendo valor composto, e valor composto citado por nome é o que impede a
      próxima grade de recompor a lista à mão. O mesmo vale para
-     `--sd-shadow-raised`, que perdeu um dos dois consumidores no mesmo commit.
+     `--pd-shadow-raised`, que perdeu um dos dois consumidores no mesmo commit.
      --------------------------------------------------------------------------- */
-  --sd-card-colapso: 672px;   /* o `max-w-2xl` em que o `Columns` da âncora colapsa */
-  --sd-card-min: calc((var(--sd-card-colapso) - 2 * var(--sd-space-4)) / 3);
-  --sd-card-grid: repeat(auto-fit, minmax(min(var(--sd-card-min), 100%), 1fr));
+  --pd-card-colapso: 672px;   /* o `max-w-2xl` em que o `Columns` da âncora colapsa */
+  --pd-card-min: calc((var(--pd-card-colapso) - 2 * var(--pd-space-4)) / 3);
+  --pd-card-grid: repeat(auto-fit, minmax(min(var(--pd-card-min), 100%), 1fr));
 }
 
 /* O gutter dobra no limiar único do projeto, que é o literal compilado do
@@ -737,8 +737,8 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    aparece, e some exatamente quando ela vira gaveta. */
 @media (min-width: 997px) {
   :root {
-    --sd-gutter: var(--sd-space-8);
-    --sd-topo-grudado: calc(var(--sd-navbar-height) + var(--sd-tabs-height));
+    --pd-gutter: var(--pd-space-8);
+    --pd-topo-grudado: calc(var(--pd-navbar-height) + var(--pd-tabs-height));
   }
 }
 
@@ -757,7 +757,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
 /* ESCURO — canônico.
 
-   O bloco teve um SEGUNDO seletor, `[data-sd-showcase]`, e ele saiu com a
+   O bloco teve um SEGUNDO seletor, `[data-pd-showcase]`, e ele saiu com a
    landing (issue #94). A ilha de espetáculo carregava o próprio substrato
    porque glow é emissão, e emissão só é legível contra escuridão; ela era um
    seletor a mais neste bloco, e não um bloco novo, e é isso que a fazia inerte
@@ -786,40 +786,40 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Dissenso registrado: a 900 é o degrau imediatamente acima na rampa, e é a
      única derivação honesta disponível — NÃO é uma medida. O berço que morreu
      era anatomia medida da âncora. */
-  --sd-surface-page:   var(--sd-neutral-page-dark);
-  --sd-surface-raised: var(--sd-surface-page);
-  --sd-surface-code:   var(--sd-gray-900);
-  --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
-  --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 72%);
+  --pd-surface-page:   var(--pd-neutral-page-dark);
+  --pd-surface-raised: var(--pd-surface-page);
+  --pd-surface-code:   var(--pd-gray-900);
+  --pd-surface-wash:   rgb(from var(--pd-accent) r g b / 12%);
+  --pd-surface-scrim:  rgb(from var(--pd-gray-950) r g b / 72%);
 
   /* text — `faint` é a parada 500, o meio matemático da rampa. É a única
      reprovação deliberada de AA do sistema (3,04:1 aqui) e é PROIBIDA para
      texto de leitura: serve separador, placeholder e controle desabilitado.
      Texto secundário legítimo usa `muted`. */
-  --sd-text-strong:  var(--sd-gray-50);
-  --sd-text-body:    var(--sd-gray-300);
-  --sd-text-muted:   var(--sd-gray-400);
-  --sd-text-faint:   var(--sd-gray-500);
-  --sd-text-inverse: oklch(from var(--sd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
+  --pd-text-strong:  var(--pd-gray-50);
+  --pd-text-body:    var(--pd-gray-300);
+  --pd-text-muted:   var(--pd-gray-400);
+  --pd-text-faint:   var(--pd-gray-500);
+  --pd-text-inverse: oklch(from var(--pd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
 
   /* border — a tinta a 7%. Uma fórmula, dois modos, e ela reproduz os DOIS
      valores medidos no alvo, que lá saem de dois mecanismos diferentes. */
-  --sd-border-subtle:  rgb(from var(--sd-text-strong) r g b / 7%);
-  --sd-border-default: rgb(from var(--sd-text-strong) r g b / 12%);
-  --sd-border-strong:  rgb(from var(--sd-text-strong) r g b / 20%);
+  --pd-border-subtle:  rgb(from var(--pd-text-strong) r g b / 7%);
+  --pd-border-default: rgb(from var(--pd-text-strong) r g b / 12%);
+  --pd-border-strong:  rgb(from var(--pd-text-strong) r g b / 20%);
 
   /* accent.
 
      `contrast` está SEM CONSUMIDOR desde que a landing saiu (issue #94) — o
      único era o texto do botão primário dela. Fica declarado, e o motivo é o
-     mesmo que mantém `--sd-gray-200`: papel semântico é família declarada
+     mesmo que mantém `--pd-gray-200`: papel semântico é família declarada
      inteira. Os dois blocos de modo declaram a MESMA lista, na mesma ordem, e
      papel que aparece num e não no outro é buraco visível; tirar o par do
      accent deixaria a camada 2 sem resposta para *que cor vai o texto sobre o
      accent*, e o próximo botão a nascer escreveria a cor à mão. */
-  --sd-accent:          var(--sd-brand-on-dark);
-  --sd-accent-hover:    oklch(from var(--sd-accent) calc(l + 0.06) c h);
-  --sd-accent-contrast: var(--sd-text-inverse);
+  --pd-accent:          var(--pd-brand-on-dark);
+  --pd-accent-hover:    oklch(from var(--pd-accent) calc(l + 0.06) c h);
+  --pd-accent-contrast: var(--pd-text-inverse);
 
   /* shadow — `lip` não mora aqui: realce é sempre luz, e luz não bifurca.
      Ver o bloco de valor único mais abaixo.
@@ -835,21 +835,21 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      mais nos dois casos: anel dentro de `box-shadow` obrigaria a REDECLARAR a
      sombra inteira de cada componente, porque `box-shadow` não se acrescenta.
      Uma linha de `border` contra três camadas de sombra repetidas. */
-  --sd-shadow-cast: rgb(from var(--sd-gray-950) r g b / 60%);
+  --pd-shadow-cast: rgb(from var(--pd-gray-950) r g b / 60%);
 
   /* focus */
-  --sd-focus-ring: var(--sd-accent);
+  --pd-focus-ring: var(--pd-accent);
 
   /* state */
-  --sd-state-info:    oklch(80% 0.14 var(--sd-hue-info));
-  --sd-state-success: oklch(80% 0.14 var(--sd-hue-success));
-  --sd-state-warn:    oklch(80% 0.14 var(--sd-hue-warn));
-  --sd-state-danger:  oklch(80% 0.14 var(--sd-hue-danger));
+  --pd-state-info:    oklch(80% 0.14 var(--pd-hue-info));
+  --pd-state-success: oklch(80% 0.14 var(--pd-hue-success));
+  --pd-state-warn:    oklch(80% 0.14 var(--pd-hue-warn));
+  --pd-state-danger:  oklch(80% 0.14 var(--pd-hue-danger));
 
-  --sd-state-info-fill:    rgb(from var(--sd-state-info)    r g b / 18%);
-  --sd-state-success-fill: rgb(from var(--sd-state-success) r g b / 18%);
-  --sd-state-warn-fill:    rgb(from var(--sd-state-warn)    r g b / 18%);
-  --sd-state-danger-fill:  rgb(from var(--sd-state-danger)  r g b / 18%);
+  --pd-state-info-fill:    rgb(from var(--pd-state-info)    r g b / 18%);
+  --pd-state-success-fill: rgb(from var(--pd-state-success) r g b / 18%);
+  --pd-state-warn-fill:    rgb(from var(--pd-state-warn)    r g b / 18%);
+  --pd-state-danger-fill:  rgb(from var(--pd-state-danger)  r g b / 18%);
 
   /* A aresta do preenchimento — o par do `-fill`, com o alfa mais alto que a
      medição do callout registrou. Ela mora aqui e não na camada 3 porque o alfa
@@ -865,10 +865,10 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      A justificativa trocou de dono junto com o vermelho: ela nomeava a pílula de
      verbo, que morreu com o contrato HTTP. O consumidor de `danger` no catálogo
      hoje é o chip, e ele usa as mesmas duas linhas de sempre. */
-  --sd-state-info-edge:    rgb(from var(--sd-state-info)    r g b / 30%);
-  --sd-state-success-edge: rgb(from var(--sd-state-success) r g b / 30%);
-  --sd-state-warn-edge:    rgb(from var(--sd-state-warn)    r g b / 30%);
-  --sd-state-danger-edge:  rgb(from var(--sd-state-danger)  r g b / 30%);
+  --pd-state-info-edge:    rgb(from var(--pd-state-info)    r g b / 30%);
+  --pd-state-success-edge: rgb(from var(--pd-state-success) r g b / 30%);
+  --pd-state-warn-edge:    rgb(from var(--pd-state-warn)    r g b / 30%);
+  --pd-state-danger-edge:  rgb(from var(--pd-state-danger)  r g b / 30%);
 
   /* code — o oitavo papel. Existe na camada 2 porque a paleta de sintaxe
      bifurca por modo, e a camada 2 é o único lugar onde modo diverge.
@@ -897,19 +897,19 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      contrapeso o código vira monocromático.
 
      O cyan é SKIN FIXA — camada 2 aqui, e fora da superfície de troca, no
-     precedente dos quatro `--sd-hue-*`. O corporativo redesenha; não re-marca.
+     precedente dos quatro `--pd-hue-*`. O corporativo redesenha; não re-marca.
 
      Piso conferível por comando, e não só registrado:
      `node scripts/contraste.mjs --verificar`.
      --------------------------------------------------------------------- */
-  --sd-code-fg:        var(--sd-text-body);
-  --sd-code-parameter: #7FE4E9;   /* oklch(85.9% 0.095 200) — o cyan, o identificador */
-  --sd-code-constant:  #7FD3E4;   /* oklch(81.9% 0.085 212) — o vizinho */
-  --sd-code-keyword:   #95BCE4;   /* oklch(78.1% 0.071 249) */
-  --sd-code-string:    #E9B999;   /* oklch(82.1% 0.070  55) — o contrapeso quente */
-  --sd-code-function:  #DDDAAE;   /* oklch(88.0% 0.058 104) */
-  --sd-code-operator:  #CBC9CF;   /* oklch(83.9% 0.009 301) */
-  --sd-code-comment:   #B2B0B8;   /* oklch(76.0% 0.012 298) — reto p/ #181A1E (issue #95) */
+  --pd-code-fg:        var(--pd-text-body);
+  --pd-code-parameter: #7FE4E9;   /* oklch(85.9% 0.095 200) — o cyan, o identificador */
+  --pd-code-constant:  #7FD3E4;   /* oklch(81.9% 0.085 212) — o vizinho */
+  --pd-code-keyword:   #95BCE4;   /* oklch(78.1% 0.071 249) */
+  --pd-code-string:    #E9B999;   /* oklch(82.1% 0.070  55) — o contrapeso quente */
+  --pd-code-function:  #DDDAAE;   /* oklch(88.0% 0.058 104) */
+  --pd-code-operator:  #CBC9CF;   /* oklch(83.9% 0.009 301) */
+  --pd-code-comment:   #B2B0B8;   /* oklch(76.0% 0.012 298) — reto p/ #181A1E (issue #95) */
 }
 
 /* CLARO — legítimo. */
@@ -924,64 +924,64 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      Aqui a superfície do código JÁ estava acima da página, e é o escuro que veio
      ao encontro dela. A assimetria — igual à página no escuro, acima dela no
      claro — era o que o cartão escondia. */
-  --sd-surface-page:   var(--sd-neutral-page-light);
-  --sd-surface-raised: var(--sd-neutral-raised-light);
-  --sd-surface-code:   oklch(from var(--sd-gray-50) 100% 0 h);
-  --sd-surface-wash:   rgb(from var(--sd-accent) r g b / 12%);
-  --sd-surface-scrim:  rgb(from var(--sd-gray-950) r g b / 40%);
+  --pd-surface-page:   var(--pd-neutral-page-light);
+  --pd-surface-raised: var(--pd-neutral-raised-light);
+  --pd-surface-code:   oklch(from var(--pd-gray-50) 100% 0 h);
+  --pd-surface-wash:   rgb(from var(--pd-accent) r g b / 12%);
+  --pd-surface-scrim:  rgb(from var(--pd-gray-950) r g b / 40%);
 
   /* text */
-  --sd-text-strong:  var(--sd-gray-950);
-  --sd-text-body:    var(--sd-gray-700);
-  --sd-text-muted:   var(--sd-gray-600);
-  --sd-text-faint:   var(--sd-gray-500);
-  --sd-text-inverse: oklch(from var(--sd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
+  --pd-text-strong:  var(--pd-gray-950);
+  --pd-text-body:    var(--pd-gray-700);
+  --pd-text-muted:   var(--pd-gray-600);
+  --pd-text-faint:   var(--pd-gray-500);
+  --pd-text-inverse: oklch(from var(--pd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
 
   /* border */
-  --sd-border-subtle:  rgb(from var(--sd-text-strong) r g b / 7%);
-  --sd-border-default: rgb(from var(--sd-text-strong) r g b / 12%);
-  --sd-border-strong:  rgb(from var(--sd-text-strong) r g b / 20%);
+  --pd-border-subtle:  rgb(from var(--pd-text-strong) r g b / 7%);
+  --pd-border-default: rgb(from var(--pd-text-strong) r g b / 12%);
+  --pd-border-strong:  rgb(from var(--pd-text-strong) r g b / 20%);
 
   /* accent */
-  --sd-accent:          var(--sd-brand-on-light);
-  --sd-accent-hover:    oklch(from var(--sd-accent) calc(l - 0.06) c h);
-  --sd-accent-contrast: var(--sd-text-inverse);
+  --pd-accent:          var(--pd-brand-on-light);
+  --pd-accent-hover:    oklch(from var(--pd-accent) calc(l - 0.06) c h);
+  --pd-accent-contrast: var(--pd-text-inverse);
 
   /* shadow */
-  --sd-shadow-cast: rgb(from var(--sd-gray-950) r g b / 8%);
+  --pd-shadow-cast: rgb(from var(--pd-gray-950) r g b / 8%);
 
   /* focus */
-  --sd-focus-ring: var(--sd-accent);
+  --pd-focus-ring: var(--pd-accent);
 
   /* state */
-  --sd-state-info:    oklch(45% 0.13 var(--sd-hue-info));
-  --sd-state-success: oklch(45% 0.13 var(--sd-hue-success));
-  --sd-state-warn:    oklch(45% 0.13 var(--sd-hue-warn));
-  --sd-state-danger:  oklch(45% 0.13 var(--sd-hue-danger));
+  --pd-state-info:    oklch(45% 0.13 var(--pd-hue-info));
+  --pd-state-success: oklch(45% 0.13 var(--pd-hue-success));
+  --pd-state-warn:    oklch(45% 0.13 var(--pd-hue-warn));
+  --pd-state-danger:  oklch(45% 0.13 var(--pd-hue-danger));
 
-  --sd-state-info-fill:    rgb(from var(--sd-state-info)    r g b / 10%);
-  --sd-state-success-fill: rgb(from var(--sd-state-success) r g b / 10%);
-  --sd-state-warn-fill:    rgb(from var(--sd-state-warn)    r g b / 10%);
-  --sd-state-danger-fill:  rgb(from var(--sd-state-danger)  r g b / 10%);
+  --pd-state-info-fill:    rgb(from var(--pd-state-info)    r g b / 10%);
+  --pd-state-success-fill: rgb(from var(--pd-state-success) r g b / 10%);
+  --pd-state-warn-fill:    rgb(from var(--pd-state-warn)    r g b / 10%);
+  --pd-state-danger-fill:  rgb(from var(--pd-state-danger)  r g b / 10%);
 
-  --sd-state-info-edge:    rgb(from var(--sd-state-info)    r g b / 25%);
-  --sd-state-success-edge: rgb(from var(--sd-state-success) r g b / 25%);
-  --sd-state-warn-edge:    rgb(from var(--sd-state-warn)    r g b / 25%);
-  --sd-state-danger-edge:  rgb(from var(--sd-state-danger)  r g b / 25%);
+  --pd-state-info-edge:    rgb(from var(--pd-state-info)    r g b / 25%);
+  --pd-state-success-edge: rgb(from var(--pd-state-success) r g b / 25%);
+  --pd-state-warn-edge:    rgb(from var(--pd-state-warn)    r g b / 25%);
+  --pd-state-danger-edge:  rgb(from var(--pd-state-danger)  r g b / 25%);
 
   /* code — os CINCO papéis cromáticos do claro ficam na mesma luminosidade, L
      48%. É a propriedade que a paleta anterior tinha e o par medido na âncora
      não tem, e é ela que segura o piso em 6,29 sobre a pastilha branca. Os dois
      acromáticos saem da faixa de propósito: `operator` desce para não competir
      com o identificador, e `comment` sobe para recuar. */
-  --sd-code-fg:        var(--sd-text-body);
-  --sd-code-parameter: #006B70;   /* oklch(48.0% 0.082 200) — o cyan, o identificador */
-  --sd-code-constant:  #1C6589;   /* oklch(48.0% 0.090 235) — o vizinho */
-  --sd-code-keyword:   #475C8B;   /* oklch(47.9% 0.081 265) */
-  --sd-code-string:    #82502B;   /* oklch(48.1% 0.085  56) — o contrapeso quente */
-  --sd-code-function:  #60612C;   /* oklch(47.9% 0.074 110) */
-  --sd-code-operator:  #535157;   /* oklch(43.9% 0.010 301) */
-  --sd-code-comment:   #615F66;   /* oklch(49.0% 0.011 299) */
+  --pd-code-fg:        var(--pd-text-body);
+  --pd-code-parameter: #006B70;   /* oklch(48.0% 0.082 200) — o cyan, o identificador */
+  --pd-code-constant:  #1C6589;   /* oklch(48.0% 0.090 235) — o vizinho */
+  --pd-code-keyword:   #475C8B;   /* oklch(47.9% 0.081 265) */
+  --pd-code-string:    #82502B;   /* oklch(48.1% 0.085  56) — o contrapeso quente */
+  --pd-code-function:  #60612C;   /* oklch(47.9% 0.074 110) */
+  --pd-code-operator:  #535157;   /* oklch(43.9% 0.010 301) */
+  --pd-code-comment:   #615F66;   /* oklch(49.0% 0.011 299) */
 }
 
 /* -----------------------------------------------------------------------------
@@ -990,9 +990,9 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    A regra que decide: token que referencia camada 2 bifurca e mora nos dois
    blocos; token que referencia só camada 1 não bifurca e mora aqui.
 
-   --sd-shadow-lip é o único papel nessa situação. Realce é luz, e luz é o topo
+   --pd-shadow-lip é o único papel nessa situação. Realce é luz, e luz é o topo
    da rampa — não "a tinta do modo". Ancorado no topo da rampa, ele some sozinho
-   no claro por IDENTIDADE MATEMÁTICA (o cartão claro É --sd-gray-50, e gray-50 a
+   no claro por IDENTIDADE MATEMÁTICA (o cartão claro É --pd-gray-50, e gray-50 a
    6% sobre gray-50 é gray-50), e volta a ser visível dentro da ilha escura sem
    redeclarar nada.
 
@@ -1011,7 +1011,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    prometia. Está escrito porque quem abrir sem contexto vai ler over-engineering
    e merece a resposta curta.
 
-   `--sd-shadow-sunken` MORREU aqui, e a morte vale a linha: ele era o
+   `--pd-shadow-sunken` MORREU aqui, e a morte vale a linha: ele era o
    contra-exemplo declarado da elevação — o único lugar do site que afundava —,
    e afundar era relativo ao cartão. Sem cartão, o contra-exemplo perde contra o
    quê ser exemplo, e o único consumidor dele era o berço do bloco de código,
@@ -1022,29 +1022,29 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    `raised` NÃO flutua: o consumidor dele é o painel da Referência da API, que é
    superfície levantada. Eram DOIS — o segundo era o botão primário da landing,
    e saiu com a página na issue #94. O token fica porque continua consumido, e é
-   essa a diferença entre ele e `--sd-type-6xl`, que saiu na mesma remoção.
+   essa a diferença entre ele e `--pd-type-6xl`, que saiu na mesma remoção.
    A profundidade saiu do CONTEÚDO, não do site — a #50 mediu zero componente de
    conteúdo com sombra em seis páginas da âncora, e o único portador de sombra
    medido lá é um chip de 24px no hover de heading.
    ----------------------------------------------------------------------------- */
 
 :root {
-  --sd-shadow-lip: rgb(from var(--sd-gray-50) r g b / 6%);
+  --pd-shadow-lip: rgb(from var(--pd-gray-50) r g b / 6%);
 
-  --sd-shadow-raised: inset 0 1px 0 0 var(--sd-shadow-lip),
-                      0 1px 2px -1px var(--sd-shadow-cast);
-  --sd-shadow-float:  inset 0 1px 0 0 var(--sd-shadow-lip),
-                      0 20px 48px -12px var(--sd-shadow-cast);
+  --pd-shadow-raised: inset 0 1px 0 0 var(--pd-shadow-lip),
+                      0 1px 2px -1px var(--pd-shadow-cast);
+  --pd-shadow-float:  inset 0 1px 0 0 var(--pd-shadow-lip),
+                      0 20px 48px -12px var(--pd-shadow-cast);
 }
 
 /* =============================================================================
    CAMADA 3 — VAZIA, e a ausência tem endereço.
 
-   Havia aqui uma regra `[data-sd-showcase]` com os cinco tokens de brilho da
-   ilha de espetáculo: os dois gradientes (`--sd-glow` e `--sd-glow-2`), a caixa
-   quadrada da luz (`--sd-glow-tamanho`) e o par de amplitude da respiração
-   (`--sd-glow-vale` e `--sd-glow-crista`). Ela era SEPARADA de propósito:
-   entrar no bloco escuro acima poria --sd-glow em :root, e o glow vazaria para
+   Havia aqui uma regra `[data-pd-showcase]` com os cinco tokens de brilho da
+   ilha de espetáculo: os dois gradientes (`--pd-glow` e `--pd-glow-2`), a caixa
+   quadrada da luz (`--pd-glow-tamanho`) e o par de amplitude da respiração
+   (`--pd-glow-vale` e `--pd-glow-crista`). Ela era SEPARADA de propósito:
+   entrar no bloco escuro acima poria --pd-glow em :root, e o glow vazaria para
    o site inteiro. A confinação não era regra que alguém precisava lembrar — era
    fato de escopo.
 
@@ -1067,23 +1067,23 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    theme-common, que anima altura em JS, trava — `transitionend` precisa
    continuar disparando.
 
-   Como o adaptador escreve --ifm-transition-fast a partir de --sd-dur-1, o
+   Como o adaptador escreve --ifm-transition-fast a partir de --pd-dur-1, o
    Infima e o theme-classic ficam parados junto, sem martelo
    `* { animation: none !important }` e sem um único !important.
    ============================================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --sd-dur-0: 1ms;
-    --sd-dur-1: 1ms;
-    --sd-dur-2: 1ms;
-    --sd-dur-3: 1ms;
+    --pd-dur-0: 1ms;
+    --pd-dur-1: 1ms;
+    --pd-dur-2: 1ms;
+    --pd-dur-3: 1ms;
   }
 
   /* Os dois que NÃO terminam sozinhos seriam removidos aqui, não encurtados — e
      hoje não há nenhum dos dois no site.
 
-     Havia uma regra `[data-sd-showcase] [data-sd-part='glow'] { animation:
+     Havia uma regra `[data-pd-showcase] [data-pd-part='glow'] { animation:
      none; }`, e ela saiu com a landing (issue #94). A respiração do glow saía
      por aqui porque encurtá-la para 1ms produziria estroboscópio, que é o oposto
      exato do que `reduce` pede. Era a única regra de ELEMENTO do arquivo fora do
@@ -1096,7 +1096,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      própria página, e simplesmente não entrava. Ver ADR 3 — a errata dele
      registra que os dois exemplos vivos da regra (d) saíram juntos.
 
-     Se um loop ambiente voltar, ele volta por aqui, com `data-sd-part` como
+     Se um loop ambiente voltar, ele volta por aqui, com `data-pd-part` como
      gancho: é contrato publicado do projeto, e o par de seletores dá (0,2,0)
      contra a (0,1,0) da classe do módulo — vence sem `!important` e sem depender
      de ordem de carga. */
@@ -1128,30 +1128,30 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 
 :root,
 :root[data-theme] {
-  /* --- terceiro namespace: nem --ifm-*, nem --sd-*. O adaptador escreve nele
+  /* --- terceiro namespace: nem --ifm-*, nem --pd-*. O adaptador escreve nele
          como escreve nos --ifm-*. DocRoot/Layout/Main soma
          --ifm-container-width + --doc-sidebar-width, então os dois se propagam
          juntos de graça. -------------------------------------------------- */
-  --doc-sidebar-width: var(--sd-sidebar-width);
+  --doc-sidebar-width: var(--pd-sidebar-width);
 
   /* --- container: AS DUAS. O Infima troca para -xl acima de 1440px, e fixar só
          a primeira faz o cartão alargar sozinho em tela larga. ------------- */
-  --ifm-container-width:    var(--sd-container-width);
-  --ifm-container-width-xl: var(--sd-container-width);
+  --ifm-container-width:    var(--pd-container-width);
+  --ifm-container-width-xl: var(--pd-container-width);
 
   /* --- preenchimento e tinta ---------------------------------------------- */
-  --ifm-background-color:         var(--sd-surface-page);
-  --ifm-background-surface-color: var(--sd-surface-raised);
-  --ifm-hover-overlay:            var(--sd-border-subtle);
-  --ifm-color-content:            var(--sd-text-body);
-  --ifm-color-content-secondary:  var(--sd-text-muted);
-  --ifm-color-content-inverse:    var(--sd-text-inverse);
-  --ifm-font-color-base:          var(--sd-text-body);
-  --ifm-font-color-base-inverse:  var(--sd-text-inverse);
-  --ifm-font-color-secondary:     var(--sd-text-muted);
-  --ifm-heading-color:            var(--sd-text-strong);
-  --ifm-color-black:              var(--sd-gray-950);
-  --ifm-color-white:              var(--sd-gray-50);
+  --ifm-background-color:         var(--pd-surface-page);
+  --ifm-background-surface-color: var(--pd-surface-raised);
+  --ifm-hover-overlay:            var(--pd-border-subtle);
+  --ifm-color-content:            var(--pd-text-body);
+  --ifm-color-content-secondary:  var(--pd-text-muted);
+  --ifm-color-content-inverse:    var(--pd-text-inverse);
+  --ifm-font-color-base:          var(--pd-text-body);
+  --ifm-font-color-base-inverse:  var(--pd-text-inverse);
+  --ifm-font-color-secondary:     var(--pd-text-muted);
+  --ifm-heading-color:            var(--pd-text-strong);
+  --ifm-color-black:              var(--pd-gray-950);
+  --ifm-color-white:              var(--pd-gray-50);
 
   /* --- marca e estados.
          Exceção 4 do adaptador: das seis shades por cor semântica, só as VIVAS
@@ -1162,11 +1162,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
          Nosso acento tem um degrau de hover, não uma família de shades, então
          -dark e -darker recebem o mesmo token — e isso é o desenho, não
          descuido. -------------------------------------------------------- */
-  --ifm-color-primary:                     var(--sd-accent);
-  --ifm-color-primary-dark:                var(--sd-accent-hover);
-  --ifm-color-primary-darker:              var(--sd-accent-hover);
-  --ifm-color-primary-contrast-background: var(--sd-surface-wash);
-  --ifm-color-primary-contrast-foreground: var(--sd-text-strong);
+  --ifm-color-primary:                     var(--pd-accent);
+  --ifm-color-primary-dark:                var(--pd-accent-hover);
+  --ifm-color-primary-darker:              var(--pd-accent-hover);
+  --ifm-color-primary-contrast-background: var(--pd-surface-wash);
+  --ifm-color-primary-contrast-foreground: var(--pd-text-strong);
 
   /* As shades de `secondary` apontam para o papel `border` e não para o papel
      `text`: `--ifm-color-secondary-dark` é lido por `--ifm-alert-border-color`
@@ -1180,35 +1180,35 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
      porque o Infima as lê em `.alert--secondary`, `.badge--secondary` e
      `.button--secondary`, e a regra do adaptador é sobre o que o framework
      consome, não sobre o que a nossa página hoje renderiza. */
-  --ifm-color-secondary:                     var(--sd-border-strong);
-  --ifm-color-secondary-dark:                var(--sd-border-strong);
-  --ifm-color-secondary-darker:              var(--sd-border-strong);
-  --ifm-color-secondary-contrast-background: var(--sd-surface-raised);
-  --ifm-color-secondary-contrast-foreground: var(--sd-text-body);
+  --ifm-color-secondary:                     var(--pd-border-strong);
+  --ifm-color-secondary-dark:                var(--pd-border-strong);
+  --ifm-color-secondary-darker:              var(--pd-border-strong);
+  --ifm-color-secondary-contrast-background: var(--pd-surface-raised);
+  --ifm-color-secondary-contrast-foreground: var(--pd-text-body);
 
-  --ifm-color-success:                     var(--sd-state-success);
-  --ifm-color-success-dark:                var(--sd-state-success);
-  --ifm-color-success-darker:              var(--sd-state-success);
-  --ifm-color-success-contrast-background: var(--sd-state-success-fill);
-  --ifm-color-success-contrast-foreground: var(--sd-text-body);
+  --ifm-color-success:                     var(--pd-state-success);
+  --ifm-color-success-dark:                var(--pd-state-success);
+  --ifm-color-success-darker:              var(--pd-state-success);
+  --ifm-color-success-contrast-background: var(--pd-state-success-fill);
+  --ifm-color-success-contrast-foreground: var(--pd-text-body);
 
-  --ifm-color-info:                     var(--sd-state-info);
-  --ifm-color-info-dark:                var(--sd-state-info);
-  --ifm-color-info-darker:              var(--sd-state-info);
-  --ifm-color-info-contrast-background: var(--sd-state-info-fill);
-  --ifm-color-info-contrast-foreground: var(--sd-text-body);
+  --ifm-color-info:                     var(--pd-state-info);
+  --ifm-color-info-dark:                var(--pd-state-info);
+  --ifm-color-info-darker:              var(--pd-state-info);
+  --ifm-color-info-contrast-background: var(--pd-state-info-fill);
+  --ifm-color-info-contrast-foreground: var(--pd-text-body);
 
-  --ifm-color-warning:                     var(--sd-state-warn);
-  --ifm-color-warning-dark:                var(--sd-state-warn);
-  --ifm-color-warning-darker:              var(--sd-state-warn);
-  --ifm-color-warning-contrast-background: var(--sd-state-warn-fill);
-  --ifm-color-warning-contrast-foreground: var(--sd-text-body);
+  --ifm-color-warning:                     var(--pd-state-warn);
+  --ifm-color-warning-dark:                var(--pd-state-warn);
+  --ifm-color-warning-darker:              var(--pd-state-warn);
+  --ifm-color-warning-contrast-background: var(--pd-state-warn-fill);
+  --ifm-color-warning-contrast-foreground: var(--pd-text-body);
 
-  --ifm-color-danger:                     var(--sd-state-danger);
-  --ifm-color-danger-dark:                var(--sd-state-danger);
-  --ifm-color-danger-darker:              var(--sd-state-danger);
-  --ifm-color-danger-contrast-background: var(--sd-state-danger-fill);
-  --ifm-color-danger-contrast-foreground: var(--sd-text-body);
+  --ifm-color-danger:                     var(--pd-state-danger);
+  --ifm-color-danger-dark:                var(--pd-state-danger);
+  --ifm-color-danger-darker:              var(--pd-state-danger);
+  --ifm-color-danger-contrast-background: var(--pd-state-danger-fill);
+  --ifm-color-danger-contrast-foreground: var(--pd-text-body);
 
   /* --- escala de ênfase. O Infima a inverte no bloco dark; nós não podemos,
          porque o adaptador é cego ao modo. A rota correta é apontar cada degrau
@@ -1216,61 +1216,61 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
          consumidos e o nosso texto tem quatro paradas, então alguns degraus
          repetem — repetir é honesto, inventar parada não seria.
          (o degrau 600 não é consumido por ninguém e por isso não é atribuído) */
-  --ifm-color-emphasis-0:    var(--sd-surface-page);
-  --ifm-color-emphasis-100:  var(--sd-surface-raised);
-  --ifm-color-emphasis-200:  var(--sd-border-subtle);
-  --ifm-color-emphasis-300:  var(--sd-border-default);
-  --ifm-color-emphasis-400:  var(--sd-border-strong);
-  --ifm-color-emphasis-500:  var(--sd-text-faint);
-  --ifm-color-emphasis-700:  var(--sd-text-muted);
-  --ifm-color-emphasis-800:  var(--sd-text-body);
-  --ifm-color-emphasis-900:  var(--sd-text-body);
-  --ifm-color-emphasis-1000: var(--sd-text-strong);
+  --ifm-color-emphasis-0:    var(--pd-surface-page);
+  --ifm-color-emphasis-100:  var(--pd-surface-raised);
+  --ifm-color-emphasis-200:  var(--pd-border-subtle);
+  --ifm-color-emphasis-300:  var(--pd-border-default);
+  --ifm-color-emphasis-400:  var(--pd-border-strong);
+  --ifm-color-emphasis-500:  var(--pd-text-faint);
+  --ifm-color-emphasis-700:  var(--pd-text-muted);
+  --ifm-color-emphasis-800:  var(--pd-text-body);
+  --ifm-color-emphasis-900:  var(--pd-text-body);
+  --ifm-color-emphasis-1000: var(--pd-text-strong);
 
   /* --- tipografia --------------------------------------------------------- */
-  --ifm-font-family-base:      var(--sd-font-body);
-  --ifm-font-family-monospace: var(--sd-font-mono);
-  --ifm-heading-font-family:   var(--sd-font-heading);
-  --ifm-font-size-base:        var(--sd-type-base);
-  --ifm-line-height-base:      var(--sd-leading-prose);
-  --ifm-heading-line-height:   var(--sd-leading-h2);
-  --ifm-heading-font-weight:   var(--sd-weight-heading);
-  --ifm-font-weight-light:     var(--sd-weight-body);
-  --ifm-font-weight-normal:    var(--sd-weight-body);
-  --ifm-font-weight-semibold:  var(--sd-weight-ui);
-  --ifm-font-weight-bold:      var(--sd-weight-heading);
+  --ifm-font-family-base:      var(--pd-font-body);
+  --ifm-font-family-monospace: var(--pd-font-mono);
+  --ifm-heading-font-family:   var(--pd-font-heading);
+  --ifm-font-size-base:        var(--pd-type-base);
+  --ifm-line-height-base:      var(--pd-leading-prose);
+  --ifm-heading-line-height:   var(--pd-leading-h2);
+  --ifm-heading-font-weight:   var(--pd-weight-heading);
+  --ifm-font-weight-light:     var(--pd-weight-body);
+  --ifm-font-weight-normal:    var(--pd-weight-body);
+  --ifm-font-weight-semibold:  var(--pd-weight-ui);
+  --ifm-font-weight-bold:      var(--pd-weight-heading);
 
-  --ifm-h1-font-size: var(--sd-type-3xl);
-  --ifm-h2-font-size: var(--sd-type-2xl);
-  --ifm-h3-font-size: var(--sd-type-xl);
-  --ifm-h4-font-size: var(--sd-type-lg);
-  --ifm-h5-font-size: var(--sd-type-base);
-  --ifm-h6-font-size: var(--sd-type-sm);
+  --ifm-h1-font-size: var(--pd-type-3xl);
+  --ifm-h2-font-size: var(--pd-type-2xl);
+  --ifm-h3-font-size: var(--pd-type-xl);
+  --ifm-h4-font-size: var(--pd-type-lg);
+  --ifm-h5-font-size: var(--pd-type-base);
+  --ifm-h6-font-size: var(--pd-type-sm);
 
   /* --- espaço ------------------------------------------------------------- */
-  --ifm-global-spacing:          var(--sd-space-4);
-  --ifm-spacing-horizontal:      var(--sd-space-4);
-  --ifm-spacing-vertical:        var(--sd-space-4);
-  --ifm-paragraph-margin-bottom: var(--sd-space-4);
-  --ifm-leading:                 var(--sd-space-6);
-  --ifm-leading-desktop:         var(--sd-space-6);
-  --ifm-list-margin:             var(--sd-space-4);
-  --ifm-list-item-margin:        var(--sd-space-1);
-  --ifm-list-left-padding:       var(--sd-space-6);
-  --ifm-list-paragraph-margin:   var(--sd-space-2);
-  --ifm-hr-margin-vertical:      var(--sd-space-6);
+  --ifm-global-spacing:          var(--pd-space-4);
+  --ifm-spacing-horizontal:      var(--pd-space-4);
+  --ifm-spacing-vertical:        var(--pd-space-4);
+  --ifm-paragraph-margin-bottom: var(--pd-space-4);
+  --ifm-leading:                 var(--pd-space-6);
+  --ifm-leading-desktop:         var(--pd-space-6);
+  --ifm-list-margin:             var(--pd-space-4);
+  --ifm-list-item-margin:        var(--pd-space-1);
+  --ifm-list-left-padding:       var(--pd-space-6);
+  --ifm-list-paragraph-margin:   var(--pd-space-2);
+  --ifm-hr-margin-vertical:      var(--pd-space-6);
 
   /* --- forma -------------------------------------------------------------- */
-  --ifm-global-radius:            var(--sd-radius-sm);
-  --ifm-button-border-radius:     var(--sd-radius-sm);
-  --ifm-badge-border-radius:      var(--sd-radius-xs);
-  --ifm-code-border-radius:       var(--sd-radius-xs);
-  --ifm-pre-border-radius:        var(--sd-radius-md);
-  --ifm-alert-border-radius:      var(--sd-radius-md);
-  --ifm-card-border-radius:       var(--sd-radius);
-  --ifm-breadcrumb-border-radius: var(--sd-radius-xs);
-  --ifm-pagination-border-radius: var(--sd-radius-sm);
-  --ifm-pagination-nav-border-radius: var(--sd-radius-md);
+  --ifm-global-radius:            var(--pd-radius-sm);
+  --ifm-button-border-radius:     var(--pd-radius-sm);
+  --ifm-badge-border-radius:      var(--pd-radius-xs);
+  --ifm-code-border-radius:       var(--pd-radius-xs);
+  --ifm-pre-border-radius:        var(--pd-radius-md);
+  --ifm-alert-border-radius:      var(--pd-radius-md);
+  --ifm-card-border-radius:       var(--pd-radius);
+  --ifm-breadcrumb-border-radius: var(--pd-radius-xs);
+  --ifm-pagination-border-radius: var(--pd-radius-sm);
+  --ifm-pagination-nav-border-radius: var(--pd-radius-md);
 
   /* --- elevação. Preenche a lacuna que o Infima tem por desenho: ele não
          redefine sombra no escuro, e as dele somem sobre fundo escuro.
@@ -1300,137 +1300,137 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
          `.navbar-sidebar`, que são chrome flutuante; `tl` só por `.shadow--tl`,
          que ninguém usa. ---------------------------------------------------- */
   --ifm-global-shadow-lw: none;
-  --ifm-global-shadow-md: var(--sd-shadow-float);
-  --ifm-global-shadow-tl: var(--sd-shadow-float);
+  --ifm-global-shadow-md: var(--pd-shadow-float);
+  --ifm-global-shadow-tl: var(--pd-shadow-float);
   --ifm-alert-shadow:      none;
   --ifm-blockquote-shadow: none;
   --ifm-navbar-shadow:     none;
 
   /* --- link --------------------------------------------------------------- */
-  --ifm-link-color:            var(--sd-accent);
-  --ifm-link-hover-color:      var(--sd-accent-hover);
+  --ifm-link-color:            var(--pd-accent);
+  --ifm-link-hover-color:      var(--pd-accent-hover);
   --ifm-link-decoration:       none;
   --ifm-link-hover-decoration: underline;
 
   /* --- código. --ifm-pre-background é sobrescrita dentro do bloco de código
          por --prism-background-color; ver a exceção 3 no fim do arquivo. ---- */
-  --ifm-code-background:  var(--sd-surface-code);
-  --ifm-pre-background:   var(--sd-surface-code);
-  --ifm-pre-color:        var(--sd-code-fg);
-  --ifm-pre-line-height:  var(--sd-leading-code);
-  --ifm-pre-padding:      var(--sd-space-4);
-  --ifm-code-padding-horizontal: var(--sd-space-1);
-  --ifm-code-padding-vertical:   var(--sd-space-1);
+  --ifm-code-background:  var(--pd-surface-code);
+  --ifm-pre-background:   var(--pd-surface-code);
+  --ifm-pre-color:        var(--pd-code-fg);
+  --ifm-pre-line-height:  var(--pd-leading-code);
+  --ifm-pre-padding:      var(--pd-space-4);
+  --ifm-code-padding-horizontal: var(--pd-space-1);
+  --ifm-code-padding-vertical:   var(--pd-space-1);
 
   /* --- régua, citação e tabela ------------------------------------------- */
-  --ifm-hr-background-color:      var(--sd-border-default);
-  --ifm-hr-margin-vertical:       var(--sd-space-12);
-  --ifm-blockquote-color:         var(--sd-text-body);
-  --ifm-blockquote-border-color:  var(--sd-border-strong);
-  --ifm-blockquote-border-left-width: calc(var(--sd-border-width) * 4);
-  --ifm-blockquote-padding-horizontal: var(--sd-space-6);
-  --ifm-blockquote-font-size:     var(--sd-type-base);
-  --ifm-table-border-color:       var(--sd-border-subtle);
+  --ifm-hr-background-color:      var(--pd-border-default);
+  --ifm-hr-margin-vertical:       var(--pd-space-12);
+  --ifm-blockquote-color:         var(--pd-text-body);
+  --ifm-blockquote-border-color:  var(--pd-border-strong);
+  --ifm-blockquote-border-left-width: calc(var(--pd-border-width) * 4);
+  --ifm-blockquote-padding-horizontal: var(--pd-space-6);
+  --ifm-blockquote-font-size:     var(--pd-type-base);
+  --ifm-table-border-color:       var(--pd-border-subtle);
   --ifm-table-background:         transparent;
   --ifm-table-head-background:    transparent;
   --ifm-table-stripe-background:  transparent;
-  --ifm-table-cell-color:         var(--sd-text-body);
-  --ifm-table-head-color:         var(--sd-text-strong);
-  --ifm-table-head-font-weight:   var(--sd-weight-ui);
-  --ifm-table-cell-padding:       var(--sd-space-3);
+  --ifm-table-cell-color:         var(--pd-text-body);
+  --ifm-table-head-color:         var(--pd-text-strong);
+  --ifm-table-head-font-weight:   var(--pd-weight-ui);
+  --ifm-table-cell-padding:       var(--pd-space-3);
 
   /* --- navbar ------------------------------------------------------------- */
   /* O TOPO INTEIRO, não a linha 1: são os nove pontos do theme-classic que
      grudam abaixo do navbar — o `top` do TOC, o do próprio `<nav>`, o
      `scroll-margin` das âncoras — e todos se realinham de graça quando a
-     segunda linha entra. Ver `--sd-topo-grudado`. */
-  --ifm-navbar-height:                 var(--sd-topo-grudado);
-  --ifm-navbar-background-color:       var(--sd-surface-page);
-  --ifm-navbar-link-color:             var(--sd-text-muted);
-  --ifm-navbar-link-hover-color:       var(--sd-text-strong);
-  --ifm-navbar-padding-horizontal:     var(--sd-space-6);
-  --ifm-navbar-padding-vertical:       var(--sd-space-2);
-  --ifm-navbar-item-padding-horizontal: var(--sd-space-3);
-  --ifm-navbar-item-padding-vertical:   var(--sd-space-2);
-  --ifm-navbar-search-input-background-color:  var(--sd-surface-raised);
-  --ifm-navbar-search-input-color:             var(--sd-text-body);
-  --ifm-navbar-search-input-placeholder-color: var(--sd-text-faint);
+     segunda linha entra. Ver `--pd-topo-grudado`. */
+  --ifm-navbar-height:                 var(--pd-topo-grudado);
+  --ifm-navbar-background-color:       var(--pd-surface-page);
+  --ifm-navbar-link-color:             var(--pd-text-muted);
+  --ifm-navbar-link-hover-color:       var(--pd-text-strong);
+  --ifm-navbar-padding-horizontal:     var(--pd-space-6);
+  --ifm-navbar-padding-vertical:       var(--pd-space-2);
+  --ifm-navbar-item-padding-horizontal: var(--pd-space-3);
+  --ifm-navbar-item-padding-vertical:   var(--pd-space-2);
+  --ifm-navbar-search-input-background-color:  var(--pd-surface-raised);
+  --ifm-navbar-search-input-color:             var(--pd-text-body);
+  --ifm-navbar-search-input-placeholder-color: var(--pd-text-faint);
 
   /* --- sidebar ------------------------------------------------------------ */
-  --ifm-menu-color:                   var(--sd-text-muted);
-  --ifm-menu-color-active:            var(--sd-accent);
-  --ifm-menu-color-background-active: var(--sd-surface-wash);
-  --ifm-menu-color-background-hover:  var(--sd-border-subtle);
+  --ifm-menu-color:                   var(--pd-text-muted);
+  --ifm-menu-color-active:            var(--pd-accent);
+  --ifm-menu-color-background-active: var(--pd-surface-wash);
+  --ifm-menu-color-background-hover:  var(--pd-border-subtle);
   /* 16 e não 12: somado ao preenchimento de 8 que o `DocSidebar/Desktop` põe na
      lista, o item da sidebar começa em 24 — que é exatamente o preenchimento
      horizontal do navbar. A marca e o primeiro ícone de seção ficam na mesma
      vertical, e o alinhamento deixa de depender de coincidência. */
-  --ifm-menu-link-padding-horizontal: var(--sd-space-4);
+  --ifm-menu-link-padding-horizontal: var(--pd-space-4);
   /* Issue #97: altura de item alvo é 36px, e a entrelinha (24px, ver
      chrome.css) já ocupa a maior parte disso — sobra 12px para os dois
-     paddings verticais, 6 cada. `--sd-space-1` é o único literal da escada, e
+     paddings verticais, 6 cada. `--pd-space-1` é o único literal da escada, e
      a razão dela ser 4 (não 8) já é o meio-passo que a densidade de 14px pede
      em chip, badge e ícone — mas nenhum consumidor até aqui multiplicava por
-     um fator fracionário. Este é o primeiro: `1,5×` de `--sd-space-1` chega
+     um fator fracionário. Este é o primeiro: `1,5×` de `--pd-space-1` chega
      nos 6px sem literal novo, reaproveitando a base fina que já existe, por
      uma técnica nova que a escada ainda não tinha precisado. */
-  --ifm-menu-link-padding-vertical:   calc(var(--sd-space-1) * 1.5);
+  --ifm-menu-link-padding-vertical:   calc(var(--pd-space-1) * 1.5);
 
   /* --- TOC ---------------------------------------------------------------- */
-  --ifm-toc-border-color:      var(--sd-border-subtle);
-  --ifm-toc-link-color:        var(--sd-text-muted);
-  --ifm-toc-padding-horizontal: var(--sd-space-3);
-  --ifm-toc-padding-vertical:   var(--sd-space-2);
+  --ifm-toc-border-color:      var(--pd-border-subtle);
+  --ifm-toc-link-color:        var(--pd-text-muted);
+  --ifm-toc-padding-horizontal: var(--pd-space-3);
+  --ifm-toc-padding-vertical:   var(--pd-space-2);
 
   /* --- breadcrumb e paginação -------------------------------------------- */
-  --ifm-breadcrumb-color-active:           var(--sd-accent);
-  --ifm-breadcrumb-item-background-active: var(--sd-surface-wash);
-  --ifm-breadcrumb-padding-horizontal:     var(--sd-space-2);
-  --ifm-breadcrumb-padding-vertical:       var(--sd-space-1);
-  --ifm-breadcrumb-spacing:                var(--sd-space-1);
-  --ifm-pagination-color-active:           var(--sd-accent);
-  --ifm-pagination-item-active-background: var(--sd-surface-wash);
-  --ifm-pagination-nav-color-hover:        var(--sd-accent);
+  --ifm-breadcrumb-color-active:           var(--pd-accent);
+  --ifm-breadcrumb-item-background-active: var(--pd-surface-wash);
+  --ifm-breadcrumb-padding-horizontal:     var(--pd-space-2);
+  --ifm-breadcrumb-padding-vertical:       var(--pd-space-1);
+  --ifm-breadcrumb-spacing:                var(--pd-space-1);
+  --ifm-pagination-color-active:           var(--pd-accent);
+  --ifm-pagination-item-active-background: var(--pd-surface-wash);
+  --ifm-pagination-nav-color-hover:        var(--pd-accent);
 
   /* --- cartão, dropdown, abas, badge -------------------------------------- */
-  --ifm-card-background-color:        var(--sd-surface-raised);
-  --ifm-card-horizontal-spacing:      var(--sd-space-6);
-  --ifm-card-vertical-spacing:        var(--sd-space-6);
-  --ifm-dropdown-background-color:    var(--sd-surface-raised);
-  --ifm-dropdown-link-color:          var(--sd-text-body);
-  --ifm-dropdown-hover-background-color: var(--sd-border-subtle);
-  --ifm-dropdown-font-weight:         var(--sd-weight-body);
-  --ifm-tabs-color:                   var(--sd-text-muted);
-  --ifm-tabs-color-active:            var(--sd-accent);
-  --ifm-tabs-color-active-border:     var(--sd-accent);
-  --ifm-badge-background-color:       var(--sd-surface-wash);
-  --ifm-badge-border-color:           var(--sd-border-default);
-  --ifm-badge-color:                  var(--sd-text-strong);
+  --ifm-card-background-color:        var(--pd-surface-raised);
+  --ifm-card-horizontal-spacing:      var(--pd-space-6);
+  --ifm-card-vertical-spacing:        var(--pd-space-6);
+  --ifm-dropdown-background-color:    var(--pd-surface-raised);
+  --ifm-dropdown-link-color:          var(--pd-text-body);
+  --ifm-dropdown-hover-background-color: var(--pd-border-subtle);
+  --ifm-dropdown-font-weight:         var(--pd-weight-body);
+  --ifm-tabs-color:                   var(--pd-text-muted);
+  --ifm-tabs-color-active:            var(--pd-accent);
+  --ifm-tabs-color-active-border:     var(--pd-accent);
+  --ifm-badge-background-color:       var(--pd-surface-wash);
+  --ifm-badge-border-color:           var(--pd-border-default);
+  --ifm-badge-color:                  var(--pd-text-strong);
 
   /* --- footer ------------------------------------------------------------- */
-  --ifm-footer-background-color: var(--sd-surface-page);
-  --ifm-footer-color:            var(--sd-text-muted);
-  --ifm-footer-link-color:       var(--sd-text-muted);
-  --ifm-footer-link-hover-color: var(--sd-accent);
-  --ifm-footer-title-color:      var(--sd-text-strong);
+  --ifm-footer-background-color: var(--pd-surface-page);
+  --ifm-footer-color:            var(--pd-text-muted);
+  --ifm-footer-link-color:       var(--pd-text-muted);
+  --ifm-footer-link-hover-color: var(--pd-accent);
+  --ifm-footer-title-color:      var(--pd-text-strong);
   /* O horizontal é o gutter do shell, e o `.container` do footer perde o
      preenchimento dele em `chrome.css` — sem isso o conteúdo do rodapé erra por
      16px contra a borda do cartão. O vertical é o ar de cima; o de baixo é
      maior e mora na regra do footer. */
-  --ifm-footer-padding-horizontal: var(--sd-gutter);
-  --ifm-footer-padding-vertical:   var(--sd-space-10);
+  --ifm-footer-padding-horizontal: var(--pd-gutter);
+  --ifm-footer-padding-vertical:   var(--pd-space-10);
 
   /* --- barra de rolagem --------------------------------------------------- */
-  --ifm-scrollbar-track-background-color:      var(--sd-surface-page);
-  --ifm-scrollbar-thumb-background-color:      var(--sd-border-strong);
-  --ifm-scrollbar-thumb-hover-background-color: var(--sd-text-faint);
+  --ifm-scrollbar-track-background-color:      var(--pd-surface-page);
+  --ifm-scrollbar-thumb-background-color:      var(--pd-border-strong);
+  --ifm-scrollbar-thumb-hover-background-color: var(--pd-text-faint);
 
   /* --- motion. É por aqui que reduced-motion alcança o framework que não
          escrevemos. --ifm-transition-slow NÃO entra: o Infima a declara e
          ninguém a consome — atribuí-la seria linha morta. ------------------- */
-  --ifm-transition-fast:            var(--sd-dur-1);
-  --ifm-transition-timing-default:  var(--sd-ease-settle);
-  --ifm-button-transition-duration: var(--sd-dur-1);
+  --ifm-transition-fast:            var(--pd-dur-1);
+  --ifm-transition-timing-default:  var(--pd-ease-settle);
+  --ifm-button-transition-duration: var(--pd-dur-1);
 }
 
 /* O título de página cresce no mesmo instante em que a sidebar aparece — um
@@ -1440,7 +1440,7 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
 @media (min-width: 997px) {
   :root,
   :root[data-theme] {
-    --ifm-h1-font-size: var(--sd-type-4xl);
+    --ifm-h1-font-size: var(--pd-type-4xl);
 
     /* O preenchimento vertical do navbar vai a ZERO no dia em que ele carrega
        duas linhas, e é peça da faixa, não afinação. Com ele, as duas linhas
@@ -1483,9 +1483,9 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   :root,
   :root[data-theme] {
     --ifm-menu-color-background-hover: transparent;
-    --ifm-navbar-link-hover-color: var(--sd-text-muted);
-    --ifm-footer-link-hover-color: var(--sd-text-muted);
-    --ifm-pagination-nav-color-hover: var(--sd-border-default);
+    --ifm-navbar-link-hover-color: var(--pd-text-muted);
+    --ifm-footer-link-hover-color: var(--pd-text-muted);
+    --ifm-pagination-nav-color-hover: var(--pd-border-default);
   }
 }
 
@@ -1543,9 +1543,9 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
    valor dele é `transform var(--ifm-transition-fast) ease`. Aqui trocamos o
    valor inteiro pelo movimento nomeado, então a curva também passa a ser nossa. */
 details[class] {
-  --docusaurus-details-decoration-color: var(--sd-border-strong);
-  --docusaurus-details-summary-arrow-size: var(--sd-space-2);
-  --docusaurus-details-transition: transform var(--sd-move-expand);
+  --docusaurus-details-decoration-color: var(--pd-border-strong);
+  --docusaurus-details-summary-arrow-size: var(--pd-space-2);
+  --docusaurus-details-transition: transform var(--pd-move-expand);
 }
 
 /* --- Exceção 3 — --prism-background-color ------------------------------------
@@ -1577,13 +1577,13 @@ O corporativo apaga a identidade visual do panlabs-docs editando o bloco entre `
 
 | Linha | O que ela move |
 | --- | --- |
-| `--sd-brand` | Os dois acentos **e tudo que desce deles** — são **seis** papéis de camada 2, não dois: a cor de link, o hover do acento (`--sd-accent-hover`), o texto-inverso que rotula preenchimento de acento (`--sd-text-inverse`, e com ele `--sd-accent-contrast`), o **wash do item ativo** (`--sd-surface-wash`, `rgb(from var(--sd-accent) …)`) e o **anel de foco** (`--sd-focus-ring`, que é `var(--sd-accent)` direto). É o hex do manual de marca, colado direto — sem converter para canais decimais. Desde a issue #95 ela **não** move mais a rampa nem as duas superfícies: essas saíram da família da marca. |
-| `--sd-brand-on-dark` | O acento no escuro. Vem com a trava de luminosidade que garante AA; mexer aqui é assumir a verificação de contraste no lugar da arquitetura. |
-| `--sd-brand-on-light` | O mesmo, no claro. |
-| `--sd-font-body` | A pilha do corpo e de todo texto de UI. |
-| `--sd-font-heading` | A pilha dos títulos. Vem igual à do corpo. |
-| `--sd-font-mono` | A pilha do código, inline e em bloco. |
-| `--sd-radius` | A base da escada de forma. **Um número entra, a escada sai:** os outros quatro raios são múltiplos dele, então os cantos do site inteiro se re-formam sem incoerência possível. |
+| `--pd-brand` | Os dois acentos **e tudo que desce deles** — são **seis** papéis de camada 2, não dois: a cor de link, o hover do acento (`--pd-accent-hover`), o texto-inverso que rotula preenchimento de acento (`--pd-text-inverse`, e com ele `--pd-accent-contrast`), o **wash do item ativo** (`--pd-surface-wash`, `rgb(from var(--pd-accent) …)`) e o **anel de foco** (`--pd-focus-ring`, que é `var(--pd-accent)` direto). É o hex do manual de marca, colado direto — sem converter para canais decimais. Desde a issue #95 ela **não** move mais a rampa nem as duas superfícies: essas saíram da família da marca. |
+| `--pd-brand-on-dark` | O acento no escuro. Vem com a trava de luminosidade que garante AA; mexer aqui é assumir a verificação de contraste no lugar da arquitetura. |
+| `--pd-brand-on-light` | O mesmo, no claro. |
+| `--pd-font-body` | A pilha do corpo e de todo texto de UI. |
+| `--pd-font-heading` | A pilha dos títulos. Vem igual à do corpo. |
+| `--pd-font-mono` | A pilha do código, inline e em bloco. |
+| `--pd-radius` | A base da escada de forma. **Um número entra, a escada sai:** os outros quatro raios são múltiplos dele, então os cantos do site inteiro se re-formam sem incoerência possível. |
 
 **A proteção não é travar valor; é a troca ser segura por construção.** Três mecanismos, todos já na arquitetura:
 
@@ -1594,21 +1594,21 @@ O corporativo apaga a identidade visual do panlabs-docs editando o bloco entre `
 
 Diferente, sim. Quebrado, não.
 
-> **A linha do `--sd-brand` dizia *"os dois acentos e a cor de link"*, e omitia dois papéis.** `--sd-surface-wash` e `--sd-focus-ring` descem do acento no bloco escuro **e** no claro, e o §10 já os media como superfície própria — *anel de foco vs levantada / página* e *`text-strong` sobre o wash do item ativo* são duas linhas da tabela de contraste dele. A omissão não era inofensiva: quem re-marca lendo só o §4 achava que o anel de foco e o realce do item ativo da sidebar ficavam onde estavam, e os dois trocam de cor junto com a marca. O critério do que entra nesta coluna é **o cone de dependência inteiro**, não os consumidores mais visíveis dele.
+> **A linha do `--pd-brand` dizia *"os dois acentos e a cor de link"*, e omitia dois papéis.** `--pd-surface-wash` e `--pd-focus-ring` descem do acento no bloco escuro **e** no claro, e o §10 já os media como superfície própria — *anel de foco vs levantada / página* e *`text-strong` sobre o wash do item ativo* são duas linhas da tabela de contraste dele. A omissão não era inofensiva: quem re-marca lendo só o §4 achava que o anel de foco e o realce do item ativo da sidebar ficavam onde estavam, e os dois trocam de cor junto com a marca. O critério do que entra nesta coluna é **o cone de dependência inteiro**, não os consumidores mais visíveis dele.
 
-> **O terceiro mecanismo é o que carrega mais peso, e a leitura fácil dele está errada.** Medido em navegador, arquivo a arquivo: **sem** o registro de `--sd-brand` e com marca **válida**, a cadeia `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte igual — custom property não registrada é token stream, e `oklch(from …)` aninhado é CSS legal. O que o registro compra não é a cadeia funcionar; é ela **não evaporar inteira** com uma colagem inválida. Sem ele, um valor torto na linha 1 apaga marca, os dois acentos, a cor de link, o rótulo do botão primário, **o anel de foco e o wash do item ativo** de uma vez, sem aviso e sem erro. Com ele, tudo isso cai no valor de fábrica e o site continua de pé. A rampa e as duas superfícies não estão nessa lista — não dependem da linha 1 para existir.
+> **O terceiro mecanismo é o que carrega mais peso, e a leitura fácil dele está errada.** Medido em navegador, arquivo a arquivo: **sem** o registro de `--pd-brand` e com marca **válida**, a cadeia `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte igual — custom property não registrada é token stream, e `oklch(from …)` aninhado é CSS legal. O que o registro compra não é a cadeia funcionar; é ela **não evaporar inteira** com uma colagem inválida. Sem ele, um valor torto na linha 1 apaga marca, os dois acentos, a cor de link, o rótulo do botão primário, **o anel de foco e o wash do item ativo** de uma vez, sem aviso e sem erro. Com ele, tudo isso cai no valor de fábrica e o site continua de pé. A rampa e as duas superfícies não estão nessa lista — não dependem da linha 1 para existir.
 >
 > O raio de dano de uma linha errada é o site inteiro, e é esse raio que o `@property` contém. Quem for tentado a tirar a linha por achá-la cerimônia está tirando a contenção, não a tipagem.
 
 ### A perda das outras cinco, escrita
 
-`@property` registra exatamente as linhas cuja entrega é **literal e computacionalmente independente** — é o que `initial-value` sabe expressar. Hoje isso produz duas: `--sd-brand`, `--sd-radius`.
+`@property` registra exatamente as linhas cuja entrega é **literal e computacionalmente independente** — é o que `initial-value` sabe expressar. Hoje isso produz duas: `--pd-brand`, `--pd-radius`.
 
-As outras cinco entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--sd-brand-on-dark` torna `--sd-accent` inválido em tempo de valor computado no modo escuro — link, anel de foco, texto-inverso e todo consumidor de `--sd-accent` perdem cor ao mesmo tempo. Com registro, teria degradado para o valor de fábrica.
+As outras cinco entregam referência (`var()`, `oklch(from …)`) ou pilha de fonte, e `initial-value` não aceita nenhuma das duas. **Consequência concreta:** colagem inválida em `--pd-brand-on-dark` torna `--pd-accent` inválido em tempo de valor computado no modo escuro — link, anel de foco, texto-inverso e todo consumidor de `--pd-accent` perdem cor ao mesmo tempo. Com registro, teria degradado para o valor de fábrica.
 
 A perda é real, está contida em **uma** propriedade — rampa, texto, borda e as duas superfícies sobrevivem porque nenhuma delas deriva do acento — e ela falha **à vista**: quem colou vê link, anel de foco e botão primário perderem cor ao mesmo tempo.
 
-Tipar os dois acentos com o hex resolvido protegeria de verdade, e foi recusado: seria a única forma de literal derivado entrar no arquivo de tokens, e ele sairia da família no instante em que o corporativo colasse outra marca — um roxo congelado sob uma marca azul. É o mesmo argumento que, até a issue #95, valia para as duas superfícies — e é exatamente por ele não valer mais para elas (a rampa não deriva da marca, então não há mais família da qual sair) que `--sd-surface-dark` e `--sd-surface-light` saíram do bloco de troca.
+Tipar os dois acentos com o hex resolvido protegeria de verdade, e foi recusado: seria a única forma de literal derivado entrar no arquivo de tokens, e ele sairia da família no instante em que o corporativo colasse outra marca — um roxo congelado sob uma marca azul. É o mesmo argumento que, até a issue #95, valia para as duas superfícies — e é exatamente por ele não valer mais para elas (a rampa não deriva da marca, então não há mais família da qual sair) que `--pd-surface-dark` e `--pd-surface-light` saíram do bloco de troca.
 
 ### Redesenhar não é re-marcar
 
@@ -1621,7 +1621,7 @@ A latitude tem **dois níveis nomeados**:
 
 > **Livre — skin corporativa (redesenho).** A **escala de duração e o vocabulário de easing**. Nenhum manual de marca corporativo especifica duração; quem edita ali está redesenhando.
 
-> **Livre — skin corporativa (redesenho).** Os quatro **matizes de estado**. O que se move é o **ângulo**, dentro da família: azul continua azul, verde continua verde. **Não** se movem `L`, `C`, nem as fórmulas de alfa — são elas que garantem AA sobre as duas superfícies em qualquer ângulo. Repintar `--sd-hue-danger` com o roxo da marca não é re-marcar: é quebrar significado.
+> **Livre — skin corporativa (redesenho).** Os quatro **matizes de estado**. O que se move é o **ângulo**, dentro da família: azul continua azul, verde continua verde. **Não** se movem `L`, `C`, nem as fórmulas de alfa — são elas que garantem AA sobre as duas superfícies em qualquer ângulo. Repintar `--pd-hue-danger` com o roxo da marca não é re-marcar: é quebrar significado.
 
 ---
 
@@ -1633,16 +1633,16 @@ Uma cor entra, um sistema inteiro de superfícies sai — essa frase valia até 
 
 A issue #95 fecha os dois lados do erro:
 
-1. **A rampa deixa de tingir.** As onze paradas passam a ser os hex medidos direto na âncora — frios, não neutros, e fixos qualquer que seja `--sd-brand`. `--sd-brand-tint` e o pin que travava `c × tint` em 0,0120 saíram do sistema: não há mais produto para travar.
-2. **A superfície de página ganha token próprio.** `--sd-neutral-page-dark` / `--sd-neutral-page-light`, cinza neutro puro, fora da rampa — porque na âncora também está fora dela. A elevada no claro segue o mesmo caminho, um degrau acima (`--sd-neutral-raised-light`); a elevada no escuro não precisa de literal — ela referencia a própria página, porque a âncora eleva cartão por borda, não por fundo (§6, abaixo).
+1. **A rampa deixa de tingir.** As onze paradas passam a ser os hex medidos direto na âncora — frios, não neutros, e fixos qualquer que seja `--pd-brand`. `--pd-brand-tint` e o pin que travava `c × tint` em 0,0120 saíram do sistema: não há mais produto para travar.
+2. **A superfície de página ganha token próprio.** `--pd-neutral-page-dark` / `--pd-neutral-page-light`, cinza neutro puro, fora da rampa — porque na âncora também está fora dela. A elevada no claro segue o mesmo caminho, um degrau acima (`--pd-neutral-raised-light`); a elevada no escuro não precisa de literal — ela referencia a própria página, porque a âncora eleva cartão por borda, não por fundo (§6, abaixo).
 
-**A forma da rampa continua sendo geometria herdada — só que agora por valor copiado, não por fórmula reaplicada.** Trocar `--sd-brand` não move mais nenhum neutro do sistema: nem fundo, nem borda, nem superfície, nem texto — só os dois acentos e a cor de link.
+**A forma da rampa continua sendo geometria herdada — só que agora por valor copiado, não por fórmula reaplicada.** Trocar `--pd-brand` não move mais nenhum neutro do sistema: nem fundo, nem borda, nem superfície, nem texto — só os dois acentos e a cor de link.
 
 ### O `L` da marca é inerte
 
 **As duas travas de acento reescrevem `L` e consomem só `c` e `h`** — `max(l, 0.72)` e `min(l, 0.50)`. Consequência que vale escrita porque contraria a intuição: **pedir uma marca "mais escura" não é uma operação que este sistema saiba fazer.** Dois hexes de mesmo matiz e mesma cromaticidade, separados por sete pontos de luminosidade, produzem os dois acentos byte a byte idênticos.
 
-**A superfície do site inteiro não se mexe nunca; só o acento esfria ou esquenta.** É isso que torna a troca de marca cirúrgica em vez de arriscada — e, desde a issue #95, é verdade por construção: a rampa e as duas superfícies simplesmente não leem `--sd-brand`.
+**A superfície do site inteiro não se mexe nunca; só o acento esfria ou esquenta.** É isso que torna a troca de marca cirúrgica em vez de arriscada — e, desde a issue #95, é verdade por construção: a rampa e as duas superfícies simplesmente não leem `--pd-brand`.
 
 ### AA é propriedade da arquitetura, não verificação por skin
 
@@ -1662,27 +1662,27 @@ Isso torna a auditoria uma leitura de bloco: **token que aparece no bloco escuro
 
 ### A superfície do código sobe um degrau, e a regra fica simétrica
 
-`--sd-surface-code` era `--sd-gray-950` no escuro, que é **o mesmo valor de `--sd-surface-page`**. Dois nomes para uma cor, no modo canônico — e é literalmente o defeito do Infima que este projeto nomeou.
+`--pd-surface-code` era `--pd-gray-950` no escuro, que é **o mesmo valor de `--pd-surface-page`**. Dois nomes para uma cor, no modo canônico — e é literalmente o defeito do Infima que este projeto nomeou.
 
 Aquilo se sustentava enquanto havia cartão: o bloco de código vivia sobre o cartão, e o que o destacava era o cartão em volta, não a tinta dele. Sem cartão, o bloco de código passou a ter **a cor exata da página**.
 
-Ela sobe para `--sd-gray-900`, e a regra passa a ser: **a superfície do código é um passo acima da página nos dois modos.** No claro ela já era — a pastilha toma o extremo do modo, que é branco —, então a assimetria (igual à página no escuro, acima dela no claro) desaparece por o escuro vir ao encontro do claro.
+Ela sobe para `--pd-gray-900`, e a regra passa a ser: **a superfície do código é um passo acima da página nos dois modos.** No claro ela já era — a pastilha toma o extremo do modo, que é branco —, então a assimetria (igual à página no escuro, acima dela no claro) desaparece por o escuro vir ao encontro do claro.
 
 Medido, contra a página: **1,057:1** no escuro e **1,026:1** no claro — recalculado na issue #95, quando a página deixou de ser parada de rampa e passou a ter token próprio. A célula do escuro era **1,000:1** antes de a [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) subir o código um degrau.
 
 > **Dissenso registrado, herdado da [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56).** A parada 900 é o degrau imediatamente acima na rampa — a **única derivação honesta disponível**, e não uma medida. O que morre no lugar dela era anatomia medida da âncora. Se ao vivo o bloco ficar pesado no escuro, o ajuste é uma linha, e é o tipo de coisa que só se julga com a implementação montada.
 
-O par do `Frame` levou a mesma correção pela mesma causa, e está em [`componentes/frame.md`](componentes/frame.md): o palco dele citava `--sd-surface-page` e passou a citar `--sd-surface-raised`. A [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) achou o defeito num componente e não olhou para o outro.
+O par do `Frame` levou a mesma correção pela mesma causa, e está em [`componentes/frame.md`](componentes/frame.md): o palco dele citava `--pd-surface-page` e passou a citar `--pd-surface-raised`. A [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) achou o defeito num componente e não olhou para o outro.
 
 ### O segundo seletor do bloco escuro, e a ilha que ele carregava
 
-**O bloco escuro tem UM seletor hoje: `:root`.** Ele teve dois — `:root, [data-sd-showcase]` —, e o segundo era a **ilha de espetáculo**. Ela saiu com a landing na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), porque a página era a única região do site a hospedá-la.
+**O bloco escuro tem UM seletor hoje: `:root`.** Ele teve dois — `:root, [data-pd-showcase]` —, e o segundo era a **ilha de espetáculo**. Ela saiu com a landing na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), porque a página era a única região do site a hospedá-la.
 
 O mecanismo fica registrado, e não como curiosidade: ele é o que precisaria voltar. Glow é **emissão**, e emissão só é legível contra escuridão — o mesmo gradiente de acento **sobe** a luminância local no escuro e a **desce** no claro. Mesma operação, sinal invertido, e traduzir produz mancha. Então o glow não traduzia: a superfície de espetáculo **carregava o próprio substrato** e renderizava escura nos dois modos.
 
 O custo arquitetural era **um seletor a mais no bloco que já existe**. Nenhum bloco novo, nenhuma briga de especificidade: custom property declarada no próprio elemento vence para a subárvore dele, e `:root[data-theme='light']` declara em `<html>`, que é outro elemento. Era isso que fazia a ilha ser **inerte na troca de tema**. Quatro coisas caíam de graça dentro dela, sem uma linha de configuração: o acento era o do escuro, a projeção voltava à opacidade do escuro, o realce da aresta voltava a ser visível, e o anel de foco já estava verificado.
 
-> **Uma armadilha de máquina que a remoção criou, e ela está fechada.** `scripts/contraste.mjs` recorta este bloco casando o seletor em início de linha. Enquanto ele era `:root,\n[data-sd-showcase]`, o par era único no arquivo. Sozinho, `:root {` abre **quatro** blocos — a camada 1, este, o da sombra e o adaptador —, e casar só o seletor recortaria o primeiro deles e passaria a medir a camada errada **em silêncio**, devolvendo número plausível em vez de exceção. O script ganhou uma segunda âncora: a primeira declaração do bloco, `color-scheme: dark`, que é o que define um bloco de modo. Voltar com a ilha exige acertar o casamento lá junto.
+> **Uma armadilha de máquina que a remoção criou, e ela está fechada.** `scripts/contraste.mjs` recorta este bloco casando o seletor em início de linha. Enquanto ele era `:root,\n[data-pd-showcase]`, o par era único no arquivo. Sozinho, `:root {` abre **quatro** blocos — a camada 1, este, o da sombra e o adaptador —, e casar só o seletor recortaria o primeiro deles e passaria a medir a camada errada **em silêncio**, devolvendo número plausível em vez de exceção. O script ganhou uma segunda âncora: a primeira declaração do bloco, `color-scheme: dark`, que é o que define um bloco de modo. Voltar com a ilha exige acertar o casamento lá junto.
 
 **Existe ilha escura, não existe ilha clara.** O critério é emissão, emissão precisa de escuridão, então o mecanismo tem uma direção só. Pendurar uma ilha clara "por simetria" criaria a licença que o critério existe para fechar: sem ele, qualquer componente difícil no claro pede dark-only, e o modo claro morre por mil concessões. **A regra continua verdadeira e continua sem sujeito** — hoje não há ilha de nenhum dos dois tipos.
 
@@ -1690,13 +1690,13 @@ O custo arquitetural era **um seletor a mais no bloco que já existe**. Nenhum b
 
 A regra que decide: **token que referencia camada 2 bifurca e mora nos dois blocos; token que referencia só camada 1 não bifurca e mora fora deles.**
 
-`--sd-shadow-lip` é o único papel nessa situação, e é uma correção com história: ele estava escrito como par declarado, com alfa zerado no claro. Zerar o alfa desligava uma fórmula que havia **invertido de sinal** — ancorada na tinta do modo, ela produziria uma linha **escura** na aresta superior do cartão claro, ou seja luz vindo de baixo.
+`--pd-shadow-lip` é o único papel nessa situação, e é uma correção com história: ele estava escrito como par declarado, com alfa zerado no claro. Zerar o alfa desligava uma fórmula que havia **invertido de sinal** — ancorada na tinta do modo, ela produziria uma linha **escura** na aresta superior do cartão claro, ou seja luz vindo de baixo.
 
-**Realce é luz, e luz é o topo da rampa — não "a tinta do modo".** Corrigida a âncora, o par some inteiro, e a conta é de quantização e não de identidade: no claro o cartão é `--sd-neutral-raised-light`, **`#FFFFFF`**, que fica **acima** do topo da rampa (`--sd-gray-50`, `#F4F6FA`) e não é parada dela. Um véu de 6% de `#F4F6FA` sobre `#FFFFFF` resolve para `254,34 · 254,46 · 254,70` — **`#FEFEFF` arredondado**, menos de um passo de 8 bits em todo canal. **A aresta iluminada some no claro porque não há nada acima dela para iluminar, e o que sobra da fórmula não alcança um degrau de cor — não porque alguém a desligou.**
+**Realce é luz, e luz é o topo da rampa — não "a tinta do modo".** Corrigida a âncora, o par some inteiro, e a conta é de quantização e não de identidade: no claro o cartão é `--pd-neutral-raised-light`, **`#FFFFFF`**, que fica **acima** do topo da rampa (`--pd-gray-50`, `#F4F6FA`) e não é parada dela. Um véu de 6% de `#F4F6FA` sobre `#FFFFFF` resolve para `254,34 · 254,46 · 254,70` — **`#FEFEFF` arredondado**, menos de um passo de 8 bits em todo canal. **A aresta iluminada some no claro porque não há nada acima dela para iluminar, e o que sobra da fórmula não alcança um degrau de cor — não porque alguém a desligou.**
 
 > **A redação anterior chamava isto de *"identidade matemática"*, e não é.** Ela dizia que no claro o cartão **é** o topo da rampa, e o topo sobre si mesmo se cancela. Os dois valores são diferentes — `#FFFFFF` contra `#F4F6FA` —, e a composição sobra em `#FEFEFF`, a um 255-avo do branco em `R` e `G`. A conclusão não muda e o argumento fica **mais** forte: some por ficar sob a resolução do canal, que é um fato medido, e não por um cancelamento algébrico que não acontece. Identidade que não fecha é o tipo de afirmação que este arquivo cobra dos outros.
 
-As sombras moram junto, pelo mesmo motivo: a composição é a mesma nos dois modos, e o modo entra por `--sd-shadow-cast`, que **é** par declarado.
+As sombras moram junto, pelo mesmo motivo: a composição é a mesma nos dois modos, e o modo entra por `--pd-shadow-cast`, que **é** par declarado.
 
 > **Exceção declarada, e é a única do sistema.** A camada 2 é só cor, e as sombras carregam comprimentos inline. `box-shadow` é valor atômico: separar geometria de cor exigiria seis tokens de comprimento para compor duas sombras. Elas moram no arquivo de tokens, cabem num bloco que se lê inteiro, e a exceção é **declarada** — não descuido.
 
@@ -1704,7 +1704,7 @@ As sombras moram junto, pelo mesmo motivo: a composição é a mesma nos dois mo
 
 Eram **quatro degraus numerados**, com um anel `0 0 0 1px` embutido em cada composição. São **dois papéis nomeados por intenção** — `raised` e `float` —, e o anel saiu.
 
-**`--sd-shadow-sunken` morreu junto, e a morte vale a linha.** Ele era o contra-exemplo declarado da elevação — *"tudo sobe, só o código afunda"* —, tinha um consumidor só, o berço do bloco de código, e **afundar era relativo ao cartão**. Sem cartão, o contra-exemplo perde contra o quê ser exemplo.
+**`--pd-shadow-sunken` morreu junto, e a morte vale a linha.** Ele era o contra-exemplo declarado da elevação — *"tudo sobe, só o código afunda"* —, tinha um consumidor só, o berço do bloco de código, e **afundar era relativo ao cartão**. Sem cartão, o contra-exemplo perde contra o quê ser exemplo.
 
 **A profundidade sai do conteúdo — não do site, e a diferença importa.** A [#50](https://github.com/ThiagoPanini/panlabs-docs/issues/50) mediu **zero componentes de conteúdo com sombra em seis páginas** da âncora: `shadow-md` e maiores existem no CSS dela e **nunca são usados**. O único portador de sombra do site medido é um chip de 24px no hover de heading.
 
@@ -1712,8 +1712,8 @@ Os dois papéis que sobram continuam com consumidor, e **nenhum deles é conteú
 
 | Papel | Quem o consome |
 | --- | --- |
-| `--sd-shadow-float` | o dropdown de idioma, a gaveta do estreito, o modal de busca e o botão de voltar ao topo — tudo `position: fixed` |
-| `--sd-shadow-raised` | o painel da referência gerada — **não flutua**: é superfície levantada |
+| `--pd-shadow-float` | o dropdown de idioma, a gaveta do estreito, o modal de busca e o botão de voltar ao topo — tudo `position: fixed` |
+| `--pd-shadow-raised` | o painel da referência gerada — **não flutua**: é superfície levantada |
 
 Então o adaptador escreve:
 
@@ -1721,7 +1721,7 @@ Então o adaptador escreve:
 | --- | --- | --- |
 | `--ifm-global-shadow-lw` | `CodeBlock/Container` (conteúdo) e `BackToTopButton` (chrome flutuante) | **`none`** |
 | `--ifm-alert-shadow` | `.alert` do Infima — o nosso callout tem DOM próprio e não é um `.alert` | **`none`** |
-| `--ifm-global-shadow-md` / `-tl` | `.dropdown__menu` e `.navbar-sidebar` — chrome flutuante | `--sd-shadow-float` |
+| `--ifm-global-shadow-md` / `-tl` | `.dropdown__menu` e `.navbar-sidebar` — chrome flutuante | `--pd-shadow-float` |
 
 **Correção medida contra o que o ticket afirmava.** A decisão nomeava `.card` como o leitor real de `lw`, *"o cartão do `card-group`, que é conteúdo"*. **Este site não renderiza `.card` nenhum:** o nosso cartão é classe de CSS Module, e a `.card` nua do Infima não a alcança. Os leitores vivos, medidos no fonte da 3.10.2 e no HTML publicado, são outros dois. A conclusão não muda para o bloco de código; o que muda é que **o botão de voltar ao topo perderia a sombra por tabela**, e ele é chrome flutuante pela mesma definição que põe o dropdown e a gaveta nessa classe. Ele a recupera por classe estável em `chrome.css` — sem exceção nova no adaptador, porque `.theme-back-to-top-button` é `ThemeClassNames`.
 
@@ -1733,7 +1733,7 @@ Então o adaptador escreve:
 
 > **Dissenso registrado, e ele é sobre a defesa da seção inteira.** A profundidade era a demonstração mais visível do sistema, e agora ela levanta um botão e um modal. Quem abrir o arquivo de tokens sem contexto vai ler *over-engineering*, e merece a resposta curta: **a defesa deixou de ser "é um sistema" e passou a ser "são dois papéis medidos que compartilham dois ingredientes"** — `lip` e `cast`. É verdade, e é menos do que o arquivo prometia.
 >
-> **E `raised` perdeu um dos dois consumidores** com a [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94): o botão primário da landing. Sobra o painel da referência gerada. O token fica porque continua consumido — e é essa a diferença entre ele e `--sd-type-6xl`, que saiu na mesma remoção.
+> **E `raised` perdeu um dos dois consumidores** com a [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94): o botão primário da landing. Sobra o painel da referência gerada. O token fica porque continua consumido — e é essa a diferença entre ele e `--pd-type-6xl`, que saiu na mesma remoção.
 
 ### A camada 3 esvaziou com a ilha, e voltou a ter membros
 
@@ -1741,23 +1741,23 @@ Então o adaptador escreve:
 
 | Token | Onde é declarado | Quantas declarações |
 | --- | --- | ---: |
-| `--sd-callout-fill` | `src/components/catalogo.module.css` | 4 |
-| `--sd-callout-edge` | `src/components/catalogo.module.css` | 4 |
-| `--sd-callout-ink` | `src/components/catalogo.module.css` | 4 |
-| `--sd-step-marker` | `src/components/catalogo.module.css` | 1 |
-| `--sd-sidebar-icone` | `src/css/chrome.css` | 11 |
+| `--pd-callout-fill` | `src/components/catalogo.module.css` | 4 |
+| `--pd-callout-edge` | `src/components/catalogo.module.css` | 4 |
+| `--pd-callout-ink` | `src/components/catalogo.module.css` | 4 |
+| `--pd-step-marker` | `src/components/catalogo.module.css` | 1 |
+| `--pd-sidebar-icone` | `src/css/chrome.css` | 11 |
 
-**As duas formas de camada 3 estão as duas representadas aqui, e a diferença importa.** O trio do callout é **uma variável, quatro valores**: cada variante do componente redeclara os três no seu próprio seletor, e a regra que pinta é uma só — é a camada 3 usada como ponto de comutação. `--sd-sidebar-icone` é o mesmo padrão levado ao extremo, com uma declaração por seção e um `mask` só que as consome todas. Já `--sd-step-marker` é o caso simples: um valor nomeado no escopo onde ele significa alguma coisa, para que a régua do marcador e o fio que liga os passos não repitam o número.
+**As duas formas de camada 3 estão as duas representadas aqui, e a diferença importa.** O trio do callout é **uma variável, quatro valores**: cada variante do componente redeclara os três no seu próprio seletor, e a regra que pinta é uma só — é a camada 3 usada como ponto de comutação. `--pd-sidebar-icone` é o mesmo padrão levado ao extremo, com uma declaração por seção e um `mask` só que as consome todas. Já `--pd-step-marker` é o caso simples: um valor nomeado no escopo onde ele significa alguma coisa, para que a régua do marcador e o fio que liga os passos não repitam o número.
 
 **A camada continua sendo uma das três, e a regra de referência do §1 se lê pelas três.** Camada sem membro é diferente de camada que não existe — e essa frase valia enquanto ela estava vazia, que é o estado que o parágrafo abaixo registra.
 
-O que morava lá **antes** eram `--sd-glow` e `--sd-glow-2`, mais a caixa quadrada da luz e o par de amplitude da respiração. Eles saíram com a ilha na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), e é isso que esvaziou a camada por um tempo. O registro fica porque é a especificação do que precisaria voltar:
+O que morava lá **antes** eram `--pd-glow` e `--pd-glow-2`, mais a caixa quadrada da luz e o par de amplitude da respiração. Eles saíram com a ilha na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), e é isso que esvaziou a camada por um tempo. O registro fica porque é a especificação do que precisaria voltar:
 
-`--sd-glow` e `--sd-glow-2` **não eram papel semântico** — são gradientes, não cores, e não cabiam na lista fechada de oito. Eram token de componente, e o componente era a própria ilha. **A regra deles era separada de propósito:** entrar no bloco escuro os poria em `:root`, e o glow vazaria para o site inteiro. Fora da ilha, `var(--sd-glow)` **não resolvia para nada** — a confinação não dependia de alguém lembrar dela, era fato de escopo. E custava **zero** na superfície de troca, que continua em sete linhas.
+`--pd-glow` e `--pd-glow-2` **não eram papel semântico** — são gradientes, não cores, e não cabiam na lista fechada de oito. Eram token de componente, e o componente era a própria ilha. **A regra deles era separada de propósito:** entrar no bloco escuro os poria em `:root`, e o glow vazaria para o site inteiro. Fora da ilha, `var(--pd-glow)` **não resolvia para nada** — a confinação não dependia de alguém lembrar dela, era fato de escopo. E custava **zero** na superfície de troca, que continua em sete linhas.
 
-**Eram dois, e o segundo não afrouxava o critério de emissão.** O magenta a **30%** citava `--sd-accent`; o cyan a **24%** citava `--sd-code-parameter`, que é o tom do identificador na paleta de sintaxe — dentro da ilha a laje era o material, e a segunda luz era a cor do material. Nenhum hex novo: as duas eram a operação 1 sobre token que já existe. **Um respirava, o outro não** — o par de amplitude alcançava só o magenta, e era assim que o teto de *um loop por página* se lia ao pé da letra.
+**Eram dois, e o segundo não afrouxava o critério de emissão.** O magenta a **30%** citava `--pd-accent`; o cyan a **24%** citava `--pd-code-parameter`, que é o tom do identificador na paleta de sintaxe — dentro da ilha a laje era o material, e a segunda luz era a cor do material. Nenhum hex novo: as duas eram a operação 1 sobre token que já existe. **Um respirava, o outro não** — o par de amplitude alcançava só o magenta, e era assim que o teto de *um loop por página* se lia ao pé da letra.
 
-> **O primeiro subiu de 12% para 30%, e o registro anterior estava errado sobre a origem.** [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) escreveu o par `0,24 / 0,30` supondo que o `--sd-glow` publicado já fosse 0,30; ele era **12%, desde o primeiro commit**. O par estava certo sobre o destino. Quem pagou a diferença foi a **figura**: enquanto havia desenho embaixo, a luz era o brilho sobre ele; sem desenho ela carregava o hero sozinha, e 12% não carregava. O documento que detalhava isso era `landing.md`, e saiu junto.
+> **O primeiro subiu de 12% para 30%, e o registro anterior estava errado sobre a origem.** [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) escreveu o par `0,24 / 0,30` supondo que o `--pd-glow` publicado já fosse 0,30; ele era **12%, desde o primeiro commit**. O par estava certo sobre o destino. Quem pagou a diferença foi a **figura**: enquanto havia desenho embaixo, a luz era o brilho sobre ele; sem desenho ela carregava o hero sozinha, e 12% não carregava. O documento que detalhava isso era `landing.md`, e saiu junto.
 
 ---
 
@@ -1771,7 +1771,7 @@ Três regras de conteúdo:
 
 1. **Ele não bifurca por modo.** Lê camada 2, que já bifurcou.
 2. **Ele não pode conter linha morta que sugira funcionar.** Cada linha foi conferida contra a lista de `--ifm-*` efetivamente lidas por `var()` no Infima e no `theme-classic`.
-3. **Ele escreve num terceiro namespace também.** `--doc-sidebar-width` não é `--ifm-*` nem `--sd-*`, e o adaptador escreve nele como escreve nos outros.
+3. **Ele escreve num terceiro namespace também.** `--doc-sidebar-width` não é `--ifm-*` nem `--pd-*`, e o adaptador escreve nele como escreve nos outros.
 
 Dois achados da implementação que a arquitetura não tinha:
 
@@ -1805,9 +1805,9 @@ A diferença para a exceção da tag é que esta é **mais** fechada, não menos
 
 ### O shim do Prism
 
-O tema Prism é objeto JavaScript em `docusaurus.config.js`, e a leitura ingênua é que a paleta de sintaxe teria que morar lá — quebrando a regra de que todo número vive num bloco só. **Não quebra:** um tema do `prism-react-renderer` é `{plain, styles:[{types, style}]}`, e o `style` aceita qualquer string CSS, inclusive `var(--sd-code-keyword)`.
+O tema Prism é objeto JavaScript em `docusaurus.config.js`, e a leitura ingênua é que a paleta de sintaxe teria que morar lá — quebrando a regra de que todo número vive num bloco só. **Não quebra:** um tema do `prism-react-renderer` é `{plain, styles:[{types, style}]}`, e o `style` aceita qualquer string CSS, inclusive `var(--pd-code-keyword)`.
 
-O tema vira um shim que **só referencia token**, e **nenhum valor de cor entra no arquivo de config**. Verificado no HTML gerado: os `<span>` de token saem com `style="color:var(--sd-code-keyword)"`, e o container com `style="--prism-background-color:var(--sd-surface-code)"`.
+O tema vira um shim que **só referencia token**, e **nenhum valor de cor entra no arquivo de config**. Verificado no HTML gerado: os `<span>` de token saem com `style="color:var(--pd-code-keyword)"`, e o container com `style="--prism-background-color:var(--pd-surface-code)"`.
 
 Um shim serve os **dois** modos: o Docusaurus cai em `prism.theme` quando `prism.darkTheme` não existe, e os tokens já bifurcaram. Declarar um segundo criaria um lugar a mais onde o modo diverge.
 
@@ -1817,16 +1817,16 @@ Um shim serve os **dois** modos: o Docusaurus cai em `prism.theme` quando `prism
 
 Dezenove nomes, e **zero valor novo** em relação ao que a direção de arte travou. Eles existem porque a regra mais dura da spec é *zero valor fora deste documento*: um arquivo de componente que escreve "peso 600" já é violação — ele precisa de um nome para citar.
 
-- **Tamanho:** `--sd-type-xs` … `--sd-type-4xl`, e a escala **termina aí** — não há degrau de display. Os degraus levam o nome do alvo, para a procedência ficar legível no próprio token e quem confere não precisar traduzir. Numerar de um a oito jogaria isso fora — e é o nome do alvo que deixa o **fim da escala ser legível** em vez de parecer truncamento.
-- **Peso:** `--sd-weight-body`, `-ui`, `-heading` — nomeados por **intenção**, não por número. `--sd-weight-600: 600` é uma identidade que não ensina nada, e nome de intenção fecha uma armadilha: o Infima chama **500** de `semibold`, e o nosso `semibold` seria 600 — a mesma palavra sobre dois números dentro do mesmo repositório.
-- **Entrelinha:** `--sd-leading-prose`, `-ui`, `-code`, `-h1` a `-h4`. `-h4` repete o valor de `-ui` e mantém nome próprio: mesmo número hoje, intenções diferentes; fundi-los faria uma mudança em h4 mexer em toda a rotulagem de UI.
-- **Tracking:** `--sd-tracking-tight`, um só, e **só em título**. O corpo usa o `normal` do navegador, que é keyword e não valor.
+- **Tamanho:** `--pd-type-xs` … `--pd-type-4xl`, e a escala **termina aí** — não há degrau de display. Os degraus levam o nome do alvo, para a procedência ficar legível no próprio token e quem confere não precisar traduzir. Numerar de um a oito jogaria isso fora — e é o nome do alvo que deixa o **fim da escala ser legível** em vez de parecer truncamento.
+- **Peso:** `--pd-weight-body`, `-ui`, `-heading` — nomeados por **intenção**, não por número. `--pd-weight-600: 600` é uma identidade que não ensina nada, e nome de intenção fecha uma armadilha: o Infima chama **500** de `semibold`, e o nosso `semibold` seria 600 — a mesma palavra sobre dois números dentro do mesmo repositório.
+- **Entrelinha:** `--pd-leading-prose`, `-ui`, `-code`, `-h1` a `-h4`. `-h4` repete o valor de `-ui` e mantém nome próprio: mesmo número hoje, intenções diferentes; fundi-los faria uma mudança em h4 mexer em toda a rotulagem de UI.
+- **Tracking:** `--pd-tracking-tight`, um só, e **só em título**. O corpo usa o `normal` do navegador, que é keyword e não valor.
 
 Isto **não** abre camada semântica de dimensão: são tokens de camada 1, declarados uma vez, consumidos direto pela camada 3.
 
 ### O degrau do título de página
 
-O título fica em `--sd-type-3xl` até 996px e em `--sd-type-4xl` a partir de 997px — e **não** nos 640px medidos no alvo.
+O título fica em `--pd-type-3xl` até 996px e em `--pd-type-4xl` a partir de 997px — e **não** nos 640px medidos no alvo.
 
 O par 30/36 é herdado; **o ponto onde ele troca, não.** 640 seria um segundo limiar de media query no mesmo eixo, contra a regra de limiar único do projeto, que alinha as media queries aos literais compilados do Infima. E alinhado, o título cresce **no mesmo instante em que a sidebar aparece** — um evento visual em vez de dois.
 
@@ -1834,7 +1834,7 @@ O par 30/36 é herdado; **o ponto onde ele troca, não.** 640 seria um segundo l
 
 ### Não há degrau de display, e a escala já terminou no `4xl` uma vez
 
-**O topo da escala é `--sd-type-4xl`.** Houve um `--sd-type-6xl` de **60px** com **um** consumidor no site inteiro — o título do hero da landing, de 997px —, e ele saiu na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), junto com o consumidor.
+**O topo da escala é `--pd-type-4xl`.** Houve um `--pd-type-6xl` de **60px** com **um** consumidor no site inteiro — o título do hero da landing, de 997px —, e ele saiu na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94), junto com o consumidor.
 
 **Antes dele o `5xl` já tinha saído**, e a lápide vale a linha porque as duas mortes são a mesma régua aplicada de dois lados. O `5xl` foi escolhido quando o hero era um bloco de prosa de 672: naquela largura, 48px era o maior degrau que o orçamento da dobra tolerava. Com o bloco do hero tomando o container, o título passou a caber numa linha em 60, e o `5xl` ficaria **sem consumidor** — o defeito do Infima que este documento nomeia para não copiar. O `6xl` sai agora pelo motivo inverso: ele tinha o consumidor, e o consumidor é que saiu.
 
@@ -1897,7 +1897,7 @@ Quatro paradas de duração mais um período de loop, duas curvas nomeadas por i
 
 Os números são medidos, não escolhidos: a parada curta é o valor mais aplicado de toda a amostra das sete referências; a média é a banda de mudança grande; a longa é a banda de entrada grande; e o período de loop é o único loop ambiente medido em qualquer uma das sete.
 
-**Correção que precisa carregar sem rastro da versão perdedora:** `--sd-move-enter` compõe da parada **curta**, não da longa. O único consumidor dele no site inteiro é o modal de busca, e a mesma medição que produziu o token registra o modal na banda curta em três dos sites. A banda longa fica com `--sd-move-showcase`, cujo consumidor é entrada grande de verdade.
+**Correção que precisa carregar sem rastro da versão perdedora:** `--pd-move-enter` compõe da parada **curta**, não da longa. O único consumidor dele no site inteiro é o modal de busca, e a mesma medição que produziu o token registra o modal na banda curta em três dos sites. A banda longa fica com `--pd-move-showcase`, cujo consumidor é entrada grande de verdade.
 
 O default do framework de utilitários do alvo **não entra**: é *default* herdado por cinco dos sete sites sem que ninguém o escolhesse, e a única aplicação medida dele é residual contra centenas da parada curta. Medição prefere o aplicado ao herdado.
 
@@ -1927,7 +1927,7 @@ Todos os pares onde AA é obrigatório, nos dois modos, sobre **as duas** superf
 | ícone de estado sobre o próprio fundo, pior caso | 6,33 | 5,98 |
 | corpo sobre fundo de callout, pior caso | 8,28 | 8,54 |
 
-**No escuro, toda linha "levantada / página" sai com as duas células idênticas** — não é arredondamento nem duplicação por engano: desde a issue #95, `--sd-surface-raised` referencia `--sd-surface-page` no modo canônico, então as duas colunas medem a mesma superfície duas vezes. No claro elas divergem por um hex (`#FFFFFF` contra `#FCFCFC`), que é distância pequena demais para separar as duas casas decimais na maioria das linhas.
+**No escuro, toda linha "levantada / página" sai com as duas células idênticas** — não é arredondamento nem duplicação por engano: desde a issue #95, `--pd-surface-raised` referencia `--pd-surface-page` no modo canônico, então as duas colunas medem a mesma superfície duas vezes. No claro elas divergem por um hex (`#FFFFFF` contra `#FCFCFC`), que é distância pequena demais para separar as duas casas decimais na maioria das linhas.
 
 ### A divergência com [`foco.md`](foco.md) §6 está fechada, por medição
 
@@ -1946,7 +1946,7 @@ O método vale registro, porque ele é o que reproduz o número. Duas escolhas o
 
 **`node scripts/contraste.mjs --verificar` reprova se o pior token cair abaixo de 8,03 no escuro ou 6,29 no claro, ou se o croma máximo passar de 0,095.**
 
-Hoje ele mede **8,13** no escuro, com **dez centésimos** de folga até o piso. A issue #95 trocou `--sd-gray-900`, que é a pastilha do escuro, e o token mais apertado dos sete — `comment` — foi remedido de `#B0AEB6` para `#B2B0B8` para não cruzar o piso; os outros seis toleraram a pastilha nova sem ajuste. Antes de #95 ele media **8,04**, e a distância até o piso era de **um centésimo**, que foi o mais apertado que este número já esteve.
+Hoje ele mede **8,13** no escuro, com **dez centésimos** de folga até o piso. A issue #95 trocou `--pd-gray-900`, que é a pastilha do escuro, e o token mais apertado dos sete — `comment` — foi remedido de `#B0AEB6` para `#B2B0B8` para não cruzar o piso; os outros seis toleraram a pastilha nova sem ajuste. Antes de #95 ele media **8,04**, e a distância até o piso era de **um centésimo**, que foi o mais apertado que este número já esteve.
 
 **O piso do escuro desceu de 8,04 para 8,03, e a descida é aritmética, não afrouxamento.** O 8,04 foi escrito como **previsão**, quando a pastilha ainda era a cor da página e a medição dava 8,94: o número gravado era o da pastilha *"um degrau acima na rampa, que é onde ela vai parar quando o cartão sair"*. O cartão saiu, a pastilha subiu, e **a previsão acertou a segunda casa decimal** — a medição dá 8,0364, que se publica como 8,04 e é, no float, três milésimos menor que o piso previsto.
 
@@ -1970,15 +1970,15 @@ Ela é a **menos saturada das três nos dois modos** e a única que bate os dois
 
 ### A única reprovação, e ela é deliberada
 
-**`--sd-text-faint` reprova: 3,88:1 no escuro — levantada e página empatam, porque são a mesma cor — e 4,63:1 no claro**, sobre a página, que é o pior caso ali. Antes da issue #95 o pior caso nos dois modos vinha da levantada; a levantada clara é hoje branco puro (`#FFFFFF`), mais clara que a página (`#FCFCFC`), e a ordem se inverteu.
+**`--pd-text-faint` reprova: 3,88:1 no escuro — levantada e página empatam, porque são a mesma cor — e 4,63:1 no claro**, sobre a página, que é o pior caso ali. Antes da issue #95 o pior caso nos dois modos vinha da levantada; a levantada clara é hoje branco puro (`#FFFFFF`), mais clara que a página (`#FCFCFC`), e a ordem se inverteu.
 
 É a parada 500 — o meio matemático da rampa —, então é o pior caso **por construção**, e nenhum ajuste salva.
 
-> **Proibido para texto de leitura.** `--sd-text-faint` existe para separador, placeholder e controle desabilitado, que é isento pela SC 1.4.3. Texto secundário legítimo usa `--sd-text-muted`, que passa nos dois modos.
+> **Proibido para texto de leitura.** `--pd-text-faint` existe para separador, placeholder e controle desabilitado, que é isento pela SC 1.4.3. Texto secundário legítimo usa `--pd-text-muted`, que passa nos dois modos.
 
 ### A garantia é da arquitetura, não desta skin
 
-**O contraste do TEXTO é propriedade das paradas, não da marca.** Desde a issue #95 isso não é mais um efeito medido — é garantia de construção: a rampa e as duas superfícies não leem `--sd-brand`, então **nenhuma célula que não cite o acento** se move numa troca de marca.
+**O contraste do TEXTO é propriedade das paradas, não da marca.** Desde a issue #95 isso não é mais um efeito medido — é garantia de construção: a rampa e as duas superfícies não leem `--pd-brand`, então **nenhuma célula que não cite o acento** se move numa troca de marca.
 
 > **Correção de fato.** Esta frase dizia *"não existe troca de marca capaz de mover uma célula desta tabela"*, sem a ressalva, e a medição derruba a versão forte: trocar o violeta pelo laranja moveu **treze** células entre esta tabela e a de [`foco.md`](foco.md) §6 — todas as que citam o acento, e só elas. A razão de contraste é função da luminância relativa do WCAG, que **não** é o `L` do OKLCH: dois acentos de mesmo `L` e matizes diferentes têm luminâncias diferentes. O que a #95 comprou foi a metade certa da garantia, e o parágrafo abaixo já a enunciava corretamente — *"as linhas que não o citam não se mexeram"*. Nenhum piso caiu na troca, e a menor folga da tabela seguiu sendo a mesma linha. Antes de #95 a garantia era empírica, não estrutural, e o parágrafo abaixo registra essa medição — histórica, mas ainda o motivo de a garantia ter sido escrita como regra em vez de ficar como coincidência.
 
@@ -2027,9 +2027,9 @@ E **um relatório**, que também roda na CI e não é nenhum dos dois:
 >
 > O que o portão 1 de fato faz são **duas pernas**: o prelúdio de `@media` sai da varredura de literal **e entra numa segunda perna**, que cobra que todo limiar seja o limiar único do projeto — 996/997px. Um `@media (min-width: 1024px)` novo reprova, que é exatamente onde ele precisa reprovar. A exceção não é buraco: é uma regra mais estreita, escrita noutro lugar.
 
-**Segundo limite, e ele foi fechado em vez de explorado.** O padrão do portão 1 é `px|rem|em|ms|s`; `dvh` **não está nele**. A altura máxima do modal de busca é `60dvh`, e escrevê-la inline num CSS Module passaria pela varredura. **Passar por buraco de varredura é a única forma de literal que este projeto não admite** — a saída correta seria fechar o buraco, e fechá-lo custa uma linha aqui em vez de uma perna nova de portão. Por isso `--sd-busca-height` é token, e o portão 1 continua com o padrão que sempre teve.
+**Segundo limite, e ele foi fechado em vez de explorado.** O padrão do portão 1 é `px|rem|em|ms|s`; `dvh` **não está nele**. A altura máxima do modal de busca é `60dvh`, e escrevê-la inline num CSS Module passaria pela varredura. **Passar por buraco de varredura é a única forma de literal que este projeto não admite** — a saída correta seria fechar o buraco, e fechá-lo custa uma linha aqui em vez de uma perna nova de portão. Por isso `--pd-busca-height` é token, e o portão 1 continua com o padrão que sempre teve.
 
-**Achado da implementação:** o `postcss-calc`, que roda na minificação, **não entende sintaxe de cor relativa** e emite aviso ao encontrar `calc(l + 0.06)` e `calc(l - 0.06)`, os dois acentos-hover. Ele **não toca no valor** — verificado byte a byte no CSS emitido, os acentos saem intactos. O aviso é ruído, não defeito, e está registrado aqui para ninguém "consertar" o acento por causa dele. Até a issue #95 ele também disparava em `calc(c * var(--sd-brand-tint))`, na rampa; a rampa é hex fixo agora e não passa mais por `calc()` nenhum, então essa metade do aviso morreu junto.
+**Achado da implementação:** o `postcss-calc`, que roda na minificação, **não entende sintaxe de cor relativa** e emite aviso ao encontrar `calc(l + 0.06)` e `calc(l - 0.06)`, os dois acentos-hover. Ele **não toca no valor** — verificado byte a byte no CSS emitido, os acentos saem intactos. O aviso é ruído, não defeito, e está registrado aqui para ninguém "consertar" o acento por causa dele. Até a issue #95 ele também disparava em `calc(c * var(--pd-brand-tint))`, na rampa; a rampa é hex fixo agora e não passa mais por `calc()` nenhum, então essa metade do aviso morreu junto.
 
 ---
 
@@ -2046,7 +2046,7 @@ Os valores são medição de primeira mão do `docs.devin.ai`, registrada em `re
 | Texto forte | `#181a1e` | `#dfe2e6` | exato |
 | Texto corpo | `#404246` | `#a0a2a6` | exato |
 
-**O chão da página não vem da rampa, e ali estava o defeito de origem.** A âncora tinge a rampa de onze cinzas com o matiz da marca, mas **não pinta a página com ela** — o fundo é token separado, cinza neutro puro. Herdávamos o mecanismo certo e o aplicávamos numa superfície onde a âncora não o aplica; com marca magenta, o chão inteiro do site ficava magenta. A linha *Fundo da página* desta tabela foi a que cobrou a correção — fechada na issue #95: `--sd-surface-page` ganhou token próprio (`--sd-neutral-page-dark` / `-light`) e a rampa parou de tingir. Ver §5, acima.
+**O chão da página não vem da rampa, e ali estava o defeito de origem.** A âncora tinge a rampa de onze cinzas com o matiz da marca, mas **não pinta a página com ela** — o fundo é token separado, cinza neutro puro. Herdávamos o mecanismo certo e o aplicávamos numa superfície onde a âncora não o aplica; com marca magenta, o chão inteiro do site ficava magenta. A linha *Fundo da página* desta tabela foi a que cobrou a correção — fechada na issue #95: `--pd-surface-page` ganhou token próprio (`--pd-neutral-page-dark` / `-light`) e a rampa parou de tingir. Ver §5, acima.
 
 **O acento não tem linha.** A cor de marca é divergência declarada da âncora — laranja, e não o azul dela. Publicar o azul como alvo mandaria copiar exatamente o que a decisão registrada recusa, e o comparador passaria a reprovar a decisão em vez da deriva.
 
@@ -2078,7 +2078,7 @@ Medida na mesma sessão, em `research/paridade-devin` §5, a 1512. As famílias 
 
 > **As duas últimas linhas fecharam na S9-8, por mecanismos opostos do mesmo upstream.** `Item de TOC tamanho` media **12,8** e `Aba do navbar tamanho` media **16**, os dois contra `14px`.
 >
-> A aba **não tinha declaração nenhuma** no Infima e herdava os 16px do `<html>`; a lista do TOC tinha uma declaração cravada no filho — `.table-of-contents { font-size: 0.8rem }` —, que vence o `--sd-type-sm` que o slot em volta já declarava. O segundo é o padrão que os títulos de doc pagaram na #96: o elemento pai mede certo, o filho mede errado, e uma sonda no pai devolveria verde.
+> A aba **não tinha declaração nenhuma** no Infima e herdava os 16px do `<html>`; a lista do TOC tinha uma declaração cravada no filho — `.table-of-contents { font-size: 0.8rem }` —, que vence o `--pd-type-sm` que o slot em volta já declarava. O segundo é o padrão que os títulos de doc pagaram na #96: o elemento pai mede certo, o filho mede errado, e uma sonda no pai devolveria verde.
 >
 > **Ausência de declaração no upstream é tão invisível quanto declaração errada, e pior de achar:** não há o que procurar com `grep`. Nos dois casos foi `npm run paridade` que apontou, e é o argumento inteiro de por que a tabela existe. O CSS está em `chrome.css`, §3 e §4.
 
@@ -2097,7 +2097,7 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | Citação, cor do texto | igual ao corpo, não esmaecida | avaliação visual |
 | Régua, margem vertical | `48px` | avaliação visual |
 
-**Três das quatro corrigidas; uma fica gap declarado.** A citação herdava o default do Infima — borda de `2px` sem recuo próprio, texto em `--sd-text-muted` — e a régua herdava a margem vertical do Infima, metade do alvo. As três fecham nesta mudança, por `--ifm-blockquote-border-left-width`, `--ifm-blockquote-padding-horizontal`, `--ifm-blockquote-color` e `--ifm-hr-margin-vertical`.
+**Três das quatro corrigidas; uma fica gap declarado.** A citação herdava o default do Infima — borda de `2px` sem recuo próprio, texto em `--pd-text-muted` — e a régua herdava a margem vertical do Infima, metade do alvo. As três fecham nesta mudança, por `--ifm-blockquote-border-left-width`, `--ifm-blockquote-padding-horizontal`, `--ifm-blockquote-color` e `--ifm-hr-margin-vertical`.
 
 **A margem vertical da citação (medida em `25,6px`) fica de fora.** Não tem correspondente exato na escala de espaço deste projeto (base `4`), e o degrau mais próximo, `24px`, já é o valor do recuo horizontal — usar o mesmo número nos dois eixos empataria duas medidas que a âncora mede diferentes. Sem sonda automática para nenhum dos dois elementos ainda.
 
@@ -2115,13 +2115,13 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | Indireção raiz → semântica | herdado | [#3](https://github.com/ThiagoPanini/panlabs-docs/issues/3) §1.1 — o token de papel apontando para a raiz injetada, no alvo |
 | Token de componente no escopo do componente | mecanismo emprestado | [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) §1.4 — `.alert` do Infima redeclara sete tokens globais |
 | Rampa de onze cinzas, hex fixo, fora da marca | herdado | `research/paridade-devin` §3.1 — [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95), medida direto na âncora (Devin), e escrita como hex — não mais como `oklch(from …)`, porque não deriva de nada em tempo de navegador. Substitui a rampa tingida pelo matiz da marca ([#2](https://github.com/ThiagoPanini/panlabs-docs/issues/2) §3.2, medida nos quatro sites do alvo anterior, expressa em `oklch(from …)` por [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §3) — o mecanismo de tingir estava certo, a camada em que ele pintava é que não: ver [`tokens.md`](tokens.md) §5 |
-| `--sd-neutral-page-dark` / `-light` e `--sd-neutral-raised-light` | herdado | `research/paridade-devin` §3.1 — [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95): `#141414` / `#fcfcfc` / `#ffffff`, medidos direto na âncora. Papel novo — antes a página era a própria parada `gray-950` (escuro) / `gray-100` (claro) |
-| `--sd-brand-tint` sai do sistema | **origem própria (consequência)** | [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95) — a rampa desacoplou da marca; não sobrou produto `c × tint` para travar. Substitui a procedência anterior (banda herdada de [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §1 + a conta que a travava em 0,0120) |
-| Matiz da marca, laranja queimado (h≈38) | origem própria | **escolhido pelo dono do produto, e a eliminação da [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95) foi revista com o custo na mesa.** A #95 tinha eliminado esta banda por escrito — *"os quatro matizes de estado são intocáveis"* —, e o laranja mora entre `--sd-hue-danger` (27) e `--sd-hue-warn` (62). O custo foi MEDIDO antes de decidir: em ΔE OKLab, o acento saía a **0,120 / 0,103** do estado mais próximo com o violeta (era o `info`), e sai a **0,088 / 0,065** com o laranja (é o `danger`) — a distância cai pela metade, e **nenhum laranja escapa disso**, porque a banda é bracketada pelos dois estados. Mover `--sd-hue-danger` ou `--sd-hue-warn` para abrir espaço foi recusado: §5 desta seção diz que repintar matiz de estado *não é re-marcar, é quebrar significado*. O croma **0,161 se mantém** — como na troca anterior, só o ângulo mudou —, e h≈38 é o teto: acima dele o acento claro (L 0,50) sai do gamute sRGB e o navegador corta o croma que a spec publica |
+| `--pd-neutral-page-dark` / `-light` e `--pd-neutral-raised-light` | herdado | `research/paridade-devin` §3.1 — [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95): `#141414` / `#fcfcfc` / `#ffffff`, medidos direto na âncora. Papel novo — antes a página era a própria parada `gray-950` (escuro) / `gray-100` (claro) |
+| `--pd-brand-tint` sai do sistema | **origem própria (consequência)** | [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95) — a rampa desacoplou da marca; não sobrou produto `c × tint` para travar. Substitui a procedência anterior (banda herdada de [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §1 + a conta que a travava em 0,0120) |
+| Matiz da marca, laranja queimado (h≈38) | origem própria | **escolhido pelo dono do produto, e a eliminação da [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95) foi revista com o custo na mesa.** A #95 tinha eliminado esta banda por escrito — *"os quatro matizes de estado são intocáveis"* —, e o laranja mora entre `--pd-hue-danger` (27) e `--pd-hue-warn` (62). O custo foi MEDIDO antes de decidir: em ΔE OKLab, o acento saía a **0,120 / 0,103** do estado mais próximo com o violeta (era o `info`), e sai a **0,088 / 0,065** com o laranja (é o `danger`) — a distância cai pela metade, e **nenhum laranja escapa disso**, porque a banda é bracketada pelos dois estados. Mover `--pd-hue-danger` ou `--pd-hue-warn` para abrir espaço foi recusado: §5 desta seção diz que repintar matiz de estado *não é re-marcar, é quebrar significado*. O croma **0,161 se mantém** — como na troca anterior, só o ângulo mudou —, e h≈38 é o teto: acima dele o acento claro (L 0,50) sai do gamute sRGB e o navegador corta o croma que a spec publica |
 | Travas de luminosidade do acento | origem própria | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §2a — verificadas em 24 matizes |
 | Três acentos no bloco de troca | herdado | [#2](https://github.com/ThiagoPanini/panlabs-docs/issues/2) §3.1 |
 | Tipografia dentro do contrato de troca | **herdado** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) — o carimbo antigo contrariava o [`principios.md`](principios.md) §2, que já dizia que tipografia é parâmetro que a âncora expõe |
-| `--sd-radius` no bloco de troca, e o valor | **herdado** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) — `--sd-radius-md` já entrega 12px, o `rounded-xl` da âncora; a parametrização por `calc()` responde ao axioma 3, não ao §3 |
+| `--pd-radius` no bloco de troca, e o valor | **herdado** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) — `--pd-radius-md` já entrega 12px, o `rounded-xl` da âncora; a parametrização por `calc()` responde ao axioma 3, não ao §3 |
 | Escada de raio por múltiplo | mecanismo emprestado | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §7 — raio paramétrico da Vapi, disciplina do Neon |
 | Escuro em `:root`, claro como override | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §4 — Infima e alvo põem claro em `:root`; axioma 4 |
 | Adaptador de mão única | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §2, derivado das armadilhas da [#5](https://github.com/ThiagoPanini/panlabs-docs/issues/5) |
@@ -2136,28 +2136,28 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | Página clara na parada 100 | origem própria | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §4 — preserva o tint na maior superfície do claro |
 | O papel da superfície levantada troca de nome | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — o nome anterior citava o cartão, que está de saída, e já colidia com a grade de `card-group` e com o cartão-componente. `raised` nomeia o papel: *o que não é a página* |
 | Pastilha de código no extremo do modo | herdado | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §4 — Clerk e a anatomia da Perplexity |
-| **A pastilha do escuro sobe para a parada 900** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ela era o **mesmo valor** de `--sd-surface-page`, e sem cartão o bloco sumia contra a página. *Dissenso: a 900 é o degrau imediatamente acima na rampa, e não uma medida; o que morre no lugar era anatomia medida* |
+| **A pastilha do escuro sobe para a parada 900** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ela era o **mesmo valor** de `--pd-surface-page`, e sem cartão o bloco sumia contra a página. *Dissenso: a 900 é o degrau imediatamente acima na rampa, e não uma medida; o que morre no lugar era anatomia medida* |
 | Borda = tinta a 7% | herdado | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §5 — reproduz os dois valores medidos com um mecanismo |
-| `--sd-shadow-lip` como valor único, ancorado no topo da rampa | origem própria | [#13](https://github.com/ThiagoPanini/panlabs-docs/issues/13) §2, corrigindo a tinta da [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) |
+| `--pd-shadow-lip` como valor único, ancorado no topo da rampa | origem própria | [#13](https://github.com/ThiagoPanini/panlabs-docs/issues/13) §2, corrigindo a tinta da [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) |
 | Dois papéis de sombra, nomeados por intenção | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — os consumidores de sombra em `src/`, com o cartão de saída. Uma escala de dois não é escala |
 | O anel embutido vira borda de verdade | **origem própria (verificação)** | [#55](https://github.com/ThiagoPanini/panlabs-docs/issues/55) — o adaptador alcança `--ifm-*-border-color` em todo componente; anel em `box-shadow` exige sobrescrita por componente |
 | `--ifm-global-shadow-md` e `-tl` ao papel flutuante | **origem própria (verificação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — no Infima, `md` é lida por `.dropdown__menu` e `.navbar-sidebar`; `tl` só por uma classe que ninguém usa |
-| **`--sd-shadow-sunken` morre; zero sombra no conteúdo** | **herdado** | [#50](https://github.com/ThiagoPanini/panlabs-docs/issues/50) — zero componentes de conteúdo com sombra em seis páginas da âncora; `shadow-md` e maiores existem no CSS dela e nunca são usados. Afundar era relativo ao cartão |
+| **`--pd-shadow-sunken` morre; zero sombra no conteúdo** | **herdado** | [#50](https://github.com/ThiagoPanini/panlabs-docs/issues/50) — zero componentes de conteúdo com sombra em seis páginas da âncora; `shadow-md` e maiores existem no CSS dela e nunca são usados. Afundar era relativo ao cartão |
 | **`--ifm-global-shadow-lw` e `--ifm-alert-shadow` em `none`** | **origem própria (verificação)** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60), com uma **correção medida**: a decisão nomeava `.card` do Infima como leitor de `lw`, e este site não renderiza `.card` nenhum. Os leitores vivos são `CodeBlock/Container` e `BackToTopButton` |
 | O botão de voltar ao topo recupera a sombra em `chrome.css` | **origem própria (consequência)** | ele é chrome flutuante pela mesma definição que classifica o dropdown e a gaveta, e o gancho é `ThemeClassNames` — nenhuma exceção nova no adaptador |
-| `--sd-shadow-cast` como par declarado | herdado | [#13](https://github.com/ThiagoPanini/panlabs-docs/issues/13) §2 — derivá-lo sai ajuste de curva com literais mágicos |
+| `--pd-shadow-cast` como par declarado | herdado | [#13](https://github.com/ThiagoPanini/panlabs-docs/issues/13) §2 — derivá-lo sai ajuste de curva com literais mágicos |
 | **O segundo seletor do bloco escuro saiu, e a camada 3 ficou vazia** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a ilha era hospedada só pela landing; o mecanismo fica registrado em §6 como especificação do que precisaria voltar |
 | **A segunda âncora de `contraste.mjs`** | **origem própria (implementação)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — sozinho, `:root {` abre quatro blocos, e casar só o seletor mediria a camada errada em silêncio |
 | Paleta de sintaxe, 14 hex | **origem própria (medição)** | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) — a âncora foi medida e revelou não-decisão; ver [`principios.md`](principios.md) §5.3. A semeadura anterior vinha do Neon, que não é âncora e não doa valor |
 | O cyan no identificador, e `constant` como vizinho | **origem própria (medição)** | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) — pintar o dominante de cyan mataria a distinção de tipo, que é a função da cor no código |
-| O cyan é **skin fixa**, fora da superfície de troca | origem própria | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) — precedente dos quatro `--sd-hue-*`: o corporativo redesenha, não re-marca |
+| O cyan é **skin fixa**, fora da superfície de troca | origem própria | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) — precedente dos quatro `--pd-hue-*`: o corporativo redesenha, não re-marca |
 | Teto de croma 0,095 | **origem própria** | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) — é o teto do par da âncora puxado para baixo por julgamento, e não uma medida |
 | Shim de config que só referencia token | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §2 |
 | Quatro matizes de estado | **herdado** | [#83](https://github.com/ThiagoPanini/panlabs-docs/issues/83) — ícone dos callouts `Note`/`Warning`/`Tip`/`Danger` medido em mintlify.com/docs (Chrome headless, `getComputedStyle`), sRGB convertido para H de OKLCH. `success` e `danger` já batiam com o ângulo anterior a menos de 1,5°; `info` e `warn` divergiam ~20° e passaram a ser o ângulo medido |
 | `Livre` dos matizes move ângulo, não tom | origem própria | [#31](https://github.com/ThiagoPanini/panlabs-docs/issues/31) §3, corrigindo a redação da [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) |
 | Fórmula de preenchimento de callout | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — medida na Perplexity |
 | Fórmula de **aresta** de callout, e ela mora na camada 2 | herdado + origem própria (implementação) | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) trava 30%/25%; o alfa bifurca por modo, e camada 2 é o único lugar onde modo diverge |
-| `--sd-card-min` derivado da medida de prosa | herdado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §2 — o limiar `@2xl` da âncora a três colunas; 42rem e a medida de prosa são o mesmo `max-w-2xl` |
+| `--pd-card-min` derivado da medida de prosa | herdado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §2 — o limiar `@2xl` da âncora a três colunas; 42rem e a medida de prosa são o mesmo `max-w-2xl` |
 | `secondary` deixa de ser "o que a `note` consome" | **origem própria (correção)** | o callout ganhou DOM próprio no slice do catálogo, e `note` é a variante azul — quem é neutro é `info` ([#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15)) |
 | Escala de espaço base 4 | **origem própria (medição)** | [#83](https://github.com/ThiagoPanini/panlabs-docs/issues/83) — `--spacing: .25rem` medido idêntico nas sete, inclusive as três que não são Mintlify. Não é decisão da âncora: é o default do Tailwind CSS v4, que as sete rodam por baixo. Convergência de ferramenta, não de sistema de design — por isso não sobe a `herdado` |
 | Nomes de tipografia | origem própria | [#31](https://github.com/ThiagoPanini/panlabs-docs/issues/31) §1 — nomear é nosso; a gramática de camada é da [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) |
@@ -2168,20 +2168,20 @@ Medido em `research/paridade-devin` §11, junto dos componentes — citação (`
 | Dois arquivos de fonte, não quinze | **origem própria (verificação)** | [#72](https://github.com/ThiagoPanini/panlabs-docs/issues/72) — a contagem da âncora é subconjunto por script para tráfego global |
 | `hyphens: none`, `text-wrap: pretty` | origem própria | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §6 — pt-BR; nenhuma referência medida nesse eixo |
 | Escala de duração e as duas curvas | herdado | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §1 — medidas nas sete |
-| `--sd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) corrigindo a [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) |
+| `--pd-move-enter` na parada curta | herdado (correção) | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) corrigindo a [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) |
 | Dois níveis de latitude | mecanismo emprestado | [#31](https://github.com/ThiagoPanini/panlabs-docs/issues/31) §3 — a distinção é da [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11), aqui vira regra |
 | Dimensões do chrome no arquivo de tokens | herdado | [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) §5 — a anatomia é de `chrome.md` |
-| **`--sd-type-6xl` saiu, e a escala termina no `4xl`** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o único consumidor era o título do hero; degrau de display não é elo de família, então não fica como órfão declarado. Terceira decisão sobre o mesmo degrau: 48, 60, nenhum |
+| **`--pd-type-6xl` saiu, e a escala termina no `4xl`** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o único consumidor era o título do hero; degrau de display não é elo de família, então não fica como órfão declarado. Terceira decisão sobre o mesmo degrau: 48, 60, nenhum |
 | O `5xl` sai da escala | **origem própria (correção)** | [#80](https://github.com/ThiagoPanini/panlabs-docs/issues/80) — ele foi dimensionado para um hero de 672, e com o hero no container ficaria sem consumidor |
-| `--sd-glow` a 30%, e `--sd-glow-2` cyan a 24% — **removidos** | **origem própria (correção)** + origem própria | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) escreveu o par supondo 0,30 na origem; o publicado era 12%, e sem a figura a luz carregava o hero sozinha. Os dois saíram na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) |
+| `--pd-glow` a 30%, e `--pd-glow-2` cyan a 24% — **removidos** | **origem própria (correção)** + origem própria | [#73](https://github.com/ThiagoPanini/panlabs-docs/issues/73) escreveu o par supondo 0,30 na origem; o publicado era 12%, e sem a figura a luz carregava o hero sozinha. Os dois saíram na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) |
 | A medida do código morre; os dois consumidores citam a de prosa | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — a derivação era o interior do cartão, e sem cartão sobraria um 768 sem raiz |
 | Par de amplitude do glow, no escopo da ilha — **removido** | origem própria | [#17](https://github.com/ThiagoPanini/panlabs-docs/issues/17) §5b — amplitude era par declarado sobre o alfa, não número novo; saiu na [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) com a regra que a hospedava |
 | **Os três movimentos da ilha ficam declarados sem consumidor** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o vocabulário de motion é fechado pelo portão 2, e nome que sai é número cravado que volta |
-| **`--sd-accent-contrast` fica declarado sem consumidor** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o único era o texto do botão primário da landing; papel semântico é família declarada nos dois modos |
-| Regra de elemento no bloco `reduce`, com gancho `data-sd-part` | **origem própria (implementação)** | ADR 3 — de `tokens.css` não há seletor que alcance uma classe hasheada, e nome de `@keyframes` não sobrevive dentro de custom property ([`motion.md`](motion.md) §6) |
+| **`--pd-accent-contrast` fica declarado sem consumidor** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o único era o texto do botão primário da landing; papel semântico é família declarada nos dois modos |
+| Regra de elemento no bloco `reduce`, com gancho `data-pd-part` | **origem própria (implementação)** | ADR 3 — de `tokens.css` não há seletor que alcance uma classe hasheada, e nome de `@keyframes` não sobrevive dentro de custom property ([`motion.md`](motion.md) §6) |
 | Portão de `grep` de literal | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §7 |
 | Espelho verificado por script | origem própria | consequência da regra de fonte única da [#9](https://github.com/ThiagoPanini/panlabs-docs/issues/9) |
 | Aviso do `postcss-calc` sobre cor relativa | **origem própria (implementação)** | observado ao rodar o build do slice 1; valor emitido conferido byte a byte |
-| `--sd-surface-scrim`, par declarado | **origem própria** | não há medição de véu nas referências. A opacidade bifurca por motivo mecânico: no escuro a página já está na parada 950, e no claro o mesmo alfa faria buraco em vez de profundidade ([`busca.md`](busca.md) §5.3) |
-| `--sd-busca-height` como token de camada 1 | **origem própria (correção)** | `dvh` não está no padrão do portão 1, e o literal passaria pela varredura — fechar o buraco custa uma linha aqui |
-| A largura do modal de busca **não** vira token | **origem própria (implementação)** | é `--sd-prose-width`, citada por nome; nomeá-la de novo criaria segunda cópia do mesmo número |
+| `--pd-surface-scrim`, par declarado | **origem própria** | não há medição de véu nas referências. A opacidade bifurca por motivo mecânico: no escuro a página já está na parada 950, e no claro o mesmo alfa faria buraco em vez de profundidade ([`busca.md`](busca.md) §5.3) |
+| `--pd-busca-height` como token de camada 1 | **origem própria (correção)** | `dvh` não está no padrão do portão 1, e o literal passaria pela varredura — fechar o buraco custa uma linha aqui |
+| A largura do modal de busca **não** vira token | **origem própria (implementação)** | é `--pd-prose-width`, citada por nome; nomeá-la de novo criaria segunda cópia do mesmo número |

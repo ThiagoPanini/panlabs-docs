@@ -36,7 +36,7 @@ Herança calada é herança que **não vira linha de spec**. Ela existe, ela dec
 | **Densidade de UI** | o valor mais unânime da amostra inteira. Quatro sistemas, um número |
 | **Tipografia** | não é delta: é **parâmetro que a própria âncora expõe**. Trocar a pilha de fonte é re-marcar, não redesenhar — por isso ela está na superfície de troca |
 | **Escala de espaço** | base 4, múltiplos de 8. Consenso de indústria antes de ser consenso da amostra |
-| **Rampa de cinzas, forma e matiz** | as onze paradas são hex medidos direto na âncora (Devin). Até a [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95) só a forma era herdada — média das quatro rampas Mintlify medidas — e o matiz vinha da marca; hoje a rampa inteira é herdada e não lê `--sd-brand` |
+| **Rampa de cinzas, forma e matiz** | as onze paradas são hex medidos direto na âncora (Devin). Até a [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95) só a forma era herdada — média das quatro rampas Mintlify medidas — e o matiz vinha da marca; hoje a rampa inteira é herdada e não lê `--pd-brand` |
 
 **Herdado calado ainda é herdado**, e continua carimbado na tabela de procedência de cada documento. O que "calado" significa é que não há seção de justificativa — a fonte é a medição, e a medição está no ticket.
 
@@ -232,7 +232,7 @@ Duas coisas mais saíram da mesma medição, e as duas cortam contra adotar o pa
 
 **A consequência é grande o bastante para ser dita em voz alta: a assinatura visual deste projeto não é mais visual.** O que resta da frase é a arquitetura de token — e ela não aparece numa captura de tela. Um leitor que abra o site publicado ao lado da âncora vê fidelidade, não assinatura; a diferença mora em como o sistema é construído, não em como ele se parece. Isso é coerente com o que o projeto entrega — estrutura e customização visual para transplante —, mas é uma perda real, e chamá-la de simplificação seria maquiagem.
 
-**O que morreu junto com a faixa, e vale nomear porque é o que precisaria voltar:** `[data-sd-showcase]` como marca de região, o critério de **emissão** que autorizava um elemento a entrar nela, os dois focos de luz e a respiração de um deles, e o degrau de display que só o hero consumia. A regra de direção única continua verdadeira e continua sem sujeito: **não existe ilha clara**, porque emissão precisa de escuridão.
+**O que morreu junto com a faixa, e vale nomear porque é o que precisaria voltar:** `[data-pd-showcase]` como marca de região, o critério de **emissão** que autorizava um elemento a entrar nela, os dois focos de luz e a respiração de um deles, e o degrau de display que só o hero consumia. A regra de direção única continua verdadeira e continua sem sujeito: **não existe ilha clara**, porque emissão precisa de escuridão.
 
 > *Dissenso registrado.* A decisão de remover a landing foi de escopo — *"seguir fielmente a doc da âncora"*, com a discussão sobre voltar a ter uma **adiada explicitamente**. Não foi a faixa que se mostrou errada; foi a página que a hospedava que saiu de escopo. Se ela voltar, esta seção volta a ter três orações, e o parágrafo acima é a lista do que precisa ser reconstruído.
 

@@ -17,7 +17,7 @@
 # reprova o que funciona é portão que alguém desliga.
 #
 # As rotas 1 e 3 nascem no slice 1. A rota 2 nasceu no slice 7, com o plugin
-# `sd-ai-era` — ela deixou de ser pulada e passou a rodar.
+# `pd-ai-era` — ela deixou de ser pulada e passou a rodar.
 #
 # Armadilha registrada: `docusaurus serve` NÃO testa isto. Ele aplica
 # `applyTrailingSlash` ao `req.url` e passa `cleanUrls: true` ao

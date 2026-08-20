@@ -36,7 +36,7 @@ ninguém tomou, e é o defeito mais caro que esta spec pode carregar.
 **E o teto de profundidade não tinha lastro.** Ele é 3, carimbado `origem
 própria (correção)`, e [`chrome.md`](../design/chrome.md) §4 registrava o
 dissenso de que *"aprofundar mais reabre este número"* — o número sendo
-`--sd-sidebar-width`, 288px. Medido: a sidebar do Devin e a do
+`--pd-sidebar-width`, 288px. Medido: a sidebar do Devin e a do
 `docs.windsurf.com` têm **`w-[18rem]`, os mesmos 288px**, e o windsurf — também
 tema `mint`, mesma dona, mesma cor primária — segura **cinco níveis** dentro
 deles. O Mintlify não declara teto numérico de aninhamento; a única regra é
@@ -220,6 +220,6 @@ renderizaria 31 linhas abertas contra as ~20 do modelo da âncora.
 | Rampa 16 · 16 · 28 · 40 · 52 | **herdado (medição)** | `docs.devin.ai` e `docs.windsurf.com`, `padding-left` inline por nível; o passo de +16px anterior era o default do Infima e não tinha sonda |
 | O teto de profundidade sobe para 4 | **herdado (medição)** | o Mintlify não declara teto, e `docs.windsurf.com` — também tema `mint` — usa cinco níveis |
 | O número 4, e não 5 nem nenhum | **origem própria (consequência)** | é a profundidade que a árvore usa; teto acima do uso é teto sem consumidor |
-| `--sd-sidebar-width` não reabre | **herdado (medição)** | `w-[18rem]` = 288px nos dois sites medidos, e o windsurf segura cinco níveis dentro deles |
+| `--pd-sidebar-width` não reabre | **herdado (medição)** | `w-[18rem]` = 288px nos dois sites medidos, e o windsurf segura cinco níveis dentro deles |
 | A rota nua resolve por `slug: /` | **origem própria (implementação)** | o `docSidebar` já leva à primeira doc; o que não resolve sozinho é a rota digitada |
 | A seta colada ao rótulo | herdado | `docs.devin.ai` — chevron depois do rótulo a `gap-x-3`, `currentColor`, traço 2, `rotate-90` ao abrir em 75ms, sem trilho vertical. **O `::after` do link é a forma errada**: ele só existe quando a categoria NÃO tem página (`menu__link--sublist-caret`), e a decisão (b) mantém a página de abertura — a forma que vale é o `<button class="menu__caret">` irmão, como a consequência 2 registra |

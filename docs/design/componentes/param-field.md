@@ -17,9 +17,9 @@ usa **só `body=`**, nunca `query`, `path` ou `header`. Quem era HTTP era o
 ```html
 <div id="campo-param-field-…">
   <p>
-    <a href="#campo-param-field-…" data-sd-part="ancora">#</a>
+    <a href="#campo-param-field-…" data-pd-part="ancora">#</a>
     <code>…</code>                          <!-- alcançável por tipo -->
-    <span data-sd-part="meta">
+    <span data-pd-part="meta">
       <span>tipo</span> · <span>padrão <code>…</code></span>
       <strong>obrigatório</strong>          <!-- alcançável por tipo -->
     </span>
@@ -30,7 +30,7 @@ usa **só `body=`**, nunca `query`, `path` ou `header`. Quem era HTTP era o
 
 **Uma parte publicada, e uma segunda que não conta como publicada pelo mesmo
 contrato.** O nome é `<code>` e o chip é `<strong>` dentro da meta — os dois
-alcançam por tipo. A âncora de linha (`#99`) também nomeia `data-sd-part`,
+alcançam por tipo. A âncora de linha (`#99`) também nomeia `data-pd-part`,
 mas por outro motivo: ela não é conferida pelo portão 5 — nenhuma página
 gerada depende dela —, é só o hook estável que `foco.css` usa para o
 fallback de toque sem custar o hash do CSS Module, a mesma razão do
@@ -115,27 +115,27 @@ Leitura do repositório. `read` basta para quem não escreve commit.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-subtle`, `--sd-text-body`, `--sd-text-muted`,
-`--sd-text-strong`, `--sd-accent`, `--sd-state-danger`, `--sd-state-danger-fill`.
+Camada 2: `--pd-border-subtle`, `--pd-text-body`, `--pd-text-muted`,
+`--pd-text-strong`, `--pd-accent`, `--pd-state-danger`, `--pd-state-danger-fill`.
 
-Camada 1: `--sd-space-1`, `--sd-space-2`, `--sd-space-4`, `--sd-space-6`,
-`--sd-space-10`, `--sd-border-width`, `--sd-radius-xs`, `--sd-radius-sm`,
-`--sd-type-xs`, `--sd-type-sm`, `--sd-font-mono`, `--sd-weight-ui`.
+Camada 1: `--pd-space-1`, `--pd-space-2`, `--pd-space-4`, `--pd-space-6`,
+`--pd-space-10`, `--pd-border-width`, `--pd-radius-xs`, `--pd-radius-sm`,
+`--pd-type-xs`, `--pd-type-sm`, `--pd-font-mono`, `--pd-weight-ui`.
 
 **Os dois `-danger` entraram com o chip vermelho**, e são o único par de estado
-que o catálogo consome fora do callout. `--sd-state-danger-edge` continua **sem
+que o catálogo consome fora do callout. `--pd-state-danger-edge` continua **sem
 consumidor**: o chip é preenchimento e texto, não aresta.
 
-**A âncora de linha (`#99`) não abre token novo.** `--sd-space-10` é o mesmo
+**A âncora de linha (`#99`) não abre token novo.** `--pd-space-10` é o mesmo
 que já espaça o topo do conteúdo abaixo do topo grudado — reusado aqui pela
 mesma distância, não uma coincidência de número tratada como derivação.
-`--sd-radius-sm` é o raio que a tabela de escala já nomeia para "botão, campo,
+`--pd-radius-sm` é o raio que a tabela de escala já nomeia para "botão, campo,
 aba, chip" (`tokens.md` §1); a âncora de 24×24 entra nessa família.
 
 ## Light e dark
 
 **Não se aplica.** Consome token semântico e não conhece modo — o chip vermelho
-inclusive: `--sd-state-danger` e o `-fill` dele bifurcam por modo na camada 2, e
+inclusive: `--pd-state-danger` e o `-fill` dele bifurcam por modo na camada 2, e
 o campo só os referencia.
 
 ## Motion / reduced-motion
@@ -170,6 +170,6 @@ O contrato de estado de entrada mora em [`foco.md`](../foco.md).
 | Sem campo editável | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §4 — a interatividade fica no painel da rota |
 | Uma parte publicada | herdado | [#18](https://github.com/ThiagoPanini/panlabs-docs/issues/18) §8, sobre a régua da [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | **Divisor vira `border-block-end`, e a última linha não tem** | **origem própria (correção)** | medido na âncora ([#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99)) — a implementação anterior desenhava `border-block-start` em toda linha, o que também riscava acima da primeira; a forma nova não risca nem antes da primeira nem depois da última |
-| **Nome do campo no acento** | **herdado (medição)** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a âncora pinta o nome com a cor de marca; era `--sd-text-strong` |
-| **Tipo e padrão viram chip neutro, como o de obrigatório** | **origem própria** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a âncora distingue as três famílias (tipo/padrão, obrigatório) só pela cor do mesmo chip; a tinta neutra reusa `--sd-border-subtle`/`--sd-text-muted`, sem cor nova |
+| **Nome do campo no acento** | **herdado (medição)** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a âncora pinta o nome com a cor de marca; era `--pd-text-strong` |
+| **Tipo e padrão viram chip neutro, como o de obrigatório** | **origem própria** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — a âncora distingue as três famílias (tipo/padrão, obrigatório) só pela cor do mesmo chip; a tinta neutra reusa `--pd-border-subtle`/`--pd-text-muted`, sem cor nova |
 | **Âncora de linha, no vão esquerdo a partir do limiar único do projeto** | **origem própria** | [#99](https://github.com/ThiagoPanini/panlabs-docs/issues/99) — mesma ideia do `.hash-link` de heading, implementação própria porque o campo não é heading; abaixo do limiar não sobra vão à esquerda para revelar, e o `display: none` tira o link também da ordem de tabulação nessa faixa — não só do hover/toque —, o mesmo preço que o TOC já paga abaixo do limiar dele (`chrome.md` §5) |

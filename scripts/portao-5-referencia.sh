@@ -24,7 +24,7 @@
 #   6. a contagem do ramo           6 páginas por locale, 6 ids no fragmento
 #
 # **A cobrança 4 é conferência de CADEIA, e vale dita.** A instrução herdada é
-# *"o gerador nomeia `data-sd-part=\"meta\"`"*, e o literal não pode aparecer no
+# *"o gerador nomeia `data-pd-part=\"meta\"`"*, e o literal não pode aparecer no
 # MDX emitido: quem escreve o atributo é `src/components/Campo.js`, e a página
 # escreve a TAG. Grepar a string no `.mdx` conferiria uma coisa que nenhum
 # renderizador lê. O que sustenta a parte no contrato do catálogo é a cadeia —
@@ -126,8 +126,8 @@ echo
 
 # --- 4. a parte `meta`, e a cadeia que a segura -------------------------------
 echo "4  a parte \`meta\` — a condição que a mantém publicada"
-grep -q 'data-sd-part="meta"' "$CAMPO" ||
-  reprova "${CAMPO} não nomeia \`data-sd-part=\"meta\"\`, e a parte perde o consumidor"
+grep -q 'data-pd-part="meta"' "$CAMPO" ||
+  reprova "${CAMPO} não nomeia \`data-pd-part=\"meta\"\`, e a parte perde o consumidor"
 
 # O outro elo: as páginas que consomem o campo. O número esperado sai do próprio
 # CONTRATO, e não de uma constante nem de uma lista de exceção a manter.

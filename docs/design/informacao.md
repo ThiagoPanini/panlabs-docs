@@ -571,7 +571,7 @@ Ele diz o que a máquina tem em mãos: quantas páginas, por qual eixo estão di
 
 **Ele não é traduzido, e é a mesma regra do §8.** As 28 páginas sem contraparte em inglês também saem em português sob `/en/`; o preâmbulo é a mesma classe de fallback, num artefato cujo leitor é máquina. O que **tem** tradução chega traduzido: título, description e rótulo de seção.
 
-A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles` + `translateContent` no plugin põem a prosa em `i18n/<locale>/sd-ai-era/`.
+A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles` + `translateContent` no plugin põem a prosa em `i18n/<locale>/pd-ai-era/`.
 
 ### 9.7 O `Content-Type` do host, e o segundo link do footer
 

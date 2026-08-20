@@ -15,11 +15,11 @@ parágrafos e bloco de código dentro de um passo.
 anuncia.
 
 ```html
-<ol data-sd-component="steps">
+<ol data-pd-component="steps">
   <li>
     <span>…</span>                        <!-- único <span> filho do passo -->
     <div>
-      <p data-sd-part="title">…</p>
+      <p data-pd-part="title">…</p>
       …
     </div>
   </li>
@@ -47,7 +47,7 @@ implícito — o número sumiria em silêncio. Um contador nomeado fecha essa fa
 
 O marcador de 28×28 e o conector de 1px da âncora não têm sonda: os dois são pseudo-elemento, e `querySelector` não os alcança. Ficam para a avaliação visual.
 
-**A margem de topo estava em `24px`, não `40`** — `npm run paridade` mediu contra o build deste slice e achou o contêiner com `margin-block` simétrico (`--sd-space-6` nos dois lados) onde o alvo pede `40px` em cima e `24px` embaixo. A correção separa os dois valores.
+**A margem de topo estava em `24px`, não `40`** — `npm run paridade` mediu contra o build deste slice e achou o contêiner com `margin-block` simétrico (`--pd-space-6` nos dois lados) onde o alvo pede `40px` em cima e `24px` embaixo. A correção separa os dois valores.
 
 **Um quarto dado do container fica de fora: `14px` de margem à esquerda.** A anatomia mede `margin: 40px 0 24px 14px`, e o recuo esquerdo não tem justificativa própria conhecida — pode ser alinhamento com algo específico do layout da âncora que este projeto não replica. Sem sonda e sem leitura confiável do porquê, fica registrado e não implementado.
 
@@ -91,12 +91,12 @@ nas páginas medidas, e por isso não existe aqui.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-default`, `--sd-border-subtle`, `--sd-text-strong`.
+Camada 2: `--pd-border-default`, `--pd-border-subtle`, `--pd-text-strong`.
 
-Camada 1: `--sd-space-4`, `--sd-space-6`, `--sd-border-width`,
-`--sd-radius-full`, `--sd-type-xs`, `--sd-weight-ui`, `--sd-leading-ui`.
+Camada 1: `--pd-space-4`, `--pd-space-6`, `--pd-border-width`,
+`--pd-radius-full`, `--pd-type-xs`, `--pd-weight-ui`, `--pd-leading-ui`.
 
-Camada 3, declarado no escopo do componente: `--sd-step-marker`, o diâmetro do
+Camada 3, declarado no escopo do componente: `--pd-step-marker`, o diâmetro do
 marcador — que é também a coluna da grade e o ponto onde o fio começa. Um valor,
 três consumidores.
 

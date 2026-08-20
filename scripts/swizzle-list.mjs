@@ -108,7 +108,7 @@ if (modo !== '--congelar' && modo !== '--verificar') {
  * fica esperando resposta que nunca vem. A escolha não altera a lista.
  */
 function saidaDoCli() {
-  const pasta = mkdtempSync(path.join(tmpdir(), 'sd-swizzle-'));
+  const pasta = mkdtempSync(path.join(tmpdir(), 'pd-swizzle-'));
   const destino = path.join(pasta, 'list.txt');
   const fd = openSync(destino, 'w');
   try {

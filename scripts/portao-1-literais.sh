@@ -15,7 +15,7 @@
 # `lh` entrou na lista no slice do catálogo, e entrou por decisão em vez de por
 # omissão. Ele é a altura da linha do próprio elemento — uma REFERÊNCIA ao que a
 # escala de tipografia já decidiu, como `%` é referência ao contêiner. Quem
-# escreve `calc((1lh - var(--sd-space-4)) / 2)` para centrar um ícone na primeira
+# escreve `calc((1lh - var(--pd-space-4)) / 2)` para centrar um ícone na primeira
 # linha não escolheu um número: pediu o que a entrelinha der. Cravar o mesmo
 # recuo em `px` é que seria literal, e esse o portão pega.
 #

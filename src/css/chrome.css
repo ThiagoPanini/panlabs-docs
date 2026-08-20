@@ -25,7 +25,7 @@
 /* -----------------------------------------------------------------------------
    1. A cadeia de proporções
 
-   `--sd-container-width` → `--sd-doc-width` (container − TOC) → prosa. Os
+   `--pd-container-width` → `--pd-doc-width` (container − TOC) → prosa. Os
    valores moram em `tokens.css`; aqui e no documento eles se citam por nome,
    para que a cadeia não tenha uma segunda versão que envelhece sozinha.
 
@@ -49,7 +49,7 @@
    congelamento de antes da #96), e o mecanismo passou. O NÚMERO final é
    1408, e só apareceu medindo o site inteiro contra a âncora — `sidebar(288)
    + container(1152) = 1440` não cabia num quadro de 1408, que é o que as
-   margens simétricas de `chrome.md` §11 exigem. `--sd-container-width` caiu
+   margens simétricas de `chrome.md` §11 exigem. `--pd-container-width` caiu
    para 1120 para fechar a conta: `288 + 1120 = 1408`. Ver `tokens.css`. */
 
 /* O PADDING LATERAL É DA ÂNCORA, e ele não muda um pixel do que já fechava.
@@ -67,13 +67,13 @@
    e continua sendo o que a caixa entrega POR DENTRO do preenchimento. */
 
 html.docs-doc-page div:has(> main) {
-  max-width: calc(var(--sd-congelamento) + 2 * var(--sd-space-8));
+  max-width: calc(var(--pd-congelamento) + 2 * var(--pd-space-8));
   margin-inline: auto;
 }
 
 @media (min-width: 997px) {
   html.docs-doc-page div:has(> main) {
-    padding-inline: var(--sd-space-8);
+    padding-inline: var(--pd-space-8);
   }
 }
 
@@ -89,11 +89,11 @@ html.docs-doc-page div:has(> main) {
        por dentro dela.
    (c) A coluna do TOC recebe a separação de um lado só, para que a borda
        direita dela feche com a borda direita do container. A separação é
-       `--sd-space-6`, ORIGEM PRÓPRIA — ver `tokens.css`.
+       `--pd-space-6`, ORIGEM PRÓPRIA — ver `tokens.css`.
 
    A COLUNA DO TOC NÃO É MAIS 25% DE UM GRID DE DOZE. O grid morreu nesta
    issue: `.row` continua `display:flex` do Infima — não se toca —, mas
-   `.col--3` deixa de ler a fração de 12 e passa a ler `--sd-toc-width`
+   `.col--3` deixa de ler a fração de 12 e passa a ler `--pd-toc-width`
    direto, um comprimento explícito. A coluna de conteúdo não precisa de
    declaração simétrica: ela é `.col` NUA — sem `col--N` — e a própria regra
    do Infima já a faz `flex: 1 0`, crescendo para preencher o que sobra da
@@ -102,8 +102,8 @@ html.docs-doc-page div:has(> main) {
    travar num número só — ver mais abaixo, e `chrome.md` §1.2 e §1.5. */
 
 html.docs-doc-page main > .container > .row > .col--3 {
-  flex-basis: var(--sd-toc-width);
-  max-width: var(--sd-toc-width);
+  flex-basis: var(--pd-toc-width);
+  max-width: var(--pd-toc-width);
 }
 
 html.docs-doc-page main {
@@ -116,7 +116,7 @@ html.docs-doc-page main {
      preenchimento aqui SOMARIA à margem do wrapper em vez de completá-la —
      e foi exatamente esse dobrar que produzia os 32px de sobra que a
      álgebra do congelamento (ver `tokens.css`) não fechava. Note que abaixo
-     de 997 esta declaração já valia zero — `gutter` e `--sd-space-4` são o
+     de 997 esta declaração já valia zero — `gutter` e `--pd-space-4` são o
      mesmo número aí —, então a mudança não toca a tela estreita. */
 
   /* O TOPO DO CONTEÚDO — o último elo da cadeia, e o único vertical, e o
@@ -131,7 +131,7 @@ html.docs-doc-page main {
      Somando por fora, a conta fecha sem brigar: 16 do container mais o que
      falta para 40. Medido: o `<article>` abre em 152 numa viewport larga, com o
      topo grudado em 112. */
-  padding-top: calc(var(--sd-space-10) - var(--sd-space-4));
+  padding-top: calc(var(--pd-space-10) - var(--pd-space-4));
 }
 
 html.docs-doc-page main > .container > .row > .col {
@@ -139,7 +139,7 @@ html.docs-doc-page main > .container > .row > .col {
 }
 
 html.docs-doc-page main > .container > .row > .col.col--3 {
-  padding-inline: var(--sd-space-6) 0;
+  padding-inline: var(--pd-space-6) 0;
 }
 
 /* -----------------------------------------------------------------------------
@@ -203,7 +203,7 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
 
   html.docs-doc-page main > .container > .row > .col:not(.col--3) {
     min-width: 0;
-    padding-left: var(--sd-corredor);
+    padding-left: var(--pd-corredor);
   }
 }
 
@@ -213,7 +213,7 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    em `tokens.css`, que é o mesmo número por construção. */
 @media (min-width: 1280px) {
   html.docs-doc-page main > .container > .row:has(> .col:not(.col--3)) {
-    margin-right: calc(var(--sd-space-4) * -1);
+    margin-right: calc(var(--pd-space-4) * -1);
   }
 }
 
@@ -239,7 +239,7 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    B. **Sem heading, não escondida** — `docItemCol` se aplica do mesmo jeito
       que em A (a condição é só `!hidden`), mas não há `.col--3` para dividir a
       `.row` com ela. A coluna cresce sozinha até o teto, e o teto AQUI BATE:
-      840 — 75% de `--sd-container-width` —, e não há como descer disso sem
+      840 — 75% de `--pd-container-width` —, e não há como descer disso sem
       `!important` de volta — o que este projeto não escreve. É a única das
       três configurações que o CSS não alcança.
    C. **Escondida no front matter** (`hide_table_of_contents: true`) —
@@ -254,7 +254,7 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    duas está na tela. B fica de fora dos dois lados, pelo motivo escrito
    acima: não é escolha, é o `!important` que ninguém vence. (Os números de A
    e B também mudaram por conta própria, depois: 816/840 em vez de 848/864,
-   quando `--sd-container-width` caiu de 1152 para 1120 — ver `tokens.css`.)
+   quando `--pd-container-width` caiu de 1152 para 1120 — ver `tokens.css`.)
 
    A MEDIDA DA PROSA sai de dois seletores estáveis — um elemento e uma classe do
    Infima — no lugar da lista de onze elementos que crescia a cada componente
@@ -280,29 +280,29 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    sozinho não basta, porque `:has()` enxerga a PRESENÇA no DOM, não o
    `display`, e o TOC continua no DOM entre 997 e 1279 mesmo escondido (ver
    §9 e a regra de `.col--3` acima). O padrão sem media query é LARGO —
-   `--sd-container-width` para a coluna. O `<article>` é seletor à parte, e a
-   NARROW dele não é `--sd-doc-width`: é `--sd-prose-width`, 720 — a âncora
+   `--pd-container-width` para a coluna. O `<article>` é seletor à parte, e a
+   NARROW dele não é `--pd-doc-width`: é `--pd-prose-width`, 720 — a âncora
    mede 720,81 com o TOC presente, o mesmo número de antes da #96. O que a
    #96 muda não é o número da prosa com TOC; é ela deixar de ser o único
    número que existe. Sem TOC visível, a prosa acompanha a coluna inteira —
-   `--sd-container-width` — e é aí que ela cresce. */
+   `--pd-container-width` — e é aí que ela cresce. */
 /* `margin-inline: 0 auto` — ancorado à esquerda, e a mudança é de MECANISMO,
    não de métrica. Enquanto o `auto` valia dos dois lados, a distância até a
    sidebar era o resto de uma divisão: metade da sobra da coluna, que a 1512
    dava 47,6 e entre 997 e 1408 dava zero. Com o corredor declarado em §1.7 a
    sobra tem dono — ela vai inteira para o lado do índice, como na âncora. */
 html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
-  max-width: var(--sd-container-width);
+  max-width: var(--pd-container-width);
   margin-inline: 0 auto;
 }
 
 @media (min-width: 1280px) {
   html.docs-doc-page main > .container > .row:has(> .col--3) > .col:not(.col--3) {
-    max-width: var(--sd-doc-width);
+    max-width: var(--pd-doc-width);
   }
 
   html.docs-doc-page main > .container > .row:has(> .col--3) > .col:not(.col--3) :is(article, .pagination-nav) {
-    max-width: var(--sd-prose-width);
+    max-width: var(--pd-prose-width);
   }
 }
 
@@ -322,7 +322,7 @@ html.docs-doc-page .theme-doc-markdown > :last-child {
    a 1,5), o que é o gesto intuitivo e o errado: o que separa uma seção da
    anterior não tem relação com o corpo do título dela.
 
-   É esta regra que resgata `--sd-space-12`. Ele tinha DOIS consumidores — o
+   É esta regra que resgata `--pd-space-12`. Ele tinha DOIS consumidores — o
    preenchimento do cartão e a metade dele no estreito —, e os dois morrem com o
    cartão. Sem esta regra o degrau ficaria órfão, que é o defeito do Infima que
    este projeto nomeou.
@@ -333,8 +333,8 @@ html.docs-doc-page .theme-doc-markdown > :last-child {
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
-  margin-top: var(--sd-space-12);
-  margin-bottom: var(--sd-space-4);
+  margin-top: var(--pd-space-12);
+  margin-bottom: var(--pd-space-4);
 }
 
 /* -----------------------------------------------------------------------------
@@ -356,17 +356,17 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
    partir da custom property, no MESMO seletor, carregado depois. Zero
    `--ifm-*` tocado fora de `tokens.css`. */
 .markdown h1:first-child {
-  font-size: var(--sd-type-3xl);
+  font-size: var(--pd-type-3xl);
 }
 
 @media (min-width: 997px) {
   .markdown h1:first-child {
-    font-size: var(--sd-type-4xl);
+    font-size: var(--pd-type-4xl);
   }
 }
 
 .markdown > h2 {
-  font-size: var(--sd-type-2xl);
+  font-size: var(--pd-type-2xl);
 }
 
 /* -----------------------------------------------------------------------------
@@ -376,7 +376,7 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
    `h1` no registro de `@theme/MDXComponents` (degrau 3). O CSS aqui não sabe
    disso: ele vê um parágrafo com a nossa classe, logo abaixo do título.
 
-   `--sd-subtitulo-recuo` e não a margem do título: as margens de irmãos
+   `--pd-subtitulo-recuo` e não a margem do título: as margens de irmãos
    adjacentes COLAPSAM para a maior das duas, então o ar de baixo do `h1` — que é
    maior — venceria e o recuo medido nunca apareceria. Zerar o do `h1` é o que
    deixa o do subtítulo mandar.
@@ -411,28 +411,28 @@ html.docs-doc-page .titulo-linha {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--sd-space-2);
+  gap: var(--pd-space-2);
 }
 
-html.docs-doc-page .titulo-linha > [data-sd-component='copiar-pagina'] {
+html.docs-doc-page .titulo-linha > [data-pd-component='copiar-pagina'] {
   margin-inline-start: auto;
 }
 
 html.docs-doc-page .subtitulo {
-  margin-top: var(--sd-subtitulo-recuo);
-  font-size: var(--sd-type-lg);
+  margin-top: var(--pd-subtitulo-recuo);
+  font-size: var(--pd-type-lg);
   /* A entrelinha é DECLARADA, e sem ela o subtítulo herdava a da prosa (1,75)
      sobre 18px = 31,5px, contra os 28 de `chrome.md` §12 — alvo `exato`. É a
      única das três medidas do subtítulo que a herança não entregava: peso e cor
      continuam não declarados, e isso segue fiel à âncora. */
-  line-height: var(--sd-subtitulo-entrelinha);
+  line-height: var(--pd-subtitulo-entrelinha);
 }
 
 /* -----------------------------------------------------------------------------
    2. Navbar — DUAS LINHAS, e a segunda sangra de ponta a ponta
 
    A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa
-   de largura total abaixo dela. Total: `--sd-topo-grudado`.
+   de largura total abaixo dela. Total: `--pd-topo-grudado`.
 
    ISTO ERA A PERDA 4, e ela estava errada. `chrome.md` §8, `swizzle.md` §4 e o
    ADR 2 diziam que a faixa *"exigiria reestruturar `Navbar/*`"*. Não exige: ela
@@ -510,11 +510,11 @@ html.docs-doc-page .subtitulo {
    O argumento é o da figura da landing, com força maior: a marca aparece em
    TODA página e a landing em uma. Tingir uma palavra de acento no canto
    superior esquerdo é o enfeite que a régua recusa, então ela fica em
-   `--sd-text-strong` — a MESMA tinta que a palavra já tinha. O que saiu foi o
-   glifo, que era a única coisa aqui a consumir `--sd-accent`.
+   `--pd-text-strong` — a MESMA tinta que a palavra já tinha. O que saiu foi o
+   glifo, que era a única coisa aqui a consumir `--pd-accent`.
 
    Medido no artefato, nos dois modos: `250,242,249` no escuro e `15,10,15` no
-   claro, os dois iguais a `--sd-text-strong` resolvido e diferentes do acento.
+   claro, os dois iguais a `--pd-text-strong` resolvido e diferentes do acento.
 
    Duas classes do Infima, degrau 1: `.navbar__brand` posiciona, `.navbar__title`
    carrega a tipografia. As declarações são as mesmas que a marca tinha — o que
@@ -522,14 +522,14 @@ html.docs-doc-page .subtitulo {
 .navbar__brand {
   display: flex;
   align-items: center;
-  color: var(--sd-text-strong);
+  color: var(--pd-text-strong);
 }
 
 .navbar__title {
-  font-family: var(--sd-font-heading);
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-heading);
-  letter-spacing: var(--sd-tracking-tight);
+  font-family: var(--pd-font-heading);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-heading);
+  letter-spacing: var(--pd-tracking-tight);
 }
 
 /* A ABA DO NAVBAR NA ESCALA DE UI, e a razão de ela precisar de declaração é a
@@ -550,7 +550,7 @@ html.docs-doc-page .subtitulo {
    escala de UI é uma só, e a tabela de alvo mede a densidade do chrome, não uma
    instância dele. */
 .navbar__link {
-  font-size: var(--sd-type-sm);
+  font-size: var(--pd-type-sm);
 }
 
 /* O HAIRLINE — o rodapé do navbar inteiro, nas duas formas (uma linha no
@@ -559,7 +559,7 @@ html.docs-doc-page .subtitulo {
    só o fio — a linha de tabs passa a ler TRANSPARENTE sobre o fundo da
    própria página, sem segunda superfície debaixo dela. */
 .navbar {
-  border-bottom: var(--sd-border-width) solid var(--sd-border-subtle);
+  border-bottom: var(--pd-border-width) solid var(--pd-border-subtle);
 }
 
 /* A FAIXA — três das quatro peças que sobram depois da #96. A primeira mora
@@ -598,7 +598,7 @@ html.docs-doc-page .subtitulo {
      assentar. */
   .navbar__inner {
     position: relative;
-    max-width: var(--sd-congelamento);
+    max-width: var(--pd-congelamento);
     margin-inline: auto;
   }
 
@@ -623,7 +623,7 @@ html.docs-doc-page .subtitulo {
      que a âncora pede, e isso é medido aqui: a 1512 o inner vai de 52 a 1460, o
      `.navbar__brand` começa em 52 e o alternador termina em 1460. Δ 0 dos dois
      lados, a 1512, 1280 e 1100. Não entra geometria nova — a altura é
-     `--sd-navbar-height`, que `tokens.css` já descreve como "a LINHA 1 do topo,
+     `--pd-navbar-height`, que `tokens.css` já descreve como "a LINHA 1 do topo,
      não o topo inteiro".
 
      É `::before` ABSOLUTO, e não `border-block-end` na fileira, porque a
@@ -644,8 +644,8 @@ html.docs-doc-page .subtitulo {
     position: absolute;
     inset-inline: 0;
     top: 0;
-    height: var(--sd-navbar-height);
-    border-block-end: var(--sd-border-width) solid var(--sd-border-subtle);
+    height: var(--pd-navbar-height);
+    border-block-end: var(--pd-border-width) solid var(--pd-border-subtle);
     pointer-events: none;
   }
 
@@ -666,12 +666,12 @@ html.docs-doc-page .subtitulo {
   /* A linha 1, determinada. `.navbar__brand` é classe do Infima — degrau 1, e
      não acoplamento a nome nosso. */
   .navbar__items > .navbar__brand {
-    min-height: var(--sd-navbar-height);
+    min-height: var(--pd-navbar-height);
   }
 
   .navbar__items--right {
     align-self: flex-start;
-    height: var(--sd-navbar-height);
+    height: var(--pd-navbar-height);
   }
 
   /* As tabs preenchem a faixa em vez de flutuar nela. Sem a altura declarada o
@@ -693,21 +693,21 @@ html.docs-doc-page .subtitulo {
   .navbar__items:not(.navbar__items--right) > .navbar__item:not(.quebra-de-faixa) {
     display: flex;
     align-items: center;
-    height: var(--sd-tabs-height);
-    border-block-end: calc(var(--sd-border-width) * 2) solid transparent;
-    margin-block-end: calc(var(--sd-border-width) * -1);
+    height: var(--pd-tabs-height);
+    border-block-end: calc(var(--pd-border-width) * 2) solid transparent;
+    margin-block-end: calc(var(--pd-border-width) * -1);
   }
 
   .navbar__items:not(.navbar__items--right)
     > .navbar__item.navbar__link--active {
-    border-block-end-color: var(--sd-accent);
+    border-block-end-color: var(--pd-accent);
   }
 }
 
 /* -----------------------------------------------------------------------------
    3. Sidebar
 
-   `--sd-sidebar-width`, separador mudo no topo, ícone em tudo abaixo dele, a
+   `--pd-sidebar-width`, separador mudo no topo, ícone em tudo abaixo dele, a
    rampa de recuo da âncora e a única seta do site. A issue #97 reescreveu três
    eixos contra a âncora; a #114 reescreveu a REGRA que os governava, e o ADR 10
    carrega o porquê de cada linha. **Nada disto custa swizzle**: o `className` é
@@ -752,11 +752,11 @@ html.docs-doc-page .subtitulo {
 .sidebar-icone > .menu__list-item-collapsible > .menu__link::before {
   content: '';
   flex: none;
-  width: var(--sd-space-4);
-  height: var(--sd-space-4);
-  margin-right: var(--sd-space-2);
+  width: var(--pd-space-4);
+  height: var(--pd-space-4);
+  margin-right: var(--pd-space-2);
   background-color: currentColor;
-  mask: var(--sd-sidebar-icone) center / contain no-repeat;
+  mask: var(--pd-sidebar-icone) center / contain no-repeat;
 }
 
 /* Os trinta e um pares seção→ícone, e eles se leem em dois blocos porque valem
@@ -781,44 +781,44 @@ html.docs-doc-page .subtitulo {
 
    Nenhum arquivo novo em `static/icons/`: todas reaproveitam desenhos que o
    manifesto já carregava, e o teto de 64 não se move. */
-.sidebar-icone--api-owner          { --sd-sidebar-icone: url('/icons/code-xml.svg'); }
-.sidebar-icone--security-champion  { --sd-sidebar-icone: url('/icons/lock.svg'); }
-.sidebar-icone--ambiente           { --sd-sidebar-icone: url('/icons/layers.svg'); }
-.sidebar-icone--esteiras           { --sd-sidebar-icone: url('/icons/workflow.svg'); }
-.sidebar-icone--infraestrutura     { --sd-sidebar-icone: url('/icons/cloud.svg'); }
-.sidebar-icone--acessos            { --sd-sidebar-icone: url('/icons/key.svg'); }
-.sidebar-icone--diagnostico        { --sd-sidebar-icone: url('/icons/activity.svg'); }
-.sidebar-icone--modulos-terraform  { --sd-sidebar-icone: url('/icons/puzzle.svg'); }
-.sidebar-icone--skills             { --sd-sidebar-icone: url('/icons/bot.svg'); }
-.sidebar-icone--servidores-mcp     { --sd-sidebar-icone: url('/icons/server.svg'); }
+.sidebar-icone--api-owner          { --pd-sidebar-icone: url('/icons/code-xml.svg'); }
+.sidebar-icone--security-champion  { --pd-sidebar-icone: url('/icons/lock.svg'); }
+.sidebar-icone--ambiente           { --pd-sidebar-icone: url('/icons/layers.svg'); }
+.sidebar-icone--esteiras           { --pd-sidebar-icone: url('/icons/workflow.svg'); }
+.sidebar-icone--infraestrutura     { --pd-sidebar-icone: url('/icons/cloud.svg'); }
+.sidebar-icone--acessos            { --pd-sidebar-icone: url('/icons/key.svg'); }
+.sidebar-icone--diagnostico        { --pd-sidebar-icone: url('/icons/activity.svg'); }
+.sidebar-icone--modulos-terraform  { --pd-sidebar-icone: url('/icons/puzzle.svg'); }
+.sidebar-icone--skills             { --pd-sidebar-icone: url('/icons/bot.svg'); }
+.sidebar-icone--servidores-mcp     { --pd-sidebar-icone: url('/icons/server.svg'); }
 
 /* O ramo do `overpower` — uma por página, na ordem da árvore. */
-.sidebar-icone--overpower              { --sd-sidebar-icone: url('/icons/zap.svg'); }
-.sidebar-icone--instalacao             { --sd-sidebar-icone: url('/icons/download.svg'); }
-.sidebar-icone--conceitos              { --sd-sidebar-icone: url('/icons/shapes.svg'); }
+.sidebar-icone--overpower              { --pd-sidebar-icone: url('/icons/zap.svg'); }
+.sidebar-icone--instalacao             { --pd-sidebar-icone: url('/icons/download.svg'); }
+.sidebar-icone--conceitos              { --pd-sidebar-icone: url('/icons/shapes.svg'); }
 
-.sidebar-icone--comandos               { --sd-sidebar-icone: url('/icons/terminal.svg'); }
-.sidebar-icone--comando-raiz           { --sd-sidebar-icone: url('/icons/circle-help.svg'); }
-.sidebar-icone--comando-list           { --sd-sidebar-icone: url('/icons/database.svg'); }
-.sidebar-icone--comando-install        { --sd-sidebar-icone: url('/icons/plus.svg'); }
-.sidebar-icone--comando-doctor         { --sd-sidebar-icone: url('/icons/gauge.svg'); }
+.sidebar-icone--comandos               { --pd-sidebar-icone: url('/icons/terminal.svg'); }
+.sidebar-icone--comando-raiz           { --pd-sidebar-icone: url('/icons/circle-help.svg'); }
+.sidebar-icone--comando-list           { --pd-sidebar-icone: url('/icons/database.svg'); }
+.sidebar-icone--comando-install        { --pd-sidebar-icone: url('/icons/plus.svg'); }
+.sidebar-icone--comando-doctor         { --pd-sidebar-icone: url('/icons/gauge.svg'); }
 
-.sidebar-icone--alvos                  { --sd-sidebar-icone: url('/icons/globe.svg'); }
-.sidebar-icone--alvo-mcp               { --sd-sidebar-icone: url('/icons/webhook.svg'); }
-.sidebar-icone--alvo-from              { --sd-sidebar-icone: url('/icons/folder.svg'); }
+.sidebar-icone--alvos                  { --pd-sidebar-icone: url('/icons/globe.svg'); }
+.sidebar-icone--alvo-mcp               { --pd-sidebar-icone: url('/icons/webhook.svg'); }
+.sidebar-icone--alvo-from              { --pd-sidebar-icone: url('/icons/folder.svg'); }
 
-.sidebar-icone--referencia             { --sd-sidebar-icone: url('/icons/book-open.svg'); }
-.sidebar-icone--codigos-de-saida       { --sd-sidebar-icone: url('/icons/circle-alert.svg'); }
-.sidebar-icone--solucao-de-problemas   { --sd-sidebar-icone: url('/icons/refresh-cw.svg'); }
+.sidebar-icone--referencia             { --pd-sidebar-icone: url('/icons/book-open.svg'); }
+.sidebar-icone--codigos-de-saida       { --pd-sidebar-icone: url('/icons/circle-alert.svg'); }
+.sidebar-icone--solucao-de-problemas   { --pd-sidebar-icone: url('/icons/refresh-cw.svg'); }
 
-.sidebar-icone--desenvolvimento        { --sd-sidebar-icone: url('/icons/wrench.svg'); }
-.sidebar-icone--telas                  { --sd-sidebar-icone: url('/icons/play.svg'); }
-.sidebar-icone--testes                 { --sd-sidebar-icone: url('/icons/repeat.svg'); }
+.sidebar-icone--desenvolvimento        { --pd-sidebar-icone: url('/icons/wrench.svg'); }
+.sidebar-icone--telas                  { --pd-sidebar-icone: url('/icons/play.svg'); }
+.sidebar-icone--testes                 { --pd-sidebar-icone: url('/icons/repeat.svg'); }
 
-.sidebar-icone--publicacao             { --sd-sidebar-icone: url('/icons/rocket.svg'); }
-.sidebar-icone--changelog              { --sd-sidebar-icone: url('/icons/clock.svg'); }
-.sidebar-icone--curadoria              { --sd-sidebar-icone: url('/icons/filter.svg'); }
-.sidebar-icone--release                { --sd-sidebar-icone: url('/icons/upload.svg'); }
+.sidebar-icone--publicacao             { --pd-sidebar-icone: url('/icons/rocket.svg'); }
+.sidebar-icone--changelog              { --pd-sidebar-icone: url('/icons/clock.svg'); }
+.sidebar-icone--curadoria              { --pd-sidebar-icone: url('/icons/filter.svg'); }
+.sidebar-icone--release                { --pd-sidebar-icone: url('/icons/upload.svg'); }
 
 /* Tipografia e raio — um corpo só, para tudo que é destino, em todo nível. A
    âncora usa peso normal com entrelinha maior, e reserva toda marcação de ativo
@@ -832,7 +832,7 @@ html.docs-doc-page .subtitulo {
    (o padrão deste arquivo, `1.7143`) mede 24,0002px no navegador. Deixar o
    `calc()` fazer a divisão em ponto flutuante duplo é mais preciso que
    qualquer decimal escrito à mão, e nomeia a derivação: 24 é o alvo, 14 é
-   `--sd-type-sm`.
+   `--pd-type-sm`.
 
    A JUSTIFICATIVA ENCOLHEU, e a forma fica. Este comentário dizia que o
    `calc()` era necessário porque *"o alvo é `exato` e o comparador não
@@ -840,47 +840,47 @@ html.docs-doc-page .subtitulo {
    o que a doutrina de tolerância de chrome.md §11 sempre mandou para medida que
    atravessa subpixel. Nem `calc()` nem decimal reprovariam hoje. O `calc()` fica
    por ser mais preciso e por nomear a derivação, não mais por caber num alvo
-   que era impossível de fechar. Não é `--sd-leading-code` (1,7143): as duas entrelinhas
+   que era impossível de fechar. Não é `--pd-leading-code` (1,7143): as duas entrelinhas
    nascem de medições independentes que bateram perto uma da outra, e nomear a
    daqui a partir de "código" seria o acoplamento falso que a escada de
-   leading já evita ao declarar `--sd-leading-h4` em nome próprio apesar de
-   repetir o número de `--sd-leading-ui`.
+   leading já evita ao declarar `--pd-leading-h4` em nome próprio apesar de
+   repetir o número de `--pd-leading-ui`.
 
    `border-radius` some do mixin do Infima (0,25rem cravado) e vira o alvo
-   publicado — `--sd-radius-md` bate 12px exato porque a base do projeto é 16.
+   publicado — `--pd-radius-md` bate 12px exato porque a base do projeto é 16.
 
    `color` sai daqui e mora na regra seguinte, com `:not(.menu__link--active)`
    — medido, não suposto: um seletor de duas classes (`.theme-doc-sidebar-menu
    .menu__link`) tem a MESMA especificidade que `.menu__link.menu__link--active`
    do Infima, e no empate quem carrega por último no cascade vence. Sem a
    exclusão, o texto e o ícone do item ativo ficavam presos em
-   `--sd-text-muted` — o próprio bug que "texto e ícone do ativo herdam o
+   `--pd-text-muted` — o próprio bug que "texto e ícone do ativo herdam o
    acento de graça" (a nota original desta seção) afirmava já estar resolvido. */
 .theme-doc-sidebar-menu .menu__link {
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-body);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-body);
   line-height: calc(24 / 14);
-  border-radius: var(--sd-radius-md);
+  border-radius: var(--pd-radius-md);
 }
 
 .theme-doc-sidebar-menu .menu__link:not(.menu__link--active) {
-  color: var(--sd-text-muted);
+  color: var(--pd-text-muted);
 }
 
 /* O SEPARADOR — o rótulo em negrito que agrupa, e o único item da sidebar que
    não é destino. Duas declarações e nada mais: a inércia sai da árvore, não
    daqui (ver o cabeçalho da seção).
 
-   O peso é `--sd-weight-heading`, e é peso de verdade, não o falso-negrito de
-   `--sd-negrito-optico`. Os dois resolvem problemas diferentes: o falso-negrito
+   O peso é `--pd-weight-heading`, e é peso de verdade, não o falso-negrito de
+   `--pd-negrito-optico`. Os dois resolvem problemas diferentes: o falso-negrito
    existe onde o peso MUDA — o item ativo troca de peso a cada navegação, e
    trocar `font-weight` reflui o texto e faz a linha pular de largura na hora em
    que o leitor clica. O separador nasce e morre no mesmo peso; não há reflow a
    evitar, e uma sombra de 0,4px seria uma aproximação onde cabe o desenho certo.
 
-   A cor sobe para `--sd-text-strong`: o separador é a única linha da sidebar que
+   A cor sobe para `--pd-text-strong`: o separador é a única linha da sidebar que
    não pode ser lida como link apagado, e a diferença de peso sozinha não paga
-   isso contra `--sd-text-muted`.
+   isso contra `--pd-text-muted`.
 
    Quatro classes contra as três da regra de cor acima — `:not()` conta a
    especificidade do argumento, então aquela regra é (0,3,0) e esta precisa
@@ -889,8 +889,8 @@ html.docs-doc-page .subtitulo {
   .theme-doc-sidebar-item-category-level-1
   > .menu__list-item-collapsible
   > .menu__link {
-  color: var(--sd-text-strong);
-  font-weight: var(--sd-weight-heading);
+  color: var(--pd-text-strong);
+  font-weight: var(--pd-weight-heading);
   text-shadow: none;
 }
 
@@ -914,7 +914,7 @@ html.docs-doc-page .subtitulo {
 
    O `text-shadow: none` da regra anterior fecha o terceiro caso pela mesma
    causa: o falso-negrito do item ativo chegaria por cima de um rótulo que já
-   nasce em `--sd-weight-heading`.
+   nasce em `--pd-weight-heading`.
 
    Nada disto é `pointer-events: none`: o rótulo continua selecionável e continua
    alcançável pelo leitor de tela como o texto que é. O que sai é a tinta. */
@@ -952,8 +952,8 @@ html.docs-doc-page .subtitulo {
    não ter uma segunda fonte de verdade para *o que é o topo*. */
 .theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
   > .menu__list-item-collapsible {
-  border-radius: var(--sd-radius-md);
-  padding-right: var(--sd-space-4);
+  border-radius: var(--pd-radius-md);
+  padding-right: var(--pd-space-4);
 }
 
 .theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
@@ -1000,7 +1000,7 @@ html.docs-doc-page .subtitulo {
    elemento, não a máscara: numa caixa de 8×16 a seta aberta ocuparia 14px de
    largura dentro de 8px de espaço reservado e transbordaria 3px para cada lado.
    Quadrada e maior que o desenho nos dois eixos, a caixa segura o giro sem
-   reservar espaço a mais na linha — os 16px são `--sd-space-4`, a mesma caixa do
+   reservar espaço a mais na linha — os 16px são `--pd-space-4`, a mesma caixa do
    ícone de família do outro lado do rótulo.
 
    O GAP É 12px do rótulo, e o `padding-left` do botão paga 8: o desenho de 8px
@@ -1014,19 +1014,19 @@ html.docs-doc-page .subtitulo {
    soma de duas rotações herdadas. */
 .theme-doc-sidebar-menu .menu__caret {
   padding-block: 0;
-  padding-inline: var(--sd-space-2) 0;
+  padding-inline: var(--pd-space-2) 0;
 }
 
 .theme-doc-sidebar-menu .menu__caret::before {
-  width: var(--sd-space-4);
-  height: var(--sd-space-4);
+  width: var(--pd-space-4);
+  height: var(--pd-space-4);
   background: none;
   background-color: currentColor;
   filter: none;
-  mask: url('/icons/chevron-right.svg') center / var(--sd-space-6) var(--sd-space-6) no-repeat;
+  mask: url('/icons/chevron-right.svg') center / var(--pd-space-6) var(--pd-space-6) no-repeat;
   transform: none;
   rotate: 90deg;
-  transition: rotate var(--sd-move-flip);
+  transition: rotate var(--pd-move-flip);
 }
 
 /* Fechado é o estado SEM rotação — o desenho já aponta para a direita. */
@@ -1076,7 +1076,7 @@ html.docs-doc-page .subtitulo {
    assim na âncora.
 
    Os níveis 3 e 4 escrevem linha. O 1 e o 2 já medem 16px sem regra:
-   `--ifm-menu-link-padding-horizontal` é `--sd-space-4`, e o Infima o aplica a
+   `--ifm-menu-link-padding-horizontal` é `--pd-space-4`, e o Infima o aplica a
    todo `.menu__link`. Uma regra que redeclara o valor herdado é uma segunda
    fonte para o mesmo número.
 
@@ -1089,7 +1089,7 @@ html.docs-doc-page .subtitulo {
    escreve seria afirmação não conferida.
 
    Nem 28 nem 40 são parada da escala de espaço — ela vai de 4 em 4 até 24 e
-   salta para 32. `calc(var(--sd-space-1) * 7)` e `* 10` compõem do único literal
+   salta para 32. `calc(var(--pd-space-1) * 7)` e `* 10` compõem do único literal
    da escala em vez de abrir duas paradas novas para um consumidor cada; as
    sondas `sidebar.item.recuo.n3` e `.n4` em `scripts/paridade.mjs` são quem
    conferem o resultado contra os alvos publicados.
@@ -1100,23 +1100,23 @@ html.docs-doc-page .subtitulo {
    valendo se um nível ganhar ou perder filhos. */
 .theme-doc-sidebar-item-link-level-3 > .menu__link,
 .theme-doc-sidebar-item-category-level-3 > .menu__list-item-collapsible > .menu__link {
-  padding-left: calc(var(--sd-space-1) * 7);
+  padding-left: calc(var(--pd-space-1) * 7);
 }
 
 .theme-doc-sidebar-item-link-level-4 > .menu__link,
 .theme-doc-sidebar-item-category-level-4 > .menu__list-item-collapsible > .menu__link {
-  padding-left: calc(var(--sd-space-1) * 10);
+  padding-left: calc(var(--pd-space-1) * 10);
 }
 
 /* Falso-negrito no item ativo. Trocar o peso reflui o texto e faz o item pular
    de largura no instante em que o leitor navega. */
 .theme-doc-sidebar-menu .menu__link--active {
-  text-shadow: var(--sd-negrito-optico);
+  text-shadow: var(--pd-negrito-optico);
 }
 
 /* A PÍLULA DO ATIVO não ganha regra de FUNDO própria na FOLHA — ela já sai
    correta da composição acima. `--ifm-menu-color-background-active` já era
-   `--sd-surface-wash` (o acento a 12%) antes da #97; o que faltava era só o
+   `--pd-surface-wash` (o acento a 12%) antes da #97; o que faltava era só o
    raio, que herdava 0,25rem cravado do mixin do Infima e agora sai da regra
    de tipografia — mesmo seletor, `.menu__link`, ativo ou não. A âncora não usa
    barra lateral, borda nem sombra no item ativo, e este projeto nunca desenhou
@@ -1124,12 +1124,12 @@ html.docs-doc-page .subtitulo {
    regra, e ela está acima, junto da migração do realce.
 
    O TEXTO E O ÍCONE precisaram, sim, de uma exclusão: `--ifm-menu-color-active`
-   já é `--sd-accent`, e o ícone é `currentColor`, mas a regra de tipografia
+   já é `--pd-accent`, e o ícone é `currentColor`, mas a regra de tipografia
    acima cravava `color` em TODO `.menu__link` com a mesma especificidade da
    regra `--active` do Infima — no empate, o cascade decidia, e decidia errado.
    O `:not(.menu__link--active)` na regra de cor é o que devolve o acento ao
    item ativo; sem ele, texto e ícone do ativo ficavam presos em
-   `--sd-text-muted`. */
+   `--pd-text-muted`. */
 
 /* O DIVISOR VERTICAL — vazamento do substrato nativo, e não pedido nenhum.
    `DocRoot/Layout/Sidebar` (hasheada) declara `border-right: 1px solid
@@ -1170,7 +1170,7 @@ aside.theme-doc-sidebar-container {
   mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    black var(--sd-space-6)
+    black var(--pd-space-6)
   );
 }
 
@@ -1202,11 +1202,11 @@ aside.theme-doc-sidebar-container {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
-  padding-right: calc(var(--sd-space-8) - var(--sd-scrollbar-fina));
+  padding-right: calc(var(--pd-space-8) - var(--pd-scrollbar-fina));
 }
 
 .theme-doc-sidebar-container .thin-scrollbar:hover {
-  scrollbar-color: var(--sd-border-strong) transparent;
+  scrollbar-color: var(--pd-border-strong) transparent;
 }
 
 .theme-doc-sidebar-container .thin-scrollbar::-webkit-scrollbar-thumb {
@@ -1214,20 +1214,20 @@ aside.theme-doc-sidebar-container {
 }
 
 .theme-doc-sidebar-container .thin-scrollbar:hover::-webkit-scrollbar-thumb {
-  background-color: var(--sd-border-strong);
+  background-color: var(--pd-border-strong);
 }
 
 /* -----------------------------------------------------------------------------
    4. TOC
 
-   A largura é `--sd-toc-width`, explícita — não é mais fração de grid. A
+   A largura é `--pd-toc-width`, explícita — não é mais fração de grid. A
    #96 corrigiu a premissa que travava em 288: ver `chrome.css` §1 e
    `chrome.md` §1.2.
    ----------------------------------------------------------------------------- */
 
 .theme-doc-toc-desktop {
-  font-size: var(--sd-type-sm);
-  line-height: var(--sd-leading-ui);
+  font-size: var(--pd-type-sm);
+  line-height: var(--pd-leading-ui);
 }
 
 /* O OFFSET DE STICKY, e ele é reescrito porque o do upstream não conhece a
@@ -1237,7 +1237,7 @@ aside.theme-doc-sidebar-container {
    --ifm-navbar-height) + 1rem)`. Com o adaptador escrevendo 112 em
    `--ifm-navbar-height`, isso dá 128 — medido, e é o que `npm run paridade`
    acusava contra o alvo de 152 do §11. Os 16 do upstream são a respiração
-   dele; a nossa é `--sd-space-10`, a mesma que o `<main>` já dá ao `<article>`
+   dele; a nossa é `--pd-space-10`, a mesma que o `<main>` já dá ao `<article>`
    (§1, acima). Alinhar os dois é o que a linha `TOC grudado em` cobra: o
    índice não sobe acima do texto que ele indexa.
 
@@ -1246,7 +1246,7 @@ aside.theme-doc-sidebar-container {
    caixa passaria a viewport em 8px e o fim da lista ficaria fora de alcance
    numa janela curta. A conta aqui é a mesma do painel da referência gerada
    (o trilho da referência, que saiu na #118): o topo do conteúdo, mais a mesma
-   respiração embaixo. `--sd-viewport-altura` é `100dvh` — o token que o
+   respiração embaixo. `--pd-viewport-altura` é `100dvh` — o token que o
    projeto já usa para não medir contra a barra de endereço do telefone.
 
    ESPECIFICIDADE, e ela custou uma medição. A regra do upstream é
@@ -1259,8 +1259,8 @@ aside.theme-doc-sidebar-container {
    sem `!important`, que este projeto não escreve em lugar nenhum. É o mesmo
    recurso que o resto deste arquivo já usa para alcançar o grid do Infima. */
 html.docs-doc-page .theme-doc-toc-desktop {
-  top: var(--sd-topo-conteudo);
-  max-height: calc(var(--sd-viewport-altura) - var(--sd-topo-conteudo) - var(--sd-space-10));
+  top: var(--pd-topo-conteudo);
+  max-height: calc(var(--pd-viewport-altura) - var(--pd-topo-conteudo) - var(--pd-space-10));
 
   /* O ROLADOR DESCE PARA A LISTA. O upstream põe `overflow-y: auto` nesta
      caixa; com o título entrando como pseudo-elemento DELA, o título rolaria
@@ -1286,25 +1286,25 @@ html.docs-doc-page .theme-doc-toc-desktop {
    React.
 
    Tudo o que a âncora mede aqui já era token deste projeto, sem exceção: a cor
-   é `--sd-text-body` nos DOIS modos (medido `#404246` no claro e `#cfd1d5` no
-   escuro, que é exatamente o que o token resolve), o corpo é `--sd-type-sm`, o
-   peso é `--sd-weight-ui` e o vão do ícone é `--sd-space-2`. Zero valor novo.
+   é `--pd-text-body` nos DOIS modos (medido `#404246` no claro e `#cfd1d5` no
+   escuro, que é exatamente o que o token resolve), o corpo é `--pd-type-sm`, o
+   peso é `--pd-weight-ui` e o vão do ícone é `--pd-space-2`. Zero valor novo.
 
    O RECUO É UMA COINCIDÊNCIA QUE FECHA, e vale escrever: o texto do item de
    TOC começa a `2 × --ifm-toc-padding-horizontal` da borda da caixa — 12 do
    `padding-left` do `<ul>` mais 12 do `margin` do `<li>`, os dois do Infima. E
-   ícone (`--sd-space-4`) mais vão (`--sd-space-2`) dão o mesmo número. Por
+   ícone (`--pd-space-4`) mais vão (`--pd-space-2`) dão o mesmo número. Por
    isso o título alinha com o texto dos itens E o ícone encosta na borda da
    caixa, como na âncora, sem que nenhum dos dois precise ceder. */
 html.docs-doc-page .theme-doc-toc-desktop::before {
   content: 'Nesta página';
   display: block;
   flex: none;
-  padding-inline-start: calc(var(--sd-space-4) + var(--sd-space-2));
-  color: var(--sd-text-body);
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-ui);
-  line-height: var(--sd-leading-ui);
+  padding-inline-start: calc(var(--pd-space-4) + var(--pd-space-2));
+  color: var(--pd-text-body);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-ui);
 }
 
 /* O EN. `content` não passa pelo i18n do Docusaurus — não há `<Translate>` a
@@ -1322,7 +1322,7 @@ html[lang='en'].docs-doc-page .theme-doc-toc-desktop::before {
 
    `block-size` é a altura da LINHA do título, não a do ícone: com
    `mask ... center`, isso centra o glifo na primeira linha sem que ninguém
-   precise calcular meio pixel. `--sd-space-4` é o tamanho de ícone de chrome
+   precise calcular meio pixel. `--pd-space-4` é o tamanho de ícone de chrome
    que `icones.md` §1 já fixa, e é o mesmo do ícone da sidebar — dois glifos de
    chrome em tamanhos diferentes na mesma tela leriam como defeito. */
 html.docs-doc-page .theme-doc-toc-desktop::after {
@@ -1330,15 +1330,15 @@ html.docs-doc-page .theme-doc-toc-desktop::after {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  inline-size: var(--sd-space-4);
-  block-size: calc(var(--sd-type-sm) * var(--sd-leading-ui));
-  background-color: var(--sd-text-body);
-  mask: url('/icons/list.svg') center / var(--sd-space-4) no-repeat;
+  inline-size: var(--pd-space-4);
+  block-size: calc(var(--pd-type-sm) * var(--pd-leading-ui));
+  background-color: var(--pd-text-body);
+  mask: url('/icons/list.svg') center / var(--pd-space-4) no-repeat;
 }
 
 /* A LISTA DO TOC NA ESCALA DE UI, e o `font-size` do slot não bastava.
 
-   `.theme-doc-toc-desktop` já declara `--sd-type-sm` (14px) acima, e a herança
+   `.theme-doc-toc-desktop` já declara `--pd-type-sm` (14px) acima, e a herança
    morre uma geração adiante: o Infima crava `.table-of-contents { font-size:
    0.8rem }` no `<ul>` que é filho dele, e `0.8 × 16 = 12,8`. Medido, o item de
    TOC saía em `12,8px` contra o alvo de `14px` de `tokens.md` §13, `Δ −1,2`,
@@ -1349,7 +1349,7 @@ html.docs-doc-page .theme-doc-toc-desktop::after {
    classe do Infima e o `TOCInline` do upstream a usa em outro contexto, que
    este projeto não renderiza hoje e não deve reger de longe. */
 html.docs-doc-page .theme-doc-toc-desktop .table-of-contents {
-  font-size: var(--sd-type-sm);
+  font-size: var(--pd-type-sm);
 
   /* A LISTA VIROU O ROLADOR, e as três declarações são consequência disso: a
      caixa em volta cedeu o `overflow` para o título ficar fora do que rola
@@ -1396,7 +1396,7 @@ html.docs-doc-page .theme-doc-toc-desktop .table-of-contents {
 
    O QUE SE ESCONDE é `.col--3`, o SLOT inteiro — não
    `.theme-doc-toc-desktop`, que é filho dele. Esconder só o filho deixaria o
-   slot vazio ainda reservando `--sd-toc-width` no `flex`, e a prosa não
+   slot vazio ainda reservando `--pd-toc-width` no `flex`, e a prosa não
    ganharia o espaço de volta — o mesmo cuidado do `:has()` acima, agora do
    lado do CSS que decide o `display`. */
 html.docs-doc-page main > .container > .row > .col--3 {
@@ -1433,7 +1433,7 @@ html.docs-doc-page main > .container > .row > .col--3 {
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page .theme-doc-breadcrumbs {
-  font-size: var(--sd-type-sm);
+  font-size: var(--pd-type-sm);
 }
 
 /* O item de home — o `<li>` do ícone de casa. Ele é o primeiro sempre que a
@@ -1461,9 +1461,9 @@ html.docs-doc-page .breadcrumbs__item:nth-last-child(2)::after {
 html.docs-doc-page .breadcrumbs__link {
   padding: 0;
   background: none;
-  color: var(--sd-accent);
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-heading);
+  color: var(--pd-accent);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-heading);
 }
 
 /* -----------------------------------------------------------------------------
@@ -1499,8 +1499,8 @@ html.docs-doc-page .pagination-nav__sublabel {
 }
 
 html.docs-doc-page .pagination-nav__label {
-  font-size: var(--sd-type-base);
-  font-weight: var(--sd-weight-ui);
+  font-size: var(--pd-type-base);
+  font-weight: var(--pd-weight-ui);
 }
 
 /* -----------------------------------------------------------------------------
@@ -1525,7 +1525,7 @@ html.docs-doc-page .pagination-nav__label {
    ----------------------------------------------------------------------------- */
 
 .footer {
-  border-top: var(--sd-border-width) solid var(--sd-border-subtle);
+  border-top: var(--pd-border-width) solid var(--pd-border-subtle);
   /* O horizontal é declarado aqui, e não deixado para a variável do Infima que o
      adaptador alimenta. Motivo: no estreito o Infima **zera** essa variável
      dentro do próprio `.footer`, que é mais perto do elemento que o `:root` do
@@ -1533,9 +1533,9 @@ html.docs-doc-page .pagination-nav__label {
      a lista fechada de cinco do ADR 1. Declarar a propriedade em vez da variável
      mantém a regra de mão única intacta: o projeto nunca lê nem escreve
      `--ifm-*` fora do adaptador. */
-  padding-inline: var(--sd-gutter);
-  padding-bottom: var(--sd-space-16);
-  font-size: var(--sd-type-sm);
+  padding-inline: var(--pd-gutter);
+  padding-bottom: var(--pd-space-16);
+  font-size: var(--pd-type-sm);
 }
 
 /* O `.container` do footer perde o preenchimento e ele sobe para o `<footer>`.
@@ -1578,11 +1578,11 @@ html.docs-doc-page .pagination-nav__label {
    DUAS causas, e as duas são consertadas aqui:
 
    1. **O termo estava errado.** O que separa a sidebar da PROSA não é o gutter
-      (32) — é a metade da folga da caixa invisível, `(--sd-doc-width −
-      --sd-prose-width) / 2` = 48. O `<article>` é centralizado dentro da coluna
+      (32) — é a metade da folga da caixa invisível, `(--pd-doc-width −
+      --pd-prose-width) / 2` = 48. O `<article>` é centralizado dentro da coluna
       de doc (§2), e o rodapé compensava com o número de antes da #96.
    2. **O `<footer>` paga um preenchimento lateral que o grupo de doc não paga.**
-      `padding-inline: var(--sd-gutter)` no `<footer>` empurra o container 32
+      `padding-inline: var(--pd-gutter)` no `<footer>` empurra o container 32
       para dentro em toda largura abaixo de 1472, enquanto a sidebar cola em 0.
       Acima do congelamento o `margin-inline: auto` do container ultrapassa os 32
       e o defeito some sozinho — que é por que ele nunca apareceu na largura de
@@ -1611,10 +1611,10 @@ html.docs-doc-page .pagination-nav__label {
   }
 
   html.docs-doc-page .footer .container {
-    max-width: var(--sd-congelamento);
+    max-width: var(--pd-congelamento);
     margin-inline: auto;
-    padding-inline: calc(var(--sd-sidebar-width) + (var(--sd-doc-width) - var(--sd-prose-width)) / 2)
-      var(--sd-gutter);
+    padding-inline: calc(var(--pd-sidebar-width) + (var(--pd-doc-width) - var(--pd-prose-width)) / 2)
+      var(--pd-gutter);
   }
 }
 
@@ -1629,8 +1629,8 @@ html.docs-doc-page .pagination-nav__label {
 }
 
 .footer__link-item {
-  line-height: var(--sd-leading-ui);
-  font-weight: var(--sd-weight-ui);
+  line-height: var(--pd-leading-ui);
+  font-weight: var(--pd-weight-ui);
 }
 
 /* O ícone de link externo sai, e o motivo não é estética: `Icon/ExternalLink`
@@ -1643,7 +1643,7 @@ html.docs-doc-page .pagination-nav__label {
 }
 
 .footer__copyright {
-  color: var(--sd-text-muted);
+  color: var(--pd-text-muted);
 }
 
 /* `docs-doc-page` vem do `DocRoot`, então a regra de alinhamento acima vale
@@ -1690,7 +1690,7 @@ html.docs-doc-page .pagination-nav__label {
 
      Ela zera o preenchimento de coluna porque, no largo, os dois lados são
      cobrados por dentro da largura pretendida e sem isso a coluna não fecha em
-     `--sd-doc-width` (816, hoje). Abaixo do limiar não há essa largura a
+     `--pd-doc-width` (816, hoje). Abaixo do limiar não há essa largura a
      fechar, nem cadeia — e a compensação vira defeito: a margem negativa da
      `.row` cancela o preenchimento do `.container`, e sem preenchimento em
      nenhum outro lugar (o `<main>` não tem mais preenchimento horizontal
@@ -1700,7 +1700,7 @@ html.docs-doc-page .pagination-nav__label {
      parágrafo. É o gutter do estreito que precisa aparecer aqui, e ele aparece
      pelo token — nunca pelo valor que o Infima por acaso também usa. */
   html.docs-doc-page main > .container > .row > .col {
-    padding-inline: var(--sd-gutter);
+    padding-inline: var(--pd-gutter);
   }
 
   /* A linha **quebra e não empilha**, revertendo deliberadamente o Infima. Ele
@@ -1710,7 +1710,7 @@ html.docs-doc-page .pagination-nav__label {
   .footer .container {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--sd-space-6);
+    gap: var(--pd-space-6);
   }
 
   /* `inline-flex` e não `inline`: a caixa continua participando da linha e
@@ -1745,7 +1745,7 @@ html.docs-doc-page .pagination-nav__label {
 
 .dropdown__menu,
 .navbar-sidebar {
-  border: var(--sd-border-width) solid var(--sd-border-subtle);
+  border: var(--pd-border-width) solid var(--pd-border-subtle);
 }
 
 /* -----------------------------------------------------------------------------
@@ -1773,5 +1773,5 @@ html.docs-doc-page .pagination-nav__label {
    ----------------------------------------------------------------------------- */
 
 button.theme-back-to-top-button {
-  box-shadow: var(--sd-shadow-float);
+  box-shadow: var(--pd-shadow-float);
 }

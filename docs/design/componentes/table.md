@@ -13,7 +13,7 @@ correção alcançar a tabela que ninguém lembrou de embrulhar.
 ## Anatomia
 
 ```html
-<div data-sd-component="table" role="region" tabindex="0" aria-label="Tabela">
+<div data-pd-component="table" role="region" tabindex="0" aria-label="Tabela">
   <table>…</table>
 </div>
 ```
@@ -72,10 +72,10 @@ Nada além disso. Se a tabela for larga, ela rola sozinha.
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-subtle`, `--sd-text-body`, `--sd-text-strong` — todos por
+Camada 2: `--pd-border-subtle`, `--pd-text-body`, `--pd-text-strong` — todos por
 meio do adaptador, que já escreve as variáveis de tabela do framework.
 
-Camada 1: `--sd-space-6`, `--sd-type-sm`, `--sd-leading-ui`.
+Camada 1: `--pd-space-6`, `--pd-type-sm`, `--pd-leading-ui`.
 
 ## Light e dark
 

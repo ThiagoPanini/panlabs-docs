@@ -1,5 +1,5 @@
 /**
- * `sd-ai-era` — o `.md` por rota, o `llms.txt` e o `llms-full.txt`.
+ * `pd-ai-era` — o `.md` por rota, o `llms.txt` e o `llms-full.txt`.
  *
  * Zero swizzle, zero dependência, zero serviço. O plugin lê a mesma porta que a
  * busca (`allContentLoaded`) e escreve três formatos no `outDir`.
@@ -118,7 +118,7 @@ export default function pluginAiEra(context, options) {
   const urlDoIndice = absoluta(`${baseUrl}llms.txt`);
 
   return {
-    name: 'sd-ai-era',
+    name: 'pd-ai-era',
 
     async allContentLoaded({allContent}) {
       paginas = paginasDe({
@@ -221,7 +221,7 @@ export default function pluginAiEra(context, options) {
  * cujo leitor é máquina. O que TEM tradução chega traduzido: título, descrição
  * e rótulo de seção. A rota para mudar isso está registrada e não foi comprada:
  * `getTranslationFiles` + `translateContent` no plugin põem a prosa em
- * `i18n/<locale>/sd-ai-era/`.
+ * `i18n/<locale>/pd-ai-era/`.
  */
 function preambulo({paginas, abas, rotulos, locale}) {
   const contagem = abas

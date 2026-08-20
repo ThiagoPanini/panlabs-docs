@@ -32,7 +32,7 @@ export default function Table({children, ...resto}) {
   return (
     <div
       className={estilos.table}
-      data-sd-component="table"
+      data-pd-component="table"
       role="region"
       tabIndex={0}
       aria-label={translate({

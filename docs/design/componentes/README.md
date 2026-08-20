@@ -37,8 +37,8 @@ implementa comportamento interativo. Ou o navegador entrega — `<details>`, `<a
 `aria-selected` prontos. **Não há um `keydown` escrito neste projeto.** Ver
 *substrato nativo* em [`domain.md`](../../agents/domain.md).
 
-**4. O contrato de partes é estreito.** `data-sd-component`, `data-sd-variant` e
-`data-sd-part` — este último **só onde o CSS não alcança** por tipo de elemento
+**4. O contrato de partes é estreito.** `data-pd-component`, `data-pd-variant` e
+`data-pd-part` — este último **só onde o CSS não alcança** por tipo de elemento
 ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 `:focus-visible` já carregam a informação.
 
@@ -55,13 +55,13 @@ ou por ARIA. **Estado nunca vira atributo**: `[open]`, `[aria-selected]` e
 > porque a rota da referência gerada a nomeia verbatim no contrato dela.
 
 **O contrato teve um consumidor que não era um dos dezessete, e ele vale
-registrado depois de morto.** A landing usava `data-sd-part="glow"` na camada
-decorativa do hero, e `data-sd-component` para alcançar `card` e `card-group`
+registrado depois de morto.** A landing usava `data-pd-part="glow"` na camada
+decorativa do hero, e `data-pd-component` para alcançar `card` e `card-group`
 dentro do JSX dela. Não era exceção à régua: era a régua aplicada fora do MDX. O
 `glow` existia porque o bloco `reduce` de `tokens.css` precisava alcançar um
 elemento cuja classe é de CSS Module e portanto **hasheada** — que é
 literalmente *o CSS não alcança por tipo de elemento*. E os dois
-`data-sd-component` já eram publicados: quem os lê de fora lê contrato, não
+`data-pd-component` já eram publicados: quem os lê de fora lê contrato, não
 implementação.
 
 > **Correção de fato.** A landing saiu em
@@ -70,7 +70,7 @@ implementação.
 > voltou a ter exatamente os dezessete consumidores**, e a régua perdeu o único
 > exemplo vivo de aplicação fora do MDX. O que sobrevive é o **precedente**, e é
 > por isso que o parágrafo fica: quando o CSS não alcança porque a classe é
-> hasheada por um módulo, `data-sd-part` é o gancho certo, e publicá-lo não abre
+> hasheada por um módulo, `data-pd-part` é o gancho certo, e publicá-lo não abre
 > exceção nenhuma. Nada foi despublicado por esta remoção — o `glow` nunca
 > esteve na tabela dos dezessete, e despublicar é o movimento que a régua acima
 > proíbe.
@@ -227,7 +227,7 @@ queria:
 | Sem válvula de escape | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §1 — veto do dono do projeto |
 | Zero JS de interação | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §6 |
 | Contrato de partes estreito | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
-| **O consumidor de fora do catálogo morreu, e o precedente fica** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o `data-sd-part="glow"` da landing era a única aplicação da régua fora do MDX; nada foi despublicado, porque ele nunca esteve na tabela dos dezessete |
+| **O consumidor de fora do catálogo morreu, e o precedente fica** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — o `data-pd-part="glow"` da landing era a única aplicação da régua fora do MDX; nada foi despublicado, porque ele nunca esteve na tabela dos dezessete |
 | Nenhum componente conhece modo de cor | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §7 |
 | Os treze cortados | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) |
 | **Nove nomes ausentes da âncora por busca de tag** — dica flutuante, distintivo, `danger`, colunas autorais, componente de diagrama, trecho, fórmula, faixa, playground de API | **origem própria** | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11 buscou a tag nos `.md` da âncora mais sondagem no DOM renderizado; não achou nenhum. Classificação por metodologia distinta da linha acima (aquela é uso zero em produção, medido pela #4); decidir se cada um fica ou sai do catálogo continua fora de escopo — aqui só a classificação fecha |

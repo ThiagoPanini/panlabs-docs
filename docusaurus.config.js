@@ -12,7 +12,7 @@
  * Shim do tema Prism.
  *
  * Um tema do `prism-react-renderer` é `{plain, styles: [{types, style}]}`, e o
- * `style` aceita qualquer string CSS — inclusive `var(--sd-code-*)`. É isso que
+ * `style` aceita qualquer string CSS — inclusive `var(--pd-code-*)`. É isso que
  * salva a fonte única de valor: a paleta de sintaxe é um papel da camada 2, que
  * bifurca por modo em `tokens.css`, e este objeto só a referencia.
  *
@@ -28,37 +28,37 @@
  */
 const temaPrism = {
   plain: {
-    color: 'var(--sd-code-fg)',
-    backgroundColor: 'var(--sd-surface-code)',
+    color: 'var(--pd-code-fg)',
+    backgroundColor: 'var(--pd-surface-code)',
   },
   styles: [
     {
       types: ['comment', 'prolog', 'doctype', 'cdata'],
-      style: {color: 'var(--sd-code-comment)', fontStyle: 'italic'},
+      style: {color: 'var(--pd-code-comment)', fontStyle: 'italic'},
     },
     {
       types: ['keyword', 'atrule', 'selector', 'tag', 'important', 'builtin'],
-      style: {color: 'var(--sd-code-keyword)'},
+      style: {color: 'var(--pd-code-keyword)'},
     },
     {
       types: ['string', 'char', 'attr-value', 'regex', 'inserted'],
-      style: {color: 'var(--sd-code-string)'},
+      style: {color: 'var(--pd-code-string)'},
     },
     {
       types: ['function', 'class-name', 'function-variable'],
-      style: {color: 'var(--sd-code-function)'},
+      style: {color: 'var(--pd-code-function)'},
     },
     {
       types: ['constant', 'symbol', 'number', 'boolean', 'deleted'],
-      style: {color: 'var(--sd-code-constant)'},
+      style: {color: 'var(--pd-code-constant)'},
     },
     {
       types: ['parameter', 'variable', 'property', 'attr-name'],
-      style: {color: 'var(--sd-code-parameter)'},
+      style: {color: 'var(--pd-code-parameter)'},
     },
     {
       types: ['operator', 'punctuation', 'entity', 'url'],
-      style: {color: 'var(--sd-code-operator)'},
+      style: {color: 'var(--pd-code-operator)'},
     },
   ],
 };
@@ -230,9 +230,9 @@ const config = {
         //
         // O argumento é o da figura da landing, com força maior: a marca aparece
         // em TODA página e a landing em uma. Ela fica **monocromática**, em
-        // `--sd-text-strong` — tingir uma palavra de acento no canto superior
+        // `--pd-text-strong` — tingir uma palavra de acento no canto superior
         // esquerdo é o enfeite que a régua recusa. A tipografia não mudou: o que
-        // saiu foi o glifo, que era a única coisa a consumir `--sd-accent`.
+        // saiu foi o glifo, que era a única coisa a consumir `--pd-accent`.
         //
         // `title` é string traduzível e entra em `navbar.json`; `panlabs` fica
         // IDÊNTICA nos dois locales, que é a razão de o nome ter sido escolhido.

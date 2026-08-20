@@ -63,11 +63,11 @@ import {
   trecho,
 } from './escada.mjs';
 
-const ID_LISTA = 'sd-busca-lista';
-const idOpcao = (i) => `sd-busca-opcao-${i}`;
+const ID_LISTA = 'pd-busca-lista';
+const idOpcao = (i) => `pd-busca-opcao-${i}`;
 
 export default function SearchBar() {
-  const dados = usePluginData('sd-busca');
+  const dados = usePluginData('pd-busca');
   const history = useHistory();
   const dialogo = useRef(null);
   const entrada = useRef(null);
@@ -166,8 +166,8 @@ export default function SearchBar() {
       <button
         type="button"
         className={estilos.botao}
-        data-sd-component="busca"
-        data-sd-part="gatilho"
+        data-pd-component="busca"
+        data-pd-part="gatilho"
         onClick={abrir}>
         <Icon name="search" size="sm" />
         <span className={estilos.rotulo}>
@@ -178,7 +178,7 @@ export default function SearchBar() {
         <kbd className={estilos.atalho}>{mac ? '⌘' : 'Ctrl'} K</kbd>
       </button>
 
-      <dialog ref={dialogo} className={estilos.modal} data-sd-component="busca" onClose={() => setAtivo(0)}>
+      <dialog ref={dialogo} className={estilos.modal} data-pd-component="busca" onClose={() => setAtivo(0)}>
         {/* ARIA por CITAÇÃO do padrão `Combobox With List Autocomplete` do
             WAI-ARIA APG, e não por invenção. É o único lugar do projeto onde a
             spec descreve ARIA em prosa, e ela aponta para um padrão publicado:
@@ -186,7 +186,7 @@ export default function SearchBar() {
             1.0), `aria-controls` para a listbox, `aria-autocomplete="list"`, e
             `aria-activedescendant` — que é o que mantém o FOCO no campo
             enquanto a seleção anda pela lista. */}
-        <div className={estilos.campo} data-sd-part="campo">
+        <div className={estilos.campo} data-pd-part="campo">
           <Icon name="search" size="sm" />
           <input
             ref={entrada}
@@ -239,7 +239,7 @@ export default function SearchBar() {
               role="option"
               aria-selected={i === ativo}
               className={estilos.opcao}
-              data-sd-part="resultado"
+              data-pd-part="resultado"
               onClick={() => escolher(i)}
               onMouseMove={() => setAtivo(i)}>
               <span className={estilos.titulo}>{realcar(r.t, termos)}</span>
@@ -302,7 +302,7 @@ export default function SearchBar() {
 /**
  * O realce — peso e, desde a #98, tinta de acento.
  *
- * A linha ativa deixou de ser `--sd-surface-wash` (ver `estilos.module.css`,
+ * A linha ativa deixou de ser `--pd-surface-wash` (ver `estilos.module.css`,
  * `.opcao[aria-selected]`), então o `<mark>` pode colorir sem cair acento
  * sobre acento no mesmo pixel. O elemento continua sendo `<mark>` porque é
  * ele que carrega o significado; o que o CSS troca agora é a tinta e o peso.

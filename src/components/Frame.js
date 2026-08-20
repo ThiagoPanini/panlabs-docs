@@ -27,7 +27,7 @@ import estilos from './catalogo.module.css';
 
 export default function Frame({children}) {
   return (
-    <figure className={estilos.frame} data-sd-component="frame">
+    <figure className={estilos.frame} data-pd-component="frame">
       <div className={estilos.frameStage}>{children}</div>
     </figure>
   );

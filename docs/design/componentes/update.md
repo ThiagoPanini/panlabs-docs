@@ -12,7 +12,7 @@ produto seria prosa solta.
 ## Anatomia
 
 ```html
-<section data-sd-component="update">
+<section data-pd-component="update">
   <header>
     2026-08-01
     <span>v1.4</span>                      <!-- único elemento do header -->
@@ -53,11 +53,11 @@ O corpo é MDX comum — lista, cerca de código e callout funcionam dentro dele
 
 ## Tokens consumidos
 
-Camada 2: `--sd-border-subtle`, `--sd-surface-wash`, `--sd-text-muted`,
-`--sd-text-strong`.
+Camada 2: `--pd-border-subtle`, `--pd-surface-wash`, `--pd-text-muted`,
+`--pd-text-strong`.
 
-Camada 1: `--sd-space-2`, `--sd-space-3`, `--sd-space-6`, `--sd-border-width`,
-`--sd-radius-xs`, `--sd-type-xs`, `--sd-type-sm`, `--sd-font-mono`.
+Camada 1: `--pd-space-2`, `--pd-space-3`, `--pd-space-6`, `--pd-border-width`,
+`--pd-radius-xs`, `--pd-type-xs`, `--pd-type-sm`, `--pd-font-mono`.
 
 ## Light e dark
 

@@ -19,7 +19,7 @@ Docusaurus já entrega título, botão de cópia e quebra de linha.
 ## Anatomia
 
 **Um objeto preenchido, um passo acima da página, com fio e sem sombra.** O
-contêiner inteiro é `--sd-surface-code`; o título da cerca, quando existe, fica
+contêiner inteiro é `--pd-surface-code`; o título da cerca, quando existe, fica
 dentro dele, separado do código pelo fio do sistema.
 
 ```html
@@ -43,14 +43,14 @@ sustentava com o cartão no meio.
 código era o contra-exemplo declarado — mas afundar era relativo ao cartão, e
 sem ele o contra-exemplo perde contra o quê ser exemplo.
 
-**Não emite `data-sd-component`** — o DOM não é nosso. O contrato de skin é a
+**Não emite `data-pd-component`** — o DOM não é nosso. O contrato de skin é a
 classe estável `.theme-code-block`. Como a skin corporativa engancha na mesma
 classe que o nosso CSS, o seletor nosso soma o **tipo do elemento** para vencer a
 classe de CSS Module hasheada do upstream sem depender de ordem de carga.
 
 **O preenchimento sai de graça, e a regra escrita vale mais que a economia:**
 `CodeBlock/Container` declara `background: var(--prism-background-color)`, e o
-shim de `themeConfig.prism` aponta essa variável para `--sd-surface-code`. O
+shim de `themeConfig.prism` aponta essa variável para `--pd-surface-code`. O
 nosso CSS declara **só o fio e o raio**.
 
 **A separação foi medida, e é o número que o defeito produzia que importa:** o
@@ -78,7 +78,7 @@ preenchido do catálogo.** Dentro de um `code-group`, os dois mudam de dono: a
 casca já tem fio e raio 16, e o bloco por dentro perde a borda própria e
 estreita o raio para `16px` menos duas larguras de fio — 2px adiantado em
 relação à casca, para revelar a moldura em vez de encostar nela. O seletor que
-faz a distinção é `[data-sd-component="code-group"] div.theme-code-block`, em
+faz a distinção é `[data-pd-component="code-group"] div.theme-code-block`, em
 `componentes.css`.
 
 ## Variantes
@@ -104,13 +104,13 @@ registrada em `themeConfig.prism.additionalLanguages`** — opção pública, de
 
 ## Tokens consumidos
 
-Camada 2: `--sd-surface-code`, `--sd-border-subtle`, `--sd-text-muted`, e os oito
-`--sd-code-*` da paleta de sintaxe.
+Camada 2: `--pd-surface-code`, `--pd-border-subtle`, `--pd-text-muted`, e os oito
+`--pd-code-*` da paleta de sintaxe.
 
-Camada 1: `--sd-border-width`, `--sd-radius`, `--sd-type-sm`,
-`--sd-weight-ui`, `--sd-leading-code`.
+Camada 1: `--pd-border-width`, `--pd-radius`, `--pd-type-sm`,
+`--pd-weight-ui`, `--pd-leading-code`.
 
-**Camada 3: nenhum.** Este componente declarava `--sd-code-berco`, a tinta da
+**Camada 3: nenhum.** Este componente declarava `--pd-code-berco`, a tinta da
 moldura, e ela morreu com o cartão de que era mistura. Nenhum token de escopo
 sobrou.
 
@@ -157,11 +157,11 @@ toque ele some sem erro, sem aviso e sem sintoma para quem testa no desktop.
 | --- | --- | --- |
 | Não é swizzle: CSS mais opção pública | **origem própria (correção)** | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15), corrigindo a rota de swizzle da raiz pela escada da [#14](https://github.com/ThiagoPanini/panlabs-docs/issues/14) |
 | Sem numeração, realce, foco, diff nem ícone | herdado | [#4](https://github.com/ThiagoPanini/panlabs-docs/issues/4) — zero usos medidos |
-| ~~Pastilha dentro de berço~~ · **objeto preenchido um passo acima da página** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — a moldura era o cartão aparecendo em volta, e com ele morreram a segunda tinta e o `--sd-code-berco` que a produzia |
-| A superfície do código sobe para a parada 900 no escuro | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ela era o **mesmo valor** de `--sd-surface-page`, e o bloco sumia contra a página no modo canônico |
-| ~~O código afunda~~ · **nada afunda** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — afundar era relativo ao cartão; `--sd-shadow-sunken` morreu junto |
+| ~~Pastilha dentro de berço~~ · **objeto preenchido um passo acima da página** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — a moldura era o cartão aparecendo em volta, e com ele morreram a segunda tinta e o `--pd-code-berco` que a produzia |
+| A superfície do código sobe para a parada 900 no escuro | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ela era o **mesmo valor** de `--pd-surface-page`, e o bloco sumia contra a página no modo canônico |
+| ~~O código afunda~~ · **nada afunda** | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — afundar era relativo ao cartão; `--pd-shadow-sunken` morreu junto |
 | Paleta de sintaxe na camada 2 | herdado | [#12](https://github.com/ThiagoPanini/panlabs-docs/issues/12) §9 |
 | Shim de config que só referencia token | origem própria | [#11](https://github.com/ThiagoPanini/panlabs-docs/issues/11) §2 |
 | `--prism-background-color` só é alcançável pelo shim | **origem própria (correção)** | medido no fonte da versão em uso — estilo inline vence folha de estilo |
 | Botão de copiar visível sob ponteiro grosso | herdado | [#28](https://github.com/ThiagoPanini/panlabs-docs/issues/28) §4.2 |
-| Raio 16 sozinho, 14 dentro do grupo | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--sd-radius-md` (12px) nos dois contextos, sem distinguir |
+| Raio 16 sozinho, 14 dentro do grupo | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--pd-radius-md` (12px) nos dois contextos, sem distinguir |

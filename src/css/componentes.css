@@ -4,7 +4,7 @@
    `code-block` e `tabs` são as duas entradas do catálogo cujo DOM **não é
    nosso**. Nenhum dos dois é swizzle: um é CSS sobre classe estável mais opção
    pública de config, o outro é CSS sobre as classes do Infima. Por isso eles não
-   emitem `data-sd-component` — e é a única exceção do contrato de partes, que é
+   emitem `data-pd-component` — e é a única exceção do contrato de partes, que é
    declarada e não descoberta.
 
    Consequência que vale escrita: para estes dois, o contrato de skin são as
@@ -31,19 +31,19 @@
    não tem mais embaixo dele.
 
    O que fica é mais simples e é o que a regra pede: um retângulo preenchido com
-   `--sd-surface-code`, um passo acima da página nos DOIS modos, com fio e sem
+   `--pd-surface-code`, um passo acima da página nos DOIS modos, com fio e sem
    sombra. O preenchimento sai de graça — `CodeBlock/Container` declara
    `background: var(--prism-background-color)`, e o shim de `themeConfig.prism`
-   aponta essa variável para `--sd-surface-code`. Repetir a declaração aqui
+   aponta essa variável para `--pd-surface-code`. Repetir a declaração aqui
    seria escrever de novo o que o próprio contrato de skin já resolve.
 
    Some junto o preenchimento de dois pixels: ele existia para REVELAR o berço
    em volta da pastilha, e com uma tinta só não revela coisa nenhuma. Sem ele o
    `<pre>` volta a encostar na borda, e o raio dele — que é o mesmo
-   `--sd-radius-md` do contêiner — coincide com o do fio em vez de aparecer dois
+   `--pd-radius-md` do contêiner — coincide com o do fio em vez de aparecer dois
    pixels adentro.
 
-   NADA AFUNDA MAIS. `--sd-shadow-sunken` era o contra-exemplo declarado da
+   NADA AFUNDA MAIS. `--pd-shadow-sunken` era o contra-exemplo declarado da
    elevação, e afundar era relativo ao cartão.
 
    `div.theme-code-block` e não `.theme-code-block`: o upstream pinta fundo,
@@ -52,16 +52,16 @@
    ----------------------------------------------------------------------------- */
 
 div.theme-code-block {
-  border: var(--sd-border-width) solid var(--sd-border-subtle);
-  border-radius: var(--sd-radius);
+  border: var(--pd-border-width) solid var(--pd-border-subtle);
+  border-radius: var(--pd-radius);
 }
 
 /* Dentro de um `code-group`, a casca já tem fio e raio — o bloco por dentro
    perde os dois próprios e herda um raio menor, 2px adiantado em relação ao
    da casca, para revelar a moldura em volta em vez de encostar nela. */
-[data-sd-component="code-group"] div.theme-code-block {
+[data-pd-component="code-group"] div.theme-code-block {
   border: none;
-  border-radius: calc(var(--sd-radius) - var(--sd-border-width) * 2);
+  border-radius: calc(var(--pd-radius) - var(--pd-border-width) * 2);
 }
 
 /* O título da cerca fica dentro do objeto, na mesma tinta, e o fio que o separa
@@ -69,9 +69,9 @@ div.theme-code-block {
    estável é ser o primeiro filho do contêiner quando existe, e o
    `:not(:only-child)` impede a regra de alcançar um bloco sem título. */
 div.theme-code-block > div:first-child:not(:only-child) {
-  color: var(--sd-text-muted);
-  font-size: var(--sd-type-sm);
-  font-weight: var(--sd-weight-ui);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
 }
 
 /* -----------------------------------------------------------------------------
@@ -88,27 +88,27 @@ div.theme-code-block > div:first-child:not(:only-child) {
    ----------------------------------------------------------------------------- */
 
 ul.tabs {
-  gap: var(--sd-space-1);
-  border-block-end: var(--sd-border-width) solid var(--sd-border-default);
-  font-weight: var(--sd-weight-ui);
+  gap: var(--pd-space-1);
+  border-block-end: var(--pd-border-width) solid var(--pd-border-default);
+  font-weight: var(--pd-weight-ui);
 }
 
 li.tabs__item {
   border-radius: 0;
-  border-block-end: calc(var(--sd-border-width) * 2) solid transparent;
-  margin-block-end: calc(var(--sd-border-width) * -1);
-  padding: var(--sd-space-2) var(--sd-space-3);
-  color: var(--sd-text-strong);
-  font-size: var(--sd-type-sm);
-  line-height: var(--sd-leading-ui);
+  border-block-end: calc(var(--pd-border-width) * 2) solid transparent;
+  margin-block-end: calc(var(--pd-border-width) * -1);
+  padding: var(--pd-space-2) var(--pd-space-3);
+  color: var(--pd-text-strong);
+  font-size: var(--pd-type-sm);
+  line-height: var(--pd-leading-ui);
   transition:
-    color var(--sd-move-state),
-    border-color var(--sd-move-state);
+    color var(--pd-move-state),
+    border-color var(--pd-move-state);
 }
 
 li.tabs__item[aria-selected='true'] {
-  border-block-end-color: var(--sd-accent);
-  color: var(--sd-accent);
+  border-block-end-color: var(--pd-accent);
+  color: var(--pd-accent);
 }
 
 /* O hover do Infima pinta um fundo E troca a cor do texto. Aqui a aba inativa
@@ -118,36 +118,36 @@ li.tabs__item[aria-selected='true'] {
 @media (hover: hover) {
   li.tabs__item:hover:not([aria-selected='true']) {
     background-color: transparent;
-    border-block-end-color: var(--sd-border-default);
+    border-block-end-color: var(--pd-border-default);
   }
 }
 
 /* -----------------------------------------------------------------------------
    tabs dentro de code-group — pílula em vez de sublinhado
 
-   `[data-sd-component="code-group"]` é o mesmo escopo que distingue as duas
+   `[data-pd-component="code-group"]` é o mesmo escopo que distingue as duas
    famílias de aba na medição: a régua de conteúdo sublinha, o grupo de código
    marca com uma pílula sob a aba ativa. As regras daqui vencem as de cima por
    especificidade (o atributo soma um seletor) sem depender de ordem de carga.
    ----------------------------------------------------------------------------- */
 
-[data-sd-component="code-group"] ul.tabs {
+[data-pd-component="code-group"] ul.tabs {
   border-block-end: none;
 }
 
-[data-sd-component="code-group"] li.tabs__item {
+[data-pd-component="code-group"] li.tabs__item {
   position: relative;
   border-block-end: none;
   margin-block-end: 0;
-  border-radius: var(--sd-radius-sm);
+  border-radius: var(--pd-radius-sm);
 }
 
-[data-sd-component="code-group"] li.tabs__item[aria-selected='true']::after {
+[data-pd-component="code-group"] li.tabs__item[aria-selected='true']::after {
   content: '';
   position: absolute;
   inset-inline: 0;
-  inset-block-end: calc(var(--sd-space-1) * -1);
-  block-size: calc(var(--sd-border-width) * 2);
-  background-color: var(--sd-accent);
-  border-radius: var(--sd-radius-full);
+  inset-block-end: calc(var(--pd-space-1) * -1);
+  block-size: calc(var(--pd-border-width) * 2);
+  background-color: var(--pd-accent);
+  border-radius: var(--pd-radius-full);
 }

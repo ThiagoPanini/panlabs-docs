@@ -176,20 +176,20 @@ Consequência que vale escrita: **zero `z-index` no arquivo**. O elemento entra 
 
 | Dimensão | Valor | De onde sai |
 | --- | --- | --- |
-| Largura | `--sd-busca-panel-width` | a âncora, centralizada, `640px` — ver §10 |
-| Altura máxima | `--sd-busca-height` | a única medida do projeto relativa à viewport |
-| Deslocamento do topo | `--sd-busca-panel-top` | a âncora, `54px` — ver §10 |
+| Largura | `--pd-busca-panel-width` | a âncora, centralizada, `640px` — ver §10 |
+| Altura máxima | `--pd-busca-height` | a única medida do projeto relativa à viewport |
+| Deslocamento do topo | `--pd-busca-panel-top` | a âncora, `54px` — ver §10 |
 | Ancoragem | topo, `margin-inline: auto` | um modal centrado verticalmente **pula** quando a lista cresce, e ela cresce a cada tecla |
 
-> **Correção — a largura parou de citar `--sd-prose-width` por nome, na [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98).** Até ali o painel abria com a medida que o leitor estava lendo, e citar a largura de prosa por nome evitava uma segunda cópia do mesmo número — coincidência de propósito, tratada como parentesco. A âncora mede o painel fixo em 640px, e 640 não é 720: continuar citando `--sd-prose-width` teria virado a derivação falsa que este projeto recusa por escrito. `--sd-busca-panel-width` é o número, sozinho, em `tokens.css`. A propriedade antiga — um transplante que mudasse a coluna de prosa também movia o painel de busca de graça — morreu junto, e vale registrado para quem for portar a régua adiante.
+> **Correção — a largura parou de citar `--pd-prose-width` por nome, na [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98).** Até ali o painel abria com a medida que o leitor estava lendo, e citar a largura de prosa por nome evitava uma segunda cópia do mesmo número — coincidência de propósito, tratada como parentesco. A âncora mede o painel fixo em 640px, e 640 não é 720: continuar citando `--pd-prose-width` teria virado a derivação falsa que este projeto recusa por escrito. `--pd-busca-panel-width` é o número, sozinho, em `tokens.css`. A propriedade antiga — um transplante que mudasse a coluna de prosa também movia o painel de busca de graça — morreu junto, e vale registrado para quem for portar a régua adiante.
 
-A entrada usa `--sd-move-enter`, cujo único consumidor no projeto é este modal ([`motion.md`](motion.md) §2).
+A entrada usa `--pd-move-enter`, cujo único consumidor no projeto é este modal ([`motion.md`](motion.md) §2).
 
 **Entrada e saída saem por mecanismos diferentes, e a assimetria foi medida — não escolhida.**
 
 | | Mecanismo | Por quê |
 | --- | --- | --- |
-| entrada | `@keyframes sd-busca-abre`, referenciado por `global(…)` | `@starting-style` **não sobrevive ao minificador** |
+| entrada | `@keyframes pd-busca-abre`, referenciado por `global(…)` | `@starting-style` **não sobrevive ao minificador** |
 | saída | `transition` com `allow-discrete` sobre `display` e `overlay` | quando `[open]` sai, a animação sai com ele e a opacidade cai pelo caminho de sempre |
 
 A primeira redação deste documento descrevia as duas pontas como uma transição só, com `@starting-style` dando o estado de partida. **Ela abria pronto no site publicado.** O minificador do Docusaurus descarta o bloco `@starting-style` inteiro — o aviso de build é `Invalid property name` —, e o sintoma é o que [`motion.md`](motion.md) §6 cataloga como o pior do projeto: `docusaurus start` anima e o publicado não, sem erro em lugar nenhum. Foi encontrado lendo o CSS emitido.
@@ -198,9 +198,9 @@ A primeira redação deste documento descrevia as duas pontas como uma transiç�
 
 ### 5.1 O realce — peso e acento, e o que resolveu a briga
 
-Até a [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) o `<mark>` mudava só o peso. A linha ativa já era uma superfície de estado — `--sd-surface-wash`, o acento a 12% — e um `<mark>` tingido poria **acento sobre acento no mesmo pixel**: duas ênfases brigando, e a de baixo perdendo. Era por isso que esta seção recusava cor.
+Até a [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) o `<mark>` mudava só o peso. A linha ativa já era uma superfície de estado — `--pd-surface-wash`, o acento a 12% — e um `<mark>` tingido poria **acento sobre acento no mesmo pixel**: duas ênfases brigando, e a de baixo perdendo. Era por isso que esta seção recusava cor.
 
-**A âncora colore o termo em acento além de engrossar, e a #98 adota — mudando o outro lado da equação, não este.** A linha ativa deixou de ser `--sd-surface-wash` e passou a `--sd-border-default`, o texto forte a 12%: mesma força de mancha, cor neutra em vez de acento. As duas ênfases não brigam mais porque só uma continua sendo acento — a troca em `.opcao[aria-selected]`, não no `<mark>`, é o que compra a cor nova sem repetir o problema que a versão anterior evitava calando-a.
+**A âncora colore o termo em acento além de engrossar, e a #98 adota — mudando o outro lado da equação, não este.** A linha ativa deixou de ser `--pd-surface-wash` e passou a `--pd-border-default`, o texto forte a 12%: mesma força de mancha, cor neutra em vez de acento. As duas ênfases não brigam mais porque só uma continua sendo acento — a troca em `.opcao[aria-selected]`, não no `<mark>`, é o que compra a cor nova sem repetir o problema que a versão anterior evitava calando-a.
 
 O elemento continua sendo `<mark>`, porque é ele que carrega o significado. O que o CSS troca agora é a tinta e o peso, os dois.
 
@@ -214,11 +214,11 @@ O elemento continua sendo `<mark>`, porque é ele que carrega o significado. O q
 
 ### 5.3 O token novo
 
-`--sd-surface-scrim` é o **único papel semântico novo** do slice — par declarado, entrando no papel `surface` que já existe, com um consumidor só: o `::backdrop`.
+`--pd-surface-scrim` é o **único papel semântico novo** do slice — par declarado, entrando no papel `surface` que já existe, com um consumidor só: o `::backdrop`.
 
 Ele deriva do extremo escuro da rampa, que é o mesmo nos dois modos; **o que bifurca é a opacidade**, e ela bifurca por motivo mecânico. No escuro a página já está perto da parada 950, e um véu leve não se distinguiria dela; no claro, a mesma opacidade transformaria a página num buraco preto em vez de empurrá-la para trás.
 
-> **Correção de contagem, e ela vale registrada.** A resolução do slice dizia *"o único token novo"*. São **dois**. O segundo é `--sd-busca-height`, e ele é de outra camada — dimensão de chrome, camada 1, que não bifurca por modo. A afirmação continua verdadeira do jeito que ela de fato importa: **o slice não abriu papel semântico novo além do scrim.**
+> **Correção de contagem, e ela vale registrada.** A resolução do slice dizia *"o único token novo"*. São **dois**. O segundo é `--pd-busca-height`, e ele é de outra camada — dimensão de chrome, camada 1, que não bifurca por modo. A afirmação continua verdadeira do jeito que ela de fato importa: **o slice não abriu papel semântico novo além do scrim.**
 >
 > Por que ele é token e não literal no CSS Module: `60dvh` **passaria** pelo portão 1, cujo padrão é `px|rem|em|ms|s`. Passar por buraco de varredura é a única forma de literal que este projeto não admite — a saída correta seria fechar o buraco, e fechá-lo aqui custa uma linha em vez de uma perna nova de portão.
 
@@ -249,7 +249,7 @@ O que a citação obriga:
 
 **O navbar não muda, e isso é medido.**
 
-Tirar `['./src/plugins/busca', …]` da config faz `usePluginData('sd-busca')` devolver `undefined`; o `SearchBar` devolve `null`; e o `Navbar/Search` do upstream esconde o contêiner vazio pelo próprio `:empty` ([`chrome.md`](chrome.md) §2.1). Sem botão, sem atalho, sem modal — e o navbar reflui sozinho.
+Tirar `['./src/plugins/busca', …]` da config faz `usePluginData('pd-busca')` devolver `undefined`; o `SearchBar` devolve `null`; e o `Navbar/Search` do upstream esconde o contêiner vazio pelo próprio `:empty` ([`chrome.md`](chrome.md) §2.1). Sem botão, sem atalho, sem modal — e o navbar reflui sozinho.
 
 É a mesma propriedade que fez o slot de busca ser declarado vazio desde o slice 1: **reservar a posição custa zero pixel**, e preenchê-la não move nada.
 
@@ -291,7 +291,7 @@ A queixa do dono foi que *"a busca não segue o modelo"*. Esta tabela transforma
 | Painel topo | `54px` | ±1 |
 | Painel raio | `20px` | exato |
 
-**Três coisas ficavam fora da tabela, e a [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) fechou duas.** A âncora põe o controle **centralizado** na primeira linha do navbar — a #98 fez o mesmo, mas o comparador **continua** sem enxergar isso: ele mede a caixa, não o eixo, e posição não é comprimento. A dica de tecla da âncora era **texto puro** contra a nossa pílula `<kbd>`, e a #98 fechou a diferença — **mas ela é de pele, não de elemento**, e a redação anterior dizia *"presença de elemento"* e que a #98 o matou. Não matou, e é decisão: o que morreu foi a **pílula** — fundo, borda, raio, padding e sombra saíram, sobraram cor e peso. O `<kbd>` continua no DOM de propósito, porque é a **semântica de tecla**, e trocá-lo por um `<span>` pagaria semântica por uma aparência que o CSS já entrega inteira. `src/theme/SearchBar/estilos.module.css` registra isso ao lado da regra, e a linha de procedência abaixo sempre disse o certo: *"a pílula `<kbd>` do atalho do gatilho vira texto puro"*. **As teclas do rodapé são o outro caso**, e lá o elemento saiu mesmo — o §desta página que as descreve já diz `nem dentro de <kbd>`, e é a diferença entre os dois que esta frase confundia. Fica de fora ainda a linha de resultado: ela só pode ser sondada com o painel aberto **e com consulta digitada**, um cenário a mais do que este instrumento monta hoje. A #98 compactou a linha mesmo sem sonda — altura por padding reduzido, raio em `--sd-radius-md` (12px, contra os 14 que a âncora mede — ver Procedência, `origem própria (implementação)`) — avaliada visualmente, não por régua.
+**Três coisas ficavam fora da tabela, e a [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) fechou duas.** A âncora põe o controle **centralizado** na primeira linha do navbar — a #98 fez o mesmo, mas o comparador **continua** sem enxergar isso: ele mede a caixa, não o eixo, e posição não é comprimento. A dica de tecla da âncora era **texto puro** contra a nossa pílula `<kbd>`, e a #98 fechou a diferença — **mas ela é de pele, não de elemento**, e a redação anterior dizia *"presença de elemento"* e que a #98 o matou. Não matou, e é decisão: o que morreu foi a **pílula** — fundo, borda, raio, padding e sombra saíram, sobraram cor e peso. O `<kbd>` continua no DOM de propósito, porque é a **semântica de tecla**, e trocá-lo por um `<span>` pagaria semântica por uma aparência que o CSS já entrega inteira. `src/theme/SearchBar/estilos.module.css` registra isso ao lado da regra, e a linha de procedência abaixo sempre disse o certo: *"a pílula `<kbd>` do atalho do gatilho vira texto puro"*. **As teclas do rodapé são o outro caso**, e lá o elemento saiu mesmo — o §desta página que as descreve já diz `nem dentro de <kbd>`, e é a diferença entre os dois que esta frase confundia. Fica de fora ainda a linha de resultado: ela só pode ser sondada com o painel aberto **e com consulta digitada**, um cenário a mais do que este instrumento monta hoje. A #98 compactou a linha mesmo sem sonda — altura por padding reduzido, raio em `--pd-radius-md` (12px, contra os 14 que a âncora mede — ver Procedência, `origem própria (implementação)`) — avaliada visualmente, não por régua.
 
 O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes de medir, porque `<dialog>` fechado não tem caixa.
 
@@ -317,14 +317,14 @@ O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes 
 | A régua de máquina em `node --test` | **origem própria (implementação)** | os portões são varredura, e ordenação não é varrível |
 | A folga de 58% sob o teto | **origem própria (medição)** | 27 616 B em pt-BR e 27 645 B em EN, no `globalData` do build de **todos** os locales — o build de um locale só encurta o permalink do EN em 156 B |
 | O empate entre títulos que se prefixam fica como perda nomeada | **origem própria (medição)** | as 45 páginas buscadas pelo próprio título; duas vêm em segundo. Remedido na #114 — a perda sobreviveu à morte das páginas de índice, o que mostra que a causa é a escada e não o corpus |
-| A geometria do §10, implementada — `--sd-busca-panel-width`, `--sd-busca-panel-top`, `--sd-radius-lg`, e o raio do controle reancorado em `--sd-radius-md` | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.1/§7.2 |
-| O fundo do painel troca `--sd-surface-raised` por `--sd-surface-page` | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.2, "fundo igual à página"; sem efeito no escuro (os dois papéis já coincidem, `tokens.css`), visível no claro |
+| A geometria do §10, implementada — `--pd-busca-panel-width`, `--pd-busca-panel-top`, `--pd-radius-lg`, e o raio do controle reancorado em `--pd-radius-md` | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.1/§7.2 |
+| O fundo do painel troca `--pd-surface-raised` por `--pd-surface-page` | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.2, "fundo igual à página"; sem efeito no escuro (os dois papéis já coincidem, `tokens.css`), visível no claro |
 | O controle centralizado na linha 1 do navbar | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.1; dependia do chão do navbar assentado, [#96](https://github.com/ThiagoPanini/panlabs-docs/issues/96) |
 | A pílula `<kbd>` do atalho do gatilho vira texto puro | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.1, resolve a lacuna que este documento já registrava no §10 |
 | As teclas do rodapé perdem o `<kbd>` e viram glifo solto | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.2 |
 | O `<mark>` ganha cor de acento, além do peso | herdado | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.2 |
-| A linha selecionada troca `--sd-surface-wash` por `--sd-border-default` (neutro) | **origem própria (implementação)** | descoberto ao implementar [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98): sem a troca, o acento do `<mark>` cai sobre acento na linha ativa — ver §5.1 |
-| O raio da linha de resultado fica em `--sd-radius-md` (12px), não nos 14px que a âncora mede | **origem própria (implementação)** | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.2 mede 14px, mas nada na medição sustenta abrir um quinto degrau de raio só por 2px não sondados (§10); a decisão de reusar `--sd-radius-md` saiu de escrever o CSS, não de régua. **Não é `delta deliberado`** — `principios.md` §3 fecha essa classe em zero membros, sem novos tickets que a reabram |
+| A linha selecionada troca `--pd-surface-wash` por `--pd-border-default` (neutro) | **origem própria (implementação)** | descoberto ao implementar [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98): sem a troca, o acento do `<mark>` cai sobre acento na linha ativa — ver §5.1 |
+| O raio da linha de resultado fica em `--pd-radius-md` (12px), não nos 14px que a âncora mede | **origem própria (implementação)** | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §7.2 mede 14px, mas nada na medição sustenta abrir um quinto degrau de raio só por 2px não sondados (§10); a decisão de reusar `--pd-radius-md` saiu de escrever o CSS, não de régua. **Não é `delta deliberado`** — `principios.md` §3 fecha essa classe em zero membros, sem novos tickets que a reabram |
 | Sem assistente de IA — navbar, campo e lista | **lacuna por restrição** | [#98](https://github.com/ThiagoPanini/panlabs-docs/issues/98) — `research/paridade-devin` §13; a restrição é o quinto zero (uma única JS de interação). Se ela ainda cabe nesta classe ou pede qualificador próprio segue **aberto** — o §13 da pesquisa já registrava a mesma dúvida, e `principios.md` §5.1 é onde ela se resolve, se resolver |
 | O cabeçalho de grupo da linha de IA some | **origem própria (consequência)** | cai da linha acima: sem a linha de IA, não sobra o que o cabeçalho rotule |
 | Fallback entra marcado, detectado por caminho | herdado | [#19](https://github.com/ThiagoPanini/panlabs-docs/issues/19) §6 |
@@ -335,8 +335,8 @@ O painel é sondado com o modal **aberto**: o comparador clica no gatilho antes 
 | `<dialog>` com `showModal()` | **mecanismo emprestado** | do navegador; a armadilha de foco e a camada superior são dele |
 | Largura igual ao interior do cartão | **origem própria** | derivada, não medida — a medida que o leitor já estava lendo |
 | Ancorado no topo | origem própria | modal centrado pula quando a lista cresce |
-| `--sd-surface-scrim`, par declarado | **origem própria** | não há medição de véu nas referências; a bifurcação de opacidade é mecânica |
-| `--sd-busca-height` como token | **origem própria (correção)** | a resolução dizia *um* token novo; são dois, e o segundo é de outra camada |
+| `--pd-surface-scrim`, par declarado | **origem própria** | não há medição de véu nas referências; a bifurcação de opacidade é mecânica |
+| `--pd-busca-height` como token | **origem própria (correção)** | a resolução dizia *um* token novo; são dois, e o segundo é de outra camada |
 | ARIA por citação do APG | herdado | *Combobox With List Autocomplete*, WAI-ARIA APG |
 | `Escape` fecha em vez de limpar | **origem própria (implementação)** | é o `<dialog>` quem trata; reescrever seria refazer o que o navegador faz |
 | A entrada é `@keyframes`, não `@starting-style` | **origem própria (correção)** | medido no CSS emitido: o minificador descarta o bloco inteiro, e o modal publicado abria sem transição |

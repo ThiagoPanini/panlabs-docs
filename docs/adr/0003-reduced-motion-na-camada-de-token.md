@@ -35,9 +35,9 @@ A implementação inteira são três linhas, em `src/css/tokens.css`:
 ```css
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --sd-dur-1: 1ms;
-    --sd-dur-2: 1ms;
-    --sd-dur-3: 1ms;
+    --pd-dur-1: 1ms;
+    --pd-dur-2: 1ms;
+    --pd-dur-3: 1ms;
   }
 }
 ```
@@ -46,13 +46,13 @@ Isso funciona por causa de duas propriedades que precisam valer juntas, e que es
 
 ### a) Todo movimento compõe da escala, e nenhum crava número
 
-Os seis movimentos nomeados são tokens completos — `<duração> <easing>` — construídos sobre `--sd-dur-*` e `--sd-ease-*`. Um componente escreve `transition: background-color var(--sd-move-state)`, nunca `transition: background-color 200ms ease-out`.
+Os seis movimentos nomeados são tokens completos — `<duração> <easing>` — construídos sobre `--pd-dur-*` e `--pd-ease-*`. Um componente escreve `transition: background-color var(--pd-move-state)`, nunca `transition: background-color 200ms ease-out`.
 
 Custom property resolve **no momento do uso**, então redefinir a escala dentro da media query atravessa todos os consumidores sozinha.
 
 ### b) O adaptador de mão única leva a redefinição para o framework que não escrevemos
 
-Como o adaptador escreve `--ifm-transition-fast: var(--sd-dur-1)` e `--ifm-transition-timing-default: var(--sd-ease-settle)`, **o Infima e o `theme-classic` param junto** — sem martelo `*`, sem um único `!important`, e sem que precisemos tocar em CSS que não é nosso.
+Como o adaptador escreve `--ifm-transition-fast: var(--pd-dur-1)` e `--ifm-transition-timing-default: var(--pd-ease-settle)`, **o Infima e o `theme-classic` param junto** — sem martelo `*`, sem um único `!important`, e sem que precisemos tocar em CSS que não é nosso.
 
 ### c) `1ms`, não `0s`
 
