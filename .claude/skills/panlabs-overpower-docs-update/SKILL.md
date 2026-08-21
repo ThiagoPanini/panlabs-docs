@@ -1,5 +1,5 @@
 ---
-name: varredura-overpower
+name: panlabs-overpower-docs-update
 description: Confere a documentação do overpower publicada neste acervo contra a ferramenta real, corrige a deriva que achar, e move o pino. Use quando `npm run pino -- --verificar` reprovar, quando uma versão nova do overpower for publicada, ou quando pedirem para varrer a doc do overpower.
 ---
 
