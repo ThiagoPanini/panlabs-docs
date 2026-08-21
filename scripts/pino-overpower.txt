@@ -31,4 +31,5 @@
 0.25.1	2026-08-19	varrido	13 correções e 3 lacunas, à mão, na #118
 0.27.0	2026-08-20	varrido	o contrato mentia sobre `--yes` desde a 0.25.2; 3 versões entraram no changelog
 0.27.2	2026-08-20	varrido	o contrato não sabia dizer opcional; schema v2 com aridade, mínimo e restrições, assinatura derivada, e o painel virou montador (#133)
-0.27.3	2026-08-20	varrido	o changelog da doc estava três versões atrás; o `--version` ganhou exceção na tabela de saída, e o `--dry-run` do contrato ganhou os dois fatos que a 0.27.1 passou a anunciar
+0.27.3	2026-08-20	varrido	`referencia/codigos-de-saida.md` não dizia que `--version` decide antes do subcomando, e uma linha malformada depois dele ainda sai `0`; único delta do changelog (#136)
+0.27.3	2026-08-20	varrido	segunda passada na mesma versão: a página de changelog parou na 0.27.0 e devia três entradas, e o `--dry-run` do contrato não tinha os dois fatos que a 0.27.1 anunciou (#137)

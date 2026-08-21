@@ -22,20 +22,6 @@ table is generated onto the [root page](../comandos/overpower) from the contract
 uvx overpower@latest doctor; echo "exited $?"
 ```
 
-:::note
-**`--version` is the table's exception, and it is one of reading order.** It
-answers and exits before the rest of the line is parsed, so
-`overpower --version install --nope` exits `0`, the same as a lone `--version`.
-The `2` the malformed line would earn on its own never fires, because the
-subcommand is never parsed. The `0` vouches for what `--version` did, not for
-what came after it.
-
-```bash
-overpower --version install --nope; echo "exited $?"
-overpower install --nope; echo "exited $?"
-```
-:::
-
 ## The axis between `2` and `3`
 
 The axis between `2` and `3` is **whose defect it is**, and that distinction is
@@ -102,3 +88,17 @@ It is *could not run to the end*, and three of those cases are you saying no:
 What the four have in common is that **nothing was written**. A script that
 treats `1` as a product failure will file a bug when the operator just pressed
 `n`.
+
+## `--version` answers before the rest gets read
+
+Placed before the subcommand, `--version` answers and exits right there,
+without handing the rest of the line to the subcommand's parser: a malformed
+invocation after it still exits `0`.
+
+```bash
+uvx overpower@latest --version install --nope
+```
+
+`install --nope` alone exits `2`, no such option. With `--version` first, the
+root answers before anything else, and the subcommand never gets read: `0`
+answers for `--version`, not for what comes after it.

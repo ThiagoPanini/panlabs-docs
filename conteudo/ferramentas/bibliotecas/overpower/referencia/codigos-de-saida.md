@@ -22,19 +22,6 @@ sai gerada na [página da raiz](../comandos/overpower), a partir do contrato.
 uvx overpower@latest doctor; echo "saiu $?"
 ```
 
-:::note
-**O `--version` é a exceção da tabela, e ela é de ordem de leitura.** Ele responde
-e sai antes de o resto da linha ser lido, então `overpower --version install --nope`
-sai `0`, igual a um `--version` sozinho. O `2` que a linha malformada ganharia
-sozinha nunca chega a disparar, porque o parse do subcomando nunca acontece. O `0`
-vale pelo que o `--version` fez, e não pelo que veio depois dele.
-
-```bash
-overpower --version install --nope; echo "saiu $?"
-overpower install --nope; echo "saiu $?"
-```
-:::
-
 ## O eixo entre `2` e `3`
 
 O eixo entre `2` e `3` é **de quem é o defeito**, e é exatamente essa distinção
@@ -100,3 +87,17 @@ Python, e sai `1`.
 
 O que os quatro têm em comum é que **nada foi escrito**. Um script que trata `1`
 como falha do produto vai reportar bug quando o operador só apertou `n`.
+
+## `--version` decide antes do resto ser lido
+
+Posto antes do subcomando, `--version` responde e sai ali mesmo, sem entregar o
+resto da linha ao parser do subcomando: por isso uma invocação malformada depois
+dele ainda sai `0`.
+
+```bash
+uvx overpower@latest --version install --nope
+```
+
+`install --nope` sozinho sai `2`, opção inexistente. Com `--version` na frente,
+quem responde primeiro é a raiz, e o subcomando nunca chega a ser lido: `0`
+responde por `--version`, não pelo que vem depois dele.
