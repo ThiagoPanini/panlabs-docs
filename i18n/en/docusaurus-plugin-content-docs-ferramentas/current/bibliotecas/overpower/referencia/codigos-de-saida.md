@@ -76,3 +76,17 @@ It is *could not run to the end*, and three of those cases are you saying no:
 What the four have in common is that **nothing was written**. A script that
 treats `1` as a product failure will file a bug when the operator just pressed
 `n`.
+
+## `--version` answers before the rest gets read
+
+Placed before the subcommand, `--version` answers and exits right there,
+without handing the rest of the line to the subcommand's parser: a malformed
+invocation after it still exits `0`.
+
+```bash
+uvx overpower@latest --version install --nope
+```
+
+`install --nope` alone exits `2`, no such option. With `--version` first, the
+root answers before anything else, and the subcommand never gets read: `0`
+answers for `--version`, not for what comes after it.
