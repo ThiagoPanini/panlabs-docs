@@ -281,7 +281,7 @@
         {
           "nome": "--dry-run",
           "tipo": "flag",
-          "descricao": "Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio.",
+          "descricao": "Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio. Um destino global já ocupado é recusado, e não perguntado, e com `--from` a raiz remota é buscada mesmo assim, porque sem ela não há plano a imprimir.",
           "aridade": {
             "multiplo": false
           }

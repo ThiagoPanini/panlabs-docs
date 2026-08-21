@@ -16,6 +16,33 @@ with no heading is a list nobody walks.
 
 ## 0.27.x
 
+<Update label="0.27.3" tag="fixed">
+  **The exit-code table now names the `--version` exception.** It answers and
+  exits before the rest of the line is parsed, so
+  `overpower --version install --nope` exits `0`, the same as a lone `--version`:
+  Click resolves the flag in the group callback and never reaches the
+  subcommand's own parsing, so the `2` the malformed line would otherwise earn
+  never fires. The `0` vouches for what `--version` did, not for what followed it.
+</Update>
+
+<Update label="0.27.2" tag="fixed">
+  **The out-of-scope runtime refusal now names the right set.** It said the set
+  `--runtime` accepts is a function of scope, 76 in project and 74 in global,
+  which is the size of the skills table alone. The flag validates against the
+  union of that table with the MCP one, 77 in project and 75 in global, because
+  `vscode` reaches through the MCP half in both scopes without carrying a skills
+  row of its own. Behaviour is unchanged.
+</Update>
+
+<Update label="0.27.1" tag="fixed">
+  **`--dry-run` now says what it actually does.** Its help read *"print the plan
+  and write nothing"*, an incomplete truth: a dry run also turns an occupied
+  global destination from a question into exit `3`, the same way `--yes` does,
+  and paired with `--from` it fetches the remote root before it has anything to
+  report. The behaviour is what it always was; what changed is the screen you
+  consult.
+</Update>
+
 <Update label="0.27.0" tag="changed">
   **The documentation left the tool's repository and now lives here.** The
   nineteen pages that used to sit in `website/` are published in this collection,

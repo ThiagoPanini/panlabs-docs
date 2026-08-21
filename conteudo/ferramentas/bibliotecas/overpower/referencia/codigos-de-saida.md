@@ -36,6 +36,18 @@ existe em lugar nenhum, então o defeito está na própria linha. Um valor de
 destino simplesmente não existe para aquele par. Isso é um fato sobre o mundo,
 não sobre o que você digitou.
 
+Uma recusa de `2` chega num painel de erro, com a mensagem nomeando toda flag
+que a linha entregou:
+
+```text
+╭─ error ──────────────────────────────────────────────────╮
+│                                                          │
+│  `list` shows one item at a time, and got --skill and    │
+│  --bundle                                                │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
+
 :::note
 A mesma leitura vale para o `--from`. Uma raiz de busca que não pôde ser obtida,
 por rede inalcançável, repositório inexistente ou falta de acesso de leitura, é

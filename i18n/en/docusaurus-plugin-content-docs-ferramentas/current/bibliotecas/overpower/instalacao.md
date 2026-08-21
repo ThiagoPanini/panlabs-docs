@@ -1,6 +1,6 @@
 ---
 title: Install
-description: How to get overpower, the op shortcut that is deliberately not installed, and the flag that proves the package arrived whole.
+description: How to get overpower, what it needs from the machine, and the flag that proves the package arrived whole.
 ---
 
 # Install

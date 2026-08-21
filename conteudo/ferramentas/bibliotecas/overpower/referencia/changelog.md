@@ -16,6 +16,33 @@ entradas sem heading é uma lista que ninguém percorre.
 
 ## 0.27.x
 
+<Update label="0.27.3" tag="correção">
+  **A tabela de códigos de saída passou a nomear a exceção do `--version`.** Ele
+  responde e sai antes de o resto da linha ser lido, então
+  `overpower --version install --nope` sai `0`, igual a um `--version` sozinho: o
+  Click resolve a flag no callback do grupo e nunca alcança o parse do
+  subcomando, então o `2` que a linha malformada ganharia não chega a disparar.
+  O `0` vale pelo que o `--version` fez, e não pelo que veio depois dele.
+</Update>
+
+<Update label="0.27.2" tag="correção">
+  **A recusa de runtime fora de escopo passou a nomear o conjunto certo.** Ela
+  dizia que o conjunto aceito pelo `--runtime` é função do escopo, 76 no projeto
+  e 74 no global, que é o tamanho da tabela de skills sozinha. A flag valida
+  contra a união dessa tabela com a de servidores MCP, 77 no projeto e 75 no
+  global, porque o `vscode` alcança pela metade MCP nos dois escopos sem ter
+  linha própria de skill. O comportamento não mudou.
+</Update>
+
+<Update label="0.27.1" tag="correção">
+  **O `--dry-run` passou a dizer o que ele faz de fato.** A ajuda dele lia
+  *"imprime o plano e não escreve nada"*, verdade incompleta: uma execução seca
+  também transforma um destino global já ocupado de pergunta em saída `3`, do
+  mesmo jeito que o `--yes`, e junto do `--from` ela busca a raiz remota antes de
+  ter o que relatar. O comportamento é o de sempre; o que mudou é a tela que você
+  consulta.
+</Update>
+
 <Update label="0.27.0" tag="mudança">
   **A documentação saiu do repositório da ferramenta e passou a viver aqui.** As
   dezenove páginas que moravam em `website/` foram publicadas neste acervo, em

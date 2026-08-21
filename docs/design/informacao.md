@@ -98,9 +98,11 @@ Jornadas              Procedimentos        Ferramentas
 | `Ferramentas` | 4 | **32** (28 autorais + 4 geradas) | **32** |
 | | **11** | **60** | **32** |
 
-**A árvore está fechada: 56 autorais mais 4 geradas, e o EN em 32.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 27, `Ferramentas` em 32 e o site em **60**. O portão 4 cobra os quatro números.
+**A árvore está fechada: 55 autorais mais 4 geradas, e o EN em 31.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 26, `Ferramentas` em 31 e o site em **59**. O portão 4 cobra os quatro números.
 
 > **Correção de contagem — #133.** As seções do `overpower` eram **seis** e são **cinco**: `Desenvolvimento` e `Publicação` serviam ao mesmo leitor, quem contribui com a ferramenta, misturadas na sidebar com as que servem quem a instala, e nada ali dizia qual era qual. As duas fundiram em `Contribuir`, e o `changelog` mudou de lado junto, para `Referência`, porque *o que mudou na versão que eu tenho* é pergunta de quem usa. Seis páginas nasceram de recorte no mesmo movimento, e os números foram de 12 · 16 · 26 para 12 · 16 · 32.
+
+> **Correção de contagem — a poda do atalho `op`.** A página `O atalho op` saiu do acervo, e com ela o desenho `send`. Ela ensinava a escrever um alias de shell e a não colidir com a CLI do 1Password: conhecimento de shell, não da ferramenta, e nada no `overpower` muda se ele não existir. Os números foram de 12 · 16 · 32 para 12 · 16 · 31, e o manifesto de ícones de 96 tags sobre 61 arquivos para 94 sobre 60.
 
 > **Correção de contagem — #117.** Os números anteriores eram 12 · 16 · 17, com 39 autorais, 45 no site e 17 em EN. `Biblioteca A`, `B` e `C` saíram inteiras, com o ramo gerado de assinatura junto, e no lugar entrou o `overpower`, com 17 páginas autorais e 4 geradas por locale. Demolição e construção foram o mesmo commit por obrigação de portão: `Biblioteca C` era a única instância de três dos dez tipos de página, e não havia corte que deixasse a cobrança 12 verde no meio do caminho.
 
@@ -122,7 +124,7 @@ O teto anterior era 2, e o argumento forte dele não era medição — era a **r
 
 **A cobrança mudou de forma, e são duas.** Ela era *"o nível 3 é usado ao menos uma vez"*, que é teto com consumidor e sem fronteira: nada impedia um terceiro nível aparecer em `Jornadas` no dia seguinte. O portão 4 passa a cobrar que **nada passe de 4 em lugar nenhum** e que **nada passe de 2 fora de `ferramentas/bibliotecas/overpower`**. Um teto que se declara e não se confere é um teto que sobe sozinho; um teto que se confere sem fronteira é um teto que vaza.
 
-**O ramo tem 13 folhas no nível 4**, que é o número que o [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) §g escreveu antes de o conteúdo existir: 4 páginas geradas em `Comandos`, 2 em `Alvos`, 2 em `Referência`, 2 em `Desenvolvimento` e 3 em `Publicação`. As cinco folhas de abertura das seções não entram na conta porque não ocupam linha própria — elas são o `link` da categoria, no nível 3.
+**O ramo tem 19 folhas no nível 4**, contra as 13 que o [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) §g escreveu antes de o conteúdo existir: 4 páginas geradas em `Comandos`, 3 em `Alvos`, 9 em `Contribuir` e 3 em `Referência`. O ADR contava `Desenvolvimento` e `Publicação`, que fundiram em `Contribuir`, e a fusão trouxe seis páginas de recorte junto. As cinco folhas de abertura das seções não entram na conta porque não ocupam linha própria — elas são o `link` da categoria, no nível 3.
 
 > **O teto de 288px não reabre, e a medição é anterior a este trabalho.** A sidebar do Devin e a do `docs.windsurf.com` têm os mesmos 288px, e o windsurf segura cinco níveis dentro deles. A fixture `aninhamento-de-sidebar-maximo` (§7) é a instância que prova o quarto nível aqui: 40px de recuo mais ícone mais o rótulo mais longo dessa profundidade.
 
@@ -209,7 +211,7 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 
 | # | O que confere |
 | ---: | --- |
-| 1 | o volume por aba e por categoria — 12 · 16 · 32, e **60** no total |
+| 1 | o volume por aba e por categoria — 12 · 16 · 31, e **59** no total |
 | 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
 | 3 | a regra de heading, com a exceção nomeada acima como **única** |
 | 4 | **`<Steps>` ausente em toda `Jornadas`** |
@@ -322,23 +324,31 @@ São onze, todos **convenção de conteúdo e zero layout**: sem front matter de
 | Tipo | Palavras | Estrutura mínima | Quantas neste artefato |
 | --- | --- | --- | ---: |
 | Quickstart | 500-700 | 1 `<Steps>` de 5 passos · 5 blocos · 2 `:::` · 1 `<CardGroup>` | 1 |
-| Conceitual | 700-1000 | 2 blocos · 1 `:::` · 1 tabela · 3-6 `##` | **11** |
+| Conceitual | 700-1000 | 2 blocos · 1 `:::` · 1 tabela · 3-6 `##` | **9** |
 | Guia | 600-900 | 1 `<Steps>` · 3 blocos · 2 `:::` | **15** |
 | SDK | 400-600 | 1 `<CodeGroup>` de instalação · 4 blocos | 2 |
 | Receita | 150-250 | 1 bloco **longo** · no máximo 1 `##` | 2 |
 | Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | **5** |
-| Referência | 300-600 | 1 tabela · 3-6 `##` | **2** |
+| Referência | 300-600 | 1 tabela · 3-6 `##` | **3** |
 | Troubleshooting | 800-1200 | 1 tabela de sintomas · 3-8 `##` | 4 |
 | Changelog | — | 6-8 entradas em `<Update>` | 1 |
 | Referência de API | — | a saída do gerador | **4 — geradas** |
 | *índice de jornada* | 250-400 | ver §6.4 | 2 |
 | *capítulo de jornada* | 180-1800 | 3-6 `##` · 2 blocos · 1 `:::` · prosa antes do 1º `##` · **sem `<Steps>`** | 10 |
 | *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 1 |
-| | | **total autoral** | **56** |
+| | | **total autoral** | **55** |
 
 > **A linha *índice de categoria* saiu, e a da fixture curta passou a somar.** Eram **oito** índices de categoria, e a fixture de página curta — `Procedimentos › Ambiente › Índice` — era uma delas: a linha dela existia para nomear o **papel**, e contá-la de novo fazia a coluna somar 47 contra um total de 46. Com a #114 a forma morreu (§6.3): sete das oito páginas saíram, e a oitava é justamente a fixture, que agora tem linha própria na sidebar e conta uma vez, na linha dela.
 
 > **A coluna foi remedida com o `overpower` dentro, e nenhum número dela é escolha de redação:** os doze são a contagem do manifesto de `scripts/portao-4-conteudo.sh`, que é o que crava e reprova. As 17 páginas novas caem em sete dos onze tipos, e a distribuição não foi desenhada para encher a coluna — ela é o que a doc de origem já tinha, mapeada gabarito a gabarito. O `Guia` passou de 11 para 15 porque cinco das seis seções do `overpower` têm uma folha de procedimento, e o `Conceitual` de 3 para 9 pelo mesmo motivo, do outro lado.
+
+> **A coluna se moveu duas vezes desde a remedição.** `O atalho op` saiu do acervo, e `Códigos de saída` deixou de ser `Conceitual` para ser `Referência`: ela é uma tabela que se consulta mais as notas de uso dela, que é o gabarito do tipo, e estava carimbada `Conceitual` só porque o tipo `Referência` não existia quando ela foi escrita. `Conceitual` foi de 11 para 9, `Referência` de 2 para 3, e o total autoral de 56 para 55.
+
+### 6.6 A cerca ```` ```text ```` é tela de ferramenta, e só
+
+Toda cerca ```` ```text ```` do acervo é **saída literal do `overpower`**, gravada da ferramenta em 60 colunas por um terminal de verdade. Ela tem entrelinha própria em `src/css/componentes.css`, `--pd-leading-tela`, porque o que ela desenha é painel de caixa e a parede `│` de uma linha precisa encostar na da linha seguinte. Com a entrelinha de código a parede vira tracejado.
+
+**A consequência é uma reserva.** Cerca de código que não é tela declara a linguagem dela, que é o que toda outra cerca do acervo já faz. Uma cerca `text` escrita para prosa qualquer herdaria a entrelinha de terminal e sairia apertada, sem nada na página explicando por quê. A largura de 60 colunas também não é gosto: em 80 a arte estoura a coluna de prosa e o leitor recebe metade de um painel com barra de rolagem.
 
 **Os onze tipos têm instância neste artefato**, e `Referência de API` é o único gerado. O portão 4 cobra a pendência **pelo avesso**: as quatro existem, e nenhuma delas pode aparecer no manifesto de tipo — uma linha ali seria página escrita à mão sob o gabarito *a saída do gerador*, que é a incoerência que o §6.1 já adjudicou uma vez.
 

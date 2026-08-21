@@ -67,5 +67,5 @@ Skips the confirmation before the write. Takes the short form `-y`. Off a termin
 </ParamField>
 
 <ParamField name="--dry-run" type="flag">
-Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory.
+Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory. An occupied global destination is refused rather than asked, and with `--from` the remote root is fetched anyway, because without it there is no plan to print.
 </ParamField>

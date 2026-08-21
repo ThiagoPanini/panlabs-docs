@@ -36,6 +36,18 @@ is real, the flag is real, nothing about the invocation is malformed, and the
 destination simply does not exist for that pairing. That is a fact about the
 world, not about what you typed.
 
+A `2` refusal arrives in an error panel, with the message naming every flag the
+line handed over:
+
+```text
+╭─ error ──────────────────────────────────────────────────╮
+│                                                          │
+│  `list` shows one item at a time, and got --skill and    │
+│  --bundle                                                │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
+
 :::note
 The same reading applies to `--from`. A search root that could not be obtained at
 all, network unreachable, repository not found, no read access, is `1`, and the

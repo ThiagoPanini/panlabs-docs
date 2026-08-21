@@ -27,7 +27,7 @@
 # `Verificação` que de fato traz o que rodar, e um vocabulário que a página que
 # se declara dicionário de fato define.
 #
-#    1. o volume por aba e por categoria     12 · 16 · 32, e 60 no total
+#    1. o volume por aba e por categoria     12 · 16 · 31, e 59 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
 #    3. a regra de heading                    com UMA exceção nomeada
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
@@ -40,7 +40,7 @@
 #   10. `description`                         em 100% das páginas
 #   11. as doze fixtures                      por caminho nomeado
 #   12. os onze tipos têm instância           e nenhum fica pendente
-#   13. a cobertura de locale                 32 em EN, e só `Ferramentas`
+#   13. a cobertura de locale                 31 em EN, e só `Ferramentas`
 #   14. o travessão                           zero nas três superfícies
 #   15. o teto de profundidade                4, alcançado, e confinado a um ramo
 #   16. a `Verificação` verifica            bloco cercado na seção, nos dois locales
@@ -117,17 +117,17 @@ reprova() {
 # `chave=valor` separados por espaço, lidos com `${par%%=*}` / `${par##*=}` —
 # o repo não tem bash 4 garantido, então nada de array associativo.
 #
-# **Estas contagens são de AUTORAL**, e são 28 para `Ferramentas`: a função conta
-# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 32 folhas na aba e 60 no
+# **Estas contagens são de AUTORAL**, e são 27 para `Ferramentas`: a função conta
+# `.md`, e o ramo gerado é `.mdx`. A soma das duas — 31 folhas na aba e 59 no
 # site — é cobrada logo abaixo, com o número gerado somado por fora.
 #
 # `bibliotecas` foi de 17 para 23 na #133: seis páginas nasceram de recorte do
 # que já existia, e nenhuma delas trouxe prosa nova.
 VOLUME_JORNADAS='api-owner=7 security-champion=5'
 VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=3 infraestrutura=3 acessos=3 diagnostico=4'
-VOLUME_FERRAMENTAS='bibliotecas=23 modulos-terraform=2 skills=2 servidores-mcp=1'
+VOLUME_FERRAMENTAS='bibliotecas=22 modulos-terraform=2 skills=2 servidores-mcp=1'
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 56 autorais.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 55 autorais.
 #
 # **A forma `indice` MORREU com a issue #114**, e com ela sete páginas: o
 # conteúdo delas era *a lista do que está logo abaixo*, e a sidebar já é essa
@@ -170,7 +170,6 @@ procedimentos/diagnostico/o-mesmo-erro-em-tres-formas:troubleshooting
 procedimentos/diagnostico/o-diff-que-resolveu:troubleshooting
 ferramentas/bibliotecas/overpower/visao-geral:quickstart
 ferramentas/bibliotecas/overpower/instalacao:sdk
-ferramentas/bibliotecas/overpower/o-atalho-op:conceitual
 ferramentas/bibliotecas/overpower/conceitos:conceitual
 ferramentas/bibliotecas/overpower/comandos/indice:referencia
 ferramentas/bibliotecas/overpower/alvos/indice:catalogo
@@ -178,7 +177,7 @@ ferramentas/bibliotecas/overpower/alvos/servidores-mcp:conceitual
 ferramentas/bibliotecas/overpower/alvos/from:guia
 ferramentas/bibliotecas/overpower/alvos/bundle-federado:conceitual
 ferramentas/bibliotecas/overpower/referencia/indice:referencia
-ferramentas/bibliotecas/overpower/referencia/codigos-de-saida:conceitual
+ferramentas/bibliotecas/overpower/referencia/codigos-de-saida:referencia
 ferramentas/bibliotecas/overpower/referencia/solucao-de-problemas:troubleshooting
 ferramentas/bibliotecas/overpower/referencia/changelog:changelog
 ferramentas/bibliotecas/overpower/contribuir/indice:guia
@@ -287,25 +286,25 @@ echo "1  volume por aba e por categoria"
 
 volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
 volume_da_aba "$PROCEDIMENTOS" 16 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
-volume_da_aba "$FERRAMENTAS" 28 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
+volume_da_aba "$FERRAMENTAS" 27 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
 
 autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
-[ "$autorais" = 56 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 56"
+[ "$autorais" = 55 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 55"
 
-# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 27, `Ferramentas`
-# em 32 e o site em 60 — os três números que a spec publica.
+# O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 26, `Ferramentas`
+# em 31 e o site em 59 — os três números que a spec publica.
 geradas=$(find "$GERADO_PT" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas" = "$GERADAS" ] ||
   reprova "o ramo gerado tem ${geradas} páginas, esperado ${GERADAS}"
 
 bibliotecas=$(( $(find "${FERRAMENTAS}/bibliotecas" -name '*.md' | wc -l) + geradas ))
-[ "$bibliotecas" = 27 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 27"
+[ "$bibliotecas" = 26 ] || reprova "Ferramentas/bibliotecas: ${bibliotecas} páginas, esperado 26"
 
 folhas_ferramentas=$((total_ferramentas + geradas))
-[ "$folhas_ferramentas" = 32 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 32"
+[ "$folhas_ferramentas" = 31 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 31"
 
 total=$((autorais + geradas))
-[ "$total" = 60 ] || reprova "o site tem ${total} páginas, esperado 60"
+[ "$total" = 59 ] || reprova "o site tem ${total} páginas, esperado 59"
 
 echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${folhas_ferramentas} = ${total}"
 echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
@@ -685,7 +684,7 @@ geradas_en=$(find "$GERADO_EN" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas_en" = "$geradas" ] ||
   reprova "EN: ${geradas_en} páginas geradas, e o pt-BR tem ${geradas} — o gerador escreve os dois"
 traduzidas=$((traduzidas + geradas_en))
-[ "$traduzidas" = 32 ] || reprova "EN: ${traduzidas} páginas, esperado 32"
+[ "$traduzidas" = 31 ] || reprova "EN: ${traduzidas} páginas, esperado 31"
 
 for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
   n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)

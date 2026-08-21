@@ -64,6 +64,27 @@ div.theme-code-block {
   border-radius: calc(var(--pd-radius) - var(--pd-border-width) * 2);
 }
 
+/* A cerca `text` é a TELA DE TERMINAL, e ela tem entrelinha própria.
+
+   Toda cerca ```` ```text ```` do acervo é saída literal do `overpower`,
+   gravada da ferramenta em 60 colunas, e o que ela desenha é painel de caixa:
+   `╭─ ... ─╮` em cima, `│` nas laterais, `╰─ ... ─╯` embaixo. Com a entrelinha
+   de código, 1,7143, o `│` de uma linha não alcança o da linha seguinte e a
+   parede do painel vira tracejado — o leitor vê um desenho quebrado onde a
+   ferramenta desenhou uma caixa fechada.
+
+   A regra é sobre o `<pre>`, e não sobre o `<code>`: é no `<pre>` que o
+   Docusaurus põe `language-text`, e o valor desce por herança até as `div`
+   de linha que o Prism emite.
+
+   **Isto reserva a cerca `text` para tela de ferramenta.** Código que não é
+   tela declara a linguagem dele, que é o que toda outra cerca do acervo já faz;
+   uma cerca `text` de prosa qualquer herdaria a entrelinha de terminal. A
+   convenção está escrita em `docs/design/informacao.md` §6. */
+pre.language-text {
+  line-height: var(--pd-leading-tela);
+}
+
 /* O título da cerca fica dentro do objeto, na mesma tinta, e o fio que o separa
    do código é o mesmo fio do sistema. A classe do título é hasheada; o que é
    estável é ser o primeiro filho do contêiner quando existe, e o
