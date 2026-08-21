@@ -28,11 +28,17 @@
  * `src/pages/` só tem se alguém escrever, e sem ele o skip link cai na reserva e
  * o marco de página fica errado. Ver docs/design/foco.md §9.
  *
- * O caminho aparece em duas formas de propósito. `<Redirect>` e `<Link>` recebem
- * a rota **sem** `baseUrl` — o roteador tem `basename`, e o `<Link>` resolve
- * sozinho. O `meta` é HTML cru fora do roteador, e precisa da URL resolvida por
- * `useBaseUrl`. É essa resolução que faz o redirecionamento acertar o locale: no
- * EN o `baseUrl` já carrega o `/en/`.
+ * O caminho aparece em duas formas, e não pela mesma razão. **O roteador NÃO
+ * tem `basename`** — `<BrowserRouter>` sobe sem ele (`clientEntry.js`), e toda
+ * rota registrada já carrega o `baseUrl` embutido no `path`. `<Link>` compensa
+ * sozinho, prependendo `baseUrl` por dentro; `<Redirect>` é o `Redirect` cru do
+ * `react-router-dom`, sem essa compensação, e por isso recebe `url`, já
+ * resolvida por `useBaseUrl` — não `DESTINO` cru. Era esse o bug: `<Redirect
+ * to={DESTINO}>` navegava para uma rota sem prefixo, que não batia com nenhuma
+ * registrada, caía no catch-all e piscava `NotFound` até o `meta` corrigir. O
+ * `meta` também é HTML cru fora do roteador e precisa da mesma resolução — é
+ * ela que faz o redirecionamento acertar o locale: no EN o `baseUrl` já carrega
+ * o `/en/`.
  *
  * Procedência: docs/design/informacao.md.
  */
@@ -76,7 +82,7 @@ export default function Raiz() {
         <meta name="robots" content="noindex, follow" />
       </Head>
 
-      <Redirect to={DESTINO} />
+      <Redirect to={url} />
 
       <Layout
         title={translate({

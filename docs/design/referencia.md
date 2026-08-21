@@ -87,7 +87,7 @@ nas duas. A conta saiu porque o layout saiu, não porque a técnica falhou.
 > uma. O componente saiu de `src/theme/`, e `docusaurus.config.js` não declara
 > mais `docItemComponent` nesta instância.
 
-As **32 páginas** da aba `Ferramentas` — 28 autorais e 4 geradas — passam pelo
+As **31 páginas** da aba `Ferramentas` — 27 autorais e 4 geradas — passam pelo
 mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O que distingue uma
 página de comando de uma página autoral é **o que está escrito nela**, não a
 moldura em volta.

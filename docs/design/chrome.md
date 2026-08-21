@@ -238,7 +238,7 @@ A regra vence por especificidade, sem `!important` e **sem reescrever `--ifm-*-v
 
 ## 3. Navbar — duas linhas, e a segunda sangra de ponta a ponta
 
-A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa de largura total abaixo dela.
+A marca e o cluster da direita ficam na linha 1; as quatro tabs caem numa faixa de largura total abaixo dela.
 
 | Posição | Item | Tipo |
 | --- | --- | --- |
@@ -246,7 +246,7 @@ A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa d
 | linha 1, direita | `Buscar` · `PT` · `GitHub` | `search`, `localeDropdown`, link |
 | linha 1, direita | alternância de tema | **não declarável** |
 | — | o espaçador que abre a faixa | `html` — degrau 2 |
-| faixa | `Jornadas` · `Procedimentos` · `Ferramentas` | `docSidebar`, uma por instância |
+| faixa | `Ferramentas` · `Procedimentos` · `Jornadas` · `Times` | `docSidebar`, uma por instância |
 
 **A ordem à direita é declarada, menos a última.** O `Navbar/Content` renderiza a alternância de tema depois dos itens da direita, por construção.
 
@@ -297,7 +297,7 @@ A escolha do `.navbar__inner` como dono não é conveniência: **essa caixa já 
 | As duas linhas juntas | recuos diferentes de propósito: a de cima acompanha a caixa do conteúdo, a de baixo ignora e sangra. É o que a âncora desenha |
 | Hairline da fileira abaixo de 997 | **não existe** — uma fileira só, e o `.navbar__inner` é `position: static` |
 | Aba ativa | sublinhado de acento, `border-block-end` de 2px, sem somar altura ao chrome |
-| A faixa | três tabs, numa linha só, altura 48, começando em y=64, sem fundo próprio |
+| A faixa | quatro tabs, numa linha só, altura 48, começando em y=64, sem fundo próprio |
 | Sticky | rolando a 800px: `navTop=0`, `navBottom=112` — grudado, na altura nova |
 | Dropdown de locale | abre por hover de verdade, atravessa a faixa, passa abaixo do `<nav>` sem recorte, os dois links clicáveis |
 | Abaixo de 997 | token volta a uma linha, `<nav>` mede 64, **zero tabs visíveis** |
@@ -310,7 +310,7 @@ A escolha do `.navbar__inner` como dono não é conveniência: **essa caixa já 
 
 Um transplante corporativo que remova a busca não deixa buraco no navbar: o `SearchBar` lê o dado global, não o encontra, e devolve `null`. A superfície da busca é de [`busca.md`](busca.md).
 
-**`localeDropdown` com rótulo curto**, e o argumento **enfraqueceu de propósito**: ele foi escrito para a *única faixa apertada do navbar*, e a faixa de tabs levou o aperto junto ao tirar as três tabs da linha 1. O rótulo curto fica, porque continua sendo uma linha de config e o nome por extenso continua sendo o item mais largo que a navbar carregaria — mas ele deixou de ser a diferença entre caber e não caber.
+**`localeDropdown` com rótulo curto**, e o argumento **enfraqueceu de propósito**: ele foi escrito para a *única faixa apertada do navbar*, e a faixa de tabs levou o aperto junto ao tirar as tabs da linha 1. O rótulo curto fica, porque continua sendo uma linha de config e o nome por extenso continua sendo o item mais largo que a navbar carregaria — mas ele deixou de ser a diferença entre caber e não caber.
 
 **GitHub entra como palavra, não como glifo.** Não há marca de terceiro no manifesto de ícones, e gastar o único slot livre num logotipo de plataforma seria decidir por acidente o que o orçamento deixou reservado sem nome.
 

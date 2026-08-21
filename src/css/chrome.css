@@ -791,6 +791,8 @@ html.docs-doc-page .subtitulo {
 .sidebar-icone--modulos-terraform  { --pd-sidebar-icone: url('/icons/puzzle.svg'); }
 .sidebar-icone--skills             { --pd-sidebar-icone: url('/icons/bot.svg'); }
 .sidebar-icone--servidores-mcp     { --pd-sidebar-icone: url('/icons/server.svg'); }
+.sidebar-icone--time-a             { --pd-sidebar-icone: url('/icons/calendar.svg'); }
+.sidebar-icone--time-b             { --pd-sidebar-icone: url('/icons/trending-up.svg'); }
 
 /* O ramo do `overpower` — uma por página, na ordem da árvore. */
 .sidebar-icone--overpower              { --pd-sidebar-icone: url('/icons/zap.svg'); }

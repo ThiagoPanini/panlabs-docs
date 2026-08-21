@@ -64,17 +64,18 @@ const temaPrism = {
 };
 
 /**
- * As três tabs, na ordem do navbar — a fonte única de ordem dos dois plugins do
- * slice 7. Só os ids: o RÓTULO de cada uma é lido do próprio navbar, mais
+ * As quatro tabs, na ordem do navbar — a fonte única de ordem dos dois plugins
+ * do slice 7. Só os ids: o RÓTULO de cada uma é lido do próprio navbar, mais
  * abaixo neste arquivo, porque é lá que ele já existe e é lá que a tradução do
  * `navbar.json` o alcança.
  *
  * A lista mora aqui, e não dentro de cada plugin, porque a ordem que a busca usa
  * para desempatar e a ordem em que o navbar apresenta as tabs **são a mesma
  * decisão** — e duas cópias dela divergiriam no dia em que uma quarta tab
- * entrasse.
+ * entrasse. Foi o que aconteceu: `Times` chegou, e as duas listas sobem na
+ * mesma revisão que reordena as três primeiras.
  */
-const ABAS = ['default', 'procedimentos', 'ferramentas'];
+const ABAS = ['ferramentas', 'procedimentos', 'default', 'times'];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -121,7 +122,7 @@ const config = {
     localeConfigs: {
       // `PT` e não `Português (Brasil)`: o rótulo do `localeDropdown` é o do
       // locale corrente, e o default do Docusaurus mede 165px contra 55px.
-      // O navbar carrega três tabs, busca, locale e GitHub — 110px é a
+      // O navbar carrega quatro tabs, busca, locale e GitHub — 110px é a
       // diferença entre caber e não caber na faixa de 997 a 1200px.
       'pt-BR': {label: 'PT', htmlLang: 'pt-BR', direction: 'ltr'},
       en: {label: 'EN', htmlLang: 'en', direction: 'ltr'},
@@ -196,10 +197,20 @@ const config = {
         // `@theme/DocItem`. As 26 páginas desta instância medem a mesma coisa.
       }),
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'times',
+        path: 'conteudo/times',
+        routeBasePath: 'times',
+        sidebarPath: './sidebars-times.js',
+      }),
+    ],
 
     // Os dois plugins de caminho do slice 7. Nenhum é dependência npm, nenhum
     // é serviço externo — eles são a mesma mecânica vista de dois lados, e leem
-    // as três instâncias acima pela mesma porta (`allContentLoaded`).
+    // as quatro instâncias acima pela mesma porta (`allContentLoaded`).
     //
     // `abas` é declarada UMA vez e servida aos dois: ela é a ordem do navbar,
     // que a busca usa como primeiro desempate e o `llms.txt` usa como seção. Um
@@ -260,13 +271,14 @@ const config = {
             value: '<!--quebra-->',
           },
 
-          // As três tabs. Cada uma troca a sidebar inteira, e cada sidebar é
+          // As quatro tabs. Cada uma troca a sidebar inteira, e cada sidebar é
           // uma instância — o eixo de navegação é a natureza do conteúdo.
           {
             type: 'docSidebar',
-            sidebarId: 'jornadas',
+            docsPluginId: 'ferramentas',
+            sidebarId: 'ferramentas',
             position: 'left',
-            label: 'Jornadas',
+            label: 'Ferramentas',
           },
           {
             type: 'docSidebar',
@@ -277,10 +289,16 @@ const config = {
           },
           {
             type: 'docSidebar',
-            docsPluginId: 'ferramentas',
-            sidebarId: 'ferramentas',
+            sidebarId: 'jornadas',
             position: 'left',
-            label: 'Ferramentas',
+            label: 'Jornadas',
+          },
+          {
+            type: 'docSidebar',
+            docsPluginId: 'times',
+            sidebarId: 'times',
+            position: 'left',
+            label: 'Times',
           },
 
           // À direita, na ordem declarada: Buscar · PT · GitHub. A alternância

@@ -15,6 +15,10 @@
     "message": "Tools",
     "description": "Navbar item with label Ferramentas"
   },
+  "item.label.Times": {
+    "message": "Teams",
+    "description": "Navbar item with label Times"
+  },
   "item.label.GitHub": {
     "message": "GitHub",
     "description": "Navbar item with label GitHub"
