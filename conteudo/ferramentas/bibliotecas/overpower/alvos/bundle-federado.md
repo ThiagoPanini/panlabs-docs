@@ -31,6 +31,44 @@ lados, e não existe um segundo validador em lugar nenhum para discordar do
 primeiro. Os `items` não alcançam nem o catálogo embutido nem um terceiro
 repositório, e um nome que não resolve sai `3` dizendo qual nome.
 
+## A anatomia do manifesto
+
+O manifesto aninha até quatro níveis, e esse é o teto: o quinto não apareceu em
+nenhum repositório federado, e um teto declarado é o que impede o arquivo de
+virar um mapa do catálogo inteiro.
+
+<ResponseField name="bundles" type="object">
+  Todas as composições que este repositório federa, sob uma chave só.
+
+  <Expandable title="campos">
+    <ResponseField name="nome-do-bundle" type="object">
+      Uma composição. A chave é o nome pelo qual `--bundle` a pede.
+
+      <Expandable title="campos">
+        <ResponseField name="description" type="string">
+          A frase que o `list` imprime por inteiro, nunca truncada.
+        </ResponseField>
+
+        <ResponseField name="items" type="array">
+          As skills que compõem o bundle, na ordem em que o plano as escreve.
+
+          <Expandable title="campos">
+            <ResponseField name="nome" type="string">
+              O nome da skill, como ele aparece sob `skills/` no mesmo
+              repositório. Nunca um caminho.
+            </ResponseField>
+
+            <ResponseField name="procedencia" type="string">
+              `federado` sempre. O leitor o preenche a partir do `--from` que
+              buscou o manifesto, e não do arquivo.
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
 ## Instalar de um bundle federado
 
 ```bash

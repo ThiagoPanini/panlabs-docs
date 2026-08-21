@@ -23,6 +23,7 @@ Numa implementação, `.claude/context-economy-protocol.md` entra no contexto co
 | issue, sub-issue, dependência, label | `docs/agents/issue-tracker.md` § Convenções, § Wayfinding operations |
 | índice da spec, os sete portões, as invariantes | `docs/design/README.md` § 3. O índice, § 5. Os sete portões |
 | árvore, abas, tipo de página, heading, locale | `docs/design/informacao.md` § 3. A árvore, § 6. Tipos de página, § 8. Locale |
+| o que está pendente e por quê | `docs/design/informacao.md` § 3 (a nota de correção), § 6.4, § 7 |
 | cor, medida, tempo, curva, rampa, contraste | `docs/design/tokens.md` § 1. As três camadas, § 10. Contraste verificado |
 | navbar, sidebar, TOC, footer, tela estreita | `docs/design/chrome.md` § 3. Navbar, § 4. Sidebar, § 9. Tela estreita |
 | ícone — manifesto, orçamento, onde é obrigatório | `docs/design/icones.md` § 5. O manifesto, § 8. Onde é obrigatório |
@@ -47,7 +48,8 @@ O método de achar dentro de um arquivo: as seções são numeradas e o título 
 - **Link quebrado só aparece no `build`.** `onBrokenLinks: 'throw'` não roda em `docusaurus start`, que devolve 200 com o shell da SPA para qualquer rota.
 - **Nenhuma dependência npm nova.** `npm run zeros` reprova, e é axioma. O `package-lock.json` versionado é a régua.
 - **A paridade trava desde a S9-8.** `npm run paridade -- --verificar` reprova quando aparece divergência fora de `scripts/paridade-abertas.txt` **ou** quando uma linha de lá passa a fechar. Mexeu num alvo ou num número medido? Acerte a lista, com o número e o gatilho — o passo já não é `continue-on-error`.
-- **Contagem de página é cobrada.** O portão 4 imprime `31 · 16 · 12 · 4 = 63` nas quatro abas de `conteudo/`, e são 59 autorais mais 4 geradas, com Bibliotecas fechando em 26. **O literal que ele confere para `Ferramentas` é 27**, a contagem AUTORAL: a função conta `.md` e o ramo gerado é `.mdx`, somado por fora. Acrescentar página sem acertar os dois números reprova.
+- **Contagem de página é cobrada.** O portão 4 imprime `31 · 4 · 1 · 1 = 37` nas quatro abas de `conteudo/`, na ordem do navbar, e são 33 autorais mais 4 geradas, com Bibliotecas fechando em 26. **O literal que ele confere para `Ferramentas` é 27**, a contagem AUTORAL: a função conta `.md` e o ramo gerado é `.mdx`, somado por fora. Acrescentar página sem acertar os dois números reprova.
+- **A árvore foi reconstruída, e a dívida está declarada.** `Jornadas` virou trilha (`Visão Geral` · `Conteúdo Teórico` · `Conteúdo Prático`, sob `API Owner`), e `Procedimentos` e `Times` ficaram numa folha `Work in Progress` cada. Cinco cobranças do portão 4 contam **zero** de propósito: o tipo `Índice de jornada` está pendente, o gabarito `capítulo` está sem sujeito, e o caso `diff` está sem dona. Escrever qualquer um de volta sem tirar o nome da lista de pendentes **reprova**.
 
 ## Idioma e voz
 

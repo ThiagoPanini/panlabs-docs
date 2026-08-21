@@ -95,14 +95,21 @@ async function esperarPor(tentar, {tentativas, intervalo}) {
 /* As rotas são escolhidas por quem renderiza o que se quer medir: componente
    que não aparece em página nenhuma não tem como ser sondado, e fingir que tem
    seria publicar um alvo que nunca reprova. */
+/* **As quatro rotas de `Procedimentos` mudaram de casa de uma vez.** A aba foi
+   esvaziada e reduzida a uma folha de marcador de lugar, e sondar uma página que
+   deixou de existir daria `sem-medida` para sempre — que é o defeito que a nota
+   do fim deste bloco já nomeia. As herdeiras são as fixtures reatribuídas de
+   `informacao.md` §7: quem renderiza o componente é quem o sonda. */
 const ROTAS = {
-  prosa: '/procedimentos/acessos/rotacionar-uma-chave',
+  prosa: '/ferramentas/bibliotecas/overpower/conceitos',
   codigo: '/ferramentas/bibliotecas/overpower/instalacao',
-  /* A rota da tabela mudou na #114: o índice de `Bibliotecas` era a página que a
-     renderizava, e ele morreu com a forma *índice de categoria* (ADR 10 §c). A
-     herdeira é a fixture `tabela-como-pagina-inteira` — o tipo `Catálogo` com
-     prosa quase nula, que é ainda mais tabela do que a anterior era. */
-  tabela: '/procedimentos/ambiente/comparativo-dev-staging-prod',
+  /* A rota da tabela mudou duas vezes. Na #114 o índice de `Bibliotecas` morreu
+     com a forma *índice de categoria* (ADR 10 §c) e a herdeira passou a ser a
+     fixture `tabela-como-pagina-inteira`. Agora a fixture trocou de dona junto
+     com o esvaziamento de `Procedimentos`, e a rota a acompanha: `Mapa de
+     módulos` é o tipo `Catálogo` com a tabela mais longa que sobrou, 20 linhas
+     sobre prosa quase nula. */
+  tabela: '/ferramentas/bibliotecas/overpower/contribuir/mapa-de-modulos',
   /* O cartão morava na landing. A landing morreu e a raiz virou salto para a
      primeira doc, então a rota do cartão é a página que ainda o renderiza —
      sondar `/` daria `sem-medida` para sempre. */
@@ -110,15 +117,20 @@ const ROTAS = {
      renderiza o cartão é a que carrega `slug: /` (ADR 10 §h). Sondar o caminho
      longo dava 404 e três `sem-medida` de uma vez. */
   cartao: '/ferramentas',
-  passos: '/procedimentos/acessos/assumir-um-papel-na-aws',
+  passos: '/ferramentas/bibliotecas/overpower/contribuir/release',
   api: '/ferramentas/bibliotecas/overpower/comandos/install',
   /* **O `<Expandable>` saiu do ramo gerado com o contrato de biblioteca**, e a
      sonda dele mudou de cenário em vez de mudar de alvo. Ele aparecia nas
      páginas de `Biblioteca C` porque um campo de retorno tinha campos dentro; o
      contrato de CLI não aninha, porque um código de saída não tem subcampos. A
      dona do componente é a fixture `aninhamento-profundo`, que sempre foi
-     autoral e sempre teve os quatro níveis. */
-  aninhamento: '/procedimentos/infraestrutura/o-output-de-um-modulo',
+     autoral e sempre teve os quatro níveis.
+     **Ela mudou de dona com o esvaziamento de `Procedimentos`**, e a troca foi
+     obrigatória e não estética: `<Expandable>` tinha UMA página no acervo
+     inteiro, e sem dona nova esta sonda viraria `sem-medida` permanente. A
+     herdeira é o manifesto do bundle federado, que aninha os mesmos quatro
+     níveis pelo mesmo motivo: um campo que tem campos dentro. */
+  aninhamento: '/ferramentas/bibliotecas/overpower/alvos/bundle-federado',
 };
 
 /* Um cenário é uma rota numa largura num tema. A largura de referência é a que

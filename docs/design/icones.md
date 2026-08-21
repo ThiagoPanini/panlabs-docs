@@ -197,27 +197,27 @@ Os nomes são **semânticos** (`rocket`, `database`, `terminal`), nunca de marca
 
 O ponto de consumo de cada um está na entrada do manifesto. `chevron-right` é **um desenho, dois estados** — caret de accordion e de categoria de sidebar, rotacionado por CSS quando aberto.
 
-### Navegação · 16 tags sobre 16 arquivos
+### Navegação · 33 tags sobre 33 arquivos
 
-Os dezesseis pares seção→ícone, **verbatim**:
+Os sete pares **de seção**, verbatim. São as árvores em que a folha ainda herda a chave do ramo que a contém:
 
-| Jornadas | ícone | Procedimentos | ícone | Ferramentas | ícone |
-| --- | --- | --- | --- | --- | --- |
-| API Owner | `code-xml` | Ambiente | `layers` * | Bibliotecas | `package` * |
-| Security Champion | `lock` * | Esteiras | `workflow` * | Módulos Terraform | `puzzle` * |
-| | | Infraestrutura | `cloud` * | Skills | `bot` * |
-| | | Acessos | `key` * | Servidores MCP | `server` * |
-| | | Diagnóstico | `activity` | | |
-
-E as cinco seções de `Bibliotecas › overpower`, no nível 3:
-
-| Seção | ícone | Seção | ícone |
+| Jornadas › API Owner | ícone | Ferramentas | ícone |
 | --- | --- | --- | --- |
-| Comandos | `terminal` * | Desenvolvimento | `wrench` * |
-| Alvos | `globe` * | Publicação | `rocket` * |
-| Referência | `book-open` * | | |
+| Visão Geral | `layers` * | Módulos Terraform | `puzzle` * |
+| Conteúdo Teórico | `code-xml` | Skills | `bot` * |
+| Conteúdo Prático | `workflow` * | Servidores MCP | `server` * |
+
+E o par de **marcador de lugar**, que é UM para as duas abas esvaziadas — `Procedimentos › Work in Progress` e `Times › Work in Progress` dizem a mesma coisa na mesma folha, e dois glifos para a mesma frase seriam distinção sem diferença:
+
+| Folha | ícone |
+| --- | --- |
+| Work in Progress | `activity` |
+
+Os **26 restantes** são o ramo do `overpower`, **um por página** e nenhum repetido, desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118). Eles moram em `src/icons/manifest.js`, na ordem da árvore, e não são transcritos aqui: uma segunda cópia de 26 linhas que a máquina já confere nos três lados é a definição de fonte que diverge em silêncio.
 
 \* reusa entrada de autoria e não consome arquivo.
+
+> **Correção de contagem — a reconstrução da árvore.** Eram doze pares de seção, e cinco saíram com o conteúdo que nomeavam: as duas jornadas narrativas e as cinco categorias de `Procedimentos` e os dois times. **Nenhum desenho saiu do manifesto.** `lock`, `cloud`, `key`, `calendar` e `trending-up` continuam no vocabulário do autor e só perderam a segunda tag, que é a leitura literal do orçamento — tag é papel, e o papel de navegação acabou quando a seção acabou. Os arquivos seguem em 60, e o teto de 64 não se move.
 
 **A chave deixou de ser sempre a do separador de topo.** Até o `overpower`, toda folha herdava a família do separador que a continha, porque nenhuma árvore tinha seção intermediária com identidade própria. As cinco linhas acima são seções de nível 3, e as folhas de nível 4 herdam a família **delas** — o nó `overpower` e as três folhas de abertura dele ficam com `--bibliotecas`. O ícone é da seção; onde não há seção, é do separador.
 
@@ -259,17 +259,17 @@ Sem ela, o cartão e um quarto da aba leem a mesma hierarquia, e o leitor não s
 
 Três pares merecem o motivo escrito:
 
-- **`lock` e não `shield`** para `Security Champion`: escudo é a metáfora genérica de segurança e não nomeia nada; cadeado é o objeto que a jornada de fato mexeu — segredo, chave, rotação;
-- **`code-xml` para `API Owner`**: o papel é dono de **contrato**, e o contrato é o artefato escrito. É o mesmo glifo que nomeava a Referência da API na árvore anterior, reempregado sem mudar de significado;
+- **`code-xml` para `Conteúdo Teórico`**: o papel é dono de **contrato**, e o contrato é o artefato escrito. É o mesmo glifo que nomeava a Referência da API duas árvores atrás e `API Owner` na anterior — ele desceu um nível dentro da mesma jornada, sem mudar de significado;
+- **`activity` para `Work in Progress`**: linha de pulso é *algo acontecendo*, que é exatamente o que uma aba esvaziada à espera de conteúdo real declara. Ele nomeava `Diagnóstico`, e é o segundo órfão de navegação reempregado do manifesto;
 - **`package` para `Bibliotecas`**: biblioteca é pacote que se instala. É a metáfora mais apertada disponível, e custa zero arquivo — a mesma que já servia `SDKs`.
 
-**As quatro abas são quatro barras laterais, vistas uma de cada vez.** Os pares de navegação nunca competem numa lista só; competem em listas de quatro, cinco, dois e dois, mais as cinco seções que só aparecem com o `overpower` aberto. A coerência é exigida **dentro** de cada aba, e o que segura as quatro juntas é a família.
+**As quatro abas são quatro barras laterais, vistas uma de cada vez.** Os pares de navegação nunca competem numa lista só; competem em listas de quatro, três, um e um, mais as seções e folhas que só aparecem com o `overpower` aberto. A coerência é exigida **dentro** de cada aba, e o que segura as quatro juntas é a família.
 
 ### Autoria · 39 tags sobre 39 arquivos
 
 **Ações (7):** `play` · `download` · `upload` · `refresh-cw` · `trash-2` · `plus` · `filter`
 
-**Objetos (16):** `file-text` · `folder` · `terminal` · `wrench` · `database` · `server` * · `cloud` * · `key` * · `lock` * · `mail` · `calendar` · `users` · `globe` · `package` * · `rocket` · `shapes`
+**Objetos (16):** `file-text` · `folder` · `terminal` · `wrench` · `database` · `server` * · `cloud` · `key` · `lock` · `mail` · `calendar` · `users` · `globe` · `package` · `rocket` · `shapes`
 
 **Estados e sinais (7):** `zap` · `clock` · `circle-alert` · `circle-help` · `sparkles` · `trending-up` · `gauge`
 
@@ -405,6 +405,7 @@ Posição registrada: **ícone é vocabulário, não é onde a identidade deve m
 | **`wrench` perdeu o consumidor que o comprou, e ganhou outro** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a porta `Ferramentas` era o único uso concreto dele, e por um ticket ele foi *o primeiro nome a olhar no próximo corte de teto*. A [#117](https://github.com/ThiagoPanini/panlabs-docs/issues/117) lhe deu a segunda tag `navegacao`, em `overpower › Desenvolvimento`: ele volta a ter consumidor concreto e sai do topo da fila de corte |
 | `circle-check` fora | **delta deliberado** | consequência da variante morta na [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15), pela regra de *sem consumidor* |
 | Os dezesseis pares seção→ícone | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — `code-xml` e `activity` reempregados, os outros nove reusando entrada de autoria; as cinco de #117 reusam pelo mesmo mecanismo |
+| **Os pares caem para 33, e nenhum desenho sai** | **origem própria (consequência)** | cinco pares de seção saíram com o conteúdo que nomeavam, e os desenhos deles perderam só a tag `navegacao`; a bijeção que `npm run icones` cobra fecha nos três lados, com 60 arquivos |
 | **A família é da seção, e não só do separador** | **origem própria (correção)** | a árvore ganhou seção de nível 3 com identidade própria, e herdar a família do topo faria cinco seções lerem como uma |
 | **O registro sóbrio em vez do ilustrativo** | **origem própria (medição)** | [#83](https://github.com/ThiagoPanini/panlabs-docs/issues/83) — as quatro Mintlify (mesmo CSS) não convergem: três renderizam glifo preenchido (Font Awesome `regular`/`solid` v7.2.0), uma usa contorno (Tabler `outline`). A âncora mistura registro do mesmo jeito que mistura família (§2) — a mistura é acidente dela, não assinatura a herdar |
 | Nome inexistente quebra o build | origem própria | [#21](https://github.com/ThiagoPanini/panlabs-docs/issues/21) §6 |

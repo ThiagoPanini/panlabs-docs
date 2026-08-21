@@ -74,8 +74,14 @@ const temaPrism = {
  * decisão** — e duas cópias dela divergiriam no dia em que uma quarta tab
  * entrasse. Foi o que aconteceu: `Times` chegou, e as duas listas sobem na
  * mesma revisão que reordena as três primeiras.
+ *
+ * **`Jornadas` subiu para segunda**, na frente de `Procedimentos`. A ordem lê o
+ * que o acervo tem para oferecer: `Ferramentas` e `Jornadas` carregam conteúdo, e
+ * `Procedimentos` e `Times` são marcador de lugar até o conteúdo real chegar. Como
+ * esta lista é também o primeiro desempate da busca, descer as duas abas vazias é
+ * decisão de resultado, e não de estética.
  */
-const ABAS = ['ferramentas', 'procedimentos', 'default', 'times'];
+const ABAS = ['ferramentas', 'default', 'procedimentos', 'times'];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -99,9 +105,8 @@ const config = {
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
-  // O terceiro do trio. Os links de âncora intra-página do acervo estão na
-  // tabela de sintomas de `Procedimentos › Diagnóstico › Índice de sintomas`. O default do Docusaurus é `warn`, e âncora
-  // quebrada que só avisa é âncora quebrada que fica. Consequência de contrato:
+  // O terceiro do trio. O default do Docusaurus é `warn`, e âncora quebrada que
+  // só avisa é âncora quebrada que fica. Consequência de contrato:
   // toda âncora citada por um link é declarada com `{#id}` no próprio heading,
   // em vez de depender de como o slugger trata acento.
   onBrokenAnchors: 'throw',
@@ -162,7 +167,7 @@ const config = {
     ],
   ],
 
-  // As outras duas tabs. **Uma instância por tab, um-para-um**, e não uma
+  // As outras três tabs. **Uma instância por tab, um-para-um**, e não uma
   // instância com várias sidebars: `routeBasePath` é por instância, então
   // compartilhar jogaria as ferramentas em `/jornadas/ferramentas/…` e a URL
   // deixaria de ler o eixo — que é a decisão inteira da arquitetura de
@@ -282,16 +287,16 @@ const config = {
           },
           {
             type: 'docSidebar',
+            sidebarId: 'jornadas',
+            position: 'left',
+            label: 'Jornadas',
+          },
+          {
+            type: 'docSidebar',
             docsPluginId: 'procedimentos',
             sidebarId: 'procedimentos',
             position: 'left',
             label: 'Procedimentos',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'jornadas',
-            position: 'left',
-            label: 'Jornadas',
           },
           {
             type: 'docSidebar',

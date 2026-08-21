@@ -67,8 +67,8 @@ panlabs infra conferir bucket relatorios
 | Encryption | KMS | `sse-s3` does not allow per-key policy |
 | Environment suffix | automatic | bucket names are immutable, and the mistake only shows after `apply` |
 
-The output is a nested object, and its anatomy is in
-[A module's output](/procedimentos/infraestrutura/o-output-de-um-modulo).
+The output is a nested object, and its full anatomy comes out of
+`terraform output -json` after the first `apply`.
 
 :::warning
 `nome` gets the environment suffix on its own. Writing `relatorios-dev` produces

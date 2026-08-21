@@ -3,20 +3,18 @@
 /**
  * A sidebar da tab `Times` — instância `times`.
  *
- * **Dois separadores, quatro páginas.** É a aba que simula documentar um time
- * de verdade em ambiente corporativo: dois times fictícios, mesma estrutura
- * entre os dois, conteúdo mockado e com sabor distinto entre um e outro.
+ * **Uma folha, e ela é marcador de lugar.** A aba trazia dois times fictícios
+ * com duas páginas cada, e os quatro saíram. Documentação de time é escrita por
+ * quem está dentro dele; até que haja um, a aba fica declaradamente vazia em vez
+ * de sustentar dois nomes inventados.
  *
- * **O nível de topo é separador: `collapsible: false` e nenhum `link`.** Igual
- * a `Procedimentos` e `Jornadas` — rótulo em negrito, sem seta, sem ícone, sem
- * `href`, sempre aberto. Esta aba fica FORA de
- * `Ferramentas › Bibliotecas › overpower`, o único ramo em que o teto de
- * profundidade sobe a 4: aqui o teto é 2, separador → folha, e nada abaixo.
- * `docs/design/informacao.md` §3.1.
+ * **Não há separador**, pelo mesmo motivo de `sidebars-procedimentos.js`:
+ * agrupar uma folha só é moldura sem quadro, e o nível 1 mede o mesmo recuo que
+ * o separador media.
  *
- * O `className` que carrega o ícone mora em tudo abaixo do separador — regra
- * de `docs/design/icones.md` §8, o mesmo caso único de `sidebars-procedimentos.js`:
- * o separador não leva `className`, e as duas folhas de cada time levam.
+ * O `className` que carrega o ícone mora nela — regra de
+ * `docs/design/icones.md` §8, e a chave é a mesma das duas abas de marcador de
+ * lugar, porque as duas dizem a mesma coisa.
  *
  * Procedência: docs/design/informacao.md · docs/design/icones.md · docs/adr/0010.
  *
@@ -24,24 +22,9 @@
  */
 const sidebars = {
   times: [
-    {
-      type: 'category',
-      label: 'Time A',
-      collapsible: false,
-      items: [
-        {type: 'doc', id: 'time-a/visao-geral', className: 'sidebar-icone sidebar-icone--time-a'},
-        {type: 'doc', id: 'time-a/desenvolvimento', className: 'sidebar-icone sidebar-icone--time-a'},
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Time B',
-      collapsible: false,
-      items: [
-        {type: 'doc', id: 'time-b/visao-geral', className: 'sidebar-icone sidebar-icone--time-b'},
-        {type: 'doc', id: 'time-b/desenvolvimento', className: 'sidebar-icone sidebar-icone--time-b'},
-      ],
-    },
+    // A única folha da instância. Ela carrega `slug: /`, e é o que faz `/times`
+    // responder 200 sem redirecionamento (ADR 10 §h).
+    {type: 'doc', id: 'work-in-progress', className: 'sidebar-icone sidebar-icone--work-in-progress'},
   ],
 };
 
