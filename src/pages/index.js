@@ -2,13 +2,14 @@
  * A raiz — uma rota que não é página: ela leva à primeira doc.
  *
  * A âncora não tem página de abertura. A raiz dela responde **308** e a porta de
- * entrada mora no host irmão; aqui a raiz vai para o índice da primeira jornada,
- * que é o primeiro destino declarado em `sidebars-jornadas.js`.
+ * entrada mora no host irmão; aqui a raiz vai para a **rota nua da primeira
+ * aba**, e a primeira aba é `Ferramentas`.
  *
- * **O destino é o índice da categoria, não o primeiro capítulo.** O índice é o
- * décimo tipo de página do site e é o destino do rótulo da categoria — mandar a
- * raiz para o capítulo 1 pularia a abertura da jornada. Ver o dissenso na
- * `## Procedência` de docs/design/informacao.md.
+ * **O destino segue a ordem do navbar, e não uma aba nomeada.** Quando
+ * `Ferramentas` passou à frente na faixa, a raiz foi junto: o que se procura
+ * mais é o que saiu daqui. A rota nua resolve por `slug: /` na folha de
+ * abertura da instância, então trocar qual folha abre a aba não mexe neste
+ * arquivo. Ver a `## Procedência` de docs/design/informacao.md.
  *
  * **Três mecanismos, e cada um cobre o que o outro não alcança:**
  *
@@ -52,23 +53,27 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 
 /**
- * A ROTA NUA da primeira aba. Ela existe porque a primeira folha de
- * `sidebars-jornadas.js` carrega `slug: /` no front matter — `/jornadas` é
- * página de verdade, não redirecionamento nem 404 (ADR 10 §h).
+ * A ROTA NUA da primeira aba. Ela existe porque a folha de abertura de
+ * `sidebars-ferramentas.js` carrega `slug: /` no front matter — `/ferramentas`
+ * é página de verdade, não redirecionamento nem 404 (ADR 10 §h).
  *
- * **O acoplamento encolheu, e vale dizer o que ele era.** Esta constante
- * soletrava `/jornadas/api-owner/indice`: o `link` da categoria `API Owner`,
- * copiado à mão de outro arquivo. Trocar aquele `link` sem trocar esta linha
- * reapontava a raiz em silêncio, com a CI verde — a lacuna estava nomeada aqui
- * e nenhum portão a casava. Com a rota nua, o alvo é a **instância**, não a
- * página: trocar qual folha abre a aba não mexe neste arquivo, porque quem
+ * **Ela segue a ordem do navbar, e já se mexeu uma vez por isso.** Apontava
+ * para `/jornadas` enquanto `Jornadas` abria a faixa; com a reordenação para
+ * `Ferramentas` · `Procedimentos` · `Jornadas` · `Times`, seguiu junto. O
+ * acoplamento é com a POSIÇÃO, não com a aba: quem trocar a ordem outra vez
+ * troca esta linha, e nenhum portão casa as duas — a lacuna fica nomeada aqui.
+ *
+ * **O acoplamento encolheu antes disso, e vale dizer o que ele era.** Esta
+ * constante soletrava `/jornadas/api-owner/indice`: o `link` de uma categoria,
+ * copiado à mão de outro arquivo. Com a rota nua, o alvo é a **instância**, não
+ * a página: trocar qual folha abre a aba não mexe neste arquivo, porque quem
  * muda de dono é o `slug: /`, que viaja com a folha.
  *
  * O que sobra de acoplamento é o que o portão 6 cobre: ele confere que
- * `/jornadas`, `/procedimentos` e `/ferramentas` devolvem 200 no host
- * publicado, e a primeira das três é exatamente este destino.
+ * `/ferramentas`, `/procedimentos`, `/jornadas` e `/times` devolvem 200 no host
+ * publicado, e a primeira das quatro é exatamente este destino.
  */
-const DESTINO = '/jornadas';
+const DESTINO = '/ferramentas';
 
 export default function Raiz() {
   const url = useBaseUrl(DESTINO);
