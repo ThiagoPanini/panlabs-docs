@@ -1979,7 +1979,7 @@ Ela é a **menos saturada das três nos dois modos** e a única que bate os dois
 
 É a parada 500 — o meio matemático da rampa —, então é o pior caso **por construção**, e nenhum ajuste salva.
 
-> **Proibido para texto de leitura.** `--pd-text-faint` existe para separador, placeholder e controle desabilitado, que é isento pela SC 1.4.3. Texto secundário legítimo usa `--pd-text-muted`, que passa nos dois modos.
+> **Proibido para texto de leitura.** `--pd-text-faint` existe para separador, placeholder, controle desabilitado e ícone não textual de indicador (a seta de categoria da sidebar, ver [`chrome.md`](chrome.md) §4.2.1) — os quatro isentos pela SC 1.4.3, porque nenhum é prosa que se lê. O ícone soma-se aos três originais pela SC 1.4.11 (Non-text Contrast): 3:1 é o piso de componente gráfico contra o fundo adjacente, e `--pd-text-faint` já mede 3,88:1 no escuro e 4,63:1 no claro contra a página (§10, acima) — folga em ambos. Texto secundário legítimo usa `--pd-text-muted`, que passa nos dois modos.
 
 ### A garantia é da arquitetura, não desta skin
 
