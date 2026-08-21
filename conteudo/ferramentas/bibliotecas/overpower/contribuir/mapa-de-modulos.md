@@ -26,7 +26,7 @@ responde, e o que ele não responde é de outro.
 | `written.py` | o único arquivo que o `overpower` escreve sobre o próprio conteúdo |
 | `inspection.py` | o que está no disco do alvo, e o que há de errado com ele |
 | `screens.py` | o que o produto desenha no terminal |
-| `recipes.py` | TOML na entrada, uma `Recipe` na saída |
+| `recipes.py` | uma subárvore do manifesto na entrada, uma `Recipe` na saída |
 | `rendering.py` | `(Recipe, documento) → os enxertos a fazer`, função pura sobre valores |
 | `grafting.py` | inserção cirúrgica num documento que não é do `overpower` |
 | `runtimes.py` | a tabela de caminhos de runtime |

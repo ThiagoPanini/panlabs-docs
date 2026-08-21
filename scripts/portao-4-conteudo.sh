@@ -27,24 +27,36 @@
 # `Verificação` que de fato traz o que rodar, e um vocabulário que a página que
 # se declara dicionário de fato define.
 #
-#    1. o volume por aba e por categoria     31 · 16 · 12 · 4, e 63 no total
+#    1. o volume por aba e por categoria     31 · 4 · 1 · 1, e 37 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
-#    3. a regra de heading                    com UMA exceção nomeada
+#    3. a regra de heading                    e o teto zero do marcador de lugar
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
-#    5. o índice de jornada                   `<CardGroup>` fora, dois headings
-#                                             literais dentro
+#    5. o índice de jornada                   pendente, e a pendência é cobrada
 #    6. prosa antes do primeiro `##`          em todo capítulo
-#    7. a lista ordenada de `## Como foi`     N itens para N capítulos
+#    7. a lista ordenada de `## Como foi`     N itens para N capítulos (pendente)
 #    8. o estado                              exatamente uma palavra na abertura
-#    9. o marcador de tradução                31 páginas, e nenhuma tradução
+#    9. o marcador de tradução                6 páginas, e nenhuma tradução
 #   10. `description`                         em 100% das páginas
-#   11. as doze fixtures                      por caminho nomeado
+#   11. as doze fixtures                      por caminho nomeado, ou pendentes
 #   12. os onze tipos têm instância           e nenhum fica pendente
 #   13. a cobertura de locale                 31 em EN, e só `Ferramentas`
 #   14. o travessão                           zero nas três superfícies
-#   15. o teto de profundidade                4, alcançado, e confinado a um ramo
+#   15. o teto de profundidade                4, alcançado, e confinado a dois ramos
 #   16. a `Verificação` verifica            bloco cercado na seção, nos dois locales
 #   17. o vocabulário do ramo               termo listado, e definido em `conceitos.md`
+#
+# **A ÁRVORE FOI RECONSTRUÍDA PARA CONTEÚDO REAL, e este portão registra o que
+# ficou pendente.** `Jornadas` era narrativa — duas jornadas, dez capítulos, um
+# índice por jornada ordenando por tempo —, e `Procedimentos` e `Times` eram
+# acervo mockado. Os três saíram: a jornada passa a ser trilha de aprendizado
+# (`Visão Geral` · `Conteúdo Teórico` · `Conteúdo Prático`) e as duas outras abas
+# ficam numa folha de marcador de lugar cada.
+#
+# O que isso faz com um portão que só sabe contar: várias cobranças passam a
+# contar ZERO. **Elas ficam, e cada uma cobra o zero por escrito**, porque é
+# assim que uma lista de dezessete não vira uma lista de treze sem ninguém
+# notar. É o mesmo mecanismo que a nota abaixo descreve para o décimo tipo, lido
+# na direção contrária.
 #
 # **A pendência do décimo tipo fechou, e o portão a cobra pelo avesso.** Até o
 # ramo gerado chegar, `Referência de API` era o único tipo sem instância, e a
@@ -99,14 +111,15 @@ GERADO_PT='conteudo/ferramentas/bibliotecas/overpower/comandos'
 GERADO_EN="${EN}/bibliotecas/overpower/comandos"
 GERADAS=4
 
-# O ramo em que o teto de profundidade 4 vale, e o único. Ver a cobrança 14.
-RAMO_PROFUNDO='ferramentas/bibliotecas/overpower'
+# Os ramos com teto próprio, `prefixo=teto`, e o teto de todo o resto. Ver a
+# cobrança 15.
+#
+# **Eram um ramo e viraram dois**, e o segundo não subiu o teto do site: a trilha
+# de `Jornadas` desce a 3 porque a seção da trilha é um nó de verdade, com folhas
+# dentro. O teto absoluto continua 4, e continua tendo um consumidor só.
+RAMOS_PROFUNDOS='ferramentas/bibliotecas/overpower=4 jornadas/api-owner=3'
 TETO_DE_PROFUNDIDADE=4
-TETO_FORA_DO_RAMO=2
-
-# A única página que pode ficar abaixo do piso de heading sem que um gabarito o
-# autorize. Ver informacao.md §4.1.
-EXCECAO_DE_HEADING='procedimentos/ambiente/indice'
+TETO_FORA_DOS_RAMOS=2
 
 falhas=0
 
@@ -124,52 +137,41 @@ reprova() {
 #
 # `bibliotecas` foi de 17 para 23 na #133: seis páginas nasceram de recorte do
 # que já existia, e nenhuma delas trouxe prosa nova.
-VOLUME_JORNADAS='api-owner=7 security-champion=5'
-VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=3 infraestrutura=3 acessos=3 diagnostico=4'
+#
+# **`Procedimentos` e `Times` não declaram categoria nenhuma**, e a lista vazia é
+# a declaração: as duas abas são uma folha de marcador de lugar no nível 1, sem
+# separador acima. A contagem da aba continua sendo cobrada; o que não existe é
+# categoria a conferir dentro dela.
+VOLUME_JORNADAS='api-owner=4'
+VOLUME_PROCEDIMENTOS=''
 VOLUME_FERRAMENTAS='bibliotecas=22 modulos-terraform=2 skills=2 servidores-mcp=1'
-VOLUME_TIMES='time-a=2 time-b=2'
+VOLUME_TIMES=''
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 59 autorais.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 33 autorais.
 #
 # **A forma `indice` MORREU com a issue #114**, e com ela sete páginas: o
 # conteúdo delas era *a lista do que está logo abaixo*, e a sidebar já é essa
 # lista (ADR 10 §c). Nenhuma linha `:indice` sobrou aqui, e é por isso que o
 # `indice` não aparece — não é omissão, é a forma que deixou de existir.
 #
-# `fixture-curta` é a forma que ficou, e ela não é tipo (§6.3): é o gabarito de
-# `Ambiente › Índice`, que sobreviveu como FOLHA por carregar a fixture
-# `pagina-muito-curta` e a única exceção nomeada da regra de heading.
-# `capitulo` é o gabarito da folha de `Jornadas`, e também não é tipo — os dez
-# tipos são os da tabela do §6.1, e `indice-de-jornada` é o décimo.
+# **`fixture-curta` morreu com a página que a carregava, e `placeholder` ocupa o
+# lugar dela.** Ele também não é tipo (§6.3): é o gabarito da folha que diz *isto
+# ainda não foi escrito* — zero `##`, zero componente do catálogo, e o
+# `<Untranslated />` que toda página fora de `Ferramentas` carrega. São seis, e
+# as seis herdam da antiga fixture curta a única coisa que ela provava: a perna
+# sem heading, com o TOC ausente do DOM.
+#
+# `capitulo` é o gabarito da folha narrativa de `Jornadas`, e também não é tipo.
+# **Ele está sem linha hoje**, e a ausência é declarada e não esquecida: a árvore
+# narrativa saiu inteira. O `case` da cobrança 2 e as cobranças 5 a 8 continuam
+# aqui pelo mesmo motivo.
 TIPOS=$(cat <<'FIM'
-jornadas/api-owner/indice:indice-de-jornada
-jornadas/api-owner/o-contrato-que-nao-existia:capitulo
-jornadas/api-owner/o-que-o-contrato-nao-cobre:capitulo
-jornadas/api-owner/a-politica-de-versao:capitulo
-jornadas/api-owner/o-schema-que-mudou-sem-aviso:capitulo
-jornadas/api-owner/depreciar-em-seis-meses:capitulo
-jornadas/api-owner/o-consumidor-invisivel:capitulo
-jornadas/security-champion/indice:indice-de-jornada
-jornadas/security-champion/a-varredura-que-reprovava-tudo:capitulo
-jornadas/security-champion/o-segredo-no-commit:capitulo
-jornadas/security-champion/a-excecao-que-virou-regra:capitulo
-jornadas/security-champion/o-inventario-de-imagens:capitulo
-procedimentos/ambiente/indice:fixture-curta
-procedimentos/ambiente/comparativo-dev-staging-prod:catalogo
-procedimentos/ambiente/preparar-a-maquina-local:guia
-procedimentos/esteiras/verificar-a-assinatura-hmac:guia
-procedimentos/esteiras/publicar-um-pacote-interno:guia
-procedimentos/esteiras/rodar-a-esteira-localmente:guia
-procedimentos/infraestrutura/o-output-de-um-modulo:conceitual
-procedimentos/infraestrutura/criar-um-bucket-versionado:guia
-procedimentos/infraestrutura/promover-um-modulo:guia
-procedimentos/acessos/permissoes-por-papel:catalogo
-procedimentos/acessos/assumir-um-papel-na-aws:guia
-procedimentos/acessos/rotacionar-uma-chave:guia
-procedimentos/diagnostico/indice-de-sintomas:troubleshooting
-procedimentos/diagnostico/monitoramento-e-alertas:conceitual
-procedimentos/diagnostico/o-mesmo-erro-em-tres-formas:troubleshooting
-procedimentos/diagnostico/o-diff-que-resolveu:troubleshooting
+jornadas/api-owner/visao-geral/resumo-das-trilhas:placeholder
+jornadas/api-owner/visao-geral/links-e-referencias:placeholder
+jornadas/api-owner/conteudo-teorico/work-in-progress:placeholder
+jornadas/api-owner/conteudo-pratico/work-in-progress:placeholder
+procedimentos/work-in-progress:placeholder
+times/work-in-progress:placeholder
 ferramentas/bibliotecas/overpower/visao-geral:quickstart
 ferramentas/bibliotecas/overpower/instalacao:sdk
 ferramentas/bibliotecas/overpower/conceitos:conceitual
@@ -197,19 +199,24 @@ ferramentas/modulos-terraform/modulo-de-papel-iam:guia
 ferramentas/skills/scaffold-de-esteira:receita
 ferramentas/skills/rotacao-de-segredo:receita
 ferramentas/servidores-mcp/servidor-de-catalogo-mcp:sdk
-times/time-a/visao-geral:conceitual
-times/time-a/desenvolvimento:catalogo
-times/time-b/visao-geral:conceitual
-times/time-b/desenvolvimento:catalogo
 FIM
 )
 
-# Os dez tipos, e onde cada um tem instância. **Nenhum fica pendente.** O
-# décimo, `referencia-de-api`, é o único que não aparece no manifesto acima: o
-# gabarito dele é *a saída do gerador*, e a instância dele é contada do disco —
-# declará-lo no manifesto seria escrever à mão o que o contrato decide.
+# Os onze tipos, e onde cada um tem instância. `referencia-de-api` não aparece no
+# manifesto acima: o gabarito dele é *a saída do gerador*, e a instância dele é
+# contada do disco — declará-lo no manifesto seria escrever à mão o que o
+# contrato decide.
+#
+# **UM fica pendente, e a pendência é cobrada por nome.** `indice-de-jornada`
+# tinha duas instâncias, e as duas eram os índices narrativos que saíram com a
+# reconstrução da árvore. O tipo NÃO some da lista: uma lista de onze que vira
+# lista de dez sem ninguém decidir é exatamente o modo de falhar que este bloco
+# existe para impedir. O portão cobra que ele siga em ZERO enquanto a pendência
+# durar, e reprova no dia em que alguém escrever uma instância sem tirar o nome
+# daqui — que é a mesma régua que `referencia-de-api` cumpriu ao contrário.
 ONZE_TIPOS='quickstart conceitual guia sdk referencia referencia-de-api receita catalogo troubleshooting changelog indice-de-jornada'
 TIPO_GERADO='referencia-de-api'
+TIPO_PENDENTE='indice-de-jornada'
 
 # As doze fixtures, por caminho nomeado. A décima segunda,
 # `aninhamento-de-sidebar-maximo`, nasceu com o `overpower`: ela prova que os 40px
@@ -219,19 +226,24 @@ TIPO_GERADO='referencia-de-api'
 #
 # `fallback-de-locale` é a única que se prova por AUSÊNCIA: a página existe em
 # pt-BR e NÃO tem contraparte em EN, que é o estado que ela exercita.
+# **Nove das doze trocaram de dona de uma vez**, e nenhuma por gosto: a dona de
+# cada uma morava em `Procedimentos` ou na `Jornadas` narrativa, e as duas
+# saíram. A herdeira de cada caso foi MEDIDA no que sobrou, e o número está na
+# tabela do §7 ao lado do nome. Onde nada no acervo exercita mais o caso, a linha
+# vale `pendente` em vez de apontar para uma página que não prova o que promete.
 FIXTURES=$(cat <<'FIM'
-tabela-larga:procedimentos/acessos/permissoes-por-papel
-tabela-como-pagina-inteira:procedimentos/ambiente/comparativo-dev-staging-prod
-bloco-de-codigo-longo:procedimentos/esteiras/verificar-a-assinatura-hmac
-pagina-muito-curta:procedimentos/ambiente/indice
-prosa-pura:jornadas/security-champion/indice
-item-de-sidebar-mais-largo:jornadas/security-champion/a-varredura-que-reprovava-tudo
+tabela-larga:ferramentas/bibliotecas/overpower/referencia/solucao-de-problemas
+tabela-como-pagina-inteira:ferramentas/bibliotecas/overpower/contribuir/mapa-de-modulos
+bloco-de-codigo-longo:ferramentas/bibliotecas/overpower/referencia/indice
+pagina-muito-curta:procedimentos/work-in-progress
+prosa-pura:times/work-in-progress
+item-de-sidebar-mais-largo:ferramentas/servidores-mcp/servidor-de-catalogo-mcp
 prosa-minima-codigo-maximo:ferramentas/skills/scaffold-de-esteira
-fallback-de-locale:jornadas/api-owner/a-politica-de-versao
-aninhamento-profundo:procedimentos/infraestrutura/o-output-de-um-modulo
-pagina-muito-longa:jornadas/api-owner/o-contrato-que-nao-existia
+fallback-de-locale:jornadas/api-owner/visao-geral/links-e-referencias
+aninhamento-profundo:ferramentas/bibliotecas/overpower/alvos/bundle-federado
+pagina-muito-longa:ferramentas/bibliotecas/overpower/alvos/indice
 painel-direito-vazio:ferramentas/bibliotecas/overpower/comandos/indice
-aninhamento-de-sidebar-maximo:ferramentas/bibliotecas/overpower/referencia/solucao-de-problemas
+aninhamento-de-sidebar-maximo:ferramentas/bibliotecas/overpower/alvos/from
 FIM
 )
 
@@ -244,11 +256,18 @@ FIM
 # par prova *página muito longa* sozinho — TOC longo, `sticky`, scroll-spy —, e o
 # que o par prova junto é *comprimento desigual entre irmãos*, que é caso do
 # domínio. Contá-lo como fixture faria a lista fechar em treze, e são doze.
+#
+# **`diff` ficou PENDENTE.** A dona dele era `Diagnóstico › O diff que resolveu`,
+# e nenhuma página do acervo que sobrou carrega uma cerca ```` ```diff ````.
+# Escrever uma só para reencher a linha seria inventar conteúdo para satisfazer
+# uma contagem, que é o defeito que esta lista existe para não ter. A linha fica,
+# marcada, e o dia em que alguém escrever a cerca é o dia em que ela volta a
+# apontar para uma página.
 CASOS_DO_DOMINIO=$(cat <<'FIM'
-saida-literal-de-terminal:jornadas/api-owner/o-schema-que-mudou-sem-aviso
-varias-linguagens-na-mesma-pagina:procedimentos/diagnostico/o-mesmo-erro-em-tres-formas
-diff:procedimentos/diagnostico/o-diff-que-resolveu
-irmao-curto:jornadas/api-owner/o-que-o-contrato-nao-cobre
+saida-literal-de-terminal:ferramentas/bibliotecas/overpower/referencia/codigos-de-saida
+varias-linguagens-na-mesma-pagina:ferramentas/servidores-mcp/servidor-de-catalogo-mcp
+diff:pendente
+irmao-curto:ferramentas/bibliotecas/overpower/alvos/bundle-federado
 FIM
 )
 
@@ -267,16 +286,21 @@ contar() {
 # de comando roda em subshell, e ali `falhas` incrementaria numa cópia que morre
 # no fecha-parêntese. Um portão que conta errado as próprias reprovações é pior
 # que um portão ausente.
+#
+# **O total sai da ÁRVORE, e não da soma das categorias declaradas**, e a
+# diferença é uma cobrança a mais de graça: uma página escrita fora de toda
+# categoria declarada some da soma antiga e reprova nesta. É também o que permite
+# uma aba sem categoria nenhuma — `Procedimentos` e `Times`, com a folha de
+# marcador de lugar no nível 1 — continuar sendo contada.
 volume=0
 volume_da_aba() {
   local raiz="$1" esperado_total="$2" nome="$3" pares="$4"
   local par categoria esperado achado
-  volume=0
+  volume=$(find "$raiz" -name '*.md' 2>/dev/null | wc -l)
   for par in $pares; do
     categoria="${par%%=*}"
     esperado="${par##*=}"
     achado=$(find "${raiz}/${categoria}" -name '*.md' 2>/dev/null | wc -l)
-    volume=$((volume + achado))
     [ "$achado" = "$esperado" ] ||
       reprova "${nome}/${categoria}: ${achado} páginas, esperado ${esperado}"
   done
@@ -290,16 +314,16 @@ echo
 # --- 1. o volume --------------------------------------------------------------
 echo "1  volume por aba e por categoria"
 
-volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
-volume_da_aba "$PROCEDIMENTOS" 16 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
+volume_da_aba "$JORNADAS" 4 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
+volume_da_aba "$PROCEDIMENTOS" 1 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
 volume_da_aba "$FERRAMENTAS" 27 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
-volume_da_aba "$TIMES" 4 'Times' "$VOLUME_TIMES"; total_times=$volume
+volume_da_aba "$TIMES" 1 'Times' "$VOLUME_TIMES"; total_times=$volume
 
 autorais=$((total_jornadas + total_procedimentos + total_ferramentas + total_times))
-[ "$autorais" = 59 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 59"
+[ "$autorais" = 33 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 33"
 
 # O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 26, `Ferramentas`
-# em 31 e o site em 59 — os três números que a spec publica.
+# em 31 e o site em 37 — os três números que a spec publica.
 geradas=$(find "$GERADO_PT" -name '*.mdx' 2>/dev/null | wc -l)
 [ "$geradas" = "$GERADAS" ] ||
   reprova "o ramo gerado tem ${geradas} páginas, esperado ${GERADAS}"
@@ -311,9 +335,10 @@ folhas_ferramentas=$((total_ferramentas + geradas))
 [ "$folhas_ferramentas" = 31 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 31"
 
 total=$((autorais + geradas))
-[ "$total" = 63 ] || reprova "o site tem ${total} páginas, esperado 63"
+[ "$total" = 37 ] || reprova "o site tem ${total} páginas, esperado 37"
 
-echo "   Ferramentas ${folhas_ferramentas} · Procedimentos ${total_procedimentos} · Jornadas ${total_jornadas} · Times ${total_times} = ${total}"
+# A ordem impressa é a do navbar, e ela mudou: `Jornadas` subiu para segunda.
+echo "   Ferramentas ${folhas_ferramentas} · Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Times ${total_times} = ${total}"
 echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
 echo
 
@@ -376,12 +401,17 @@ while IFS=: read -r relativo tipo; do
     changelog)      exigir 'entradas <Update>' "$(contar "$arquivo" '^<Update ')" 6 ;;
     # O gabarito do capítulo: 2 blocos e 1 `:::`. A espinha de 3 a 6 `##` e a
     # prosa antes do primeiro heading são cobradas nas seções 3 e 6.
+    # **Sem linha no manifesto hoje** — ver a nota do manifesto.
     capitulo)       exigir 'blocos' "$blocos" 2; exigir 'callouts' "$callouts" 1 ;;
-    # O décimo tipo. As duas seções obrigatórias são cobradas na seção 5, e a
-    # ausência de componente é o que faz dele a página mais nua do site.
+    # O décimo tipo, e o tipo PENDENTE. As duas seções obrigatórias são cobradas
+    # na seção 5, e a ausência de componente é o que faz dele a página mais nua
+    # do site. **Sem linha no manifesto hoje** — ver a cobrança 12.
     indice-de-jornada) : ;;
-    indice)         : ;; # forma, não tipo — o piso do tipo da seção, mais o índice
-    fixture-curta)  : ;; # a exceção de heading, cobrada na seção 3
+    # Forma, não tipo. O marcador de lugar é a folha que diz *isto ainda não foi
+    # escrito*: zero `##` (cobrado na seção 3), zero componente, e nenhum
+    # orçamento estrutural a cobrar aqui — cobrar estrutura de uma página que
+    # declara não ter conteúdo seria pedir moldura para o quadro que falta.
+    placeholder)    : ;;
     *)              reprova "${relativo}: tipo desconhecido '${tipo}'" ;;
   esac
 done <<< "$TIPOS"
@@ -391,10 +421,15 @@ echo
 
 # --- 3. a regra de heading ----------------------------------------------------
 #
-# O piso é três `##` em toda página. Dois gabaritos abrem teto próprio, e nenhum
-# dos dois é exceção: `Receita` fica em no máximo um, e o índice de jornada em
-# exatamente dois, que são os dois literais da seção 5. A exceção NOMEADA é uma
-# só — a página que rompe a própria forma.
+# O piso é três `##` em toda página. Três gabaritos abrem teto próprio, e nenhum
+# dos três é exceção: `Receita` fica em no máximo um, o índice de jornada em
+# exatamente dois (os dois literais da seção 5), e o marcador de lugar em ZERO.
+#
+# **A exceção NOMEADA acabou, e não por relaxamento.** Ela era
+# `procedimentos/ambiente/indice`, a única página que rompia a própria forma; a
+# página saiu com a aba, e o que ficou no lugar dela tem GABARITO — orçamento do
+# tipo, não exceção. Uma varredura com lista de exceção vazia é uma varredura
+# mais forte do que uma com uma linha.
 echo "3  regra de heading"
 sem_toc=0
 com_toc=0
@@ -404,8 +439,9 @@ while IFS=: read -r relativo tipo; do
   [ -f "$arquivo" ] || continue
   h2=$(contar "$arquivo" '^## ')
 
-  if [ "$relativo" = "$EXCECAO_DE_HEADING" ]; then
-    [ "$h2" = 0 ] || reprova "${relativo}: ${h2} \`##\`, e a fixture exige ZERO"
+  if [ "$tipo" = 'placeholder' ]; then
+    [ "$h2" = 0 ] ||
+      reprova "${relativo}: ${h2} \`##\`, e o marcador de lugar fica em ZERO"
   elif [ "$tipo" = 'receita' ]; then
     [ "$h2" -le 1 ] 2>/dev/null ||
       reprova "${relativo}: ${h2} \`##\`, máximo 1 em Receita"
@@ -425,10 +461,10 @@ done <<< "$TIPOS"
 
 echo "   ${sem_toc} sem coluna de TOC · ${com_toc} com"
 
-# **A exceção nomeada já foi cobrada acima**, página a página: fora de um
-# gabarito, só `EXCECAO_DE_HEADING` pode ficar abaixo do piso. Contar aqui
-# quantas páginas ficam sem TOC seria cobrar outra coisa — a `Receita` fica em
-# zero pelo orçamento dela, e orçamento não é exceção.
+# **O piso já foi cobrado acima**, página a página, e não há mais lista de
+# exceção: quem fica abaixo dele fica por gabarito. Contar aqui quantas páginas
+# ficam sem TOC seria cobrar outra coisa — a `Receita` fica em zero pelo
+# orçamento dela, e orçamento não é exceção.
 #
 # O que esta contagem cobra é que as DUAS configurações de coluna que este
 # acervo produz existam no artefato.
@@ -498,8 +534,12 @@ while IFS=: read -r relativo tipo; do
   done
 done <<< "$TIPOS"
 
-[ "$indices" = 2 ] || reprova "${indices} índices de jornada, esperado 2"
-echo "   ${indices} índices, sem grade, com \`## Como foi\` e \`## O que não funcionou\`"
+# **ZERO, e o zero é a cobrança.** Os dois índices narrativos saíram com a
+# reconstrução da árvore, e o tipo está pendente (cobrança 12). Escrever um
+# índice de jornada sem tirar o tipo da lista de pendentes reprova aqui.
+[ "$indices" = 0 ] ||
+  reprova "${indices} índice(s) de jornada, e o tipo está declarado PENDENTE na cobrança 12"
+echo "   ${indices} índices, e o tipo está pendente: a jornada virou trilha, e a trilha não narra"
 echo
 
 # --- 6. prosa antes do primeiro `##`, em todo capítulo -------------------------
@@ -532,8 +572,12 @@ while IFS=: read -r relativo tipo; do
     reprova "${relativo}: nenhuma linha de prosa entre o título e o primeiro \`##\`"
 done <<< "$TIPOS"
 
-[ "$capitulos" = 10 ] || reprova "${capitulos} capítulos, esperado 10"
-echo "   ${capitulos} capítulos, todos com parágrafo de contexto antes da espinha"
+# **ZERO hoje, pelo mesmo motivo da cobrança 5.** O gabarito `capitulo` continua
+# escrito, e a varredura volta a ter sujeito no dia em que uma linha `:capitulo`
+# entrar no manifesto.
+[ "$capitulos" = 0 ] ||
+  reprova "${capitulos} capítulo(s), e o gabarito está sem linha no manifesto"
+echo "   ${capitulos} capítulos: a árvore narrativa saiu, e o gabarito fica sem sujeito"
 echo
 
 # --- 7. a lista ordenada de `## Como foi` --------------------------------------
@@ -557,7 +601,7 @@ while IFS= read -r jornada; do
   [ "$itens" = "$capitulos_da_jornada" ] ||
     reprova "${jornada}: \`## Como foi\` lista ${itens} itens para ${capitulos_da_jornada} capítulos"
 done < <(find "$JORNADAS" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
-echo "   as duas listas têm um item por capítulo"
+echo "   nenhuma jornada tem \`indice.md\` hoje, e a varredura fica sem sujeito"
 echo
 
 # --- 8. o estado, uma palavra na abertura -------------------------------------
@@ -583,15 +627,15 @@ while IFS=: read -r relativo tipo; do
   [ "$estados" = 1 ] ||
     reprova "${relativo}: ${estados} palavras de estado na abertura, e é exatamente uma"
 done <<< "$TIPOS"
-echo "   \`Em curso\` · \`Encerrada\` — uma palavra por índice, e o vocabulário fecha em dois"
+echo "   \`Em curso\` · \`Encerrada\` — o vocabulário fecha em dois, e fica sem índice a carimbar"
 echo
 
 # --- 9. o marcador de tradução ------------------------------------------------
 #
 # **A regra apertou**, e é consequência de o locale ter fronteira: `<Untranslated
-# />` é sobre a página SÓ existir num locale, e isso só acontece em `Jornadas` e
-# `Procedimentos`. As 22 de `Ferramentas` nascem traduzidas, então marcá-las
-# seria carimbar um estado que elas nunca terão.
+# />` é sobre a página SÓ existir num locale, e isso acontece em `Jornadas`,
+# `Procedimentos` e `Times`. As de `Ferramentas` nascem traduzidas, então
+# marcá-las seria carimbar um estado que elas nunca terão.
 echo "9  marcador de tradução"
 sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS" "$TIMES") || true
 if [ -n "$sem_marcador" ]; then
@@ -612,8 +656,8 @@ if [ -n "$com_marcador_en" ]; then
 fi
 
 marcadas=$(grep -Rl '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS" "$TIMES" 2>/dev/null | wc -l)
-[ "$marcadas" = 32 ] || reprova "${marcadas} páginas com marcador, esperado 32"
-echo "   ${marcadas} marcam (12 de Jornadas + 16 de Procedimentos + 4 de Times); Ferramentas e as traduções não"
+[ "$marcadas" = 6 ] || reprova "${marcadas} páginas com marcador, esperado 6"
+echo "   ${marcadas} marcam (4 de Jornadas + 1 de Procedimentos + 1 de Times); Ferramentas e as traduções não"
 echo
 
 # --- 10. `description` em 100% ------------------------------------------------
@@ -635,8 +679,14 @@ echo
 # --- 11. as doze fixtures, por caminho nomeado --------------------------------
 echo "11  as doze fixtures"
 n_fixtures=0
+pendentes=0
 while IFS=: read -r caso caminho; do
   n_fixtures=$((n_fixtures + 1))
+  if [ "$caminho" = 'pendente' ]; then
+    pendentes=$((pendentes + 1))
+    echo "   PENDENTE  a fixture \`${caso}\` está sem dona, e a linha fica declarada"
+    continue
+  fi
   [ -f "${CONTEUDO}/${caminho}.md" ] ||
     reprova "a fixture \`${caso}\` aponta para ${caminho}, que não existe"
 done <<< "$FIXTURES"
@@ -645,10 +695,15 @@ done <<< "$FIXTURES"
 # fica fora do EN, então a conferência é a mesma da seção 9 vista pelo avesso —
 # e vale escrita, porque o dia em que alguém traduzir a aba é o dia em que a
 # fixture morre calada.
-[ ! -e "i18n/en/docusaurus-plugin-content-docs/current/api-owner/a-politica-de-versao.md" ] ||
+[ ! -e "i18n/en/docusaurus-plugin-content-docs/current/api-owner/visao-geral/links-e-referencias.md" ] ||
   reprova "a fixture de fallback ganhou contraparte em EN, e o estado que ela prova sumiu"
 
 while IFS=: read -r caso caminho; do
+  if [ "$caminho" = 'pendente' ]; then
+    pendentes=$((pendentes + 1))
+    echo "   PENDENTE  o caso \`${caso}\` está sem dona, e a linha fica declarada"
+    continue
+  fi
   [ -f "${CONTEUDO}/${caminho}.md" ] ||
     reprova "o caso \`${caso}\` aponta para ${caminho}, que não existe"
 done <<< "$CASOS_DO_DOMINIO"
@@ -656,7 +711,11 @@ done <<< "$CASOS_DO_DOMINIO"
 n_casos=$(printf '%s\n' "$CASOS_DO_DOMINIO" | wc -l)
 [ "$n_fixtures" = 12 ] || reprova "${n_fixtures} fixtures declaradas, e a spec fecha em doze"
 [ "$n_casos" = 4 ] || reprova "${n_casos} casos do domínio declarados, e a spec fecha em quatro"
-echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio, todos por caminho nomeado"
+# **O número de pendentes é CRAVADO**, e é o que impede a lista de virar
+# formulário: sem ele, marcar mais uma linha como `pendente` passaria calado.
+[ "$pendentes" = 1 ] ||
+  reprova "${pendentes} linha(s) marcada(s) \`pendente\`, e a spec declara UMA (\`diff\`)"
+echo "   ${n_fixtures} fixtures e ${n_casos} casos do domínio, ${pendentes} pendente e o resto por caminho nomeado"
 echo
 
 # --- 12. os onze tipos têm instância -------------------------------------------
@@ -673,9 +732,17 @@ for tipo in $ONZE_TIPOS; do
       reprova "o tipo \`${tipo}\` não tem nenhuma instância no artefato"
     continue
   fi
+  if [ "$tipo" = "$TIPO_PENDENTE" ]; then
+    # A pendência lida ao contrário: o tipo continua na lista, e o portão cobra
+    # que ele siga sem instância enquanto ninguém decidir escrevê-lo de volta.
+    [ "$n" = 0 ] ||
+      reprova "\`${tipo}\` está declarado PENDENTE e tem ${n} instância(s) — tire-o de TIPO_PENDENTE"
+    echo "   PENDENTE  \`${tipo}\` segue sem instância, e a linha fica declarada"
+    continue
+  fi
   [ "$n" -ge 1 ] || reprova "o tipo \`${tipo}\` não tem nenhuma instância no artefato"
 done
-echo "   os onze com instância — \`${TIPO_GERADO}\` com as ${geradas} do ramo gerado, e nenhum pendente"
+echo "   dez dos onze com instância — \`${TIPO_GERADO}\` com as ${geradas} do ramo gerado, e \`${TIPO_PENDENTE}\` pendente"
 echo
 
 # --- 13. a cobertura de locale ------------------------------------------------
@@ -804,8 +871,18 @@ echo
 # **A cobrança mudou de forma com o ADR 10 §g).** Ela era *"o nível 3 é usado ao
 # menos uma vez"*, que é teto com consumidor mas sem fronteira: nada impedia um
 # terceiro nível aparecer em `Jornadas` no dia seguinte. Agora o teto é 4 e ele é
-# **confinado**, o que são duas cobranças e não uma: nada passa de 4 em lugar
-# nenhum, e nada passa de 2 fora do ramo do `overpower`.
+# **confinado**, o que são três cobranças e não uma: nada passa de 4 em lugar
+# nenhum, nada passa do teto do próprio ramo, e nada passa de 2 fora dos ramos
+# declarados.
+#
+# **A fronteira deixou de ser um ramo e passou a ser dois, com teto próprio cada
+# um.** `jornadas/api-owner` entrou com teto 3, e não com o teto do site: a
+# trilha tem seção com folhas dentro, o que gasta um nível, e nada ali pede um
+# quarto. Declarar `3` em vez de deixá-la herdar o `4` é o que impede a jornada
+# de ganhar um nível de graça por estar na mesma lista do `overpower`.
+#
+# **Cada ramo declarado precisa ALCANÇAR o próprio teto.** Um ramo com teto 3 que
+# usa 2 é a mesma coisa que um teto sem consumidor, um nível acima.
 #
 # A régua é a PROFUNDIDADE DE CAMINHO, contada a partir do primeiro segmento
 # abaixo da aba. Ela é o teto superior do nível de sidebar e nunca o subestima: a
@@ -813,9 +890,14 @@ echo
 # nível que ocupa na árvore, então `comandos/indice` mede 4 aqui e desenha 3 lá.
 # Cobrar o caminho é mais estrito que cobrar a árvore, e é o que este portão
 # consegue ler sem importar a sidebar.
-echo "15  o teto de profundidade, confinado a um ramo"
+echo "15  o teto de profundidade, confinado aos ramos declarados"
 profundidade_maxima=0
-fora_do_ramo=''
+acima_do_teto=''
+alcance_dos_ramos=''
+for par in $RAMOS_PROFUNDOS; do
+  alcance_dos_ramos="${alcance_dos_ramos}${par%%=*}=0 "
+done
+
 while IFS= read -r arquivo; do
   relativo="${arquivo#${CONTEUDO}/}"
   sem_aba="${relativo#*/}"
@@ -824,24 +906,55 @@ while IFS= read -r arquivo; do
   [ "$nivel" -le "$profundidade_maxima" ] || profundidade_maxima=$nivel
 
   if [ "$nivel" -gt "$TETO_DE_PROFUNDIDADE" ]; then
-    reprova "${relativo}: nível ${nivel}, e o teto é ${TETO_DE_PROFUNDIDADE}"
+    reprova "${relativo}: nível ${nivel}, e o teto absoluto é ${TETO_DE_PROFUNDIDADE}"
   fi
 
-  case "$relativo" in
-    "${RAMO_PROFUNDO}"/*) ;;
-    *) [ "$nivel" -le "$TETO_FORA_DO_RAMO" ] || fora_do_ramo="${fora_do_ramo}${relativo} (nível ${nivel})"$'\n' ;;
-  esac
+  # O teto DESTE arquivo: o do ramo que o contém, ou o de fora dos ramos.
+  teto_daqui=$TETO_FORA_DOS_RAMOS
+  ramo_daqui=''
+  for par in $RAMOS_PROFUNDOS; do
+    case "$relativo" in
+      "${par%%=*}"/*) teto_daqui="${par##*=}"; ramo_daqui="${par%%=*}" ;;
+    esac
+  done
+
+  if [ "$nivel" -gt "$teto_daqui" ]; then
+    acima_do_teto="${acima_do_teto}${relativo} (nível ${nivel}, teto ${teto_daqui})"$'\n'
+  fi
+
+  # O alcance do ramo, para a terceira cobrança. `chave=maior nível visto`.
+  if [ -n "$ramo_daqui" ]; then
+    novo=''
+    for par in $alcance_dos_ramos; do
+      if [ "${par%%=*}" = "$ramo_daqui" ] && [ "$nivel" -gt "${par##*=}" ]; then
+        novo="${novo}${ramo_daqui}=${nivel} "
+      else
+        novo="${novo}${par} "
+      fi
+    done
+    alcance_dos_ramos="$novo"
+  fi
 done < <(find "$CONTEUDO" \( -name '*.md' -o -name '*.mdx' \) | sort)
 
-if [ -n "$fora_do_ramo" ]; then
-  reprova "o teto de ${TETO_DE_PROFUNDIDADE} é confinado a \`${RAMO_PROFUNDO}\`, e isto está fora:"
-  printf '%s' "$fora_do_ramo" | sed 's/^/    /'
+if [ -n "$acima_do_teto" ]; then
+  reprova "profundidade acima do teto do próprio ramo (fora dos ramos declarados o teto é ${TETO_FORA_DOS_RAMOS}):"
+  printf '%s' "$acima_do_teto" | sed 's/^/    /'
 fi
+
+for par in $RAMOS_PROFUNDOS; do
+  ramo="${par%%=*}"
+  esperado="${par##*=}"
+  for medido in $alcance_dos_ramos; do
+    [ "${medido%%=*}" = "$ramo" ] || continue
+    [ "${medido##*=}" = "$esperado" ] ||
+      reprova "${ramo}: declara teto ${esperado} e chega ao nível ${medido##*=} — teto sem consumidor sobe sozinho"
+  done
+done
 
 [ "$profundidade_maxima" = "$TETO_DE_PROFUNDIDADE" ] ||
   reprova "a árvore chega ao nível ${profundidade_maxima}, e um teto de ${TETO_DE_PROFUNDIDADE} sem consumidor é teto que sobe sozinho"
 
-echo "   teto ${TETO_DE_PROFUNDIDADE}, alcançado, e confinado a ${RAMO_PROFUNDO}"
+echo "   teto ${TETO_DE_PROFUNDIDADE}, alcançado, e confinado a: ${RAMOS_PROFUNDOS}"
 echo
 
 # --- 16. a `Verificação` verifica --------------------------------------------

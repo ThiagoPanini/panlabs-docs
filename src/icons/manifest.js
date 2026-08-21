@@ -70,17 +70,20 @@ const SISTEMA = [
 ];
 
 /**
- * Navegação · 11 tags sobre 11 arquivos, dos quais **dois moram aqui**.
+ * Navegação · 33 tags sobre 33 arquivos, dos quais **dois moram aqui**.
  *
- * Os outros nove reusam entrada de autoria e carregam a segunda tag na própria
- * entrada — é isso que faz 70 tags caberem em 61 arquivos. Os dois daqui são
- * órfãos de navegação **reempregados**: `code-xml` e `activity` já eram
- * navegação na árvore anterior, e trocaram de seção sem trocar de papel.
+ * Os outros trinta e um reusam entrada de autoria e carregam a segunda tag na
+ * própria entrada — é isso que faz as tags caberem em menos arquivos do que elas
+ * somam. Os dois daqui são órfãos de navegação **reempregados**, e os dois já
+ * trocaram de seção mais de uma vez sem trocar de papel: `code-xml` era
+ * `Jornadas › API Owner` e passou a `Conteúdo Teórico`, dentro da mesma jornada;
+ * `activity` era `Procedimentos › Diagnóstico` e passou a nomear a folha de
+ * marcador de lugar das duas abas que esvaziaram.
  * @type {Entrada[]}
  */
 const NAVEGACAO = [
-  {nome: 'code-xml', papeis: ['navegacao'], onde: 'Jornadas › API Owner'},
-  {nome: 'activity', papeis: ['navegacao'], onde: 'Procedimentos › Diagnóstico'},
+  {nome: 'code-xml', papeis: ['navegacao'], onde: 'Jornadas › API Owner › Conteúdo Teórico'},
+  {nome: 'activity', papeis: ['navegacao'], onde: 'Procedimentos › Work in Progress e Times › Work in Progress'},
 ];
 
 /**
@@ -92,7 +95,7 @@ const NAVEGACAO = [
  * definição da tag NÃO reverte com elas: `autoria` é *"o nome escrito como
  * string"*, e não *"o MDX do autor"* — a correção que a estabeleceu vale por si.
  *
- * **Vinte e nove entradas carregam a segunda tag `navegacao` e moram aqui.**
+ * **Trinta e uma entradas carregam a segunda tag `navegacao` e moram aqui.**
  * Elas chegaram em duas levas, e as duas provam a mesma coisa: navegação nova
  * NÃO custa arquivo. As cinco seções do `overpower` levaram a navegação de 11
  * para 16 tags; a #118 deu ícone próprio a cada uma das 21 páginas do produto e
@@ -131,11 +134,11 @@ const AUTORIA = [
   {nome: 'wrench', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Arquitetura · vocabulário do autor'},
   {nome: 'database', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower list · vocabulário do autor'},
   {nome: 'server', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Servidores MCP · vocabulário do autor'},
-  {nome: 'cloud', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Infraestrutura · vocabulário do autor'},
-  {nome: 'key', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Acessos · vocabulário do autor'},
-  {nome: 'lock', papeis: ['navegacao', 'autoria'], onde: 'Jornadas › Security Champion · vocabulário do autor'},
+  {nome: 'cloud', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'key', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'lock', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'mail', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'calendar', papeis: ['navegacao', 'autoria'], onde: 'Times › Time A · vocabulário do autor'},
+  {nome: 'calendar', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'users', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir · vocabulário do autor'},
   {nome: 'globe', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Alvos · vocabulário do autor'},
   // PERDEU a tag `navegacao` na #118. Ele era a chave `bibliotecas`, que as
@@ -152,12 +155,12 @@ const AUTORIA = [
   {nome: 'circle-alert', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Códigos de saída · vocabulário do autor'},
   {nome: 'circle-help', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower · vocabulário do autor', lucide: 'circle-question-mark'},
   {nome: 'sparkles', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Critérios de catálogo · vocabulário do autor'},
-  {nome: 'trending-up', papeis: ['navegacao', 'autoria'], onde: 'Times › Time B · vocabulário do autor'},
+  {nome: 'trending-up', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'gauge', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower doctor · vocabulário do autor'},
 
   // Conceitos · 9
-  {nome: 'layers', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Ambiente · vocabulário do autor'},
-  {nome: 'workflow', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Esteiras · vocabulário do autor'},
+  {nome: 'layers', papeis: ['navegacao', 'autoria'], onde: 'Jornadas › API Owner › Visão Geral · vocabulário do autor'},
+  {nome: 'workflow', papeis: ['navegacao', 'autoria'], onde: 'Jornadas › API Owner › Conteúdo Prático · vocabulário do autor'},
   {nome: 'puzzle', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Módulos Terraform · vocabulário do autor'},
   {nome: 'bot', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Skills · vocabulário do autor'},
   {nome: 'webhook', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Alvos › Servidores MCP · vocabulário do autor'},
@@ -189,7 +192,7 @@ export const NOMES = ICONES.map((i) => i.nome);
 export const TETO = 64;
 
 /**
- * Os trinta e um pares seção→ícone. A chave vira `sidebar-icone--<chave>` no
+ * Os trinta e três pares seção→ícone. A chave vira `sidebar-icone--<chave>` no
  * `className` da sidebar.
  *
  * **A chave deixou de ser da seção e passou a ser da PÁGINA — no `overpower`.**
@@ -216,20 +219,27 @@ export const TETO = 64;
  * manifesto já carregava como vocabulário do autor, e o teto de 64 não se move.
  */
 export const PARES_SECAO = {
-  // As dez de SEÇÃO — as árvores em que a folha ainda herda a chave do ramo que
+  // As sete de SEÇÃO — as árvores em que a folha ainda herda a chave do ramo que
   // a contém. Ver a nota sobre o orçamento, acima.
-  'api-owner': 'code-xml',
-  'security-champion': 'lock',
-  ambiente: 'layers',
-  esteiras: 'workflow',
-  infraestrutura: 'cloud',
-  acessos: 'key',
-  diagnostico: 'activity',
+  //
+  // **Eram doze**, e as cinco que saíram saíram com o conteúdo que nomeavam: as
+  // duas jornadas narrativas, as cinco categorias de `Procedimentos` e os dois
+  // times. Os desenhos delas NÃO saíram do manifesto: `lock`, `cloud`, `key`,
+  // `calendar` e `trending-up` continuam no vocabulário do autor e só perderam a
+  // segunda tag, que é a leitura literal do orçamento — tag é papel, e o papel
+  // de navegação acabou quando a seção acabou.
+  //
+  // As três de `Jornadas` são a árvore nova da trilha, e a de marcador de lugar
+  // é UMA para as duas abas esvaziadas: `Procedimentos` e `Times` dizem a mesma
+  // coisa na mesma folha, e dois glifos para a mesma frase seriam distinção sem
+  // diferença.
+  'visao-geral': 'layers',
+  'conteudo-teorico': 'code-xml',
+  'conteudo-pratico': 'workflow',
+  'work-in-progress': 'activity',
   'modulos-terraform': 'puzzle',
   skills: 'bot',
   'servidores-mcp': 'server',
-  'time-a': 'calendar',
-  'time-b': 'trending-up',
 
   // As vinte e sete do `overpower` — uma por PÁGINA, e nenhuma repetida.
   //

@@ -67,8 +67,8 @@ panlabs infra conferir bucket relatorios
 | Criptografia | KMS | `sse-s3` não permite política por chave |
 | Sufixo de ambiente | automático | nome de bucket é imutável, e o erro só aparece depois do `apply` |
 
-O output é um objeto aninhado, e a anatomia dele está em
-[O output de um módulo](/procedimentos/infraestrutura/o-output-de-um-modulo).
+O output é um objeto aninhado, e a anatomia dele sai inteira de
+`terraform output -json` depois do primeiro `apply`.
 
 :::warning
 `nome` recebe o sufixo do ambiente sozinho. Escrever `relatorios-dev` produz

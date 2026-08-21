@@ -49,5 +49,4 @@ jobs:
 
 `silencio-antes-de-revogar` is the parameter that separates this skill from a
 script: revoking on a clock knocks over anything that reads the secret hourly,
-and revoking on absence of use knocks over nothing. The equivalent manual
-procedure is in [Rotate a key](/procedimentos/acessos/rotacionar-uma-chave).
+and revoking on absence of use knocks over nothing.

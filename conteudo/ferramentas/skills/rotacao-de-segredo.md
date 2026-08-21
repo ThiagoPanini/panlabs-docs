@@ -49,5 +49,4 @@ jobs:
 
 `silencio-antes-de-revogar` é o parâmetro que separa esta skill de um script:
 revogar por relógio derruba quem lê o segredo de hora em hora, e revogar por
-ausência de uso não derruba ninguém. O procedimento manual equivalente está em
-[Rotacionar uma chave](/procedimentos/acessos/rotacionar-uma-chave).
+ausência de uso não derruba ninguém.

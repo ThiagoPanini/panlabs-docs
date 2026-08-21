@@ -14,6 +14,38 @@ não promove o primeiro dígito, e a régua inteira está em
 Os agrupamentos por minor existem para a coluna de navegação. Uma lista de trinta
 entradas sem heading é uma lista que ninguém percorre.
 
+## 0.29.x
+
+<Update label="0.29.0" tag="quebra">
+  **Um repositório caseiro declara tudo o que oferece num arquivo só, na raiz.**
+  O `.overpower.yaml` carrega `bundles:` e `mcp:` dentro dele, e passa pelo mesmo
+  leitor que lê o catálogo que a wheel publica: um arquivo, um formato, um
+  leitor. O `.overpower/catalog.yaml` e o `.overpower/mcp/<slug>.toml` deixaram
+  de ser lidos, e **não há janela de compatibilidade**: achar a convenção antiga
+  num repositório sem `.overpower.yaml` sai `3`, nomeando os arquivos achados e o
+  arquivo a escrever no lugar. O catálogo embutido migrou junto, as quatro
+  receitas entraram na chave `mcp:` e o TOML saiu do produto, então as duas
+  procedências passam pelo mesmo caminho. O `--mcp --from` deixou de andar pela
+  árvore: a declaração é ancorada na raiz do repositório apontado, e a subpasta
+  da URL segue estreitando apenas o alcance de `--skill`.
+</Update>
+
+## 0.28.x
+
+<Update label="0.28.0" tag="novidade">
+  **No escopo de máquina, o `install` pergunta o valor de cada slot e o escreve
+  literal.** Uma execução, e a configuração fica completa, em vez de terminar
+  avisando que a variável é sua para exportar. A entrada é mascarada, o valor
+  nunca é ecoado, e a variável já exportada é oferecida como padrão sem aparecer
+  na tela. No escopo de projeto o slot continua sendo `${VAR}` e nada mais, e o
+  VS Code mantém o `inputs[]` com `password: true`, que é a única grafia medida
+  em que o segredo fica guardado sob proteção do sistema. Sem terminal ou com
+  `--yes` nada é perguntado, e o comportamento anterior fica intacto; valor já
+  gravado é mantido e não perguntado de novo, com `--force` reabrindo a pergunta;
+  resposta vazia grava a referência de volta. O `--dry-run` não pergunta, e
+  anuncia quantos segredos seriam pedidos.
+</Update>
+
 ## 0.27.x
 
 <Update label="0.27.3" tag="correção">

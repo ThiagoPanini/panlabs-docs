@@ -76,35 +76,41 @@ A porta fica **aberta e não usada**, o que é diferente de fechada.
 
 ---
 
-## 3. A árvore — 4 · 5 · 2 · 2, teto de profundidade 4
+## 3. A árvore — 4 · 1 · 0 · 0, teto de profundidade 4
 
 ```
-Ferramentas            Procedimentos        Jornadas              Times
-├ Bibliotecas          ├ Ambiente           ├ API Owner           ├ Time A
-│ └ overpower          ├ Esteiras           └ Security Champion   └ Time B   ← nível 2
-│   ├ Comandos         ├ Infraestrutura                                      ← nível 3
-│   │ └ overpower list ├ Acessos                                             ← nível 4
-│   ├ Alvos            └ Diagnóstico
-│   ├ Referência
-│   └ Contribuir
-├ Módulos Terraform
+Ferramentas              Jornadas                  Procedimentos        Times
+├ Bibliotecas            └ API Owner               └ Work in Progress   └ Work in Progress
+│ └ overpower              ├ Visão Geral
+│   ├ Comandos             │ ├ Resumo das Trilhas
+│   │ └ overpower list     │ └ Links e Referências
+│   ├ Alvos                ├ Conteúdo Teórico
+│   ├ Referência           │ └ Work in Progress
+│   └ Contribuir           └ Conteúdo Prático
+├ Módulos Terraform          └ Work in Progress
 ├ Skills
 └ Servidores MCP
 ```
 
-O marcador de nível aponta a linha do ramo de `Ferramentas`, a única que desce abaixo do teto de 2.
+**A ordem das abas é a do navbar, e `Jornadas` subiu para segunda.** A régua é o que cada aba tem para oferecer: as duas primeiras carregam conteúdo, e as duas últimas são marcador de lugar até o conteúdo real chegar. A mesma lista é o primeiro desempate da busca (`busca.md` §3), então descer as duas abas vazias é decisão de resultado, e não de vitrine.
 
-**Treze separadores no topo, e cinco nós que colapsam — todos no mesmo ramo.** O nível de topo não é categoria: é **separador** — rótulo em negrito, sem página, sem seta e sem ícone, sempre aberto (§3.2). Os únicos nós do site que colapsam de verdade são `overpower`, no nível 2, e as quatro seções dele, no nível 3; é por isso que a seta só ganha desenho ali. `Times` segue a mesma forma de `Procedimentos` e `Jornadas`: separador → folha, e nada abaixo.
+**Cinco separadores no topo, e oito nós que colapsam, em dois ramos.** O nível de topo não é categoria: é **separador** — rótulo em negrito, sem página, sem seta e sem ícone, sempre aberto (§3.2). Os nós que colapsam de verdade são `overpower`, no nível 2, mais as quatro seções dele no nível 3, e as três seções da trilha de `API Owner`, no nível 2. `Procedimentos` e `Times` não têm separador nenhum: cada uma é uma folha no nível 1, e agrupar uma folha só seria moldura sem quadro.
 
 | Aba | Separadores | Páginas pt-BR | EN |
 | --- | ---: | ---: | ---: |
 | `Ferramentas` | 4 | **31** (27 autorais + 4 geradas) | **31** |
-| `Procedimentos` | 5 | **16** (2 folhas de abertura + 14 folhas) | — |
-| `Jornadas` | 2 | **12** (2 folhas de abertura + 10 capítulos) | — |
-| `Times` | 2 | **4** (2 folhas por time) | — |
-| | **13** | **63** | **31** |
+| `Jornadas` | 1 | **4** (3 seções de trilha) | — |
+| `Procedimentos` | 0 | **1** (marcador de lugar) | — |
+| `Times` | 0 | **1** (marcador de lugar) | — |
+| | **5** | **37** | **31** |
 
-**A árvore está fechada: 59 autorais mais 4 geradas, e o EN em 31.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 26, `Ferramentas` em 31 e o site em **63**. O portão 4 cobra os quatro números.
+**A árvore está fechada: 33 autorais mais 4 geradas, e o EN em 31.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 26, `Ferramentas` em 31 e o site em **37**. O portão 4 cobra os quatro números.
+
+> **Correção de contagem — a árvore foi reconstruída para conteúdo real.** Os números anteriores eram 31 · 16 · 12 · 4, com 59 autorais e 63 no site. Três coisas aconteceram no mesmo movimento, e nenhuma foi poda de gordura:
+>
+> - **`Jornadas` deixou de ser narrativa.** Eram duas jornadas, dois índices e dez capítulos ordenados por tempo. `Security Champion` saiu inteira, e `API Owner` passou a ter a forma que o aprendizado corporativo de fato tem: `Visão Geral` (com `Resumo das Trilhas` e `Links e Referências`), `Conteúdo Teórico` e `Conteúdo Prático`. Os subníveis dos dois últimos ficam **indefinidos por enquanto**, e é por isso que cada um abre com uma folha de marcador de lugar em vez de conteúdo inventado.
+> - **`Procedimentos` e `Times` foram esvaziadas.** As 16 e as 4 páginas mockadas saíram, e no lugar ficou uma folha `Work in Progress` por aba. Procedimento de verdade sai do que o ambiente corporativo exige, e documentação de time é escrita por quem está dentro dele; nenhuma das duas nasce de mock.
+> - **A dívida ficou declarada, e não apagada.** O tipo `Índice de jornada` fica **pendente** (§6.4), o gabarito `capítulo` fica sem sujeito (§6.5), nove das doze fixtures trocaram de dona e o caso `diff` fica **pendente** (§7). O portão 4 cobra cada uma dessas linhas pelo nome — é o mesmo mecanismo que declarava a pendência de `Referência de API` antes de o ramo gerado existir, lido na direção contrária.
 
 > **Correção de contagem — #133.** As seções do `overpower` eram **seis** e são **cinco**: `Desenvolvimento` e `Publicação` serviam ao mesmo leitor, quem contribui com a ferramenta, misturadas na sidebar com as que servem quem a instala, e nada ali dizia qual era qual. As duas fundiram em `Contribuir`, e o `changelog` mudou de lado junto, para `Referência`, porque *o que mudou na versão que eu tenho* é pergunta de quem usa. Seis páginas nasceram de recorte no mesmo movimento, e os números foram de 12 · 16 · 26 para 12 · 16 · 32.
 
@@ -116,9 +122,7 @@ O marcador de nível aponta a linha do ramo de `Ferramentas`, a única que desce
 
 > **Correção de aritmética contra a resolução, e ela continua valendo lida ao contrário.** A resolução pedia *"46 páginas autorais em pt-BR e 21 em EN"*, e os dois números não podiam valer juntos: as geradas estão **fora** do primeiro e **dentro** do segundo. Elas chegam no mesmo commit nos dois locales. Com a #117 os números são 50 e 26, e a relação é a mesma — a diferença é exatamente as 28 páginas de `Jornadas` e `Procedimentos`, que não se traduzem.
 
-**A contagem desigual das jornadas é de propósito** — `API Owner` com 6 capítulos e `Security Champion` com 4. Arco de papel não tem comprimento fixo, e duas jornadas com o mesmo número leem como formulário preenchido duas vezes.
-
-**`Ferramentas` é a única aba que passa do nível 1**, e a profundidade existe onde uma ferramenta tem seções: `Bibliotecas › overpower`. As outras três famílias da aba são separador → folha, e as outras três abas inteiras também.
+**Duas abas passam do nível 1, e as duas por terem seção com folhas dentro:** `Ferramentas › Bibliotecas › overpower`, que desce ao 4, e `Jornadas › API Owner`, que desce ao 3. As outras três famílias de `Ferramentas` são separador → folha, e `Procedimentos` e `Times` param no nível 1.
 
 ### 3.1 O teto de profundidade sobe para 4, e ele é confinado a um ramo
 
@@ -128,9 +132,11 @@ O teto anterior era 2, e o argumento forte dele não era medição — era a **r
 
 > **Correção de fato — #97, e ela ficou obsoleta na #114.** A redação intermediária era *ícone em toda folha, nenhum em cabeçalho de grupo*, e ela negava ícone a um grupo de nível 2. A redação em vigor dá ícone a ele: o grupo está abaixo do separador, e o nível dele não entra no teste. As três redações resolvem o nível 3, e só a terceira resolveu também o nível 4 sem que ninguém tivesse de decidir de novo — o que ficou provado quando o `overpower` chegou e a regra não precisou de uma quarta redação.
 
-**A cobrança mudou de forma, e são duas.** Ela era *"o nível 3 é usado ao menos uma vez"*, que é teto com consumidor e sem fronteira: nada impedia um terceiro nível aparecer em `Jornadas` no dia seguinte. O portão 4 passa a cobrar que **nada passe de 4 em lugar nenhum** e que **nada passe de 2 fora de `ferramentas/bibliotecas/overpower`**. Um teto que se declara e não se confere é um teto que sobe sozinho; um teto que se confere sem fronteira é um teto que vaza.
+**A cobrança mudou de forma, e são três.** Ela era *"o nível 3 é usado ao menos uma vez"*, que é teto com consumidor e sem fronteira: nada impedia um terceiro nível aparecer em `Jornadas` no dia seguinte. O portão 4 passa a cobrar que **nada passe de 4 em lugar nenhum**, que **nada passe do teto do próprio ramo**, e que **nada passe de 2 fora dos ramos declarados**. Um teto que se declara e não se confere é um teto que sobe sozinho; um teto que se confere sem fronteira é um teto que vaza.
 
-**O ramo tem 19 folhas no nível 4**, contra as 13 que o [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) §g escreveu antes de o conteúdo existir: 4 páginas geradas em `Comandos`, 3 em `Alvos`, 9 em `Contribuir` e 3 em `Referência`. O ADR contava `Desenvolvimento` e `Publicação`, que fundiram em `Contribuir`, e a fusão trouxe seis páginas de recorte junto. As cinco folhas de abertura das seções não entram na conta porque não ocupam linha própria — elas são o `link` da categoria, no nível 3.
+> **A fronteira deixou de ser um ramo e passou a ser dois, com teto próprio cada um.** `jornadas/api-owner` entrou com teto **3**, e não com o teto do site: a trilha tem seção com folhas dentro, o que gasta um nível, e nada nela pede um quarto. Declarar `3` em vez de deixá-la herdar o `4` é o que impede a jornada de ganhar um nível de graça por estar na mesma lista do `overpower`. E cada ramo declarado precisa **alcançar** o próprio teto: um ramo com teto 3 que usa 2 é a mesma coisa que um teto sem consumidor, um nível acima. As três cobranças são as da linha 15 do §4.2.
+
+**O ramo do `overpower` tem 19 folhas no nível 4**, contra as 13 que o [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md) §g escreveu antes de o conteúdo existir: 4 páginas geradas em `Comandos`, 3 em `Alvos`, 9 em `Contribuir` e 3 em `Referência`. O ADR contava `Desenvolvimento` e `Publicação`, que fundiram em `Contribuir`, e a fusão trouxe seis páginas de recorte junto. As cinco folhas de abertura das seções não entram na conta porque não ocupam linha própria — elas são o `link` da categoria, no nível 3.
 
 > **O teto de 288px não reabre, e a medição é anterior a este trabalho.** A sidebar do Devin e a do `docs.windsurf.com` têm os mesmos 288px, e o windsurf segura cinco níveis dentro deles. A fixture `aninhamento-de-sidebar-maximo` (§7) é a instância que prova o quarto nível aqui: 40px de recuo mais ícone mais o rótulo mais longo dessa profundidade.
 
@@ -146,18 +152,23 @@ O teto anterior era 2, e o argumento forte dele não era medição — era a **r
 | 2+ | categoria | sim, a de abertura | sim, nasce fechada | sim | sim |
 | folha | folha | sim | — | sim | não |
 
-Hoje o único nó de nível 2 é `Bibliotecas › overpower`, que aponta para `Visão geral`; os cinco de nível 3 são as seções dele, e cada uma aponta para a própria folha de abertura.
+Em `Ferramentas` o único nó de nível 2 é `Bibliotecas › overpower`, que aponta para `Visão geral`; as quatro seções dele, no nível 3, apontam cada uma para a própria folha de abertura.
 
-**A folha de abertura tem linha própria.** Quatro páginas de entrada sobreviveram à morte da forma *índice de categoria* (§6.3), e as quatro abrem o grupo delas como primeira folha:
+**As três seções da trilha de `Jornadas` são categoria SEM página de abertura**, e a exceção é declarada: elas colapsam e agrupam, e não têm `link`. O motivo é o do ADR 10 §d lido um nível abaixo — dar `link` à seção esconderia `Resumo das Trilhas` da lista, porque a folha de abertura deixaria de ter linha própria, e é justamente essa linha que a árvore desenha. Categoria colapsável sem `link` sai do `theme-classic` com caret e sem `href`, que é o comportamento que se quer: o rótulo abre e fecha, e quem tem página é a folha.
 
-| Aba | Separador | Folha de abertura |
+| Nível | O que é | Tem página | Colapsa | Ícone | Seta |
+| --- | --- | :---: | :---: | :---: | :---: |
+| 2+ em `Ferramentas` | categoria | sim, a de abertura | sim | sim | sim |
+| 2 em `Jornadas` | seção de trilha | **não** | sim | sim | sim |
+
+**A folha de abertura tem linha própria.** Duas páginas de entrada sobrevivem hoje, e as duas abrem o grupo delas como primeira folha:
+
+| Aba | Grupo | Folha de abertura |
 | --- | --- | --- |
-| `Jornadas` | API Owner | `Índice` |
-| `Jornadas` | Security Champion | `Índice` |
-| `Procedimentos` | Ambiente | `Índice` |
-| `Procedimentos` | Diagnóstico | `Índice de sintomas` |
+| `Jornadas` | Visão Geral | `Resumo das Trilhas` |
+| `Ferramentas` | Bibliotecas › overpower › Alvos | `Índice` |
 
-**A assimetria que sobra é medida, não descuido:** os outros nove separadores não têm folha de abertura nenhuma, e na âncora é assim — `Get Started` abre com a folha `Introducing Devin`, e outros grupos abrem direto no primeiro item.
+**A assimetria que sobra é medida, não descuido:** os outros separadores não têm folha de abertura nenhuma, e na âncora é assim — `Get Started` abre com a folha `Introducing Devin`, e outros grupos abrem direto no primeiro item.
 
 **A rota nua de cada aba resolve por `slug: /`.** A primeira folha de cada instância carrega `slug: /` no front matter, e `/ferramentas`, `/procedimentos`, `/jornadas` e `/times` passam a ser páginas de verdade em vez de 404 ou redirecionamento. O portão 6 confere as quatro contra o host publicado.
 
@@ -165,17 +176,20 @@ Hoje o único nó de nível 2 é `Bibliotecas › overpower`, que aponta para `V
 
 > **Correção de carimbo — #114.** `collapsed: false` estava carimbado **`herdado`**, com a fonte *"a âncora mostra a árvore aberta"*. A medição diz que a âncora mostra o **nível 1** aberto — e ele nem colapsa —, enquanto grupo aninhado nasce **fechado**. `herdado` significa *não toca*; um `herdado` falso congela uma decisão que ninguém tomou. A chave saiu do repositório inteiro: onde não há colapso ela não tem sujeito, e onde há, o default do Docusaurus já é o alvo.
 
-**Duas páginas de abertura carregam tipo de verdade**, e não uma forma: `Diagnóstico › Índice de sintomas` é `Troubleshooting`, e `overpower › Visão geral` é `Quickstart`. `Alvos › Índice` é a terceira, e é `Catálogo`. Forma e tipo são eixos diferentes; quando discordam, quem manda no número do §6.2 é o tipo.
+**Duas páginas de abertura carregam tipo de verdade**, e não uma forma: `overpower › Visão geral` é `Quickstart`, e `Alvos › Índice` é `Catálogo`. Forma e tipo são eixos diferentes; quando discordam, quem manda no número do §6.2 é o tipo.
 
 ### 3.3 O que existe, e o que falta
 
 | Estado | O quê | Dono |
 | --- | --- | --- |
-| escrito | `Jornadas` inteira — 2 folhas de abertura e 10 capítulos | este ticket |
-| escrito | `Procedimentos` inteira — 2 folhas de abertura e 14 folhas | este ticket |
-| escrito | as **11 folhas autorais** de `Ferramentas`, nos dois locales | este ticket |
+| escrito | as **27 folhas autorais** de `Ferramentas`, nos dois locales | este ticket |
 | escrito | as **4 páginas geradas** de `overpower › Comandos` e o fragmento de sidebar | [#82](https://github.com/ThiagoPanini/panlabs-docs/issues/82) |
 | removido | as **7 páginas de índice de categoria**, e a forma com elas | [#114](https://github.com/ThiagoPanini/panlabs-docs/issues/114) |
+| removido | a `Jornadas` narrativa — 2 índices e 10 capítulos — e as 20 páginas mockadas de `Procedimentos` e `Times` | a reconstrução da árvore |
+| **a escrever** | os subníveis de `Conteúdo Teórico` e `Conteúdo Prático`, a partir do processo de aprendizado corporativo | a definir |
+| **a escrever** | `Procedimentos` e `Times`, a partir do que o ambiente corporativo exige | a definir |
+
+**O que está `a escrever` NÃO é pendência silenciosa.** Cada linha tem uma folha de marcador de lugar no artefato, com gabarito próprio (§6.3), e o portão 4 conta as folhas. Uma aba que ficasse vazia de verdade sumiria da contagem sem que ninguém notasse; uma aba com marcador de lugar aparece toda vez que o portão roda.
 
 **O ramo gerado não é escrito à mão.** Ele sai de um contrato de superfície de comando — uma aplicação e três comandos —, e o gerador emite também o fragmento de sidebar que `sidebars-ferramentas.js` importa; escrevê-lo à mão seria exatamente a segunda fonte de verdade que o gerador existe para impedir. Ver [ADR 9](../adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md), que supera o [ADR 8](../adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md), que superou o [ADR 5](../adr/0005-referencia-da-api-gerada-de-contrato.md).
 
@@ -185,29 +199,29 @@ Hoje o único nó de nível 2 é `Bibliotecas › overpower`, que aponta para `V
 
 **Medido no artefato.** Uma categoria declarada com lista de itens vazia é **normalizada para link** pelo Docusaurus: o `<li>` conserva o `className`, mas o rótulo deixa de ser envolvido pelo bloco colapsável. O caret some, e some com razão.
 
-O CSS de sidebar cobre as duas formas — a folha, e o nó embrulhado por `.menu__list-item-collapsible`. **Nenhum dos treze separadores está vazio hoje**, então a regra é **cobertura sem fixture**, escrita para não ser removida por parecer morta.
+O CSS de sidebar cobre as duas formas — a folha, e o nó embrulhado por `.menu__list-item-collapsible`. **Nenhum dos cinco separadores nem nenhuma das seções está vazia hoje**, então a regra é **cobertura sem fixture**, escrita para não ser removida por parecer morta.
 
 ---
 
 ## 4. A regra de heading, que é decisão de layout disfarçada de conteúdo
 
-> **Toda página carrega no mínimo três `##`.** Dois gabaritos abrem teto próprio, e **nenhum dos dois é exceção**: `Receita` fica em no máximo um, e o índice de jornada em exatamente dois — que são os dois headings literais obrigatórios dele.
+> **Toda página carrega no mínimo três `##`.** Três gabaritos abrem teto próprio, e **nenhum dos três é exceção**: `Receita` fica em no máximo um, o índice de jornada em exatamente dois — que são os dois headings literais obrigatórios dele — e o marcador de lugar em zero.
 
 Não é estilo. É a regra que produz as configurações de TOC que provam a medida constante da coluna.
 
 **Correção de premissa, medida em 3.10.2 e mantida:** a classe de 75% é aplicada sempre que `hide_table_of_contents` não está no front matter, **independentemente de haver heading**. O que depende de heading é a coluna do TOC. A tabela completa está em [`chrome.md`](chrome.md) §2.1.
 
-### 4.1 A exceção é uma só, e é nomeada
+### 4.1 A exceção acabou, e virou gabarito
 
-> **`Procedimentos › Ambiente › Índice` carrega ZERO `##`.** É a única página abaixo do próprio piso sem que um gabarito a autorize, e ela está lá de propósito.
+> **A lista de exceção da regra de heading está VAZIA, e ficou mais forte por isso.**
 
-**Ela trocou de dona nesta spec.** A fixture morava em `Comece aqui › Ambientes`, que é página do produto anterior e morreu com a árvore. Foi para o índice de `Ambiente`, e o custo em página é **zero** — ela nunca foi o cartão.
+**A exceção era `Procedimentos › Ambiente › Índice`**, com zero `##`, e a página saiu com o esvaziamento da aba. Ela era a única que rompia a própria forma sem um gabarito que a autorizasse, e o que ficou no lugar dela **tem gabarito**: o marcador de lugar (§6.3) fica em zero `##` por orçamento, do mesmo jeito que `Receita` fica em no máximo um.
 
-**O que ela prova mudou, e a redação anterior ficou para trás.** Dizia ser *"o `.col` travado no mesmo pixel com ou sem TOC, confirmado ao vivo contra o próprio Devin, que reserva a largura da coluna de TOC mesmo vazia"*. A #96 **reverteu o mesmo-pixel** — [`chrome.md`](chrome.md) §1 registra que a caixa invisível passou a segurar dois pixels, um por configuração —, então a fixture deixou de provar aquilo no instante em que a decisão caiu. Ela continua sendo fixture, e por um motivo mais estreito: é uma das **3** páginas do acervo sem um `##`, e portanto a única forma de exercitar a perna *sem heading* — TOC fora do DOM e teto de 840 a partir de 1408. A medição contra o Devin não é apagada: ela sustentava a decisão que a #96 reverteu, e vive no registro dessa reversão.
+**O que ela provava continua provado, e por seis páginas em vez de uma.** O que a fixture entregava era a perna *sem heading* da tabela de [`chrome.md`](chrome.md) §2.1 — TOC fora do DOM e teto de 840 a partir de 1408 —, e todo marcador de lugar a exercita. A fixture `pagina-muito-curta` trocou de dona para `Procedimentos › Work in Progress` (§7), que é a mais curta das seis.
 
-**Exceção anônima é buraco; exceção nomeada é decisão.** É por isso que ela está escrita aqui, no `sidebars-procedimentos.js` e no portão — e é por isso que a segunda reprova.
+> **Correção de redação — a #96.** A redação anterior dizia que a fixture provava *"o `.col` travado no mesmo pixel com ou sem TOC, confirmado ao vivo contra o próprio Devin"*. A #96 reverteu o mesmo-pixel, e a caixa invisível passou a segurar dois pixels, um por configuração. A medição contra o Devin não é apagada: ela sustentava a decisão que a #96 reverteu, e vive no registro dessa reversão.
 
-**Teto que sai de gabarito não é exceção.** `Receita` em no máximo um `##` e o índice de jornada em exatamente dois são **orçamento do tipo**, e o portão os trata como tal. Exceção é a página que rompe a própria forma, e ela é uma.
+**Teto que sai de gabarito não é exceção.** `Receita` em no máximo um `##`, o índice de jornada em exatamente dois e o marcador de lugar em zero são **orçamento do tipo**, e o portão os trata como tal. Exceção seria a página que rompe a própria forma, e hoje não há nenhuma.
 
 ### 4.2 O portão 4 — a régua de máquina das contagens
 
@@ -217,21 +231,21 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 
 | # | O que confere |
 | ---: | --- |
-| 1 | o volume por aba e por categoria — 31 · 16 · 12 · 4, e **63** no total |
+| 1 | o volume por aba e por categoria — 31 · 4 · 1 · 1, e **37** no total |
 | 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
-| 3 | a regra de heading, com a exceção nomeada acima como **única** |
+| 3 | a regra de heading, com a lista de exceção **vazia** e o teto zero do marcador de lugar |
 | 4 | **`<Steps>` ausente em toda `Jornadas`** |
-| 5 | **`<CardGroup>` ausente** nos dois índices de jornada, e os headings literais `## Como foi` e `## O que não funcionou` presentes |
+| 5 | **`<CardGroup>` ausente** em todo índice de jornada, e os headings literais `## Como foi` e `## O que não funcionou` presentes — **hoje em zero, e o zero é cobrado** |
 | 6 | **prosa entre o `# h1` e o primeiro `##`** em todo capítulo |
-| 7 | a lista ordenada de `## Como foi` com **exatamente N itens para N capítulos** |
-| 8 | **exatamente uma palavra de estado** na abertura de cada índice de jornada |
-| 9 | o marcador de tradução em **31** páginas, e em nenhuma tradução |
+| 7 | a lista ordenada de `## Como foi` com **exatamente N itens para N capítulos** — sem sujeito hoje |
+| 8 | **exatamente uma palavra de estado** na abertura de cada índice de jornada — sem sujeito hoje |
+| 9 | o marcador de tradução em **6** páginas, e em nenhuma tradução |
 | 10 | **`description` presente em 100%** das páginas |
-| 11 | **as doze fixtures existem**, por caminho nomeado |
-| 12 | **os onze tipos têm instância** — e nenhum fica pendente |
-| 13 | **a cobertura de locale** — 32 páginas em EN, e só `Ferramentas` |
+| 11 | **as doze fixtures e os quatro casos existem**, por caminho nomeado — e **exatamente uma** linha marcada `pendente` |
+| 12 | **dez dos onze tipos têm instância** — e o décimo primeiro, `Índice de jornada`, é cobrado **pendente pelo nome** |
+| 13 | **a cobertura de locale** — 31 páginas em EN, e só `Ferramentas` |
 | 14 | **zero travessão** em `conteudo/`, `i18n/` e `contratos/` — a mensagem aponta arquivo e linha, e a exceção de citação abaixo é a única |
-| 15 | **o teto de profundidade** — 4, alcançado, e confinado a um ramo |
+| 15 | **o teto de profundidade** — 4, alcançado, e confinado aos dois ramos declarados, com teto próprio cada um |
 | 16 | **a `Verificação` verifica** — página typed `guia` cuja seção existe e não tem bloco cercado, **nos dois locales** |
 | 17 | **o vocabulário do ramo está definido** — termo de `scripts/termos-overpower.txt` sem entrada em `conceitos.md`, **só em pt-BR** |
 
@@ -241,7 +255,7 @@ As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>
 
 **As cobranças 16 e 17 nasceram na [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133), e as duas cobram uma promessa, não uma contagem.** A 16 mede o que uma seção chamada `Verificação` de fato contém: nas cinco páginas typed `guia` do ramo `overpower` ela não trazia comando nenhum, e sim justificativa de desenho. A 17 mede a declaração de abertura de `conceitos.md`, que diz ser onde a definição mora: `achado` e `enxerto` eram usados em três páginas como se conhecidos, e definidos em zero.
 
-**A 16 não cobra a AUSÊNCIA da seção, e o limite é deliberado.** Exigi-la alcançaria `procedimentos/esteiras/verificar-a-assinatura-hmac.md`, que é de outra aba e estava fora do escopo do ticket. O buraco fica nomeado no comentário do portão, para o ticket que o fechar.
+**A 16 não cobra a AUSÊNCIA da seção, e o limite é deliberado.** Exigi-la alcançaria, na árvore de então, uma folha de `Procedimentos` que estava fora do escopo do ticket. Aquela página saiu com a aba, e o limite fica — reescrevê-lo agora seria alargar uma régua sem medir o que ela passa a alcançar. O buraco continua nomeado no comentário do portão, para o ticket que o fechar.
 
 **A 16 varre os dois locales; a 17, só o pt-BR.** A assimetria tem razão: o heading da 16 é fixo por locale (`## Verificação` e `## Checking it`) e não há o que traduzir na régua, enquanto a lista de termos da 17 carrega palavras em português e cobrir o EN exigiria uma segunda lista para uma página que é tradução da primeira.
 
@@ -264,9 +278,11 @@ As contagens ignoram bloco cercado, senão um `##` de comentário ou um `<Steps>
 
 **A linha 13 estava faltando nesta tabela, e a contagem dizia doze.** A cobertura de locale é cobrada pelo portão desde que ele foi reescrito com a árvore do `panlabs`, e a tabela nunca a listou. A #115 acertou os dois lados de uma vez, ao acrescentar a 14.
 
+**Cinco cobranças passaram a contar ZERO, e as cinco ficam.** As linhas 5 a 8 perderam sujeito quando a `Jornadas` narrativa saiu, e a 12 passou a cobrar uma pendência em vez de uma instância. Apagá-las levaria a lista de dezessete para treze sem que ninguém tivesse decidido isso, que é exatamente o modo de falhar contra o qual este portão existe. Cada uma cobra o zero **por escrito**: escrever um índice de jornada sem tirar o tipo de `TIPO_PENDENTE` reprova, e é assim que a dívida volta a aparecer no dia em que alguém a pagar.
+
 **A coluna de palavras não é cobrada, e a de estrutura é.** Palavra é proxy ruim, e cobrar por máquina um número que as páginas de código não têm por que bater só produziria prosa de enchimento.
 
-**`onBrokenAnchors: 'throw'` continua na config**, e a consequência de contrato vale repetida: **toda âncora citada por um link é declarada com `{#id}` no próprio heading**, em vez de depender de como o slugger trata acento. A tabela de sintomas de `Diagnóstico › Índice de sintomas` é quem exercita isso.
+**`onBrokenAnchors: 'throw'` continua na config**, e a consequência de contrato vale repetida: **toda âncora citada por um link é declarada com `{#id}` no próprio heading**, em vez de depender de como o slugger trata acento. A página que mais a exercitava era a tabela de sintomas de `Diagnóstico`, e ela saiu com a aba; a régua continua valendo para a próxima âncora que alguém escrever.
 
 ---
 
@@ -304,22 +320,24 @@ São onze, todos **convenção de conteúdo e zero layout**: sem front matter de
 | Tipo | Onde vive | Gabarito |
 | --- | --- | --- |
 | **Quickstart** | `overpower › Visão geral` | intro curta → `<Steps>` com código em cada passo → `<CardGroup>` de próximos passos |
-| **Conceitual** | Infraestrutura, Diagnóstico, `overpower` | definição → por que existe → como aparece no artefato → armadilhas em `callout` |
-| **Guia** | folhas de `Procedimentos` e `Ferramentas` | pré-requisitos → `<Steps>` → verificação → variações |
+| **Conceitual** | `overpower` — conceitos, alvos e contribuir | definição → por que existe → como aparece no artefato → armadilhas em `callout` |
+| **Guia** | folhas de `Ferramentas` | pré-requisitos → `<Steps>` → verificação → variações |
 | **SDK** | `overpower › Instalação` · `Servidor de catálogo MCP` | instalação em `<CodeGroup>` por gerenciador → configuração → uso → tratamento de erro |
 | **Referência** | `overpower › Comandos › Índice` · `overpower › Referência › Índice` | o que é → **a tabela ou a lista que se consulta** → as notas de uso |
 | **Referência de API** | `overpower › Comandos`, ramo gerado | **gerada** do contrato de superfície de comando — o gabarito é a saída do gerador |
 | **Receita** | `Skills` | o problema em uma frase → código completo copiável → no máximo 1 `##` |
-| **Catálogo** | `Ambiente`, `Acessos`, `overpower › Alvos` | intro curta → como ler a tabela → **a tabela larga** → notas |
-| **Troubleshooting** | `Diagnóstico`, `overpower › Referência` | tabela de sintomas → uma seção por sintoma: causa, comando que confirma |
+| **Catálogo** | `overpower › Alvos` e `overpower › Contribuir` | intro curta → como ler a tabela → **a tabela larga** → notas |
+| **Troubleshooting** | `overpower › Referência` | tabela de sintomas → uma seção por sintoma: causa, comando que confirma |
 | **Changelog** | `overpower › Referência › Changelog` | cronologia reversa, uma entrada por versão publicada |
-| **Índice de jornada** | os 2 índices de `Jornadas` | ver §6.4 — o décimo tipo |
+| **Índice de jornada** | **pendente** — zero instância hoje | ver §6.4 — o décimo tipo |
 
 **O décimo primeiro tipo nasceu na [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133), e ele fecha um buraco medido.** `comandos/indice.md` mede 83,3% Referência e `referencia/indice.md` mede 72,3%, e as duas estavam arquivadas como `Conceitual`. Não era acidente: a taxonomia não tinha slot para **referência autoral**, então toda página assim era empurrada para `Conceitual`, e passava a ser cobrada por um gabarito que pede *definição → por que existe → armadilhas* onde o corpo é uma tabela que se consulta. O tipo novo separa a tabela que se lê do argumento que se segue, e o que a máquina cobra dele é a tabela, porque é ela que faz a diferença.
 
 **`Referência` não é `Referência de API`, e a distância entre as duas é quem escreve.** A segunda é **gerada** e o gabarito dela é a saída do gerador; a primeira é autoral, e o gabarito é o desta linha. Um nome não abrevia o outro.
 
-**`Instalação` é SDK e não Guia, e a atribuição é de propósito.** O gabarito de SDK pede *instalação em `<CodeGroup>` por gerenciador*, e `uvx` contra `uv tool` contra `pipx` é exatamente isso. Sem ela o tipo cairia de três instâncias para uma, porque `Biblioteca A` e `B` eram duas delas. `Alvos › Índice` carrega tipo de verdade pelo mesmo mecanismo que `Diagnóstico › Índice de sintomas` já abriu (§6.3): a página de abertura de uma seção pode ser um tipo, e aqui ela é `Catálogo`, com os 77 runtimes.
+**`Instalação` é SDK e não Guia, e a atribuição é de propósito.** O gabarito de SDK pede *instalação em `<CodeGroup>` por gerenciador*, e `uvx` contra `uv tool` contra `pipx` é exatamente isso. Sem ela o tipo cairia de três instâncias para uma, porque `Biblioteca A` e `B` eram duas delas. `Alvos › Índice` carrega tipo de verdade pelo mesmo mecanismo (§6.3): a página de abertura de uma seção pode ser um tipo, e aqui ela é `Catálogo`, com os 77 runtimes.
+
+**Um dos onze está PENDENTE, e o nome fica na tabela.** `Índice de jornada` tinha duas instâncias, e as duas saíram com a `Jornadas` narrativa. O tipo **não sai da lista**: uma lista de onze que vira lista de dez sem que ninguém decida é o defeito que esta seção existe para não ter, e o precedente é o próprio `Referência de API`, que passou issues inteiras declarado pendente antes de o gerador chegar. A cobrança 12 do portão 4 cobra o zero pelo nome, e reprova no dia em que alguém escrever uma instância sem tirar o tipo da lista de pendentes.
 
 ### 6.2 O orçamento é de estrutura, e a palavra é indicativa
 
@@ -366,22 +384,26 @@ Toda cerca ```` ```text ```` do acervo é **saída literal do `overpower`**, gra
 
 **Quatro sobreviveram como folha, e nenhuma delas era forma.** Eram conteúdo com dona, e matá-las derrubaria quatro invariantes de uma vez:
 
-| Página | Por que sobrevive |
+| Página | Por que sobrevivia |
 | --- | --- |
-| `Ambiente › Índice` | fixture `pagina-muito-curta` **e** a única exceção nomeada da regra de heading (§4.1) |
-| `Diagnóstico › Índice de sintomas` | carrega `Troubleshooting` de verdade |
-| `API Owner › Índice` | é o décimo tipo de página |
-| `Security Champion › Índice` | é o décimo tipo **e** a fixture `prosa-pura` |
+| `Ambiente › Índice` | fixture `pagina-muito-curta` **e** a única exceção nomeada da regra de heading |
+| `Diagnóstico › Índice de sintomas` | carregava `Troubleshooting` de verdade |
+| `API Owner › Índice` | era o décimo tipo de página |
+| `Security Champion › Índice` | era o décimo tipo **e** a fixture `prosa-pura` |
 
-Custo de matar as quatro: um tipo de página, duas das doze fixtures e a exceção de heading — quatro invariantes derrubadas para poupar quatro arquivos.
+Custo de matar as quatro naquele momento: um tipo de página, duas das doze fixtures e a exceção de heading — quatro invariantes derrubadas para poupar quatro arquivos. **As quatro saíram depois**, e não por poda: saíram com as abas inteiras, na reconstrução da árvore (§3), e as quatro invariantes foram **realocadas por nome** em vez de sumirem — as fixtures trocaram de dona (§7), a exceção de heading virou gabarito (§4.1) e o tipo ficou declarado pendente (§6.4).
 
-**`fixture-curta` é o que resta da forma, e continua não sendo tipo.** É o gabarito de `Ambiente › Índice`: ~120 palavras e zero `##`. Ele descreve *como aquela página se escreve*, não uma classe de conteúdo — a mesma distinção de sempre, gabarito sem tipo.
+**`fixture-curta` morreu com a página, e `placeholder` ocupa o lugar dela.** O gabarito novo também não é tipo: **zero `##`**, zero componente do catálogo, o `<Untranslated />` que toda página fora de `Ferramentas` carrega, e prosa que diz o que vai entrar ali e o que ainda falta decidir. São seis, uma por seção sem conteúdo. Ele descreve *como aquela página se escreve*, não uma classe de conteúdo — a mesma distinção de sempre, gabarito sem tipo.
 
-**Duas folhas de abertura carregam tipo de verdade.** `Diagnóstico › Índice de sintomas` é a tabela de sintomas do gabarito de `Troubleshooting`, e é contado lá. Forma e tipo são eixos diferentes; quando discordam, quem manda no número é o tipo. O mesmo vale para `overpower › Visão geral`, que é página de abertura de categoria **e** `Quickstart`, e para `overpower › Alvos › Índice`, que é abertura de seção **e** `Catálogo`.
+**Marcador de lugar é decisão, e não rascunho esquecido.** Uma seção que existe na árvore e não tem página some da sidebar; uma seção com marcador de lugar aparece toda vez que o portão 4 conta, e a folha diz por escrito o que está faltando. É o mesmo mecanismo da pendência declarada, no nível da página.
 
-**`capítulo` também é forma, e não um décimo primeiro tipo.** Ele tem gabarito próprio — e um gabarito apertado, porque é a folha mais numerosa do acervo —, mas o que ele descreve é *como uma folha de `Jornadas` se escreve*, não uma classe de conteúdo que exista noutra aba. A distinção é a mesma do índice de categoria: gabarito sem tipo.
+**Duas folhas de abertura carregam tipo de verdade.** `overpower › Visão geral` é página de abertura de categoria **e** `Quickstart`, e `overpower › Alvos › Índice` é abertura de seção **e** `Catálogo`. Forma e tipo são eixos diferentes; quando discordam, quem manda no número é o tipo.
 
-### 6.4 O décimo tipo — o índice de jornada
+**`capítulo` também é forma, e não um décimo primeiro tipo.** Ele tem gabarito próprio — e um gabarito apertado, porque era a folha mais numerosa do acervo —, mas o que ele descreve é *como uma folha narrativa de `Jornadas` se escreve*, não uma classe de conteúdo que exista noutra aba. **Ele está sem sujeito hoje** (§6.5). A distinção é a mesma do índice de categoria: gabarito sem tipo.
+
+### 6.4 O décimo tipo — o índice de jornada, hoje pendente
+
+> **Zero instância hoje, e o zero é cobrado por nome.** A `Jornadas` narrativa saiu na reconstrução da árvore (§3), e com ela os dois índices que eram as únicas instâncias deste tipo. O gabarito abaixo **fica escrito**, e a cobrança 12 do portão 4 cobra que ele siga sem instância enquanto a pendência durar. O dia em que alguém escrever um índice de jornada é o dia em que o portão reprova pedindo que o tipo saia de `TIPO_PENDENTE` — que é como uma dívida declarada volta a aparecer.
 
 ```
 # <Nome da jornada>
@@ -405,9 +427,11 @@ Custo de matar as quatro: um tipo de página, duas das doze fixtures e a exceç�
 
 **Estado é conteúdo, e o vocabulário fecha em dois:** `Em curso` · `Encerrada`, **uma palavra** na abertura, cobrada pelo portão. `Abandonada` foi escrita e removida: com duas jornadas ela não teria instância, e **vocabulário sem consumidor é o defeito que este projeto mata por nome**.
 
-É a única página do site sem nenhum componente do catálogo além do `<Untranslated />`.
+Era a única página do site sem nenhum componente do catálogo além do `<Untranslated />`. **Hoje o marcador de lugar (§6.3) também não tem nenhum**, e foi para ele que a fixture `prosa-pura` mudou de dona (§7).
 
 ### 6.5 O capítulo, e a fronteira entre duas abas
+
+> **Sem sujeito hoje, e o gabarito fica.** A folha narrativa saiu com a `Jornadas` narrativa, e nenhuma linha do manifesto de tipo do portão 4 carrega `capitulo`. A cobrança 6 conta zero e diz que conta zero. **A fronteira abaixo continua valendo**, e vale mais agora do que antes: ela é a régua que decide onde o conteúdo real vai morar quando ele chegar.
 
 **Gabarito:** parágrafo de contexto **antes do primeiro heading**, espinha de **3 a 6 `##`**, 2 blocos, 1 `:::`. **`<Steps>` proibido.**
 
@@ -427,34 +451,32 @@ Se um capítulo pode carregar `<Steps>`, o leitor abre a página e não consegue
 
 **Eram treze, foram a onze, e são doze.** Nenhuma morreu pelo cartão, e a décima segunda chegou com o quarto nível de sidebar.
 
+**Nove das doze trocaram de dona de uma vez**, e nenhuma por gosto: a dona de cada uma morava em `Procedimentos` ou na `Jornadas` narrativa, e as duas saíram na reconstrução da árvore (§3). **A herdeira de cada caso foi medida no que sobrou**, e o número está na tabela ao lado do nome — reatribuir por semelhança de assunto, sem medir, produziria uma lista que parece completa e não prova nada.
+
 | Caso | Página dona | O que prova |
 | --- | --- | --- |
-| Tabela larga | `Acessos › Permissões por papel` — 40 × 5 | scroll horizontal dentro da coluna de prosa |
-| Tabela como página inteira | `Ambiente › Comparativo dev/staging/prod` | o tipo `Catálogo` com prosa quase nula |
-| Bloco de código longo | `Esteiras › Verificar a assinatura HMAC` | **altura** — bloco de 70 linhas. Só isso: a página não tem `<CodeGroup>` nem cerca titulada (ver nota) |
-| **Página muito curta** | **`Ambiente › Índice`** — ~120 palavras, zero `##` | **a perna sem heading**: nenhuma coluna de TOC no DOM, e o teto de 840 mordendo a partir de 1408 (ver nota) |
-| Prosa pura | `Jornadas › Security Champion › Índice` | a medida de prosa sozinha, sem nada para escondê-la |
-| Item de sidebar mais largo | `Security Champion › A varredura que reprovava tudo` — 30 caracteres | wrap ou truncamento no item, com ícone à esquerda |
+| Tabela larga | `overpower › Referência › Solução de problemas` — 5 × 22, a mais larga do acervo | scroll horizontal dentro da coluna de prosa |
+| Tabela como página inteira | `overpower › Contribuir › Mapa de módulos` — tabela de 20 linhas sobre prosa quase nula | o tipo `Catálogo` com prosa quase nula |
+| Bloco de código longo | `overpower › Referência › Índice` — cerca de 91 linhas, a mais alta do acervo | **altura**, e só isso (ver nota) |
+| **Página muito curta** | **`Procedimentos › Work in Progress`** — 74 palavras, zero `##` | **a perna sem heading**: nenhuma coluna de TOC no DOM, e o teto de 840 mordendo a partir de 1408 |
+| Prosa pura | `Times › Work in Progress` — 72 palavras, nenhum componente do catálogo | a medida de prosa sozinha, sem nada para escondê-la |
+| Item de sidebar mais largo | `Servidores MCP › Servidor de catálogo MCP` — 24 caracteres no nível 2 | wrap ou truncamento no item, com ícone à esquerda e recuo mínimo |
 | Prosa mínima, código máximo | `Skills › Scaffold de esteira` | o escape de medida com um bloco só, muito longo |
-| Fallback silencioso de locale | `/en/jornadas/api-owner/a-politica-de-versao` | `<Untranslated />` e texto pt-BR sob rota EN |
-| Aninhamento profundo | `Infraestrutura › O output de um módulo` — quatro níveis | `<ResponseField>` sobre `<Expandable>` |
-| Página muito longa | `API Owner › O contrato que não existia` — ~1800 palavras | TOC longo, `sticky` e scroll-spy |
+| Fallback silencioso de locale | `/en/jornadas/api-owner/visao-geral/links-e-referencias` | `<Untranslated />` e texto pt-BR sob rota EN |
+| Aninhamento profundo | `overpower › Alvos › O bundle federado` — quatro níveis | `<ResponseField>` sobre `<Expandable>` |
+| Página muito longa | `overpower › Alvos › Índice` — ~1740 palavras, a mais longa do acervo | TOC longo, `sticky` e scroll-spy |
 | Sem painel, mesma moldura | `overpower › Comandos › Índice` | a folha autoral que abre a categoria das quatro geradas: **sem** `api_exemplos`, e medindo o mesmo que as **com** — era a fixture da perna que delegava, e virou a prova de que não há duas pernas |
-| **Aninhamento de sidebar máximo** | **`overpower › Referência › Solução de problemas`** — nível 4 | os 40px de recuo mais o ícone mais 20 caracteres de rótulo, dentro dos 288px |
+| **Aninhamento de sidebar máximo** | **`overpower › Alvos › Instalar de um repositório`** — nível 4, 26 caracteres | os 40px de recuo mais o ícone mais o rótulo mais longo do site, dentro dos 288px |
 
-> **Duas linhas desta tabela prometiam mais do que a dona entrega, e as duas foram medidas.**
->
-> **`Página muito curta`** dizia provar *"a coluna no mesmo pixel sem coluna de TOC"*. Esse alvo **não existe mais**: a #96 reverteu o mesmo-pixel, e [`chrome.md`](chrome.md) §1 já registra que a caixa invisível hoje segura **dois** pixels, um por configuração. A prova que a página de fato entrega é outra, e continua valendo a fixture: ela é uma das **3** páginas do acervo sem um `##`, e é por isso a única forma de exercitar a perna *sem heading* da tabela de §1 — TOC ausente do DOM e teto de 840 mordendo a partir de 1408.
->
-> **`Bloco de código longo`** prometia *"altura, `<CodeGroup>` e o título nu"*, e a dona não tem os dois últimos: `verificar-a-assinatura-hmac.md` tem **zero** `<CodeGroup>` e nenhuma cerca titulada — as duas cercas dela são ```` ```python ```` e ```` ```yaml ````, nuas. O que ela prova é a **altura**, com um bloco de 70 linhas, e isso ela prova sozinha. `<CodeGroup>` e cerca titulada têm dona em outro lugar: `Bibliotecas › overpower › Instalação` e `Servidores MCP › Servidor de catálogo MCP`. Fixture que promete três coisas e entrega uma não é fixture fraca — é **afirmação não conferida**, que é o defeito que esta seção existe para não ter.
+> **`Bloco de código longo` prometia mais do que a dona entregava, e a promessa foi cortada antes da mudança de dona.** Ela dizia provar *"altura, `<CodeGroup>` e o título nu"*, e a dona de então tinha só o primeiro. O que a fixture prova é a **altura**, e a herdeira a prova melhor: 91 linhas contra as 70 anteriores. `<CodeGroup>` e cerca titulada têm dona em outro lugar: `Bibliotecas › overpower › Instalação` e `Servidores MCP › Servidor de catálogo MCP`. Fixture que promete três coisas e entrega uma não é fixture fraca — é **afirmação não conferida**, que é o defeito que esta seção existe para não ter.
 
-**Duas fixtures morreram, e nenhuma pelo cartão.** `Sidebar longa` — nenhuma aba nova chega perto das 33 linhas da árvore anterior, e este artefato **não inventa página para forçar o número**. `Navbar apertado` — a faixa de tabs saiu da navbar e levou o aperto junto.
+> **`Aninhamento profundo` foi a única troca OBRIGATÓRIA, e não por ser fixture.** `<Expandable>` tinha exatamente uma página no acervo inteiro, e ela morava em `Infraestrutura`. Sem dona nova, a sonda `expandable.raio` de `scripts/paridade.mjs` viraria `sem-medida` permanente — e `sem-medida` reprova o `--verificar`, porque alvo publicado sem elemento que o exercite é alvo que nunca reprova. A herdeira aninha os mesmos quatro níveis pelo mesmo motivo: um campo do manifesto que tem campos dentro. **As outras oito trocas custaram zero linha de conteúdo.**
 
-**A décima segunda nasceu de um teto que subiu, que é a única coisa que faz uma fixture nascer.** `Aninhamento de sidebar máximo` existe porque o teto de profundidade foi de 3 para 4 (§3.1), e um nível novo é um recuo novo: 40px, mais o ícone da seção, mais o rótulo, dentro dos 288px da coluna. `Solução de problemas` é a dona porque tem o rótulo mais longo dessa profundidade, 20 caracteres.
+> **`Item de sidebar mais largo` e `Aninhamento de sidebar máximo` deixaram de ser *a mais larga* e *a mais funda*.** Na árvore anterior o rótulo mais largo do site estava no nível 2 e o mais largo do nível 4 era outro, então as duas linhas se separavam sozinhas. Agora o rótulo mais largo do site — `Instalar de um repositório`, 26 caracteres — **está** no nível 4. As duas continuam provando coisas diferentes, e a redação passa a dizer qual: uma é o pior caso de **largura de rótulo com recuo mínimo** (nível 2, onde sobram cerca de 216px), e a outra é o pior caso de **largura com recuo máximo** (nível 4, onde sobram cerca de 192px). Sem esta nota, a segunda linha herdaria a afirmação *"o rótulo mais longo dessa profundidade"* já falsa: a dona anterior media 20 caracteres, e havia dois rótulos maiores no mesmo nível.
 
-> **`Item de sidebar mais largo` NÃO trocou de dona, e a conta é por que não.** Ela continua sendo `A varredura que reprovava tudo`, com 30 caracteres no nível 2, onde sobram cerca de 216px; no nível 4 sobram cerca de 192px para os 20 caracteres do rótulo novo. As duas provam coisas diferentes — largura de rótulo contra recuo de profundidade — e é por isso que são duas linhas e não uma disputa.
+**Duas fixtures morreram antes desta reatribuição, e nenhuma pelo cartão.** `Sidebar longa` — nenhuma aba nova chega perto das 33 linhas da árvore anterior, e este artefato **não inventa página para forçar o número**. `Navbar apertado` — a faixa de tabs saiu da navbar e levou o aperto junto.
 
-> **`Aninhamento profundo` também não se mexeu, e o nome engana.** Ela é `<ResponseField>` sobre `<Expandable>`, aninhamento de componente **dentro da página**, e continua em `Infraestrutura › O output de um módulo`. A fixture nova é aninhamento **de árvore**, na coluna da esquerda. Nomes parecidos, eixos diferentes.
+**A décima segunda nasceu de um teto que subiu, que é a única coisa que faz uma fixture nascer.** `Aninhamento de sidebar máximo` existe porque o teto de profundidade foi de 3 para 4 (§3.1), e um nível novo é um recuo novo: 40px, mais o ícone da seção, mais o rótulo, dentro dos 288px da coluna.
 
 ### 7.1 Os quatro casos que o domínio novo cobre, e que não são fixture
 
@@ -462,12 +484,14 @@ O domínio anterior cobria quatro buracos de layout; o acervo cobre os mesmos e 
 
 | Caso | Página dona |
 | --- | --- |
-| Saída literal de terminal | `API Owner › O schema que mudou sem aviso` |
-| Várias linguagens na mesma página | `Diagnóstico › O mesmo erro em três formas` |
-| Diff | `Diagnóstico › O diff que resolveu` |
-| Comprimento muito desigual entre irmãos | o par `O contrato que não existia` (~1800) e `O que o contrato não cobre` (~180) |
+| Saída literal de terminal | `overpower › Referência › Códigos de saída` — cercas ```` ```text ```` |
+| Várias linguagens na mesma página | `Servidores MCP › Servidor de catálogo MCP` — `bash`, `json` e `python` |
+| Diff | **pendente** — nenhuma página do acervo carrega uma cerca ```` ```diff ```` |
+| Comprimento muito desigual entre irmãos | o par `Alvos › Índice` (~1740) e `Alvos › O bundle federado` (~240) |
 
 O último compartilha dona com a fixture de página muito longa, e é por isso que ele é **caso** e não fixture: o lado longo do par prova *página muito longa* sozinho — TOC longo, `sticky`, scroll-spy —, e o que o par prova junto é a desigualdade. Contá-lo como fixture faria a lista fechar em treze, e são doze; o portão 4 cobra os dois números separados, doze e quatro.
+
+**`Diff` ficou PENDENTE, e a linha fica marcada em vez de sair.** A dona dele era `Diagnóstico › O diff que resolveu`, e nada no que sobrou carrega a cerca. Escrever uma página só para reencher a linha seria inventar conteúdo para satisfazer uma contagem — o mesmo defeito que matou `sidebar longa`, lido ao contrário. O portão 4 cobra que exista **exatamente uma** linha marcada `pendente` nas duas listas somadas: sem esse número, marcar mais uma passaria calado, e a lista viraria formulário.
 
 ### 7.2 A regra de desempate, com UMA exceção
 
@@ -475,9 +499,11 @@ O último compartilha dona com a fixture de página muito longa, e é por isso q
 
 O orçamento existe para produzir páginas plausíveis; a fixture existe para provar uma medida.
 
-**A exceção é uma só, e é a mesma da regra de heading:** `Ambiente › Índice`, que fica em zero `##` contra o piso de três.
+**A lista de exceção está VAZIA**, e ela esvaziou pelo mesmo movimento do §4.1: a única exceção era `Ambiente › Índice`, que ficava em zero `##` contra o piso de três, e a página saiu com a aba. As três fixtures que moram em folha de marcador de lugar — `pagina-muito-curta`, `prosa-pura` e, por tabela, a perna sem heading — **não são exceção**: o gabarito `placeholder` já fixa zero `##` e zero componente, então fixture e orçamento concordam em vez de disputar.
 
-**Eram duas.** A segunda era `Conceitos › Conciliação`, que ficava abaixo do orçamento de `Conceitual` para exercitar prosa pura. Ela **não tem sucessora**, e não por esquecimento: a fixture de prosa pura foi para o **índice de jornada**, que é um tipo que já nasce sem nenhum componente do catálogo. O conflito deixou de existir em vez de ser transferido.
+**Eram duas.** A segunda era `Conceitos › Conciliação`, que ficava abaixo do orçamento de `Conceitual` para exercitar prosa pura. Ela **não tem sucessora**, e não por esquecimento: a fixture de prosa pura foi para o índice de jornada e, com a pendência dele, para o marcador de lugar — os dois já nascem sem nenhum componente do catálogo. O conflito deixou de existir em vez de ser transferido.
+
+**A regra fica, e vale mais com a lista vazia.** Uma régua de desempate sem caso ativo é a que se lê antes de criar o próximo conflito, e é ela que decide o que acontece quando o conteúdo real chegar.
 
 ---
 
@@ -489,10 +515,12 @@ A fronteira é **audiência do artefato**, e não infra pública contra corporat
 
 | Traduzido para EN | Só pt-BR |
 | --- | --- |
-| `Ferramentas` — **31**: 27 autorais e 4 geradas | `Jornadas` 12 · `Procedimentos` 16 · `Times` 4 |
-| **31** | **32** |
+| `Ferramentas` — **31**: 27 autorais e 4 geradas | `Jornadas` 4 · `Procedimentos` 1 · `Times` 1 |
+| **31** | **6** |
 
-**32 páginas carregam o marcador de fallback.** `Times` entrou com as 4 dele; `Jornadas` e `Procedimentos` continuam nas mesmas 12 e 16 de sempre — o número anterior, 28, não se mexeu com o `overpower`, porque o port trocou o conteúdo de `Ferramentas`, que é a aba traduzida. *(Correção de aritmética anterior: a contagem dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes, e depois 31; a #114 tirou três índices de `Procedimentos` do acervo.)*
+**6 páginas carregam o marcador de fallback**, e o número caiu de 32 porque as três abas não traduzidas foram esvaziadas ou reconstruídas (§3). O lado traduzido **não se mexeu**: `Ferramentas` fecha nas mesmas 31, porque nada do que saiu era dela. *(Correções de aritmética anteriores: a contagem já disse 36, somando os cinco índices de `Procedimentos` duas vezes, e depois 31; a #114 tirou três índices de `Procedimentos` do acervo, e `Times` entrou com 4.)*
+
+**A fronteira não mudou, e a regra continua sendo audiência do artefato.** Uma aba que hoje é marcador de lugar não vira candidata a tradução por estar vazia: quando o conteúdo real de `Procedimentos` e `Times` chegar, ele continua sendo da casa, e continua sem leitor de inglês.
 
 **O EN do `overpower` saiu barato, e vale registrar por quê.** A doc de origem já é inglesa, e o registro do site é declarativo em terceira pessoa — que é o registro em que ela já estava. O port foi reescrita nos dois locales, não cópia: **6 das 19 páginas de origem não passavam no piso de três `##`**, e **19 de 19 falhavam a estrutura mínima do gabarito do tipo**, porque a origem é Markdown puro, sem `<Steps>`, sem `<CodeGroup>`, sem `<CardGroup>` e sem `:::`. O que veio de graça foi o idioma, não a forma.
 
@@ -641,7 +669,7 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | Quatro tabs, quatro instâncias | origem própria | `routeBasePath` e versionamento são por instância |
 | `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 31 folhas da instância usam o `@theme/DocItem` do upstream |
 | Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) §árvore |
-| **A quarta aba, e a ordem do navbar invertida** | **origem própria** | `Times` simula documentar time de dentro de uma empresa, que é o cenário do acervo, e a ordem passa a ser `Ferramentas` · `Procedimentos` · `Jornadas` · `Times`, por frequência de consulta. A árvore vai de 2 · 5 · 4 para 4 · 5 · 2 · 2 |
+| **A quarta aba, e a ordem do navbar invertida** | **origem própria** | `Times` simula documentar time de dentro de uma empresa, e a ordem passou a ser `Ferramentas` · `Procedimentos` · `Jornadas` · `Times`, por frequência de consulta — **superada pela reconstrução da árvore**, que sobe `Jornadas` para segunda |
 | **`Times` é separador → folha, e `Desenvolvimento` é uma folha só** | **origem própria (consequência)** | o §3.1 confina o teto de 4 ao ramo `Ferramentas › Bibliotecas › overpower`; fora dele o teto é 2, e `Siglas`, `Repositórios` e `Ofertas` viram três `##` de uma página, não três páginas |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |
@@ -680,6 +708,16 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | Zero versionamento | origem própria | seis das sete referências não têm seletor |
 | Os dois nomes de componente de versão, verbatim | **origem própria (implementação)** | ausência descrita e não nomeada não é greppável |
 | O portão 4 e o `onBrokenAnchors: 'throw'` | **origem própria (implementação)** | os critérios deste documento são contagens, e a tabela de sintomas traz âncoras intra-página |
+| **A árvore reconstruída para conteúdo real** | **origem própria** | `Jornadas` deixa de ser narrativa e vira trilha de aprendizado; `Procedimentos` e `Times` ficam num marcador de lugar cada até o conteúdo do ambiente corporativo chegar. A árvore vai de 4 · 5 · 2 · 2 para 4 · 1 · 0 · 0, e o site de 63 para 37 |
+| **`Jornadas` é a segunda aba do navbar** | **origem própria** | a ordem lê o que cada aba tem para oferecer, e a mesma lista é o primeiro desempate da busca; descer as duas abas vazias é decisão de resultado |
+| **A trilha é seção sem página de abertura** | **origem própria (consequência)** | dar `link` à seção tiraria a linha própria de `Resumo das Trilhas`, que é a linha que a árvore pedida desenha |
+| **O marcador de lugar é gabarito, e não rascunho** | **origem própria (consequência)** | seção sem página some da sidebar; seção com marcador de lugar é contada pelo portão toda vez que ele roda |
+| **`Índice de jornada` fica pendente, e o tipo não sai da lista** | **origem própria (consequência)** | precedente do próprio `Referência de API`, que passou issues declarado pendente antes de o gerador existir |
+| **A exceção de heading acaba, e vira gabarito** | **origem própria (correção)** | a página que a carregava saiu com a aba, e o que ficou no lugar tem orçamento; lista de exceção vazia é régua mais forte que lista com uma linha |
+| **Nove das doze fixtures trocam de dona** | **origem própria (medição)** | a herdeira de cada caso foi medida no que sobrou: 5 × 22 na tabela mais larga, cerca de 91 linhas na mais alta, ~1740 palavras na página mais longa, 26 caracteres no rótulo mais largo |
+| **`Aninhamento profundo` troca de dona por obrigação de máquina** | **origem própria (implementação)** | `<Expandable>` tinha uma página só no acervo, e `sem-medida` reprova o `--verificar` do comparador de paridade |
+| **`Diff` fica pendente** | **origem própria** | nada no que sobrou carrega a cerca, e inventar página para reencher a linha é o defeito que matou `sidebar longa` |
+| **O teto de profundidade é confinado a dois ramos, com teto próprio cada um** | **origem própria (consequência)** | a trilha gasta um nível com a seção e não pede um quarto; herdar o 4 do `overpower` daria um nível de graça |
 | O manifesto de tipo mora no portão, não no conteúdo | **origem própria (implementação)** | o §6 proíbe `type:` no front matter; um manifesto de build não toca página nem CSS |
 | A coluna de estrutura obriga, a de palavras é indicativa | **origem própria** | *palavra é proxy ruim*, e este documento leva a frase a sério |
 | `Referência de API` cobrada pelo avesso no portão | **origem própria (implementação)** | a pendência fechou; o que resta cobrar é que as seis existam e que nenhuma entre no manifesto de tipo |

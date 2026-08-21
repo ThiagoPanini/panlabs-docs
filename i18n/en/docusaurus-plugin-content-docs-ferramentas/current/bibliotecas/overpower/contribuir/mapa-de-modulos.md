@@ -26,7 +26,7 @@ for, and what it does not answer for belongs to another one.
 | `written.py` | the only file overpower writes about its own content |
 | `inspection.py` | what is on the disk of the target, and what is wrong with it |
 | `screens.py` | what the product draws to the terminal |
-| `recipes.py` | TOML in, a `Recipe` out |
+| `recipes.py` | a subtree of the manifest in, a `Recipe` out |
 | `rendering.py` | `(Recipe, document) → the grafts to make`, a pure function over values |
 | `grafting.py` | surgical insertion into a document that is not overpower's |
 | `runtimes.py` | the runtime path table |

@@ -29,10 +29,15 @@
 # Uso: scripts/portao-6-rotas.sh <url-base> [caminho-da-rota]
 #      scripts/portao-6-rotas.sh https://thiagopanini.github.io/panlabs-docs
 #
-# **A rota default é a fixture de página curta**, e a escolha não é decorativa:
-# ela é a única página do acervo sem coluna de TOC, então o `.md` dela é o menor
-# do site e o teste das três rotas roda contra o caso mais magro que existe. Se
-# ele passa ali, o host não está tratando o `.md` por tamanho nem por conteúdo.
+# **A rota default é uma folha de marcador de lugar**, e a escolha não é
+# decorativa: ela não tem um `##` sequer, então o `.md` dela é dos menores do
+# site e o teste das três rotas roda contra o caso mais magro que existe. Se ele
+# passa ali, o host não está tratando o `.md` por tamanho nem por conteúdo.
+#
+# Ela era a fixture de página curta de `Procedimentos › Ambiente › Índice`, e a
+# aba foi esvaziada. A folha que sobrou de `Procedimentos` carrega `slug: /`, e
+# a regra abaixo a proíbe como argumento; a herdeira é a folha equivalente da
+# trilha de `Jornadas`, que é folha comum.
 #
 # Ela é também a rota que mais envelhece: um portão de cadência de IMPLANTAÇÃO
 # não roda em commit, então uma rota morta aqui só aparece no dia do deploy.
@@ -50,8 +55,8 @@
 # script — o que o torna reusável, e o que espalha a lista. A lista fica aqui,
 # que é onde quem mexe na árvore vem parar:
 #
-#   pt-BR   /procedimentos/ambiente/preparar-a-maquina-local  ← o default abaixo
-#   en      /en/ferramentas/bibliotecas/overpower/conceitos    ← argumento em deploy.yml
+#   pt-BR   /jornadas/api-owner/conteudo-teorico/work-in-progress  ← o default abaixo
+#   en      /en/ferramentas/bibliotecas/overpower/conceitos         ← argumento em deploy.yml
 #
 # A rota do EN não é escolha de gosto: `Ferramentas` é a única aba traduzida
 # (`informacao.md` §8), e apontar para outra mediria a rota de FALLBACK em
@@ -86,7 +91,7 @@ set -uo pipefail
 
 BASE="${1:?uso: portao-6-rotas.sh <url-base> [caminho-da-rota]}"
 BASE="${BASE%/}"
-ROTA="${2:-/procedimentos/ambiente/preparar-a-maquina-local}"
+ROTA="${2:-/jornadas/api-owner/conteudo-teorico/work-in-progress}"
 # `sim` quando quem chamou escolheu a rota — é a execução do EN, em `deploy.yml`.
 # O bloco das rotas nuas roda só na outra, e a distinção é essa e não o valor da rota.
 if [ $# -ge 2 ]; then ROTA_VEIO_POR_ARGUMENTO=sim; else ROTA_VEIO_POR_ARGUMENTO=nao; fi

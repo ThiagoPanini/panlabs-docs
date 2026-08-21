@@ -59,7 +59,7 @@ Escreve sob o diretório do usuário em vez do repositório atual. Aceita a form
 </ParamField>
 
 <ParamField name="--force" type="flag">
-Sobrescreve um destino que já existe no escopo de máquina, sem perguntar. No escopo de repositório não tem efeito, porque lá o `git status` já revela e desfaz. Aceita a forma curta `-f`.
+Sobrescreve um destino que já existe no escopo de máquina, sem perguntar. No escopo de repositório não tem efeito, porque lá o `git status` já revela e desfaz. Aceita a forma curta `-f`. Ele tem um segundo efeito no escopo de máquina: um slot cujo valor já está escrito no documento volta a ser perguntado, porque valor gravado é o que ocupa o destino.
 </ParamField>
 
 <ParamField name="--yes" type="flag">
@@ -67,5 +67,5 @@ Pula a confirmação antes da escrita. Aceita a forma curta `-y`. Fora de termin
 </ParamField>
 
 <ParamField name="--dry-run" type="flag">
-Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio. Um destino global já ocupado é recusado, e não perguntado, e com `--from` a raiz remota é buscada mesmo assim, porque sem ela não há plano a imprimir.
+Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio. Um destino global já ocupado é recusado, e não perguntado, e com `--from` a raiz remota é buscada mesmo assim, porque sem ela não há plano a imprimir. Ele nunca pergunta um segredo: anuncia quantos slots a linha real pediria, e para aí.
 </ParamField>

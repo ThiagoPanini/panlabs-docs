@@ -39,11 +39,11 @@ A fronteira é `setGlobalData`, e ela é estreita de propósito: o plugin não s
 | `x` | índice da aba |
 | `f` | presente só quando a página é fallback pt-BR sob o locale EN |
 
-As chaves são curtas porque cada uma se repete cinquenta e quatro vezes por locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
+As chaves são curtas porque cada uma se repete uma vez por página em cada locale, e o teto do §2.3 é serializado. `f` é **omitida** quando falsa em vez de escrita como `0`: uma chave ausente não custa bytes.
 
 ### 2.2 A fonte é o MDX
 
-Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 4 páginas geradas de `overpower › Comandos` entrarem pelo mesmo caminho das 56 autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição. Valeu de novo no port do `overpower`: o ramo trocou de contrato, de dona e de tamanho, e nem o plugin nem esta seção precisaram de um caso a mais.
+Não o HTML renderizado — o que dispensa `cheerio` e é o que fez **as 4 páginas geradas de `overpower › Comandos` entrarem pelo mesmo caminho das autorais, sem caso especial**. Uma página gerada é um arquivo em disco como qualquer outra, e foi por isso que o índice não precisou saber que o ramo gerado chegou — ele chegou, e a única linha que mudou foi a da medição. Valeu de novo no port do `overpower`: o ramo trocou de contrato, de dona e de tamanho, e nem o plugin nem esta seção precisaram de um caso a mais.
 
 O que sai antes de indexar, e por quê:
 
@@ -64,20 +64,22 @@ O motivo é mecânico: o índice viaja no bundle principal de **toda página do 
 
 | Locale | Registros | Bytes | Folga sob os 64 KB |
 | --- | ---: | ---: | ---: |
-| `pt-BR` | 59 | 30 824 | 53% |
-| `en` | 59 | 31 167 | 52% |
+| `pt-BR` | 37 | 18 822 | 71% |
+| `en` | 37 | 18 604 | 72% |
 
-Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 31 páginas traduzidas ficam mais curtas em inglês, e as 28 de fallback entram em português com a marca `f`. **A inversão da [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133) se desfez**, e o EN voltou a ser o maior, por 343 bytes. O que a desfez foi a entrada das telas de terminal: elas são a MESMA saída literal nos dois locales, byte a byte, então elas não têm tradução mais curta a oferecer e o prefixo `/en/` volta a decidir sozinho.
+Os dois locales têm a mesma contagem de registros e quase o mesmo peso: sob `/en/` as 31 páginas traduzidas ficam mais curtas em inglês, e as 6 de fallback entram em português com a marca `f`. **O pt-BR voltou a ser o maior, por 218 bytes**, e a inversão acompanhou a reconstrução da árvore: as páginas que saíram eram todas de fallback, então o EN perdeu texto português e o prefixo `/en/` deixou de compensar sozinho.
 
 > **A medição do EN só vale no build de TODOS os locales, e a armadilha custa 3 bytes por página.** Medir com `docusaurus build --locale en` sozinho encurta o índice, e o erro é sistemático: sem o pt-BR no mesmo passe, o EN vira o único locale, o `baseUrl` perde o segmento `/en/`, e **cada permalink encurta três caracteres**. Com 52 páginas o desconto era 156 bytes; com 59, são 177. O índice medido assim é de um site que não se publica.
 >
 > O pt-BR não denuncia a armadilha, e é isso que a torna cara: ele é o locale default, nunca carrega prefixo, e dá **o mesmo número pelos dois métodos**. Quem confere um locale só e vê o número bater conclui que o método está validado. **Meça sempre com `npm run build`**, e leia o `globalData.json` que ele deixa — ele é do último locale do passe, que é o EN.
 
-> **A folga caiu de 64% para 51% e voltou para 53%, e foi conteúdo nas três vezes.** O port do `overpower` trocou 12 páginas por 21 e o acervo foi de 45 para 54, com o índice pt-BR subindo 5 616 bytes; a [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133) acrescentou seis páginas e o levou de 54 para 60, subindo outros 3 102, **517 bytes por página acrescentada**. Depois disso o índice CAIU 1 277 bytes, e a conta tem dois termos: a página do atalho `op` saiu inteira, e as telas de terminal que entraram no lugar não pesam nada. **Cerca de código não entra no índice** — `extrair()` alterna um estado em cada `` ``` `` e descarta tudo que está dentro —, então as cinco telas acrescentaram só a prosa em volta delas e um `##` novo. A série inteira é 35 612 bytes para as 73 páginas do Trilho, 24 894 para 46 páginas, 27 616 com o primeiro ramo gerado dentro (52), 23 383 depois que os sete índices de categoria saíram (45), 28 999 com o `overpower` (54), 32 101 com as seis da #133 (60), e 30 824 agora (59).
+> **A folga foi de 64% para 51%, voltou para 53%, e saltou para 71%. Foi conteúdo nas quatro vezes.** O port do `overpower` trocou 12 páginas por 21 e o acervo foi de 45 para 54, com o índice pt-BR subindo 5 616 bytes; a [#133](https://github.com/ThiagoPanini/panlabs-docs/issues/133) acrescentou seis páginas e o levou de 54 para 60, subindo outros 3 102, **517 bytes por página acrescentada**. Depois disso o índice CAIU 1 277 bytes, e a conta tem dois termos: a página do atalho `op` saiu inteira, e as telas de terminal que entraram no lugar não pesam nada. **Cerca de código não entra no índice** — `extrair()` alterna um estado em cada `` ``` `` e descarta tudo que está dentro —, então as cinco telas acrescentaram só a prosa em volta delas e um `##` novo. A série inteira é 35 612 bytes para as 73 páginas do Trilho, 24 894 para 46 páginas, 27 616 com o primeiro ramo gerado dentro (52), 23 383 depois que os sete índices de categoria saíram (45), 28 999 com o `overpower` (54), 32 101 com as seis da #133 (60), 30 824 depois da poda do atalho `op` (59), e **18 822 agora (37)**.
+>
+> **O salto de 30 824 para 18 822 é a reconstrução da árvore** ([`informacao.md`](informacao.md) §3): 26 páginas saíram e 6 marcadores de lugar entraram. **12 002 bytes para 22 páginas líquidas é 546 por página**, na mesma ordem de grandeza dos 517 medidos na direção contrária — o índice cobra e devolve o mesmo preço, o que é o sinal de que nada no plugin depende do tamanho do acervo.
 >
 > **A régua para a próxima vez é o custo por página gerada: 499 bytes**, remedidos com o ramo do `overpower` no ar — eram 459 com o de `Biblioteca C`, e a diferença é a prosa mais longa das opções de CLI, não o formato. A folga atual comporta cerca de 73 páginas geradas a mais; comporta menos se elas forem maiores. Quem acrescentar um segundo ramo gerado mede antes, não depois — o teto não avisa, ele reprova o build.
 
-**A varredura também confere a aritmética do locale de graça:** dos 54 registros do índice EN, **28 carregam a marca de fallback**, que é exatamente a contagem que [`informacao.md`](informacao.md) §8 declara. Duas superfícies independentes chegando ao mesmo número é a forma mais barata de conferência que este projeto tem.
+**A varredura também confere a aritmética do locale de graça:** dos 37 registros do índice EN, **6 carregam a marca de fallback**, que é exatamente a contagem que [`informacao.md`](informacao.md) §8 declara. Duas superfícies independentes chegando ao mesmo número é a forma mais barata de conferência que este projeto tem.
 
 ### 2.4 O que fica de fora
 
