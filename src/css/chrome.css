@@ -993,8 +993,17 @@ html.docs-doc-page .subtitulo {
    Infima (`--ifm-menu-link-sublist-icon`, um `data:` URI de 16px com
    `fill: rgba(0,0,0,0.5)`), pintado no modo escuro por um `filter: invert(100%)
    sepia(94%) saturate(17%)…` de sete etapas. Máscara com `currentColor` troca as
-   sete etapas por uma declaração e faz a seta seguir a cor do rótulo — inclusive
-   o acento do item ativo — de graça.
+   sete etapas por uma declaração.
+
+   CORREÇÃO, medida ao tornar a seta mais sutil: a redação anterior seguia
+   daqui dizendo que a máscara fazia a seta seguir a cor do rótulo "de graça",
+   inclusive o acento do item ativo. Medido: falso nos dois estados. O
+   `<button class="menu__caret">` é IRMÃO do `<a class="menu__link">` dentro do
+   wrapper, não filho — `color` não herda entre irmãos, e o `currentColor` da
+   máscara nunca puxou do rótulo. Sem declaração própria, ele herdava o texto de
+   corpo ambiente (`--pd-text-body`), que nos dois modos resolve MAIS
+   contrastado que o rótulo apagado (`--pd-text-muted`) — o oposto de discreto,
+   e o oposto do que `docs.devin.ai` faz.
 
    A GEOMETRIA É 1:1 COM O ARQUIVO, e vale escrever porque parece coincidência e
    não é. O alvo medido na âncora é *traço 2, 8px de largura*; o
@@ -1023,6 +1032,18 @@ html.docs-doc-page .subtitulo {
 .theme-doc-sidebar-menu .menu__caret {
   padding-block: 0;
   padding-inline: var(--pd-space-2) 0;
+  color: var(--pd-text-faint);
+}
+
+/* A CONVERGÊNCIA — quando o ramo está aberto, o `.menu__link` irmão vira
+   `--ifm-menu-color-active` (o acento), e a seta precisa da mesma cor para
+   não sobrar cinza ao lado de um rótulo colorido. Não há herança direta entre
+   irmãos — `:has()` é o que já resolve esse mesmo problema para o fundo da
+   pílula, duas regras acima, e resolve aqui do mesmo jeito. */
+.theme-doc-sidebar-menu
+  .menu__list-item-collapsible:has(> .menu__link--active)
+  > .menu__caret {
+  color: var(--ifm-menu-color-active);
 }
 
 .theme-doc-sidebar-menu .menu__caret::before {
