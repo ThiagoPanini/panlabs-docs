@@ -104,6 +104,62 @@ prints every destination and who reads it, mirrors the real exit code, and
 writes nothing, not even an empty directory. What it prints is what step 3
 writes.
 
+Step 2 prints the plan, and nothing else happens:
+
+```text
+  _____   _____ _ __ _ __   _____      _____ _ __
+ / _ \ \ / / _ \ '__| '_ \ / _ \ \ /\ / / _ \ '__|
+| (_) \ V /  __/ |  | |_) | (_) \ V  V /  __/ |
+ \___/ \_/ \___|_|  | .__/ \___/ \_/\_/ \___|_|
+                    |_|
+
+  installs curated agent equipment   v0.27.3
+╭─ plan ───────────────────────────────────────────────────╮
+│                                                          │
+│  panlabs-python-standards  1 skill                       │
+│                                                          │
+│    skill  panlabs-python-standards                       │
+│                                                          │
+│    .claude/skills/  ← claude-code               8 files  │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+dry run nothing was written
+```
+
+Each destination line says where the equipment goes and which runtime reads that
+path. Step 3 repeats that summary, writes, and closes by saying what landed:
+
+```text
+  _____   _____ _ __ _ __   _____      _____ _ __
+ / _ \ \ / / _ \ '__| '_ \ / _ \ \ /\ / / _ \ '__|
+| (_) \ V /  __/ |  | |_) | (_) \ V  V /  __/ |
+ \___/ \_/ \___|_|  | .__/ \___/ \_/\_/ \___|_|
+                    |_|
+
+  installs curated agent equipment   v0.27.3
+┌  overpower install
+│
+◇  summary ────────────────────────────────────────────────╮
+│                                                          │
+│  panlabs-python-standards  1 skill                       │
+│                                                          │
+│    .claude/skills/  ← claude-code               8 files  │
+│                                                          │
+├──────────────────────────────────────────────────────────╯
+│
+◇  installed ──────────────────────────────────────────────╮
+│                                                          │
+│  ✓ panlabs-python-standards  1 skill                     │
+│    .claude/skills/                                       │
+│                                                          │
+│  1 write · 8 files                                       │
+│                                                          │
+├──────────────────────────────────────────────────────────╯
+│
+└  Done!  Review what landed before use; it runs with full  
+   agent permission.                                        
+```
+
 Then the check:
 
 ```bash
@@ -155,8 +211,8 @@ catalog that exists*.
 
 <CardGroup>
   <Card title="Install" icon="download" href="/ferramentas/bibliotecas/overpower/instalacao">
-    Getting overpower onto a machine, including the one shortcut it deliberately
-    does not create for you.
+    Getting overpower onto a machine, and the flag that proves it arrived
+    whole.
   </Card>
   <Card title="Concepts" icon="book-open" href="/ferramentas/bibliotecas/overpower/conceitos">
     The vocabulary the rest of this site leans on without re-explaining.

@@ -5,6 +5,8 @@ description: The catalog as it stands today, with one AI Framework, one bundle, 
 
 # Reference
 
+{/* cita-saida-de-ferramenta */}
+
 This is what ships inside the package right now, in this release. The catalog is
 embedded, not fetched, so this list describes exactly the version you have
 installed. A newer release may carry more, and this page describes today's.
@@ -43,6 +45,109 @@ shaped service, it settles the recurring questions of that shape.
 ```bash
 uvx overpower@latest list --mcp cloudflare
 ```
+
+## The screen `list` draws
+
+Bare `list` prints the whole catalog, one panel per block, with each item's size
+and file count and the line that installs it:
+
+```text
+  _____   _____ _ __ _ __   _____      _____ _ __
+ / _ \ \ / / _ \ '__| '_ \ / _ \ \ /\ / / _ \ '__|
+| (_) \ V /  __/ |  | |_) | (_) \ V  V /  __/ |
+ \___/ \_/ \___|_|  | .__/ \___/ \_/\_/ \___|_|
+                    |_|
+
+  installs curated agent equipment   v0.27.3
+╭─ AI Frameworks  installs whole ──────────────────────────╮
+│                                                          │
+│  matt-pocock                       199.4 KiB · 74 files  │
+│    Matt Pocock's agent skills for real engineering:      │
+│    grilling, spec and ticket flows, TDD, code review,    │
+│    domain modelling and more.                            │
+│                                                          │
+│      overpower install --ai-framework matt-pocock        │
+│      overpower list --ai-framework matt-pocock           │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+
+╭─ Pool skills  installs alone ────────────────────────────╮
+│                                                          │
+│  panlabs-python-standards           229.0 KiB · 8 files  │
+│    Padrão de referência para backend Python — contratos  │
+│    e ports, composição e forma do código, topologia e    │
+│    kernel, modelo de erro, doutrina de testes e a régua  │
+│    de máquina. Use ao criar um serviço Python do zero,   │
+│    ao revisar um existente, ou ao decidir qualquer uma   │
+│    destas perguntas — que forma tem um use-case, onde o  │
+│    arquivo mora, o que o erro devolve, o que é fake e o  │
+│    que é real, que config trava a regra. Cada posição    │
+│    carrega a condição em que vale, a garantia que        │
+│    compra, o dissenso vencido e o gatilho que a reabre.  │
+│                                                          │
+│      overpower install --skill panlabs-python-standards  │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+
+╭─ Bundles  lists pool artifacts only ─────────────────────╮
+│                                                          │
+│  api-python                         229.0 KiB · 8 files  │
+│    Equipment for working on a Python API.                │
+│                                                          │
+│      overpower install --bundle api-python               │
+│      overpower list --bundle api-python                  │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+
+╭─ MCP servers  grafts into the runtime's config ──────────╮
+│                                                          │
+│  cloudflare                                        http  │
+│    Cloudflare's remote MCP server, over streamable       │
+│    HTTP. It carries no secret in the file: the           │
+│    connection authorises in the browser the first time   │
+│    an agent uses it, so nothing here has to be filled    │
+│    in before the server works.                           │
+│                                                          │
+│      overpower install --mcp cloudflare                  │
+│      overpower list --mcp cloudflare                     │
+│                                                          │
+│  coolify                                          stdio  │
+│    Coolify's API server, run as a local process. It      │
+│    deploys and inspects the applications, databases and  │
+│    servers of a Coolify panel — the address of the       │
+│    panel is configuration and is written into the file,  │
+│    while the access token is a secret and is only ever   │
+│    referenced.                                           │
+│                                                          │
+│      overpower install --mcp coolify                     │
+│      overpower list --mcp coolify                        │
+│                                                          │
+│  github                                            http  │
+│    GitHub's remote MCP server, reached over HTTP. It     │
+│    reads and writes issues, pull requests and workflows  │
+│    in the repositories your token can see, and it is     │
+│    authorised with a personal access token sent on       │
+│    every request.                                        │
+│                                                          │
+│      overpower install --mcp github                      │
+│      overpower list --mcp github                         │
+│                                                          │
+│  hostinger-vps                                    stdio  │
+│    Hostinger's API server, run as a local process. It    │
+│    manages VPS instances, DNS records and domains        │
+│    through the Hostinger API, and every call it makes    │
+│    is authorised with your API token — so the token has  │
+│    to be in the environment the runtime starts in.       │
+│                                                          │
+│      overpower install --mcp hostinger-vps               │
+│      overpower list --mcp hostinger-vps                  │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
+
+Each item's description comes from the artifact itself and arrives whole: it is
+not cut at the first sentence, because a catalog of cut descriptions is a catalog
+that has to be looked up somewhere else.
 
 ## The live version of this page
 

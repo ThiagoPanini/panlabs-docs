@@ -103,6 +103,62 @@ O passo 2 é o que faz o 3 ser sem surpresa: o `--dry-run` resolve tudo, imprime
 todo destino e quem o lê, espelha o código de saída real e não escreve nada, nem
 um diretório vazio. O que ele imprimir é o que o passo 3 escreve.
 
+O passo 2 imprime o plano, e nada mais acontece:
+
+```text
+  _____   _____ _ __ _ __   _____      _____ _ __
+ / _ \ \ / / _ \ '__| '_ \ / _ \ \ /\ / / _ \ '__|
+| (_) \ V /  __/ |  | |_) | (_) \ V  V /  __/ |
+ \___/ \_/ \___|_|  | .__/ \___/ \_/\_/ \___|_|
+                    |_|
+
+  installs curated agent equipment   v0.27.3
+╭─ plan ───────────────────────────────────────────────────╮
+│                                                          │
+│  panlabs-python-standards  1 skill                       │
+│                                                          │
+│    skill  panlabs-python-standards                       │
+│                                                          │
+│    .claude/skills/  ← claude-code               8 files  │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+dry run nothing was written
+```
+
+Cada linha de destino diz para onde o equipamento vai e qual runtime lê aquele
+caminho. O passo 3 repete esse resumo, escreve, e fecha dizendo o que aterrissou:
+
+```text
+  _____   _____ _ __ _ __   _____      _____ _ __
+ / _ \ \ / / _ \ '__| '_ \ / _ \ \ /\ / / _ \ '__|
+| (_) \ V /  __/ |  | |_) | (_) \ V  V /  __/ |
+ \___/ \_/ \___|_|  | .__/ \___/ \_/\_/ \___|_|
+                    |_|
+
+  installs curated agent equipment   v0.27.3
+┌  overpower install
+│
+◇  summary ────────────────────────────────────────────────╮
+│                                                          │
+│  panlabs-python-standards  1 skill                       │
+│                                                          │
+│    .claude/skills/  ← claude-code               8 files  │
+│                                                          │
+├──────────────────────────────────────────────────────────╯
+│
+◇  installed ──────────────────────────────────────────────╮
+│                                                          │
+│  ✓ panlabs-python-standards  1 skill                     │
+│    .claude/skills/                                       │
+│                                                          │
+│  1 write · 8 files                                       │
+│                                                          │
+├──────────────────────────────────────────────────────────╯
+│
+└  Done!  Review what landed before use; it runs with full  
+   agent permission.                                        
+```
+
 Depois, a conferência:
 
 ```bash
@@ -154,8 +210,8 @@ grafia que mantém *o catálogo que você recebe* igual a *o catálogo que exist
 
 <CardGroup>
   <Card title="Instalação" icon="download" href="/ferramentas/bibliotecas/overpower/instalacao">
-    Como pôr o `overpower` numa máquina, e o atalho que ele deliberadamente não
-    cria para você.
+    Como pôr o `overpower` numa máquina, e a flag que prova que ele chegou
+    inteiro.
   </Card>
   <Card title="Conceitos" icon="book-open" href="/ferramentas/bibliotecas/overpower/conceitos">
     O vocabulário em que o resto deste site se apoia sem reexplicar.

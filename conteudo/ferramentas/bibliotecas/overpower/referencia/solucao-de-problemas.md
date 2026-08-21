@@ -126,6 +126,41 @@ São cinco, e a lista é fechada.
 | aprovação pendente | um servidor foi escrito num enxerto que o Claude Code controla, e ele não o aprovou | aprove o servidor no runtime, fora do `overpower` |
 | clone ausente | um enxerto ainda nomeia um clone `[source]` que não está mais na máquina | reinstale o servidor, ou tire o enxerto |
 
+Na tela, cada achado sai com o caminho envolvido logo abaixo do nome, e a saída
+é `3`:
+
+```text
+  _____   _____ _ __ _ __   _____      _____ _ __
+ / _ \ \ / / _ \ '__| '_ \ / _ \ \ /\ / / _ \ '__|
+| (_) \ V /  __/ |  | |_) | (_) \ V  V /  __/ |
+ \___/ \_/ \___|_|  | .__/ \___/ \_/\_/ \___|_|
+                    |_|
+
+  installs curated agent equipment   v0.27.3
+╭─ terminal  how this screen is set up ────────────────────╮
+│                                                          │
+│  tty       yes                                           │
+│  colour    truecolor                                     │
+│  width     60 columns                                    │
+│  NO_COLOR  unset                                         │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+
+╭─ integrity  what is installed ───────────────────────────╮
+│                                                          │
+│  2 artifacts · 3 places                                  │
+│                                                          │
+│  dangling link                                           │
+│    .agents/skills/panlabs-python-standards-old/  ←       │
+│    ../../.claude/skills/panlabs-python-standards-old     │
+│                                                          │
+│  copies of `panlabs-python-standards` differ             │
+│    .agents/skills/panlabs-python-standards/              │
+│    .claude/skills/panlabs-python-standards/              │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
+
 ## Os dois avisos do `doctor`
 
 Um **aviso** é observação sobre o ambiente, não sobre o que aterrissou. Ele

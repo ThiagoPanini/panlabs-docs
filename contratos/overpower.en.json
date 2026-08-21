@@ -281,7 +281,7 @@
         {
           "nome": "--dry-run",
           "tipo": "flag",
-          "descricao": "Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory.",
+          "descricao": "Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory. An occupied global destination is refused rather than asked, and with `--from` the remote root is fetched anyway, because without it there is no plan to print.",
           "aridade": {
             "multiplo": false
           }

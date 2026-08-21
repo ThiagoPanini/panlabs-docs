@@ -67,5 +67,5 @@ Pula a confirmação antes da escrita. Aceita a forma curta `-y`. Fora de termin
 </ParamField>
 
 <ParamField name="--dry-run" type="flag">
-Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio.
+Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio. Um destino global já ocupado é recusado, e não perguntado, e com `--from` a raiz remota é buscada mesmo assim, porque sem ela não há plano a imprimir.
 </ParamField>

@@ -22,6 +22,19 @@ sai gerada na [página da raiz](../comandos/overpower), a partir do contrato.
 uvx overpower@latest doctor; echo "saiu $?"
 ```
 
+:::note
+**O `--version` é a exceção da tabela, e ela é de ordem de leitura.** Ele responde
+e sai antes de o resto da linha ser lido, então `overpower --version install --nope`
+sai `0`, igual a um `--version` sozinho. O `2` que a linha malformada ganharia
+sozinha nunca chega a disparar, porque o parse do subcomando nunca acontece. O `0`
+vale pelo que o `--version` fez, e não pelo que veio depois dele.
+
+```bash
+overpower --version install --nope; echo "saiu $?"
+overpower install --nope; echo "saiu $?"
+```
+:::
+
 ## O eixo entre `2` e `3`
 
 O eixo entre `2` e `3` é **de quem é o defeito**, e é exatamente essa distinção
@@ -35,6 +48,18 @@ existe em lugar nenhum, então o defeito está na própria linha. Um valor de
 é `3`: o valor é real, a flag é real, nada na invocação está malformado, e o
 destino simplesmente não existe para aquele par. Isso é um fato sobre o mundo,
 não sobre o que você digitou.
+
+Uma recusa de `2` chega num painel de erro, com a mensagem nomeando toda flag
+que a linha entregou:
+
+```text
+╭─ error ──────────────────────────────────────────────────╮
+│                                                          │
+│  `list` shows one item at a time, and got --skill and    │
+│  --bundle                                                │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
 
 :::note
 A mesma leitura vale para o `--from`. Uma raiz de busca que não pôde ser obtida,

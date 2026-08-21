@@ -288,6 +288,11 @@ Este bloco é **espelho fiel de `src/css/tokens.css`** — o mesmo texto, não u
   --pd-leading-prose: 1.75;
   --pd-leading-ui:    1.5;
   --pd-leading-code:  1.7143;
+  /* Tela de terminal. Ela não é código: é arte de caixa, e o `│` de uma linha
+     precisa encostar no `│` da linha de baixo para o painel ter parede. Com o
+     1.7143 do código a parede vira tracejado e o desenho lê como quebrado. 1.2
+     é o ponto medido em que a parede fecha e a marca em ASCII ainda respira. */
+  --pd-leading-tela:  1.2;
   --pd-leading-h1:    1.111;
   --pd-leading-h2:    1.333;
   --pd-leading-h3:    1.4;

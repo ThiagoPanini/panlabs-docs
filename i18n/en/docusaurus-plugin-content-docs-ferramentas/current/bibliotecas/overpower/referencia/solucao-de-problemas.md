@@ -121,6 +121,41 @@ A **finding** is a defect in what landed, and one alone takes `doctor` to exit
 | pending approval | a server was written into a graft Claude Code gates, and it has not approved it | approve the server in the runtime, outside overpower |
 | missing clone | a graft still names a `[source]` clone that is no longer on the machine | reinstall the server, or remove the graft |
 
+On screen, each finding comes out with the path involved right below the name,
+and the exit is `3`:
+
+```text
+  _____   _____ _ __ _ __   _____      _____ _ __
+ / _ \ \ / / _ \ '__| '_ \ / _ \ \ /\ / / _ \ '__|
+| (_) \ V /  __/ |  | |_) | (_) \ V  V /  __/ |
+ \___/ \_/ \___|_|  | .__/ \___/ \_/\_/ \___|_|
+                    |_|
+
+  installs curated agent equipment   v0.27.3
+╭─ terminal  how this screen is set up ────────────────────╮
+│                                                          │
+│  tty       yes                                           │
+│  colour    truecolor                                     │
+│  width     60 columns                                    │
+│  NO_COLOR  unset                                         │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+
+╭─ integrity  what is installed ───────────────────────────╮
+│                                                          │
+│  2 artifacts · 3 places                                  │
+│                                                          │
+│  dangling link                                           │
+│    .agents/skills/panlabs-python-standards-old/  ←       │
+│    ../../.claude/skills/panlabs-python-standards-old     │
+│                                                          │
+│  copies of `panlabs-python-standards` differ             │
+│    .agents/skills/panlabs-python-standards/              │
+│    .claude/skills/panlabs-python-standards/              │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
+
 ## The two notices of `doctor`
 
 A **notice** is an observation about the environment, not about what landed. It

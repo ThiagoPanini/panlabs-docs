@@ -22,6 +22,20 @@ table is generated onto the [root page](../comandos/overpower) from the contract
 uvx overpower@latest doctor; echo "exited $?"
 ```
 
+:::note
+**`--version` is the table's exception, and it is one of reading order.** It
+answers and exits before the rest of the line is parsed, so
+`overpower --version install --nope` exits `0`, the same as a lone `--version`.
+The `2` the malformed line would earn on its own never fires, because the
+subcommand is never parsed. The `0` vouches for what `--version` did, not for
+what came after it.
+
+```bash
+overpower --version install --nope; echo "exited $?"
+overpower install --nope; echo "exited $?"
+```
+:::
+
 ## The axis between `2` and `3`
 
 The axis between `2` and `3` is **whose defect it is**, and that distinction is
@@ -35,6 +49,18 @@ in the table, but has no destination in the scope you asked for, is `3`: the val
 is real, the flag is real, nothing about the invocation is malformed, and the
 destination simply does not exist for that pairing. That is a fact about the
 world, not about what you typed.
+
+A `2` refusal arrives in an error panel, with the message naming every flag the
+line handed over:
+
+```text
+╭─ error ──────────────────────────────────────────────────╮
+│                                                          │
+│  `list` shows one item at a time, and got --skill and    │
+│  --bundle                                                │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
 
 :::note
 The same reading applies to `--from`. A search root that could not be obtained at
