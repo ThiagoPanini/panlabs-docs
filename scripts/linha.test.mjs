@@ -25,6 +25,7 @@ import {
   avaliar,
   estadoInicial,
   montar,
+  recusasDaLinha,
 } from '../src/theme/MDXComponents/linha.mjs';
 import {RECUSAS, lerContrato, validar} from './lib/assinatura.mjs';
 
@@ -461,5 +462,85 @@ test('`separador` sem `multiplo` reprova, porque nada seria separado', () => {
 test('os dois contratos commitados passam na coerência do modelo', () => {
   for (const caminho of ['contratos/overpower.pt-BR.json', 'contratos/overpower.en.json']) {
     assert.deepEqual(validar(lerContrato(caminho)), [], caminho);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// `recusasDaLinha` — uma frase por REGRA, e não uma por flag
+//
+// O defeito que estes casos fecham foi medido no navegador: em `install`,
+// marcar `--mcp` fazia a MESMA frase de 105 caracteres aparecer três vezes e
+// empurrava a grade 132px; em `list`, três frases que só diferiam no nome da
+// flag, e 78px. A recusa é da regra, e a regra é uma.
+// ---------------------------------------------------------------------------
+
+test('uma regra que recusa três flags produz UMA recusa, não três', () => {
+  const estado = ligar(LIST, 'sempre', {'--skill': 'x'});
+  const lista = recusasDaLinha(LIST, estado);
+
+  assert.equal(lista.length, 1);
+  assert.deepEqual(lista[0].recusadas, ['--bundle', '--mcp', '--ai-framework']);
+  assert.equal(lista[0].classe, 'TooManySelectorsError');
+  assert.equal(lista[0].exit, 2);
+});
+
+test('a mesma frase repetida some: `install` recusa três e diz uma vez só', () => {
+  const estado = ligar(INSTALL, 'terminal', {'--mcp': 'x'});
+  const lista = recusasDaLinha(INSTALL, estado);
+
+  assert.equal(lista.length, 1);
+  assert.equal(lista[0].classe, 'MixedClassesWithoutRuntimeError');
+  assert.deepEqual(lista[0].recusadas, ['--skill', '--ai-framework']);
+});
+
+test('`{flags}` é reescrito sobre o conjunto inteiro, na ordem do contrato', () => {
+  // A CLI nomeia toda flag que recebeu — `" and ".join(self.flags)` em
+  // `cli.py`. Uma frase de grupo que nomeasse só o par de uma avaliação por
+  // flag escolheria um par arbitrário entre os três que a regra recusa.
+  const estado = ligar(LIST, 'sempre', {'--skill': 'x'});
+  const [recusa] = recusasDaLinha(LIST, estado);
+
+  assert.match(recusa.mensagem, /^`list` shows one item at a time, and got /);
+  assert.equal(
+    recusa.mensagem,
+    '`list` shows one item at a time, and got --skill and --bundle and --mcp and --ai-framework',
+  );
+});
+
+test('sem conflito não há recusa nenhuma, e a guarda apaga a regra inteira', () => {
+  assert.deepEqual(recusasDaLinha(LIST, estadoInicial(LIST, 'sempre')), []);
+
+  // `--runtime` é a guarda de `install`: com ela nomeada, a mistura de classes
+  // deixa de ser recusa, e o painel não tem o que dizer.
+  const comGuarda = ligar(INSTALL, 'terminal', {'--runtime': 'claude-code', '--mcp': 'x'});
+  assert.deepEqual(recusasDaLinha(INSTALL, comGuarda), []);
+});
+
+test('a regra `proibe` recusa só a flag que ela nomeia, e não o grupo inteiro', () => {
+  // `--from` em `list` não é seletor: ele não entra no grupo exclusivo, e a
+  // única flag que ele fecha é `--ai-framework`. Uma recusa que apagasse os
+  // quatro seletores aqui estaria ensinando uma regra que a CLI não tem.
+  const estado = ligar(LIST, 'sempre', {'--from': 'https://github.com/dono/repo'});
+  const lista = recusasDaLinha(LIST, estado);
+
+  assert.equal(lista.length, 1);
+  assert.equal(lista[0].classe, 'UnsupportedRemoteListUnitError');
+  assert.deepEqual(lista[0].recusadas, ['--ai-framework']);
+});
+
+test('cada flag recusada aparece em exatamente uma recusa', () => {
+  // O `aria-describedby` de uma caixa aponta para um id só. Uma flag em duas
+  // recusas significaria duas descrições para o mesmo controle, e o painel
+  // teria de escolher uma sem critério.
+  for (const [entrada, contexto, ligadas] of [
+    [LIST, 'sempre', {'--skill': 'x'}],
+    [LIST, 'sempre', {'--from': 'u'}],
+    [INSTALL, 'terminal', {'--mcp': 'x'}],
+    [INSTALL, 'terminal', {'--from': 'u'}],
+  ]) {
+    const vistas = recusasDaLinha(entrada, ligar(entrada, contexto, ligadas)).flatMap(
+      (recusa) => recusa.recusadas,
+    );
+    assert.equal(vistas.length, new Set(vistas).size, JSON.stringify(ligadas));
   }
 });

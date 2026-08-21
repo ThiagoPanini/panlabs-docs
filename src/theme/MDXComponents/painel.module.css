@@ -92,11 +92,26 @@
   gap: var(--pd-space-3);
 }
 
+/* **`nowrap`, e ele é correção de fato.** A célula quebrava, e o campo de uma
+   flag de nome longo caía para a linha de baixo enquanto o das vizinhas ficava
+   em cima: numa grade de duas colunas isso produzia fileiras de alturas
+   diferentes e campos desalinhados, sem que nada no conteúdo justificasse.
+
+   O `wrap` existia para a mensagem de recusa, que ocupava a linha inteira da
+   célula com `flex: 1 1 100%`. Ela saiu daqui — é da regra, não da flag —, e
+   com ela some a única coisa que precisava de uma segunda linha. O campo tem
+   `min-width: 0`, então ele encolhe em vez de empurrar. */
 .painelCampo {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--pd-space-2);
+  /* O preenchimento é de TODA célula, e não só da recusada: ele é o que
+     permite pintar o fundo de uma delas sem que ligar uma flag mexa na altura
+     da grade. Um `padding` que aparece junto com a cor seria um pulo de layout
+     a cada clique, que é o defeito que este componente acabou de fechar. */
+  padding: var(--pd-space-2);
+  border-radius: var(--pd-radius-sm);
   font-size: var(--pd-type-xs);
   color: var(--pd-text-muted);
 }
@@ -134,22 +149,65 @@
   font-size: var(--pd-type-sm);
 }
 
+/* A célula recusada. **Ela apaga, e não some** — uma flag que desaparece quando
+   outra é ligada faz o leitor procurar o que ele acabou de ver. O que ela perde
+   é ênfase, e é isso que liga as três células apagadas à única frase embaixo da
+   grade: o leitor vê o que mudou sem ler nada.
+
+   O `cursor` vai no rótulo inteiro, e não só na caixa: a área clicável de um
+   `<label>` é o rótulo, e uma seta normal sobre texto que não responde é a
+   afirmação errada. */
+.painelCampo[data-recusada] {
+  background-color: var(--pd-surface-wash);
+  color: var(--pd-text-faint);
+}
+
+.painelCampo[data-recusada] .painelRotulo {
+  cursor: not-allowed;
+}
+
+/* O campo apaga quando não aceita tecla, e a pele nativa de `:disabled` quase
+   não muda nada no Chrome — o leitor via um campo com aparência de editável que
+   engolia a digitação.
+
+   **`:disabled` sozinho NÃO é recusa**, e essa distinção custou uma volta: o
+   campo de toda flag desmarcada também é `disabled`, então uma pele de recusa
+   escrita aqui pintava as quatro flags desligadas como se a regra as tivesse
+   fechado. Aqui vai só o apagamento; o que marca a recusa é o `[data-recusada]`
+   da célula e a frase única embaixo da grade. */
+.painelCampo input[type='text']:disabled {
+  border-color: var(--pd-border-subtle);
+  color: var(--pd-text-faint);
+  cursor: not-allowed;
+}
+
 /* -----------------------------------------------------------------------------
-   O motivo de uma flag recusada.
+   A recusa — UMA por regra, entre a grade e a linha.
 
-   **Ela desabilita em vez de sumir.** Uma flag que desaparece quando outra é
-   ligada faz o leitor procurar o que ele acabou de ver; uma que fica visível e
-   desabilitada, com a mensagem que a ferramenta imprime, ensina a regra. É a
-   diferença entre um painel que impede o erro e um que o explica.
+   **Ela era uma por flag, e isso era o defeito.** Uma regra de exclusividade
+   recusa todos os outros membros de uma vez, e a mensagem era impressa dentro
+   de cada célula: em `install`, marcar `--mcp` fazia a MESMA frase de 105
+   caracteres aparecer três vezes e empurrava a grade 132px; em `list`, três
+   frases que só diferiam no nome da flag, e 78px. O texto nascia embaixo de
+   três controles que o leitor não tinha tocado, o que é o que o fazia parecer
+   surgido do nada.
 
-   A mensagem ocupa a linha inteira da célula porque é frase, não rótulo: ela é
-   o texto literal da CLI, e quebrar uma frase em coluna de grade a tornaria
-   ilegível justamente onde ela é a única explicação.
+   **A caixa é uma citação de terminal, e a pele diz isso.** A frase é a da CLI,
+   byte a byte, e em pt-BR ela chega em inglês — sem moldura, uma frase inglesa
+   solta numa página portuguesa lê como texto de interface mal traduzido. Com
+   fundo, borda e mono, lê como o que é: o que a ferramenta responde. É a mesma
+   doutrina do `cita-saida-de-ferramenta` que o portão 4 já conhece.
    ----------------------------------------------------------------------------- */
-.painelMotivo {
-  flex: 1 1 100%;
+.painelRecusa {
   margin: 0;
+  padding: var(--pd-space-3) var(--pd-space-4);
+  border: var(--pd-border-width) solid var(--pd-border-subtle);
+  border-inline-start-color: var(--pd-border-strong);
+  border-radius: var(--pd-radius-sm);
+  background-color: var(--pd-surface-wash);
+  font-family: var(--pd-font-mono);
   font-size: var(--pd-type-xs);
   line-height: var(--pd-leading-ui);
-  color: var(--pd-text-muted);
+  color: var(--pd-text-body);
+  overflow-wrap: anywhere;
 }

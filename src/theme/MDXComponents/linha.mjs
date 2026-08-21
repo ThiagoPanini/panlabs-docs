@@ -17,8 +17,8 @@
  * mesma função lendo o mesmo campo.
  *
  * **Zero React, zero DOM**, para que o script de build possa importá-lo. É a
- * mesma doutrina de `placeholder.mjs` e de `SearchBar/escada.mjs`: a régua e os
- * dois consumidores leem o mesmo arquivo. `scripts/linha.test.mjs` é a régua;
+ * mesma doutrina de `SearchBar/escada.mjs`: a régua e os dois consumidores leem
+ * o mesmo arquivo. `scripts/linha.test.mjs` é a régua;
  * `scripts/gerar-referencia.mjs` e `PainelComando.js` são os consumidores.
  *
  * **O que este modelo NÃO faz, de propósito.** Ele modela a *linha*, não a
@@ -151,6 +151,21 @@ export function membrosEmConflito(restricao, presentes) {
 }
 
 /**
+ * A mensagem da regra, com `{flags}` preenchido na ordem do contrato.
+ *
+ * **`" and "` não é escolha de estilo daqui.** É o que `TooManySelectorsError`
+ * faz em `cli.py`, `" and ".join(self.flags)`, e o docstring dela diz por quê:
+ * *"names every flag it was given, so the line can be cut in one edit"*. Uma
+ * vírgula ficaria mais bonita e faria o leitor procurar no terminal um texto
+ * que não existe.
+ */
+function mensagemDe(entrada, restricao, flags) {
+  const ordem = ordemDe(entrada);
+  const nomeadas = [...new Set(flags)].sort((a, b) => ordem.get(a) - ordem.get(b));
+  return (restricao.mensagem ?? '').replace('{flags}', nomeadas.join(' and '));
+}
+
+/**
  * Se ligar `candidata` violaria a restrição, e com que mensagem.
  *
  * Devolve `null` quando não viola. A avaliação é sempre sobre o estado *com* a
@@ -170,10 +185,8 @@ function violacao(entrada, restricao, presentes) {
     if (membros.length === 0) {
       return null;
     }
-    const ordem = ordemDe(entrada);
-    const nomeadas = [...membros].sort((a, b) => ordem.get(a) - ordem.get(b));
     return {
-      mensagem: (restricao.mensagem ?? '').replace('{flags}', nomeadas.join(' and ')),
+      mensagem: mensagemDe(entrada, restricao, membros),
       exit: restricao.exit,
       classe: restricao.classe,
     };
@@ -182,7 +195,7 @@ function violacao(entrada, restricao, presentes) {
   if (restricao.tipo === 'proibe') {
     if (presentes.has(restricao.quando) && presentes.has(restricao.proibida)) {
       return {
-        mensagem: restricao.mensagem ?? '',
+        mensagem: mensagemDe(entrada, restricao, [restricao.quando, restricao.proibida]),
         exit: restricao.exit,
         classe: restricao.classe,
       };
@@ -213,10 +226,11 @@ function violacao(entrada, restricao, presentes) {
  * `str(Erro(...))` com a `mensagem` do contrato, byte a byte. Sem o nome da
  * classe essa conferência não teria por onde começar.
  */
+const porPrecedencia = (entrada) =>
+  [...(entrada.restricoes ?? [])].sort((a, b) => (a.precedencia ?? 0) - (b.precedencia ?? 0));
+
 export function avaliar(entrada, estado) {
-  const restricoes = [...(entrada.restricoes ?? [])].sort(
-    (a, b) => (a.precedencia ?? 0) - (b.precedencia ?? 0),
-  );
+  const restricoes = porPrecedencia(entrada);
 
   return Object.fromEntries(
     parametrosDe(entrada).map((parametro) => {
@@ -226,12 +240,69 @@ export function avaliar(entrada, estado) {
       for (const restricao of restricoes) {
         const encontrada = violacao(entrada, restricao, presentes);
         if (encontrada) {
-          return [parametro.nome, {permitida: false, ...encontrada}];
+          // `regra` é o objeto de restrição, não uma cópia: quem agrupa por
+          // regra precisa voltar a ela para reescrever `{flags}` sobre o
+          // conjunto inteiro, e comparar por identidade é mais barato e mais
+          // seguro que casar pela `classe`.
+          return [parametro.nome, {permitida: false, regra: restricao, ...encontrada}];
         }
       }
       return [parametro.nome, {permitida: true}];
     }),
   );
+}
+
+/**
+ * As recusas agrupadas **por regra**, uma entrada por regra que morde.
+ *
+ * **Por que ela existe: o painel dizia a mesma coisa N vezes.** `avaliar`
+ * responde por flag, que é o que a interface precisa para desabilitar campo. Mas
+ * uma regra de exclusividade recusa TODOS os outros membros de uma vez, e o
+ * painel imprimia a mensagem embaixo de cada um. Medido em `install`, marcar
+ * `--mcp` fazia a MESMA frase de 105 caracteres aparecer três vezes e empurrava
+ * a grade 132px para baixo; em `list`, três frases que só diferiam no nome da
+ * flag, e 78px. Três cópias de uma regra não são três informações.
+ *
+ * **`{flags}` é reescrito sobre o conjunto inteiro**, e não sobre o par que a
+ * avaliação por flag produziu. A CLI nomeia toda flag que recebeu, então a
+ * mensagem de grupo é a que ela imprimiria para essa linha — não a de um par
+ * arbitrário entre os vários que a regra recusa.
+ *
+ * A ordem é a `precedencia` do contrato, que é a ordem em que a CLI avalia.
+ */
+export function recusasDaLinha(entrada, estado) {
+  const veredito = avaliar(entrada, estado);
+  const presentes = new Set(ligadas(entrada, estado));
+  const grupos = new Map();
+
+  for (const parametro of parametrosDe(entrada)) {
+    const atual = veredito[parametro.nome];
+    if (atual?.permitida !== false) {
+      continue;
+    }
+    const grupo = grupos.get(atual.regra) ?? {regra: atual.regra, recusadas: []};
+    grupo.recusadas.push(parametro.nome);
+    grupos.set(atual.regra, grupo);
+  }
+
+  return porPrecedencia(entrada)
+    .filter((restricao) => grupos.has(restricao))
+    .map((restricao) => {
+      const {recusadas} = grupos.get(restricao);
+      // As que já estão ligadas e pertencem à regra entram na frase: são elas
+      // que o leitor escolheu, e sem elas a mensagem diria que a ferramenta
+      // recebeu só o que ele NÃO pôde marcar.
+      const envolvidas = [
+        ...recusadas,
+        ...(restricao.membros ?? [restricao.quando]).filter((nome) => presentes.has(nome)),
+      ];
+      return {
+        classe: restricao.classe,
+        exit: restricao.exit,
+        recusadas,
+        mensagem: mensagemDe(entrada, restricao, envolvidas),
+      };
+    });
 }
 
 /**

@@ -42,8 +42,11 @@
  * zero 5 de `cinco-zeros.sh` proíbe autor novo de modelo de interação, e uma
  * caixa de seleção não é um: é o controle que o HTML já tem para *ligar e
  * desligar*, que é exatamente o que acrescentar uma flag é. Campo recusado usa
- * o `disabled` nativo, e o motivo vai em texto ao lado, ligado por
- * `aria-describedby` — sem tecla, sem foco programático, sem ARIA a inventar.
+ * o `disabled` nativo, e o motivo é UM parágrafo por regra, abaixo da grade,
+ * apontado por `aria-describedby` de todas as caixas que aquela regra recusou —
+ * sem tecla, sem foco programático, sem ARIA a inventar. Três caixas apontando
+ * para a mesma descrição é o que a especificação já prevê, e é mais barato para
+ * quem ouve do que três frases idênticas.
  *
  * Composição, não swizzle: `CodeBlock` é o mesmo bloco que `CodeGroup` usa para
  * o catálogo — mas o `CodeGroup` autoral lê cercas de código ESTÁTICAS do MDX, e
@@ -56,7 +59,7 @@ import {useDoc} from '@docusaurus/plugin-content-docs/client';
 // O modelo de linha é lido do MESMO arquivo que o gerador importa. Ver o
 // cabeçalho de `linha.mjs`: a assinatura emitida no build e a linha montada aqui
 // são a mesma função sobre o mesmo campo, e por isso não podem divergir.
-import {avaliar, estadoInicial, montar} from './linha.mjs';
+import {avaliar, estadoInicial, montar, recusasDaLinha} from './linha.mjs';
 import estilos from './painel.module.css';
 
 export default function PainelComando() {
@@ -98,6 +101,11 @@ function Fluxo({exemplos}) {
 function Montador({exemplos}) {
   const {assinatura, linguagem, modelo} = exemplos;
 
+  // O prefixo dos ids desta instância. Ele sai do comando, que é único na
+  // página gerada, e não de um contador — um contador dependeria da ordem de
+  // renderização e o SSR e a hidratação poderiam discordar dele.
+  const idBase = `painel-${(modelo.qualificado ?? 'comando').replace(/[^a-z0-9]+/gi, '-')}`;
+
   // **O estado inicial é derivado, e é por isso que o SSR bate.** O servidor
   // pinta `estadoInicial(modelo, contexto)` e o cliente reidrata calculando a
   // mesma função sobre o mesmo dado. Nada aqui lê o navegador.
@@ -105,6 +113,27 @@ function Montador({exemplos}) {
 
   const veredito = useMemo(() => avaliar(modelo, estado), [modelo, estado]);
   const texto = useMemo(() => montar(modelo, estado), [modelo, estado]);
+
+  // **A recusa é agrupada por REGRA, e a razão é medida.** Antes, cada flag
+  // recusada carregava a própria cópia da mensagem: marcar `--mcp` em `install`
+  // imprimia a MESMA frase três vezes e empurrava a grade 132px; marcar
+  // `--skill` em `list` imprimia três frases que só diferiam no nome da flag.
+  // O texto aparecia embaixo de três controles que o leitor não tinha tocado,
+  // que é o que o fazia parecer surgido do nada. Uma regra, uma frase, num
+  // lugar só — abaixo da grade, no caminho entre o que ele marcou e a linha.
+  const regrasRecusadas = useMemo(() => recusasDaLinha(modelo, estado), [modelo, estado]);
+
+  // O id da mensagem, por flag: o `aria-describedby` de três caixas
+  // desabilitadas passa a apontar para o MESMO parágrafo, em vez de três.
+  const idDaRecusa = useMemo(() => {
+    const mapa = {};
+    regrasRecusadas.forEach((regra, indice) => {
+      regra.recusadas.forEach((nome) => {
+        mapa[nome] = `${idBase}-recusa-${indice}`;
+      });
+    });
+    return mapa;
+  }, [regrasRecusadas, idBase]);
 
   const alternar = (nome) =>
     setEstado((atual) => ({...atual, [nome]: {...atual[nome], ligada: !atual[nome].ligada}}));
@@ -139,6 +168,7 @@ function Montador({exemplos}) {
               parametro={parametro}
               campo={estado[parametro.nome]}
               veredito={veredito[parametro.nome]}
+              idMotivo={idDaRecusa[parametro.nome]}
               onAlternar={() => alternar(parametro.nome)}
               onDigitar={(valor) => digitar(parametro.nome, valor)}
             />
@@ -146,23 +176,41 @@ function Montador({exemplos}) {
         </div>
       )}
 
+      {/* A recusa, uma por regra, entre a grade e a linha — que é o caminho
+          que o olho já faz depois de marcar uma caixa. A mensagem é a da CLI,
+          byte a byte, e é o contrato que a carrega: traduzi-la faria o leitor
+          procurar no terminal um texto que não existe. */}
+      {regrasRecusadas.map((regra, indice) => (
+        <p
+          key={regra.classe ?? indice}
+          className={estilos.painelRecusa}
+          id={`${idBase}-recusa-${indice}`}
+        >
+          {regra.mensagem}
+          {regra.exit === undefined ? null : <> (exit {regra.exit})</>}
+        </p>
+      ))}
+
       <CodeBlock language={linguagem}>{texto}</CodeBlock>
     </div>
   );
 }
 
 /**
- * Uma flag: a caixa que a liga, o campo do valor, e o motivo quando a linha não
- * pode tê-la.
+ * Uma flag: a caixa que a liga e o campo do valor.
  *
  * **A recusa desabilita em vez de esconder.** Uma flag que some da tela quando
  * outra é ligada faz o leitor procurar o que ele viu; uma que fica visível e
  * desabilitada, com a mensagem que a ferramenta imprime, ENSINA a regra —
  * que é a diferença entre um painel que impede o erro e um que o explica.
+ *
+ * **O motivo NÃO mora aqui**, e é a correção que este componente recebeu: ele
+ * é da regra, não da flag, e uma regra que recusa três flags escrevia três
+ * cópias de si mesma. O que sobra aqui é o `data-recusada`, que apaga a célula,
+ * e o `aria-describedby` apontando para a frase única lá embaixo.
  */
-function Campo({parametro, campo, veredito, onAlternar, onDigitar}) {
+function Campo({parametro, campo, veredito, idMotivo, onAlternar, onDigitar}) {
   const permitida = veredito?.permitida !== false;
-  const idMotivo = `motivo-${parametro.nome.replace(/^-+/, '')}`;
   const booleana = parametro.tipo === 'flag';
 
   return (
@@ -186,15 +234,6 @@ function Campo({parametro, campo, veredito, onAlternar, onDigitar}) {
           disabled={!permitida || !campo?.ligada}
           onChange={(evento) => onDigitar(evento.target.value)}
         />
-      )}
-
-      {/* A mensagem é a da CLI, byte a byte, e é o contrato que a carrega —
-          traduzi-la faria o leitor procurar no terminal um texto que não existe. */}
-      {!permitida && veredito.mensagem && (
-        <p className={estilos.painelMotivo} id={idMotivo}>
-          {veredito.mensagem}
-          {veredito.exit === undefined ? null : <> (exit {veredito.exit})</>}
-        </p>
       )}
     </div>
   );
