@@ -969,15 +969,20 @@ html.docs-doc-page .subtitulo {
 
 /* A pílula do ativo, quando quem está ativo é o nó colapsável. O Infima cobre o
    caso da FOLHA sozinho (`--ifm-menu-color-background-active` em
-   `.menu__link--active`), e no wrapper ele só pinta o realce de HOVER — a
-   classe `--active` que o `theme-classic` põe no wrapper marca *o ramo contém a
-   página*, não *esta linha é a página*, e as duas não podem ler igual.
+   `.menu__link--active`), e no wrapper ele só pinta o realce de HOVER.
 
-   `:has()` é o seletor que sabe a diferença: ele pergunta pelo `--active` do
-   próprio link, que só existe quando a página aberta é a de abertura do
-   grupo. */
+   O `theme-classic` calcula DOIS sinais diferentes: `isActive` (recursivo —
+   verdadeiro se *qualquer* descendente é a página ativa) e `isCurrentPage`
+   (exato — verdadeiro só se *este link* é a página). O primeiro vira a classe
+   `menu__link--active` em TODO ancestral do item ativo; o segundo vira
+   `.menu__list-item-collapsible--active` só no próprio wrapper da página.
+
+   Antes desta regra usava `:has(> .menu__link--active)` — o seletor recursivo
+   — e era o que pintava o fundo do pai quando só a folha estava ativa. A
+   correção é consumir o sinal exato que o Docusaurus já emite — a classe
+   `--active` do wrapper — sem inventar seletor novo. */
 .theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
-  > .menu__list-item-collapsible:has(> .menu__link--active) {
+  > .menu__list-item-collapsible.menu__list-item-collapsible--active {
   background: var(--ifm-menu-color-background-active);
 }
 
@@ -1034,8 +1039,12 @@ html.docs-doc-page .subtitulo {
 /* A CONVERGÊNCIA — quando o ramo está aberto, o `.menu__link` irmão vira
    `--ifm-menu-color-active` (o acento), e a seta precisa da mesma cor para
    não sobrar cinza ao lado de um rótulo colorido. Não há herança direta entre
-   irmãos — `:has()` é o que já resolve esse mesmo problema para o fundo da
-   pílula, duas regras acima, e resolve aqui do mesmo jeito. */
+   irmãos — `:has()` pergunta se há um link ativo em qualquer profundidade.
+
+   A seta e a pílula têm propósitos diferentes: a seta sinaliza *ramo aberto*
+   (qualquer descendente ativo), por isso continua recursiva; a pílula agora
+   sinaliza *página exata* (só a categoria própria ativa), e usa o sinal exato
+   que o Docusaurus emite. Mesmo padrão CSS `:has()`, escopos diferentes. */
 .theme-doc-sidebar-menu
   .menu__list-item-collapsible:has(> .menu__link--active)
   > .menu__caret {
