@@ -75,3 +75,17 @@ Python, e sai `1`.
 
 O que os quatro têm em comum é que **nada foi escrito**. Um script que trata `1`
 como falha do produto vai reportar bug quando o operador só apertou `n`.
+
+## `--version` decide antes do resto ser lido
+
+Posto antes do subcomando, `--version` responde e sai ali mesmo, sem entregar o
+resto da linha ao parser do subcomando: por isso uma invocação malformada depois
+dele ainda sai `0`.
+
+```bash
+uvx overpower@latest --version install --nope
+```
+
+`install --nope` sozinho sai `2`, opção inexistente. Com `--version` na frente,
+quem responde primeiro é a raiz, e o subcomando nunca chega a ser lido: `0`
+responde por `--version`, não pelo que vem depois dele.
