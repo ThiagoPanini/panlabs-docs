@@ -101,8 +101,8 @@ Uma linha por customização, com o degrau e **por que o degrau acima não alcan
 
 | Item | O que muda | Por que o degrau acima não alcança |
 | --- | --- | --- |
-| Três instâncias de `plugin-content-docs` | as três tabs, cada uma com `routeBasePath` e sidebar próprios | `routeBasePath` é por instância; classe não cria rota |
-| `themeConfig.navbar.items` | as três tabs, o slot de busca, o locale, o GitHub | idem |
+| Quatro instâncias de `plugin-content-docs` | as quatro tabs, cada uma com `routeBasePath` e sidebar próprios | `routeBasePath` é por instância; classe não cria rota |
+| `themeConfig.navbar.items` | as quatro tabs, o slot de busca, o locale, o GitHub | idem |
 | `navbar.items[]` do tipo `html` | **o espaçador que abre a faixa de tabs** — base 100%, altura 0. Escolhido em vez de dar `flex-basis: 100%` à marca porque não acopla a faixa à existência de uma marca | não há classe estável num nó que o tema não renderiza; o item é o que cria o nó |
 | `themeConfig.footer` | os links, o copyright, a forma plana | idem |
 | `themeConfig.prism.additionalLanguages: ['bash']` | registra `bash` para as cercas de shell do acervo — **o consumidor mudou de dono e ficou maior**: ele era o snippet de cURL do painel, e o painel tem uma linguagem só | `bash` não está no bundle padrão do `prism-react-renderer`; sem o registro o bloco sai sem realce e ninguém avisa. `python`, a linguagem do painel, **está** no bundle |

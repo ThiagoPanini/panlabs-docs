@@ -88,6 +88,7 @@ const SIDEBARS = [
   'sidebars-procedimentos.js',
   'sidebars-ferramentas.js',
   'sidebars-referencia.js',
+  'sidebars-times.js',
 ];
 // O `'` de fechamento no fim NÃO é enfeite: `[a-z0-9-]+` casa PREFIXO, então
 // `sidebar-icone--api-ownerX` extrairia `api-owner` e a conferência passaria

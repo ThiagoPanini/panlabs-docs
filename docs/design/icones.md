@@ -225,7 +225,7 @@ E as cinco seções de `Bibliotecas › overpower`, no nível 3:
 
 > **Correção de fato — #97.** A regra acima é a de antes da #97. A âncora marca a **folha**, não o topo, e a #97 reescreveu de novo: **ícone em toda folha, nenhum em cabeçalho de grupo** — ver §8. `Biblioteca C` continua sem ícone, mas por outro motivo agora: ela é cabeçalho de grupo, não porque more no nível 2. As folhas dela — as três autorais e as seis geradas de `docs/design/referencia.md` §5 — ganham ícone pela primeira vez, herdando `--bibliotecas`, a família da categoria de topo que as contém.
 
-**As três tabs de navbar continuam sem ícone**: a regra é *um slot por nó de topo da **sidebar***, e o navbar já carrega tabs, busca, locale e GitHub sem folga para enfeite.
+**As quatro tabs de navbar continuam sem ícone**: a regra é *um slot por nó de topo da **sidebar***, e o navbar já carrega tabs, busca, locale e GitHub sem folga para enfeite.
 
 #### As três portas da landing tinham ícone, e a régua que elas produziram fica
 
@@ -263,7 +263,7 @@ Três pares merecem o motivo escrito:
 - **`code-xml` para `API Owner`**: o papel é dono de **contrato**, e o contrato é o artefato escrito. É o mesmo glifo que nomeava a Referência da API na árvore anterior, reempregado sem mudar de significado;
 - **`package` para `Bibliotecas`**: biblioteca é pacote que se instala. É a metáfora mais apertada disponível, e custa zero arquivo — a mesma que já servia `SDKs`.
 
-**As três abas são três barras laterais, vistas uma de cada vez.** Os dezesseis nunca competem numa lista só; competem em listas de dois, cinco e quatro, mais as cinco seções que só aparecem com o `overpower` aberto. A coerência é exigida **dentro** de cada aba, e o que segura as três juntas é a família.
+**As quatro abas são quatro barras laterais, vistas uma de cada vez.** Os pares de navegação nunca competem numa lista só; competem em listas de quatro, cinco, dois e dois, mais as cinco seções que só aparecem com o `overpower` aberto. A coerência é exigida **dentro** de cada aba, e o que segura as quatro juntas é a família.
 
 ### Autoria · 39 tags sobre 39 arquivos
 

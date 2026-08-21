@@ -22,7 +22,7 @@ O alvo de replicação é um **ambiente corporativo** onde Docusaurus é obrigat
 
 **O [mapa do `mint`](https://github.com/ThiagoPanini/panlabs-docs/issues/49) está em curso**, e ele reconstrói o site sobre a mesma arquitetura: a skin trocou, a landing foi refeita — e depois removida —, e o Trilho — a API de pagamentos fictícia que ocupava o conteúdo — deu lugar ao `panlabs`. **A referência gerada está no ar**, sobre um contrato de assinatura de função, tipo e módulo: `Ferramentas` fecha em 21. Falta o fecho da spec.
 
-**46 páginas autorais mais 6 geradas em três abas** — 52 no total —, mais 21 traduções, busca, artefatos AI-era e dois locales. A rota `/` não é página: ela **redireciona** para `/jornadas/api-owner/indice`, o primeiro destino declarado em `sidebars-jornadas.js`. A spec são vinte e nove arquivos mais oito ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
+**59 páginas autorais mais 4 geradas em quatro abas** — 63 no total —, mais 31 traduções, busca, artefatos AI-era e dois locales. A rota `/` não é página: ela **redireciona** para `/jornadas/api-owner/indice`, o primeiro destino declarado em `sidebars-jornadas.js`. A spec são vinte e nove arquivos mais oito ADRs, e a espinha dela é [`docs/design/README.md`](docs/design/README.md).
 
 > **Correção de contagem.** A landing saiu ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)) e levou junto o portão que só ela ativava: **eram oito portões, são sete**, e a spec caiu de **trinta arquivos para vinte e nove**. O número 8 **não se reaproveita** — o ADR 5 cita o portão 5 pelo número, e é esse precedente que congela a numeração dos sete que ficam.
 

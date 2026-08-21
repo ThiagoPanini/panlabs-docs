@@ -64,17 +64,19 @@
 # motivo que não é o que a rota 3 mede. As duas rotas acima são folhas comuns,
 # fundo do poço da árvore, e a barra depois delas não é diretório de nada.
 #
-# --- as três rotas nuas, e por que elas ganharam bloco próprio ----------------
+# --- as quatro rotas nuas, e por que elas ganharam bloco próprio --------------
 #
-# `/jornadas`, `/procedimentos` e `/ferramentas` são páginas de verdade desde a
-# issue #114: a primeira folha de cada instância carrega `slug: /` no front
-# matter (ADR 10 §h). Antes disso as três eram 404 — o `docSidebar` da navbar
-# leva à primeira doc por outro caminho, e a rota digitada não resolvia.
+# `/jornadas`, `/procedimentos`, `/ferramentas` e `/times` são páginas de verdade
+# desde a issue #114: a primeira folha de cada instância carrega `slug: /` no
+# front matter (ADR 10 §h). Antes disso as três primeiras eram 404 — o
+# `docSidebar` da navbar leva à primeira doc por outro caminho, e a rota digitada
+# não resolvia. `Times` nasceu já com a folha marcada, e entra aqui pela mesma
+# regra.
 #
 # Elas NÃO entram como argumento porque as três formas acima medem coisas
 # diferentes de uma rota só: 200/html, a emissão `.md`, e a não-canonicidade da
-# barra. O que se quer das três nuas é a primeira pergunta apenas, e para as
-# três de uma vez. Por isso o bloco separado, e por isso ele roda uma vez só —
+# barra. O que se quer das quatro nuas é a primeira pergunta apenas, e para as
+# quatro de uma vez. Por isso o bloco separado, e por isso ele roda uma vez só —
 # na execução sem argumento de rota, que é a do locale pt-BR.
 #
 # A pergunta `200 + text/html` é literalmente a mesma da rota 1, e mora na função
@@ -94,8 +96,8 @@ falhas=0
 cabecalhos() { curl -sS -o /dev/null -D - --max-time 30 "$1"; }
 status_final() { curl -sS -o /dev/null -w '%{http_code}' -L --max-time 30 "$1"; }
 
-# `200` mais `text/html`, sem redirect — a pergunta que a rota 1 e as três rotas
-# nuas fazem igual. Ela mora numa função só desde a #114: eram dois blocos com o
+# `200` mais `text/html`, sem redirect — a pergunta que a rota 1 e as quatro
+# rotas nuas fazem igual. Ela mora numa função só desde a #114: eram dois blocos com o
 # mesmo `grep`, o mesmo teste e a mesma mensagem, e o segundo nasceu de copiar o
 # primeiro. Um portão cujo critério existe em duas cópias é um portão que aperta
 # de um lado só no dia em que alguém mexer numa delas.
@@ -167,13 +169,13 @@ else
 fi
 echo
 
-# --- as três rotas nuas -------------------------------------------------------
+# --- as quatro rotas nuas -----------------------------------------------------
 #
 # Roda só na execução sem argumento de rota. Na execução do EN o argumento existe,
 # e conferir `/jornadas` de lá mediria a rota pt-BR uma segunda vez.
 if [ "$ROTA_VEIO_POR_ARGUMENTO" = nao ]; then
-  echo "rotas nuas  as três instâncias, por \`slug: /\` na folha de abertura"
-  for nua in /jornadas /procedimentos /ferramentas; do
+  echo "rotas nuas  as quatro instâncias, por \`slug: /\` na folha de abertura"
+  for nua in /ferramentas /procedimentos /jornadas /times; do
     echo "        GET ${BASE}${nua}"
     html_200 "${BASE}${nua}" \
       "        A rota nua sai do \`slug: /\` na primeira folha da instância; confira
@@ -187,4 +189,4 @@ if [ "$falhas" -gt 0 ]; then
   exit 1
 fi
 
-echo "Portão 6 passou — as três formas da rota canônica, e as três rotas nuas."
+echo "Portão 6 passou — as três formas da rota canônica, e as quatro rotas nuas."

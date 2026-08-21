@@ -38,13 +38,16 @@ A consequência é direta e está cobrada: **o custo de gabarito sobe.** Cada ti
 
 ---
 
-## 2. Topologia — três tabs, três instâncias, um-para-um
+## 2. Topologia — quatro tabs, quatro instâncias, um-para-um
 
 | Tab | Rota | Instância | Layout |
 | --- | --- | --- | --- |
-| **Jornadas** | `/jornadas` | `default` | padrão |
-| **Procedimentos** | `/procedimentos` | `procedimentos` | padrão |
 | **Ferramentas** | `/ferramentas` | `ferramentas` | padrão, e declara `docItemComponent` |
+| **Procedimentos** | `/procedimentos` | `procedimentos` | padrão |
+| **Jornadas** | `/jornadas` | `default` | padrão |
+| **Times** | `/times` | `times` | padrão |
+
+A ordem da tabela é a do navbar, e ela mudou: `Ferramentas` abre a faixa e `Jornadas` cai para terceira. O que a decidiu foi frequência de consulta, não hierarquia — o que saiu daqui é o que se procura mais. `ABAS`, em `docusaurus.config.js`, e a lista visual do navbar carregam a mesma ordem em duas cópias mantidas à mão; o comentário de lá já previa o dia em que uma quarta tab entrasse.
 
 Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chrome.md`](chrome.md) §2.
 
@@ -53,11 +56,11 @@ Tabs no navbar como `docSidebar`, cada uma trocando a sidebar inteira. Ver [`chr
 1. **`routeBasePath` é por instância.** Compartilhar jogaria as ferramentas em `/jornadas/ferramentas/…` — a URL deixaria de ler o eixo, e o eixo é a decisão inteira da navegação;
 2. **versionamento é por instância.** É o que permitiria versionar uma tab só. O §5 dispensa versionamento por completo, mas foi a granularidade que tornou a análise possível.
 
-**O eixo é a natureza do conteúdo**, e ele é mais forte aqui do que era antes: `Jornadas` diz **o que aconteceu**, `Procedimentos` diz **como se faz**, `Ferramentas` diz **o que saiu daqui**. Os três respondem perguntas diferentes do mesmo leitor.
+**O eixo é a natureza do conteúdo**, e ele é mais forte aqui do que era antes: `Ferramentas` diz **o que saiu daqui**, `Procedimentos` diz **como se faz**, `Jornadas` diz **o que aconteceu**, `Times` diz **quem faz o quê**. Os quatro respondem perguntas diferentes do mesmo leitor.
 
 ### 2.1 `Ferramentas` não declara mais `docItemComponent`, e nenhuma folha muda de layout
 
-**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **32 folhas** — 28 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
+**Verificado no código, não deduzido:** nenhuma página desta instância muda de layout, e desde a [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) não há o que comutar. `docusaurus.config.js` não declara `docItemComponent`, e as **31 folhas** — 27 autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`, com a mesma coluna e o mesmo TOC. O `api_exemplos` continua no front matter das 4 geradas, e quem o lê é o `<PainelComando />` de dentro do fluxo do MDX. Ver [`design/referencia.md`](../design/referencia.md) §2.
 
 É a segunda instância do projeto a usar a opção, e ela continua **degrau 2**: opção pública, custo de upgrade zero, zero swizzle. Ver [ADR 2](../adr/0002-politica-de-swizzle.md).
 
@@ -67,38 +70,41 @@ O `<html>` de uma página de doc carrega classe por **plugin** (`plugin-docs`), 
 
 Nada em `src/css/` escopa por instância, e nada deveria:
 
-> **Escopar por instância é escopar por *onde a página está*, quando o que importa é *o que a página é*.** As três tabs compartilham o mesmo layout de página; o que rompe layout é o ramo gerado, e ele rompe por `docItemComponent`, que é opção pública. Uma regra `plugin-id-ferramentas` seria a segunda fonte de verdade para uma decisão que o componente de rota já toma.
+> **Escopar por instância é escopar por *onde a página está*, quando o que importa é *o que a página é*.** As quatro tabs compartilham o mesmo layout de página; o que rompe layout é o ramo gerado, e ele rompe por `docItemComponent`, que é opção pública. Uma regra `plugin-id-ferramentas` seria a segunda fonte de verdade para uma decisão que o componente de rota já toma.
 
 A porta fica **aberta e não usada**, o que é diferente de fechada.
 
 ---
 
-## 3. A árvore — 2 · 5 · 4, teto de profundidade 4
+## 3. A árvore — 4 · 5 · 2 · 2, teto de profundidade 4
 
 ```
-Jornadas              Procedimentos        Ferramentas
-├ API Owner           ├ Ambiente           ├ Bibliotecas
-└ Security Champion   ├ Esteiras           │ └ overpower          ← nível 2
-                      ├ Infraestrutura     │   ├ Comandos         ← nível 3
-                      ├ Acessos            │   │ └ overpower list ← nível 4
-                      └ Diagnóstico        │   ├ Alvos
-                                           │   ├ Referência
-                                           │   └ Contribuir
-                                           ├ Módulos Terraform
-                                           ├ Skills
-                                           └ Servidores MCP
+Ferramentas            Procedimentos        Jornadas              Times
+├ Bibliotecas          ├ Ambiente           ├ API Owner           ├ Time A
+│ └ overpower          ├ Esteiras           └ Security Champion   └ Time B   ← nível 2
+│   ├ Comandos         ├ Infraestrutura                                      ← nível 3
+│   │ └ overpower list ├ Acessos                                             ← nível 4
+│   ├ Alvos            └ Diagnóstico
+│   ├ Referência
+│   └ Contribuir
+├ Módulos Terraform
+├ Skills
+└ Servidores MCP
 ```
 
-**Onze separadores no topo, e cinco nós que colapsam — todos no mesmo ramo.** O nível de topo não é categoria: é **separador** — rótulo em negrito, sem página, sem seta e sem ícone, sempre aberto (§3.2). Os únicos nós do site que colapsam de verdade são `overpower`, no nível 2, e as quatro seções dele, no nível 3; é por isso que a seta só ganha desenho ali.
+O marcador de nível aponta a linha do ramo de `Ferramentas`, a única que desce abaixo do teto de 2.
+
+**Treze separadores no topo, e cinco nós que colapsam — todos no mesmo ramo.** O nível de topo não é categoria: é **separador** — rótulo em negrito, sem página, sem seta e sem ícone, sempre aberto (§3.2). Os únicos nós do site que colapsam de verdade são `overpower`, no nível 2, e as quatro seções dele, no nível 3; é por isso que a seta só ganha desenho ali. `Times` segue a mesma forma de `Procedimentos` e `Jornadas`: separador → folha, e nada abaixo.
 
 | Aba | Separadores | Páginas pt-BR | EN |
 | --- | ---: | ---: | ---: |
-| `Jornadas` | 2 | **12** (2 folhas de abertura + 10 capítulos) | — |
+| `Ferramentas` | 4 | **31** (27 autorais + 4 geradas) | **31** |
 | `Procedimentos` | 5 | **16** (2 folhas de abertura + 14 folhas) | — |
-| `Ferramentas` | 4 | **32** (28 autorais + 4 geradas) | **32** |
-| | **11** | **60** | **32** |
+| `Jornadas` | 2 | **12** (2 folhas de abertura + 10 capítulos) | — |
+| `Times` | 2 | **4** (2 folhas por time) | — |
+| | **13** | **63** | **31** |
 
-**A árvore está fechada: 55 autorais mais 4 geradas, e o EN em 31.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 26, `Ferramentas` em 31 e o site em **59**. O portão 4 cobra os quatro números.
+**A árvore está fechada: 59 autorais mais 4 geradas, e o EN em 31.** O ramo gerado de `overpower › Comandos` chega pelo contrato de superfície de comando, e com ele `Bibliotecas` fecha em 26, `Ferramentas` em 31 e o site em **63**. O portão 4 cobra os quatro números.
 
 > **Correção de contagem — #133.** As seções do `overpower` eram **seis** e são **cinco**: `Desenvolvimento` e `Publicação` serviam ao mesmo leitor, quem contribui com a ferramenta, misturadas na sidebar com as que servem quem a instala, e nada ali dizia qual era qual. As duas fundiram em `Contribuir`, e o `changelog` mudou de lado junto, para `Referência`, porque *o que mudou na versão que eu tenho* é pergunta de quem usa. Seis páginas nasceram de recorte no mesmo movimento, e os números foram de 12 · 16 · 26 para 12 · 16 · 32.
 
@@ -112,7 +118,7 @@ Jornadas              Procedimentos        Ferramentas
 
 **A contagem desigual das jornadas é de propósito** — `API Owner` com 6 capítulos e `Security Champion` com 4. Arco de papel não tem comprimento fixo, e duas jornadas com o mesmo número leem como formulário preenchido duas vezes.
 
-**`Ferramentas` é a única aba que passa do nível 1**, e a profundidade existe onde uma ferramenta tem seções: `Bibliotecas › overpower`. As outras três famílias da aba são separador → folha, e as outras duas abas inteiras também.
+**`Ferramentas` é a única aba que passa do nível 1**, e a profundidade existe onde uma ferramenta tem seções: `Bibliotecas › overpower`. As outras três famílias da aba são separador → folha, e as outras três abas inteiras também.
 
 ### 3.1 O teto de profundidade sobe para 4, e ele é confinado a um ramo
 
@@ -151,9 +157,9 @@ Hoje o único nó de nível 2 é `Bibliotecas › overpower`, que aponta para `V
 | `Procedimentos` | Ambiente | `Índice` |
 | `Procedimentos` | Diagnóstico | `Índice de sintomas` |
 
-**A assimetria que sobra é medida, não descuido:** os outros sete separadores não têm folha de abertura nenhuma, e na âncora é assim — `Get Started` abre com a folha `Introducing Devin`, e outros grupos abrem direto no primeiro item.
+**A assimetria que sobra é medida, não descuido:** os outros nove separadores não têm folha de abertura nenhuma, e na âncora é assim — `Get Started` abre com a folha `Introducing Devin`, e outros grupos abrem direto no primeiro item.
 
-**A rota nua de cada aba resolve por `slug: /`.** A primeira folha de cada instância carrega `slug: /` no front matter, e `/jornadas`, `/procedimentos` e `/ferramentas` passam a ser páginas de verdade em vez de 404 ou redirecionamento. O portão 6 confere as três contra o host publicado.
+**A rota nua de cada aba resolve por `slug: /`.** A primeira folha de cada instância carrega `slug: /` no front matter, e `/ferramentas`, `/procedimentos`, `/jornadas` e `/times` passam a ser páginas de verdade em vez de 404 ou redirecionamento. O portão 6 confere as quatro contra o host publicado.
 
 > **Correção de fato — #114.** Esta seção dizia *"a categoria é clicável e aponta para o índice"*, e sustentava a decisão em *"três fatos verificados na fonte"*. Lidos um a um, dois eram mecânica do Docusaurus — o caret é elemento separado do link; categoria sem link não é inerte no SSR — e o terceiro era uma **opinião** escrita como fato: *"fazer o elemento mais proeminente da sidebar ser um destino em vez de um toggle é melhor"*. Nenhum dos três media a âncora, e o carimbo da linha dizia isso: `origem própria`, que a [`principios.md`](principios.md) §5 define como *"a mais frágil, e a primeira a ser contestada"*. A medição contestou. O detalhe está no [ADR 10](../adr/0010-a-categoria-de-sidebar-nao-e-destino.md).
 
@@ -179,7 +185,7 @@ Hoje o único nó de nível 2 é `Bibliotecas › overpower`, que aponta para `V
 
 **Medido no artefato.** Uma categoria declarada com lista de itens vazia é **normalizada para link** pelo Docusaurus: o `<li>` conserva o `className`, mas o rótulo deixa de ser envolvido pelo bloco colapsável. O caret some, e some com razão.
 
-O CSS de sidebar cobre as duas formas — a folha, e o nó embrulhado por `.menu__list-item-collapsible`. **Nenhum dos onze separadores está vazio hoje**, então a regra é **cobertura sem fixture**, escrita para não ser removida por parecer morta.
+O CSS de sidebar cobre as duas formas — a folha, e o nó embrulhado por `.menu__list-item-collapsible`. **Nenhum dos treze separadores está vazio hoje**, então a regra é **cobertura sem fixture**, escrita para não ser removida por parecer morta.
 
 ---
 
@@ -211,7 +217,7 @@ Os critérios desta seção, do §6, do §7 e do §8 são todos **contagens**, e
 
 | # | O que confere |
 | ---: | --- |
-| 1 | o volume por aba e por categoria — 12 · 16 · 31, e **59** no total |
+| 1 | o volume por aba e por categoria — 31 · 16 · 12 · 4, e **63** no total |
 | 2 | **o tipo de cada página, e o orçamento estrutural dele** — um `Guia` sem `<Steps>` reprova |
 | 3 | a regra de heading, com a exceção nomeada acima como **única** |
 | 4 | **`<Steps>` ausente em toda `Jornadas`** |
@@ -324,11 +330,11 @@ São onze, todos **convenção de conteúdo e zero layout**: sem front matter de
 | Tipo | Palavras | Estrutura mínima | Quantas neste artefato |
 | --- | --- | --- | ---: |
 | Quickstart | 500-700 | 1 `<Steps>` de 5 passos · 5 blocos · 2 `:::` · 1 `<CardGroup>` | 1 |
-| Conceitual | 700-1000 | 2 blocos · 1 `:::` · 1 tabela · 3-6 `##` | **9** |
+| Conceitual | 700-1000 | 2 blocos · 1 `:::` · 1 tabela · 3-6 `##` | **11** |
 | Guia | 600-900 | 1 `<Steps>` · 3 blocos · 2 `:::` | **15** |
 | SDK | 400-600 | 1 `<CodeGroup>` de instalação · 4 blocos | 2 |
 | Receita | 150-250 | 1 bloco **longo** · no máximo 1 `##` | 2 |
-| Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | **5** |
+| Catálogo | 200-300 | 1 tabela de 20-40 linhas × 4-5 colunas | **7** |
 | Referência | 300-600 | 1 tabela · 3-6 `##` | **3** |
 | Troubleshooting | 800-1200 | 1 tabela de sintomas · 3-8 `##` | 4 |
 | Changelog | — | 6-8 entradas em `<Update>` | 1 |
@@ -336,13 +342,15 @@ São onze, todos **convenção de conteúdo e zero layout**: sem front matter de
 | *índice de jornada* | 250-400 | ver §6.4 | 2 |
 | *capítulo de jornada* | 180-1800 | 3-6 `##` · 2 blocos · 1 `:::` · prosa antes do 1º `##` · **sem `<Steps>`** | 10 |
 | *a fixture de página curta* | ~120 | nenhuma — ver §4.1 | 1 |
-| | | **total autoral** | **55** |
+| | | **total autoral** | **59** |
 
 > **A linha *índice de categoria* saiu, e a da fixture curta passou a somar.** Eram **oito** índices de categoria, e a fixture de página curta — `Procedimentos › Ambiente › Índice` — era uma delas: a linha dela existia para nomear o **papel**, e contá-la de novo fazia a coluna somar 47 contra um total de 46. Com a #114 a forma morreu (§6.3): sete das oito páginas saíram, e a oitava é justamente a fixture, que agora tem linha própria na sidebar e conta uma vez, na linha dela.
 
 > **A coluna foi remedida com o `overpower` dentro, e nenhum número dela é escolha de redação:** os doze são a contagem do manifesto de `scripts/portao-4-conteudo.sh`, que é o que crava e reprova. As 17 páginas novas caem em sete dos onze tipos, e a distribuição não foi desenhada para encher a coluna — ela é o que a doc de origem já tinha, mapeada gabarito a gabarito. O `Guia` passou de 11 para 15 porque cinco das seis seções do `overpower` têm uma folha de procedimento, e o `Conceitual` de 3 para 9 pelo mesmo motivo, do outro lado.
 
 > **A coluna se moveu duas vezes desde a remedição.** `O atalho op` saiu do acervo, e `Códigos de saída` deixou de ser `Conceitual` para ser `Referência`: ela é uma tabela que se consulta mais as notas de uso dela, que é o gabarito do tipo, e estava carimbada `Conceitual` só porque o tipo `Referência` não existia quando ela foi escrita. `Conceitual` foi de 11 para 9, `Referência` de 2 para 3, e o total autoral de 56 para 55.
+
+> **Correção de contagem — a chegada de `Times`.** A quarta aba trouxe dois times fictícios, mesma estrutura entre os dois: uma folha `Conceitual` (`Visão geral`) e uma folha `Catálogo` (`Desenvolvimento`) por time. `Conceitual` foi de 9 para 11, `Catálogo` de 5 para 7, e o total autoral de 55 para 59 — 63 no site, com as 4 geradas somadas por fora.
 
 ### 6.6 A cerca ```` ```text ```` é tela de ferramenta, e só
 
@@ -477,14 +485,14 @@ O orçamento existe para produzir páginas plausíveis; a fixture existe para pr
 
 A regra: **traduz-se o que é consumido por outros times.**
 
-A fronteira é **audiência do artefato**, e não infra pública contra corporativa: biblioteca, módulo, skill e servidor MCP nascem na mesma esteira que tudo, mas são **consumidos fora da equipe que os escreveu**, e é isso que lhes dá leitor de inglês. Jornada é registro pessoal; procedimento é da casa. Nenhum dos dois tem leitor fora.
+A fronteira é **audiência do artefato**, e não infra pública contra corporativa: biblioteca, módulo, skill e servidor MCP nascem na mesma esteira que tudo, mas são **consumidos fora da equipe que os escreveu**, e é isso que lhes dá leitor de inglês. Jornada é registro pessoal; procedimento é da casa; time também é da casa, documentado para quem já está dentro dela. Nenhum dos três tem leitor fora.
 
 | Traduzido para EN | Só pt-BR |
 | --- | --- |
-| `Ferramentas` — **32**: 28 autorais e 4 geradas | `Jornadas` 12 · `Procedimentos` 16 |
-| **26** | **28** |
+| `Ferramentas` — **31**: 27 autorais e 4 geradas | `Jornadas` 12 · `Procedimentos` 16 · `Times` 4 |
+| **31** | **32** |
 
-**28 páginas carregam o marcador de fallback**, e o número não se mexeu com o `overpower`: o port trocou o conteúdo de `Ferramentas`, que é a aba traduzida, e nenhuma página de `Jornadas` ou `Procedimentos` entrou ou saiu. *(Correção de aritmética anterior: a contagem dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes, e depois 31; a #114 tirou três índices de `Procedimentos` do acervo.)*
+**32 páginas carregam o marcador de fallback.** `Times` entrou com as 4 dele; `Jornadas` e `Procedimentos` continuam nas mesmas 12 e 16 de sempre — o número anterior, 28, não se mexeu com o `overpower`, porque o port trocou o conteúdo de `Ferramentas`, que é a aba traduzida. *(Correção de aritmética anterior: a contagem dizia 36 porque somava os cinco índices de `Procedimentos` duas vezes, e depois 31; a #114 tirou três índices de `Procedimentos` do acervo.)*
 
 **O EN do `overpower` saiu barato, e vale registrar por quê.** A doc de origem já é inglesa, e o registro do site é declarativo em terceira pessoa — que é o registro em que ela já estava. O port foi reescrita nos dois locales, não cópia: **6 das 19 páginas de origem não passavam no piso de três `##`**, e **19 de 19 falhavam a estrutura mínima do gabarito do tipo**, porque a origem é Markdown puro, sem `<Steps>`, sem `<CodeGroup>`, sem `<CardGroup>` e sem `:::`. O que veio de graça foi o idioma, não a forma.
 
@@ -504,7 +512,7 @@ A convenção de autoria que fecha o contrato é de uma linha:
 
 | Superfície | Onde a tradução mora |
 | --- | --- |
-| Rótulos das três tabs, e **a marca** | `i18n/en/docusaurus-theme-classic/navbar.json` |
+| Rótulos das quatro tabs, e **a marca** | `i18n/en/docusaurus-theme-classic/navbar.json` |
 | Links e copyright do footer | `i18n/en/docusaurus-theme-classic/footer.json` |
 | Rótulos das categorias de sidebar | `i18n/en/docusaurus-plugin-content-docs-<id>/current.json` |
 | Texto dentro dos componentes do catálogo | `i18n/en/code.json` |
@@ -630,9 +638,11 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | Nome próprio como título | **lacuna por restrição** | `title` e `tagline` não são traduzíveis no Docusaurus |
 | O cenário fecha em três strings | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) — GitHub Actions, AWS e Python; o resto cai delas somadas às categorias |
 | O custo de gabarito sobe sem convenção conhecida | **origem própria (consequência)** | o gênero público do domínio anterior era o que segurava a coerência; sem ele, quem segura é o gabarito |
-| Três tabs, três instâncias | origem própria | `routeBasePath` e versionamento são por instância |
-| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 32 folhas da instância usam o `@theme/DocItem` do upstream |
+| Quatro tabs, quatro instâncias | origem própria | `routeBasePath` e versionamento são por instância |
+| `Ferramentas` **não** declara `docItemComponent` | **origem própria (correção)** | conferido no código: a linha saiu na [#118](https://github.com/ThiagoPanini/panlabs-docs/issues/118) junto com o `ApiDocItem`; as 31 folhas da instância usam o `@theme/DocItem` do upstream |
 | Árvore 2 · 5 · 4 | origem própria | [#81](https://github.com/ThiagoPanini/panlabs-docs/issues/81) §árvore |
+| **A quarta aba, e a ordem do navbar invertida** | **origem própria** | `Times` simula documentar time de dentro de uma empresa, que é o cenário do acervo, e a ordem passa a ser `Ferramentas` · `Procedimentos` · `Jornadas` · `Times`, por frequência de consulta. A árvore vai de 2 · 5 · 4 para 4 · 5 · 2 · 2 |
+| **`Times` é separador → folha, e `Desenvolvimento` é uma folha só** | **origem própria (consequência)** | o §3.1 confina o teto de 4 ao ramo `Ferramentas › Bibliotecas › overpower`; fora dele o teto é 2, e `Siglas`, `Repositórios` e `Ofertas` viram três `##` de uma página, não três páginas |
 | **Teto de profundidade 3** | **origem própria (correção)** | o que impedia o nível 3 era a redação da regra de ícone, não o teto — ver [`icones.md`](icones.md) §8 |
 | Contagem desigual das jornadas | origem própria | arco de papel não tem comprimento fixo |
 | Categoria clicável | origem própria | três fatos verificados na fonte — **superada na #114**; dois dos três eram mecânica do Docusaurus e o terceiro era opinião escrita como fato |
@@ -686,4 +696,5 @@ A rota para mudar isso fica registrada e não foi comprada: `getTranslationFiles
 | `pathname://` no link do footer | herdado | escotilha pública do Docusaurus para arquivo que não é rota — degrau 2 |
 | **Uma ruptura de layout, e não duas** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a landing saiu; sobra o ramo gerado de `overpower › Comandos`, e a proibição de o tipo romper layout não muda |
 | **A raiz é um salto, não uma página** | **origem própria (consequência)** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — sem landing, a raiz leva ao índice da primeira jornada, que é o primeiro destino declarado em `sidebars-jornadas.js`. *Dissenso registrado, e ele é sobre uma palavra.* O critério do ticket dizia *"a primeira **folha** declarada na primeira sidebar"*, e **`folha` é termo definido deste projeto: ele exclui índice.** O §3 conta `Procedimentos` como *"5 índices + 14 folhas"*, e o verbete de `docs/agents/domain.md` diz *"Capítulo: a folha"*. Lido ao pé da letra, o destino seria `api-owner/o-contrato-que-nao-existia`, o primeiro item de `items`. **Vence o índice mesmo assim, por três razões e com o custo da troca declarado.** Primeira: o corpo do mesmo ticket diz *"a raiz dela redireciona para a primeira **doc**"*, e o índice é doc — é `{type: 'doc'}` no `link` da categoria. Segunda: o comportamento que o ticket manda copiar é o da âncora, e o que a raiz dela serve é a página de abertura, cujo análogo aqui é o índice, não o capítulo 1. Terceira: o índice é o décimo tipo de página e é o destino do rótulo da categoria — mandar a raiz ao capítulo 1 pularia a abertura da jornada, que é a página escrita para ser lida primeiro, e a deixaria alcançável só por quem clicar no rótulo. **Trocar é uma linha** — a constante `DESTINO` de `src/pages/index.js` |
+| **`<Redirect>` recebe a rota resolvida, não a crua** | **origem própria (correção)** | conferido no código: `<BrowserRouter>` sobe **sem** `basename` e toda rota registrada já traz o `baseUrl` no `path`. `<Link>` compensa por dentro; o `Redirect` do `react-router-dom` não. `<Redirect to={DESTINO}>` navegava para rota sem prefixo, caía no catch-all e piscava `NotFound` até o `meta refresh` corrigir — o docblock de `src/pages/index.js` afirmava o contrário e foi reescrito |
 | **O redirecionamento da raiz é `meta refresh` mais `<Redirect>`, não 308** | **lacuna por restrição** | [#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94) — a âncora responde **308** na raiz; o host é o GitHub Pages, que não emite redirecionamento de servidor configurável. A divergência é de host, não de desenho |

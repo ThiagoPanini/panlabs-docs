@@ -9,7 +9,11 @@
  * uma pilha separada de desenhos** — é por isso que `package`, `layers`,
  * `workflow` e outros seis carregam duas tags e consomem um arquivo só.
  *
- *   19 sistema + 36 navegação + 39 autoria = 94 tags sobre 60 arquivos
+ *   19 sistema + 38 navegação + 39 autoria = 96 tags sobre 60 arquivos
+ *
+ * **A navegação subiu de 36 para 38 com `Times`.** `calendar` e `trending-up`
+ * ganharam a tag: os dois já estavam no manifesto como vocabulário do autor, e
+ * nenhum arquivo novo entrou. O par `PARES_SECAO` sobe junto, na mesma conta.
  *
  * O teto é 64 — **teto, não meta**. Ele foi alcançado no mapa do `mint` e a
  * árvore do `panlabs` devolveu folga: **quatro cortes, quatro slots livres**.
@@ -131,7 +135,7 @@ const AUTORIA = [
   {nome: 'key', papeis: ['navegacao', 'autoria'], onde: 'Procedimentos › Acessos · vocabulário do autor'},
   {nome: 'lock', papeis: ['navegacao', 'autoria'], onde: 'Jornadas › Security Champion · vocabulário do autor'},
   {nome: 'mail', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'calendar', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'calendar', papeis: ['navegacao', 'autoria'], onde: 'Times › Time A · vocabulário do autor'},
   {nome: 'users', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir · vocabulário do autor'},
   {nome: 'globe', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Alvos · vocabulário do autor'},
   // PERDEU a tag `navegacao` na #118. Ele era a chave `bibliotecas`, que as
@@ -148,7 +152,7 @@ const AUTORIA = [
   {nome: 'circle-alert', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Códigos de saída · vocabulário do autor'},
   {nome: 'circle-help', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower · vocabulário do autor', lucide: 'circle-question-mark'},
   {nome: 'sparkles', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Critérios de catálogo · vocabulário do autor'},
-  {nome: 'trending-up', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {nome: 'trending-up', papeis: ['navegacao', 'autoria'], onde: 'Times › Time B · vocabulário do autor'},
   {nome: 'gauge', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower doctor · vocabulário do autor'},
 
   // Conceitos · 9
@@ -205,7 +209,7 @@ export const TETO = 64;
  * três árvores seguem com ícone de seção, e a linha que as separa é aritmética,
  * não gosto.
  *
- * O que continua da #97 é a metade que a medição sustentou: as três tabs de
+ * O que continua da #97 é a metade que a medição sustentou: as quatro tabs de
  * navbar seguem sem ícone, e o separador de topo também.
  *
  * **Nenhuma das novas custou arquivo.** Todas reaproveitam desenhos que o
@@ -224,6 +228,8 @@ export const PARES_SECAO = {
   'modulos-terraform': 'puzzle',
   skills: 'bot',
   'servidores-mcp': 'server',
+  'time-a': 'calendar',
+  'time-b': 'trending-up',
 
   // As vinte e sete do `overpower` — uma por PÁGINA, e nenhuma repetida.
   //

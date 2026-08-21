@@ -27,7 +27,7 @@
 # `Verificação` que de fato traz o que rodar, e um vocabulário que a página que
 # se declara dicionário de fato define.
 #
-#    1. o volume por aba e por categoria     12 · 16 · 31, e 59 no total
+#    1. o volume por aba e por categoria     31 · 16 · 12 · 4, e 63 no total
 #    2. o tipo de cada página                 e o orçamento ESTRUTURAL dele
 #    3. a regra de heading                    com UMA exceção nomeada
 #    4. `<Steps>` ausente em `Jornadas`       a fronteira entre duas abas
@@ -80,6 +80,7 @@ CONTEUDO='conteudo'
 JORNADAS='conteudo/jornadas'
 PROCEDIMENTOS='conteudo/procedimentos'
 FERRAMENTAS='conteudo/ferramentas'
+TIMES='conteudo/times'
 EN='i18n/en/docusaurus-plugin-content-docs-ferramentas/current'
 
 # As três superfícies do conteúdo publicado, para a varredura de travessão. `EN`
@@ -126,8 +127,9 @@ reprova() {
 VOLUME_JORNADAS='api-owner=7 security-champion=5'
 VOLUME_PROCEDIMENTOS='ambiente=3 esteiras=3 infraestrutura=3 acessos=3 diagnostico=4'
 VOLUME_FERRAMENTAS='bibliotecas=22 modulos-terraform=2 skills=2 servidores-mcp=1'
+VOLUME_TIMES='time-a=2 time-b=2'
 
-# O manifesto de tipo — `caminho:tipo`, um por linha, para as 55 autorais.
+# O manifesto de tipo — `caminho:tipo`, um por linha, para as 59 autorais.
 #
 # **A forma `indice` MORREU com a issue #114**, e com ela sete páginas: o
 # conteúdo delas era *a lista do que está logo abaixo*, e a sidebar já é essa
@@ -195,6 +197,10 @@ ferramentas/modulos-terraform/modulo-de-papel-iam:guia
 ferramentas/skills/scaffold-de-esteira:receita
 ferramentas/skills/rotacao-de-segredo:receita
 ferramentas/servidores-mcp/servidor-de-catalogo-mcp:sdk
+times/time-a/visao-geral:conceitual
+times/time-a/desenvolvimento:catalogo
+times/time-b/visao-geral:conceitual
+times/time-b/desenvolvimento:catalogo
 FIM
 )
 
@@ -287,9 +293,10 @@ echo "1  volume por aba e por categoria"
 volume_da_aba "$JORNADAS" 12 'Jornadas' "$VOLUME_JORNADAS"; total_jornadas=$volume
 volume_da_aba "$PROCEDIMENTOS" 16 'Procedimentos' "$VOLUME_PROCEDIMENTOS"; total_procedimentos=$volume
 volume_da_aba "$FERRAMENTAS" 27 'Ferramentas' "$VOLUME_FERRAMENTAS"; total_ferramentas=$volume
+volume_da_aba "$TIMES" 4 'Times' "$VOLUME_TIMES"; total_times=$volume
 
-autorais=$((total_jornadas + total_procedimentos + total_ferramentas))
-[ "$autorais" = 55 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 55"
+autorais=$((total_jornadas + total_procedimentos + total_ferramentas + total_times))
+[ "$autorais" = 59 ] || reprova "o acervo tem ${autorais} páginas autorais, esperado 59"
 
 # O ramo gerado, somado por fora. Ele fecha `Bibliotecas` em 26, `Ferramentas`
 # em 31 e o site em 59 — os três números que a spec publica.
@@ -304,9 +311,9 @@ folhas_ferramentas=$((total_ferramentas + geradas))
 [ "$folhas_ferramentas" = 31 ] || reprova "Ferramentas: ${folhas_ferramentas} folhas, esperado 31"
 
 total=$((autorais + geradas))
-[ "$total" = 59 ] || reprova "o site tem ${total} páginas, esperado 59"
+[ "$total" = 63 ] || reprova "o site tem ${total} páginas, esperado 63"
 
-echo "   Jornadas ${total_jornadas} · Procedimentos ${total_procedimentos} · Ferramentas ${folhas_ferramentas} = ${total}"
+echo "   Ferramentas ${folhas_ferramentas} · Procedimentos ${total_procedimentos} · Jornadas ${total_jornadas} · Times ${total_times} = ${total}"
 echo "   (${autorais} autorais mais ${geradas} geradas; Bibliotecas fecha em ${bibliotecas})"
 echo
 
@@ -586,7 +593,7 @@ echo
 # `Procedimentos`. As 22 de `Ferramentas` nascem traduzidas, então marcá-las
 # seria carimbar um estado que elas nunca terão.
 echo "9  marcador de tradução"
-sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS") || true
+sem_marcador=$(grep -RL '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS" "$TIMES") || true
 if [ -n "$sem_marcador" ]; then
   reprova "fonte sem contraparte em EN e sem \`<Untranslated />\`:"
   echo "$sem_marcador" | sed 's/^/    /'
@@ -604,9 +611,9 @@ if [ -n "$com_marcador_en" ]; then
   echo "$com_marcador_en" | sed 's/^/    /'
 fi
 
-marcadas=$(grep -Rl '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS" 2>/dev/null | wc -l)
-[ "$marcadas" = 28 ] || reprova "${marcadas} páginas com marcador, esperado 28"
-echo "   ${marcadas} marcam (12 de Jornadas + 16 de Procedimentos); Ferramentas e as traduções não"
+marcadas=$(grep -Rl '<Untranslated />' --include='*.md' "$JORNADAS" "$PROCEDIMENTOS" "$TIMES" 2>/dev/null | wc -l)
+[ "$marcadas" = 32 ] || reprova "${marcadas} páginas com marcador, esperado 32"
+echo "   ${marcadas} marcam (12 de Jornadas + 16 de Procedimentos + 4 de Times); Ferramentas e as traduções não"
 echo
 
 # --- 10. `description` em 100% ------------------------------------------------
@@ -686,10 +693,10 @@ geradas_en=$(find "$GERADO_EN" -name '*.mdx' 2>/dev/null | wc -l)
 traduzidas=$((traduzidas + geradas_en))
 [ "$traduzidas" = 31 ] || reprova "EN: ${traduzidas} páginas, esperado 31"
 
-for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos; do
+for outra in i18n/en/docusaurus-plugin-content-docs i18n/en/docusaurus-plugin-content-docs-procedimentos i18n/en/docusaurus-plugin-content-docs-times; do
   n=$(find "$outra" -name '*.md' 2>/dev/null | wc -l)
   [ "$n" = 0 ] ||
-    reprova "${outra}: ${n} páginas, e estas duas abas são buraco de propósito"
+    reprova "${outra}: ${n} páginas, e estas três abas são buraco de propósito"
 done
 
 echo "   ${traduzidas} traduzidas · ${marcadas} das ${autorais} autorais sem EN, de propósito"
