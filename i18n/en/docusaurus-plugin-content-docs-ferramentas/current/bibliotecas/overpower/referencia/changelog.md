@@ -14,6 +14,39 @@ does not promote the first digit, and the whole rule is on
 The groupings by minor exist for the navigation column. A list of thirty entries
 with no heading is a list nobody walks.
 
+## 0.29.x
+
+<Update label="0.29.0" tag="breaking">
+  **A home repository declares everything it offers in a single file, at its
+  root.** `.overpower.yaml` carries `bundles:` and `mcp:` inside it, and goes
+  through the very reader that reads the catalog the wheel ships: one file, one
+  format, one reader. `.overpower/catalog.yaml` and `.overpower/mcp/<slug>.toml`
+  are no longer read, and **there is no compatibility window**: finding the old
+  convention in a repository with no `.overpower.yaml` exits `3`, naming the
+  files it found and the one file to write in their place. The embedded catalog
+  migrated along with it, the four recipes moved into the `mcp:` key and TOML
+  left the product, so both provenances travel the same path. `--mcp --from`
+  stopped walking the tree: the declaration is anchored at the root of the
+  repository the URL names, and the subfolder still narrows only what `--skill`
+  reaches.
+</Update>
+
+## 0.28.x
+
+<Update label="0.28.0" tag="added">
+  **In machine scope, `install` asks for each slot's value and writes it
+  literally.** One run, and the configuration is complete, instead of ending with
+  a notice that the variable is yours to export. Input is masked, the value is
+  never echoed, and an already exported variable is offered as the default without
+  ever being drawn on screen. In project scope the slot is still `${VAR}` and
+  nothing else, and VS Code keeps its `inputs[]` with `password: true`, the one
+  measured spelling in which the secret stays under OS protection. Off a terminal
+  or with `--yes` nothing is asked, and the previous behaviour is untouched; a
+  value already stored is kept and not asked for again, with `--force` reopening
+  the question; an empty answer writes the reference back. `--dry-run` does not
+  ask, and announces how many secrets would be requested.
+</Update>
+
 ## 0.27.x
 
 <Update label="0.27.3" tag="fixed">

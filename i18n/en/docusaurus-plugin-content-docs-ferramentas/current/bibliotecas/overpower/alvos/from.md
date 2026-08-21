@@ -23,8 +23,8 @@ standard library.
 <Steps>
   <Step title="Ask what the repository offers">
     Bare, with no selector at all, `--from` prints that repository's
-    **showcase**: the skills under `skills/`, the recipes under `.overpower/mcp/`,
-    and the bundles declared in `.overpower/catalog.yaml`.
+    **showcase**: the skills under `skills/`, plus the bundles and MCP servers
+    the `.overpower.yaml` at its root declares.
 
     ```bash
     uvx overpower@latest list --from https://github.com/owner/repo
@@ -93,9 +93,13 @@ overpower's own wheel, so there is nothing in someone else's repository for the
 flag to name. That line exits `2` before anything is fetched.
 :::
 
-The three selectors do not read the URL the same way. `--skill` and `--mcp` treat
-it as a **search root**, and the repository, a subfolder, or the artifact's own
-folder all reach the same result. `--bundle` and the bare showcase are **anchored**
-at the repository root, so the URL's subfolder narrows nothing: what a repository
-offers, and what it composes, are properties of the repository rather than of the
-path you happened to paste.
+The three selectors do not read the URL the same way. Only `--skill` treats it as
+a **search root**, and the repository, a subfolder, or the artifact's own folder
+all reach the same result. `--bundle`, `--mcp` and the bare showcase are
+**anchored** at the repository root, in the `.overpower.yaml` that lives there, so
+the URL's subfolder narrows nothing: what a repository offers, and what it
+composes, are properties of the repository rather than of the path you happened to
+paste.
+
+**`--mcp` stopped walking**, and the change follows the format: the recipe became
+part of the declaration, so it is anchored along with it.

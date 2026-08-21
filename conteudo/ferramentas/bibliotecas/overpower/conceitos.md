@@ -62,9 +62,12 @@ cópia e o enxerto são as duas formas de aterrissar, e a diferença entre elas 
 quem é o arquivo de destino.
 
 **Slot** é onde um segredo pertence dentro de uma receita, declarado como **nome
-e papel**, `env`, `header` ou `bearer`, e nunca como valor. O slot é exatamente
-aquilo que o `overpower` se recusa a escrever em disco. Todo o resto que a
-receita declara, ele escreve porque pode.
+e papel**, `env`, `header` ou `bearer`, e nunca como valor. Uma receita nunca
+carrega segredo; quem decide o que aterrissa no lugar do slot é o **escopo**. No
+escopo de repositório aterrissa a referência `${VAR}` e nada mais, porque o
+arquivo é versionado. No escopo de máquina o `install` pergunta o valor atrás de
+uma máscara e o escreve literal, porque ali o `git` não alcança. Todo o resto que
+a receita declara, ele escreve nos dois escopos porque pode.
 
 **Precondição** é uma conferência que uma receita pode nomear, de um vocabulário
 fechado que o próprio `overpower` implementa: existe um dado comando, uma dada

@@ -61,9 +61,12 @@ are the two ways of landing, and what separates them is who owns the destination
 file.
 
 **Slot** is where a secret belongs in a recipe, declared as a **name and a
-role**, `env`, `header` or `bearer`, and never as a value. A slot is exactly what
-overpower refuses to write to disk; everything else a recipe declares, it writes
-because it can.
+role**, `env`, `header` or `bearer`, and never as a value. A recipe never carries a
+secret; what lands in the slot's place is decided by the **scope**. In repository
+scope the `${VAR}` reference lands and nothing else, because the file is versioned.
+In machine scope `install` asks for the value behind a mask and writes it
+literally, because `git` does not reach there. Everything else a recipe declares,
+it writes in both scopes because it can.
 
 **Precondition** is a check a recipe can name, from a closed vocabulary overpower
 itself implements: does a given command exist, is a given variable set, does a

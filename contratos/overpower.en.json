@@ -119,7 +119,7 @@
         {
           "nome": "--mcp",
           "tipo": "name",
-          "descricao": "Opens an MCP server's recipe, with the transport, the fields the TOML itself spells, and the derived targets.",
+          "descricao": "Opens an MCP server's recipe, with the transport, the fields the declaration itself spells, and the derived targets. A recipe is an entry of the YAML manifest's `mcp:` key, not a file beside it.",
           "aridade": {
             "multiplo": false
           }
@@ -263,7 +263,7 @@
         {
           "nome": "--force",
           "tipo": "flag",
-          "descricao": "Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`.",
+          "descricao": "Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`. It has a second effect in machine scope: a slot whose value is already written into the document is asked for again, because a stored value is what occupies the destination.",
           "aridade": {
             "multiplo": false
           },
@@ -281,7 +281,7 @@
         {
           "nome": "--dry-run",
           "tipo": "flag",
-          "descricao": "Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory. An occupied global destination is refused rather than asked, and with `--from` the remote root is fetched anyway, because without it there is no plan to print.",
+          "descricao": "Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory. An occupied global destination is refused rather than asked, and with `--from` the remote root is fetched anyway, because without it there is no plan to print. It never asks for a secret: it announces how many slots the real line would ask about, and stops there.",
           "aridade": {
             "multiplo": false
           }

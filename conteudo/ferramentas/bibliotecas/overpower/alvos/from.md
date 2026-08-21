@@ -23,8 +23,8 @@ tarball anônimo usando só a biblioteca padrão do Python.
 <Steps>
   <Step title="Perguntar o que o repositório oferece">
     Nu, sem seletor nenhum, o `--from` imprime a **vitrine** daquele repositório:
-    as skills sob `skills/`, as receitas sob `.overpower/mcp/` e os bundles
-    declarados em `.overpower/catalog.yaml`.
+    as skills sob `skills/`, mais os bundles e os servidores MCP que o
+    `.overpower.yaml` da raiz declara.
 
     ```bash
     uvx overpower@latest list --from https://github.com/owner/repo
@@ -93,9 +93,13 @@ próprio `overpower`, então não há nada no repositório de outra pessoa para 
 nomear. Essa linha sai `2` antes de qualquer busca.
 :::
 
-Os três seletores não leem a URL do mesmo jeito. O `--skill` e o `--mcp` a tratam
-como **raiz de busca**, e o repositório, uma subpasta ou a pasta do próprio
-artefato chegam todos ao mesmo resultado. O `--bundle` e a vitrine nua estão
-**ancorados** na raiz do repositório, então a subpasta da URL não estreita nada:
-o que um repositório oferece, e o que ele compõe, são propriedades do repositório
-e não do caminho que você por acaso colou.
+Os três seletores não leem a URL do mesmo jeito. Só o `--skill` a trata como
+**raiz de busca**, e o repositório, uma subpasta ou a pasta do próprio artefato
+chegam todos ao mesmo resultado. O `--bundle`, o `--mcp` e a vitrine nua estão
+**ancorados** na raiz do repositório, no `.overpower.yaml` que mora lá, então a
+subpasta da URL não estreita nada: o que um repositório oferece, e o que ele
+compõe, são propriedades do repositório e não do caminho que você por acaso
+colou.
+
+**O `--mcp` deixou de andar pela árvore**, e a mudança acompanha o formato: a
+receita virou uma entrada da declaração, então ela é ancorada junto com ela.

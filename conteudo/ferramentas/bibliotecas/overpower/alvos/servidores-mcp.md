@@ -1,6 +1,6 @@
 ---
 title: Servidores MCP
-description: O enxerto, uma chave dentro de um arquivo que é seu, segredo nunca escrito, e alvos derivados em vez de declarados.
+description: O enxerto, uma chave dentro de um arquivo que é seu, o slot que o escopo decide onde aterrissa, e alvos derivados em vez de declarados.
 ---
 
 # Servidores MCP
@@ -60,11 +60,12 @@ Nada mais nele é tocado, e como um enxerto nunca substitui arquivo inteiro, só
 acrescenta chave, também não há portão de aprovação: um servidor escrito no seu
 próprio arquivo pessoal é um que você já aprovou implicitamente ao escrevê-lo.
 
-## O segredo nunca é escrito, o endereço é
+## O slot é declarado como nome e papel, nunca como valor
 
 Uma receita declara um segredo como **slot**, um nome e um papel, nunca um valor
-e nunca uma grafia específica. O que aterrissa no arquivo de configuração é a
-referência que o próprio runtime expande na hora de conectar, e não o segredo.
+e nunca uma grafia específica. O endereço é outra coisa: uma URL base não é
+segredo, e tratá-la como se fosse só deixaria o servidor sem achar aquilo com que
+ele deve conversar. Por isso `server.env` é escrito no arquivo e o slot não.
 
 ```json
 {
@@ -80,16 +81,48 @@ referência que o próprio runtime expande na hora de conectar, e não o segredo
 }
 ```
 
-Essas duas últimas linhas são a distinção inteira. O slot é o que o `overpower`
-se recusa a escrever, e todo o resto de `env` é o que ele escreve porque pode. Um
-endereço como uma URL base não é segredo, e tratá-lo como se fosse só deixaria o
-servidor sem achar aquilo com que ele deve conversar.
-
 Existem três papéis de slot, `env`, `header` e `bearer`. Um slot `bearer` é
 renderizado como `Authorization: Bearer ${VAR}` sem que a receita jamais precise
 soletrar essa string. Nenhuma referência carrega valor padrão, porque a sintaxe
 `${VAR:-fallback}` é entendida por exatamente um runtime, e em todos os outros
 que leem o mesmo `.mcp.json` a expressão inteira é tratada como string literal.
+
+## Onde o valor do slot aterrissa depende do escopo
+
+**O escopo decide, e a régua é onde o `git` alcança.** No escopo de repositório o
+que aterrissa é a referência acima e nada mais: o arquivo é versionado, e um
+segredo literal ali viaja no primeiro `push`. No escopo de máquina o arquivo não é
+versionado, e o `install` **pergunta o valor de cada slot e o escreve literal**,
+para que uma execução deixe a configuração completa em vez de terminar avisando
+que a variável é sua para exportar.
+
+| Escopo | O que aterrissa | Quem preenche |
+| --- | --- | --- |
+| repositório | `${VAR}`, e nada mais | você, exportando a variável |
+| máquina | o valor digitado, literal | a pergunta durante o `install` |
+| VS Code | `inputs[]` com `password: true` | o próprio editor, que guarda sob proteção do sistema |
+
+A pergunta é **mascarada**, e o valor nunca é ecoado, nem na tela nem em nenhuma
+saída do produto. Uma variável já exportada é oferecida como padrão dentro do
+mesmo campo mascarado, então quem já a exportou para testar o servidor à mão
+confirma com uma tecla, sem que ela chegue a ser desenhada.
+
+Quatro regras fecham o comportamento, e nenhuma delas é implícita:
+
+- **sem terminal, ou com `--yes`, nada é perguntado**, e o que aterrissa é a
+  referência, exatamente como antes;
+- **valor já gravado é mantido e não é perguntado de novo**, e `--force` reabre a
+  pergunta, porque valor gravado é o que ocupa o destino;
+- **resposta vazia grava `${VAR}` de volta**, que é o gesto documentado para tirar
+  o segredo do arquivo;
+- **o `--dry-run` nunca pergunta**, e anuncia quantos slots a linha real pediria.
+
+:::warning
+O segredo escrito no escopo de máquina mora num arquivo que o `git` não alcança,
+e é isso que autoriza a escrita. Não repita o gesto num arquivo versionado: no
+escopo de repositório o `overpower` recusa escrever o valor, e colar um à mão
+publica o segredo no primeiro `push`.
+:::
 
 ## Os alvos são derivados, nunca declarados
 

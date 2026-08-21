@@ -59,7 +59,7 @@ Writes under the home directory instead of the current repository. Takes the sho
 </ParamField>
 
 <ParamField name="--force" type="flag">
-Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`.
+Overwrites an existing destination in machine scope, without asking. In repository scope it has no effect, because `git status` already reveals and undoes there. Takes the short form `-f`. It has a second effect in machine scope: a slot whose value is already written into the document is asked for again, because a stored value is what occupies the destination.
 </ParamField>
 
 <ParamField name="--yes" type="flag">
@@ -67,5 +67,5 @@ Skips the confirmation before the write. Takes the short form `-y`. Off a termin
 </ParamField>
 
 <ParamField name="--dry-run" type="flag">
-Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory. An occupied global destination is refused rather than asked, and with `--from` the remote root is fetched anyway, because without it there is no plan to print.
+Resolves everything, prints the plan, mirrors the real exit code and writes nothing, not even an empty directory. An occupied global destination is refused rather than asked, and with `--from` the remote root is fetched anyway, because without it there is no plan to print. It never asks for a secret: it announces how many slots the real line would ask about, and stops there.
 </ParamField>

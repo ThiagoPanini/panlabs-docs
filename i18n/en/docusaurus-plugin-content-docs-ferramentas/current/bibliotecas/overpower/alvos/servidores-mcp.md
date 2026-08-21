@@ -1,6 +1,6 @@
 ---
 title: MCP servers
-description: The graft, one key inside a file that is yours, secrets never written, and targets derived rather than declared.
+description: The graft, one key inside a file that is yours, the slot whose landing place the scope decides, and targets derived rather than declared.
 ---
 
 # MCP servers
@@ -60,11 +60,13 @@ only adds a key, there is no approval gate either: a server written into your ow
 personal file is one you have already implicitly approved by having written it
 yourself.
 
-## The secret is never written; the address is
+## A slot is declared as a name and a role, never as a value
 
 A recipe declares a secret as a **slot**, a name and a role, never a value and
-never a specific spelling. What lands in the configuration file is the reference
-the runtime itself expands at connection time, not the secret.
+never a specific spelling. The address is a different thing: a base URL is not a
+secret, and treating it like one would only leave the server unable to find what
+it is supposed to talk to. That is why `server.env` is written into the file and
+the slot is not.
 
 ```json
 {
@@ -80,16 +82,49 @@ the runtime itself expands at connection time, not the secret.
 }
 ```
 
-Those last two lines are the whole distinction. A slot is what overpower refuses
-to write, and everything else in `env` is what it writes because it can. An address
-like a base URL is not a secret, and treating it like one would only leave the
-server unable to find what it is supposed to talk to.
-
 Three slot roles exist, `env`, `header` and `bearer`. A `bearer` slot is rendered
 as `Authorization: Bearer ${VAR}` without the recipe ever having to spell that
 string out. No reference carries a default value, because `${VAR:-fallback}` syntax
 is understood by exactly one runtime, and in every other runtime reading the very
 same `.mcp.json` that whole expression is treated as a literal string.
+
+## Where a slot's value lands depends on the scope
+
+**Scope decides, and the ruler is where `git` reaches.** In repository scope what
+lands is the reference above and nothing else: the file is versioned, and a
+literal secret there travels on the first `push`. In machine scope the file is not
+versioned, and `install` **asks for each slot's value and writes it literally**, so
+that one run leaves the configuration complete instead of ending with a notice
+that the variable is yours to export.
+
+| Scope | What lands | Who fills it in |
+| --- | --- | --- |
+| repository | `${VAR}`, and nothing else | you, by exporting the variable |
+| machine | the value you type, literal | the question asked during `install` |
+| VS Code | `inputs[]` with `password: true` | the editor itself, which stores it under OS protection |
+
+The question is **masked**, and the value is never echoed, neither on screen nor in
+any output of the product. An already exported variable is offered as the default
+inside that same masked field, so someone who exported the token to try the server
+by hand confirms with one keystroke, without it ever being drawn.
+
+Four rules close the behaviour, and none of them is implicit:
+
+- **off a terminal, or with `--yes`, nothing is asked**, and what lands is the
+  reference, exactly as before;
+- **a value already stored is kept and not asked for again**, and `--force`
+  reopens the question, because a stored value is what occupies the destination;
+- **an empty answer writes `${VAR}` back**, which is the documented gesture for
+  taking the secret out of the file;
+- **`--dry-run` never asks**, and announces how many slots the real line would ask
+  about.
+
+:::warning
+A secret written in machine scope lives in a file `git` does not reach, and that is
+what authorises the write. Do not repeat the gesture in a versioned file: in
+repository scope overpower refuses to write the value, and pasting one by hand
+publishes the secret on the first `push`.
+:::
 
 ## Targets are derived, never declared
 
