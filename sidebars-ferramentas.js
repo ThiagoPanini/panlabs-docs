@@ -89,7 +89,6 @@ const sidebars = {
           link: {type: 'doc', id: 'bibliotecas/overpower/visao-geral'},
           items: [
             {type: 'doc', id: 'bibliotecas/overpower/instalacao', className: 'sidebar-icone sidebar-icone--instalacao'},
-            {type: 'doc', id: 'bibliotecas/overpower/o-atalho-op', className: 'sidebar-icone sidebar-icone--atalho-op'},
             {type: 'doc', id: 'bibliotecas/overpower/conceitos', className: 'sidebar-icone sidebar-icone--conceitos'},
             {
               // A seção que hospeda o ramo gerado. A folha de abertura dela é

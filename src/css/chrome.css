@@ -795,7 +795,6 @@ html.docs-doc-page .subtitulo {
 /* O ramo do `overpower` — uma por página, na ordem da árvore. */
 .sidebar-icone--overpower              { --pd-sidebar-icone: url('/icons/zap.svg'); }
 .sidebar-icone--instalacao             { --pd-sidebar-icone: url('/icons/download.svg'); }
-.sidebar-icone--atalho-op              { --pd-sidebar-icone: url('/icons/send.svg'); }
 .sidebar-icone--conceitos              { --pd-sidebar-icone: url('/icons/shapes.svg'); }
 
 .sidebar-icone--comandos               { --pd-sidebar-icone: url('/icons/terminal.svg'); }

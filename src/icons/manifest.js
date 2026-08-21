@@ -9,7 +9,7 @@
  * uma pilha separada de desenhos** — é por isso que `package`, `layers`,
  * `workflow` e outros seis carregam duas tags e consomem um arquivo só.
  *
- *   19 sistema + 16 navegação + 40 autoria = 75 tags sobre 61 arquivos
+ *   19 sistema + 36 navegação + 39 autoria = 94 tags sobre 60 arquivos
  *
  * O teto é 64 — **teto, não meta**. Ele foi alcançado no mapa do `mint` e a
  * árvore do `panlabs` devolveu folga: **quatro cortes, quatro slots livres**.
@@ -110,7 +110,6 @@ const AUTORIA = [
   {nome: 'download', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › overpower › Instalação · vocabulário do autor'},
   {nome: 'upload', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › O release-ready · vocabulário do autor'},
   {nome: 'refresh-cw', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Solução de problemas · vocabulário do autor'},
-  {nome: 'send', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › O atalho op · vocabulário do autor'},
   {nome: 'trash-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
   {nome: 'plus', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower install · vocabulário do autor'},
   {nome: 'filter', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Curadoria · vocabulário do autor', lucide: 'funnel'},
@@ -239,7 +238,6 @@ export const PARES_SECAO = {
   // agora vestindo `alvo-bundle`, que é a página do bundle federado.
   overpower: 'zap',
   instalacao: 'download',
-  'atalho-op': 'send',
   conceitos: 'shapes',
 
   comandos: 'terminal',

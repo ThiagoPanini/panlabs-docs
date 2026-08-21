@@ -12,7 +12,7 @@
  * `::before`, em `src/css/chrome.css`. Não é inconsistência: não existe ponto de
  * swizzle `safe` para injetar componente React num item de sidebar, então a
  * rota de `className` + máscara é a **única** zero-swizzle. Os dois leem os
- * mesmos 61 arquivos.
+ * mesmos 60 arquivos.
  *
  * **Nada aqui degrada em silêncio.** Nome desconhecido lança; o Docusaurus
  * prerenderiza toda página no build, então o `throw` *é* falha de build, sem
@@ -77,7 +77,6 @@ import Play from '@site/static/icons/play.svg';
 import Download from '@site/static/icons/download.svg';
 import Upload from '@site/static/icons/upload.svg';
 import RefreshCw from '@site/static/icons/refresh-cw.svg';
-import Send from '@site/static/icons/send.svg';
 import Trash2 from '@site/static/icons/trash-2.svg';
 import Plus from '@site/static/icons/plus.svg';
 import Filter from '@site/static/icons/filter.svg';
@@ -143,7 +142,6 @@ const DESENHOS = {
   'download': Download,
   'upload': Upload,
   'refresh-cw': RefreshCw,
-  'send': Send,
   'trash-2': Trash2,
   'plus': Plus,
   'filter': Filter,

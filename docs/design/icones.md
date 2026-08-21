@@ -18,7 +18,7 @@ Tudo aqui é obrigatório. Não há bloco `Livre`: os **desenhos** são skin e s
 
 ## 1. Origem — Lucide vendorizado
 
-**61 arquivos `.svg` do Lucide (ISC), copiados para dentro do repositório.** Não é dependência, não é CDN, não é resolução em runtime.
+**60 arquivos `.svg` do Lucide (ISC), copiados para dentro do repositório.** Não é dependência, não é CDN, não é resolução em runtime.
 
 O axioma 2 fecha a porta do **pacote**, não a do desenho: `npm install` de uma biblioteca de ícones está proibido, mas copiar arquivos de licença permissiva custa **zero dependência** e um arquivo de licença. A restrição sempre foi mais estreita do que parecia.
 
@@ -69,7 +69,7 @@ O ícone da sidebar é o único que roda por máscara e não recebe compensaçã
 
 ## 3. Dois renderizadores, uma fonte de verdade
 
-**Eram três.** O terceiro era a marca, e ela perdeu o glifo — ver abaixo. Os dois que sobram não são inconsistência: cada um é **forçado pelo contexto**, e os dois leem os mesmos 61 arquivos.
+**Eram três.** O terceiro era a marca, e ela perdeu o glifo — ver abaixo. Os dois que sobram não são inconsistência: cada um é **forçado pelo contexto**, e os dois leem os mesmos 60 arquivos.
 
 ### (a) Componentes de conteúdo → SVGR inline
 
@@ -127,9 +127,9 @@ A palavra bate com `--pd-text-strong` no pixel, nos dois modos, e **não** bate 
 | Navegação — um por nó de sidebar que carrega ícone | 37 | 37 |
 | Autoria — o vocabulário escrito como string | 40 | 40 |
 | **Total de tags** | **96** | — |
-| **Total de arquivos** | — | **61** |
+| **Total de arquivos** | — | **60** |
 
-A coluna de arquivos **soma mais que 61 de propósito**: são **trinta e cinco** entradas com duas tags, e uma entrada com duas tags aparece nas duas linhas. 96 − 35 = 61, e é essa a aritmética inteira.
+A coluna de arquivos **soma mais que 60 de propósito**: são **trinta e quatro** entradas com duas tags, e uma entrada com duas tags aparece nas duas linhas. 94 − 34 = 60, e é essa a aritmética inteira.
 
 As trinta e cinco carregam `navegacao` e `autoria` juntas, e moram na lista de autoria. Os dois pares restantes da navegação, `code-xml` e `activity`, são navegação pura.
 
@@ -141,7 +141,7 @@ As trinta e cinco carregam `navegacao` e `autoria` juntas, e moram na lista de a
 >
 > **A landing saiu ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)) e a definição fica.** Ela foi o caso que expôs a diferença entre *superfície* e *consumidor*, e é exatamente por isso que reverter a definição junto com a página seria o erro: voltar a dizer *MDX* recriaria a redação estreita que já se mostrou errada uma vez, e o próximo `<Card>` escrito fora de `.mdx` a quebraria de novo. **Hoje o MDX é o único consumidor outra vez, e a regra continua sendo a superfície.**
 
-**O teto é 64. Teto, não meta — e a folga está em três.** Ele foi alcançado no mapa do `mint`, com `wrench` no último slot; a árvore do `panlabs` cortou **quatro** desenhos e a folga voltou a quatro. **Um foi gasto**: `list`, o glifo do título do índice desta página, é o 61º arquivo. O 65º ícone continua sendo troca; o 61º era revisão de design, e foi revisto — a decisão está no §8, e o argumento é que a superfície nova é chrome, onde a regra de glifo já existia e só não tinha alcançado o índice.
+**O teto é 64. Teto, não meta — e a folga está em quatro.** Ele foi alcançado no mapa do `mint`, com `wrench` no último slot; a árvore do `panlabs` cortou **quatro** desenhos e a folga voltou a quatro. **Um foi gasto e devolvido**: `list`, o glifo do título do índice desta página, gastou o 61º slot, e o slot voltou quando a página do atalho `op` saiu do acervo e levou `send` com ela. O 65º ícone continua sendo troca; o 61º era revisão de design, e foi revisto — a decisão está no §8, e o argumento é que a superfície nova é chrome, onde a regra de glifo já existia e só não tinha alcançado o índice.
 
 **O teto NÃO desce para 60.** Ele é o limite do que se consegue auditar de uma vez, não uma marca d'água do que já se gastou — descê-lo seria trocar uma régua por um registro do passado, e o número perderia o argumento que o justifica.
 
@@ -183,7 +183,7 @@ Os cinco de chrome (`Icon/Arrow`, `Icon/DarkMode`, `Icon/LightMode`, `Icon/Edit`
 O manifesto vive em `src/icons/manifest.js`, e ele **é o contrato**:
 
 ```
-static/icons/*.svg     ← 61 desenhos.  TROCÁVEL — é skin, axioma 3
+static/icons/*.svg     ← 60 desenhos.  TROCÁVEL — é skin, axioma 3
 src/icons/manifest.js  ← 60 nomes + papéis.  CONTRATO. Não troca.
 ```
 
@@ -265,9 +265,9 @@ Três pares merecem o motivo escrito:
 
 **As três abas são três barras laterais, vistas uma de cada vez.** Os dezesseis nunca competem numa lista só; competem em listas de dois, cinco e quatro, mais as cinco seções que só aparecem com o `overpower` aberto. A coerência é exigida **dentro** de cada aba, e o que segura as três juntas é a família.
 
-### Autoria · 40 tags sobre 40 arquivos
+### Autoria · 39 tags sobre 39 arquivos
 
-**Ações (8):** `play` · `download` · `upload` · `refresh-cw` · `send` · `trash-2` · `plus` · `filter`
+**Ações (7):** `play` · `download` · `upload` · `refresh-cw` · `trash-2` · `plus` · `filter`
 
 **Objetos (16):** `file-text` · `folder` · `terminal` · `wrench` · `database` · `server` * · `cloud` * · `key` * · `lock` * · `mail` · `calendar` · `users` · `globe` · `package` * · `rocket` · `shapes`
 
@@ -362,7 +362,7 @@ O último é o único que viaja calado sem essa conferência: arquivo órfão n�
 
 ## 9. Custo de bundle, aceito conscientemente
 
-Registro estático coloca os 61 no bundle principal. É o preço de `icon="rocket"` funcionar sem import dinâmico, e é barato — dezenas de kilobytes crus, poucos gzipados.
+Registro estático coloca os 60 no bundle principal. É o preço de `icon="rocket"` funcionar sem import dinâmico, e é barato — dezenas de kilobytes crus, poucos gzipados.
 
 O caminho da sidebar não paga isso duas vezes: as máscaras entram no CSS, e como os arquivos são pequenos o empacotador as embute como dado em vez de gerar requisição. Um desenho, dois consumidores, zero divergência possível.
 

@@ -1,6 +1,6 @@
 ---
 title: Instalação
-description: Como obter o overpower, o atalho op que de propósito não é instalado, e a flag que prova que o pacote chegou inteiro.
+description: Como obter o overpower, o que ele exige da máquina, e a flag que prova que o pacote chegou inteiro.
 ---
 
 # Instalação
