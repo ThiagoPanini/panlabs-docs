@@ -16,8 +16,9 @@ bundles:
   api-python:
     description: Everything needed to work on the Python API.
     items:
-      - fastapi-conventions
-      - pytest-fixtures
+      - skill:fastapi-conventions
+      - skill:pytest-fixtures
+      - mcp:my-server
 
 mcp:
   my-server:
@@ -26,14 +27,23 @@ mcp:
     server:
       command: "npx"
       args: ["-y", "@internal/catalog-mcp@1.4.0"]
+
+  sourced-server:
+    description: The server our own repository maintains.
+    source:
+      git: https://github.com/acme/catalog-mcp
+      ref: v1.4.0
+      runner: uvx
+      entrypoint: catalog-mcp
 ```
 
 | Field | What it accepts |
 | --- | --- |
 | `bundles.<name>` | the name `--bundle` asks the composition by |
 | `bundles.<name>.description` | the sentence `list` prints in full, never truncated |
-| `bundles.<name>.items` | **names**, never paths, of the skills that same repository offers under `skills/` |
+| `bundles.<name>.items` | **names carrying the namespace as a prefix**, `skill:<name>` or `mcp:<name>`, resolved inside that same repository. Never a path |
 | `mcp.<slug>` | the name `--mcp` asks the server by, with the whole recipe inside |
+| `mcp.<slug>.source` | the **address** of the server's code: `git`, `ref`, `runner` and `entrypoint`, all four required. Whatever declares `source` declares neither `transport`, nor `server.command`, nor a runner precondition, because those three become derived |
 
 That file is read by the **same reader** that reads the catalog overpower ships,
 so a malformed manifest is refused naming the same field on both sides and there
@@ -52,6 +62,15 @@ repository still carrying `.overpower/mcp/<slug>.toml` at its root and no
 instead. The alternative would be the silent half: list the skills, omit the
 servers, exit `0`, describing the repository as offering less than its author
 declared.
+:::
+
+:::warning
+**The prefix in `items` has no compatibility window either.** An entry with no
+prefix, or with a prefix outside the closed set, is refused by name. Every
+`items` written before has to gain its `skill:`, and it holds the same for the
+embedded catalog and for a federated one. The reason is that a bundle now
+reaches an MCP server, and without the namespace a bare name would be ambiguous
+between the two.
 :::
 
 ## The anatomy of the manifest
@@ -77,9 +96,10 @@ file from turning into a map of the whole catalog.
             </ResponseField>
 
             <ResponseField name="items" type="array">
-              The names of the skills that make up the bundle, resolved against
-              this same repository's `skills/`. Never a path, and never an
-              address.
+              The names of the artifacts that make up the bundle, each carrying
+              the namespace as a prefix: `skill:<name>` resolves against this
+              same repository's `skills/`, `mcp:<name>` against the recipes this
+              same file declares. Never a path, and never an address.
             </ResponseField>
           </Expandable>
         </ResponseField>

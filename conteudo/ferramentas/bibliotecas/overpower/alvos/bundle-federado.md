@@ -16,8 +16,9 @@ bundles:
   api-python:
     description: Tudo que é preciso para trabalhar na API em Python.
     items:
-      - fastapi-conventions
-      - pytest-fixtures
+      - skill:fastapi-conventions
+      - skill:pytest-fixtures
+      - mcp:meu-servidor
 
 mcp:
   meu-servidor:
@@ -26,14 +27,23 @@ mcp:
     server:
       command: "npx"
       args: ["-y", "@interno/catalogo-mcp@1.4.0"]
+
+  servidor-de-fonte:
+    description: O servidor que o nosso próprio repositório mantém.
+    source:
+      git: https://github.com/acme/catalogo-mcp
+      ref: v1.4.0
+      runner: uvx
+      entrypoint: catalogo-mcp
 ```
 
 | Campo | O que ele aceita |
 | --- | --- |
 | `bundles.<nome>` | o nome pelo qual `--bundle` pede a composição |
 | `bundles.<nome>.description` | a frase que o `list` imprime por inteiro, nunca truncada |
-| `bundles.<nome>.items` | **nomes**, nunca caminhos, das skills que aquele mesmo repositório oferece sob `skills/` |
+| `bundles.<nome>.items` | **nomes com o espaço de nomes como prefixo**, `skill:<nome>` ou `mcp:<nome>`, resolvidos dentro daquele mesmo repositório. Nunca um caminho |
 | `mcp.<slug>` | o nome pelo qual `--mcp` pede o servidor, e a receita inteira dentro |
+| `mcp.<slug>.source` | o **endereço** do código do servidor: `git`, `ref`, `runner` e `entrypoint`, os quatro obrigatórios. Quem declara `source` não declara `transport`, `server.command` nem precondição de runner, porque os três passam a derivados |
 
 Esse arquivo é lido pelo **mesmo leitor** que lê o catálogo que o `overpower`
 publica, então um manifesto malformado é recusado nomeando o mesmo campo dos dois
@@ -52,6 +62,14 @@ repositório que ainda guarda `.overpower/mcp/<slug>.toml` na raiz e não tem
 lugar. A alternativa seria a metade silenciosa: listar as skills, omitir os
 servidores e sair `0`, descrevendo o repositório como oferecendo menos do que o
 autor declarou.
+:::
+
+:::warning
+**O prefixo em `items` também não tem janela de compatibilidade.** Uma entrada
+sem prefixo, ou com prefixo fora do conjunto fechado, é recusa por nome. Todo
+`items` escrito antes precisa ganhar o `skill:`, e vale igual para o catálogo
+embutido e para o federado. O motivo é que um bundle passou a alcançar servidor
+MCP, e sem o espaço de nomes um nome solto ficaria ambíguo entre as duas coisas.
 :::
 
 ## A anatomia do manifesto
@@ -78,9 +96,10 @@ virar um mapa do catálogo inteiro.
             </ResponseField>
 
             <ResponseField name="items" type="array">
-              Os nomes das skills que compõem o bundle, resolvidos contra o
-              `skills/` deste mesmo repositório. Nunca um caminho, e nunca um
-              endereço.
+              Os nomes dos artefatos que compõem o bundle, cada um com o espaço
+              de nomes como prefixo: `skill:<nome>` resolve contra o `skills/`
+              deste mesmo repositório, `mcp:<nome>` contra as receitas que este
+              mesmo arquivo declara. Nunca um caminho, e nunca um endereço.
             </ResponseField>
           </Expandable>
         </ResponseField>

@@ -119,7 +119,7 @@ A **finding** is a defect in what landed, and one alone takes `doctor` to exit
 | link turned text | a file inside landed equipment is a link target and is spelled as content | reinstall; the copy lost the link on the way |
 | divergence | two copies of one artifact, in one scope, do not agree on content | reinstall to reconcile, and decide which scope owns it |
 | pending approval | a server was written into a graft Claude Code gates, and it has not approved it | approve the server in the runtime, outside overpower |
-| missing clone | a graft still names a `[source]` clone that is no longer on the machine | reinstall the server, or remove the graft |
+| runner gone | a graft rendered from a `source:` recipe names a runner that is no longer on `PATH` | install the runner the recipe asks for, `uvx` or `npx`, or remove the graft |
 
 On screen, each finding comes out with the path involved right below the name,
 and the exit is `3`:
@@ -156,7 +156,7 @@ and the exit is `3`:
 ╰──────────────────────────────────────────────────────────╯
 ```
 
-## The two notices of `doctor`
+## The notice of `doctor`
 
 A **notice** is an observation about the environment, not about what landed. It
 does **not** fail: a run carrying only notices exits `0`.
@@ -164,7 +164,6 @@ does **not** fail: a run carrying only notices exits `0`.
 | Notice | What it means | What to do |
 | --- | --- | --- |
 | unset slot | a graft reads a slot out of the environment, and this environment lacks it | set the variable, or accept that this server does not come up here |
-| orphan clone | a clone sits under the machine's `.overpower/mcp/` that no graft refers to | delete the directory, if you are sure nothing uses it |
 
 :::note
 Finding and notice are product vocabulary, and each definition lives in

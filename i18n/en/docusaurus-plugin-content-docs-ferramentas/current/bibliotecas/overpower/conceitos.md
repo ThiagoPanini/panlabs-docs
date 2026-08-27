@@ -37,7 +37,8 @@ names, and expands into exactly what that manifest lists.
 ## Where content comes from
 
 **Pool** is the set of individually curated artifacts, organized by type. It is
-the source both a direct `--skill` install and every bundle draw from.
+what a direct `--skill` install draws from, and where every `skill:` item of a
+bundle comes from.
 
 **Catalog** is everything overpower knows how to install, artifacts, frameworks
 and bundles together. It is curated, not open, and it is not a registry in the
@@ -87,8 +88,8 @@ recipe came from.
 [troubleshooting](referencia/solucao-de-problemas).
 
 **Notice** is an observation about the environment, not about what landed. A
-notice **does not fail**: a run carrying only notices exits `0`. There are two,
-and they travel in a list of their own precisely so they do not add to the verdict.
+notice **does not fail**: a run carrying only notices exits `0`. Today there is
+one, and it travels in a list of its own precisely so it does not add to the verdict.
 
 | Vocabulary | About what | What it does to the exit code |
 | --- | --- | --- |

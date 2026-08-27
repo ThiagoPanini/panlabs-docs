@@ -37,7 +37,8 @@ de artefato, e expande exatamente no que esse manifesto lista.
 ## De onde o conteúdo vem
 
 **Pool** é o conjunto de artefatos curados individualmente, organizado por tipo.
-É a fonte de onde bebem tanto um `--skill` direto quanto todo bundle.
+É a fonte de onde bebe um `--skill` direto, e de onde vem todo item `skill:` de
+um bundle.
 
 **Catálogo** é tudo que o `overpower` sabe instalar, artefatos, frameworks e
 bundles juntos. Ele é curado, não aberto, e não é registro no sentido usual: o
@@ -89,7 +90,7 @@ saída.
 [solução de problemas](referencia/solucao-de-problemas).
 
 **Aviso** é uma observação sobre o ambiente, não sobre o que aterrissou. Aviso
-**não reprova**: uma execução só com avisos sai `0`. São dois, e eles viajam numa
+**não reprova**: uma execução só com avisos sai `0`. Hoje é um, e ele viaja numa
 lista própria justamente para não somar ao veredito.
 
 | Vocabulário | Sobre o quê | O que faz com o código de saída |
