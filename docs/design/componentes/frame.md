@@ -145,20 +145,32 @@ da mídia por dentro — o mesmo par que separa casca e código em
 Ela não é sobre o componente: é sobre **o que ele enquadra**. Um diagrama é um
 artefato, e artefato precisa funcionar nos dois modos.
 
-> **A regra: diagrama é SVG usando `currentColor`, nunca cor assada. Um arquivo
-> por diagrama, não um por modo.**
+> **A regra: um arquivo por diagrama, nunca um asset por modo. O que bifurca é o
+> mecanismo, e quem o escolhe é a procedência do desenho.**
 
-O que o componente faz para sustentar a regra é uma linha: o palco declara
-`color`, e o desenho herda. É por isso que a exceção aparece aqui e não some — se
-o palco não declarasse tinta, um diagrama correto ainda dependeria de o autor
-lembrar de herdar de algum lugar.
+**Desenho de origem própria herda a tinta do palco, e entra inline.** O
+componente declara `color`, o SVG usa `currentColor`, e o desenho fica do tom do
+texto em volta sem saber em que modo está. É por isso que a exceção aparece aqui
+e não some — se o palco não declarasse tinta, um diagrama correto ainda
+dependeria de o autor lembrar de herdar de algum lugar. Para esse caso a
+proibição de `<img>` continua de pé, e pela razão medida: `<img src="…svg">`
+renderiza o SVG num documento separado, e `currentColor` ali resolve contra o
+`color` daquele documento, não contra o do palco.
 
-**E a mesma regra fecha a rota de entrega, que estava em aberto:** o diagrama
-chega ao MDX como **SVG inline, um arquivo por diagrama, nunca `<img>`**.
-`<img src="…svg">` renderiza o SVG num documento separado, e `currentColor` ali
-resolve contra o `color` daquele documento, não contra o do palco. A rota de
-asset registrado é, portanto, **incompatível** com a regra que o próprio
-componente carrega. A lacuna existia porque ninguém tinha ligado as duas pontas.
+**Desenho de procedência externa traz a própria adaptação, e entra por `<img>`.**
+É o caso do diagrama exportado do draw.io, que não emite `currentColor` em lugar
+nenhum: ele emite `light-dark()`, que resolve contra o `color-scheme`, e o
+`color-scheme` do documento hospedeiro **atravessa** a fronteira do `<img>` e
+vence a preferência do sistema operacional. Um arquivo, dois modos, pela outra
+ponta — e sem JavaScript, sem `ThemedImage`, sem dois assets. O invariante que a
+regra protege é o mesmo, e é ele que sobrevive; o `currentColor` era o mecanismo
+de um caso, não a regra.
+
+**E inlinar esse SVG não é a alternativa mais segura: quebra as duas coisas.** O
+`color-scheme: light dark` que o draw.io grava no `<svg>` raiz vence o herdado de
+`:root`, e o diagrama passaria a seguir o sistema operacional enquanto o resto do
+site segue o botão. O `<style>` que ele carrega vazaria do desenho para a página
+inteira. A rota de asset registrado não é uma concessão aqui — é a correta.
 
 Fundo do palco é a superfície levantada, que já bifurcou na camada 2. O
 componente continua não sabendo em que modo está.
@@ -172,10 +184,16 @@ estado.
 
 Sem foco próprio: não há elemento focável.
 
-**O nome acessível do diagrama é responsabilidade inteira do desenho.** Sem
-`<figcaption>`, `role="img"` mais rótulo no `<svg>` é a única rota — não uma
-principal com a legenda como reforço, e sim a única que existe. O contrato de
-estado de entrada mora em [`foco.md`](../foco.md).
+**O nome acessível do diagrama é responsabilidade inteira do desenho**, e a rota
+depende de como ele chega. Sem `<figcaption>`, o SVG inline depende de
+`role="img"` mais rótulo no `<svg>` — não uma rota principal com a legenda como
+reforço, e sim a única que existe. O SVG que entra por `<img>` depende do `alt`,
+com a mesma força e por dois motivos somados: o draw.io exporta **zero `<title>`
+e zero `<desc>`**, então nada dentro do arquivo nomeia o desenho; e a busca do
+site indexa o markdown fonte, então o `alt` é também a única coisa que torna o
+diagrama encontrável, porque rótulo de dentro do desenho não entra no índice por
+rota nenhuma. Escrever *"Diagrama de arquitetura"* desperdiça as duas funções.
+O contrato de estado de entrada mora em [`foco.md`](../foco.md).
 
 ## Procedência
 
@@ -188,7 +206,11 @@ estado de entrada mora em [`foco.md`](../foco.md).
 | O palco é tingido — `--pd-surface-raised` | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ele citava `--pd-surface-page`, e sem cartão isso é uma borda em volta de nada. Mesmo defeito do bloco de código, achado lá e não aqui |
 | Diagrama é SVG com `currentColor`, um arquivo para os dois modos | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §7 — exceção criada pela decisão acima |
 | Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
-| **Como o diagrama chega ao MDX** — SVG inline, nunca `<img>` | **origem própria (consequência)** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — `<img src="…svg">` não herda `currentColor`, então a rota de asset registrado é incompatível com a regra que o componente já carregava. A lacuna existia por ninguém ter ligado as duas pontas |
+| **Como o diagrama chega ao MDX** — inline quando herda a tinta do palco, `<img>` quando traz a própria adaptação | **origem própria (consequência)** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) fechou a rota em SVG inline porque `<img src="…svg">` não herda `currentColor`, e a razão foi conferida por medição: dentro do `<img>` o `currentColor` vira preto mesmo com o palco declarando outra tinta. Ela continua verdadeira, e apenas não alcança desenho que nunca usa `currentColor`. [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) mede o outro caso e o **delimita**, em vez de abrir exceção genérica |
+| Diagrama de draw.io entra como `.drawio.svg`, um arquivo que é ao mesmo tempo o publicado e o fonte | origem própria | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — o XML do diagrama mora no atributo `content` do próprio `<svg>`, e reabrir o arquivo exportado devolveu 21 de 21 células. Sem artefato derivado não existe sincronia a vigiar, e o ambiente-alvo não aceita o passo de CI que a vigiaria |
+| O `.drawio.svg` co-loca ao markdown que o usa, nunca em `static/` | **origem própria (implementação)** | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — asset co-locado é módulo do webpack e recarrega por HMR; o mesmo arquivo em `static/` não recarrega, porque o Docusaurus grava `liveReload: false`. É a co-locação que compra o loop de salvar e ver |
+| Um desenho por locale, co-locado nas duas árvores | **origem própria (consequência)** | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — rótulo de diagrama é conteúdo, e a cobrança 13 do portão 4 cobra cobertura de locale. O mesmo desenho com rótulo em pt-BR numa página EN é conteúdo não traduzido, e nenhuma varredura o pegaria |
+| Inlinar o SVG do draw.io fica fora | origem própria | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — medido: o `color-scheme` que ele grava no `<svg>` raiz vence o herdado de `:root`, e o `<style>` que ele carrega vazaria para a página inteira |
 | Preenchimento 8, raio 16 no palco, raio 12 na mídia interna | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--pd-space-6` e `--pd-radius-md` nos dois níveis, sem distinguir |
 | Grade de pontos, desvanecida em gradiente vertical | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11. Camada nova, independente da linha "sem fundo quadriculado" acima: quadriculado indicaria transparência de imagem, a grade é textura decorativa por trás do diagrama |
 | `radial-gradient` mais `mask-image` no lugar do SVG em data-URI da âncora | **origem própria (implementação)** | mesmo resultado visual, zero asset novo — o axioma 2 vale para decoração tanto quanto para dependência |

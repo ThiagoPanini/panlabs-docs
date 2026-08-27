@@ -23,6 +23,12 @@ walking `content/`. For `--from`, `remote.py` answers the same question by
 obtaining a copy of a foreign repository. `planning.py` turns the `Request` into a
 `Plan`, and every write passes through the single boundary in `writing.py`.
 
+<Frame>
+
+![cli.py parses the line and, when a value is missing, wizard.py fills the gaps; both produce the same Request, which planning.py turns into a Plan by asking discovery.py and packaged.py for the embedded catalog or remote.py for the foreign repository, and every write passes through the single boundary in writing.py before it becomes a file on disk.](./fluxo-de-uma-invocacao.drawio.svg)
+
+</Frame>
+
 ```bash
 uvx overpower@latest install --skill panlabs-python-standards --runtime claude-code --dry-run
 ```
