@@ -22,12 +22,12 @@ A metade de integridade lê a tabela de runtimes nos dois escopos e confere o qu
 
 O `doctor` usa dois dos quatro códigos da aplicação, e a escolha entre eles é o que o torna utilizável como portão de CI. Um relatório ruim nunca sai `1`, porque relatório ruim não é queda.
 
-O que o relatório traz se divide em dois, e só um lado mexe no código: **achado** reprova, **aviso** não. São cinco achados e dois avisos, e a lista está na página de solução de problemas.
+O que o relatório traz se divide em dois, e só um lado mexe no código: **achado** reprova, **aviso** não. São cinco achados e um aviso, e a lista está na página de solução de problemas.
 
 <ResponseField name="0" type="int">
-As cinco conferências que reprovam rodaram e nenhuma achou problema. Aviso não conta: slot vazio e clone órfão saem no relatório e não mexem no código de saída.
+As cinco conferências que reprovam rodaram e nenhuma achou problema. Aviso não conta: slot vazio sai no relatório e não mexe no código de saída.
 </ResponseField>
 
 <ResponseField name="3" type="int">
-Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código. As cinco que chegam aqui são link pendurado, link virado texto, divergência de conteúdo, servidor pendente de aprovação e clone sumido.
+Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código. As cinco que chegam aqui são link pendurado, link virado texto, divergência de conteúdo, servidor pendente de aprovação e runner sumido do `PATH`.
 </ResponseField>
