@@ -14,6 +14,39 @@ does not promote the first digit, and the whole rule is on
 The groupings by minor exist for the navigation column. A list of thirty entries
 with no heading is a list nobody walks.
 
+## 0.31.x
+
+<Update label="0.31.0" tag="breaking">
+  **A server's source became an address, and nothing is cloned any more.** A
+  recipe whose server has code of its own declares `source:` with `git`, `ref`,
+  `runner` and `entrypoint`, and overpower renders the runner line out of them,
+  with `server.args` appended at the end. The `~/.overpower/mcp/` directory is
+  gone, and that is why a recipe with a source installs in **project scope**
+  again, with a written file identical on every machine. `ref` is required and
+  `runner` is closed vocabulary, `uvx` or `npx`, and both are refused by name
+  outside those conditions. `transport`, `server.command` and the runner
+  precondition became **derived**: declaring any of them beside `source:` is
+  also a refusal by name. The old `source:`, with its `url` key, and the source
+  substitution token stopped being read, **with no compatibility window**.
+  `doctor` lost its two clone checks and gained one: it re-runs the runner
+  precondition against `PATH`, offline. And `list --from` now shows the origin
+  and the ref on the server's line.
+</Update>
+
+## 0.30.x
+
+<Update label="0.30.0" tag="breaking">
+  **A bundle now reaches an MCP server, and `items` gained a namespace prefix.**
+  Every `items` entry now carries `skill:<name>` or `mcp:<name>`, resolved inside
+  the same repository, on both provenances. **There is no compatibility window**:
+  an entry with no prefix, or with a prefix outside the closed set, is refused by
+  name, and every `items` already written has to gain its `skill:`. A bundle with
+  a skill and a server writes the folder and the key in the same run, and the
+  screens correctly add up an item that has no tree to weigh, because a recipe
+  weighs a key and not bytes. Scope stays one per run: nothing inside the bundle
+  picks a scope per item.
+</Update>
+
 ## 0.29.x
 
 <Update label="0.29.0" tag="breaking">

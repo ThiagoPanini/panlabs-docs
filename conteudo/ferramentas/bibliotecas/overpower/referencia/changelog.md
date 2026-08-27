@@ -14,6 +14,39 @@ não promove o primeiro dígito, e a régua inteira está em
 Os agrupamentos por minor existem para a coluna de navegação. Uma lista de trinta
 entradas sem heading é uma lista que ninguém percorre.
 
+## 0.31.x
+
+<Update label="0.31.0" tag="quebra">
+  **A fonte de um servidor virou endereço, e nada mais é clonado.** Uma receita
+  cujo servidor tem código próprio declara `source:` com `git`, `ref`, `runner` e
+  `entrypoint`, e o `overpower` renderiza a linha do runner a partir deles, com o
+  `server.args` aposto no fim. O diretório `~/.overpower/mcp/` deixou de existir,
+  e é por isso que receita com fonte volta a instalar em **escopo de projeto**,
+  com um arquivo escrito idêntico em toda máquina. O `ref` é obrigatório e o
+  `runner` é vocabulário fechado, `uvx` ou `npx`, e os dois são recusados por
+  nome fora dessas condições. O `transport`, o `server.command` e a precondição
+  de runner passaram a **derivados**: declarar qualquer um deles ao lado de
+  `source:` também é recusa por nome. O `source:` antigo, com a chave `url`, e o
+  token de substituição da fonte deixaram de ser lidos, **sem janela de
+  compatibilidade**. O `doctor` perdeu as duas conferências de clone e ganhou
+  uma: re-roda a precondição do runner contra o `PATH`, offline. E o
+  `list --from` passou a mostrar a origem e a ref na linha do servidor.
+</Update>
+
+## 0.30.x
+
+<Update label="0.30.0" tag="quebra">
+  **Um bundle passou a alcançar servidor MCP, e o `items` ganhou prefixo de
+  espaço de nomes.** Cada entrada de `items` carrega agora `skill:<nome>` ou
+  `mcp:<nome>`, resolvido dentro do mesmo repositório, nas duas procedências.
+  **Não há janela de compatibilidade**: entrada sem prefixo, ou com prefixo fora
+  do conjunto fechado, é recusa por nome, e todo `items` já escrito precisa
+  ganhar o `skill:`. Um bundle com skill e servidor escreve a pasta e a chave na
+  mesma execução, e as telas somam corretamente um item que não tem árvore para
+  pesar, porque a receita pesa uma chave e não bytes. O escopo continua um por
+  execução: nada dentro do bundle escolhe escopo por item.
+</Update>
+
 ## 0.29.x
 
 <Update label="0.29.0" tag="quebra">

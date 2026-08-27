@@ -119,7 +119,7 @@
         {
           "nome": "--mcp",
           "tipo": "name",
-          "descricao": "Opens an MCP server's recipe, with the transport, the fields the declaration itself spells, and the derived targets. A recipe is an entry of the YAML manifest's `mcp:` key, not a file beside it.",
+          "descricao": "Opens an MCP server's recipe, with the fields the declaration itself spells and the ones overpower derives from it, the transport among those when the recipe carries `source:`. A recipe is an entry of the YAML manifest's `mcp:` key, not a file beside it.",
           "aridade": {
             "multiplo": false
           }
@@ -361,17 +361,17 @@
       "parametros": [],
       "retorno": {
         "tipo": "int",
-        "descricao": "`doctor` uses two of the application's four codes, and the choice between them is what makes it usable as a CI gate. An unhealthy report is never `1`, because an unhealthy report is not a crash.\n\nWhat the report carries splits in two, and only one side moves the code: a **finding** fails, a **notice** does not. There are five findings and two notices, and the list is on the troubleshooting page.",
+        "descricao": "`doctor` uses two of the application's four codes, and the choice between them is what makes it usable as a CI gate. An unhealthy report is never `1`, because an unhealthy report is not a crash.\n\nWhat the report carries splits in two, and only one side moves the code: a **finding** fails, a **notice** does not. There are five findings and one notice, and the list is on the troubleshooting page.",
         "campos": [
           {
             "nome": "0",
             "tipo": "int",
-            "descricao": "The five checks that fail the gate ran and none found a problem. Notices do not count: an unset slot and an orphan clone show in the report and leave the exit code alone."
+            "descricao": "The five checks that fail the gate ran and none found a problem. Notices do not count: an unset slot shows in the report and leaves the exit code alone."
           },
           {
             "nome": "3",
             "tipo": "int",
-            "descricao": "Found a problem. The check ran correctly and computed a real answer that happens to be negative, so a script tells `the check ran and failed` apart from `the check itself broke` by exit code alone. The five that reach here are a dangling link, a link turned into text, a content divergence, a server pending approval, and a missing clone."
+            "descricao": "Found a problem. The check ran correctly and computed a real answer that happens to be negative, so a script tells `the check ran and failed` apart from `the check itself broke` by exit code alone. The five that reach here are a dangling link, a link turned into text, a content divergence, a server pending approval, and a runner gone from `PATH`."
           }
         ]
       },

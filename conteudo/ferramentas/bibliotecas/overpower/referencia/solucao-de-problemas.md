@@ -124,7 +124,7 @@ São cinco, e a lista é fechada.
 | link virado texto | um arquivo dentro do equipamento aterrissado é alvo de um link e está grafado como conteúdo | reinstale; a cópia perdeu o link no caminho |
 | divergência | duas cópias de um artefato, no mesmo escopo, não concordam no conteúdo | reinstale para reconciliar, e decida qual escopo é o dono |
 | aprovação pendente | um servidor foi escrito num enxerto que o Claude Code controla, e ele não o aprovou | aprove o servidor no runtime, fora do `overpower` |
-| clone ausente | um enxerto ainda nomeia um clone `[source]` que não está mais na máquina | reinstale o servidor, ou tire o enxerto |
+| runner sumido | um enxerto renderizado de uma receita com `source:` nomeia um runner que não está mais no `PATH` | instale o runner que a receita exige, `uvx` ou `npx`, ou tire o enxerto |
 
 Na tela, cada achado sai com o caminho envolvido logo abaixo do nome, e a saída
 é `3`:
@@ -161,7 +161,7 @@ Na tela, cada achado sai com o caminho envolvido logo abaixo do nome, e a saída
 ╰──────────────────────────────────────────────────────────╯
 ```
 
-## Os dois avisos do `doctor`
+## O aviso do `doctor`
 
 Um **aviso** é observação sobre o ambiente, não sobre o que aterrissou. Ele
 **não** reprova: uma execução só com avisos sai `0`.
@@ -169,7 +169,6 @@ Um **aviso** é observação sobre o ambiente, não sobre o que aterrissou. Ele
 | Aviso | O que significa | O que fazer |
 | --- | --- | --- |
 | slot sem valor | um enxerto lê um slot do ambiente, e este ambiente não o tem | ponha a variável, ou aceite que aquele servidor não sobe aqui |
-| clone órfão | há um clone sob o `.overpower/mcp/` da máquina a que nenhum enxerto se refere | apague o diretório, se tiver certeza de que nada o usa |
 
 :::note
 Achado e aviso são vocabulário do produto, e a definição de cada um mora em
