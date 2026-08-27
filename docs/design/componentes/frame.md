@@ -119,6 +119,12 @@ desenha dentro dela.
 
 ## Autoria em MDX
 
+**Duas rotas, e a seção Light e dark diz qual vale para qual desenho.** As duas
+entram dentro do `<Frame>`, sempre: fora dele o diagrama perde o palco, e é o
+palco que declara a tinta que a primeira rota herda.
+
+Desenho de origem própria, traçado à mão, herdando a tinta do palco:
+
 ```mdx
 <Frame>
 <svg viewBox="0 0 520 88" role="img" aria-label="Fluxo em três estados">
@@ -126,6 +132,43 @@ desenha dentro dela.
 </svg>
 </Frame>
 ```
+
+Diagrama vindo do draw.io, que traz a própria adaptação de tema:
+
+```mdx
+<Frame>
+
+![o cli.py parseia a linha e o wizard.py preenche as lacunas…](./fluxo-de-uma-invocacao.drawio.svg)
+
+</Frame>
+```
+
+As linhas em branco dentro do `<Frame>` não são estilo: sem elas o MDX 3 lê o
+`![…]()` como texto, e a imagem não vira imagem.
+
+**O arquivo é um `.drawio.svg`, e ele é ao mesmo tempo o publicado e o fonte** —
+o modelo do diagrama mora no atributo `content` do `<svg>` raiz, e o autor edita
+esse arquivo, não um `.drawio` à parte. Não existe passo de exportação.
+
+As cinco regras que o acompanham:
+
+1. **Co-locado ao markdown que o usa**, nunca em `static/`. Asset ao lado da
+   página é módulo do webpack e recarrega sozinho no dev server; `static/` não.
+   Diagrama usado por mais de uma página sobe para a pasta ancestral comum mais
+   próxima, nunca para um depósito global.
+2. **Um desenho por locale.** Rótulo é conteúdo. O mesmo arquivo servindo pt-BR
+   e EN publica rótulo não traduzido, e nenhuma varredura pega isso.
+3. **Nome em minúscula com hífen**, dizendo o assunto, terminando em
+   `.drawio.svg`.
+4. **`alt` obrigatório, descrevendo o mecanismo** — ver A11y, logo abaixo.
+5. **Fundo transparente**, para o desenho se fundir ao palco nos dois modos.
+
+**Nada rola horizontalmente, e nada custa CSS para isso.** O Infima já traz
+`img { max-width: 100% }`, e o palco acrescenta `max-inline-size: 100%` sobre
+`img` e `svg`; diagrama mais largo que a coluna **encolhe para caber**, e SVG
+não perde nitidez ao reduzir. A regra que fecha o ponto é de conteúdo, não de
+CSS: **se o desenho fica ilegível na largura da coluna, ele está complexo demais,
+e a saída é fatiar em dois.**
 
 ## Tokens consumidos
 
@@ -148,7 +191,7 @@ artefato, e artefato precisa funcionar nos dois modos.
 > **A regra: um arquivo por diagrama, nunca um asset por modo. O que bifurca é o
 > mecanismo, e quem o escolhe é a procedência do desenho.**
 
-**Desenho de origem própria herda a tinta do palco, e entra inline.** O
+**Desenho traçado à mão, que herda a tinta do palco, entra inline.** O
 componente declara `color`, o SVG usa `currentColor`, e o desenho fica do tom do
 texto em volta sem saber em que modo está. É por isso que a exceção aparece aqui
 e não some — se o palco não declarasse tinta, um diagrama correto ainda
@@ -157,9 +200,9 @@ proibição de `<img>` continua de pé, e pela razão medida: `<img src="…svg"
 renderiza o SVG num documento separado, e `currentColor` ali resolve contra o
 `color` daquele documento, não contra o do palco.
 
-**Desenho de procedência externa traz a própria adaptação, e entra por `<img>`.**
-É o caso do diagrama exportado do draw.io, que não emite `currentColor` em lugar
-nenhum: ele emite `light-dark()`, que resolve contra o `color-scheme`, e o
+**Desenho que traz a própria adaptação de tema entra por `<img>`.** O critério é
+o mecanismo, não de onde o arquivo veio. É o caso do diagrama do draw.io, que
+não emite `currentColor` em lugar nenhum: ele emite `light-dark()`, que resolve contra o `color-scheme`, e o
 `color-scheme` do documento hospedeiro **atravessa** a fronteira do `<img>` e
 vence a preferência do sistema operacional. Um arquivo, dois modos, pela outra
 ponta — e sem JavaScript, sem `ThemedImage`, sem dois assets. O invariante que a
@@ -204,13 +247,14 @@ O contrato de estado de entrada mora em [`foco.md`](../foco.md).
 | O contrato de vídeo da âncora fica **medido e não exercido** | origem própria | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) — registrado para ninguém remediar a ausência por intuição |
 | Sem fundo quadriculado | **origem própria (consequência)** | ele existe para imagem com transparência, que não é o caso. **As duas fontes discordam sobre ele e nenhuma explica a diferença:** está na medição de `mintlify.com/docs` e **não** na do `mint` do Devin. O palco tingido foi escolhido pelo segundo — escolha entre fontes, **não confirmação**. Se o quadriculado existir no `mint`, a ausência dele aqui passa a ser **divergência da âncora** |
 | O palco é tingido — `--pd-surface-raised` | **origem própria (implementação)** | [#56](https://github.com/ThiagoPanini/panlabs-docs/issues/56) — ele citava `--pd-surface-page`, e sem cartão isso é uma borda em volta de nada. Mesmo defeito do bloco de código, achado lá e não aqui |
-| Diagrama é SVG com `currentColor`, um arquivo para os dois modos | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §7 — exceção criada pela decisão acima |
+| Diagrama é um arquivo para os dois modos, nunca um asset por modo | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §7 — exceção criada pela decisão acima. A linha nascia dizendo *SVG com `currentColor`*, e a [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) a estreitou: o invariante de um arquivo só ficou de pé, e o `currentColor` desceu a mecanismo de uma das duas rotas |
 | Zero partes publicadas | origem própria | [#15](https://github.com/ThiagoPanini/panlabs-docs/issues/15) §5 |
 | **Como o diagrama chega ao MDX** — inline quando herda a tinta do palco, `<img>` quando traz a própria adaptação | **origem própria (consequência)** | [#60](https://github.com/ThiagoPanini/panlabs-docs/issues/60) fechou a rota em SVG inline porque `<img src="…svg">` não herda `currentColor`, e a razão foi conferida por medição: dentro do `<img>` o `currentColor` vira preto mesmo com o palco declarando outra tinta. Ela continua verdadeira, e apenas não alcança desenho que nunca usa `currentColor`. [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) mede o outro caso e o **delimita**, em vez de abrir exceção genérica |
-| Diagrama de draw.io entra como `.drawio.svg`, um arquivo que é ao mesmo tempo o publicado e o fonte | origem própria | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — o XML do diagrama mora no atributo `content` do próprio `<svg>`, e reabrir o arquivo exportado devolveu 21 de 21 células. Sem artefato derivado não existe sincronia a vigiar, e o ambiente-alvo não aceita o passo de CI que a vigiaria |
+| Diagrama de draw.io entra como `.drawio.svg`, um arquivo que é ao mesmo tempo o publicado e o fonte | **origem própria (medição)** | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — o XML do diagrama mora no atributo `content` do próprio `<svg>`, e reabrir o arquivo exportado devolveu 21 de 21 células. Sem artefato derivado não existe sincronia a vigiar, e o ambiente-alvo não aceita o passo de CI que a vigiaria |
 | O `.drawio.svg` co-loca ao markdown que o usa, nunca em `static/` | **origem própria (implementação)** | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — asset co-locado é módulo do webpack e recarrega por HMR; o mesmo arquivo em `static/` não recarrega, porque o Docusaurus grava `liveReload: false`. É a co-locação que compra o loop de salvar e ver |
 | Um desenho por locale, co-locado nas duas árvores | **origem própria (consequência)** | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — rótulo de diagrama é conteúdo, e a cobrança 13 do portão 4 cobra cobertura de locale. O mesmo desenho com rótulo em pt-BR numa página EN é conteúdo não traduzido, e nenhuma varredura o pegaria |
-| Inlinar o SVG do draw.io fica fora | origem própria | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — medido: o `color-scheme` que ele grava no `<svg>` raiz vence o herdado de `:root`, e o `<style>` que ele carrega vazaria para a página inteira |
+| Inlinar o SVG do draw.io fica fora | **origem própria (medição)** | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — o `color-scheme` que ele grava no `<svg>` raiz vence o herdado de `:root`, e o `<style>` que ele carrega vazaria do desenho para a página inteira |
+| Nada rola horizontalmente, e não custa CSS | **origem própria (medição)** | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) — o Infima já traz `img { max-width: 100% }` e o palco acrescenta `max-inline-size: 100%`; medido, um desenho de 662px exibiu 622px na coluna. A regra que sobra é de conteúdo: ilegível na largura da coluna quer dizer complexo demais |
 | Preenchimento 8, raio 16 no palco, raio 12 na mídia interna | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11; a versão anterior cravava `--pd-space-6` e `--pd-radius-md` nos dois níveis, sem distinguir |
 | Grade de pontos, desvanecida em gradiente vertical | herdado | [#100](https://github.com/ThiagoPanini/panlabs-docs/issues/100) — `research/paridade-devin` §11. Camada nova, independente da linha "sem fundo quadriculado" acima: quadriculado indicaria transparência de imagem, a grade é textura decorativa por trás do diagrama |
 | `radial-gradient` mais `mask-image` no lugar do SVG em data-URI da âncora | **origem própria (implementação)** | mesmo resultado visual, zero asset novo — o axioma 2 vale para decoração tanto quanto para dependência |
