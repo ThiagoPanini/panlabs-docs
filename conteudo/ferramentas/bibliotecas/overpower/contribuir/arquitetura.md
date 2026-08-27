@@ -23,6 +23,12 @@ existe andando por `content/`. Para o `--from`, o `remote.py` responde a mesma
 pergunta obtendo uma cópia de um repositório alheio. O `planning.py` transforma a
 `Request` num `Plan`, e toda escrita passa pela fronteira única em `writing.py`.
 
+<Frame>
+
+![O cli.py parseia a linha e, quando falta dado, o wizard.py preenche as lacunas; os dois produzem a mesma Request, que o planning.py transforma em Plan consultando o catálogo embutido por discovery.py e packaged.py ou o repositório alheio por remote.py, e toda escrita passa pela fronteira única do writing.py antes de virar arquivo no disco.](./fluxo-de-uma-invocacao.drawio.svg)
+
+</Frame>
+
 ```bash
 uvx overpower@latest install --skill panlabs-python-standards --runtime claude-code --dry-run
 ```

@@ -40,6 +40,14 @@ Duas alimentam o [segundo mapa](https://github.com/ThiagoPanini/panlabs-docs/iss
 
 **A primeira mediu com Chrome headless dirigido por CDP, e sem dependência nova** — o Node 24 tem `WebSocket` nativo. O axioma 2 vale também para o instrumento de medição, e é por isso que nem puppeteer nem playwright entraram. **A última fez o mesmo, e virou ferramenta:** o `npm run paridade` da [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93) é esse instrumento apontado para as tabelas de alvo, e roda na CI como relatório.
 
+## A pesquisa que nasceu fora dos mapas
+
+Uma veio de um pedido direto, sem ticket de mapa, e por isso a síntese dela mora no ticket que ela **gerou**. Mesma convenção de branch.
+
+| Branch | Onde a síntese mora | Tamanho | O que mediu |
+| --- | --- | --- | --- |
+| `research/diagramas-drawio` | [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) | 729 linhas | Como um diagrama draw.io chega a uma página de conteúdo com a esteira de CI **imutável** por restrição de projeto. Custeou o caminho descartado em número: o motor no cliente pede **8,77 MiB** commitados, telefona para fora quando o stencil não está vendorizado e não põe nenhum `<svg>` no HTML estático. Achou o híbrido `.drawio.svg`, que é ao mesmo tempo o publicado e o fonte — e com isso a sincronia que um portão de CI vigiaria deixa de existir, em vez de ficar sem vigia. Carrega **duas correções datadas**, uma delas desmentindo a própria §4.1. |
+
 ## O teste de reconstrução
 
 Não é pesquisa — é o **contrário** dela. As sete acima alimentaram as decisões; esta cobra o resultado. Mesma convenção de branch, pelo mesmo motivo: o material é longo e a síntese mora onde a decisão se lê.

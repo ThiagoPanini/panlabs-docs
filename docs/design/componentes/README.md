@@ -80,7 +80,9 @@ implementação.
 prática: o corporativo troca **quatro** cores de callout, não vinte.
 
 **As duas continuam pelas mesmas razões de sempre** — o `code-block` pela paleta
-de sintaxe, o `frame` pelo `currentColor` do diagrama. O que mudou nos dois foi a
+de sintaxe, o `frame` porque um diagrama tem de funcionar nos dois modos com um
+arquivo só (o `currentColor` era o mecanismo dessa exceção e a [#145](https://github.com/ThiagoPanini/panlabs-docs/issues/145) o
+estreitou para uma das duas rotas de entrega). O que mudou nos dois foi a
 **superfície**, e superfície é papel da camada 2, que já bifurcou: nenhum dos
 dois passou a saber em que modo está.
 

@@ -53,6 +53,8 @@ Tradução mora em `i18n/en/docusaurus-plugin-content-docs-ferramentas/current/`
 
 A cobrança 14 do portão 4 varre as três superfícies e reprova apontando arquivo e linha. `docs/` fica de fora, e por decisão: a spec não é produto, e `scripts/invariantes.sh` exige o literal `Livre — <dono>` lá dentro.
 
+**A varredura não filtra extensão** — ela roda `find -type f`, então alcança o `.drawio.svg` de um diagrama co-locado. Rótulo de desenho não leva travessão, e cada rótulo conta duas vezes: no `<text>` renderizado e no XML embutido no atributo `content`.
+
 **A única exceção é citação de saída de ferramenta.** Um arquivo que declara `{/* cita-saida-de-ferramenta */}` (ou `"citaSaidaDeFerramenta": true`, em `contratos/`) nas 20 primeiras linhas pode carregar `—` **dentro de cerca de código**, na linha `api_exemplos:` de página gerada, ou num valor `"mensagem"`. Fora dessas regiões o portão reprova igual. O marcador é `{/* */}` porque o comentário HTML não compila sob MDX 3.
 
 ## Link quebrado
