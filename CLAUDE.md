@@ -63,4 +63,4 @@ A voz do conteúdo é **`você` + imperativo**, no site inteiro. **Zero primeira
 
 **Zero travessão no conteúdo publicado.** `content/`, `i18n/` e `contracts/` fecham em zero `—`, e a saída é vírgula, dois-pontos, parênteses ou a frase reescrita, escolhida uma a uma. A cobrança 14 do portão 4 varre as três e reprova apontando arquivo e linha. `docs/` fica de fora, e por decisão: `invariantes.sh` exige o literal `Livre — <dono>` lá dentro.
 
-**A exceção é citação de saída de ferramenta.** Arquivo que declara `{/* cita-saida-de-ferramenta */}` (ou `"citesToolOutput": true`, em `contracts/`) nas 20 primeiras linhas pode ter `—` dentro de cerca de código, na linha `api_exemplos:` de página gerada, ou num valor `"mensagem"`. Fora dessas regiões reprova igual.
+**A exceção é citação de saída de ferramenta.** Arquivo que declara `{/* cita-saida-de-ferramenta */}` (ou `"citesToolOutput": true`, em `contracts/`) nas 20 primeiras linhas pode ter `—` dentro de cerca de código, na linha `api_exemplos:` de página gerada, ou num valor `"message"`. Fora dessas regiões reprova igual.
