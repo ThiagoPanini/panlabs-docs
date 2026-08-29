@@ -64,7 +64,6 @@
  */
 
 import React, {useCallback, useEffect, useId, useRef, useState} from 'react';
-import Translate, {translate} from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Icon from '@site/src/components/Icon';
 
@@ -119,67 +118,47 @@ export default function CopyPage({permalink}) {
     }
   }, [notify, mdRoute]);
 
-  /* Os três rótulos saem de `translate()` e não de `<Translate>`, porque os
-     dois que estão fora de cena também precisam ser TEXTO: eles seguram a
-     largura da caixa, e uma frase em português segurando a largura de uma
-     tela em inglês devolveria o pulo que a técnica existe para evitar. */
+  /* Os três rótulos são texto simples e não elemento, porque os dois que
+     estão fora de cena também precisam ser TEXTO: eles seguram a largura da
+     caixa, e um nó React fora de cena mediria diferente de um em cena. */
   const labels = {
-    idle: translate({
-      id: 'panlabs-docs.copiar.rotulo',
-      message: 'Copiar página',
-      description: 'Rótulo do botão que copia a página em Markdown',
-    }),
-    copied: translate({
-      id: 'panlabs-docs.copiar.feito',
-      message: 'Copiado',
-      description: 'Confirmação de que a página foi copiada',
-    }),
-    error: translate({
-      id: 'panlabs-docs.copiar.erro',
-      message: 'Não copiou',
-      description: 'Aviso de que a cópia falhou',
-    }),
+    idle: 'Copiar página',
+    copied: 'Copiado',
+    error: 'Não copiou',
   };
 
-  const assistantPrompt = translate(
-    {
-      id: 'panlabs-docs.copiar.prompt',
-      message: 'Leia {url} para eu poder fazer perguntas sobre esta página da documentação.',
-      description: 'Pergunta que o assistente externo recebe já escrita, com a URL do Markdown',
-    },
-    {url: mdUrl},
-  );
+  const assistantPrompt = `Leia ${mdUrl} para eu poder fazer perguntas sobre esta página da documentação.`;
 
   const actions = [
     {
       key: 'copiar',
       icon: 'copy',
       onActivate: copy,
-      title: <Translate id="panlabs-docs.copiar.menu.copiar" description="Item de menu que copia o Markdown">Copiar página</Translate>,
-      support: <Translate id="panlabs-docs.copiar.menu.copiar.apoio" description="Explicação do item que copia o Markdown">O Markdown desta página, para colar num assistente</Translate>,
+      title: 'Copiar página',
+      support: 'O Markdown desta página, para colar num assistente',
     },
     {
       key: 'ver',
       icon: 'file-text',
       href: mdRoute,
-      title: <Translate id="panlabs-docs.copiar.menu.ver" description="Item de menu que abre o Markdown">Ver como Markdown</Translate>,
-      support: <Translate id="panlabs-docs.copiar.menu.ver.apoio" description="Explicação do item que abre o Markdown">A mesma página em texto puro</Translate>,
+      title: 'Ver como Markdown',
+      support: 'A mesma página em texto puro',
     },
     {
       key: 'chatgpt',
       icon: 'external-link',
       href: `https://chatgpt.com/?q=${encodeURIComponent(assistantPrompt)}`,
       external: true,
-      title: <Translate id="panlabs-docs.copiar.menu.chatgpt" description="Item de menu que abre a página no ChatGPT">Abrir no ChatGPT</Translate>,
-      support: <Translate id="panlabs-docs.copiar.menu.assistente.apoio" description="Explicação dos itens que abrem a página num assistente">Perguntar sobre esta página</Translate>,
+      title: 'Abrir no ChatGPT',
+      support: 'Perguntar sobre esta página',
     },
     {
       key: 'claude',
       icon: 'external-link',
       href: `https://claude.ai/new?q=${encodeURIComponent(assistantPrompt)}`,
       external: true,
-      title: <Translate id="panlabs-docs.copiar.menu.claude" description="Item de menu que abre a página no Claude">Abrir no Claude</Translate>,
-      support: <Translate id="panlabs-docs.copiar.menu.assistente.apoio" description="Explicação dos itens que abrem a página num assistente">Perguntar sobre esta página</Translate>,
+      title: 'Abrir no Claude',
+      support: 'Perguntar sobre esta página',
     },
   ];
 
@@ -218,11 +197,7 @@ export default function CopyPage({permalink}) {
         data-pd-part="mais"
         popovertarget={menuId}
         aria-expanded={open}
-        aria-label={translate({
-          id: 'panlabs-docs.copiar.mais',
-          message: 'Mais formas de levar esta página',
-          description: 'Nome acessível do botão que abre o menu ao lado de Copiar página',
-        })}>
+        aria-label="Mais formas de levar esta página">
         <Icon name="chevron-right" size="sm" />
       </button>
 

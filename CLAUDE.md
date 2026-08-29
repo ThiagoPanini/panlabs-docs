@@ -16,7 +16,7 @@ Não há portão, régua de forma, cobrança de prosa nem hook de commit. Existi
 
 **Cor e medida saem do arquivo de tokens.** `src/css/tokens.css` é a sede única de literal. Fora da camada de raiz, todo valor deriva de algo que já está lá por uma operação declarada — sintaxe relativa (`oklch(from …)`), `color-mix(in oklab, …)` ou `calc()` sobre a base de raio, espaço ou duração. Hex novo, px avulso ou `cubic-bezier` solto em CSS de componente é o defeito que esta regra existe para pegar. Cor desce pela camada semântica; dimensão vem direto da raiz.
 
-**Zero travessão no conteúdo publicado.** `content/`, `i18n/` e `contracts/` fecham em zero `—`, e a saída é vírgula, dois-pontos, parênteses ou a frase reescrita, escolhida uma a uma. O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha. `docs/` e a raiz ficam de fora. A exceção é **citação de saída de ferramenta**: dentro de cerca de código ou num valor `"message"`, onde o travessão é o que a ferramenta imprimiu.
+**Zero travessão no conteúdo publicado.** `content/` e `contracts/` fecham em zero `—`, e a saída é vírgula, dois-pontos, parênteses ou a frase reescrita, escolhida uma a uma. O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha. `docs/` e a raiz ficam de fora. A exceção é **citação de saída de ferramenta**: dentro de cerca de código ou num valor `"message"`, onde o travessão é o que a ferramenta imprimiu.
 
 ## Idioma e voz
 

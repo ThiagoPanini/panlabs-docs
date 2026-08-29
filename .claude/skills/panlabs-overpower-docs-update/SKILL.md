@@ -56,7 +56,7 @@ print(json.dumps({
 }, indent=1, ensure_ascii=False))
 ```
 
-Rode com `uv run python` a partir do checkout irmão, ou com `uvx --from overpower==<versão> python`. Compare com `contracts/overpower.pt-BR.json` e `contracts/overpower.en.json`:
+Rode com `uv run python` a partir do checkout irmão, ou com `uvx --from overpower==<versão> python`. Compare com `contracts/overpower.json`:
 
 | o que conferir | onde, no contrato |
 | --- | --- |
@@ -82,9 +82,7 @@ Três delas carregam travessão literal. O contrato pode carregá-lo porque decl
 
 E confira a **descrição** de cada opção contra o texto de ajuda real. Este é o achado que a máquina não pega e que aconteceu de verdade: na 0.25.2 a ajuda do `--yes` passou a anunciar o segundo efeito, e o contrato continuou afirmando que *"a ajuda da ferramenta não anuncia"*. O contrato estava bem formado, o portão 5 estava verde, e a frase era falsa.
 
-**Corrigido o contrato, rode `npm run generate:reference`.** As oito páginas de `comandos/` — quatro por locale — são projeção. **Nunca as edite à mão**; o portão 5 regenera e reprova no `git diff`.
-
-**Os dois contratos são um par.** Toda mudança em `pt-BR` tem a sua em `en`, com as mesmas chaves. O `npm test` confere a congruência do par.
+**Corrigido o contrato, rode `npm run generate:reference`.** As quatro páginas de `comandos/` são projeção. **Nunca as edite à mão**; o portão 5 regenera e reprova no `git diff`.
 
 ## 3. O eixo de prosa — juízo, com prova
 
@@ -133,9 +131,8 @@ O modo de falha desta tarefa não é achar pouco. É **achar coisa que não exis
 
 ## 4. As armadilhas deste repositório — elas reprovam o PR
 
-- **Zero travessão** em `content/`, `i18n/` e `contracts/`. A cobrança 14 do portão 4 varre as três e aponta arquivo e linha, **inclusive dentro de bloco de código**. A prosa do `overpower` é cheia de travessão: todo texto copiado de lá precisa sair como vírgula, dois-pontos, parênteses ou frase reescrita, escolhido um a um. Este é o erro que você vai cometer.
+- **Zero travessão** em `content/` e `contracts/`. A cobrança 14 do portão 4 varre as duas e aponta arquivo e linha, **inclusive dentro de bloco de código**. A prosa do `overpower` é cheia de travessão: todo texto copiado de lá precisa sair como vírgula, dois-pontos, parênteses ou frase reescrita, escolhido um a um. Este é o erro que você vai cometer.
 - **Página gerada nunca se edita à mão.** `comandos/*.mdx` sai do contrato, e o portão 5 reprova o `git diff`.
-- **Paridade de locale.** Só a aba `Ferramentas` é traduzida, e a cobertura é cobrada: toda página mexida é duas.
 - **Contagem de página.** O portão 4 crava o volume por aba e o total. Acrescentar ou remover página exige acertar `scripts/portao-4-conteudo.sh` no mesmo PR. Acrescentar `<Update>` na página de changelog **não** exige: aquela cobrança é piso, não igualdade.
 - **A voz é `você` + imperativo, zero primeira pessoa**, no site inteiro.
 - **Nenhuma dependência npm nova.** É axioma, e `npm run zeros` reprova.

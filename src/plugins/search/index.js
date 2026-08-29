@@ -121,12 +121,7 @@ export default function searchPlugin(context, options) {
     async allContentLoaded({allContent, actions}) {
       const {i18n, siteDir} = context;
 
-      const records = pagesFrom({
-        allContent,
-        siteDir,
-        tabs: options.tabs,
-        translatedLocale: i18n.currentLocale !== i18n.defaultLocale,
-      }).map((page) => {
+      const records = pagesFrom({allContent, siteDir, tabs: options.tabs}).map((page) => {
         const {headings, text} = extract(page.body);
         return {
           u: page.permalink,
@@ -135,10 +130,6 @@ export default function searchPlugin(context, options) {
           s: headings,
           b: text,
           x: page.tabIndex,
-          // A página de fallback ENTRA no índice, marcada. Escondê-la faria a
-          // busca em EN devolver menos do que o site tem — o leitor chegaria na
-          // página por link e não pela busca, o que é pior que o português.
-          ...(page.fallback ? {f: 1} : {}),
         };
       });
 

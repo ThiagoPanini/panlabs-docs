@@ -66,7 +66,7 @@ A moldura de navegação que o Docusaurus já entrega — navbar, sidebar, TOC, 
 _Avoid_: layout, tema
 
 **Componente de conteúdo**:
-O que o autor escreve dentro do MDX, por oposição ao chrome. É um **catálogo fechado de dezessete**, todos registrados globalmente em `@theme/MDXComponents`: nenhum arquivo de conteúdo importa nada, e não há válvula de escape — quando uma página precisa de um arranjo que o catálogo não cobre, a página muda.
+O que o autor escreve dentro do MDX, por oposição ao chrome. É um **catálogo fechado de dezesseis**, todos registrados globalmente em `@theme/MDXComponents`: nenhum arquivo de conteúdo importa nada, e não há válvula de escape — quando uma página precisa de um arranjo que o catálogo não cobre, a página muda.
 _Avoid_: widget, bloco
 
 **Subtítulo**:

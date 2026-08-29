@@ -6,8 +6,6 @@ description: O mapa das trilhas de aprendizado do papel de API Owner, e a ordem 
 
 # Resumo das Trilhas
 
-<Untranslated />
-
 Esta página reúne as trilhas de aprendizado do papel de API Owner: uma linha por
 trilha, com o que cada uma cobre, o que ela pressupõe e em que ordem lê-las.
 

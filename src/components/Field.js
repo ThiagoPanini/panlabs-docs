@@ -31,7 +31,6 @@
 
 import React from 'react';
 import clsx from 'clsx';
-import Translate, {translate} from '@docusaurus/Translate';
 import styles from './catalog.module.css';
 
 // Só identificador de código como entrada — minúsculo e ASCII por contrato do
@@ -62,14 +61,7 @@ function Field({kind, name, type, required, deprecated, defaultValue, children})
           href={`#${id}`}
           className={styles.fieldAnchor}
           data-pd-part="ancora"
-          aria-label={translate(
-            {
-              id: 'panlabs-docs.campo.ancora',
-              message: 'Link para {nome}',
-              description: 'Nome acessível da âncora de linha de um campo de API',
-            },
-            {name: name},
-          )}>
+          aria-label={`Link para ${name}`}>
           #
         </a>
         <code>{name}</code>
@@ -85,21 +77,10 @@ function Field({kind, name, type, required, deprecated, defaultValue, children})
           <span className={styles.fieldChip}>{type}</span>
           {defaultValue === undefined ? null : (
             <span className={styles.fieldChip}>
-              <Translate id="panlabs-docs.campo.padrao" description="Rótulo do valor default de um campo de API">
-                padrão
-              </Translate>{' '}
-              <code>{defaultValue}</code>
+              padrão <code>{defaultValue}</code>
             </span>
           )}
-          {required ? (
-            <strong>
-              <Translate
-                id="panlabs-docs.campo.obrigatorio"
-                description="Chip que marca um parâmetro obrigatório">
-                obrigatório
-              </Translate>
-            </strong>
-          ) : null}
+          {required ? <strong>obrigatório</strong> : null}
         </span>
       </p>
       <div className={styles.fieldBody}>{children}</div>

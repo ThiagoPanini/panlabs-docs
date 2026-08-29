@@ -4,8 +4,8 @@
  * Os dois plugins deste slice são a mesma mecânica vista de dois lados: ambos
  * precisam da árvore inteira, na ordem em que o leitor a vê, com o MDX de cada
  * página à mão. Escrever isso duas vezes produziria duas ordens que divergem no
- * dia em que uma tab entrar — então a ordem, a leitura do arquivo e a detecção
- * de fallback moram aqui, e cada plugin consome o resultado.
+ * dia em que uma tab entrar — então a ordem e a leitura do arquivo moram aqui,
+ * e cada plugin consome o resultado.
  *
  * **A fonte é o MDX, não o HTML renderizado.** É o que dispensa `cheerio` e o
  * que faz as 6 páginas geradas da referência entrarem pelo mesmo caminho das
@@ -96,14 +96,8 @@ function sidebarOrder(sidebars) {
  * O rótulo da aba é o que o navbar diz que ele é: são a mesma decisão, e as
  * duas superfícies que precisam dele aqui (a seção do `llms.txt` e o
  * agrupamento dos resultados de busca) mostram ao leitor exatamente a palavra
- * que ele acabou de clicar.
- *
- * E ele chega **traduzido de graça**. O `translatePluginContent` do core aplica
- * `translateThemeConfig` durante o carregamento de conteúdo — antes de
- * `allContentLoaded` — então `i18n/en/docusaurus-theme-classic/navbar.json` já
- * está dentro de `context.siteConfig.themeConfig` quando estes dois plugins
- * rodam. Declarar o rótulo na opção do plugin criaria uma segunda cópia, e ela
- * sairia em português no build do EN.
+ * que ele acabou de clicar. Declarar o rótulo na opção do plugin criaria uma
+ * segunda cópia, e as duas podiam divergir.
  *
  * @param {{navbar?: {items?: any[]}}} themeConfig
  * @param {string[]} tabs
@@ -132,9 +126,8 @@ export function tabLabels(themeConfig, tabs) {
  * @param {Record<string, Record<string, any>>} args.allContent
  * @param {string} args.siteDir
  * @param {string[]} args.tabs ids das instâncias de docs, na ordem do navbar
- * @param {boolean} args.translatedLocale `currentLocale !== defaultLocale`
  */
-export function pagesFrom({allContent, siteDir, tabs, translatedLocale}) {
+export function pagesFrom({allContent, siteDir, tabs}) {
   const instances = allContent?.[DOCS_PLUGIN] ?? {};
   const pages = [];
 
@@ -172,11 +165,6 @@ export function pagesFrom({allContent, siteDir, tabs, translatedLocale}) {
           permalink: doc.permalink,
           filePath,
           body: withoutTopImport(raw.replace(FRONT_MATTER, '')),
-          // Sem lista para manter: se o fonte não está sob a árvore localizada,
-          // é a página de fallback em pt-BR servida sob `/en/`. No locale de
-          // origem não há fallback nenhum, e a árvore localizada dele sequer
-          // existe em disco — daí a guarda.
-          fallback: translatedLocale && !filePath.startsWith(version.contentPathLocalized),
         });
       }
     }

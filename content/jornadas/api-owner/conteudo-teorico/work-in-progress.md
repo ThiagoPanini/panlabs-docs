@@ -5,8 +5,6 @@ description: O conteúdo teórico da trilha de API Owner ainda está por escreve
 
 # Work in Progress
 
-<Untranslated />
-
 O conteúdo teórico desta trilha ainda não existe. Ele vai cobrir o que é preciso
 entender antes de mexer num contrato de API: versionamento, compatibilidade,
 depreciação e o que um consumidor tem direito de esperar.

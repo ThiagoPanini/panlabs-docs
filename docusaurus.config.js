@@ -121,17 +121,14 @@ const config = {
   // especificidade deste projeto foi medida contra o Infima sem camadas.
   // Ligar o flag muda a premissa e reabre o ADR.
 
+  // NÃO É VESTÍGIO DE i18n — é o que fixa o locale em pt-BR. Sem este bloco o
+  // default do próprio Docusaurus é `en` (`DEFAULT_I18N_CONFIG`, medido em
+  // `node_modules/@docusaurus/core/lib/server/configValidation.js`), e o
+  // `htmlLang` do site sairia errado. Um locale só na lista é o jeito padrão
+  // de fixar idioma sem tradução, sem dropdown e sem `i18n/`.
   i18n: {
     defaultLocale: 'pt-BR',
-    locales: ['pt-BR', 'en'],
-    localeConfigs: {
-      // `PT` e não `Português (Brasil)`: o rótulo do `localeDropdown` é o do
-      // locale corrente, e o default do Docusaurus mede 165px contra 55px.
-      // O navbar carrega quatro tabs, busca, locale e GitHub — 110px é a
-      // diferença entre caber e não caber na faixa de 997 a 1200px.
-      'pt-BR': {label: 'PT', htmlLang: 'pt-BR', direction: 'ltr'},
-      en: {label: 'EN', htmlLang: 'en', direction: 'ltr'},
-    },
+    locales: ['pt-BR'],
   },
 
   presets: [
@@ -338,7 +335,7 @@ const config = {
             label: 'Times',
           },
 
-          // À direita, na ordem declarada: Buscar · PT · GitHub. A alternância
+          // À direita, na ordem declarada: Buscar · GitHub. A alternância
           // de tema não é declarável — o `Navbar/Content` a renderiza depois
           // dos itens da direita, e é por isso que ela fecha a linha.
           //
@@ -347,7 +344,6 @@ const config = {
           // esconde o contêiner sozinho (`.navbarSearchContainer:empty`), então
           // reservar a posição custa zero pixel.
           {type: 'search', position: 'right'},
-          {type: 'localeDropdown', position: 'right'},
           {
             href: 'https://github.com/ThiagoPanini/panlabs-docs',
             label: 'GitHub',

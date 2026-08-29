@@ -9,7 +9,6 @@
     "swizzle": "docusaurus swizzle",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
-    "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "prebuild": "node scripts/generate-reference.mjs",
     "prestart": "node scripts/generate-reference.mjs",

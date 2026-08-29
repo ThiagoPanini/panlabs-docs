@@ -100,6 +100,14 @@ decisão sobreviveu à troca de premissa:
 > dados do painel — o que ele deixou de fazer é escolher layout. Ver
 > [`referencia.md`](../design/referencia.md) §2.
 
+> **Correção — #158.** O primeiro item desta lista dizia *"dois contratos
+> monolíngues congruentes, um por locale, nunca um bilíngue"*. O site virou
+> locale único, e não há mais `pt-BR`/`en` a distinguir: o par virou um
+> `contracts/overpower.json` só. O que a linha original protegia continua de
+> pé, o contrato nunca é bilíngue, só que a pergunta *quantos contratos por
+> locale* parou de fazer sentido. `validatePair` e a congruência que ela
+> cobrava saíram de `scripts/lib/signature.mjs` junto.
+
 ### f) O arquivo do gerador não troca de nome
 
 `scripts/gerar-referencia.mjs` continua. O ADR 8 §f) recusou `gerar-api` porque
@@ -162,7 +170,7 @@ de códigos é a leitura transversal que a raiz já publica.
 | Decisão | Classe | Fonte |
 | --- | --- | --- |
 | Gerar de contrato, saída commitada, portão de diff | herdado | [ADR 8](0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) — a decisão sobreviveu à troca de sujeito |
-| Dois contratos monolíngues congruentes, JSON puro | herdado | [ADR 8](0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) a) e b) |
+| JSON puro, contrato único desde o #158 | herdado | [ADR 8](0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) a) |
 | Fragmento de sidebar em vez da árvore | herdado | [ADR 8](0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) c) |
 | Validador com lista fechada e JSON Pointer | herdado | [ADR 8](0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md) d) |
 | O contrato descreve superfície de CLI, não assinatura | **origem própria** | o `overpower` é executado, não importado — a superfície pública dele é a linha de comando |

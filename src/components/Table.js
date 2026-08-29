@@ -8,7 +8,7 @@
  * Ele é o **único lugar do catálogo onde ARIA aparece**, e aparece porque o HTML
  * não tem elemento para isto: sem `role="region"` mais `tabindex`, um leitor de
  * teclado não consegue rolar uma tabela larga. Região sem nome acessível é
- * defeito, então o rótulo vem da camada de i18n.
+ * defeito, então o rótulo é obrigatório.
  *
  * Ele também corrige um defeito do Infima que ninguém tinha nomeado: o
  * framework declara `table { display: block; overflow: auto }`. Isso resolve o
@@ -25,7 +25,6 @@
  */
 
 import React from 'react';
-import {translate} from '@docusaurus/Translate';
 import styles from './catalog.module.css';
 
 export default function Table({children, ...rest}) {
@@ -35,11 +34,7 @@ export default function Table({children, ...rest}) {
       data-pd-component="table"
       role="region"
       tabIndex={0}
-      aria-label={translate({
-        id: 'panlabs-docs.tabela.regiao',
-        message: 'Tabela',
-        description: 'Nome acessível da região rolável que envolve toda tabela',
-      })}>
+      aria-label="Tabela">
       <table {...rest}>{children}</table>
     </div>
   );

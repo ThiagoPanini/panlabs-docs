@@ -52,7 +52,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useHistory} from '@docusaurus/router';
 import {usePluginData} from '@docusaurus/useGlobalData';
-import Translate, {translate} from '@docusaurus/Translate';
 import Icon from '@site/src/components/Icon';
 import styles from './styles.module.css';
 import {
@@ -170,11 +169,7 @@ export default function SearchBar() {
         data-pd-part="trigger"
         onClick={open}>
         <Icon name="search" size="sm" />
-        <span className={styles.label}>
-          <Translate id="panlabs-docs.busca.abrir" description="Rótulo do botão que abre a busca">
-            Buscar
-          </Translate>
-        </span>
+        <span className={styles.label}>Buscar</span>
         <kbd className={styles.shortcut}>{mac ? '⌘' : 'Ctrl'} K</kbd>
       </button>
 
@@ -198,11 +193,7 @@ export default function SearchBar() {
             aria-controls={LIST_ID}
             aria-autocomplete="list"
             aria-activedescendant={results.length > 0 ? optionId(active) : undefined}
-            aria-label={translate({
-              id: 'panlabs-docs.busca.campo',
-              message: 'Buscar na documentação',
-              description: 'Nome acessível do campo de busca',
-            })}
+            aria-label="Buscar na documentação"
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
@@ -214,11 +205,7 @@ export default function SearchBar() {
             type="button"
             className={styles.close}
             onClick={close}
-            aria-label={translate({
-              id: 'panlabs-docs.busca.fechar',
-              message: 'Fechar a busca',
-              description: 'Nome acessível do botão que fecha o modal de busca',
-            })}>
+            aria-label="Fechar a busca">
             <Icon name="x" size="sm" />
           </button>
         </div>
@@ -227,11 +214,7 @@ export default function SearchBar() {
           id={LIST_ID}
           role="listbox"
           className={styles.list}
-          aria-label={translate({
-            id: 'panlabs-docs.busca.resultados',
-            message: 'Resultados',
-            description: 'Nome acessível da lista de resultados da busca',
-          })}>
+          aria-label="Resultados">
           {results.map((r, i) => (
             <li
               key={r.u}
@@ -244,55 +227,22 @@ export default function SearchBar() {
               onMouseMove={() => setActive(i)}>
               <span className={styles.title}>{highlight(r.t, terms)}</span>
               <span className={styles.tab}>{labels[r.x]}</span>
-              {r.f ? (
-                <span className={styles.fallback}>
-                  <Translate
-                    id="panlabs-docs.busca.fallback"
-                    description="Marca de resultado cuja página ainda está em português">
-                    em português
-                  </Translate>
-                </span>
-              ) : null}
               <span className={styles.excerpt}>{highlight(excerpt(r, terms), terms)}</span>
             </li>
           ))}
         </ul>
 
         <p role="status" className={styles.visuallyHidden}>
-          {query.trim() === ''
-            ? ''
-            : translate(
-                {
-                  id: 'panlabs-docs.busca.contagem',
-                  message: '{n} resultados',
-                  description: 'Anúncio do número de resultados, para leitor de tela',
-                },
-                {n: results.length},
-              )}
+          {query.trim() === '' ? '' : `${results.length} resultados`}
         </p>
 
         {/* As teclas são CARACTERES SOLTOS desde a #98 — nem ícone, nem
             elemento de teclado. Três setas desenhadas custariam três slots e
             estourariam o teto de 64 do manifesto — e `↑` já é a seta. */}
         <footer className={styles.footer}>
-          <span>
-            ↑↓{' '}
-            <Translate id="panlabs-docs.busca.tecla.navegar" description="Legenda das setas no rodapé do modal">
-              navegar
-            </Translate>
-          </span>
-          <span>
-            ↵{' '}
-            <Translate id="panlabs-docs.busca.tecla.abrir" description="Legenda do Enter no rodapé do modal">
-              abrir
-            </Translate>
-          </span>
-          <span>
-            esc{' '}
-            <Translate id="panlabs-docs.busca.tecla.fechar" description="Legenda do Esc no rodapé do modal">
-              fechar
-            </Translate>
-          </span>
+          <span>↑↓ navegar</span>
+          <span>↵ abrir</span>
+          <span>esc fechar</span>
         </footer>
       </dialog>
     </>

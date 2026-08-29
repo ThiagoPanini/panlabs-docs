@@ -303,16 +303,9 @@
   font-weight: var(--pd-weight-ui);
 }
 
-.tab,
-.fallback {
+.tab {
   color: var(--pd-text-faint);
   font-size: var(--pd-type-xs);
-}
-
-.fallback {
-  padding-inline: var(--pd-space-1);
-  border: var(--pd-border-width) solid var(--pd-border-subtle);
-  border-radius: var(--pd-radius-xs);
 }
 
 .excerpt {
