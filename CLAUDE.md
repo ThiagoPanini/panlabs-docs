@@ -33,6 +33,10 @@ A voz do conteúdo é **`você` mais imperativo**, no site inteiro, com **zero p
 
 ## Agent skills
 
+### Fluxo de desenvolvimento
+
+Toda mudança sai por branch e PR, nunca commit direto na `main` — commit com o trailer `Closes #N`, merge só com o check `gate` verde. Ver `docs/agents/workflow.md`.
+
 ### Issue tracker
 
 Issues do GitHub em `ThiagoPanini/panlabs-docs`, pela CLI `gh`. Ver `docs/agents/issue-tracker.md`.
