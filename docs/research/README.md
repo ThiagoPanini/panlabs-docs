@@ -38,7 +38,7 @@ Duas alimentam o [segundo mapa](https://github.com/ThiagoPanini/panlabs-docs/iss
 | `research/faixa-de-tabs` | [#51](https://github.com/ThiagoPanini/panlabs-docs/issues/51) | — | Se a faixa de tabs de largura total custa um swizzle `unsafe`. **Não custa:** degraus 0+1+2, portão 7 verde com ela montada, e o fundo sangra porque quem pinta é o próprio `<nav>`. Corrigiu a **perda 4**, que está errada em três documentos. |
 | `research/paridade-devin` | [#92](https://github.com/ThiagoPanini/panlabs-docs/issues/92) | 521 linhas | Quanto o site está longe da âncora, em número. Três medições de primeira mão — a âncora em cinco larguras nos dois temas, o site atual pela mesma régua, e a varredura da página de API com o catálogo. Achou o **defeito de origem da cor**: a âncora tinge a rampa com o matiz da marca mas **não pinta a página com ela**, e nós pintamos — daí o chão magenta. É de onde saem as **tabelas de alvo** publicadas na spec pela [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93), e a **seção 3 (Paleta) fechou nos dois temas** com a [#95](https://github.com/ThiagoPanini/panlabs-docs/issues/95): rampa desacoplada da marca, chão neutro com token próprio, acento violeta — **hoje laranja queimado**, h≈38, com o croma 0,161 que a #95 fixou intacto. |
 
-**A primeira mediu com Chrome headless dirigido por CDP, e sem dependência nova** — o Node 24 tem `WebSocket` nativo. O axioma 2 vale também para o instrumento de medição, e é por isso que nem puppeteer nem playwright entraram. **A última fez o mesmo, e virou ferramenta:** o `npm run paridade` da [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93) é esse instrumento apontado para as tabelas de alvo, e roda na CI como relatório.
+**A primeira mediu com Chrome headless dirigido por CDP, e sem dependência nova** — o Node 24 tem `WebSocket` nativo. O axioma 2 vale também para o instrumento de medição, e é por isso que nem puppeteer nem playwright entraram. **A última fez o mesmo, e virou ferramenta:** a [#93](https://github.com/ThiagoPanini/panlabs-docs/issues/93) apontou esse instrumento para as tabelas de alvo e o pôs na CI como relatório. Ele saiu com os demais scripts na [#154](https://github.com/ThiagoPanini/panlabs-docs/issues/154).
 
 ## A pesquisa que nasceu fora dos mapas
 
@@ -54,10 +54,12 @@ Não é pesquisa — é o **contrário** dela. As sete acima alimentaram as deci
 
 | Branch | Onde a síntese mora | Tamanho | O que mediu |
 | --- | --- | --- | --- |
-| `research/reconstrucao-axioma-6` | [`docs/design/README.md`](../design/README.md) §6 | 522 linhas | O **axioma 6**, cobrado: uma sessão de agente que só recebeu `docs/design/` e `docs/adr/` reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. Build verde nos dois locales; **vinte e cinco reinterpretações e quatro erros de fato** na spec. |
+| `research/reconstrucao-axioma-6` | `docs/design/README.md` §6, na tag `spec-v1` | 522 linhas | O **axioma 6**, cobrado: uma sessão de agente que só recebeu `docs/design/` e `docs/adr/` reconstruiu a camada de tokens e a página de documentação sobre um Docusaurus vazio. Build verde nos dois locales; **vinte e cinco reinterpretações e quatro erros de fato** na spec. |
 
 ## Por que os branches não são mergeados
 
 Pesquisa é insumo datado, não contrato. Ela alimenta decisões e depois envelhece — o Docusaurus sobe de versão, o Mintlify muda o CSS, o Algolia muda os termos. Manter o material na `main` daria a ele um status de verdade corrente que ele não tem.
 
-O que vira verdade corrente atravessa a decisão: sai da pesquisa, passa por um ticket do mapa, e aterrissa em `docs/design/` ou em `docs/adr/` já filtrado. **O branch preserva a medição; a spec carrega a conclusão.**
+O que vira verdade corrente atravessa a decisão: sai da pesquisa, passa por um ticket do mapa, e aterrissa em `docs/adr/` já filtrado. **O branch preserva a medição; a decisão carrega a conclusão.**
+
+> A spec de design que era o outro destino saiu da árvore na [#152](https://github.com/ThiagoPanini/panlabs-docs/issues/152), e está inteira na tag **`spec-v1`**.

@@ -30,7 +30,7 @@ O vizinho que veio embutido você **não relê** — clona dele. Dos demais, só
 
 **Não leia arquivo com `cat`, `sed` ou `head`.** É a maior categoria de `Bash` deste repo (12,8k tokens por sessão) e passa por fora do orçamento — o digest não a vê e a trava de `Read` não a pega. Para localizar, `grep -n` e leia a fatia; para ler, `Read` com `offset`/`limit`.
 
-`docs/design/tokens.md` passa de 1800 linhas e `docs/design/informacao.md` passa de 550. Nenhum dos dois se lê inteiro. Vá pela seção que a tabela do `CLAUDE.md` aponta.
+Os arquivos longos que sobraram são os ADRs — `docs/adr/0008` passa de 230 linhas, o `0010` de 220. Vá pela seção, não pelo arquivo: `grep -n '^## ' <arquivo>` devolve o sumário por menos que uma leitura.
 
 ## 4. Issue enxuta
 
@@ -42,13 +42,13 @@ gh issue view N --json title,body,labels
 
 Sem `--comments` salvo necessidade real, sem issues irmãs, sem varrer o mapa. O mapa de wayfinding é grande, e lê-lo inteiro é meia janela.
 
-## 5. Direto ao portão que reprova
+## 5. Não redija plano; rode o build
 
-O digest já é o plano — não redija plano em prosa antes de editar. Identifique qual dos sete portões cobra a mudança e rode **só ele** durante o trabalho (`npm run portao:N`, 0,6–0,7s cada, medidos). A bateria inteira fica para o fim.
+O digest já é o plano — não redija plano em prosa antes de editar.
 
-**`npm run portoes` não é a CI.** Ele roda os portões 1, 2, 3, 4 e 5 (~2,5s). A CI roda também o portão 7, `npm test`, `npm run icones`, `node scripts/espelho-tokens.mjs --verificar`, `npm run contraste`, `npm run invariantes`, `npm run build` e `npm run zeros`. Verde local no bundle não é verde na CI.
+**A CI é uma coisa só: `npm run build`.** Não há portão, régua nem varredura para escolher; rode o build antes do push e é isso. Ele leva ~40s, então rode-o **no fim**, não a cada edição.
 
-> **Correção de contagem.** **Eram oito portões, são sete** — o 8 morreu com a landing ([#94](https://github.com/ThiagoPanini/panlabs-docs/issues/94)). O número **não se reaproveita**: os que ficam vão de 1 a 7 e nenhum é renumerado, porque o ADR 5 cita o portão 5 pelo número.
+> **Os portões morreram** ([#154](https://github.com/ThiagoPanini/panlabs-docs/issues/154)), com os 26 scripts que os rodavam e o hook de commit. Se um documento deste repo mandar você rodar `npm run portoes`, `npm run portao:N`, `npm test`, `npm run invariantes`, `npm run zeros`, `npm run icones`, `npm run paridade`, `npm run contraste` ou `espelho-tokens.mjs`, o documento está vencido — nenhum existe. O que sobrou de regra de escrita está em prosa no `CLAUDE.md`, sem cobrança automática.
 
 ## 6. Narre comprimido
 
