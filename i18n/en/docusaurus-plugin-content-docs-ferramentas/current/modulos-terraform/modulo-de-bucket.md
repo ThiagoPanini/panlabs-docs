@@ -3,6 +3,8 @@ title: Bucket module
 description: The module that creates a private, versioned and encrypted bucket, with the three variables, the nested output, and what it decides for you.
 ---
 
+import Provisions from './o-que-o-modulo-provisiona.drawio.svg';
+
 # Bucket module
 
 Creates a bucket with what the house has already decided: private, versioned,
@@ -57,6 +59,10 @@ panlabs infra conferir bucket relatorios
 # access          private (public access block: 4/4)
 # versioning      enabled
 ```
+
+<Frame>
+  <Provisions role="img" aria-label="A terraform apply creates, inside the AWS account, a private versioned bucket encrypted with a KMS key and restricted by an access policy, with public access blocked on all four keys." />
+</Frame>
 
 ## What it decides for you
 
