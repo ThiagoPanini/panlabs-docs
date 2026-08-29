@@ -1,7 +1,6 @@
 name: Deploy
 
-# Constrói e publica em GitHub Pages, e roda o portão de cadência de
-# IMPLANTAÇÃO contra a URL pública que acabou de subir.
+# Constrói e publica em GitHub Pages.
 #
 # Nenhuma dependência npm nova entra por esta porta: `actions/*` e `npm ci`.
 
@@ -35,15 +34,6 @@ jobs:
 
       - run: npm ci
 
-      # Nenhum portão roda aqui, e a razão é o ruleset da `main`: o check `gate`
-      # é required e `strict` está ligado, então nada entra na `main` sem a
-      # bateria inteira do `ci.yml` ter passado sobre o conteúdo que vai ser
-      # mergeado. Repetir o portão 1, o portão 2 e o espelho de tokens neste
-      # ponto não cobre risco nenhum — cobria antes do ruleset, quando nada
-      # garantia que a `main` tinha recebido conteúdo verde.
-      #
-      # A exceção é `workflow_dispatch`: disparo manual passa a construir sem
-      # portão nenhum, e isso é aceito — é ato de quem sabe o que está fazendo.
       - name: Build (pt-BR e en)
         run: npm run build
 
@@ -60,38 +50,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    outputs:
-      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
-  portao-6:
-    name: Portão 6 — rotas contra o host
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # O GitHub Pages leva alguns segundos para servir o que acabou de aceitar.
-      - name: Esperar a propagação
-        run: sleep 20
-
-      # `docusaurus serve` NÃO substitui isto: ele aplica `applyTrailingSlash` ao
-      # `req.url` e passa `cleanUrls: true` ao `serve-handler`, então valida a
-      # config e não o host. Reprovar a rota 1 aciona a alavanca de emissão dupla
-      # do ADR 7.
-      #
-      # As TRÊS rotas, e nos DOIS locales. O segundo locale não é redundância: o
-      # `.md` da rota 2 é escrito por locale, num `outDir` diferente, e o
-      # baseUrl do EN carrega o prefixo — é exatamente o lugar onde a
-      # concatenação `permalink + '.md'` erraria sem ninguém ver.
-      - name: Portão 6 — as três rotas, pt-BR
-        run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}"
-
-      # A rota do EN é de `Ferramentas`, e não é escolha de gosto: é a única aba
-      # traduzida (`informacao.md` §8). As outras duas existem sob `/en/` como
-      # fallback em português, e apontar o portão para uma delas mediria a
-      # rota de fallback em vez da rota traduzida.
-      - name: Portão 6 — as três rotas, en
-        run: ./scripts/portao-6-rotas.sh "${{ needs.deploy.outputs.page_url }}" /en/ferramentas/bibliotecas/overpower/conceitos

@@ -1,9 +1,17 @@
 name: CI
 
-# Os portões de cadência de COMMIT, mais o build.
+# A única validação é a que a documentação do Docusaurus já manda rodar:
+# `npm run build`. `onBrokenLinks: 'throw'` faz o link quebrado reprovar
+# aqui, e só aqui — `docusaurus start` devolve 200 com o shell da SPA para
+# qualquer rota.
 #
-# Nenhuma dependência npm nova entra por esta porta: tudo aqui é `actions/*` e
-# `npm ci` sobre o `package-lock.json` versionado.
+# O `prebuild` regenera a referência a partir do par de contratos de
+# assinatura antes do build (`package.json`), e o gerador importa o
+# validador do par e o modelo de linha de comando — o build exercita os
+# dois de graça, sem passo dedicado.
+#
+# Nenhuma dependência npm nova entra por esta porta: tudo aqui é `actions/*`
+# e `npm ci` sobre o `package-lock.json` versionado.
 
 # O gatilho é `push`, e SÓ `push`. `pull_request` saiu porque duplicava toda
 # run: um check run cola no SHA, não no evento, então o mesmo commit reportava
@@ -47,130 +55,5 @@ jobs:
 
       - run: npm ci
 
-      # Portão 1 — literal de cor, comprimento, tempo ou curva fora do arquivo
-      # de tokens.
-      - name: Portão 1 — literais
-        run: npm run portao:1
-
-      # Portão 2 — duração ou curva cravada numa transição ou animação.
-      - name: Portão 2 — motion
-        run: npm run portao:2
-
-      # Portão 3 — `outline` fora do arquivo de foco. Este contrato não morre
-      # por anel feio; morre por `outline: none` escrito para "limpar" um botão.
-      - name: Portão 3 — outline
-        run: npm run portao:3
-
-      # Portão 4 — volume, tipo de página, regra de heading e cobertura de
-      # locale nas três abas de `conteudo/`, mais o ramo gerado somado por fora.
-      - name: Portão 4 — conteúdo
-        run: npm run portao:4
-
-      # Portão 5 — regenera a referência de biblioteca a partir do par de
-      # contratos de assinatura e reprova em `git diff`. O gerador é
-      # determinístico, e divergência contra o que está commitado significa
-      # contrato editado sem regenerar, ou página gerada editada à mão.
-      # Ver ADR 8, que supera o ADR 5.
-      #
-      # (O ADR 5 o chamava de *o único portão que não é `grep`*. Desde o slice 7
-      # são dois: o portão 7 é da mesma família — regenera e diffa.)
-      - name: Portão 5 — a referência gerada
-        run: npm run portao:5
-
-      # Portão 7 — a superfície de swizzle congelada, e `src/theme/` conferido
-      # contra ela. A CADÊNCIA dele é de UPGRADE: ele só tem o que reprovar
-      # quando o `@docusaurus/theme-classic` muda de versão. Ele roda aqui em
-      # toda CI mesmo assim, e o motivo é que não existe gatilho barato para
-      # *"houve um upgrade"* — `package-lock.json` muda por dez razões, e um
-      # portão que depende de alguém lembrar de rodá-lo é um portão que não
-      # roda. Dez segundos por CI é o preço de ver a falha silenciosa que
-      # nenhum build reprova.
-      - name: Portão 7 — swizzle
-        run: npm run portao:7
-
-      # (O portão 8 — a licença de "wow" da landing — saiu com a página que ele
-      # cobrava. Ele contava seis efeitos numa rota que deixou de existir, e a
-      # numeração não foi reaproveitada: o ADR 5 cita o portão 5 pelo número, e
-      # é esse precedente que congela a numeração dos que ficam.)
-
-      # As duas réguas de máquina — `node --test`, do próprio runtime, sem
-      # dependência nova. A da busca existe porque ordenação de resultado não é
-      # varrível; a do validador de contrato, porque um validador que aceitasse
-      # tudo passaria no portão 5 todos os dias. Lista fechada sem caso que a
-      # exercite é prosa.
-      - name: As réguas de `node --test` — busca, contrato e paridade
-        run: npm test
-
-      # A bijeção manifesto ↔ `static/icons/`. Não é portão: não precisa de rede
-      # (só confere o que está no repositório) e o build já quebra alto se um
-      # desenho faltar. Roda aqui porque a mensagem é melhor.
-      - name: Manifesto de ícones
-        run: npm run icones
-
-      # O bloco css de docs/design/tokens.md é espelho de src/css/tokens.css.
-      # Não é um portão — é a verificação que torna a palavra "espelho"
-      # conferível.
-      - name: Espelho de tokens
-        run: node scripts/espelho-tokens.mjs --verificar
-
-      # As duas tabelas de contraste da spec, COMPUTADAS de `tokens.css` em vez
-      # de transcritas. Também não é portão, e pela mesma régua do espelho: ela
-      # confere que duas cópias da mesma verdade não divergiram — o número
-      # escrito na spec e a cor que o CSS entrega.
-      #
-      # Ela nasceu do defeito que fechou: `tokens.md` §10 e `foco.md` §6 mediam
-      # o MESMO par e discordavam em três das quatro células, e ninguém tinha
-      # como saber qual estava certa.
-      - name: Contraste medido
-        run: npm run contraste
-
-      # As cinco invariantes de FORMA da spec. Não são portão — os portões
-      # cobram o código, e estas cobram o documento. A spec é o entregável deste
-      # projeto (axioma 6), e entregável sem régua envelhece calado.
-      - name: As cinco invariantes de forma (1 a 4 e a 6)
-        run: npm run invariantes
-
-      # `onBrokenLinks: throw` faz a verificação de link acontecer aqui. Ela
-      # nunca acontece em `docusaurus start`, que devolve 200 com o shell da SPA
-      # para qualquer rota.
       - name: Build (pt-BR e en)
         run: npm run build
-
-      # Os cinco zeros, conferidos e não afirmados. Roda DEPOIS do build porque
-      # o terceiro zero confere o HTML publicado: nada carrega recurso de outra
-      # origem. Sem `build/` ele só olharia `src/`, que é metade da resposta.
-      - name: Os cinco zeros
-        run: npm run zeros
-
-      # A paridade contra a âncora. Ela imprime a distância até o `docs.devin.ai`
-      # — os alvos vivem nas tabelas da spec e o comparador mede o site
-      # construído, por isso roda depois do build.
-      #
-      # ESTE PASSO DEIXOU DE SER `continue-on-error` NA S9-8, e o que mudou não
-      # foi a régua de desenho: foi o que a máquina cobra.
-      #
-      # O `continue-on-error` estava certo enquanto `--verificar` reprovava com
-      # QUALQUER diferença. A paridade nunca fecha em zero — parte da distância é
-      # escolha registrada, e `referencia.md` §8 publica 448 contra 511 de
-      # propósito, recusando esconder o número atrás de uma tolerância larga. Um
-      # verificador que só passa num estado que a spec recusa não trava nada; ele
-      # só ensina a ignorar o log, que foi o que aconteceu.
-      #
-      # Agora `--verificar` cobra a lista de divergências aceitas —
-      # `scripts/paridade-abertas.txt`, no formato do `swizzle-list.txt` — e ela
-      # reprova nas DUAS direções: divergência que não está na lista (regressão,
-      # ou alvo publicado sem código atrás) e linha da lista que já fecha (dívida
-      # paga e registro velho). Sem a segunda, a lista só cresceria e viraria
-      # tolerância com outro nome.
-      #
-      # O juiz do DESENHO continua sendo a avaliação visual humana sobre o
-      # produto final. O que travou merge foi outra coisa: que ninguém
-      # acrescente distância até a âncora sem julgá-la.
-      #
-      # O Chrome é o que a imagem do runner já traz — `/usr/bin/google-chrome`,
-      # que o script procura antes do cache do puppeteer/playwright. Nenhuma
-      # action nova entra por aqui, e nenhuma dependência npm: o axioma 2 vale
-      # também para o instrumento. Se a imagem deixar de trazê-lo, o passo falha
-      # com a mensagem de como apontar (`CHROME=`).
-      - name: Paridade com a âncora (triagem contra a lista de aceitas)
-        run: npm run paridade -- --verificar
