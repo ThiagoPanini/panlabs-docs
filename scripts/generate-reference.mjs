@@ -1,7 +1,7 @@
 /**
- * O gerador da referência — lê o par de contratos de assinatura, valida, e
- * escreve as quatro páginas `.mdx` nos dois locales mais o **fragmento** de
- * sidebar que `sidebars-ferramentas.js` importa.
+ * O gerador da referência — lê o contrato de assinatura, valida, e escreve as
+ * quatro páginas `.mdx` mais o **fragmento** de sidebar que
+ * `sidebars-ferramentas.js` importa.
  *
  * **O nome não é `gerar-api`.** O contrato deixou de falar HTTP na ADR 8 e
  * deixou de falar biblioteca na ADR 9; hoje ele descreve **superfície de
@@ -38,24 +38,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import {readContract, validatePair} from './lib/signature.mjs';
+import {readContract, validate} from './lib/signature.mjs';
 // O modelo de linha vem do MESMO arquivo que o painel lê, e é o que faz a
 // assinatura emitida aqui e a linha montada lá não poderem divergir: são a mesma
 // função sobre o mesmo campo. Ver o cabeçalho de `line.mjs`.
 import {shellQuote, signatureOf} from '../src/theme/MDXComponents/line.mjs';
 
-const CONTRACTS = {
-  'pt-BR': 'contracts/overpower.pt-BR.json',
-  en: 'contracts/overpower.en.json',
-};
+const CONTRACT_PATH = 'contracts/overpower.json';
 
-/** Onde cada locale escreve. O EN é a árvore de tradução da instância `ferramentas`. */
-const DESTINATIONS = {
-  'pt-BR': 'content/ferramentas/bibliotecas/overpower/comandos',
-  en: 'i18n/en/docusaurus-plugin-content-docs-tools/current/bibliotecas/overpower/comandos',
-};
+const DESTINATION = 'content/ferramentas/bibliotecas/overpower/comandos';
 
-/** O prefixo de id de documento — o mesmo nos dois locales. */
+/** O prefixo de id de documento. */
 const PREFIX = 'bibliotecas/overpower/comandos';
 
 const FRAGMENT = 'sidebars-referencia.js';
@@ -332,9 +325,9 @@ function fieldMdx(field, tag, context, nivel) {
 
   // **A aridade é do modelo, e a página a diz sozinha.** Cinco flags de
   // `install` acumulam — repetir a flag e separar por vírgula chegam à mesma
-  // tupla — e nenhuma página dizia isso. Escrever a frase à mão em dez lugares,
-  // em dois locales, é a deriva que este gerador existe para não ter; escrevê-la
-  // aqui faz cada `<ParamField>` herdá-la do campo que a declara.
+  // tupla — e nenhuma página dizia isso. Escrever a frase à mão em dez lugares
+  // é a deriva que este gerador existe para não ter; escrevê-la aqui faz cada
+  // `<ParamField>` herdá-la do campo que a declara.
   if (field.arity?.multiple) {
     body.push('', label(labels, 'multipleArity'));
   }
@@ -563,9 +556,9 @@ export function frontMatter(entry, context) {
 // ---------------------------------------------------------------------------
 
 /**
- * O contexto de emissão — o contrato de UM locale, indexado por id.
+ * O contexto de emissão — o contrato, indexado por id.
  *
- * Ele sai de `writeLocale` porque a régua de máquina precisa emitir uma
+ * Ele sai de `writeDocs` porque a régua de máquina precisa emitir uma
  * página sem escrever no disco. O par de disco existe e o teste o lê, mas ele
  * também monta pares sintéticos para exercitar o que o contrato publicado de
  * propósito não tem — flag booleana, rótulo ausente, raiz sem tabela de saída —,
@@ -582,9 +575,9 @@ export function contextFor(contract, contractPath) {
 }
 
 /** Escreve o diretório inteiro e apaga o `.mdx` que sobrou de um contrato anterior. */
-function writeLocale(locale, contract) {
-  const context = contextFor(contract, CONTRACTS[locale]);
-  const destination = DESTINATIONS[locale];
+function writeDocs(contract) {
+  const context = contextFor(contract, CONTRACT_PATH);
+  const destination = DESTINATION;
   fs.mkdirSync(destination, {recursive: true});
 
   const written = new Set();
@@ -662,17 +655,15 @@ function writeFragment(contract) {
 // ---------------------------------------------------------------------------
 
 function main() {
-  let contracts;
+  let contract;
   try {
-    contracts = Object.fromEntries(
-      Object.entries(CONTRACTS).map(([locale, filePath]) => [locale, readContract(filePath)]),
-    );
+    contract = readContract(CONTRACT_PATH);
   } catch (error) {
     console.error(`RECUSADO ${error.refusal} em "${error.pointer}" — ${error.message}`);
     process.exit(1);
   }
 
-  const refusals = validatePair(contracts['pt-BR'], contracts.en);
+  const refusals = validate(contract);
   if (refusals.length > 0) {
     console.error(`O contrato foi RECUSADO em ${refusals.length} ponto(s):`);
     for (const {refusal, pointer, detail} of refusals) {
@@ -682,12 +673,10 @@ function main() {
     process.exit(1);
   }
 
-  const counted = Object.entries(contracts).map(
-    ([locale, contract]) => `${locale}: ${writeLocale(locale, contract)}`,
-  );
-  writeFragment(contracts['pt-BR']);
+  const written = writeDocs(contract);
+  writeFragment(contract);
 
-  console.log(`Referência gerada — ${counted.join(' · ')} · ${FRAGMENT}`);
+  console.log(`Referência gerada — ${written} página(s) · ${FRAGMENT}`);
 }
 
 /**

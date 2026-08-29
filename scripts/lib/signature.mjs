@@ -82,29 +82,16 @@ export const REFUSALS = {
   moreThanFourErrors: 'more-than-four-errors',
   deadReference: 'dead-reference',
   receiverCycle: 'receiver-cycle',
-  incongruentContracts: 'incongruent-contracts',
   exclusiveGroupOfOne: 'exclusive-group-of-one',
   modelNamesNonexistentFlag: 'model-names-nonexistent-flag',
   mandatoryExclusive: 'mandatory-exclusive',
   incoherentArity: 'incoherent-arity',
 };
 
-/**
- * As chaves de PROSA — as únicas que podem divergir entre os dois contratos.
- *
- * Tudo o mais é estrutura, e estrutura divergente é o defeito que a congruência
- * existe para pegar: nome de campo, tipo, obrigatoriedade e exemplo são
- * **contrato, não prosa**, e traduzi-los produziria um leitor de EN escrevendo
- * código que não roda.
- */
-const PROSE = new Set(['summary', 'description', 'when']);
-
 /** Um segmento de JSON Pointer, escapado conforme a RFC 6901. */
 const segment = (key) => String(key).replace(/~/g, '~0').replace(/\//g, '~1');
 
 const pointerFor = (...parts) => parts.map((part) => `/${segment(part)}`).join('');
-
-const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
  * Lê e parseia um contrato. **A recusa de YAML sai daqui**, por consequência de
@@ -387,92 +374,4 @@ export function validate(contract) {
   }
 
   return refusals;
-}
-
-/**
- * A congruência do par — a única recusa que nenhum contrato sozinho produz.
- *
- * Ela percorre os dois em paralelo e reprova a **primeira** divergência fora das
- * chaves de prosa. Um contrato bilíngue dispensaria esta função e custaria a
- * transplantabilidade do arquivo; dois monolíngues custam esta varredura.
- *
- * @param {any} pt
- * @param {any} en
- */
-export function validatePair(pt, en) {
-  const refusals = [...validate(pt), ...validate(en)];
-  if (refusals.length > 0) {
-    return refusals;
-  }
-
-  const divergence = compare(pt, en, '');
-  if (divergence !== null) {
-    refusals.push({
-      refusal: REFUSALS.incongruentContracts,
-      pointer: divergence,
-      detail: 'o par é monolíngue e congruente: só prosa diverge entre os dois arquivos',
-    });
-  }
-  return refusals;
-}
-
-/**
- * A primeira divergência estrutural entre dois nós, ou `null`.
- *
- * `rotulos` é o único nó em que **as chaves são estrutura e os valores são
- * prosa**. Os valores divergem por definição — é o que faz o par ser monolíngue
- * e o que dispensa o gerador de carregar uma tabela de strings por locale. As
- * chaves, não: cada uma é o título de uma seção que a forma da espécie exige, e
- * uma que exista só de um lado é uma seção sem título num locale só.
- */
-function compare(a, b, pointer) {
-  if (Array.isArray(a) || Array.isArray(b)) {
-    if (!Array.isArray(a) || !Array.isArray(b)) {
-      return pointer;
-    }
-    for (let i = 0; i < Math.max(a.length, b.length); i += 1) {
-      if (i >= a.length || i >= b.length) {
-        return `${pointer}${pointerFor(i)}`;
-      }
-      const inner = compare(a[i], b[i], `${pointer}${pointerFor(i)}`);
-      if (inner !== null) {
-        return inner;
-      }
-    }
-    return null;
-  }
-
-  if (isObject(a) || isObject(b)) {
-    if (!isObject(a) || !isObject(b)) {
-      return pointer;
-    }
-    const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort();
-    for (const key of keys) {
-      if (PROSE.has(key)) {
-        continue;
-      }
-      if (!(key in a) || !(key in b)) {
-        return `${pointer}${pointerFor(key)}`;
-      }
-      // O bloco de rótulos: confere o conjunto de chaves e para aí. Sem isto o
-      // par podia perder `opcoes` num locale só, e o defeito só apareceria na
-      // emissão daquele locale.
-      if (pointer === '' && key === 'labels' && isObject(a[key]) && isObject(b[key])) {
-        const labels = [...new Set([...Object.keys(a[key]), ...Object.keys(b[key])])].sort();
-        for (const name of labels) {
-          if (!(name in a[key]) || !(name in b[key])) {
-            return `${pointer}${pointerFor(key)}${pointerFor(name)}`;
-          }
-        }
-        continue;
-      }
-      const inner = compare(a[key], b[key], `${pointer}${pointerFor(key)}`);
-      if (inner !== null) {
-        return inner;
-      }
-    }
-    return null;
-  }
-
-  return a === b ? null : pointer;
 }

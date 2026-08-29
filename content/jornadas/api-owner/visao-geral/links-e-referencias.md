@@ -5,8 +5,6 @@ description: As fontes internas e externas que sustentam as trilhas de API Owner
 
 # Links e Referências
 
-<Untranslated />
-
 Aqui ficam as fontes que sustentam as trilhas: especificação, artigo,
 repositório e página interna, cada uma com uma linha dizendo a que pergunta ela
 responde.

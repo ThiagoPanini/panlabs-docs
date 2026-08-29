@@ -38,8 +38,7 @@
  * to={DESTINO}>` navegava para uma rota sem prefixo, que não batia com nenhuma
  * registrada, caía no catch-all e piscava `NotFound` até o `meta` corrigir. O
  * `meta` também é HTML cru fora do roteador e precisa da mesma resolução — é
- * ela que faz o redirecionamento acertar o locale: no EN o `baseUrl` já carrega
- * o `/en/`.
+ * ela que faz o redirecionamento acertar o `baseUrl` do site.
  *
  * Procedência: docs/design/informacao.md.
  */
@@ -47,7 +46,6 @@
 import React from 'react';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
-import Translate, {translate} from '@docusaurus/Translate';
 import {Redirect} from '@docusaurus/router';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
@@ -89,28 +87,10 @@ export default function Root() {
 
       <Redirect to={url} />
 
-      <Layout
-        title={translate({
-          id: 'panlabs-docs.raiz.titulo',
-          message: 'Documentação',
-          description: 'Título da rota raiz, que redireciona para a primeira doc',
-        })}
-        noFooter>
+      <Layout title="Documentação" noFooter>
         <main className="container margin-vert--xl">
-          <p>
-            <Translate
-              id="panlabs-docs.raiz.aviso"
-              description="Aviso da rota raiz quando o redirecionamento não acontece sozinho">
-              Esta página leva à documentação.
-            </Translate>
-          </p>
-          <Link to={DESTINATION}>
-            <Translate
-              id="panlabs-docs.raiz.link"
-              description="Link manual para o destino da rota raiz">
-              Abrir a documentação
-            </Translate>
-          </Link>
+          <p>Esta página leva à documentação.</p>
+          <Link to={DESTINATION}>Abrir a documentação</Link>
         </main>
       </Layout>
     </>

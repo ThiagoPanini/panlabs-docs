@@ -66,7 +66,6 @@ import Frame from '@site/src/components/Frame';
 import Icon from '@site/src/components/Icon';
 import Steps, {Step} from '@site/src/components/Steps';
 import Table from '@site/src/components/Table';
-import Untranslated from '@site/src/components/Untranslated';
 import Update from '@site/src/components/Update';
 import {ParamField, ResponseField} from '@site/src/components/Field';
 
@@ -96,20 +95,20 @@ import CommandPanel from './CommandPanel';
  *
  * **Por que ele mora AQUI e não num arquivo próprio**, e não é pelo portão: o
  * portão 7 varre `src/theme/`, então um `src/components/Titulo.js` passaria
- * igual. O motivo é que `src/components/` é o CATÁLOGO — dezessete componentes
+ * igual. O motivo é que `src/components/` é o CATÁLOGO — dezesseis componentes
  * contados, cada um com documento de nove seções e cada um alcançável do MDX
  * por tag. O subtítulo não é nenhuma das três coisas: ele é chrome, não tem
  * documento de catálogo, e o autor nunca o escreve. Pô-lo lá adicionaria um
- * décimo oitavo arquivo a uma pasta cuja contagem é afirmação da spec.
+ * décimo sétimo arquivo a uma pasta cuja contagem é afirmação da spec.
  *
  * **Ele é obrigatório, e a ausência QUEBRA O BUILD.** Mesma doutrina de nome de
  * ícone inexistente e de rótulo repetido em `CodeGroup`: falha alto, nunca
  * degradação silenciosa. Na âncora ele é condicional — presente em 5 de 8
  * páginas medidas; aqui não.
  *
- * **A ordem no topo da página** passa a ser `h1` → subtítulo → `<Untranslated />`
- * → corpo. O `<Untranslated />` é escrito pelo autor logo abaixo do título e o
- * subtítulo é injetado aqui, então ele nasce antes sem ninguém mexer no MDX.
+ * **A ordem no topo da página** passa a ser `h1` → subtítulo → corpo. O
+ * subtítulo é injetado aqui, então ele nasce logo abaixo do título sem
+ * ninguém mexer no MDX.
  *
  * O termo `lead` fica morto e não volta. O nome é **subtítulo**: um termo que já
  * enganou uma vez não se recicla com significado novo.
@@ -180,14 +179,14 @@ export default {
   Tabs,
   TabItem,
 
-  // Os treze componentes de CATÁLOGO com tag própria — catorze chaves, porque
-  // `steps` tem duas. Os outros quatro do catálogo de dezessete não têm tag:
+  // Os doze componentes de CATÁLOGO com tag própria — treze chaves, porque
+  // `steps` tem duas. Os outros quatro do catálogo de dezesseis não têm tag:
   // `callout` é `:::`, `code-block` é a cerca, `tabs` vem do Docusaurus acima, e
   // `table` é a chave de elemento acima.
   //
-  // A décima quinta chave, `CommandPanel`, NÃO é do catálogo — ela é chrome de
+  // A décima quarta chave, `CommandPanel`, NÃO é do catálogo — ela é chrome de
   // uma rota, e a nota ao lado dela diz por quê. O catálogo continua fechado em
-  // dezessete.
+  // dezesseis.
   //
   // Inicial maiúscula não é estilo: em MDX v3 a tag minúscula é elemento HTML, e
   // um `<card>` sairia como tag desconhecida.
@@ -210,6 +209,5 @@ export default {
   ResponseField,
   Step,
   Steps,
-  Untranslated,
   Update,
 };

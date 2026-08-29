@@ -2,9 +2,6 @@
 paths:
   - "content/**/*.md"
   - "content/**/*.mdx"
-  - "i18n/**/*.md"
-  - "i18n/**/*.mdx"
-  - "i18n/**/*.json"
   - "contracts/**/*.json"
 ---
 
@@ -35,9 +32,7 @@ A ordem é a do navbar. Mais o ramo gerado, somado por fora — **37 no site**, 
 
 ## Locale
 
-**Só `Ferramentas` é traduzida.** As outras três abas existem só em pt-BR, e isso é decisão, não pendência.
-
-Tradução mora em `i18n/en/docusaurus-plugin-content-docs-tools/current/`, espelhando a árvore de `content/ferramentas/`. Rótulo de UI vai em `i18n/en/docusaurus-theme-classic/`.
+**O site é locale único, pt-BR.** Não há tradução, não há `i18n/`, e o #158 é o que fechou essa porta.
 
 ## Voz
 
@@ -45,13 +40,13 @@ Tradução mora em `i18n/en/docusaurus-plugin-content-docs-tools/current/`, espe
 
 ## Travessão
 
-**Zero `—` em `content/`, `i18n/` e `contracts/`.** O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha. A saída é vírgula, dois-pontos, parênteses ou a frase reescrita, **escolhida uma a uma**: travessão é pontuação legítima do português, e trocar o caractere por outro fixo produz frase truncada ou pontuação dobrada.
+**Zero `—` em `content/` e `contracts/`.** O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha. A saída é vírgula, dois-pontos, parênteses ou a frase reescrita, **escolhida uma a uma**: travessão é pontuação legítima do português, e trocar o caractere por outro fixo produz frase truncada ou pontuação dobrada.
 
 Vale para o `.drawio.svg` de um diagrama co-locado também, e nele o rótulo aparece duas vezes: no `<text>` renderizado e no XML embutido no atributo `content`.
 
 **A exceção é citação de saída de ferramenta**: dentro de cerca de código, na linha `api_exemplos:` de página gerada, ou num valor `"message"`, onde o travessão é o que a ferramenta imprimiu.
 
-Conferir à mão: `grep -rn '—' content/ i18n/ contracts/`.
+Conferir à mão: `grep -rn '—' content/ contracts/`.
 
 ## Link quebrado
 

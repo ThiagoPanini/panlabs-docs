@@ -121,12 +121,7 @@ export default function aiEraPlugin(context, options) {
     name: 'pd-ai-era',
 
     async allContentLoaded({allContent}) {
-      pages = pagesFrom({
-        allContent,
-        siteDir: context.siteDir,
-        tabs: options.tabs,
-        translatedLocale: i18n.currentLocale !== i18n.defaultLocale,
-      });
+      pages = pagesFrom({allContent, siteDir: context.siteDir, tabs: options.tabs});
     },
 
     async postBuild({outDir}) {
@@ -215,13 +210,9 @@ export default function aiEraPlugin(context, options) {
  * nomeado aqui não existe —, e o custo de mantê-la é uma linha por ferramenta
  * real que entrar.
  *
- * **Ele sai em pt-BR nos dois locales, e é a mesma regra do resto do site.** As
- * 28 páginas sem contraparte em inglês também saem em português sob `/en/`
- * (`informacao.md` §8) — o preâmbulo é a mesma classe de fallback, num artefato
- * cujo leitor é máquina. O que TEM tradução chega traduzido: título, descrição
- * e rótulo de seção. A rota para mudar isso está registrada e não foi comprada:
- * `getTranslationFiles` + `translateContent` no plugin põem a prosa em
- * `i18n/<locale>/pd-ai-era/`.
+ * **Ele sai em pt-BR, e é a mesma regra do resto do site.** O acervo é
+ * locale único desde o #158: não há tradução a projetar, e o preâmbulo lê o
+ * mesmo título, descrição e rótulo de seção que o leitor humano vê.
  */
 function preamble({pages, tabs, labels, locale}) {
   const count = tabs
