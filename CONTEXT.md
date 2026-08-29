@@ -87,9 +87,11 @@ O registro único de nomes e papéis, em `src/icons/manifest.js`, que é **contr
 
 Posições travadas. Não se renegociam sem reabrir a decisão que as pôs de pé.
 
-1. **Docusaurus é inegociável.** Restrição do ambiente corporativo alvo, não preferência.
-3. **A skin é trocável.** O produto é a arquitetura de tokens; a skin de referência é demonstração. O corporativo tem marca própria — cravar cor obriga retrabalho.
-4. **Dark é canônico, light é legítimo.** Os dois existem; o desenho nasce no escuro. O custo real não é CSS, é decidir o que acontece com glow e gradiente no claro.
+Os números são os originais, e a lista é de marcadores de propósito: numa lista ordenada o Markdown renumera de 1 a 3 ao renderizar, que é exatamente o estrago que o parágrafo abaixo descreve.
+
+- **1 — Docusaurus é inegociável.** Restrição do ambiente corporativo alvo, não preferência.
+- **3 — A skin é trocável.** O produto é a arquitetura de tokens; a skin de referência é demonstração. O corporativo tem marca própria — cravar cor obriga retrabalho.
+- **4 — Dark é canônico, light é legítimo.** Os dois existem; o desenho nasce no escuro. O custo real não é CSS, é decidir o que acontece com glow e gradiente no claro.
 
 **Eram seis, e os números que morreram não se reaproveitam.** Os ADRs citam axioma pelo número — o 2 aparece em cinco deles, o 4 no ADR 1 —, então renumerar os sobreviventes faria cada citação apontar para a posição errada. Ficam vagos:
 

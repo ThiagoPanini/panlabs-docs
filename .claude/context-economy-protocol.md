@@ -21,8 +21,8 @@ Peça exatamente isto, e diga o teto em linhas:
 1. **Arquivos relevantes** — path + uma linha de por que importa.
 2. **O vizinho mais próximo, verbatim** — o arquivo que o código novo vai espelhar (o componente irmão, a regra CSS irmã, a página irmã, o teste irmão), embutido no digest. Ele carrega o código a copiar; assim não custa uma segunda leitura sua.
 3. **O padrão a espelhar** — a convenção que o vizinho demonstra.
-4. **Os portões e ADR que a área ativa** — quais dos sete reprovam esta mudança, e o que cada um cobra.
-5. **Os seams de teste** — `scripts/busca.test.mjs` e `scripts/assinatura.test.mjs` são as duas únicas réguas de `node --test`; o resto do repo é cobrado por varredura.
+4. **Os ADR que a área ativa** — quais das doze decisões governam esta mudança, e o que cada uma trava.
+5. **A regra de escrita que a área ativa** — qual arquivo de `.claude/rules/` casa o path tocado (`content/` e `i18n/`, `src/css/`, `src/theme/`), e o que ele pede. Nenhuma delas é cobrada por máquina, então ninguém te avisa se você a quebrar.
 
 ## 3. O digest é o orçamento de leitura
 
