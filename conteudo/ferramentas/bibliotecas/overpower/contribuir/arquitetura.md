@@ -3,6 +3,8 @@ title: Arquitetura
 description: O fluxo de uma invocação pelos módulos, e duas raízes irmãs de conteúdo com invariantes opostas.
 ---
 
+import Fluxo from './fluxo-de-uma-invocacao.drawio.svg';
+
 # Arquitetura
 
 Esta página mapeia a base de código para quem está prestes a mexer nela: o caminho
@@ -24,9 +26,7 @@ pergunta obtendo uma cópia de um repositório alheio. O `planning.py` transform
 `Request` num `Plan`, e toda escrita passa pela fronteira única em `writing.py`.
 
 <Frame>
-
-![O cli.py parseia a linha e, quando falta dado, o wizard.py preenche as lacunas; os dois produzem a mesma Request, que o planning.py transforma em Plan consultando o catálogo embutido por discovery.py e packaged.py ou o repositório alheio por remote.py, e toda escrita passa pela fronteira única do writing.py antes de virar arquivo no disco.](./fluxo-de-uma-invocacao.drawio.svg)
-
+  <Fluxo role="img" aria-label="O cli.py parseia a linha e, quando falta dado, o wizard.py preenche as lacunas; os dois produzem a mesma Request, que o planning.py transforma em Plan consultando o catálogo embutido por discovery.py e packaged.py ou o repositório alheio por remote.py, e toda escrita passa pela fronteira única do writing.py antes de virar arquivo no disco." />
 </Frame>
 
 ```bash

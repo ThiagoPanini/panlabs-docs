@@ -3,6 +3,8 @@ title: Architecture
 description: The flow of one invocation through the modules, and two sibling content roots with opposite invariants.
 ---
 
+import Flow from './fluxo-de-uma-invocacao.drawio.svg';
+
 # Architecture
 
 This page maps the codebase for someone about to change it: the path a single
@@ -24,9 +26,7 @@ obtaining a copy of a foreign repository. `planning.py` turns the `Request` into
 `Plan`, and every write passes through the single boundary in `writing.py`.
 
 <Frame>
-
-![cli.py parses the line and, when a value is missing, wizard.py fills the gaps; both produce the same Request, which planning.py turns into a Plan by asking discovery.py and packaged.py for the embedded catalog or remote.py for the foreign repository, and every write passes through the single boundary in writing.py before it becomes a file on disk.](./fluxo-de-uma-invocacao.drawio.svg)
-
+  <Flow role="img" aria-label="cli.py parses the line and, when a value is missing, wizard.py fills the gaps; both produce the same Request, which planning.py turns into a Plan by asking discovery.py and packaged.py for the embedded catalog or remote.py for the foreign repository, and every write passes through the single boundary in writing.py before it becomes a file on disk." />
 </Frame>
 
 ```bash

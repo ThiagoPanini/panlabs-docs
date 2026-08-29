@@ -3,6 +3,8 @@ title: Módulo de bucket
 description: O módulo que cria bucket privado, versionado e criptografado, com as três variáveis, o output aninhado e o que ele decide por você.
 ---
 
+import Provisiona from './o-que-o-modulo-provisiona.drawio.svg';
+
 # Módulo de bucket
 
 Cria um bucket com o que a casa já decidiu: privado, versionado, criptografado
@@ -57,6 +59,10 @@ panlabs infra conferir bucket relatorios
 # acesso         privado (bloqueio de acesso público: 4/4)
 # versionamento  habilitado
 ```
+
+<Frame>
+  <Provisiona role="img" aria-label="O terraform apply cria, dentro da conta AWS, um bucket privado e versionado que é criptografado com uma chave KMS e restringido por uma política de acesso, com bloqueio de acesso público nas quatro chaves." />
+</Frame>
 
 ## O que ele decide por você
 

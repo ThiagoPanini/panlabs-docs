@@ -172,3 +172,34 @@ li.tabs__item[aria-selected='true'] {
   background-color: var(--pd-accent);
   border-radius: var(--pd-radius-full);
 }
+
+/* ===== Diagrama: a tinta e do palco, nunca do arquivo ==================
+   O draw.io grava cor em duas camadas. A de ATRIBUTO (`fill`/`stroke`) e
+   sempre a paleta clara e existe em todo salvamento, de todo editor; a de
+   `style=` com `light-dark()` so existe quando o motor CSS do editor conhece
+   a funcao. Casamos a primeira e vencemos a segunda por `!important`.
+
+   O `docusaurus.config.js` desliga `moveElemsAttrsToGroup` e `convertColors`
+   do SVGO para que o atributo fique sempre na folha e sempre na forma longa.
+   Ver o comentario la, e a perna 3 de `scripts/portao-1-literais.sh`. */
+[data-pd-component='frame'] svg [stroke='#000000'] { stroke: currentColor !important; }
+[data-pd-component='frame'] svg [fill='#000000']   { fill:   currentColor !important; }
+
+/* O branco so vira vazado quando vem PAREADO com o traco preto, porque esse
+   par e a caixa da paleta padrao. Branco sozinho e glifo de icone: a forma da
+   AWS desenha o simbolo com `fill="#ffffff" stroke="none"` por cima do
+   quadrado de marca, e vazar isso apaga o desenho e deixa o quadrado liso. */
+[data-pd-component='frame'] svg [fill='#ffffff'][stroke='#000000'] { fill: transparent !important; }
+
+/* O `<text>` do ramo `<switch>` carrega a cor no proprio atributo. */
+[data-pd-component='frame'] svg [stroke^='light-dark'] { stroke: currentColor !important; }
+[data-pd-component='frame'] svg [fill^='light-dark']   { fill:   currentColor !important; }
+
+/* Rotulo em `<foreignObject>`: a cor mora em `style` inline, e ela e a unica
+   coisa do desenho que PRECISA seguir a pagina, inclusive quando o autor a
+   escolheu (o `fontColor` da forma AWS e azul-marinho, ilegivel no escuro). */
+[data-pd-component='frame'] svg foreignObject div {
+  color: currentColor !important;
+  background-color: transparent !important;
+}
+

@@ -93,6 +93,11 @@ function extrair(corpo) {
  */
 function aTextoPlano(texto) {
   return texto
+    // O rótulo acessível sai ANTES da tag ser descartada. Ele é a única prosa
+    // que descreve um diagrama, e a linha de baixo levaria a tag inteira junto:
+    // o desenho sairia do índice e ficaria inencontrável, do mesmo jeito que
+    // rótulo de dentro do desenho já é.
+    .replace(/<[^>]*\saria-label="([^"]*)"[^>]*>/g, ' $1 ')
     .replace(/<[^>]*>/g, ' ') // tag JSX do catálogo
     .replace(/^\s*:::.*$/gm, ' ') // marcador de admonition
     .replace(/^\s*\|.*$/gm, ' ') // linha de tabela

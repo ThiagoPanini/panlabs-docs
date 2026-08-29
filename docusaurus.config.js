@@ -152,6 +152,38 @@ const config = {
         // Sem blog: nada no mapa o pediu, e um plugin ligado sem consumidor é a
         // mesma classe de defeito que as variáveis inertes do Infima.
         blog: false,
+        // O SVGR inlina o `.drawio.svg` importado de uma página, e as duas
+        // otimizações desligadas aqui existem porque o palco pinta o desenho
+        // casando a camada de ATRIBUTO do draw.io por seletor.
+        //
+        // `moveElemsAttrsToGroup` sobe atributo comum para o `<g>` pai, e ele
+        // sobe MAIS num arquivo salvo por editor sem `light-dark()`, porque ali
+        // as cores ficam uniformes. O atributo saía da folha, o seletor deixava
+        // de casar, e o resultado era seta preta invisível no escuro **só** nos
+        // arquivos vindos daquele editor. Medido: 3 grupos hasteados no arquivo
+        // assado, zero no sadio.
+        //
+        // `convertColors` encurta `#000000` para `#000`, e um seletor de
+        // atributo casa string, não cor. Desligar deixa uma forma só.
+        svgr: {
+          svgrConfig: {
+            svgoConfig: {
+              plugins: [
+                {
+                  name: 'preset-default',
+                  params: {
+                    overrides: {
+                      removeTitle: false,
+                      removeViewBox: false,
+                      moveElemsAttrsToGroup: false,
+                      convertColors: false,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
         theme: {
           // A ordem importa: `tokens.css` é o primeiro item porque as raízes
           // precisam existir antes de qualquer regra que as consuma.
