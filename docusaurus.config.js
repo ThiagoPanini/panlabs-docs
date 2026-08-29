@@ -81,7 +81,7 @@ const temaPrism = {
  * esta lista é também o primeiro desempate da busca, descer as duas abas vazias é
  * decisão de resultado, e não de estética.
  */
-const ABAS = ['ferramentas', 'default', 'procedimentos', 'times'];
+const ABAS = ['tools', 'default', 'procedures', 'teams'];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -141,11 +141,11 @@ const config = {
       ({
         // A tab `Jornadas` é a instância `default` do plugin de docs.
         //
-        // O acervo mora em `conteudo/`, e não em `docs/`, porque `docs/` é a
+        // O acervo mora em `content/`, e não em `docs/`, porque `docs/` é a
         // documentação DESTE repositório — agentes, ADRs, spec de design. A
         // rota pública é `/jornadas`, e é ela que o portão 6 verifica.
         docs: {
-          path: 'conteudo/jornadas',
+          path: 'content/jornadas',
           routeBasePath: 'jornadas',
           sidebarPath: './sidebars-jornadas.js',
         },
@@ -191,8 +191,8 @@ const config = {
             './src/css/tokens.css',
             './src/css/custom.css',
             './src/css/chrome.css',
-            './src/css/componentes.css',
-            './src/css/foco.css',
+            './src/css/components.css',
+            './src/css/focus.css',
           ],
         },
       }),
@@ -209,8 +209,8 @@ const config = {
       '@docusaurus/plugin-content-docs',
       /** @type {import('@docusaurus/plugin-content-docs').Options} */
       ({
-        id: 'procedimentos',
-        path: 'conteudo/procedimentos',
+        id: 'procedures',
+        path: 'content/procedimentos',
         routeBasePath: 'procedimentos',
         sidebarPath: './sidebars-procedimentos.js',
       }),
@@ -219,8 +219,8 @@ const config = {
       '@docusaurus/plugin-content-docs',
       /** @type {import('@docusaurus/plugin-content-docs').Options} */
       ({
-        id: 'ferramentas',
-        path: 'conteudo/ferramentas',
+        id: 'tools',
+        path: 'content/ferramentas',
         routeBasePath: 'ferramentas',
         sidebarPath: './sidebars-ferramentas.js',
         // **Esta instância declarava `docItemComponent`, e não declara mais.**
@@ -238,8 +238,8 @@ const config = {
       '@docusaurus/plugin-content-docs',
       /** @type {import('@docusaurus/plugin-content-docs').Options} */
       ({
-        id: 'times',
-        path: 'conteudo/times',
+        id: 'teams',
+        path: 'content/times',
         routeBasePath: 'times',
         sidebarPath: './sidebars-times.js',
       }),
@@ -253,8 +253,8 @@ const config = {
     // que a busca usa como primeiro desempate e o `llms.txt` usa como seção. Um
     // id que não exista entre as instâncias **quebra o build** em vez de sumir
     // um terço do site em silêncio.
-    ['./src/plugins/busca', {abas: ABAS}],
-    ['./src/plugins/ai-era', {abas: ABAS}],
+    ['./src/plugins/search', {tabs: ABAS}],
+    ['./src/plugins/ai-era', {tabs: ABAS}],
   ],
 
   themeConfig:
@@ -304,7 +304,7 @@ const config = {
           {
             type: 'html',
             position: 'left',
-            className: 'quebra-de-faixa',
+            className: 'tab-strip-break',
             value: '<!--quebra-->',
           },
 
@@ -312,28 +312,28 @@ const config = {
           // uma instância — o eixo de navegação é a natureza do conteúdo.
           {
             type: 'docSidebar',
-            docsPluginId: 'ferramentas',
-            sidebarId: 'ferramentas',
+            docsPluginId: 'tools',
+            sidebarId: 'tools',
             position: 'left',
             label: 'Ferramentas',
           },
           {
             type: 'docSidebar',
-            sidebarId: 'jornadas',
+            sidebarId: 'journeys',
             position: 'left',
             label: 'Jornadas',
           },
           {
             type: 'docSidebar',
-            docsPluginId: 'procedimentos',
-            sidebarId: 'procedimentos',
+            docsPluginId: 'procedures',
+            sidebarId: 'procedures',
             position: 'left',
             label: 'Procedimentos',
           },
           {
             type: 'docSidebar',
-            docsPluginId: 'times',
-            sidebarId: 'times',
+            docsPluginId: 'teams',
+            sidebarId: 'teams',
             position: 'left',
             label: 'Times',
           },

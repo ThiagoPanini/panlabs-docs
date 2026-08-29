@@ -1,0 +1,71 @@
+---
+# GERADO por scripts/generate-reference.mjs a partir de contracts/overpower.pt-BR.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower install
+description: Escreve. Imprime o plano, com todo destino e quem o lê, antes de encostar em disco, e pergunta antes de escrever quando há um terminal do outro lado.
+api_exemplos: {"signature":"overpower install [--runtime <key>] [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>] [--global] [--force] [--yes] [--dry-run]","language":"bash","model":{"call":"overpower install","qualified":"overpower install","context":"terminal","parameters":[{"name":"--runtime","type":"key","arity":{"multiple":true,"separator":","},"example":"claude-code"},{"name":"--skill","type":"name","arity":{"multiple":true,"separator":","},"example":"panlabs-python-standards"},{"name":"--bundle","type":"name","arity":{"multiple":true,"separator":","}},{"name":"--mcp","type":"name","arity":{"multiple":true,"separator":","}},{"name":"--ai-framework","type":"name","arity":{"multiple":true,"separator":","}},{"name":"--from","type":"url","arity":{"multiple":false}},{"name":"--global","type":"flag","arity":{"multiple":false}},{"name":"--force","type":"flag","arity":{"multiple":false}},{"name":"--yes","type":"flag","arity":{"multiple":false}},{"name":"--dry-run","type":"flag","arity":{"multiple":false}}],"minimum":[{"context":"terminal","flags":[]},{"context":"no-terminal","flags":["--skill","--runtime"]}],"constraints":[{"type":"exclusive","precedence":1,"members":["--mcp","--skill","--bundle","--ai-framework"],"partition":[["--mcp"],["--skill","--bundle","--ai-framework"]],"guard":"--runtime","class":"MixedClassesWithoutRuntimeError","exit":2,"literal":true,"message":"a skill and an MCP server on one line need --runtime named explicitly, or two separate commands — one per class"},{"type":"forbids","precedence":2,"when":"--from","forbidden":"--ai-framework","class":"UnsupportedRemoteUnitError","exit":2,"literal":true,"message":"`--from` installs skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those"},{"type":"disables","precedence":3,"when":"--from","class":"RemoteSkillNotFoundError","exit":3,"literal":false,"message":"with `--from` a name the remote does not have is refused at exit 3, where the embedded catalog would have refused it at exit 2"}]}}
+---
+
+# overpower install
+
+{/* cita-saida-de-ferramenta */}
+
+**Comando** · `overpower install`
+
+<CommandPanel />
+
+Os quatro seletores se misturam livremente numa linha só, e cada um aceita valor separado por vírgula, a repetição da flag, ou as duas coisas. Quando a linha resolve para escritas em mais de uma unidade, elas acontecem sempre na mesma ordem, framework, depois bundle, depois artefato avulso, depois servidor MCP, e a unidade mais específica escreve por último.
+
+Num terminal, uma linha que não fecha um plano abre o assistente em vez de simplesmente recusar. Ele abre só os passos que a sua linha deixou em aberto, sempre na mesma ordem, e o que ele coleta vira exatamente a mesma requisição que a linha digitada à mão teria montado.
+
+## Opções
+
+<ParamField name="--runtime" type="key">
+Quem recebe o que foi instalado. Aceita as chaves de uma tabela fechada de 77 runtimes, e não tem valor padrão. O que acontece sem ele depende de haver terminal: num terminal, uma linha que nomeia o que instalar e nenhum runtime abre o assistente no passo que faltou; fora de terminal, ela recusa com saída 2 em vez de adivinhar. A exceção é a linha que mistura skill e servidor MCP, que exige o runtime nomeado nos dois casos.
+
+Aceita repetição e vários nomes separados por vírgula.
+</ParamField>
+
+<ParamField name="--skill" type="name">
+Uma skill do pool, instalada sozinha. Aceita a forma curta `-s`.
+
+Aceita repetição e vários nomes separados por vírgula.
+</ParamField>
+
+<ParamField name="--bundle" type="name">
+Um bundle, expandido nos artefatos de pool que o manifesto dele nomeia. Aceita a forma curta `-b`.
+
+Aceita repetição e vários nomes separados por vírgula.
+</ParamField>
+
+<ParamField name="--mcp" type="name">
+Um servidor MCP, enxertado na configuração do próprio runtime. Aqui nada é copiado, e sim acrescentado dentro de um documento que já é seu.
+
+Aceita repetição e vários nomes separados por vírgula.
+</ParamField>
+
+<ParamField name="--ai-framework" type="name">
+Um AI Framework, instalado inteiro. Ele não tem forma curta de propósito, porque `-f` já é `--force` neste mesmo comando.
+
+Aceita repetição e vários nomes separados por vírgula.
+</ParamField>
+
+<ParamField name="--from" type="url">
+Instala a partir de um repositório do GitHub, sem passo de registro. Uma vez na linha, o catálogo embutido não é consultado. Nu, num terminal, ele abre a vitrine daquele repositório como um passo do assistente; fora de um terminal, uma linha com `--from` e nenhum seletor sai `2`, porque não há assistente a abrir.
+</ParamField>
+
+<ParamField name="--global" type="flag">
+Escreve sob o diretório do usuário em vez do repositório atual. Aceita a forma curta `-g`.
+</ParamField>
+
+<ParamField name="--force" type="flag">
+Sobrescreve um destino que já existe no escopo de máquina, sem perguntar. No escopo de repositório não tem efeito, porque lá o `git status` já revela e desfaz. Aceita a forma curta `-f`. Ele tem um segundo efeito no escopo de máquina: um slot cujo valor já está escrito no documento volta a ser perguntado, porque valor gravado é o que ocupa o destino.
+</ParamField>
+
+<ParamField name="--yes" type="flag">
+Pula a confirmação antes da escrita. Aceita a forma curta `-y`. Fora de terminal ele é aceito e não faz nada, porque lá não há confirmação a pular. Num terminal ele tem um segundo efeito: um destino já ocupado no escopo de máquina deixa de virar pergunta e vira recusa, com saída 3, onde a linha sem `-y` teria perguntado e podido escrever. Quem levanta essa recusa é `--force`, e só ele.
+</ParamField>
+
+<ParamField name="--dry-run" type="flag">
+Resolve tudo, imprime o plano, espelha o código de saída real e não escreve nada, nem um diretório vazio. Um destino global já ocupado é recusado, e não perguntado, e com `--from` a raiz remota é buscada mesmo assim, porque sem ela não há plano a imprimir. Ele nunca pergunta um segredo: anuncia quantos slots a linha real pediria, e para aí.
+</ParamField>

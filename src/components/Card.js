@@ -17,21 +17,21 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Icon from './Icon';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 export function CardGroup({children}) {
   return (
-    <div className={estilos.cardGroup} data-pd-component="card-group">
+    <div className={styles.cardGroup} data-pd-component="card-group">
       {children}
     </div>
   );
 }
 
 export default function Card({title, icon, href, children}) {
-  const conteudo = (
+  const content = (
     <>
       {icon ? <Icon name={icon} size="lg" /> : null}
-      <span className={estilos.cardTitle} data-pd-part="title">
+      <span className={styles.cardTitle} data-pd-part="title">
         {title}
       </span>
       {children}
@@ -41,12 +41,12 @@ export default function Card({title, icon, href, children}) {
   // `<Link>` e não `<a>`: ele decide entre navegação client-side e link externo,
   // e é ele que resolve `baseUrl` num caminho interno.
   return href ? (
-    <Link className={estilos.card} data-pd-component="card" to={href}>
-      {conteudo}
+    <Link className={styles.card} data-pd-component="card" to={href}>
+      {content}
     </Link>
   ) : (
-    <div className={estilos.card} data-pd-component="card">
-      {conteudo}
+    <div className={styles.card} data-pd-component="card">
+      {content}
     </div>
   );
 }

@@ -18,16 +18,16 @@
  */
 
 import React from 'react';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 export default function Expandable({title, defaultOpen, children}) {
   return (
     <details
-      className={estilos.expandable}
+      className={styles.expandable}
       data-pd-component="expandable"
       open={defaultOpen ? true : undefined}>
-      <summary className={estilos.expandableSummary}>{title}</summary>
-      <div className={estilos.expandableBody}>{children}</div>
+      <summary className={styles.expandableSummary}>{title}</summary>
+      <div className={styles.expandableBody}>{children}</div>
     </details>
   );
 }

@@ -1,0 +1,57 @@
+---
+# GERADO por scripts/generate-reference.mjs a partir de contracts/overpower.pt-BR.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower
+description: A raiz da linha de comando, com as opções que valem em qualquer posição e a tabela dos quatro códigos de saída que os três comandos compartilham.
+api_exemplos: {"signature":"overpower [--help] [--version] <command>","language":"bash","lines":["overpower list --skill \"panlabs-python-standards\"","overpower install --runtime \"claude-code\" --skill \"panlabs-python-standards\"","overpower doctor"]}
+---
+
+# overpower
+
+{/* cita-saida-de-ferramenta */}
+
+**Aplicação** · `overpower`
+
+<CommandPanel />
+
+Toda invocação do `overpower` responde a uma de exatamente três perguntas, e cada pergunta é um comando. Digitado nu, o `overpower` imprime a marca e a ajuda de topo, e sai `0`; sob um cano a marca cai e só a ajuda passa, para que um `grep` ou um redirecionamento receba algo que valha a leitura.
+
+O catálogo que o `overpower` instala vem embutido no pacote, então a versão da ferramenta é a versão do catálogo. É por isso que toda linha deste site fixa `@latest`, e é isso que `--version` prova.
+
+## Comandos
+
+| Nome | Espécie | O que faz |
+| --- | --- | --- |
+| [`overpower list`](./list.mdx) | Comando | Responde o que existe. Nu, imprime o catálogo embutido em quatro blocos; com um seletor, abre um item só, por inteiro. |
+| [`overpower install`](./install.mdx) | Comando | Escreve. Imprime o plano, com todo destino e quem o lê, antes de encostar em disco, e pergunta antes de escrever quando há um terminal do outro lado. |
+| [`overpower doctor`](./doctor.mdx) | Comando | Responde se o que foi escrito continua sendo o que foi escrito. Reporta o terminal e a integridade numa saída só, nos dois escopos ao mesmo tempo. |
+
+## Opções globais
+
+<ParamField name="--help" type="flag">
+Imprime a ajuda do nível em que aparece e sai `0`. Na raiz, é a mesma tela que o `overpower` nu já mostra.
+</ParamField>
+
+<ParamField name="--version" type="flag">
+Imprime a versão lida dos metadados do pacote instalado, e não de uma constante fixada no código. É a conferência mais barata de que o pacote chegou inteiro.
+</ParamField>
+
+## Códigos de saída
+
+O código de saída é a resposta da linha, e ele vale igual nos três comandos. O eixo entre `2` e `3` diz de quem é o defeito, e é essa distinção que torna os dois úteis dentro de um script.
+
+<ResponseField name="0" type="int">
+Fez o que foi pedido.
+</ResponseField>
+
+<ResponseField name="1" type="int">
+Não conseguiu rodar. Uma falha que o produto não reconhece como recusa própria vira painel de erro e sai por aqui, o que é em si uma afirmação, a de que o defeito é do `overpower`.
+</ResponseField>
+
+<ResponseField name="2" type="int">
+A invocação está errada. O valor que você digitou não existe em lugar nenhum, e a mensagem imprime a lista fechada inteira.
+</ResponseField>
+
+<ResponseField name="3" type="int">
+Rodou, e a resposta é não. A linha estava bem formada, o valor era real, e o que não existe é o par que você pediu.
+</ResponseField>

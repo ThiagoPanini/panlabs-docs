@@ -135,8 +135,8 @@ samp {
    entrada da ilha, a respiração do glow e o reveal por rolagem — saíram com a
    landing (issue #94), porque eram consumidos só pelo CSS Module dela.
 
-   A respiração não ficou órfã, ficou QUEBRADA: ela lia `--pd-glow-vale` e
-   `--pd-glow-crista`, e esses dois saíram junto com a regra `[data-pd-showcase]`
+   A respiração não ficou órfã, ficou QUEBRADA: ela lia `--pd-glow-trough` e
+   `--pd-glow-crest`, e esses dois saíram junto com a regra `[data-pd-showcase]`
    da camada 3. Mantê-la seria um `@keyframes` animando para `opacity`
    indefinido. Os tokens de movimento que as nomeavam — `--pd-move-showcase`,
    `--pd-move-reveal`, `--pd-move-ambient` — continuam declarados em
@@ -173,7 +173,7 @@ samp {
 
    `@keyframes` referenciado por `global(…)` é a forma que este projeto já sabe
    que atravessa o minificador inteira. Ver docs/design/motion.md §6. */
-@keyframes pd-busca-abre {
+@keyframes pd-search-open {
   from {
     opacity: 0;
   }

@@ -20,7 +20,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import Icon from './Icon';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 /**
  * O glifo por variante — fixo, do papel `sistema` do manifesto.
@@ -42,14 +42,14 @@ import estilos from './catalogo.module.css';
  * declarado no próprio `.callout`.
  */
 const VARIANTES = {
-  note: {glifo: 'pencil-line', classe: estilos.calloutNote, tamanho: 'sm'},
+  note: {glifo: 'pencil-line', classe: styles.calloutNote, tamanho: 'sm'},
   info: {glifo: 'info', classe: undefined, tamanho: 'md'},
-  tip: {glifo: 'lightbulb', classe: estilos.calloutTip, tamanho: 'md'},
-  warning: {glifo: 'triangle-alert', classe: estilos.calloutWarning, tamanho: 'md'},
+  tip: {glifo: 'lightbulb', classe: styles.calloutTip, tamanho: 'md'},
+  warning: {glifo: 'triangle-alert', classe: styles.calloutWarning, tamanho: 'md'},
 };
 
 /* Sem prop `id`. Ela existiu como repasse para o atributo do `<div>` e saiu por
-   não ter consumidor: ZERO call sites em `conteudo/`. Um callout não é destino
+   não ter consumidor: ZERO call sites em `content/`. Um callout não é destino
    de link neste site — os âncoras de navegação são os headings, que o
    Docusaurus já ancora sozinho —, e um `id` que ninguém escreve rendia
    `id={undefined}` em toda instância. Volta com o call site junto no dia em que
@@ -58,7 +58,7 @@ export default function Callout({variant, title, children}) {
   const {glifo, classe, tamanho} = VARIANTES[variant] ?? VARIANTES.info;
   return (
     <div
-      className={clsx(estilos.callout, classe)}
+      className={clsx(styles.callout, classe)}
       data-pd-component="callout"
       data-pd-variant={variant}>
       <Icon name={glifo} size={tamanho} />
@@ -66,9 +66,9 @@ export default function Callout({variant, title, children}) {
           um `<svg>` — a skin alcança por `> div`. O título, não: ele é um `<p>`
           entre os `<p>` que o autor escreve, e nenhum seletor de tipo o separa
           deles. */}
-      <div className={estilos.calloutContent}>
+      <div className={styles.calloutContent}>
         {title ? (
-          <p className={estilos.calloutTitle} data-pd-part="title">
+          <p className={styles.calloutTitle} data-pd-part="title">
             {title}
           </p>
         ) : null}

@@ -30,13 +30,13 @@
  */
 
 /**
- * `nome` é NOSSO nome — semântico, e é ele que o autor escreve no MDX. `lucide`
+ * `name` é NOSSO nome — semântico, e é ele que o autor escreve no MDX. `lucide`
  * só aparece onde o upstream diverge, e é a prova de que o nome do contrato não
  * é refém do vocabulário de terceiro: o Lucide renomeia glifo entre versões, e
  * quem paga é o mapa de uma linha, não o MDX de dezenas de páginas.
  *
- * @typedef {'sistema' | 'navegacao' | 'autoria'} Papel
- * @typedef {{nome: string, papeis: Papel[], onde: string, lucide?: string}} Entrada
+ * @typedef {'system' | 'navigation' | 'authoring'} Role
+ * @typedef {{name: string, roles: Role[], where: string, lucide?: string}} Entry
  */
 
 /**
@@ -45,28 +45,28 @@
  * **Eram 19.** `train-track` saiu porque a marca ficou só com a palavra: sem
  * glifo ao lado do nome, o desenho perdeu o único consumidor que tinha, e
  * componente sem consumidor é o defeito que este projeto mata por nome.
- * @type {Entrada[]}
+ * @type {Entry[]}
  */
-const SISTEMA = [
-  {nome: 'info', papeis: ['sistema'], onde: 'callout `info`'},
-  {nome: 'lightbulb', papeis: ['sistema'], onde: 'callout `tip`'},
-  {nome: 'triangle-alert', papeis: ['sistema'], onde: 'callout `warning`'},
-  {nome: 'pencil-line', papeis: ['sistema'], onde: 'callout `note`'},
-  {nome: 'chevron-right', papeis: ['sistema'], onde: 'caret de `Accordion`, de categoria de sidebar e — girado — do par `Copiar página`'},
-  {nome: 'check', papeis: ['sistema'], onde: 'passo concluído em `Steps` e confirmação de `Copiar página`'},
-  {nome: 'copy', papeis: ['sistema'], onde: 'botão copiar do bloco de código e o par `Copiar página`'},
-  {nome: 'wrap-text', papeis: ['sistema'], onde: 'toggle de quebra de linha do bloco de código', lucide: 'text-wrap'},
-  {nome: 'external-link', papeis: ['sistema'], onde: 'link externo e os itens de assistente de `Copiar página`'},
-  {nome: 'search', papeis: ['sistema'], onde: 'busca'},
-  {nome: 'x', papeis: ['sistema'], onde: 'fechar modal'},
-  {nome: 'menu', papeis: ['sistema'], onde: 'hambúrguer de tela estreita'},
-  {nome: 'sun', papeis: ['sistema'], onde: 'tema claro'},
-  {nome: 'moon', papeis: ['sistema'], onde: 'tema escuro'},
-  {nome: 'monitor', papeis: ['sistema'], onde: 'tema do sistema'},
-  {nome: 'languages', papeis: ['sistema'], onde: 'seletor de locale'},
-  {nome: 'link', papeis: ['sistema'], onde: 'âncora de heading'},
-  {nome: 'list', papeis: ['sistema'], onde: 'título do índice desta página', lucide: 'text-align-start'},
-  {nome: 'arrow-right', papeis: ['sistema'], onde: 'paginação e CTA de card'},
+const SYSTEM = [
+  {name: 'info', roles: ['system'], where: 'callout `info`'},
+  {name: 'lightbulb', roles: ['system'], where: 'callout `tip`'},
+  {name: 'triangle-alert', roles: ['system'], where: 'callout `warning`'},
+  {name: 'pencil-line', roles: ['system'], where: 'callout `note`'},
+  {name: 'chevron-right', roles: ['system'], where: 'caret de `Accordion`, de categoria de sidebar e — girado — do par `Copiar página`'},
+  {name: 'check', roles: ['system'], where: 'passo concluído em `Steps` e confirmação de `Copiar página`'},
+  {name: 'copy', roles: ['system'], where: 'botão copiar do bloco de código e o par `Copiar página`'},
+  {name: 'wrap-text', roles: ['system'], where: 'toggle de quebra de linha do bloco de código', lucide: 'text-wrap'},
+  {name: 'external-link', roles: ['system'], where: 'link externo e os itens de assistente de `Copiar página`'},
+  {name: 'search', roles: ['system'], where: 'busca'},
+  {name: 'x', roles: ['system'], where: 'fechar modal'},
+  {name: 'menu', roles: ['system'], where: 'hambúrguer de tela estreita'},
+  {name: 'sun', roles: ['system'], where: 'tema claro'},
+  {name: 'moon', roles: ['system'], where: 'tema escuro'},
+  {name: 'monitor', roles: ['system'], where: 'tema do sistema'},
+  {name: 'languages', roles: ['system'], where: 'seletor de locale'},
+  {name: 'link', roles: ['system'], where: 'âncora de heading'},
+  {name: 'list', roles: ['system'], where: 'título do índice desta página', lucide: 'text-align-start'},
+  {name: 'arrow-right', roles: ['system'], where: 'paginação e CTA de card'},
 ];
 
 /**
@@ -79,11 +79,11 @@ const SISTEMA = [
  * `Jornadas › API Owner` e passou a `Conteúdo Teórico`, dentro da mesma jornada;
  * `activity` era `Procedimentos › Diagnóstico` e passou a nomear a folha de
  * marcador de lugar das duas abas que esvaziaram.
- * @type {Entrada[]}
+ * @type {Entry[]}
  */
-const NAVEGACAO = [
-  {nome: 'code-xml', papeis: ['navegacao'], onde: 'Jornadas › API Owner › Conteúdo Teórico'},
-  {nome: 'activity', papeis: ['navegacao'], onde: 'Procedimentos › Work in Progress e Times › Work in Progress'},
+const NAVIGATION = [
+  {name: 'code-xml', roles: ['navigation'], where: 'Jornadas › API Owner › Conteúdo Teórico'},
+  {name: 'activity', roles: ['navigation'], where: 'Procedimentos › Work in Progress e Times › Work in Progress'},
 ];
 
 /**
@@ -92,10 +92,10 @@ const NAVEGACAO = [
  *
  * **Eram duas superfícies.** A segunda eram as três portas da landing, que
  * usavam a mesma `<Card icon="…">`, e saíram com a página na issue #94. A
- * definição da tag NÃO reverte com elas: `autoria` é *"o nome escrito como
+ * definição da tag NÃO reverte com elas: `authoring` é *"o nome escrito como
  * string"*, e não *"o MDX do autor"* — a correção que a estabeleceu vale por si.
  *
- * **Trinta e uma entradas carregam a segunda tag `navegacao` e moram aqui.**
+ * **Trinta e uma entradas carregam a segunda tag `navigation` e moram aqui.**
  * Elas chegaram em duas levas, e as duas provam a mesma coisa: navegação nova
  * NÃO custa arquivo. As cinco seções do `overpower` levaram a navegação de 11
  * para 16 tags; a #118 deu ícone próprio a cada uma das 21 páginas do produto e
@@ -109,76 +109,76 @@ const NAVEGACAO = [
  * um que nenhuma das categorias dela usava. A regra fica sem sujeito, e a escolha
  * que ela produziu fica — desfazê-la seria remexer no manifesto sem medição que
  * o peça.
- * @type {Entrada[]}
+ * @type {Entry[]}
  */
-const AUTORIA = [
+const AUTHORING = [
   // Ações · 8
-  {nome: 'play', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Telas · vocabulário do autor'},
-  {nome: 'download', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › overpower › Instalação · vocabulário do autor'},
-  {nome: 'upload', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › O release-ready · vocabulário do autor'},
-  {nome: 'refresh-cw', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Solução de problemas · vocabulário do autor'},
-  {nome: 'trash-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'plus', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower install · vocabulário do autor'},
-  {nome: 'filter', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Curadoria · vocabulário do autor', lucide: 'funnel'},
+  {name: 'play', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Contribuir › Telas · vocabulário do autor'},
+  {name: 'download', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › overpower › Instalação · vocabulário do autor'},
+  {name: 'upload', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Contribuir › O release-ready · vocabulário do autor'},
+  {name: 'refresh-cw', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Referência › Solução de problemas · vocabulário do autor'},
+  {name: 'trash-2', roles: ['authoring'], where: 'vocabulário do autor'},
+  {name: 'plus', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Comandos › overpower install · vocabulário do autor'},
+  {name: 'filter', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Contribuir › Curadoria · vocabulário do autor', lucide: 'funnel'},
 
   // Objetos · 16
-  {nome: 'file-text', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Mapa de módulos · vocabulário do autor'},
-  {nome: 'folder', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Alvos › from · vocabulário do autor'},
+  {name: 'file-text', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Contribuir › Mapa de módulos · vocabulário do autor'},
+  {name: 'folder', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Alvos › from · vocabulário do autor'},
   // Era também a porta `Procedimentos` da landing, que saiu na #94. Hoje é o
   // glifo de `Comandos`, que é o nome que ele já nomeava.
-  {nome: 'terminal', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Comandos · vocabulário do autor'},
+  {name: 'terminal', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Comandos · vocabulário do autor'},
   // Comprado pela porta `Ferramentas` da landing, que saiu na #94. Continua no
   // vocabulário do autor, é o único nome de ferramenta do manifesto, e hoje
   // nomeia também `Contribuir › Arquitetura` — ele vestia `Desenvolvimento`, que
   // fundiu em `Contribuir` na #133.
-  {nome: 'wrench', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Arquitetura · vocabulário do autor'},
-  {nome: 'database', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower list · vocabulário do autor'},
-  {nome: 'server', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Servidores MCP · vocabulário do autor'},
-  {nome: 'cloud', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'key', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'lock', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'mail', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'calendar', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'users', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir · vocabulário do autor'},
-  {nome: 'globe', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Alvos · vocabulário do autor'},
+  {name: 'wrench', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Contribuir › Arquitetura · vocabulário do autor'},
+  {name: 'database', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Comandos › overpower list · vocabulário do autor'},
+  {name: 'server', roles: ['navigation', 'authoring'], where: 'Ferramentas › Servidores MCP · vocabulário do autor'},
+  {name: 'cloud', roles: ['authoring'], where: 'vocabulário do autor'},
+  {name: 'key', roles: ['authoring'], where: 'vocabulário do autor'},
+  {name: 'lock', roles: ['authoring'], where: 'vocabulário do autor'},
+  {name: 'mail', roles: ['authoring'], where: 'vocabulário do autor'},
+  {name: 'calendar', roles: ['authoring'], where: 'vocabulário do autor'},
+  {name: 'users', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Contribuir · vocabulário do autor'},
+  {name: 'globe', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Alvos · vocabulário do autor'},
   // PERDEU a tag `navegacao` na #118. Ele era a chave `bibliotecas`, que as
   // três folhas de topo do `overpower` repetiam; com ícone próprio por página
   // ninguém mais a declara, e par sem declarante é o que `npm run icones`
   // reprova. O separador `Bibliotecas` nunca teve ícone — ADR 10 §e).
-  {nome: 'package', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Alvos › O bundle federado · vocabulário do autor'},
-  {nome: 'rocket', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Release · vocabulário do autor'},
-  {nome: 'shapes', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › overpower › Conceitos · vocabulário do autor'},
+  {name: 'package', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Alvos › O bundle federado · vocabulário do autor'},
+  {name: 'rocket', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Contribuir › Release · vocabulário do autor'},
+  {name: 'shapes', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › overpower › Conceitos · vocabulário do autor'},
 
   // Estados e sinais · 7
-  {nome: 'zap', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower · vocabulário do autor'},
-  {nome: 'clock', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Changelog · vocabulário do autor'},
-  {nome: 'circle-alert', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Referência › Códigos de saída · vocabulário do autor'},
-  {nome: 'circle-help', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower · vocabulário do autor', lucide: 'circle-question-mark'},
-  {nome: 'sparkles', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Critérios de catálogo · vocabulário do autor'},
-  {nome: 'trending-up', papeis: ['autoria'], onde: 'vocabulário do autor'},
-  {nome: 'gauge', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Comandos › overpower doctor · vocabulário do autor'},
+  {name: 'zap', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower · vocabulário do autor'},
+  {name: 'clock', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Referência › Changelog · vocabulário do autor'},
+  {name: 'circle-alert', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Referência › Códigos de saída · vocabulário do autor'},
+  {name: 'circle-help', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Comandos › overpower · vocabulário do autor', lucide: 'circle-question-mark'},
+  {name: 'sparkles', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Contribuir › Critérios de catálogo · vocabulário do autor'},
+  {name: 'trending-up', roles: ['authoring'], where: 'vocabulário do autor'},
+  {name: 'gauge', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Comandos › overpower doctor · vocabulário do autor'},
 
   // Conceitos · 9
-  {nome: 'layers', papeis: ['navegacao', 'autoria'], onde: 'Jornadas › API Owner › Visão Geral · vocabulário do autor'},
-  {nome: 'workflow', papeis: ['navegacao', 'autoria'], onde: 'Jornadas › API Owner › Conteúdo Prático · vocabulário do autor'},
-  {nome: 'puzzle', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Módulos Terraform · vocabulário do autor'},
-  {nome: 'bot', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Skills · vocabulário do autor'},
-  {nome: 'webhook', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Alvos › Servidores MCP · vocabulário do autor'},
-  {nome: 'bell', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Contribuir › Os dois hooks · vocabulário do autor'},
+  {name: 'layers', roles: ['navigation', 'authoring'], where: 'Jornadas › API Owner › Visão Geral · vocabulário do autor'},
+  {name: 'workflow', roles: ['navigation', 'authoring'], where: 'Jornadas › API Owner › Conteúdo Prático · vocabulário do autor'},
+  {name: 'puzzle', roles: ['navigation', 'authoring'], where: 'Ferramentas › Módulos Terraform · vocabulário do autor'},
+  {name: 'bot', roles: ['navigation', 'authoring'], where: 'Ferramentas › Skills · vocabulário do autor'},
+  {name: 'webhook', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Alvos › Servidores MCP · vocabulário do autor'},
+  {name: 'bell', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Contribuir › Os dois hooks · vocabulário do autor'},
   // Era a porta `Jornadas` da landing, que saiu na #94. A regra da porta ficou
   // sem sujeito quando a landing morreu, e é por isso que ele pôde virar glifo de
   // categoria aqui: `Referência` é seção do `overpower`, e nenhuma porta a
   // contém.
-  {nome: 'book-open', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › Bibliotecas › overpower › Referência · vocabulário do autor'},
-  {nome: 'repeat', papeis: ['navegacao', 'autoria'], onde: 'Ferramentas › … › Contribuir › Testes · vocabulário do autor'},
-  {nome: 'undo-2', papeis: ['autoria'], onde: 'vocabulário do autor'},
+  {name: 'book-open', roles: ['navigation', 'authoring'], where: 'Ferramentas › Bibliotecas › overpower › Referência · vocabulário do autor'},
+  {name: 'repeat', roles: ['navigation', 'authoring'], where: 'Ferramentas › … › Contribuir › Testes · vocabulário do autor'},
+  {name: 'undo-2', roles: ['authoring'], where: 'vocabulário do autor'},
 ];
 
-/** @type {Entrada[]} */
-export const ICONES = [...SISTEMA, ...NAVEGACAO, ...AUTORIA];
+/** @type {Entry[]} */
+export const ICONS = [...SYSTEM, ...NAVIGATION, ...AUTHORING];
 
 /** Os nomes de arquivo, em ordem de manifesto — 61 hoje, contra o teto de 64. */
-export const NOMES = ICONES.map((i) => i.nome);
+export const NAMES = ICONS.map((i) => i.name);
 
 /**
  * O teto é duro. Ele existe porque conjunto que cresce sob demanda vira dívida:
@@ -189,10 +189,10 @@ export const NOMES = ICONES.map((i) => i.nome);
  * auditar de uma vez, não uma marca d'água do que já se gastou — descê-lo para
  * 60 seria trocar uma régua por um registro do passado.
  */
-export const TETO = 64;
+export const CEILING = 64;
 
 /**
- * Os trinta e três pares seção→ícone. A chave vira `sidebar-icone--<chave>` no
+ * Os trinta e três pares seção→ícone. A chave vira `sidebar-icon--<chave>` no
  * `className` da sidebar.
  *
  * **A chave deixou de ser da seção e passou a ser da PÁGINA — no `overpower`.**
@@ -218,7 +218,7 @@ export const TETO = 64;
  * **Nenhuma das novas custou arquivo.** Todas reaproveitam desenhos que o
  * manifesto já carregava como vocabulário do autor, e o teto de 64 não se move.
  */
-export const PARES_SECAO = {
+export const SECTION_ICON_PAIRS = {
   // As sete de SEÇÃO — as árvores em que a folha ainda herda a chave do ramo que
   // a contém. Ver a nota sobre o orçamento, acima.
   //
@@ -289,6 +289,6 @@ export const PARES_SECAO = {
  *
  * O Lucide **renomeia glifo entre versões** — `code-xml` já foi `code-2`. Os
  * nomes deste manifesto se conferem contra esta versão no ato de copiar, e é
- * `scripts/vendorizar-icones.mjs` quem roda a conferência.
+ * `scripts/vendor-icons.mjs` quem roda a conferência.
  */
-export const LUCIDE_VERSAO = '1.30.0';
+export const LUCIDE_VERSION = '1.30.0';

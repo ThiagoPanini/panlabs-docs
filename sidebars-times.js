@@ -21,10 +21,10 @@
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
  */
 const sidebars = {
-  times: [
+  teams: [
     // A única folha da instância. Ela carrega `slug: /`, e é o que faz `/times`
     // responder 200 sem redirecionamento (ADR 10 §h).
-    {type: 'doc', id: 'work-in-progress', className: 'sidebar-icone sidebar-icone--work-in-progress'},
+    {type: 'doc', id: 'work-in-progress', className: 'sidebar-icon sidebar-icon--work-in-progress'},
   ],
 };
 

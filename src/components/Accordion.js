@@ -22,11 +22,11 @@
 
 import React from 'react';
 import Icon from './Icon';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 export function AccordionGroup({children}) {
   return (
-    <div className={estilos.accordionGroup} data-pd-component="accordion-group">
+    <div className={styles.accordionGroup} data-pd-component="accordion-group">
       {children}
     </div>
   );
@@ -35,23 +35,23 @@ export function AccordionGroup({children}) {
 export default function Accordion({title, description, icon, defaultOpen, children}) {
   return (
     <details
-      className={estilos.accordion}
+      className={styles.accordion}
       data-pd-component="accordion"
       // Não controlado: quem guarda o estado é o elemento. `undefined` remove o
       // atributo, e é o `[open]` do DOM que o CSS e a skin leem.
       open={defaultOpen ? true : undefined}>
-      <summary className={estilos.accordionSummary}>
+      <summary className={styles.accordionSummary}>
         {icon ? <Icon name={icon} size="sm" /> : null}
-        <span className={estilos.accordionTitle} data-pd-part="title">
+        <span className={styles.accordionTitle} data-pd-part="title">
           {title}
         </span>
         {description ? (
-          <span className={estilos.accordionDescription} data-pd-part="description">
+          <span className={styles.accordionDescription} data-pd-part="description">
             {description}
           </span>
         ) : null}
       </summary>
-      <div className={estilos.accordionBody}>{children}</div>
+      <div className={styles.accordionBody}>{children}</div>
     </details>
   );
 }

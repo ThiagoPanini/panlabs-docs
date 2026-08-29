@@ -29,12 +29,12 @@
  */
 
 import React from 'react';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 export default function Frame({children}) {
   return (
-    <figure className={estilos.frame} data-pd-component="frame">
-      <div className={estilos.frameStage}>{children}</div>
+    <figure className={styles.frame} data-pd-component="frame">
+      <div className={styles.frameStage}>{children}</div>
     </figure>
   );
 }

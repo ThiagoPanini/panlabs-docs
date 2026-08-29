@@ -14,16 +14,16 @@
  */
 
 import React from 'react';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 export default function Update({label, tag, children}) {
   return (
-    <section className={estilos.update} data-pd-component="update">
-      <header className={estilos.updateHead}>
+    <section className={styles.update} data-pd-component="update">
+      <header className={styles.updateHead}>
         {label}
-        {tag ? <span className={estilos.updateTag}>{tag}</span> : null}
+        {tag ? <span className={styles.updateTag}>{tag}</span> : null}
       </header>
-      <div className={estilos.updateBody}>{children}</div>
+      <div className={styles.updateBody}>{children}</div>
     </section>
   );
 }

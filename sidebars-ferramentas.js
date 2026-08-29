@@ -1,7 +1,7 @@
 // @ts-check
 
 // O ramo gerado de `overpower › Comandos`, emitido por
-// `scripts/gerar-referencia.mjs`. É o ÚNICO import de um arquivo de sidebar deste
+// `scripts/generate-reference.mjs`. É o ÚNICO import de um arquivo de sidebar deste
 // projeto, e ele existe para que as duas posses não se misturem — ver o bloco
 // abaixo.
 import referencia from './sidebars-referencia.js';
@@ -71,7 +71,7 @@ import referencia from './sidebars-referencia.js';
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
  */
 const sidebars = {
-  ferramentas: [
+  tools: [
     {
       type: 'category',
       label: 'Bibliotecas',
@@ -85,11 +85,11 @@ const sidebars = {
           // está dentro.
           type: 'category',
           label: 'overpower',
-          className: 'sidebar-icone sidebar-icone--overpower',
+          className: 'sidebar-icon sidebar-icon--overpower',
           link: {type: 'doc', id: 'bibliotecas/overpower/visao-geral'},
           items: [
-            {type: 'doc', id: 'bibliotecas/overpower/instalacao', className: 'sidebar-icone sidebar-icone--instalacao'},
-            {type: 'doc', id: 'bibliotecas/overpower/conceitos', className: 'sidebar-icone sidebar-icone--conceitos'},
+            {type: 'doc', id: 'bibliotecas/overpower/instalacao', className: 'sidebar-icon sidebar-icon--instalacao'},
+            {type: 'doc', id: 'bibliotecas/overpower/conceitos', className: 'sidebar-icon sidebar-icon--conceitos'},
             {
               // A seção que hospeda o ramo gerado. A folha de abertura dela é
               // autoral e é a fixture de painel direito vazio: ela passa pela
@@ -97,37 +97,37 @@ const sidebars = {
               // existir nela — irmã direta das quatro que a pintam.
               type: 'category',
               label: 'Comandos',
-              className: 'sidebar-icone sidebar-icone--comandos',
+              className: 'sidebar-icon sidebar-icon--comandos',
               link: {type: 'doc', id: 'bibliotecas/overpower/comandos/indice'},
               items: [...referencia],
             },
             {
               type: 'category',
               label: 'Alvos',
-              className: 'sidebar-icone sidebar-icone--alvos',
+              className: 'sidebar-icon sidebar-icon--alvos',
               link: {type: 'doc', id: 'bibliotecas/overpower/alvos/indice'},
               items: [
-                {type: 'doc', id: 'bibliotecas/overpower/alvos/servidores-mcp', className: 'sidebar-icone sidebar-icone--alvo-mcp'},
-                {type: 'doc', id: 'bibliotecas/overpower/alvos/from', className: 'sidebar-icone sidebar-icone--alvo-from'},
-                {type: 'doc', id: 'bibliotecas/overpower/alvos/bundle-federado', className: 'sidebar-icone sidebar-icone--alvo-bundle'},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/servidores-mcp', className: 'sidebar-icon sidebar-icon--alvo-mcp'},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/from', className: 'sidebar-icon sidebar-icon--alvo-from'},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/bundle-federado', className: 'sidebar-icon sidebar-icon--alvo-bundle'},
               ],
             },
             {
               type: 'category',
               label: 'Referência',
-              className: 'sidebar-icone sidebar-icone--referencia',
+              className: 'sidebar-icon sidebar-icon--referencia',
               link: {type: 'doc', id: 'bibliotecas/overpower/referencia/indice'},
               items: [
-                {type: 'doc', id: 'bibliotecas/overpower/referencia/codigos-de-saida', className: 'sidebar-icone sidebar-icone--codigos-de-saida'},
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/codigos-de-saida', className: 'sidebar-icon sidebar-icon--codigos-de-saida'},
                 // A fixture de aninhamento máximo: nível 4, com os 40px de
                 // recuo mais o ícone mais o rótulo mais longo desta
                 // profundidade, tudo dentro dos 288px da coluna.
-                {type: 'doc', id: 'bibliotecas/overpower/referencia/solucao-de-problemas', className: 'sidebar-icone sidebar-icone--solucao-de-problemas'},
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/solucao-de-problemas', className: 'sidebar-icon sidebar-icon--solucao-de-problemas'},
                 // O changelog é do lado do leitor, e não do de quem publica: ele
                 // responde *o que mudou na versão que eu tenho*, que é pergunta
                 // de quem usa. Ele morava sob `publicacao/` e mudou de casa na
                 // #133, junto com a fusão que criou o `contribuir/`.
-                {type: 'doc', id: 'bibliotecas/overpower/referencia/changelog', className: 'sidebar-icone sidebar-icone--changelog'},
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/changelog', className: 'sidebar-icon sidebar-icon--changelog'},
               ],
             },
             {
@@ -138,18 +138,18 @@ const sidebars = {
               // onde o leitor a vê antes de clicar (#133).
               type: 'category',
               label: 'Contribuir',
-              className: 'sidebar-icone sidebar-icone--contribuir',
+              className: 'sidebar-icon sidebar-icon--contribuir',
               link: {type: 'doc', id: 'bibliotecas/overpower/contribuir/indice'},
               items: [
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/arquitetura', className: 'sidebar-icone sidebar-icone--arquitetura'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/mapa-de-modulos', className: 'sidebar-icone sidebar-icone--mapa-de-modulos'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/hooks', className: 'sidebar-icone sidebar-icone--hooks'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/testes', className: 'sidebar-icone sidebar-icone--testes'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/telas', className: 'sidebar-icone sidebar-icone--telas'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/curadoria', className: 'sidebar-icone sidebar-icone--curadoria'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/criterios-de-catalogo', className: 'sidebar-icone sidebar-icone--criterios-de-catalogo'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release', className: 'sidebar-icone sidebar-icone--release'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release-ready', className: 'sidebar-icone sidebar-icone--release-ready'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/arquitetura', className: 'sidebar-icon sidebar-icon--arquitetura'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/mapa-de-modulos', className: 'sidebar-icon sidebar-icon--mapa-de-modulos'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/hooks', className: 'sidebar-icon sidebar-icon--hooks'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/testes', className: 'sidebar-icon sidebar-icon--testes'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/telas', className: 'sidebar-icon sidebar-icon--telas'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/curadoria', className: 'sidebar-icon sidebar-icon--curadoria'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/criterios-de-catalogo', className: 'sidebar-icon sidebar-icon--criterios-de-catalogo'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release', className: 'sidebar-icon sidebar-icon--release'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release-ready', className: 'sidebar-icon sidebar-icon--release-ready'},
               ],
             },
           ],
@@ -161,8 +161,8 @@ const sidebars = {
       label: 'Módulos Terraform',
       collapsible: false,
       items: [
-        {type: 'doc', id: 'modulos-terraform/modulo-de-bucket', className: 'sidebar-icone sidebar-icone--modulos-terraform'},
-        {type: 'doc', id: 'modulos-terraform/modulo-de-papel-iam', className: 'sidebar-icone sidebar-icone--modulos-terraform'},
+        {type: 'doc', id: 'modulos-terraform/modulo-de-bucket', className: 'sidebar-icon sidebar-icon--modulos-terraform'},
+        {type: 'doc', id: 'modulos-terraform/modulo-de-papel-iam', className: 'sidebar-icon sidebar-icon--modulos-terraform'},
       ],
     },
     {
@@ -172,8 +172,8 @@ const sidebars = {
       items: [
         // A fixture de prosa mínima e código máximo — o tipo `Receita`, relocado
         // para cá quando a aba própria dele morreu.
-        {type: 'doc', id: 'skills/scaffold-de-esteira', className: 'sidebar-icone sidebar-icone--skills'},
-        {type: 'doc', id: 'skills/rotacao-de-segredo', className: 'sidebar-icone sidebar-icone--skills'},
+        {type: 'doc', id: 'skills/scaffold-de-esteira', className: 'sidebar-icon sidebar-icon--skills'},
+        {type: 'doc', id: 'skills/rotacao-de-segredo', className: 'sidebar-icon sidebar-icon--skills'},
       ],
     },
     {
@@ -181,7 +181,7 @@ const sidebars = {
       label: 'Servidores MCP',
       collapsible: false,
       items: [
-        {type: 'doc', id: 'servidores-mcp/servidor-de-catalogo-mcp', className: 'sidebar-icone sidebar-icone--servidores-mcp'},
+        {type: 'doc', id: 'servidores-mcp/servidor-de-catalogo-mcp', className: 'sidebar-icon sidebar-icon--servidores-mcp'},
       ],
     },
   ],

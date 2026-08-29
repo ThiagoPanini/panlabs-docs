@@ -29,7 +29,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import {paginasDe, rotulosDasAbas} from '../paginas';
+import {pagesFrom, tabLabels} from '../pages';
 
 /**
  * O separador de documento do `llms-full.txt`, na forma do Neon.
@@ -38,7 +38,7 @@ import {paginasDe, rotulosDasAbas} from '../paginas';
  * máquina: o separador carrega a URL de origem, então o parser não precisa
  * inferir onde um documento termina nem de onde ele veio.
  */
-const separador = (url) => `--- [Document source](${url}) ---`;
+const separator = (url) => `--- [Document source](${url}) ---`;
 
 /**
  * O corpo com o subtítulo emitido como citação abaixo do `h1`.
@@ -62,7 +62,7 @@ const separador = (url) => `--- [Document source](${url}) ---`;
  * diferença aparece no dia em que uma página abrir com bloco cercado:
  * `# comentário` de shell casaria a mesma marca, e a citação entraria no meio do
  * código — sem erro, sem aviso, e visível só para quem abrisse o `.md`. Como
- * `paginasDe` já tirou o front matter e o `import` do topo, a primeira linha com
+ * `pagesFrom` já tirou o front matter e o `import` do topo, a primeira linha com
  * texto é o `h1` do autor em todas as 73 páginas, e exigir isso troca a
  * inserção errada por uma mensagem.
  *
@@ -70,14 +70,14 @@ const separador = (url) => `--- [Document source](${url}) ---`;
  * `> Summary:` acima do separador de documento, que é a forma do Neon. Duas
  * cópias do mesmo campo no mesmo documento seriam ruído para o parser.
  *
- * @param {{corpo: string, descricao: string, permalink: string}} pagina
+ * @param {{body: string, description: string, permalink: string}} page
  */
-function comSubtitulo({corpo, descricao, permalink}) {
+function withSubtitle({body, description, permalink}) {
   // A carga também é conferida, e não só a âncora. O override de `h1` já
   // estoura sem `description` — mas ele é swizzle, e swizzle sai. Se saísse, o
   // `.md` passaria a emitir uma citação vazia: um `>` solto, sem erro e sem
   // aviso, que é o modo de falhar que esta função existe para não ter.
-  if (!descricao?.trim()) {
+  if (!description?.trim()) {
     throw new Error(
       `Página sem \`description\`: ${permalink}\n` +
         'O subtítulo do `.md` servido sai desse campo, e ele é obrigatório em ' +
@@ -85,9 +85,9 @@ function comSubtitulo({corpo, descricao, permalink}) {
     );
   }
 
-  const linhas = corpo.split('\n');
-  const indiceDoTitulo = linhas.findIndex((linha) => linha.trim() !== '');
-  if (indiceDoTitulo === -1 || !linhas[indiceDoTitulo].startsWith('# ')) {
+  const lines = body.split('\n');
+  const titleIndex = lines.findIndex((line) => line.trim() !== '');
+  if (titleIndex === -1 || !lines[titleIndex].startsWith('# ')) {
     throw new Error(
       `Página que não abre com \`# título\`: ${permalink}\n` +
         'O `.md` servido emite o subtítulo como citação abaixo do `h1`, e a ' +
@@ -97,43 +97,43 @@ function comSubtitulo({corpo, descricao, permalink}) {
   }
 
   return [
-    ...linhas.slice(0, indiceDoTitulo + 1),
+    ...lines.slice(0, titleIndex + 1),
     '',
-    `> ${descricao}`,
-    ...linhas.slice(indiceDoTitulo + 1),
+    `> ${description}`,
+    ...lines.slice(titleIndex + 1),
   ].join('\n');
 }
 
 /**
  * @param {import('@docusaurus/types').LoadContext} context
- * @param {{abas: string[]}} options
+ * @param {{tabs: string[]}} options
  * @returns {import('@docusaurus/types').Plugin}
  */
-export default function pluginAiEra(context, options) {
+export default function aiEraPlugin(context, options) {
   const {siteConfig, baseUrl, i18n} = context;
-  /** @type {ReturnType<typeof paginasDe>} */
-  let paginas = [];
+  /** @type {ReturnType<typeof pagesFrom>} */
+  let pages = [];
 
-  const absoluta = (permalink) => `${siteConfig.url}${permalink}`;
-  const urlDoIndice = absoluta(`${baseUrl}llms.txt`);
+  const absoluteUrl = (permalink) => `${siteConfig.url}${permalink}`;
+  const indexUrl = absoluteUrl(`${baseUrl}llms.txt`);
 
   return {
     name: 'pd-ai-era',
 
     async allContentLoaded({allContent}) {
-      paginas = paginasDe({
+      pages = pagesFrom({
         allContent,
         siteDir: context.siteDir,
-        abas: options.abas,
-        localeTraduzido: i18n.currentLocale !== i18n.defaultLocale,
+        tabs: options.tabs,
+        translatedLocale: i18n.currentLocale !== i18n.defaultLocale,
       });
     },
 
     async postBuild({outDir}) {
-      const escrever = async (relativo, texto) => {
-        const destino = path.join(outDir, relativo);
-        await fs.mkdir(path.dirname(destino), {recursive: true});
-        await fs.writeFile(destino, texto, 'utf8');
+      const write = async (relative, text) => {
+        const destination = path.join(outDir, relative);
+        await fs.mkdir(path.dirname(destination), {recursive: true});
+        await fs.writeFile(destination, text, 'utf8');
       };
 
       // --- o `.md` por rota ---------------------------------------------------
@@ -146,10 +146,10 @@ export default function pluginAiEra(context, options) {
       // grafo navegável: quem chega num `.md` por link direto descobre que
       // existe uma lista, e a máquina que o lê acha o resto do site.
       await Promise.all(
-        paginas.map((pagina) =>
-          escrever(
-            `${pagina.permalink.slice(baseUrl.length)}.md`,
-            `> [Índice para máquinas](${urlDoIndice}) · [Página](${absoluta(pagina.permalink)})\n\n${comSubtitulo(pagina).trim()}\n`,
+        pages.map((page) =>
+          write(
+            `${page.permalink.slice(baseUrl.length)}.md`,
+            `> [Índice para máquinas](${indexUrl}) · [Página](${absoluteUrl(page.permalink)})\n\n${withSubtitle(page).trim()}\n`,
           ),
         ),
       );
@@ -160,37 +160,37 @@ export default function pluginAiEra(context, options) {
       // llms.txt — *pode ser pulada se o contexto for curto* — e nenhuma das
       // três referências medidas a usa. Marcar uma seção inteira como
       // descartável é uma decisão sobre o conteúdo que este site não tomou.
-      const rotulos = rotulosDasAbas(siteConfig.themeConfig, options.abas);
-      const secoes = options.abas.map((aba, i) => {
-        const linhas = paginas
-          .filter((pagina) => pagina.aba === aba)
-          .map((pagina) => `- [${pagina.titulo}](${absoluta(pagina.permalink)}.md): ${pagina.descricao}`);
-        return `## ${rotulos[i]}\n\n${linhas.join('\n')}`;
+      const labels = tabLabels(siteConfig.themeConfig, options.tabs);
+      const sections = options.tabs.map((tab, i) => {
+        const lines = pages
+          .filter((page) => page.tab === tab)
+          .map((page) => `- [${page.title}](${absoluteUrl(page.permalink)}.md): ${page.description}`);
+        return `## ${labels[i]}\n\n${lines.join('\n')}`;
       });
 
-      const abertura = [
+      const opening = [
         `# ${siteConfig.title}`,
         '',
         `> ${siteConfig.tagline}`,
         '',
-        preambulo({paginas, abas: options.abas, rotulos, locale: i18n.currentLocale}),
+        preamble({pages, tabs: options.tabs, labels, locale: i18n.currentLocale}),
       ];
 
-      await escrever('llms.txt', [...abertura, '', secoes.join('\n\n'), ''].join('\n'));
+      await write('llms.txt', [...opening, '', sections.join('\n\n'), ''].join('\n'));
 
       // --- llms-full.txt ------------------------------------------------------
-      await escrever(
+      await write(
         'llms-full.txt',
         [
-          ...abertura,
+          ...opening,
           '',
-          ...paginas.map((pagina) =>
+          ...pages.map((page) =>
             [
-              separador(absoluta(pagina.permalink)),
+              separator(absoluteUrl(page.permalink)),
               '',
-              `> Summary: ${pagina.descricao}`,
+              `> Summary: ${page.description}`,
               '',
-              pagina.corpo.trim(),
+              page.body.trim(),
               '',
             ].join('\n'),
           ),
@@ -223,12 +223,12 @@ export default function pluginAiEra(context, options) {
  * `getTranslationFiles` + `translateContent` no plugin põem a prosa em
  * `i18n/<locale>/pd-ai-era/`.
  */
-function preambulo({paginas, abas, rotulos, locale}) {
-  const contagem = abas
-    .map((aba, i) => `${paginas.filter((pagina) => pagina.aba === aba).length} em ${rotulos[i]}`)
+function preamble({pages, tabs, labels, locale}) {
+  const count = tabs
+    .map((tab, i) => `${pages.filter((page) => page.tab === tab).length} em ${labels[i]}`)
     .join(', ');
   return [
-    `\`panlabs\`: o acervo de aprendizado de um desenvolvedor. ${paginas.length} páginas (${contagem}), locale \`${locale}\`.`,
+    `\`panlabs\`: o acervo de aprendizado de um desenvolvedor. ${pages.length} páginas (${count}), locale \`${locale}\`.`,
     '',
     `Toda página deste site também é servida como Markdown: acrescente \`.md\` à URL dela.`,
     '',

@@ -73,10 +73,10 @@ import Layout from '@theme/Layout';
  * `/ferramentas`, `/procedimentos`, `/jornadas` e `/times` devolvem 200 no host
  * publicado, e a primeira das quatro é exatamente este destino.
  */
-const DESTINO = '/ferramentas';
+const DESTINATION = '/ferramentas';
 
-export default function Raiz() {
-  const url = useBaseUrl(DESTINO);
+export default function Root() {
+  const url = useBaseUrl(DESTINATION);
 
   return (
     <>
@@ -104,7 +104,7 @@ export default function Raiz() {
               Esta página leva à documentação.
             </Translate>
           </p>
-          <Link to={DESTINO}>
+          <Link to={DESTINATION}>
             <Translate
               id="panlabs-docs.raiz.link"
               description="Link manual para o destino da rota raiz">

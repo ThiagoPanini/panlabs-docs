@@ -67,7 +67,7 @@
    e continua sendo o que a caixa entrega POR DENTRO do preenchimento. */
 
 html.docs-doc-page div:has(> main) {
-  max-width: calc(var(--pd-congelamento) + 2 * var(--pd-space-8));
+  max-width: calc(var(--pd-freeze) + 2 * var(--pd-space-8));
   margin-inline: auto;
 }
 
@@ -203,7 +203,7 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
 
   html.docs-doc-page main > .container > .row > .col:not(.col--3) {
     min-width: 0;
-    padding-left: var(--pd-corredor);
+    padding-left: var(--pd-corridor);
   }
 }
 
@@ -376,7 +376,7 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
    `h1` no registro de `@theme/MDXComponents` (degrau 3). O CSS aqui não sabe
    disso: ele vê um parágrafo com a nossa classe, logo abaixo do título.
 
-   `--pd-subtitulo-recuo` e não a margem do título: as margens de irmãos
+   `--pd-subtitle-indent` e não a margem do título: as margens de irmãos
    adjacentes COLAPSAM para a maior das duas, então o ar de baixo do `h1` — que é
    maior — venceria e o recuo medido nunca apareceria. Zerar o do `h1` é o que
    deixa o do subtítulo mandar.
@@ -386,15 +386,15 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
 
    A LINHA DO TÍTULO entrou entre os dois quando o par "Copiar página" chegou:
    o `h1` deixou de ser irmão adjacente do subtítulo e passou a ser filho de
-   `.titulo-linha`, que é quem tem o subtítulo por irmão agora. O mecanismo do
+   `.title-row`, que é quem tem o subtítulo por irmão agora. O mecanismo do
    recuo não mudou — quem colapsa continua sendo margem de irmãos —, mudou de
    quem é a margem que precisa sair da frente. As DUAS regras ficam: a antiga
    ainda vale para qualquer página cujo `h1` não esteja na linha, e nenhuma
    delas cobra a outra.
    ----------------------------------------------------------------------------- */
 
-html.docs-doc-page h1:has(+ .subtitulo),
-html.docs-doc-page .titulo-linha:has(+ .subtitulo) > h1 {
+html.docs-doc-page h1:has(+ .subtitle),
+html.docs-doc-page .title-row:has(+ .subtitle) > h1 {
   margin-bottom: 0;
 }
 
@@ -407,32 +407,32 @@ html.docs-doc-page .titulo-linha:has(+ .subtitulo) > h1 {
 
    `flex-wrap: wrap` é a saída para o título longo: em vez de espremer o botão
    contra a última palavra, ele desce inteiro para a linha de baixo. */
-html.docs-doc-page .titulo-linha {
+html.docs-doc-page .title-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--pd-space-2);
 }
 
-html.docs-doc-page .titulo-linha > [data-pd-component='copiar-pagina'] {
+html.docs-doc-page .title-row > [data-pd-component='copy-page'] {
   margin-inline-start: auto;
 }
 
-html.docs-doc-page .subtitulo {
-  margin-top: var(--pd-subtitulo-recuo);
+html.docs-doc-page .subtitle {
+  margin-top: var(--pd-subtitle-indent);
   font-size: var(--pd-type-lg);
   /* A entrelinha é DECLARADA, e sem ela o subtítulo herdava a da prosa (1,75)
      sobre 18px = 31,5px, contra os 28 de `chrome.md` §12 — alvo `exato`. É a
      única das três medidas do subtítulo que a herança não entregava: peso e cor
      continuam não declarados, e isso segue fiel à âncora. */
-  line-height: var(--pd-subtitulo-entrelinha);
+  line-height: var(--pd-subtitle-line-height);
 }
 
 /* -----------------------------------------------------------------------------
    2. Navbar — DUAS LINHAS, e a segunda sangra de ponta a ponta
 
    A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa
-   de largura total abaixo dela. Total: `--pd-topo-grudado`.
+   de largura total abaixo dela. Total: `--pd-sticky-top`.
 
    ISTO ERA A PERDA 4, e ela estava errada. `chrome.md` §8, `swizzle.md` §4 e o
    ADR 2 diziam que a faixa *"exigiria reestruturar `Navbar/*`"*. Não exige: ela
@@ -495,7 +495,7 @@ html.docs-doc-page .subtitulo {
 
    A faixa não existe abaixo do limiar; o espaçador dela tampouco. O seletor se
    escopa sozinho — `menu__list-item` só é aplicada na forma móvel. */
-.menu__list-item.quebra-de-faixa {
+.menu__list-item.tab-strip-break {
   display: none;
 }
 
@@ -598,7 +598,7 @@ html.docs-doc-page .subtitulo {
      assentar. */
   .navbar__inner {
     position: relative;
-    max-width: var(--pd-congelamento);
+    max-width: var(--pd-freeze);
     margin-inline: auto;
   }
 
@@ -657,7 +657,7 @@ html.docs-doc-page .subtitulo {
     align-content: flex-start;
   }
 
-  .navbar__items > .quebra-de-faixa {
+  .navbar__items > .tab-strip-break {
     flex: 0 0 100%;
     height: 0;
     padding: 0;
@@ -690,7 +690,7 @@ html.docs-doc-page .subtitulo {
      descendente direto, nenhum item tem um, e a regra casava 0 de 4 em todas
      as rotas: a aba ativa ficou sem o sublinhado de acento que `chrome.md` §3
      publica, em 104 páginas do build. */
-  .navbar__items:not(.navbar__items--right) > .navbar__item:not(.quebra-de-faixa) {
+  .navbar__items:not(.navbar__items--right) > .navbar__item:not(.tab-strip-break) {
     display: flex;
     align-items: center;
     height: var(--pd-tabs-height);
@@ -748,15 +748,15 @@ html.docs-doc-page .subtitulo {
    O separador não aparece em nenhum dos dois, e não por seletor: ele não recebe
    `className` nenhum em `sidebars-*.js`. Quem decide é a árvore, não o CSS, e é
    isso que faz a regra valer em qualquer profundidade sem crescer aqui. */
-.sidebar-icone > .menu__link::before,
-.sidebar-icone > .menu__list-item-collapsible > .menu__link::before {
+.sidebar-icon > .menu__link::before,
+.sidebar-icon > .menu__list-item-collapsible > .menu__link::before {
   content: '';
   flex: none;
   width: var(--pd-space-4);
   height: var(--pd-space-4);
   margin-right: var(--pd-space-2);
   background-color: currentColor;
-  mask: var(--pd-sidebar-icone) center / contain no-repeat;
+  mask: var(--pd-sidebar-icon) center / contain no-repeat;
 }
 
 /* Os trinta e um pares seção→ícone, e eles se leem em dois blocos porque valem
@@ -781,48 +781,48 @@ html.docs-doc-page .subtitulo {
 
    Nenhum arquivo novo em `static/icons/`: todas reaproveitam desenhos que o
    manifesto já carregava, e o teto de 64 não se move. */
-.sidebar-icone--visao-geral        { --pd-sidebar-icone: url('/icons/layers.svg'); }
-.sidebar-icone--conteudo-teorico   { --pd-sidebar-icone: url('/icons/code-xml.svg'); }
-.sidebar-icone--conteudo-pratico   { --pd-sidebar-icone: url('/icons/workflow.svg'); }
-.sidebar-icone--work-in-progress   { --pd-sidebar-icone: url('/icons/activity.svg'); }
-.sidebar-icone--modulos-terraform  { --pd-sidebar-icone: url('/icons/puzzle.svg'); }
-.sidebar-icone--skills             { --pd-sidebar-icone: url('/icons/bot.svg'); }
-.sidebar-icone--servidores-mcp     { --pd-sidebar-icone: url('/icons/server.svg'); }
+.sidebar-icon--visao-geral        { --pd-sidebar-icon: url('/icons/layers.svg'); }
+.sidebar-icon--conteudo-teorico   { --pd-sidebar-icon: url('/icons/code-xml.svg'); }
+.sidebar-icon--conteudo-pratico   { --pd-sidebar-icon: url('/icons/workflow.svg'); }
+.sidebar-icon--work-in-progress   { --pd-sidebar-icon: url('/icons/activity.svg'); }
+.sidebar-icon--modulos-terraform  { --pd-sidebar-icon: url('/icons/puzzle.svg'); }
+.sidebar-icon--skills             { --pd-sidebar-icon: url('/icons/bot.svg'); }
+.sidebar-icon--servidores-mcp     { --pd-sidebar-icon: url('/icons/server.svg'); }
 
 /* O ramo do `overpower` — uma por página, na ordem da árvore. */
-.sidebar-icone--overpower              { --pd-sidebar-icone: url('/icons/zap.svg'); }
-.sidebar-icone--instalacao             { --pd-sidebar-icone: url('/icons/download.svg'); }
-.sidebar-icone--conceitos              { --pd-sidebar-icone: url('/icons/shapes.svg'); }
+.sidebar-icon--overpower              { --pd-sidebar-icon: url('/icons/zap.svg'); }
+.sidebar-icon--instalacao             { --pd-sidebar-icon: url('/icons/download.svg'); }
+.sidebar-icon--conceitos              { --pd-sidebar-icon: url('/icons/shapes.svg'); }
 
-.sidebar-icone--comandos               { --pd-sidebar-icone: url('/icons/terminal.svg'); }
-.sidebar-icone--comando-raiz           { --pd-sidebar-icone: url('/icons/circle-help.svg'); }
-.sidebar-icone--comando-list           { --pd-sidebar-icone: url('/icons/database.svg'); }
-.sidebar-icone--comando-install        { --pd-sidebar-icone: url('/icons/plus.svg'); }
-.sidebar-icone--comando-doctor         { --pd-sidebar-icone: url('/icons/gauge.svg'); }
+.sidebar-icon--comandos               { --pd-sidebar-icon: url('/icons/terminal.svg'); }
+.sidebar-icon--comando-raiz           { --pd-sidebar-icon: url('/icons/circle-help.svg'); }
+.sidebar-icon--comando-list           { --pd-sidebar-icon: url('/icons/database.svg'); }
+.sidebar-icon--comando-install        { --pd-sidebar-icon: url('/icons/plus.svg'); }
+.sidebar-icon--comando-doctor         { --pd-sidebar-icon: url('/icons/gauge.svg'); }
 
-.sidebar-icone--alvos                  { --pd-sidebar-icone: url('/icons/globe.svg'); }
-.sidebar-icone--alvo-mcp               { --pd-sidebar-icone: url('/icons/webhook.svg'); }
-.sidebar-icone--alvo-from              { --pd-sidebar-icone: url('/icons/folder.svg'); }
-.sidebar-icone--alvo-bundle            { --pd-sidebar-icone: url('/icons/package.svg'); }
+.sidebar-icon--alvos                  { --pd-sidebar-icon: url('/icons/globe.svg'); }
+.sidebar-icon--alvo-mcp               { --pd-sidebar-icon: url('/icons/webhook.svg'); }
+.sidebar-icon--alvo-from              { --pd-sidebar-icon: url('/icons/folder.svg'); }
+.sidebar-icon--alvo-bundle            { --pd-sidebar-icon: url('/icons/package.svg'); }
 
-.sidebar-icone--referencia             { --pd-sidebar-icone: url('/icons/book-open.svg'); }
-.sidebar-icone--codigos-de-saida       { --pd-sidebar-icone: url('/icons/circle-alert.svg'); }
-.sidebar-icone--solucao-de-problemas   { --pd-sidebar-icone: url('/icons/refresh-cw.svg'); }
-.sidebar-icone--changelog              { --pd-sidebar-icone: url('/icons/clock.svg'); }
+.sidebar-icon--referencia             { --pd-sidebar-icon: url('/icons/book-open.svg'); }
+.sidebar-icon--codigos-de-saida       { --pd-sidebar-icon: url('/icons/circle-alert.svg'); }
+.sidebar-icon--solucao-de-problemas   { --pd-sidebar-icon: url('/icons/refresh-cw.svg'); }
+.sidebar-icon--changelog              { --pd-sidebar-icon: url('/icons/clock.svg'); }
 
 /* `contribuir/` nasceu na #133 da fusão de `desenvolvimento/` com `publicacao/`,
    e herda os desenhos dos dois: a chave inglesa que era do primeiro passa ao nó,
    e o foguete do segundo fica com o `release`. */
-.sidebar-icone--contribuir             { --pd-sidebar-icone: url('/icons/users.svg'); }
-.sidebar-icone--arquitetura            { --pd-sidebar-icone: url('/icons/wrench.svg'); }
-.sidebar-icone--mapa-de-modulos        { --pd-sidebar-icone: url('/icons/file-text.svg'); }
-.sidebar-icone--hooks                  { --pd-sidebar-icone: url('/icons/bell.svg'); }
-.sidebar-icone--testes                 { --pd-sidebar-icone: url('/icons/repeat.svg'); }
-.sidebar-icone--telas                  { --pd-sidebar-icone: url('/icons/play.svg'); }
-.sidebar-icone--curadoria              { --pd-sidebar-icone: url('/icons/filter.svg'); }
-.sidebar-icone--criterios-de-catalogo  { --pd-sidebar-icone: url('/icons/sparkles.svg'); }
-.sidebar-icone--release                { --pd-sidebar-icone: url('/icons/rocket.svg'); }
-.sidebar-icone--release-ready          { --pd-sidebar-icone: url('/icons/upload.svg'); }
+.sidebar-icon--contribuir             { --pd-sidebar-icon: url('/icons/users.svg'); }
+.sidebar-icon--arquitetura            { --pd-sidebar-icon: url('/icons/wrench.svg'); }
+.sidebar-icon--mapa-de-modulos        { --pd-sidebar-icon: url('/icons/file-text.svg'); }
+.sidebar-icon--hooks                  { --pd-sidebar-icon: url('/icons/bell.svg'); }
+.sidebar-icon--testes                 { --pd-sidebar-icon: url('/icons/repeat.svg'); }
+.sidebar-icon--telas                  { --pd-sidebar-icon: url('/icons/play.svg'); }
+.sidebar-icon--curadoria              { --pd-sidebar-icon: url('/icons/filter.svg'); }
+.sidebar-icon--criterios-de-catalogo  { --pd-sidebar-icon: url('/icons/sparkles.svg'); }
+.sidebar-icon--release                { --pd-sidebar-icon: url('/icons/rocket.svg'); }
+.sidebar-icon--release-ready          { --pd-sidebar-icon: url('/icons/upload.svg'); }
 
 /* Tipografia e raio — um corpo só, para tudo que é destino, em todo nível. A
    âncora usa peso normal com entrelinha maior, e reserva toda marcação de ativo
@@ -876,7 +876,7 @@ html.docs-doc-page .subtitulo {
    daqui (ver o cabeçalho da seção).
 
    O peso é `--pd-weight-heading`, e é peso de verdade, não o falso-negrito de
-   `--pd-negrito-optico`. Os dois resolvem problemas diferentes: o falso-negrito
+   `--pd-optical-bold`. Os dois resolvem problemas diferentes: o falso-negrito
    existe onde o peso MUDA — o item ativo troca de peso a cada navegação, e
    trocar `font-weight` reflui o texto e faz a linha pular de largura na hora em
    que o leitor clica. O separador nasce e morre no mesmo peso; não há reflow a
@@ -1145,7 +1145,7 @@ html.docs-doc-page .subtitulo {
 /* Falso-negrito no item ativo. Trocar o peso reflui o texto e faz o item pular
    de largura no instante em que o leitor navega. */
 .theme-doc-sidebar-menu .menu__link--active {
-  text-shadow: var(--pd-negrito-optico);
+  text-shadow: var(--pd-optical-bold);
 }
 
 /* A PÍLULA DO ATIVO não ganha regra de FUNDO própria na FOLHA — ela já sai
@@ -1236,7 +1236,7 @@ aside.theme-doc-sidebar-container {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
-  padding-right: calc(var(--pd-space-8) - var(--pd-scrollbar-fina));
+  padding-right: calc(var(--pd-space-8) - var(--pd-scrollbar-thin));
 }
 
 .theme-doc-sidebar-container .thin-scrollbar:hover {
@@ -1280,7 +1280,7 @@ aside.theme-doc-sidebar-container {
    caixa passaria a viewport em 8px e o fim da lista ficaria fora de alcance
    numa janela curta. A conta aqui é a mesma do painel da referência gerada
    (o trilho da referência, que saiu na #118): o topo do conteúdo, mais a mesma
-   respiração embaixo. `--pd-viewport-altura` é `100dvh` — o token que o
+   respiração embaixo. `--pd-viewport-height` é `100dvh` — o token que o
    projeto já usa para não medir contra a barra de endereço do telefone.
 
    ESPECIFICIDADE, e ela custou uma medição. A regra do upstream é
@@ -1293,8 +1293,8 @@ aside.theme-doc-sidebar-container {
    sem `!important`, que este projeto não escreve em lugar nenhum. É o mesmo
    recurso que o resto deste arquivo já usa para alcançar o grid do Infima. */
 html.docs-doc-page .theme-doc-toc-desktop {
-  top: var(--pd-topo-conteudo);
-  max-height: calc(var(--pd-viewport-altura) - var(--pd-topo-conteudo) - var(--pd-space-10));
+  top: var(--pd-content-top);
+  max-height: calc(var(--pd-viewport-height) - var(--pd-content-top) - var(--pd-space-10));
 
   /* O ROLADOR DESCE PARA A LISTA. O upstream põe `overflow-y: auto` nesta
      caixa; com o título entrando como pseudo-elemento DELA, o título rolaria
@@ -1645,7 +1645,7 @@ html.docs-doc-page .pagination-nav__label {
   }
 
   html.docs-doc-page .footer .container {
-    max-width: var(--pd-congelamento);
+    max-width: var(--pd-freeze);
     margin-inline: auto;
     padding-inline: calc(var(--pd-sidebar-width) + (var(--pd-doc-width) - var(--pd-prose-width)) / 2)
       var(--pd-gutter);
