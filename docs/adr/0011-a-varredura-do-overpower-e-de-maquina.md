@@ -1,6 +1,18 @@
 # ADR 11 — A varredura do overpower deixa de ser humana, e o pino é o que a cobra
 
-**Status:** aceito · slice 11 · 2026-08-20
+**Status:** aceito · slice 11 · 2026-08-20 · **garantia de máquina suspensa** · 2026-08-28
+
+> ### A metade que cobra saiu do ar, por decisão — 2026-08-28
+>
+> **A decisão não muda.** A divisão entre hook (automação) e pino (garantia) continua sendo a leitura certa do problema, e nada aqui diz o contrário. O que sai do ar é só uma das duas metades.
+>
+> **O que sobrevive:** a metade que trabalha. A skill (hoje [`panlabs-overpower-docs-update`](../../.claude/skills/panlabs-overpower-docs-update/SKILL.md), renomeada depois desta ADR) continua existindo com gatilho humano — pedida quando uma versão nova do `overpower` sai, ou quando alguém pedir a varredura.
+>
+> **O que morreu:** o pino. `scripts/pino.mjs`, `scripts/pino.test.mjs`, `scripts/pino-overpower.txt` e o passo homônimo do job `gate` saíram do repositório ([issue #149](https://github.com/ThiagoPanini/panlabs-docs/issues/149)). `npm run pino -- --verificar` deixou de existir.
+>
+> **Por que.** Medido em 80 runs de CI: 73 verdes, 6 vermelhas, 1 cancelada — e das seis reprovações, quatro foram o pino atrasado atrás de uma release do `overpower` que ninguém neste repositório publicou, sem relação nenhuma com o diff do PR em curso. No mesmo período, zero defeito não intencional foi pego por qualquer portão, pino incluído. A decisão é do dono do acervo, registrada na [issue #148](https://github.com/ThiagoPanini/panlabs-docs/issues/148).
+>
+> **A consequência, dita em voz alta.** Nada mais avisa, de máquina, que a documentação do `overpower` envelheceu. A deriva silenciosa que esta ADR existia para fechar — contrato correto e projeção fiel, ferramenta real já diferente — **volta a ser possível**, exatamente como estava antes desta ADR. Nenhuma substituição foi decidida; o dono declarou que vai pensar nela depois.
 
 ## Contexto
 
