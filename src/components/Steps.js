@@ -13,11 +13,11 @@
 
 import React from 'react';
 import Icon from './Icon';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 export default function Steps({children}) {
   return (
-    <ol className={estilos.steps} data-pd-component="steps">
+    <ol className={styles.steps} data-pd-component="steps">
       {children}
     </ol>
   );
@@ -25,15 +25,15 @@ export default function Steps({children}) {
 
 export function Step({title, icon, children}) {
   return (
-    <li className={estilos.step}>
+    <li className={styles.step}>
       {/* Sem `data-pd-part`: o marcador é o único `<span>` filho do passo, e o
           irmão é um `<div>` — a skin alcança por `li > span`. */}
-      <span className={estilos.stepMarker}>
+      <span className={styles.stepMarker}>
         {icon ? <Icon name={icon} size="sm" /> : null}
       </span>
-      <div className={estilos.stepBody}>
+      <div className={styles.stepBody}>
         {title ? (
-          <p className={estilos.stepTitle} data-pd-part="title">
+          <p className={styles.stepTitle} data-pd-part="title">
             {title}
           </p>
         ) : null}

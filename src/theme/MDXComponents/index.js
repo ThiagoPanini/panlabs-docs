@@ -68,10 +68,10 @@ import Steps, {Step} from '@site/src/components/Steps';
 import Table from '@site/src/components/Table';
 import Untranslated from '@site/src/components/Untranslated';
 import Update from '@site/src/components/Update';
-import {ParamField, ResponseField} from '@site/src/components/Campo';
+import {ParamField, ResponseField} from '@site/src/components/Field';
 
-import CopiarPagina from './CopiarPagina';
-import PainelComando from './PainelComando';
+import CopyPage from './CopyPage';
+import CommandPanel from './CommandPanel';
 
 /**
  * O SUBTÍTULO — a linha que toda página do site ganha abaixo do título.
@@ -86,7 +86,7 @@ import PainelComando from './PainelComando';
  * `DocItem/Content` — os dois `unsafe`, os dois proibidos. Ancorar no `<h1>`
  * pelo registro alcança, e a condição que isso exige está conferida: **61 de 61
  * páginas escrevem o próprio `# Título`**, e nenhuma escreve dois. A conferência
- * deixou de ser varredura de mão: a cobrança 10 do portão 4 percorre `conteudo/`
+ * deixou de ser varredura de mão: a cobrança 10 do portão 4 percorre `content/`
  * e a árvore de tradução e reprova a primeira página sem `description`.
  *
  * **Superfície nova no mesmo degrau.** É a primeira vez que este registro
@@ -115,16 +115,16 @@ import PainelComando from './PainelComando';
  * enganou uma vez não se recicla com significado novo.
  *
  * `useDoc` é API pública de `@docusaurus/plugin-content-docs/client`, já
- * consumida também pelo `PainelComando`. Ele estoura fora de um `DocProvider`, e isso é
+ * consumida também pelo `CommandPanel`. Ele estoura fora de um `DocProvider`, e isso é
  * propriedade e não descuido: todo MDX deste site é documentação, e o dia em que
- * um `.mdx` nascer fora de `conteudo/` é o dia de decidir o que o subtítulo dele
+ * um `.mdx` nascer fora de `content/` é o dia de decidir o que o subtítulo dele
  * é — não o dia de descobrir que a página saiu sem um.
  *
  * Procedência: docs/design/chrome.md · docs/design/swizzle.md.
  */
 const H1Original = MDXComponents.h1;
 
-function Titulo(props) {
+function Title(props) {
   const {frontMatter, metadata} = useDoc();
   const {description} = frontMatter;
 
@@ -143,7 +143,7 @@ function Titulo(props) {
 
      O SUBTÍTULO CONTINUA IRMÃO DO `h1`? Não, e a diferença é conferível: ele
      agora é irmão da LINHA. A regra que zerava a margem de baixo do `h1` por
-     `:has(+ .subtitulo)` mudou de alvo junto, em `chrome.css` §6 — margens de
+     `:has(+ .subtitle)` mudou de alvo junto, em `chrome.css` §6 — margens de
      irmãos adjacentes colapsam para a maior das duas, e o recuo medido do
      subtítulo só aparece se o ar de baixo do título não vencer.
 
@@ -153,11 +153,11 @@ function Titulo(props) {
      defeito que a #96 consertou. */
   return (
     <>
-      <div className="titulo-linha">
+      <div className="title-row">
         <H1Original {...props} />
-        <CopiarPagina permalink={metadata.permalink} />
+        <CopyPage permalink={metadata.permalink} />
       </div>
-      <p className="subtitulo">{description}</p>
+      <p className="subtitle">{description}</p>
     </>
   );
 }
@@ -168,7 +168,7 @@ export default {
   // A segunda chave de ELEMENTO deste registro, e a que muda mais a tela: o
   // subtítulo nasce colado no título, dentro do mesmo `<header>` que o remark
   // do Docusaurus embrulha em volta do h1 do MDX.
-  h1: Titulo,
+  h1: Title,
 
   // A outra chave de elemento. Toda tabela de Markdown nasce dentro da região
   // rolável — o autor não escolhe, e é isso que faz a correção de
@@ -185,7 +185,7 @@ export default {
   // `callout` é `:::`, `code-block` é a cerca, `tabs` vem do Docusaurus acima, e
   // `table` é a chave de elemento acima.
   //
-  // A décima quinta chave, `PainelComando`, NÃO é do catálogo — ela é chrome de
+  // A décima quinta chave, `CommandPanel`, NÃO é do catálogo — ela é chrome de
   // uma rota, e a nota ao lado dela diz por quê. O catálogo continua fechado em
   // dezessete.
   //
@@ -200,12 +200,12 @@ export default {
   Frame,
   Icon,
   // A única chave do registro que NENHUM autor escreve, e por isso ela é a
-  // única fora do catálogo de componentes: quem emite `<PainelComando />` é
-  // `scripts/gerar-referencia.mjs`, no corpo das 4 páginas de comando, e o
+  // única fora do catálogo de componentes: quem emite `<CommandPanel />` é
+  // `scripts/generate-reference.mjs`, no corpo das 4 páginas de comando, e o
   // portão 5 regenera e diffa. Ele entra pela mesma porta que os outros — o
   // registro é global, e um bloco de fluxo não precisa de componente de rota
   // para existir. Ver o cabeçalho dele e ADR 2.
-  PainelComando,
+  CommandPanel,
   ParamField,
   ResponseField,
   Step,

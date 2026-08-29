@@ -1,0 +1,33 @@
+---
+# GERADO por scripts/generate-reference.mjs a partir de contracts/overpower.pt-BR.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower doctor
+description: Responde se o que foi escrito continua sendo o que foi escrito. Reporta o terminal e a integridade numa saída só, nos dois escopos ao mesmo tempo.
+api_exemplos: {"signature":"overpower doctor","language":"bash","model":{"call":"overpower doctor","qualified":"overpower doctor","context":"always","parameters":[],"minimum":[{"context":"always","flags":[]}],"constraints":[]}}
+---
+
+# overpower doctor
+
+{/* cita-saida-de-ferramenta */}
+
+**Comando** · `overpower doctor`
+
+<CommandPanel />
+
+A metade de terminal reporta quatro fatos, se há um TTY ligado, que sistema de cor foi detectado, a largura da tela e se `NO_COLOR` está posto. É o conjunto exato que explica uma tela que saiu torta, sem precisar de uma ida e volta para perguntar.
+
+A metade de integridade lê a tabela de runtimes nos dois escopos e confere o que encontra contra o que foi de fato instalado. Ela lê os dois porque o alvo não carrega manifesto próprio, então não existe conferir um escopo só que queira dizer alguma coisa. É também por isso que `doctor` não tem `--global`, e é por isso que ele responde fora de um repositório git, reportando vazio a metade que não achou.
+
+## Códigos de saída
+
+O `doctor` usa dois dos quatro códigos da aplicação, e a escolha entre eles é o que o torna utilizável como portão de CI. Um relatório ruim nunca sai `1`, porque relatório ruim não é queda.
+
+O que o relatório traz se divide em dois, e só um lado mexe no código: **achado** reprova, **aviso** não. São cinco achados e um aviso, e a lista está na página de solução de problemas.
+
+<ResponseField name="0" type="int">
+As cinco conferências que reprovam rodaram e nenhuma achou problema. Aviso não conta: slot vazio sai no relatório e não mexe no código de saída.
+</ResponseField>
+
+<ResponseField name="3" type="int">
+Achou problema. A conferência rodou certo e calculou uma resposta real, que por acaso é negativa, então um script separa `a conferência rodou e reprovou` de `a conferência quebrou` só pelo código. As cinco que chegam aqui são link pendurado, link virado texto, divergência de conteúdo, servidor pendente de aprovação e runner sumido do `PATH`.
+</ResponseField>

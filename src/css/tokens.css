@@ -225,7 +225,7 @@
      precisa encostar no `│` da linha de baixo para o painel ter parede. Com o
      1.7143 do código a parede vira tracejado e o desenho lê como quebrado. 1.2
      é o ponto medido em que a parede fecha e a marca em ASCII ainda respira. */
-  --pd-leading-tela:  1.2;
+  --pd-leading-screen:  1.2;
   --pd-leading-h1:    1.111;
   --pd-leading-h2:    1.333;
   --pd-leading-h3:    1.4;
@@ -240,7 +240,7 @@
      que o leitor navega; meio pixel de sombra engrossa sem mexer na métrica.
      `currentColor` resolve no elemento, então o realce acompanha o acento sem
      par declarado e sem segundo valor para o modo claro. */
-  --pd-negrito-optico: 0 0 0.4px currentColor;
+  --pd-optical-bold: 0 0 0.4px currentColor;
 
   /* ---------------------------------------------------------------------------
      Espaço — base 4px, escada por calc(). Um literal só.
@@ -403,7 +403,7 @@
   /* O PISO DE UM CAMPO EDITÁVEL do painel de comando — a largura abaixo da
      qual a grade dele para de pôr dois campos lado a lado e empilha.
 
-     **Ele ocupa o slot que era `--pd-api-prosa-width` (577), e a troca conta
+     **Ele ocupa o slot que era `--pd-api-prose-width` (577), e a troca conta
      uma decisão.** Aquele token existia para uma página de referência com
      prosa mais estreita que a comum, porque a âncora trocava a coluna do TOC
      por um trilho de amostras — medido em `research/paridade-devin` §10
@@ -422,11 +422,11 @@
      regra das camadas manda camada 3 declarar no escopo do próprio componente;
      o portão 1 manda todo literal de comprimento morar aqui. As duas não podem
      valer ao mesmo tempo para um número que só um componente usa, e este bloco
-     já resolveu isso duas vezes antes, do mesmo jeito: `--pd-copiar-height` e
-     `--pd-copiar-menu-width` são medidas do par segmentado do cabeçalho, e
+     já resolveu isso duas vezes antes, do mesmo jeito: `--pd-copy-height` e
+     `--pd-copy-menu-width` são medidas do par segmentado do cabeçalho, e
      estão logo abaixo. O portão é a régua que reprova, e é ele que decide o
      empate. */
-  --pd-campo-min:        280px;
+  --pd-field-min:        280px;
 
   /* O CORREDOR — a distância entre a borda direita da sidebar e o começo do
      texto, e até aqui ele existia por ACIDENTE.
@@ -440,7 +440,7 @@
      dentro da coluna: 47,6 a 1512, perto do número da âncora por coincidência
      aritmética, e ZERO em toda largura entre 997 e 1408 — que é onde um
      laptop vive. Ver `chrome.md` §1.7. */
-  --pd-corredor: 43.2px;
+  --pd-corridor: 43.2px;
 
   /* O PAR SEGMENTADO do cabeçalho — "Copiar página" e o menu ao lado.
 
@@ -449,8 +449,8 @@
      do menu dela (276,7 medido, arredondado ao inteiro como toda medida de
      âncora deste bloco). Derivar qualquer um dos dois de `--pd-space-*` seria
      coincidência de número, não parentesco. Ver `chrome.md` §6.4. */
-  --pd-copiar-height:      34px;
-  --pd-copiar-menu-width: 277px;
+  --pd-copy-height:      34px;
+  --pd-copy-menu-width: 277px;
 
   /* A GOTEIRA DA BARRA FINA — o que `scrollbar-width: thin` reserva, medido
      no Chromium 148 desta máquina: 15px com `auto`, 10 com `thin`.
@@ -459,7 +459,7 @@
      fechar nos 32 da âncora sem que ninguém tenha de medir de novo, e é o
      único número deste arquivo que outro navegador pode desmentir — por isso
      é citado uma vez só, em `chrome.css` §4. */
-  --pd-scrollbar-fina: 10px;
+  --pd-scrollbar-thin: 10px;
 
   /* `--pd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
      própria — é consequência do congelamento abaixo perder o termo do
@@ -483,7 +483,7 @@
      papel — ele soma zero agora, só o `padding-top` fica. O termo do gutter
      sai da fórmula porque o gutter não tem mais nada a completar aqui:
      `sidebar + container`, e mais nada. */
-  --pd-congelamento: calc(var(--pd-sidebar-width) + var(--pd-container-width));
+  --pd-freeze: calc(var(--pd-sidebar-width) + var(--pd-container-width));
 
   /* O recuo do subtítulo sob o título. LITERAL pelo mesmo motivo da altura da
      faixa: é medida de chrome, não parada da escala de espaço, e escrevê-lo como
@@ -492,7 +492,7 @@
      Na âncora ele sai de um `mt-2` de 8 colapsando contra o `space-y-2.5` do
      contêiner. O que se copia é o RESULTADO medido, não a aritmética de um
      framework de utilitários que este projeto não tem. */
-  --pd-subtitulo-recuo:   10px;
+  --pd-subtitle-indent:   10px;
 
   /* A ENTRELINHA do subtítulo. Ela existe porque sem ela o subtítulo herdava
      `--pd-leading-prose` (1,75) sobre 18px = 31,5px, contra os 28 que
@@ -506,7 +506,7 @@
      LITERAL pelo mesmo motivo do recuo acima: é medida de chrome, e a escala de
      espaço não tem parada em 28 — ela pula de 24 (`--pd-space-6`) para 32
      (`--pd-space-8`). */
-  --pd-subtitulo-entrelinha: 28px;
+  --pd-subtitle-line-height: 28px;
 
   /* O TOPO GRUDADO — a altura que o navbar de fato ocupa, e o offset de tudo o
      que gruda abaixo dele. Uma linha no estreito; duas de 997 para cima.
@@ -520,12 +520,12 @@
      faixa: `.navbar-sidebar__brand` e `.navbar-sidebar__items` leem o mesmo
      `--ifm-navbar-height`. Sem o escopo, o cabeçalho do drawer do estreito
      infla para a altura de duas linhas que ali não existem. */
-  --pd-topo-grudado: var(--pd-navbar-height);
+  --pd-sticky-top: var(--pd-navbar-height);
 
   /* O TOPO DO CONTEÚDO — a linha em que o `<article>` abre, e o offset de tudo
      o que gruda ALINHADO com ele em vez de com a barra.
 
-     Ele não é um número novo: `--pd-topo-grudado` mais `--pd-space-10` já era
+     Ele não é um número novo: `--pd-sticky-top` mais `--pd-space-10` já era
      calculado à mão em três lugares — o `padding-top` do `<main>`
      (`chrome.css` §1), o `max-height` do painel da referência e o comentário
      que o justifica (*"a mesma respiração que o topo do conteúdo já usa"*).
@@ -537,7 +537,7 @@
      que é o que §11 e `referencia.md` §8 cobram na linha `grudado em`.
 
      Medido aqui, a 1512: `article.getBoundingClientRect().top` = 152. */
-  --pd-topo-conteudo: calc(var(--pd-topo-grudado) + var(--pd-space-10));
+  --pd-content-top: calc(var(--pd-sticky-top) + var(--pd-space-10));
 
   /* A coluna de conteúdo. Até a #96 ela era `.col--9` do grid de doze — 1152 ×
      0,75 = 864 —, e a #96 matou o grid: não há mais 75/25 a manter, só o
@@ -579,7 +579,7 @@
      até a borda da viewport. Essa distância virou trabalho do
      `margin-inline: auto` do wrapper de `chrome.css` §1, o `<main>` perdeu o
      preenchimento horizontal, e o congelamento perdeu o termo do gutter — ver
-     `--pd-congelamento` acima. O que sobra para este token: o preenchimento
+     `--pd-freeze` acima. O que sobra para este token: o preenchimento
      próprio do `<footer>`, o recuo do `.container` dele até a coluna de doc
      (`chrome.css`, alinhamento do rodapé), e o preenchimento do `.col` que
      volta no estreito. */
@@ -604,11 +604,11 @@
      medida da âncora não tem relação com a escala, e coincidir por acidente é a
      derivação que este arquivo já recusa por escrito (ver a Forma, acima). Todos
      de consumidor único, como este. Procedência: docs/design/busca.md §10. */
-  --pd-busca-height: 60dvh;
-  --pd-busca-panel-width:      640px;
-  --pd-busca-panel-top:        54px;
-  --pd-busca-controle-width:   300.75px;
-  --pd-busca-controle-height:  36px;
+  --pd-search-height: 60dvh;
+  --pd-search-panel-width:      640px;
+  --pd-search-panel-top:        54px;
+  --pd-search-control-width:   300.75px;
+  --pd-search-control-height:  36px;
 
   /* O TERCEIRO token medido contra a viewport, não o único — a nota acima
      mentia por omissão assim que este entrou. Mesmo buraco de portão 1, mesma
@@ -622,7 +622,7 @@
      quem o lê hoje é o teto do TOC em `chrome.css`, que tem a mesma conta e
      chegou depois. Um token com dois pedidos e um consumidor não é token
      inerte, é token com um consumidor. */
-  --pd-viewport-altura: 100dvh;
+  --pd-viewport-height: 100dvh;
 
   /* ---------------------------------------------------------------------------
      Grade de cartões — camada 1, e a declaração serve o MDX.
@@ -661,8 +661,8 @@
      próxima grade de recompor a lista à mão. O mesmo vale para
      `--pd-shadow-raised`, que perdeu um dos dois consumidores no mesmo commit.
      --------------------------------------------------------------------------- */
-  --pd-card-colapso: 672px;   /* o `max-w-2xl` em que o `Columns` da âncora colapsa */
-  --pd-card-min: calc((var(--pd-card-colapso) - 2 * var(--pd-space-4)) / 3);
+  --pd-card-collapse: 672px;   /* o `max-w-2xl` em que o `Columns` da âncora colapsa */
+  --pd-card-min: calc((var(--pd-card-collapse) - 2 * var(--pd-space-4)) / 3);
   --pd-card-grid: repeat(auto-fit, minmax(min(var(--pd-card-min), 100%), 1fr));
 }
 
@@ -676,7 +676,7 @@
 @media (min-width: 997px) {
   :root {
     --pd-gutter: var(--pd-space-8);
-    --pd-topo-grudado: calc(var(--pd-navbar-height) + var(--pd-tabs-height));
+    --pd-sticky-top: calc(var(--pd-navbar-height) + var(--pd-tabs-height));
   }
 }
 
@@ -980,8 +980,8 @@
 
    Havia aqui uma regra `[data-pd-showcase]` com os cinco tokens de brilho da
    ilha de espetáculo: os dois gradientes (`--pd-glow` e `--pd-glow-2`), a caixa
-   quadrada da luz (`--pd-glow-tamanho`) e o par de amplitude da respiração
-   (`--pd-glow-vale` e `--pd-glow-crista`). Ela era SEPARADA de propósito:
+   quadrada da luz (`--pd-glow-size`) e o par de amplitude da respiração
+   (`--pd-glow-trough` e `--pd-glow-crest`). Ela era SEPARADA de propósito:
    entrar no bloco escuro acima poria --pd-glow em :root, e o glow vazaria para
    o site inteiro. A confinação não era regra que alguém precisava lembrar — era
    fato de escopo.
@@ -1281,8 +1281,8 @@
   /* O TOPO INTEIRO, não a linha 1: são os nove pontos do theme-classic que
      grudam abaixo do navbar — o `top` do TOC, o do próprio `<nav>`, o
      `scroll-margin` das âncoras — e todos se realinham de graça quando a
-     segunda linha entra. Ver `--pd-topo-grudado`. */
-  --ifm-navbar-height:                 var(--pd-topo-grudado);
+     segunda linha entra. Ver `--pd-sticky-top`. */
+  --ifm-navbar-height:                 var(--pd-sticky-top);
   --ifm-navbar-background-color:       var(--pd-surface-page);
   --ifm-navbar-link-color:             var(--pd-text-muted);
   --ifm-navbar-link-hover-color:       var(--pd-text-strong);

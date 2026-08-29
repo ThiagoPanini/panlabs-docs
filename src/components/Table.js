@@ -26,12 +26,12 @@
 
 import React from 'react';
 import {translate} from '@docusaurus/Translate';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
-export default function Table({children, ...resto}) {
+export default function Table({children, ...rest}) {
   return (
     <div
-      className={estilos.table}
+      className={styles.table}
       data-pd-component="table"
       role="region"
       tabIndex={0}
@@ -40,7 +40,7 @@ export default function Table({children, ...resto}) {
         message: 'Tabela',
         description: 'Nome acessível da região rolável que envolve toda tabela',
       })}>
-      <table {...resto}>{children}</table>
+      <table {...rest}>{children}</table>
     </div>
   );
 }

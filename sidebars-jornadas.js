@@ -48,7 +48,7 @@
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
  */
 const sidebars = {
-  jornadas: [
+  journeys: [
     {
       type: 'category',
       label: 'API Owner',
@@ -57,31 +57,31 @@ const sidebars = {
         {
           type: 'category',
           label: 'Visão Geral',
-          className: 'sidebar-icone sidebar-icone--visao-geral',
+          className: 'sidebar-icon sidebar-icon--visao-geral',
           items: [
             // A folha de abertura da instância. Ela carrega `slug: /`, e é por
             // isso que `/jornadas` é página de verdade em vez de 404 (ADR 10 §h).
-            {type: 'doc', id: 'api-owner/visao-geral/resumo-das-trilhas', className: 'sidebar-icone sidebar-icone--visao-geral'},
+            {type: 'doc', id: 'api-owner/visao-geral/resumo-das-trilhas', className: 'sidebar-icon sidebar-icon--visao-geral'},
             // A fixture de fallback silencioso de locale:
             // `/en/jornadas/api-owner/visao-geral/links-e-referencias` serve o
             // texto em pt-BR.
-            {type: 'doc', id: 'api-owner/visao-geral/links-e-referencias', className: 'sidebar-icone sidebar-icone--visao-geral'},
+            {type: 'doc', id: 'api-owner/visao-geral/links-e-referencias', className: 'sidebar-icon sidebar-icon--visao-geral'},
           ],
         },
         {
           type: 'category',
           label: 'Conteúdo Teórico',
-          className: 'sidebar-icone sidebar-icone--conteudo-teorico',
+          className: 'sidebar-icon sidebar-icon--conteudo-teorico',
           items: [
-            {type: 'doc', id: 'api-owner/conteudo-teorico/work-in-progress', className: 'sidebar-icone sidebar-icone--conteudo-teorico'},
+            {type: 'doc', id: 'api-owner/conteudo-teorico/work-in-progress', className: 'sidebar-icon sidebar-icon--conteudo-teorico'},
           ],
         },
         {
           type: 'category',
           label: 'Conteúdo Prático',
-          className: 'sidebar-icone sidebar-icone--conteudo-pratico',
+          className: 'sidebar-icon sidebar-icon--conteudo-pratico',
           items: [
-            {type: 'doc', id: 'api-owner/conteudo-pratico/work-in-progress', className: 'sidebar-icone sidebar-icone--conteudo-pratico'},
+            {type: 'doc', id: 'api-owner/conteudo-pratico/work-in-progress', className: 'sidebar-icon sidebar-icon--conteudo-pratico'},
           ],
         },
       ],

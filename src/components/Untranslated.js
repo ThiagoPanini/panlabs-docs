@@ -22,7 +22,7 @@ import React from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate from '@docusaurus/Translate';
 import Icon from './Icon';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
 export default function Untranslated() {
   const {
@@ -37,7 +37,7 @@ export default function Untranslated() {
   }
 
   return (
-    <aside className={estilos.untranslated} data-pd-component="untranslated">
+    <aside className={styles.untranslated} data-pd-component="untranslated">
       <Icon name="languages" size="sm" />
       <p>
         <Translate

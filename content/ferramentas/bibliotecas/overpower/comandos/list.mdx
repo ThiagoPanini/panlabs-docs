@@ -1,0 +1,41 @@
+---
+# GERADO por scripts/generate-reference.mjs a partir de contracts/overpower.pt-BR.json.
+# Não edite à mão: o portão 5 regenera e reprova em `git diff --exit-code`.
+title: overpower list
+description: Responde o que existe. Nu, imprime o catálogo embutido em quatro blocos; com um seletor, abre um item só, por inteiro.
+api_exemplos: {"signature":"overpower list [--skill <name>] [--bundle <name>] [--mcp <name>] [--ai-framework <name>] [--from <url>]","language":"bash","model":{"call":"overpower list","qualified":"overpower list","context":"always","parameters":[{"name":"--skill","type":"name","arity":{"multiple":false},"example":"panlabs-python-standards"},{"name":"--bundle","type":"name","arity":{"multiple":false}},{"name":"--mcp","type":"name","arity":{"multiple":false}},{"name":"--ai-framework","type":"name","arity":{"multiple":false}},{"name":"--from","type":"url","arity":{"multiple":false}}],"minimum":[{"context":"always","flags":[]}],"constraints":[{"type":"exclusive","precedence":1,"members":["--skill","--bundle","--mcp","--ai-framework"],"guard":null,"class":"TooManySelectorsError","exit":2,"literal":true,"message":"`list` shows one item at a time, and got {flags}"},{"type":"forbids","precedence":2,"when":"--from","forbidden":"--ai-framework","class":"UnsupportedRemoteListUnitError","exit":2,"literal":true,"message":"`--from` on `list` shows skills, MCP servers and bundles — an AI Framework does not exist remotely: it is a folder of the overpower's own wheel, and --ai-framework names one of those"}]}}
+---
+
+# overpower list
+
+{/* cita-saida-de-ferramenta */}
+
+**Comando** · `overpower list`
+
+<CommandPanel />
+
+Cada entrada sai com o tamanho, a contagem de arquivos e a descrição por inteiro, nunca truncada, porque a descrição é aquilo sobre o que a decisão de instalar é de fato tomada. Abaixo dela vem a linha que instala o item, sem cifrão na frente, para que copiar e colar devolva algo que roda.
+
+`list` responde sobre um item de cada vez. Dois seletores na mesma linha são uma pergunta com duas respostas, e o comando recusa em vez de escolher uma calado.
+
+## Opções
+
+<ParamField name="--skill" type="name">
+Abre uma skill do pool por inteiro. Aceita a forma curta `-s`.
+</ParamField>
+
+<ParamField name="--bundle" type="name">
+Abre um bundle e lista os artefatos que o manifesto dele nomeia. Aceita a forma curta `-b`.
+</ParamField>
+
+<ParamField name="--mcp" type="name">
+Abre a receita de um servidor MCP, com os campos que a própria declaração soletra e os que o `overpower` deriva dela, o transporte entre estes quando a receita traz `source:`. A receita é uma entrada da chave `mcp:` do manifesto YAML, e não um arquivo ao lado dele.
+</ParamField>
+
+<ParamField name="--ai-framework" type="name">
+Abre um AI Framework e imprime cada artefato dentro dele. É o único seletor que `--from` recusa.
+</ParamField>
+
+<ParamField name="--from" type="url">
+Lê de um repositório do GitHub em vez do catálogo embutido. Nu, imprime a vitrine daquele repositório.
+</ParamField>

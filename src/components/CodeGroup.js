@@ -30,21 +30,21 @@ import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
-import estilos from './catalogo.module.css';
+import styles from './catalog.module.css';
 
-const TITULO = /title="([^"]*)"/;
-const LINGUAGEM = /language-([\w-]+)/;
+const TITLE = /title="([^"]*)"/;
+const LANGUAGE = /language-([\w-]+)/;
 
 /**
  * Uma cerca dentro de JSX chega como `<pre>` cujo único filho é o `<code>`, e é
  * no `<code>` que moram `className` e `metastring`. Esta função é o único lugar
  * do projeto que conhece essa forma.
  *
- * @param {React.ReactElement} cerca
+ * @param {React.ReactElement} fence
  * @returns {{className?: string, metastring?: string, children?: unknown}}
  */
-function conteudoDaCerca(cerca) {
-  return cerca.props?.children?.props ?? cerca.props;
+function fenceContent(fence) {
+  return fence.props?.children?.props ?? fence.props;
 }
 
 /**
@@ -52,29 +52,29 @@ function conteudoDaCerca(cerca) {
  * duas, a posição. Nunca vazio — aba sem nome é aba que não se clica de novo.
  *
  * @param {{className?: string, metastring?: string}} props
- * @param {number} indice
+ * @param {number} index
  */
-function rotuloDe(props, indice) {
-  const titulo = props.metastring?.match(TITULO)?.[1];
-  if (titulo) {
-    return titulo;
+function labelFor(props, index) {
+  const title = props.metastring?.match(TITLE)?.[1];
+  if (title) {
+    return title;
   }
-  const linguagem = props.className?.match(LINGUAGEM)?.[1];
-  return linguagem ?? String(indice + 1);
+  const language = props.className?.match(LANGUAGE)?.[1];
+  return language ?? String(index + 1);
 }
 
 export default function CodeGroup({groupId, queryString, children}) {
-  const cercas = React.Children.toArray(children).filter(React.isValidElement);
-  const rotulos = cercas.map((cerca, i) => rotuloDe(conteudoDaCerca(cerca), i));
+  const fences = React.Children.toArray(children).filter(React.isValidElement);
+  const labels = fences.map((fence, i) => labelFor(fenceContent(fence), i));
 
   // Rótulo repetido é o valor da aba repetido, e o `Tabs` resolve isso
   // selecionando a primeira — o autor clica na segunda e a primeira acende.
   // Falha alto, como nome de ícone inexistente e verbo fora da escada.
-  const repetido = rotulos.find((r, i) => rotulos.indexOf(r) !== i);
-  if (repetido) {
+  const repeated = labels.find((r, i) => labels.indexOf(r) !== i);
+  if (repeated) {
     throw new Error(
       [
-        `Duas cercas do mesmo <CodeGroup> têm o rótulo "${repetido}".`,
+        `Duas cercas do mesmo <CodeGroup> têm o rótulo "${repeated}".`,
         'O rótulo é o valor da aba, e valor repetido faz a seleção acender na aba errada.',
         'Dê um `title=` distinto a cada cerca.',
       ].join('\n'),
@@ -82,17 +82,17 @@ export default function CodeGroup({groupId, queryString, children}) {
   }
 
   return (
-    <div className={estilos.codeGroup} data-pd-component="code-group">
+    <div className={styles.codeGroup} data-pd-component="code-group">
       <Tabs groupId={groupId} queryString={queryString}>
-        {cercas.map((cerca, indice) => {
-          const props = conteudoDaCerca(cerca);
-          const rotulo = rotulos[indice];
-          const resto = (props.metastring ?? '').replace(TITULO, '').trim();
+        {fences.map((fence, index) => {
+          const props = fenceContent(fence);
+          const label = labels[index];
+          const rest = (props.metastring ?? '').replace(TITLE, '').trim();
           return (
-            <TabItem key={rotulo} value={rotulo} label={rotulo}>
+            <TabItem key={label} value={label} label={label}>
               <CodeBlock
                 className={props.className}
-                metastring={resto === '' ? undefined : resto}>
+                metastring={rest === '' ? undefined : rest}>
                 {props.children}
               </CodeBlock>
             </TabItem>

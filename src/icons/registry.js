@@ -1,7 +1,7 @@
 /**
  * O registro React dos ícones — o primeiro dos dois renderizadores.
  *
- * `resolverIcone('rocket')` devolve um **componente React** vindo do SVGR, que
+ * `resolveIcon('rocket')` devolve um **componente React** vindo do SVGR, que
  * o `preset-classic` já registra por padrão (`@docusaurus/plugin-svgr` é
  * dependência dele). O SVG do Lucide nasce com `stroke="currentColor"` e
  * `fill="none"`, então a tinta vem de graça e `stroke-width` é prop — que é o
@@ -43,7 +43,7 @@
  * Procedência: docs/design/icones.md.
  */
 
-import {NOMES} from './manifest';
+import {NAMES} from './manifest';
 
 import Info from '@site/static/icons/info.svg';
 import Lightbulb from '@site/static/icons/lightbulb.svg';
@@ -61,8 +61,8 @@ import Sun from '@site/static/icons/sun.svg';
 import Moon from '@site/static/icons/moon.svg';
 import Monitor from '@site/static/icons/monitor.svg';
 import Languages from '@site/static/icons/languages.svg';
-import LinkIcone from '@site/static/icons/link.svg';
-import Lista from '@site/static/icons/list.svg';
+import LinkIcon from '@site/static/icons/link.svg';
+import ListIcon from '@site/static/icons/list.svg';
 import ArrowRight from '@site/static/icons/arrow-right.svg';
 
 import Rocket from '@site/static/icons/rocket.svg';
@@ -109,7 +109,7 @@ import Webhook from '@site/static/icons/webhook.svg';
 import Bell from '@site/static/icons/bell.svg';
 
 /** @type {Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>} */
-const DESENHOS = {
+const DRAWINGS = {
   'info': Info,
   'lightbulb': Lightbulb,
   'triangle-alert': TriangleAlert,
@@ -126,8 +126,8 @@ const DESENHOS = {
   'moon': Moon,
   'monitor': Monitor,
   'languages': Languages,
-  'link': LinkIcone,
-  'list': Lista,
+  'link': LinkIcon,
+  'list': ListIcon,
   'arrow-right': ArrowRight,
 
   'rocket': Rocket,
@@ -182,15 +182,15 @@ const DESENHOS = {
 // é onde a duplicação da lista pode envelhecer em silêncio.
 // ---------------------------------------------------------------------------
 
-const semDesenho = NOMES.filter((nome) => !DESENHOS[nome]);
-const semEntrada = Object.keys(DESENHOS).filter((nome) => !NOMES.includes(nome));
+const withoutDrawing = NAMES.filter((name) => !DRAWINGS[name]);
+const withoutEntry = Object.keys(DRAWINGS).filter((name) => !NAMES.includes(name));
 
-if (semDesenho.length > 0 || semEntrada.length > 0) {
+if (withoutDrawing.length > 0 || withoutEntry.length > 0) {
   throw new Error(
     [
       'O manifesto de ícones e o registro divergiram.',
-      semDesenho.length > 0 && `  Sem desenho no registro: ${semDesenho.join(', ')}`,
-      semEntrada.length > 0 && `  Sem entrada no manifesto: ${semEntrada.join(', ')}`,
+      withoutDrawing.length > 0 && `  Sem desenho no registro: ${withoutDrawing.join(', ')}`,
+      withoutEntry.length > 0 && `  Sem entrada no manifesto: ${withoutEntry.join(', ')}`,
     ]
       .filter(Boolean)
       .join('\n'),
@@ -207,60 +207,60 @@ if (semDesenho.length > 0 || semEntrada.length > 0) {
  * @param {string} a
  * @param {string} b
  */
-function distancia(a, b) {
-  const linha = Array.from({length: b.length + 1}, (_, i) => i);
+function distance(a, b) {
+  const row = Array.from({length: b.length + 1}, (_, i) => i);
   for (let i = 1; i <= a.length; i += 1) {
-    let anterior = linha[0];
-    linha[0] = i;
+    let previous = row[0];
+    row[0] = i;
     for (let j = 1; j <= b.length; j += 1) {
-      const guardado = linha[j];
-      linha[j] = Math.min(
-        linha[j] + 1,
-        linha[j - 1] + 1,
-        anterior + (a[i - 1] === b[j - 1] ? 0 : 1),
+      const saved = row[j];
+      row[j] = Math.min(
+        row[j] + 1,
+        row[j - 1] + 1,
+        previous + (a[i - 1] === b[j - 1] ? 0 : 1),
       );
-      anterior = guardado;
+      previous = saved;
     }
   }
-  return linha[b.length];
+  return row[b.length];
 }
 
 /**
- * @param {string} nome
+ * @param {string} name
  * @returns {string | undefined} o vizinho mais próximo, se houver um plausível
  */
-function vizinhoMaisProximo(nome) {
-  let melhor;
-  let menor = Infinity;
-  for (const candidato of NOMES) {
-    const d = distancia(nome, candidato);
-    if (d < menor) {
-      menor = d;
-      melhor = candidato;
+function nearestNeighbor(name) {
+  let best;
+  let smallest = Infinity;
+  for (const candidate of NAMES) {
+    const d = distance(name, candidate);
+    if (d < smallest) {
+      smallest = d;
+      best = candidate;
     }
   }
   // Acima de um terço do comprimento a sugestão vira ruído — melhor não sugerir
   // do que mandar alguém para o glifo errado.
-  return menor <= Math.max(2, Math.ceil(nome.length / 3)) ? melhor : undefined;
+  return smallest <= Math.max(2, Math.ceil(name.length / 3)) ? best : undefined;
 }
 
 /**
  * Devolve o componente do ícone, ou lança.
  *
- * @param {string} nome
+ * @param {string} name
  * @returns {React.ComponentType<React.SVGProps<SVGSVGElement>>}
  */
-export function resolverIcone(nome) {
-  const desenho = DESENHOS[nome];
-  if (desenho) {
-    return desenho;
+export function resolveIcon(name) {
+  const drawing = DRAWINGS[name];
+  if (drawing) {
+    return drawing;
   }
-  const sugestao = vizinhoMaisProximo(nome);
+  const suggestion = nearestNeighbor(name);
   throw new Error(
     [
-      `Ícone "${nome}" não existe.`,
-      sugestao && `Você quis dizer "${sugestao}"?`,
-      `${NOMES.length} ícones disponíveis em src/icons/manifest.js.`,
+      `Ícone "${name}" não existe.`,
+      suggestion && `Você quis dizer "${suggestion}"?`,
+      `${NAMES.length} ícones disponíveis em src/icons/manifest.js.`,
     ]
       .filter(Boolean)
       .join('\n'),

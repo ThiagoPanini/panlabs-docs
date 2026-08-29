@@ -26,7 +26,7 @@ Leia, e só isto:
 - as entradas do `CHANGELOG.md` do `overpower` entre o pino e a publicada;
 - o `git diff <tag-do-pino>..<tag-publicada>` restrito a `src/overpower/cli.py`, `src/overpower/errors.py`, `src/overpower/catalog/`, `src/overpower/runtimes.py`, `README.md` e `pyproject.toml`;
 - `docs/agents/*.md` do `overpower` — é o resumo já curado do que mudou conceitualmente, e é sinal mais nítido que o diff cru. **Leia; nunca escreva.** Aquilo é memória de engenharia daquele repositório.
-- o índice das páginas daqui: título e `description` de cada arquivo em `conteudo/ferramentas/bibliotecas/overpower/`.
+- o índice das páginas daqui: título e `description` de cada arquivo em `content/ferramentas/bibliotecas/overpower/`.
 
 Decida: **vale varredura completa?** Registre a decisão com o motivo, seja qual for.
 
@@ -56,7 +56,7 @@ print(json.dumps({
 }, indent=1, ensure_ascii=False))
 ```
 
-Rode com `uv run python` a partir do checkout irmão, ou com `uvx --from overpower==<versão> python`. Compare com `contratos/overpower.pt-BR.json` e `contratos/overpower.en.json`:
+Rode com `uv run python` a partir do checkout irmão, ou com `uvx --from overpower==<versão> python`. Compare com `contracts/overpower.pt-BR.json` e `contracts/overpower.en.json`:
 
 | o que conferir | onde, no contrato |
 | --- | --- |
@@ -76,13 +76,13 @@ from overpower.cli import TooManySelectorsError
 assert str(TooManySelectorsError(["--skill", "--bundle"])) == "..."
 ```
 
-Três delas carregam travessão literal. O contrato pode carregá-lo porque declara `"citaSaidaDeFerramenta": true` nas 20 primeiras linhas; a página que a cita precisa de `{/* cita-saida-de-ferramenta */}` e de cerca de código em volta. Ver a cobrança 14 do portão 4.
+Três delas carregam travessão literal. O contrato pode carregá-lo porque declara `"citesToolOutput": true` nas 20 primeiras linhas; a página que a cita precisa de `{/* cita-saida-de-ferramenta */}` e de cerca de código em volta. Ver a cobrança 14 do portão 4.
 
 **A cardinalidade de `--runtime` sai de `known_runtimes()`, nunca da prosa do fonte.** `planning.py` diz *76 in project, 74 in global* e está desatualizado desde a entrada do `vscode`; um contrato derivado da prosa nasce errado.
 
 E confira a **descrição** de cada opção contra o texto de ajuda real. Este é o achado que a máquina não pega e que aconteceu de verdade: na 0.25.2 a ajuda do `--yes` passou a anunciar o segundo efeito, e o contrato continuou afirmando que *"a ajuda da ferramenta não anuncia"*. O contrato estava bem formado, o portão 5 estava verde, e a frase era falsa.
 
-**Corrigido o contrato, rode `npm run gerar:referencia`.** As oito páginas de `comandos/` — quatro por locale — são projeção. **Nunca as edite à mão**; o portão 5 regenera e reprova no `git diff`.
+**Corrigido o contrato, rode `npm run generate:reference`.** As oito páginas de `comandos/` — quatro por locale — são projeção. **Nunca as edite à mão**; o portão 5 regenera e reprova no `git diff`.
 
 **Os dois contratos são um par.** Toda mudança em `pt-BR` tem a sua em `en`, com as mesmas chaves. O `npm test` confere a congruência do par.
 
@@ -90,7 +90,7 @@ E confira a **descrição** de cada opção contra o texto de ajuda real. Este �
 
 As vinte e três páginas escritas à mão, mais uma que mora fora da subárvore e que uma varredura por caminho perderia:
 
-    conteudo/ferramentas/skills/scaffold-de-esteira.md
+    content/ferramentas/skills/scaffold-de-esteira.md
 
 As fontes de verdade, herdadas da #118:
 
@@ -111,7 +111,7 @@ A cobrança 17 do portão 4 pega **termo listado e não definido**: todo termo d
 **A outra metade é sua, e é juízo:** termo **usado e não listado**. Varra a prosa do ramo procurando palavra que o texto trata como conhecida do produto, e confira contra a lista:
 
 ```bash
-grep -rhoE '\*\*[A-ZÀ-Ú][a-zà-ú-]+\*\*' conteudo/ferramentas/bibliotecas/overpower/ | sort -u
+grep -rhoE '\*\*[A-ZÀ-Ú][a-zà-ú-]+\*\*' content/ferramentas/bibliotecas/overpower/ | sort -u
 ```
 
 Compare com `scripts/termos-overpower.txt`. Um negrito que nomeia conceito do produto e não está na lista é uma das duas coisas, e as duas exigem edição: ou ele entra na lista **e** ganha definição em `conceitos.md`, ou ele não é vocabulário e o negrito é enfeite. **Nenhuma varredura decide isso por você** — é exatamente por não haver régua que esta metade é trabalho de agente.
@@ -133,7 +133,7 @@ O modo de falha desta tarefa não é achar pouco. É **achar coisa que não exis
 
 ## 4. As armadilhas deste repositório — elas reprovam o PR
 
-- **Zero travessão** em `conteudo/`, `i18n/` e `contratos/`. A cobrança 14 do portão 4 varre as três e aponta arquivo e linha, **inclusive dentro de bloco de código**. A prosa do `overpower` é cheia de travessão: todo texto copiado de lá precisa sair como vírgula, dois-pontos, parênteses ou frase reescrita, escolhido um a um. Este é o erro que você vai cometer.
+- **Zero travessão** em `content/`, `i18n/` e `contracts/`. A cobrança 14 do portão 4 varre as três e aponta arquivo e linha, **inclusive dentro de bloco de código**. A prosa do `overpower` é cheia de travessão: todo texto copiado de lá precisa sair como vírgula, dois-pontos, parênteses ou frase reescrita, escolhido um a um. Este é o erro que você vai cometer.
 - **Página gerada nunca se edita à mão.** `comandos/*.mdx` sai do contrato, e o portão 5 reprova o `git diff`.
 - **Paridade de locale.** Só a aba `Ferramentas` é traduzida, e a cobertura é cobrada: toda página mexida é duas.
 - **Contagem de página.** O portão 4 crava o volume por aba e o total. Acrescentar ou remover página exige acertar `scripts/portao-4-conteudo.sh` no mesmo PR. Acrescentar `<Update>` na página de changelog **não** exige: aquela cobrança é piso, não igualdade.
