@@ -5,24 +5,24 @@ paths:
   - "src/theme/**/*.css"
 ---
 
-# `src/theme/` — swizzle, e a escada que o precede
+# `src/theme/`, swizzle, and the ladder that precedes it
 
-**Falha silenciosa alta**: swizzle quebra quando o `@docusaurus/theme-classic` muda de versão, e nenhum build quebra antes disso. Nada aqui é cobrado por máquina — a disciplina é de leitura.
+**High silent-failure risk**: a swizzle breaks when `@docusaurus/theme-classic` changes version, and no build breaks before that happens. Nothing here is enforced by machine, the discipline is by reading.
 
 ## Zero `unsafe`
 
-Componente marcado `unsafe` no ledger do Docusaurus **não entra** por decisão de conveniência. A escada existe para achar o degrau que alcança sem descer até lá.
+A component marked `unsafe` in Docusaurus's ledger **doesn't get in** as a matter of convenience. The ladder exists to find the rung that reaches without going down that far.
 
-## Antes de descer para o swizzle
+## Before reaching for a swizzle
 
-A escada tem degraus mais baratos, e a disciplina é subir até achar o que não alcança:
+The ladder has cheaper rungs, and the discipline is climbing until you find the one that doesn't reach:
 
-- **Degrau 0** — variável do Infima, via o adaptador em `src/css/tokens.css`.
-- **Degrau 1** — classe estável em `src/css/chrome.css`.
-- **Degrau 2+** — swizzle.
+- **Rung 0** — an Infima variable, through the adapter in `src/css/tokens.css`.
+- **Rung 1** — a stable class hook in `src/css/chrome.css`.
+- **Rung 2+** — swizzle.
 
-Ao acrescentar um swizzle, escreva **por que o degrau acima não alcançou**. É o que faz a decisão revisável depois, e o racional está no [ADR 2](../../docs/adr/0002-politica-de-swizzle.md).
+When adding a swizzle, write down **why the rung above didn't reach**. That's what makes the decision reviewable later; the rationale is in [Decisions § The Swizzle Ladder, and a Zero-Unsafe Budget](../../DECISIONS.md#the-swizzle-ladder-and-a-zero-unsafe-budget).
 
-## O que já mora aqui
+## What already lives here
 
-`src/theme/MDXComponents/` (o registro dos componentes de autoria), `src/theme/ApiDocItem/` (a página de referência gerada), `src/theme/SearchBar/` (o modal e a escada de pontuação), `src/theme/NavbarItem/` e `src/theme/Admonition/Types.js`. Três coisas diferentes convivem nesta pasta e não se misturam.
+`src/theme/Admonition/` (custom admonition types), `src/theme/MDXComponents/` (the authored component registry), and `src/theme/SearchBar/` (the search modal and its scoring ladder). Three different things share this folder without mixing.
