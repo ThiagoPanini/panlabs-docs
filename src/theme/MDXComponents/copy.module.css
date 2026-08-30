@@ -1,48 +1,51 @@
 /* =============================================================================
-   O par segmentado do cabeçalho — "Copiar página" e o menu ao lado.
+   panlabs-docs — the copy control
 
-   Camada 3: tudo aqui deriva de token de camada 1 e 2. Os dois tokens novos
-   do componente moram em `tokens.css` — `--pd-copy-height` e
-   `--pd-copy-menu-width` —, e os dois são medida da âncora, não escala:
-   34 e 277 não caem em `--pd-space-*` nem em múltiplo dela, e derivar por
-   coincidência de número é a derivação falsa que este projeto recusa por
-   escrito.
-
-   TODO O RESTO JÁ ERA TOKEN, e isso não é sorte: o texto do botão mede 14 no
-   peso 500 (`--pd-type-sm` · `--pd-weight-ui`), o vão entre glifo e palavra é
-   8 (`--pd-space-2`), o raio das pontas é 12 (`--pd-radius-md`, o mesmo do
-   item de sidebar), o raio do menu é 16 (`--pd-radius`) e o preenchimento
-   dele é 4 (`--pd-space-1`). Medidos na âncora, um a um.
-
-   NENHUMA declaração `outline` neste arquivo — o portão 3 reprova outline
-   fora de `src/css/foco.css`, e não há exceção a pedir: os dois botões e cada
-   item de menu herdam `:focus-visible` de graça.
-
-   Procedência: docs/design/chrome.md §6.4.
+   The header's split pair — "Copy page" and the menu beside it — plus the
+   popover menu it opens.
    ============================================================================= */
 
+/* Layer 3: everything here derives from a layer 1 or 2 token. The
+   component's two new tokens live in tokens.css — `--pd-copy-height` and
+   `--pd-copy-menu-width` — and both are measured off the anchor, not scale:
+   34 and 277 don't land on `--pd-space-*` or a multiple of it, and deriving
+   by number coincidence is the false derivation this project refuses in
+   writing.
+
+   EVERYTHING ELSE WAS ALREADY A TOKEN, and that's not luck: the button text
+   measures 14 at weight 500 (`--pd-type-sm` · `--pd-weight-ui`), the gap
+   between glyph and word is 8 (`--pd-space-2`), the end radius is 12
+   (`--pd-radius-md`, the same as a sidebar item), the menu's radius is 16
+   (`--pd-radius`), and its padding is 4 (`--pd-space-1`). Measured on the
+   anchor, one at a time.
+
+   NO `outline` declaration in this file — the only file allowed to write it
+   is focus.css, and there's no exception to ask for here: both buttons and
+   every menu item inherit `:focus-visible` for free. */
+
 /* -----------------------------------------------------------------------------
-   O par
+   The pair
 
-   `flex: 0 0 auto` — dentro da linha do título ele é a peça que NÃO cede: o
-   `h1` é que quebra quando falta largura. Sem isso, um título longo achataria
-   o botão até o rótulo sumir.
+   `flex: 0 0 auto` — inside the title line it's the piece that does NOT
+   yield: it's the `h1` that wraps when width runs short. Without this, a
+   long title would flatten the button until the label disappeared.
 
-   Nenhum `position` aqui, e a ausência é a mudança: o menu é `popover` e vive
-   na top layer, então não há pai posicionado a oferecer. Quem carrega a
-   relação entre gatilho e menu é o ancoramento, mais abaixo.
+   No `position` here, and the absence is the change: the menu is a
+   `popover` and lives in the top layer, so there's no positioned parent to
+   offer. What carries the relationship between trigger and menu is the
+   anchoring, further below.
    ----------------------------------------------------------------------------- */
 .pair {
   display: none;
   flex: 0 0 auto;
 }
 
-/* O par só existe a partir do limiar da sidebar, e o motivo é o mesmo da
-   âncora — lá ele desaparece quando o cabeçalho fica mais estreito que 520px,
-   por container query. Aqui o limiar é o do projeto (§1.6), que é a lista
-   fechada que o portão 1 cobra; o comportamento é o mesmo em espírito, e no
-   estreito a página abre no conteúdo, como o TOC móvel que sai pelo mesmo
-   critério. */
+/* The pair only exists from the sidebar's threshold up, and the reason
+   mirrors the anchor's own: there it disappears once the header gets
+   narrower than 520px, via container query. Here the threshold is the
+   project's own (chrome.css §1.6), a single closed value; the behavior
+   matches in spirit, and on narrow screens the page opens on content, the
+   same criterion the mobile TOC uses. */
 @media (min-width: 997px) {
   .pair {
     display: inline-flex;
@@ -50,11 +53,12 @@
 }
 
 /* -----------------------------------------------------------------------------
-   As duas metades
+   The two halves
 
-   Elas se encostam sem borda dupla: a da esquerda não desenha a borda direita,
-   e a da direita desenha as quatro. É o que a âncora faz, medido —
-   `border-width: 1px 0 1px 1px` na primeira, `1px` na segunda.
+   They meet with no doubled border: the left one doesn't draw its right
+   border, and the right one draws all four. That's what the anchor does,
+   measured — `border-width: 1px 0 1px 1px` on the first, `1px` on the
+   second.
    ----------------------------------------------------------------------------- */
 .copy,
 .more {
@@ -78,8 +82,8 @@
   border-end-start-radius: var(--pd-radius-md);
 }
 
-/* Quadrado, e a largura sai da altura em vez de um segundo número: o botão do
-   chevron da âncora mede 34 × 34. */
+/* Square, and the width comes from the height instead of a second number:
+   the anchor's chevron button measures 34 × 34. */
 .more {
   width: var(--pd-copy-height);
   justify-content: center;
@@ -93,24 +97,24 @@
   border-color: var(--pd-border-strong);
 }
 
-/* O manifesto de ícones não vendoriza um `chevron-down` — ele tem o
-   `chevron-right`, que já serve o caret de `Accordion` e o de categoria de
-   sidebar. Girar o mesmo desenho é o que evita um vigésimo primeiro glifo no
-   orçamento de `icones.md` para uma seta que só muda de eixo. */
+/* The icon manifest doesn't vendor a `chevron-down` — it has
+   `chevron-right`, which already serves Accordion's caret and the sidebar
+   category's. Rotating the same drawing avoids adding a twenty-first glyph
+   to the icon set for an arrow that only changes axis. */
 .more svg {
   transform: rotate(90deg);
 }
 
 /* -----------------------------------------------------------------------------
-   Os três rótulos empilhados
+   The three stacked labels
 
-   Uma célula de grade só, os três dentro dela. A caixa mede o mais largo e
-   PARA DE SE MEXER — trocar o texto no clique faria o par saltar, que é o
-   mesmo defeito que o falso-negrito do item de sidebar e a goteira estável da
-   barra de rolagem evitam em `chrome.css` §4, pela mesma razão.
+   One grid cell, all three inside it. The box measures the widest and STOPS
+   MOVING — swapping the text on click would make the pair jump, the same
+   defect the sidebar item's optical bold and the scrollbar's stable gutter
+   avoid in chrome.css §4, for the same reason.
 
-   `visibility: hidden` e não `display: none`: o que sai de cena precisa
-   continuar ocupando a célula, senão não segura largura nenhuma.
+   `visibility: hidden`, not `display: none`: whatever leaves the scene still
+   needs to occupy the cell, or it holds no width at all.
    ----------------------------------------------------------------------------- */
 .labels {
   display: grid;
@@ -127,57 +131,59 @@
 }
 
 /* -----------------------------------------------------------------------------
-   O menu — `popover` nativo, e por isso ele não mora mais no fluxo
+   The menu — native `popover`, and why it no longer lives in flow
 
-   `popover` põe o elemento na TOP LAYER, e lá o pai posicionado não existe
-   mais: `top: 100%` do `.pair` deixou de significar coisa alguma. Quem devolve
-   a relação é o ancoramento de CSS — `anchor-name` no gatilho,
-   `position-anchor` no menu —, e é ele que faz o menu abrir COLADO no botão
-   em vez de no meio da tela, que é onde a folha do navegador o põe por padrão.
+   `popover` puts the element in the TOP LAYER, and there the positioned
+   parent no longer exists: `.pair`'s `top: 100%` stopped meaning anything.
+   What restores the relationship is CSS anchoring — `anchor-name` on the
+   trigger, `position-anchor` on the menu — and it's what makes the menu open
+   FLUSH against the button instead of in the middle of the screen, which is
+   where the browser's UA sheet puts it by default.
 
-   Alinhado pela borda DIREITA do par (`span-inline-start` abre para a
-   esquerda), porque é de lá que ele nasce e é para lá que o cabeçalho empurra
-   o botão. Abrir para a direita o faria sair da coluna de texto.
+   Aligned to the pair's RIGHT edge (`span-inline-start` opens leftward),
+   because that's where it's born and where the header pushes the button.
+   Opening rightward would push it out of the text column.
 
-   O FALLBACK É A FOLHA DO NAVEGADOR, e o `@supports` é o que o mantém
-   íntegro: onde não houver ancoramento, o bloco inteiro não entra e o menu
-   fica onde a folha do UA o põe — centro da viewport, com fundo, borda e
-   sombra intactos. Utilizável, e nunca invisível. É a mesma escolha do
-   `<dialog>` da busca: a peça continua alcançável onde o posicionamento fino
-   não chega.
+   THE FALLBACK IS THE BROWSER'S UA SHEET, and `@supports` is what keeps it
+   intact: where anchoring isn't available, the whole block doesn't apply and
+   the menu stays where the UA sheet puts it — viewport center, with
+   background, border, and shadow intact. Usable, never invisible. The same
+   choice as the search `<dialog>`: the piece stays reachable where fine
+   positioning doesn't reach.
 
-   **O `@supports` não é cerimônia, e a alternativa foi medida.** Declarar o
-   posicionamento solto deixaria `inset: auto` valer sozinho no navegador sem
-   ancoramento, e a posição estática de um elemento em top layer NÃO é a que
-   ele teria no fluxo: medido, o menu ia para `x=0, y=8` — o canto da tela, que
-   é pior que o centro.
+   **`@supports` isn't ceremony, and the alternative was measured.**
+   Declaring the loose positioning would let `inset: auto` apply alone in a
+   browser without anchoring, and a top-layer element's static position is
+   NOT the one it would have in flow: measured, the menu landed at `x=0,
+   y=8` — the corner of the screen, worse than the center.
 
-   `anchor()` e não `position-area`: a forma curta obriga a escolher entre
-   eixo físico e lógico, e `bottom span-inline-start` mistura os dois — o
-   Chromium a descarta em silêncio, com `position-area` computando `none` e o
-   menu no canto. As duas funções dizem a mesma coisa sem a armadilha.
+   `anchor()`, not `position-area`: the short form forces a choice between
+   physical and logical axis, and `bottom span-inline-start` mixes the two —
+   Chromium silently drops it, `position-area` computes to `none`, and the
+   menu ends up in the corner. Both functions say the same thing without the
+   trap.
 
-   Não há `z-index`: a top layer está acima de tudo por definição, e escrever
-   um seria fingir que a pilha ainda vale aqui.
+   No `z-index`: the top layer sits above everything by definition, and
+   writing one would pretend the stack still applies here.
    ----------------------------------------------------------------------------- */
 .more {
   anchor-name: --pd-copy-trigger;
 }
 
-/* `display` EM DUAS REGRAS, e a armadilha custou um menu permanentemente
-   aberto — visível nesta implementação até a conferência em navegador.
+/* `display` IN TWO RULES, and the trap cost a menu stuck permanently open —
+   visible in this implementation until the browser check caught it.
 
-   Quem esconde o popover fechado é `[popover]:not(:popover-open) { display:
-   none }`, e essa regra mora na folha do NAVEGADOR. A origem de autor vence a
-   de user agent sempre, sem empate a desfazer: um `display: flex` escrito numa
-   classe nossa apaga o esconderijo e o menu passa a ficar em cena o tempo
-   todo — inclusive no HTML estático, antes de qualquer clique.
+   What hides the closed popover is `[popover]:not(:popover-open) { display:
+   none }`, and that rule lives in the BROWSER's sheet. Author origin always
+   beats user-agent origin, no tie to resolve: a `display: flex` written in
+   one of our classes erases the hiding and the menu stays on screen the
+   whole time — including in the static HTML, before any click.
 
-   A correção é dizer o `display` só no estado aberto. Onde `:popover-open` não
-   existir, a regra cai inteira e o menu fica `display: none` — o gatilho
-   também não abriria nada ali, então a peça some junto com a função em vez de
-   ficar solta na página. O botão de copiar, que é o principal, não depende
-   dela. */
+   The fix is to state `display` only for the open state. Where
+   `:popover-open` doesn't exist, the whole rule falls away and the menu
+   stays `display: none` — the trigger wouldn't open anything there either,
+   so the piece disappears along with the function instead of sitting loose
+   on the page. The copy button, the main one, doesn't depend on it. */
 .menu {
   display: none;
   width: var(--pd-copy-menu-width);
@@ -224,9 +230,9 @@
   text-decoration: none;
 }
 
-/* O glifo não encolhe. Sem isso o flex o achataria quando o rótulo de um item
-   quebrar em duas linhas — que é o que acontece no EN, onde as frases de apoio
-   são mais longas. */
+/* The glyph doesn't shrink. Without this, flex would flatten it whenever an
+   item's label wraps to two lines — which happens in EN, where the support
+   phrases run longer. */
 .item svg {
   flex: 0 0 auto;
 }

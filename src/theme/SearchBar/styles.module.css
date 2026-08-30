@@ -1,46 +1,52 @@
 /* =============================================================================
-   `SearchBar` — o botão do navbar e o modal.
+   panlabs-docs — SearchBar
 
-   Camada 3: tudo aqui deriva de token de camada 1 e 2. Os tokens novos do
-   componente moram em `tokens.css`, junto de `--pd-search-height` —
-   `--pd-surface-scrim` (papel `surface`, par declarado) e, desde a #98, quatro
-   medidas de consumidor único: `--pd-search-panel-width`, `--pd-search-panel-top`,
-   `--pd-search-control-width` e `--pd-search-control-height`. NENHUM decorre da
-   escala de espaço — são medição da âncora, e derivar por coincidência de
-   número é a derivação falsa que este projeto recusa por escrito.
-
-   **A LARGURA do painel deixou de ser `--pd-prose-width` citada por nome — essa
-   frase morreu na #98.** Era verdade enquanto o painel abria com a medida que o
-   leitor estava lendo; a âncora mede 640px fixo, centralizado, e 640 não é
-   720 — citar `--pd-prose-width` teria virado coincidência de número, não
-   parentesco. `--pd-search-panel-width` é a medida nova, sozinha.
-
-   NENHUMA declaração `outline` neste arquivo — o portão 3 reprova outline fora
-   de `src/css/foco.css`, e não há exceção a pedir: `:focus-visible` já é
-   universal e o botão, o campo e o × o herdam de graça.
-
-   Procedência: docs/design/busca.md · docs/research/paridade-devin.md §7 (issue #98).
+   The navbar trigger and the search modal: layer 3, everything here derives
+   from a layer-1 or layer-2 token.
    ============================================================================= */
 
+/* The component's own tokens live in tokens.css, alongside
+   `--pd-search-height` — `--pd-surface-scrim` (a `surface` role, a declared
+   pair) and four single-consumer measurements: `--pd-search-panel-width`,
+   `--pd-search-panel-top`, `--pd-search-control-width`, and
+   `--pd-search-control-height`. NONE of them derive from the space scale —
+   they're the anchor's own measurement, and deriving from a coincidence of
+   number is the false derivation this project refuses in writing.
+
+   THE PANEL'S WIDTH no longer cites `--pd-prose-width` by name — that
+   citation doesn't hold up. It was true only while the panel opened at
+   whatever width the reader was reading; the anchor measures a fixed,
+   centered 640px, and 640 isn't 720 — citing `--pd-prose-width` would have
+   turned into a coincidence of numbers, not real kinship.
+   `--pd-search-panel-width` is the new measurement, on its own. */
+
+/* ZERO `outline` DECLARATION in this file. The entry-state contract
+   (focus.css) is universal, and the button, the field, and the × all
+   inherit `:focus-visible` for free — there's no exception to ask for here. */
+
 /* -----------------------------------------------------------------------------
-   O gatilho — BOTÃO, não campo. A #98 muda a LEITURA, não o elemento.
+   The trigger — a BUTTON, not a field. What changed is the READING, not the
+   element.
 
-   A âncora e três das quatro referências abrem um modal; um `<input>` no navbar
-   que não aceita digitação é um controle que mente sobre o que faz. O botão diz
-   *isto abre outra coisa*, que é o que de fato acontece — isso não mudou.
+   The anchor, and three of its four references, open a modal; an `<input>`
+   in the navbar that doesn't accept typing is a control that lies about what
+   it does. The button says *this opens something else*, which is what
+   actually happens — that hasn't changed.
 
-   O que a #98 muda é só a pele: acima de 997px ele agora LÊ como campo — anel,
-   raio maior, caixa do tamanho da âncora, centralizado na linha 1 — sem deixar
-   de SER botão. Honestidade é sobre o contrato com teclado e leitor de tela,
-   não sobre pixel; um `<button>` pintado de campo continua anunciado como
-   "botão", continua ativando em Enter/Espaço, e é exatamente por isso que ele
-   pode se vestir de campo sem mentir o que o parágrafo acima recusa.
+   What changed is only the skin: above 997px it now READS as a field — a
+   ring, a larger radius, a box the anchor's own size, centered on line 1 —
+   without stopping to BE a button. Honesty is about the contract with the
+   keyboard and the screen reader, not about pixels; a `<button>` painted to
+   look like a field is still announced as "button," still activates on
+   Enter/Space, and that's exactly why it can dress as a field without lying
+   in the way the paragraph above refuses.
 
-   Um limiar só, o do Infima: acima de 997 o botão carrega ícone, rótulo e
-   tecla, centralizado; abaixo, ícone puro, no lugar de sempre — a centralização
-   é junto com o resto do vestido, e abaixo do limiar não há vestido nenhum.
-   Abaixo do limiar o navbar já está no aperto máximo — é onde a sidebar virou
-   gaveta e o hambúrguer apareceu. */
+   One threshold only, Infima's: above 997 the button carries an icon, a
+   label, and a key, centered; below it, a bare icon in its usual place — the
+   centering comes with the rest of the dressing, and below the threshold
+   there's no dressing at all. Below the threshold the navbar is already at
+   its tightest squeeze — it's where the sidebar became a drawer and the
+   hamburger appeared. */
 .button {
   display: inline-flex;
   align-items: center;
@@ -56,10 +62,10 @@
   transition: color var(--pd-move-state), border-color var(--pd-move-state);
 }
 
-/* O anel muda no hover — a âncora reforça o mesmo anel, não pinta fundo. Sob
-   `(hover: hover)` porque o contrato de estado de entrada (ADR 4) não admite
-   hover fora dela: sem a guarda, o toque prende o estado até o dedo tocar em
-   outro lugar. */
+/* The ring changes on hover — the anchor reinforces the same ring, it
+   doesn't paint a background. Under `(hover: hover)` because the
+   entry-state contract (ADR 4) doesn't allow hover outside its guard:
+   without it, touch would stick the state until the finger taps elsewhere. */
 @media (hover: hover) {
   .button:hover {
     color: var(--pd-text-strong);
@@ -72,12 +78,12 @@
   display: none;
 }
 
-/* O atalho, TEXTO PURO — a pílula de `<kbd>` morreu na #98. Sem fundo, sem
-   borda, sem raio, sem padding, sem sombra: só cor e peso. O elemento continua
-   `<kbd>` — semântica de tecla, não caixa de tecla — e `margin-inline-start:
-   auto` o empurra para o fim da caixa fixa, deixando ícone e rótulo agrupados
-   no início, como um campo de verdade organiza afordância à esquerda e atalho
-   à direita. */
+/* The shortcut, PLAIN TEXT — the `<kbd>` pill is gone. No background, no
+   border, no radius, no padding, no shadow: only color and weight. The
+   element is still `<kbd>` — key semantics, not a key-shaped box — and
+   `margin-inline-start: auto` pushes it to the end of the fixed box, leaving
+   the icon and label grouped at the start, the way a real field organizes
+   affordance on the left and shortcut on the right. */
 .shortcut {
   margin-inline-start: auto;
   color: var(--pd-text-faint);
@@ -93,19 +99,20 @@
     display: inline;
   }
 
-  /* Centralizado na linha 1 do navbar, não mais à direita — o pedido central
-     da #98. `position: absolute` tira o gatilho do fluxo de
-     `.navbar__items--right` (os itens que sobram ali só se reacomodam) e
-     centraliza contra `.navbar__inner`, que é o container que já centraliza
-     sidebar + conteúdo + TOC (`chrome.css` §1) — não o viewport. `top: 50%`
-     sozinho erraria o eixo vertical: `.navbar__inner` cobre as DUAS linhas do
-     navbar quando a faixa de tabs está montada, e centralizar contra a altura
-     inteira poria o gatilho entre as linhas em vez de dentro da primeira. O
-     deslocamento certo é a folga entre a linha 1 e a caixa do gatilho, dividida
-     ao meio — medido depois de escrito: sem ele o gatilho cola no topo da
-     linha 1 em vez de repousar no centro dela, junto dos vizinhos.
-     `position: relative` em `.navbar__inner` mora em `chrome.css`, porque esse
-     elemento não é deste componente. */
+  /* Centered on the navbar's line 1, no longer flush right — the central
+     placement this component asks for. `position: absolute` takes the
+     trigger out of `.navbar__items--right`'s flow (the items left there
+     just resettle) and centers it against `.navbar__inner`, the same
+     container that already centers sidebar + content + TOC (chrome.css
+     §1) — not the viewport. `top: 50%` alone would miss the vertical axis:
+     `.navbar__inner` spans BOTH lines of the navbar once the tab strip is
+     mounted, and centering against the full height would put the trigger
+     between the lines instead of inside the first one. The right offset is
+     the gap between line 1 and the trigger's box, split in half — measured
+     after writing it: without it the trigger sticks to the top of line 1
+     instead of resting at its center, alongside its neighbors.
+     `position: relative` on `.navbar__inner` lives in chrome.css, because
+     that element doesn't belong to this component. */
   .button {
     position: absolute;
     inset-block-start: calc((var(--pd-navbar-height) - var(--pd-search-control-height)) / 2);
@@ -118,16 +125,16 @@
 }
 
 /* -----------------------------------------------------------------------------
-   O modal — `<dialog>` com `showModal()`.
+   The modal — a `<dialog>` opened with `showModal()`.
 
-   O elemento entra na TOP LAYER do navegador, então ele não participa de
-   `z-index` nenhum: não há número a escolher e não há empilhamento a brigar com
-   o navbar fixo. Zero declaração de `z-index` neste arquivo, e é consequência
-   da escolha do elemento.
+   The element enters the browser's TOP LAYER, so it takes no part in any
+   `z-index`: there's no number to pick and no stacking fight with the fixed
+   navbar. Zero `z-index` declaration in this file, a consequence of the
+   element choice.
 
-   Ancorado no topo: um modal centrado verticalmente pula quando a lista cresce,
-   e a lista cresce a cada tecla. `margin-block-start` fixo mais
-   `margin-inline: auto` deixa o painel parado enquanto o conteúdo muda.
+   Anchored at the top: a vertically centered modal jumps as the list grows,
+   and the list grows with every keystroke. A fixed `margin-block-start` plus
+   `margin-inline: auto` keeps the panel still while the content changes.
    ----------------------------------------------------------------------------- */
 .modal {
   inline-size: min(var(--pd-search-panel-width), calc(100% - 2 * var(--pd-gutter)));
@@ -135,31 +142,33 @@
   margin-block: var(--pd-search-panel-top) auto;
   margin-inline: auto;
   padding: 0;
-  /* A borda do `<dialog>` que o agente de usuário desenha é substituída, não
-     removida: o fio aqui é o mesmo que era o anel embutido na sombra. */
+  /* The border the user agent draws on `<dialog>` is replaced, not removed:
+     the hairline here is the same one that used to be the ring embedded in
+     the shadow. */
   border: var(--pd-border-width) solid var(--pd-border-subtle);
   border-radius: var(--pd-radius-lg);
-  /* Fundo igual à PÁGINA desde a #98 — era `--pd-surface-raised` (o cartão
-     levantado). A âncora não separa o painel por superfície, só pelo anel
-     acima; no escuro os dois tokens já coincidem, no claro este é o que muda
-     o painel de branco puro para o branco levemente cinza da página. */
+  /* The background matches the PAGE — it used to be `--pd-surface-raised`
+     (the raised card). The anchor doesn't separate the panel by surface,
+     only by the ring above; in dark mode the two tokens already coincide,
+     in light mode this is what changes the panel from pure white to the
+     page's slightly gray white. */
   background: var(--pd-surface-page);
   color: var(--pd-text-body);
   box-shadow: var(--pd-shadow-float);
   overflow: hidden;
-  /* SEM `display` aqui — ver o bloco `[open]` adiante. */
+  /* NO `display` here — see the `[open]` block below. */
 }
 
-/* O `::backdrop` é o único consumidor de `--pd-surface-scrim`, e o único véu do
-   site. Ele existe porque `showModal()` o cria — com `show()` não haveria
-   backdrop nenhum, nem armadilha de foco. */
+/* `::backdrop` is the only consumer of `--pd-surface-scrim`, and the only
+   veil on the site. It exists because `showModal()` creates it — with
+   `show()` there would be no backdrop at all, and no focus trap. */
 .modal::backdrop {
   background: var(--pd-surface-scrim);
 }
 
-/* A entrada usa `--pd-move-enter`, cujo ÚNICO consumidor no projeto é este
-   modal. `allow-discrete` é o que faz a SAÍDA rodar sobre `display`, que o
-   `<dialog>` alterna: sem ele o painel sumiria de uma vez. */
+/* Entry uses `--pd-move-enter`, whose ONLY consumer in the project is this
+   modal. `allow-discrete` is what makes EXIT run across `display`, which
+   `<dialog>` toggles: without it the panel would vanish all at once. */
 .modal,
 .modal::backdrop {
   opacity: 0;
@@ -169,52 +178,55 @@
     overlay var(--pd-move-enter) allow-discrete;
 }
 
-/* A ENTRADA é `@keyframes`, não `@starting-style`, e a troca foi medida no CSS
-   emitido: o minificador do Docusaurus DESCARTA o bloco `@starting-style`
-   inteiro — `Invalid property name` no aviso de build — e o modal publicado
-   abria pronto, sem uma transição, enquanto `docusaurus start` animava. O
-   sintoma é o que motion.md §6 já cataloga como o pior do documento.
+/* ENTRY is `@keyframes`, not `@starting-style` — the swap was measured in
+   the emitted CSS: Docusaurus's minifier DISCARDS the entire
+   `@starting-style` block (`Invalid property name` in the build warning),
+   and the published modal opened already fully shown, with no transition,
+   while `docusaurus start` animated it. This is the worst build-time
+   surprise this project's motion system has measured.
 
-   `global(…)` sem dois-pontos pelo motivo do mesmo §6: dentro de um CSS Module
-   o nome de um `@keyframes` é manglado mesmo quando o módulo não o define, e o
-   `postcss-discard-unused` apaga o keyframe global que ficou órfão.
+   `global(…)` with no colon, for the same reason: inside a CSS Module a
+   `@keyframes` name gets mangled even when the module doesn't define it,
+   and `postcss-discard-unused` strips the orphaned global keyframe.
 
-   A saída continua sendo a transição acima: quando `[open]` sai, a animação sai
-   com ele, e a opacidade cai de 1 a 0 pelo caminho de sempre. */
+   Exit stays the transition above: when `[open]` leaves, the animation
+   leaves with it, and opacity falls from 1 to 0 the usual way. */
 .modal[open],
 .modal[open]::backdrop {
   opacity: 1;
   animation: global(pd-search-open) var(--pd-move-enter) both;
 }
 
-/* O `display` do painel mora AQUI, e a razão é um defeito medido: um
-   `display: flex` de AUTOR em `.modal` vence o `dialog:not([open]) {
-   display: none }` da folha do agente de usuário — folha de autor sempre ganha
-   de folha de UA. O `<dialog>` FECHADO continuava no layout, e o custo era
-   duplo: 2 paradas de Tab invisíveis entre a busca e o seletor de locale, e uma
-   zona morta de clique de 640×140 sobre a página. Reproduzido em 8 combinações
-   (2 larguras × 2 temas × 2 locales).
+/* The panel's `display` lives HERE, and the reason is a measured defect: an
+   AUTHOR-level `display: flex` on `.modal` beats the user-agent
+   stylesheet's `dialog:not([open]) { display: none }` — an author sheet
+   always beats a UA sheet. A CLOSED `<dialog>` stayed in layout, and the
+   cost was double: 2 invisible Tab stops between search and the locale
+   selector, and a 640×140 dead click zone over the page. Reproduced across
+   8 combinations (2 widths × 2 themes × 2 locales).
 
-   O `[open]` é o que devolve a alternância ao agente de usuário — e, de quebra,
-   o que faz o `transition: display … allow-discrete` do bloco acima deixar de
-   ser letra morta: só há transição de `display` quando `display` de fato muda.
+   `[open]` is what hands the toggle back to the user agent — and, as a
+   bonus, what stops the `transition: display … allow-discrete` in the block
+   above from being dead letter: `display` only transitions when `display`
+   actually changes.
 
-   `::backdrop` fica de fora de propósito: ele não tem filho, e `display` nele
-   seria ruído. */
+   `::backdrop` is deliberately left out: it has no child, and `display` on
+   it would be noise. */
 .modal[open] {
   display: flex;
   flex-direction: column;
 }
 
 /* -----------------------------------------------------------------------------
-   O campo — CAIXA INTERNA desde a #98, não mais um fio no rodapé da linha.
+   The field — an INNER BOX, no longer a single hairline at the row's foot.
 
-   `margin` em vez de fio único: a caixa flutua dentro do padding do painel,
-   com o fundo do painel visível ao redor dela — é o que lê como "campo dentro
-   do painel" em vez de "linha de topo do painel". O raio reusa `--pd-radius`
-   base (16px): é o mesmo valor que a âncora mede para esta caixa, e a
-   coincidência com o raio antigo do PAINEL é isso mesmo — coincidência, não
-   parentesco; o painel se moveu para `--pd-radius-lg` e deixou o valor livre.
+   `margin` instead of a single hairline: the box floats inside the panel's
+   padding, with the panel's background visible around it — that's what
+   reads as "a field inside the panel" instead of "the panel's top line."
+   The radius reuses the base `--pd-radius` (16px): it's the same value the
+   anchor measures for this box, and the coincidence with the PANEL's old
+   radius is exactly that — coincidence, not kinship; the panel moved to
+   `--pd-radius-lg` and left the value free.
    ----------------------------------------------------------------------------- */
 .field {
   display: flex;
@@ -259,10 +271,11 @@
 }
 
 /* -----------------------------------------------------------------------------
-   A lista
+   The list
 
-   Sem teto de resultados: ela rola. Truncar em dez seria esconder acerto sem
-   dizer que escondeu, e é o modo de falhar que este projeto recusa.
+   No ceiling on results: it scrolls. Truncating at ten would hide a match
+   without saying it hid it, and that's the failure mode this project
+   refuses.
    ----------------------------------------------------------------------------- */
 .list {
   flex: 1 1 auto;
@@ -272,11 +285,13 @@
   list-style: none;
 }
 
-/* A âncora mede h50/raio14 contra o nosso h86/raio8 — compacto é o pedido da
-   #98. O raio reusa `--pd-radius-md` (12px) em vez de um quinto degrau só para
-   os 2px que faltam até 14: a diferença não é sondada (§10 do busca.md — o
-   comparador não monta o cenário de painel aberto + consulta digitada) e não
-   seria vista fora de régua. Ver Procedência, `delta deliberado`. */
+/* The anchor measures h50/radius14 against this project's h86/radius8 —
+   compact is what this option asks for. The radius reuses `--pd-radius-md`
+   (12px) instead of opening a fifth step just for the 2px missing to reach
+   14: the difference isn't probed by the comparison harness (it never
+   assembles the open-panel-plus-typed-query scenario) and wouldn't be seen
+   outside a ruler. A deliberate delta, and a closed, justified one — not an
+   oversight. */
 .option {
   display: grid;
   grid-template-columns: 1fr auto auto;
@@ -287,12 +302,13 @@
   cursor: pointer;
 }
 
-/* O estado ativo NÃO vira atributo — `aria-selected` já carrega a informação, e
-   o contrato de partes é estreito por decisão.
+/* The active state does NOT become a data attribute — `aria-selected`
+   already carries the information, and the parts contract stays narrow by
+   decision.
 
-   O fundo é NEUTRO desde a #98 — `--pd-border-default` (texto forte a 12%),
-   não `--pd-surface-wash` (acento a 12%). A troca é a metade que torna o
-   `<mark>` colorido seguro: ver o comentário dele, abaixo, e a Procedência. */
+   The background is NEUTRAL — `--pd-border-default` (strong text at 12%),
+   not `--pd-surface-wash` (accent at 12%). That swap is the half that makes
+   the colored `<mark>` safe: see its comment below. */
 .option[aria-selected='true'] {
   background: var(--pd-border-default);
 }
@@ -313,20 +329,21 @@
   color: var(--pd-text-muted);
   font-size: var(--pd-type-sm);
   line-height: var(--pd-leading-ui);
-  /* Duas linhas e reticências: o corpo indexado tem 200 caracteres, e deixá-lo
-     correr faria a altura de cada resultado depender do texto. */
+  /* Two lines and an ellipsis: the indexed body is 200 characters, and
+     letting it run would make each result's height depend on its text. */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
 }
 
-/* O realce ganhou TINTA na #98 — a âncora colore em acento além de engrossar,
-   e o fundo continua `none`: dois acentos no mesmo pixel só brigam se os dois
-   forem FUNDO. A linha ativa parou de ser `--pd-surface-wash` bem por isto
-   (ver `.option[aria-selected]`, acima) — o fundo dela é neutro agora, então o
-   `<mark>` acentuado nunca cai sobre acento. O elemento continua sendo `<mark>`
-   porque é ele que carrega o significado. */
+/* The highlight has COLOR — the anchor colors it in accent on top of
+   bolding, and the background stays `none`: two accents on the same pixel
+   only clash if both are BACKGROUND. That's exactly why the active row
+   stopped being `--pd-surface-wash` (see `.option[aria-selected]` above) —
+   its background is neutral now, so the accented `<mark>` never lands on
+   accent. The element stays `<mark>` because it's the one that carries the
+   meaning. */
 .option mark {
   background: none;
   color: var(--pd-accent);
@@ -334,11 +351,11 @@
 }
 
 /* -----------------------------------------------------------------------------
-   O anúncio de contagem — `role="status"`, fora da tela e dentro da árvore.
+   The count announcement — `role="status"`, off-screen and inside the tree.
 
-   `display: none` o tiraria da árvore de acessibilidade e o leitor de tela
-   nunca ouviria a contagem. O recorte de um pixel é a técnica que mantém o nó
-   vivo sem ocupar espaço.
+   `display: none` would remove it from the accessibility tree and the
+   screen reader would never hear the count. The one-pixel clip is the
+   technique that keeps the node alive without taking up space.
    ----------------------------------------------------------------------------- */
 .visuallyHidden {
   position: absolute;
@@ -352,13 +369,14 @@
 }
 
 /* -----------------------------------------------------------------------------
-   O rodapé — legendas de tecla em CARACTERE solto, nunca em ícone nem em
-   elemento de teclado.
+   The footer — key captions as PLAIN CHARACTERS, never an icon or a
+   keyboard-key element.
 
-   Três setas desenhadas custariam três slots do manifesto e estourariam o teto
-   de 64. `↑`, `↓`, `↵` e `esc` já são glifos da fonte — a #98 tira a pastilha
-   `<kbd>` que os envolvia, e não sobra CSS de caixa para eles: são texto do
-   próprio `<span>`, herdando `color`/`font-size` daqui.
+   Three drawn arrows would cost three icon-manifest slots and blow past the
+   64-icon ceiling. `↑`, `↓`, `↵`, and `esc` are already glyphs of the font —
+   the `<kbd>` pill that used to wrap them is gone, and there's no leftover
+   box CSS for them: they're plain text of the `<span>` itself, inheriting
+   `color`/`font-size` from here.
    ----------------------------------------------------------------------------- */
 .footer {
   display: flex;
@@ -369,8 +387,8 @@
   font-size: var(--pd-type-xs);
 }
 
-/* Abaixo do limiar o rodapé sai: quem está no toque não tem tecla, e a linha
-   viraria ruído ocupando a altura que a lista quer. */
+/* Below the threshold the footer leaves: whoever's on touch has no keyboard,
+   and the line would become noise, taking up height the list wants. */
 @media (max-width: 996px) {
   .footer {
     display: none;
