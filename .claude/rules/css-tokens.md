@@ -3,36 +3,32 @@ paths:
   - "src/css/*.css"
 ---
 
-# CSS — a camada de token
+# CSS, the token layer
 
-Nada cobra estes arquivos por máquina. As regras abaixo valem por leitura, e é por isso que estão escritas.
+Nothing enforces these files by machine. The rules below hold by reading, which is why they're written down.
 
-## O andaime que já existe — clone dele, não invente
+## The scaffolding that already exists, clone it, don't invent it
 
-| Arquivo | O que mora nele |
+| File | What lives in it |
 | --- | --- |
-| `src/css/tokens.css` | as três camadas. **O único arquivo do projeto com literal de cor, comprimento, tempo ou curva.** |
-| `src/css/focus.css` | o contrato de estado de entrada. **O único arquivo que escreve `outline`.** |
-| `src/css/chrome.css` | navbar, sidebar, TOC, footer, paginação |
-| `src/css/components.css` | os componentes MDX de autoria |
-| `src/css/custom.css` | a entrada; importa os demais |
+| `src/css/tokens.css` | the three layers. **The only file in the project with a literal color, length, duration, or curve.** |
+| `src/css/focus.css` | the entry-state contract. **The only file that writes `outline`.** |
+| `src/css/chrome.css` | navbar, sidebar, TOC, footer, pagination |
+| `src/css/components.css` | the authored MDX components |
+| `src/css/custom.css` | the entry point; imports the rest |
 
-## A regra de referência
+## The reference rule
 
-Três camadas, e a direção é uma só.
+Three layers, one direction.
 
-- **Camada 1, raiz.** Literais. Bloco de troca (o que o corporativo re-marca) + base (escalas e a forma da rampa).
-- **Camada 2, semântica.** **Só cor.** Os papéis, onde o modo é resolvido — `:root` escuro e `:root[data-theme='light']` claro.
-- **Camada 3, componente.** Declarada no escopo do próprio componente, **nunca** em `:root`.
+- **Layer 1, root.** Literals. The swap block (what gets rebranded) plus the base (scales and the ramp's shape).
+- **Layer 2, semantic.** **Color only.** The roles, where the mode resolves, dark `:root` and light `:root[data-theme='light']`.
+- **Layer 3, component.** Declared in the component's own scope, **never** at `:root`.
 
-**Cor sempre desce pela camada 2** — nenhum componente lê a rampa ou a marca direto. **Dimensão vem direto da camada 1.**
+**Color always flows down through layer 2**, no component reads the ramp or the brand directly. **Dimension comes straight from layer 1.**
 
-Faltou o papel na camada 2? Derive dele, não crave um literal novo: sintaxe relativa (`oklch(from var(--x) …)`), `color-mix(in oklab, …)` ou `calc()` sobre a base.
+Missing the role in layer 2? Derive it, don't bake in a new literal: relative syntax (`oklch(from var(--x) …)`), `color-mix(in oklab, …)`, or `calc()` over the base.
 
-## As três regras que valem ao escrever
+## What DECISIONS.md already settles
 
-- **Cor, comprimento, tempo e curva ficam em `tokens.css`.** `0`, número sem unidade, `%`, `fr`, `ch`, `lh` e `auto` ficam de fora do escopo: são layout.
-- **Nenhuma duração ou curva cravada numa transição.** Os movimentos nomeados são o vocabulário fechado, e é o que faz `prefers-reduced-motion` alcançar o Infima e o theme-classic, que não escrevemos aqui.
-- **`outline` só em `src/css/focus.css`.** A regra existe contra o `outline: none` escrito para "limpar" um botão.
-
-O racional das três está no [ADR 1](../../docs/adr/0001-doutrina-de-css.md); o de `prefers-reduced-motion`, no [ADR 3](../../docs/adr/0003-reduced-motion-na-camada-de-token.md).
+Which values live in `tokens.css` and which don't, transition timing as named movement tokens, and where `outline` gets written, that's [Decisions § CSS in Three Layers, One Source of Literals](../../DECISIONS.md#css-in-three-layers-one-source-of-literals), [§ Movement Lives in the Token Layer](../../DECISIONS.md#movement-lives-in-the-token-layer), and [§ The Entry-State Contract](../../DECISIONS.md#the-entry-state-contract). Read them before writing a transition, a focus ring, or a new color.

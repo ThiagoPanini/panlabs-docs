@@ -5,49 +5,32 @@ paths:
   - "contracts/**/*.json"
 ---
 
-# Conteúdo — o que a arquitetura de informação pede
+# Content, what the information architecture asks for
 
-Nada aqui é cobrado por máquina. Uma página a mais não quebra build nenhum, e nenhuma varredura confere as contagens abaixo — elas descrevem a árvore de hoje, e envelhecem caladas.
+Nothing here is enforced by machine. One more page breaks no build, and no sweep checks the counts below, they describe today's tree, and go stale quietly.
 
-## A árvore de hoje
+## Prohibition by location
 
-| Aba | Páginas autorais |
-| --- | --- |
-| `content/ferramentas/` | 27 |
-| `content/jornadas/` | 4 |
-| `content/procedimentos/` | 1 |
-| `content/times/` | 1 |
+`<Steps>` is `Procedimentos`'s backbone and doesn't enter `Jornadas`, without that split the reader can't tell why the page isn't in the other tab. `<CardGroup>` doesn't enter a jornada index, because a grid has no order and the trait that justifies the type is ordering by time.
 
-A ordem é a do navbar. Mais o ramo gerado, somado por fora — **37 no site**, 33 autorais mais 4 geradas. Recontar é `find content -name '*.md' -type f | wc -l`.
+## The depth ceiling
 
-**Dívida declarada:** o tipo `Índice de jornada` não tem instância, o gabarito `capítulo` está sem sujeito, e o caso `diff` está sem dona. `Procedimentos` e `Times` são um marcador de lugar cada, à espera de conteúdo real.
+It's **4**, and it's **confined** to two branches: `content/ferramentas/bibliotecas/overpower/` closes at 4 and `content/jornadas/api-owner/` closes at 3. Outside those two, nothing passes level 2. The rationale is in [Decisions § A Sidebar Category Is Not a Destination](../../DECISIONS.md#a-sidebar-category-is-not-a-destination).
 
-## Proibição por localização
+## Voice
 
-`<Steps>` é a espinha de `Procedimentos` e não entra em `Jornadas` — sem isso o leitor não sabe dizer por que a página não está na outra aba. `<CardGroup>` não entra no índice de jornada, porque grade não tem ordem e o traço que justifica o tipo é ordenar por tempo.
+**`you` plus imperative. Zero first person, no exception**, across the whole site. The collection is personal in what it chooses to document, not in its grammar.
 
-## O teto de profundidade
+## Em dash
 
-É **4**, e ele é **confinado** a dois ramos: `content/ferramentas/bibliotecas/overpower/` fecha em 4 e `content/jornadas/api-owner/` fecha em 3. Fora dos dois nada passa do nível 2. O racional está no [ADR 10](../../docs/adr/0010-a-categoria-de-sidebar-nao-e-destino.md).
+**Zero `—` in `content/` and `contracts/`.** The em dash is machine-written text's tell, and this repo's product is a site meant to be looked at. The way out is a comma, a colon, parentheses, or the sentence rewritten, **chosen one at a time**: the em dash is legitimate Portuguese punctuation, and swapping it for one fixed character produces a truncated sentence or doubled punctuation.
 
-## Locale
+Applies to a co-located diagram's `.drawio.svg` too, where the label shows up twice, once in the rendered `<text>`, once in the XML embedded in the `content` attribute.
 
-**O site é locale único, pt-BR.** Não há tradução, não há `i18n/`, e o #158 é o que fechou essa porta.
+**The exception is quoting a tool's own output**: inside a code fence, in a generated page's `api_exemplos:` line, or in a `"message"` value, where the em dash is what the tool printed.
 
-## Voz
+Check by hand: `grep -rn '—' content/ contracts/`.
 
-**`você` + imperativo. Zero primeira pessoa, sem exceção** — no site inteiro, nos dois locales. O acervo é pessoal pelo que escolhe documentar, não pela gramática.
+## Broken link
 
-## Travessão
-
-**Zero `—` em `content/` e `contracts/`.** O em-dash é a marca de texto escrito por máquina, e o produto deste repo é um site que se olha. A saída é vírgula, dois-pontos, parênteses ou a frase reescrita, **escolhida uma a uma**: travessão é pontuação legítima do português, e trocar o caractere por outro fixo produz frase truncada ou pontuação dobrada.
-
-Vale para o `.drawio.svg` de um diagrama co-locado também, e nele o rótulo aparece duas vezes: no `<text>` renderizado e no XML embutido no atributo `content`.
-
-**A exceção é citação de saída de ferramenta**: dentro de cerca de código, na linha `api_exemplos:` de página gerada, ou num valor `"message"`, onde o travessão é o que a ferramenta imprimiu.
-
-Conferir à mão: `grep -rn '—' content/ contracts/`.
-
-## Link quebrado
-
-`onBrokenLinks: 'throw'` só dispara em `npm run build`. `docusaurus start` devolve 200 com o shell da SPA para qualquer rota — ele nunca vai te avisar.
+`onBrokenLinks: 'throw'` only fires on `npm run build`. `docusaurus start` returns 200 with the SPA shell for any route, it will never warn you.

@@ -1,100 +1,84 @@
 # panlabs-docs
 
-Um projeto de documentação de referência construído com Docusaurus. O conteúdo é um acervo de aprendizado; o produto é a **estrutura** e a **customização visual**, feitas para serem transplantadas a um ambiente corporativo onde Docusaurus é obrigatório e o espaço de dependências é apertado.
+A reference documentation project built with Docusaurus. The content is a developer's personal learning collection; the product is its **structure** and **visual customization**.
 
 ## Language
 
-### O acervo
+### The collection
 
 **panlabs**:
-O acervo que a documentação é — o registro de aprendizado de um desenvolvedor dentro de uma empresa, e o `title` do site. É **misto**: conteúdo mockado e conteúdo real convivem, e o mockado vai sendo substituído à medida que as coisas reais surgem.
-_Avoid_: Trilho (o domínio fictício anterior, morto)
+The collection the documentation is — a developer's learning record inside a company that's never named, and the site's `title`. It's **mixed**: mocked content and real content coexist, and the mocked kind gets replaced as real things show up.
+_Avoid_: Trilho (the earlier fictional domain, dead)
 
-**Voz da casa**:
-`você` mais imperativo, no site inteiro, com **zero primeira pessoa**. O acervo é pessoal pelo que escolhe documentar, não pela gramática.
+**House voice**:
+`you` plus imperative, across the whole site, with **zero first person**. The collection is personal in what it chooses to document, not in its grammar.
 
 **Tab**:
-Um dos quatro eixos de navegação de topo — `Ferramentas`, `Jornadas`, `Procedimentos`, `Times`, nesta ordem. Cada uma é uma instância de `plugin-content-docs`, um-para-um, porque `routeBasePath` e versionamento são por instância.
-_Avoid_: seção, área
+One of the four top-level navigation axes — `Ferramentas`, `Jornadas`, `Procedimentos`, `Times`, in this order. Each is an instance of `plugin-content-docs`, one to one, because `routeBasePath` and versioning are per instance.
+_Avoid_: section, area
 
-**Tipo de página**:
-Convenção de **conteúdo**, nunca de layout: nenhum tipo tem CSS, front matter ou componente próprio. Cada um tem um gabarito, e o gabarito pode exigir, limitar e proibir componente.
+**Page type**:
+A **content** convention, never a layout one: no type owns its own CSS, front matter, or component. Each has a template, and the template can require, limit, or forbid a component.
 
 **Jornada**:
-Uma categoria da aba `Jornadas`, e **um papel que o autor vestiu** — não um tópico. Papel tem começo, meio e aprendizado, e é o que evita a jornada virar uma categoria de `Procedimentos` com outro nome.
+A category of the `Jornadas` tab, and **a role the author put on** — not a topic. A role has a beginning, a middle, and a lesson learned, which is what keeps a jornada from turning into a `Procedimentos` category under another name.
 
-**Varredura**:
-O ato de conferir a documentação do `overpower` publicada aqui **contra a ferramenta real** — o `--help`, o catálogo embutido, o `CHANGELOG.md`. Mora na skill `.claude/skills/panlabs-overpower-docs-update/`.
+**Sweep**:
+The act of checking the `overpower` documentation published here **against the real tool** — its `--help`, its built-in catalog, its `CHANGELOG.md`. Lives in the `.claude/skills/panlabs-overpower-docs-update/` skill.
 
-**Deriva**:
-A divergência que a varredura acha: a página ou o contrato afirmando da ferramenta algo que deixou de ser verdade. **Não tem sintoma local** — nada no build a detecta.
+**Drift**:
+The divergence a sweep finds: a page or contract claiming something about the tool that's stopped being true. **Has no local symptom**, nothing in the build detects it.
 
-**Veredito**:
-O que uma varredura conclui, e o negativo vale tanto quanto o positivo: `varrido` diz que havia deriva e ela foi corrigida, `sem-deriva` diz que a varredura rodou e não havia o que mudar.
+**Verdict**:
+What a sweep concludes, and the negative counts as much as the positive: `swept` means there was drift and it got fixed, `no-drift` means the sweep ran and there was nothing to change.
 
-### O sistema visual
+### The visual system
 
-**Âncora**:
-O **Mintlify**, no tema `mint`, com o **Devin** como referência única — o sistema que o panlabs-docs herda por padrão. Ela manda no que se vê; onde o projeto não a segue, é por restrição da plataforma, não por escolha.
-_Avoid_: inspiração, referência
+**Anchor**:
+**Mintlify**, in the `mint` theme, with **Devin** as its one reference — the system panlabs-docs inherits by default. It dictates the look; where the project departs from it, that's a platform constraint, not a choice.
+_Avoid_: inspiration, reference
 
 **Skin**:
-A camada trocável do sistema de tokens. Trocar a skin re-marca a documentação inteira sem tocar em layout, motion ou componente.
+The swappable layer of the token system. Swapping the skin rebrands the entire documentation without touching layout, motion, or component.
 
-**Superfície de troca**:
-As dez linhas do bloco `/* SKIN */`, na camada de raiz, que o corporativo edita para re-marcar a documentação inteira. Editar fora dela é **redesenhar**, não re-marcar.
+**Swap surface**:
+The ten lines of the `/* SKIN */` block, in the root layer, that get edited to rebrand the whole documentation. Editing outside it is **redesigning**, not rebranding.
 
-**Camada**:
-Um dos três degraus do sistema de tokens: **raiz** (o único lugar com literal), **semântica** (só cor, onde o papel é nomeado e o modo é resolvido) e **componente** (declarada no escopo do próprio componente, nunca em `:root`). Cor sempre desce pela semântica; dimensão vem direto da raiz.
+**Layer**:
+One of the token system's three tiers: **root** (the only place with a literal), **semantic** (color only, where the role is named and the mode resolved), and **component** (declared in the component's own scope, never at `:root`). Color always flows down through the semantic layer; dimension comes straight from the root.
 
-**Regra de derivação**:
-Nenhum valor entra no sistema como literal, salvo na camada de raiz. Todo o resto sai de algo que já está lá por uma operação declarada — sintaxe relativa, `color-mix()` ou `calc()`.
+**Derivation rule**:
+No value enters the system as a literal, except in the root layer. Everything else comes from something already there, through a declared operation — relative syntax, `color-mix()`, or `calc()`.
 
 **`pd`**:
-O prefixo de tudo que o design system deste repo nomeia — `--pd-*` nas variáveis, `data-pd-*` no contrato de partes, e o mesmo `pd-` em keyframes e ids. Sai de `panlabs-docs`.
+The prefix on everything this repo's design system names — `--pd-*` in variables, `data-pd-*` in the parts contract, and the same `pd-` in keyframes and ids. Comes from `panlabs-docs`.
 
-**Adaptador**:
-O bloco que atribui `--ifm-*` a partir de `var(--pd-*)`. Mão única: o sistema **nunca lê** variável do Infima, só escreve. É a fronteira que mantém o Docusaurus como consumidor do sistema em vez de fundação dele.
+**Adapter**:
+The block that assigns `--ifm-*` from `var(--pd-*)`. One-way: the system **never reads** an Infima variable, only writes. It's the boundary that keeps Docusaurus a consumer of the system instead of its foundation.
 
-**Contrato de partes**:
-Os atributos que a skin engancha para repintar um componente por CSS — `data-pd-component`, `data-pd-variant` e `data-pd-part`. Não pode ser classe de CSS Module, porque o nome é hasheado no build. **Estado nunca vira atributo**.
+**Parts contract**:
+The attributes the skin hooks into to repaint a component through CSS — `data-pd-component`, `data-pd-variant`, and `data-pd-part`. Can't be a CSS Module class, because the name gets hashed at build time. **State never becomes an attribute**.
 
-### A moldura
+### The frame
 
 **Chrome**:
-A moldura de navegação que o Docusaurus já entrega — navbar, sidebar, TOC, paginação, breadcrumbs, modal de busca, footer. Não se autora; se **entorta**, via variável do Infima e swizzle.
-_Avoid_: layout, tema
+The navigation frame Docusaurus already provides — navbar, sidebar, TOC, pagination, breadcrumbs, search modal, footer. Not authored; **bent**, through Infima variables and swizzle.
+_Avoid_: layout, theme
 
-**Componente de conteúdo**:
-O que o autor escreve dentro do MDX, por oposição ao chrome. É um **catálogo fechado de dezesseis**, todos registrados globalmente em `@theme/MDXComponents`: nenhum arquivo de conteúdo importa nada, e não há válvula de escape — quando uma página precisa de um arranjo que o catálogo não cobre, a página muda.
-_Avoid_: widget, bloco
+**Content component**:
+What the author writes inside MDX, as opposed to chrome. A **closed catalog of sixteen**, all registered globally through `@theme/MDXComponents`: no content file imports anything, and there's no escape hatch — when a page needs an arrangement the catalog doesn't cover, the page changes.
+_Avoid_: widget, block
 
-**Subtítulo**:
-A linha abaixo do `h1`, em toda página. **Não é escrita pelo autor** — é o `description` do front matter, o mesmo campo que alimenta o `<meta>` e o índice de busca. É chrome, não componente, e `description` ausente quebra o build.
+**Subtitle**:
+The line under the `h1`, on every page. **Not written by the author** — it's the front matter's `description`, the same field that feeds the `<meta>` tag and the search index. It's chrome, not a component, and a missing `description` breaks the build.
 _Avoid_: lead, tagline
 
-**Separador**:
-O nó de **topo** da sidebar, e ele não é página: rótulo em negrito, sem link, sem seta, sem ícone e sempre aberto. A regra de ícone que sai dele é agnóstica de profundidade — nenhum ícone no separador, ícone em tudo abaixo, folha ou grupo, em qualquer nível.
-_Avoid_: categoria de topo, grupo
+**Separator**:
+The sidebar's **top** node, and it isn't a page: bold label, no link, no arrow, no icon, always expanded. The icon rule that follows from it is depth-agnostic — no icon on the separator, an icon on everything below it, leaf or group, at any level.
+_Avoid_: top-level category, group
 
-**Substrato nativo**:
-A regra de que nenhum componente do catálogo implementa comportamento interativo. Ou o elemento do navegador entrega (`<details>`, `<a>`, `<table>`), ou o Docusaurus entrega (`Tabs`). Zero `keydown` escrito no projeto.
+**Native substrate**:
+The rule that no catalog component implements its own interactive behavior. Either the browser element delivers (`<details>`, `<a>`, `<table>`), or Docusaurus delivers (`Tabs`). Zero `keydown` written in the project.
 
-**Manifesto de ícones**:
-O registro único de nomes e papéis, em `src/icons/manifest.js`, que é **contrato**; os desenhos são skin e se trocam inteiros mantendo os nomes. Nome inexistente quebra o build, com sugestão do vizinho mais próximo — nunca placeholder, nunca degradação silenciosa.
-
-## Axiomas
-
-Posições travadas. Não se renegociam sem reabrir a decisão que as pôs de pé.
-
-Os números são os originais, e a lista é de marcadores de propósito: numa lista ordenada o Markdown renumera de 1 a 3 ao renderizar, que é exatamente o estrago que o parágrafo abaixo descreve.
-
-- **1 — Docusaurus é inegociável.** Restrição do ambiente corporativo alvo, não preferência.
-- **3 — A skin é trocável.** O produto é a arquitetura de tokens; a skin de referência é demonstração. O corporativo tem marca própria — cravar cor obriga retrabalho.
-- **4 — Dark é canônico, light é legítimo.** Os dois existem; o desenho nasce no escuro. O custo real não é CSS, é decidir o que acontece com glow e gradiente no claro.
-
-**Eram seis, e os números que morreram não se reaproveitam.** Os ADRs citam axioma pelo número — o 2 aparece em cinco deles, o 4 no ADR 1 —, então renumerar os sobreviventes faria cada citação apontar para a posição errada. Ficam vagos:
-
-- **2, vanilla-first.** Dependência nova passa a ser aceita, e só **para capacidade nova** — nunca para reescrever o que já funciona nem para ressuscitar régua apagada. As decisões que os ADRs 5, 6, 8, 9 e 12 justificam por ele continuam de pé; o que caiu foi a proibição, não o resultado.
-- **5, medição, não invenção.** A pesquisa que servia de fonte não está neste repositório, e a régua que cobrava o carimbo de procedência foi apagada.
-- **6, a spec é o entregável.** O transplante corporativo aconteceu. A spec de design que era o produto está na tag `spec-v1`, fora da árvore de trabalho.
+**Icon manifest**:
+The single registry of names and roles, in `src/icons/manifest.js`, which is **contract**; the drawings are skin and get swapped whole while keeping the names. A nonexistent name breaks the build, with a nearest-neighbor suggestion — never a placeholder, never silent degradation.
