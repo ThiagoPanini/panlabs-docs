@@ -1,70 +1,54 @@
 /* =============================================================================
-   panlabs-docs — o chrome
+   panlabs-docs — the chrome
 
-   O shell da página de documentação: proporções, navbar com faixa de tabs,
-   sidebar, TOC, eyebrow, subtítulo, paginação, footer e o comportamento em tela
-   estreita.
-
-   NÃO HÁ CARTÃO. A página é plana, e o que segura a geometria são duas caixas
-   invisíveis — uma na coluna, uma no `<article>`.
-
-   Este arquivo NÃO tem valor literal — cor, comprimento, tempo e curva vivem em
-   `tokens.css` e chegam aqui por nome. A única exceção é o limiar de media
-   query, que é comprimento e que a media query não sabe ler de custom property;
-   o portão 1 tem uma segunda perna que exige que **todo limiar do projeto seja
-   996 ou 997**, o literal compilado do Infima.
-
-   E ele nunca lê `--ifm-*`. O adaptador de mão única escreve nessas variáveis;
-   nada do projeto as consome. Ver ADR 1.
-
-   Zero swizzle. Tudo aqui é degrau 0 (variável do Infima) ou degrau 1 (classe
-   estável — `ThemeClassNames`, classes do Infima, `className` em `sidebars.js`).
-   Procedência: docs/design/chrome.md.
+   The documentation page shell: navbar, tab strip, sidebar, TOC, eyebrow,
+   subtitle, pagination, footer, and narrow-screen behavior.
    ============================================================================= */
 
+/* NO CARD. The page is flat; two invisible boxes — one on the column, one on
+   the <article> — hold the geometry instead.
+
+   No literal color, length, duration, or curve lives here — they arrive
+   from tokens.css by name. The one exception is the media-query threshold:
+   a media query can't read a custom property, and this project has a
+   single threshold, 996/997, the literal Infima compiles into its own
+   runtime.
+
+   The bridge is one-way: it writes --ifm-*, and nothing here reads it back.
+   See DECISIONS.md#css-in-three-layers-one-source-of-literals.
+
+   Zero swizzle. Everything here is rung 0 (an Infima variable) or rung 1 (a
+   stable class — ThemeClassNames, Infima classes, a className in
+   sidebars.js). See DECISIONS.md#the-swizzle-ladder-and-a-zero-unsafe-budget. */
+
 /* -----------------------------------------------------------------------------
-   1. A cadeia de proporções
+   1. The proportion chain
 
-   `--pd-container-width` → `--pd-doc-width` (container − TOC) → prosa. Os
-   valores moram em `tokens.css`; aqui e no documento eles se citam por nome,
-   para que a cadeia não tenha uma segunda versão que envelhece sozinha.
+   `--pd-container-width` → `--pd-doc-width` (container minus TOC) → prose.
+   The values live in tokens.css; here and in the TOC section they're cited
+   by name, so the chain doesn't grow a second copy that ages on its own.
 
-   O CONGELAMENTO é `sidebar + container` — token em `tokens.css`, não mais só
-   prosa — e é a largura a partir da qual o grupo sidebar + conteúdo + TOC
-   para de crescer. Não leva termo de gutter: quem fazia esse papel era o
-   preenchimento horizontal do `<main>`, e ele saiu — ver a nota abaixo do
-   bloco `(a)`.
+   THE FREEZE is `sidebar + container` — a token in tokens.css — the width
+   from which the sidebar + content + TOC group stops growing. It carries no
+   gutter term: the `<main>` padding that used to do that job is gone (see
+   the note under the `<main>` rule below).
 
-   A #96 dá ao congelamento o seu PRIMEIRO consumidor real: antes dele, sidebar
-   e `<main>` eram dois irmãos soltos dentro de `.docRoot` — hashed, sem
-   seletor estável —, e toda a folga da tela ia para a direita porque nada
-   centralizava o par. A correção não toca `.docRoot`: seleciona ESTRUTURA, não
-   nome. `<main>` é landmark HTML5 e é sempre filho direto do flex que também
-   segura a sidebar — `div:has(> main)` alcança esse pai sem citar a classe
-   hasheada, e sem custar `unsafe`. Provado em protótipo antes desta
-   implementação — ver `prototypes/96-centralizacao` na branch descartável, e
-   o veredito no commit dela.
+   The wrapper below selects STRUCTURE, not a class name: `<main>` is an
+   HTML5 landmark and is always the direct child of the flex box that also
+   holds the sidebar — `div:has(> main)` reaches that parent without citing
+   the hashed class, and with no `unsafe` swizzle.
+   ----------------------------------------------------------------------------- */
 
-   O NÚMERO MUDOU DEPOIS DO PROTÓTIPO: ele testou o mecanismo com 1472 (o
-   congelamento de antes da #96), e o mecanismo passou. O NÚMERO final é
-   1408, e só apareceu medindo o site inteiro contra a âncora — `sidebar(288)
-   + container(1152) = 1440` não cabia num quadro de 1408, que é o que as
-   margens simétricas de `chrome.md` §11 exigem. `--pd-container-width` caiu
-   para 1120 para fechar a conta: `288 + 1120 = 1408`. Ver `tokens.css`. */
+/* The side padding matches the anchor's own wrapper rule: `max-width: 1472`,
+   `margin-inline: auto`, `padding-inline: 32`. What's implemented is just
+   the inner half of that — `max-width: 1408`, exactly `1472 − 2 × 32` — and
+   the two forms deliver the SAME number at every width from 1472 up. They
+   only diverge BELOW 1472: the inner form lets the margin fall to zero and
+   the sidebar touches the viewport edge, while the anchor's form holds at
+   32.
 
-/* O PADDING LATERAL É DA ÂNCORA, e ele não muda um pixel do que já fechava.
-
-   O §11 publica a regra do wrapper dela desde sempre — `max-width: 1472`,
-   `margin-inline: auto`, `padding-inline: 32` — e usa essa regra para DERIVAR
-   as margens a 1920. O que estava implementado era só a metade de dentro:
-   `max-width: 1408`, que é exatamente `1472 − 2 × 32`. As duas formas
-   entregam o MESMO número em toda largura a partir de 1472 — a 1512, `(1512 −
-   1472) ÷ 2 + 32 = 52`, e a 1408 `(1512 − 1408) ÷ 2 = 52`, o alvo publicado.
-   Elas só divergem ABAIXO de 1472: a de dentro deixa a margem cair a zero e
-   encosta a sidebar na borda da viewport, a da âncora trava em 32.
-
-   O congelamento não muda de valor: ele continua sendo `sidebar + container`,
-   e continua sendo o que a caixa entrega POR DENTRO do preenchimento. */
+   The freeze doesn't change value: it's still `sidebar + container`, and
+   still what the box delivers INSIDE the padding. */
 
 html.docs-doc-page div:has(> main) {
   max-width: calc(var(--pd-freeze) + 2 * var(--pd-space-8));
@@ -77,29 +61,25 @@ html.docs-doc-page div:has(> main) {
   }
 }
 
-/* Ela fecha em três declarações, e as três existem por um motivo mecânico:
+/* Three declarations, for one mechanical reason each:
 
-   (a) O `<main>` PERDEU o preenchimento horizontal que tinha — ver a nota na
-       regra de `<main>` abaixo. Antes da #96 era ele quem completava a
-       distância até a borda da viewport; agora essa distância é o
-       `margin-inline: auto` do wrapper acima, e um preenchimento a mais
-       aqui dobraria a conta.
-   (b) O `.col` perde o preenchimento horizontal. Sem isso a coluna de
-       conteúdo nasce menor do que deveria, porque os dois lados são cobrados
-       por dentro dela.
-   (c) A coluna do TOC recebe a separação de um lado só, para que a borda
-       direita dela feche com a borda direita do container. A separação é
-       `--pd-space-6`, ORIGEM PRÓPRIA — ver `tokens.css`.
+   (a) `<main>` LOST its own horizontal padding — see the note on the
+       `<main>` rule below. That distance is now the wrapper's
+       `margin-inline: auto`, above; padding here too would double the
+       count.
+   (b) `.col` loses its horizontal padding. Without this the content column
+       is born narrower than intended, since both sides are charged from
+       inside it.
+   (c) The TOC column receives separation on one side only, so its right
+       edge closes with the container's right edge. The separation is
+       `--pd-space-6`, its own origin — see tokens.css.
 
-   A COLUNA DO TOC NÃO É MAIS 25% DE UM GRID DE DOZE. O grid morreu nesta
-   issue: `.row` continua `display:flex` do Infima — não se toca —, mas
-   `.col--3` deixa de ler a fração de 12 e passa a ler `--pd-toc-width`
-   direto, um comprimento explícito. A coluna de conteúdo não precisa de
-   declaração simétrica: ela é `.col` NUA — sem `col--N` — e a própria regra
-   do Infima já a faz `flex: 1 0`, crescendo para preencher o que sobra da
-   `.row` depois do TOC fixo. É exatamente a "largura explícita" que a issue
-   pede, e é o motivo de a prosa poder variar com a presença do TOC em vez de
-   travar num número só — ver mais abaixo, e `chrome.md` §1.2 e §1.5. */
+   THE TOC COLUMN IS NO LONGER 25% OF A TWELVE-COLUMN GRID. `.row` is still
+   Infima's `display: flex` — untouched — but `.col--3` reads
+   `--pd-toc-width` directly, an explicit length, instead of a grid
+   fraction. The content column needs no matching declaration: it's a bare
+   `.col`, and Infima's own rule already makes it `flex: 1 0`, growing to
+   fill whatever the fixed-width TOC leaves in the row. */
 
 html.docs-doc-page main > .container > .row > .col--3 {
   flex-basis: var(--pd-toc-width);
@@ -107,30 +87,26 @@ html.docs-doc-page main > .container > .row > .col--3 {
 }
 
 html.docs-doc-page main {
-  /* O `<main>` PERDEU O PREENCHIMENTO HORIZONTAL na #96. Até aqui ele
-     completava, com `calc(gutter − 16)`, a distância até a borda da
-     viewport que ele mesmo era — o `<main>` não tinha pai que o
-     centralizasse, então tinha que abrir a própria margem. Agora tem: o
-     wrapper de `chrome.css` §1 centraliza o grupo inteiro com
-     `margin-inline: auto`, e essa distância vira trabalho dele. Manter o
-     preenchimento aqui SOMARIA à margem do wrapper em vez de completá-la —
-     e foi exatamente esse dobrar que produzia os 32px de sobra que a
-     álgebra do congelamento (ver `tokens.css`) não fechava. Note que abaixo
-     de 997 esta declaração já valia zero — `gutter` e `--pd-space-4` são o
-     mesmo número aí —, então a mudança não toca a tela estreita. */
+  /* `<main>` LOST its horizontal padding. It used to complete, with
+     `calc(gutter − 16)`, the distance to the viewport edge that it alone was
+     responsible for — it had no parent to center it. Now it has one: the
+     wrapper above centers the whole group with `margin-inline: auto`, and
+     that distance became the wrapper's job. Keeping the padding here would
+     ADD to the wrapper's margin instead of completing it — doubling is what
+     produced the 32px surplus the freeze math didn't close. Below 997 this
+     declaration already computed to zero — `gutter` and `--pd-space-4` are
+     the same number there — so the change doesn't touch narrow screens. */
 
-  /* O TOPO DO CONTEÚDO — o último elo da cadeia, e o único vertical, e o
-     único que sobrevive à #96 sem mudar de mecanismo.
+  /* THE CONTENT TOP — the last link in the chain, and the only vertical one.
 
-     Ele completa no `<main>` o que o container já dá. E aqui isso não é
-     simetria de estilo: é a ÚNICA rota. O `DocRoot/Layout/Main` cola
-     `padding-top--md` no container, e essa classe do Infima é `!important` —
-     nenhuma declaração de folha de estilo a vence sem escrever um
-     `!important` de volta, que é o que este projeto não faz em lugar nenhum.
+     It completes, on `<main>`, what the container already gives. And this
+     is the ONLY route: `DocRoot/Layout/Main` sticks a `!important` padding
+     class on the container, and no stylesheet rule beats an `!important`
+     without writing one back, which this project never does.
 
-     Somando por fora, a conta fecha sem brigar: 16 do container mais o que
-     falta para 40. Medido: o `<article>` abre em 152 numa viewport larga, com o
-     topo grudado em 112. */
+     Summing from outside, the count closes without a fight: 16 from the
+     container plus what's missing to reach 40. Measured: `<article>` opens
+     at 152 on a wide viewport, with the sticky top at 112. */
   padding-top: calc(var(--pd-space-10) - var(--pd-space-4));
 }
 
@@ -143,53 +119,48 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
 }
 
 /* -----------------------------------------------------------------------------
-   1.7 O CORREDOR, e os 25% que o `docItemCol` reserva para um índice escondido
+   1.7 The corridor, and the 25% docItemCol reserves for a hidden index
 
-   Duas correções que respondem à mesma queixa — *o texto está colado na
-   sidebar, e apertado* — e as duas só se enxergam MEDINDO fora de 1512.
+   Two fixes answering the same complaint — the text sits too close to the
+   sidebar — and both only show up MEASURING outside 1512.
 
-   (1) O CORREDOR ERA ACIDENTE. A distância entre a borda da sidebar e o texto
-       nunca foi declarada: ela era o que sobrasse do `margin-inline: auto` do
-       `<article>` dentro de uma coluna maior que a prosa. A 1512 sobravam 47,6
-       — perto dos 43,2 da âncora por coincidência aritmética, e foi por isso
-       que passou. Entre 997 e 1408 a coluna encolhe até caber na prosa, não
-       sobra nada para dividir, e a distância medida é **zero**: o `h1` começa
-       no mesmo `x` em que a sidebar termina. O corredor passa a ser
-       declarado, no número medido na âncora, e o `<article>` deixa de
-       centralizar — ancora à esquerda e devolve a sobra ao lado do índice,
-       que é o que a âncora faz.
+   (1) THE CORRIDOR WAS AN ACCIDENT. The distance between the sidebar's edge
+       and the text was never declared: it was whatever `margin-inline: auto`
+       left over on `<article>` inside a column wider than the prose.
+       Between 997 and 1408 the column shrinks to fit the prose, nothing is
+       left to divide, and the measured distance is ZERO: the `h1` starts at
+       the same `x` where the sidebar ends. The corridor is now declared, at
+       the anchor's measured number, and `<article>` stops centering — it
+       anchors left and hands the remainder to the index side, which is what
+       the anchor does.
 
-   (2) OS 25% MORTOS. `docItemCol` é `max-width: 75% !important` numa classe
-       hasheada de CSS Module, e o `!important` não se vence sem escrever
-       outro — que este projeto não faz. Ele existe para abrir lugar ao TOC;
-       abaixo de 1280 o TOC está `display: none` por decisão nossa (§1.6) e o
-       quarto reservado vira faixa vazia: **180px a 1024, 244px a 1279**,
-       medidos. O teto não se derruba — muda-se a BASE dele. `max-width: 75%`
-       resolve contra a `.row`, então uma `.row` de 4/3 do container faz 75%
-       dela valer o container inteiro. `calc(-100% / 3)` é o complemento
-       exato de 75%, não um número escolhido: `0,75 × 4/3 = 1`.
+   (2) THE DEAD 25%. `docItemCol` is `max-width: 75% !important` in a hashed
+       CSS Module class, and the `!important` isn't beaten without writing
+       another, which this project never does. It exists to make room for
+       the TOC; below 1280 the TOC is `display: none` by this project's own
+       decision (§1.6), and the reserved quarter turns into an empty band —
+       measured 180px at 1024, 244px at 1279. The ceiling isn't removed —
+       its BASE changes. `max-width: 75%` resolves against `.row`, so
+       widening `.row` to 4/3 of the container makes 75% of it equal the
+       whole container. `calc(-100% / 3)` is 75%'s exact complement, not a
+       chosen number: `0.75 × 4/3 = 1`.
 
-   `min-width: 0` é obrigatório e não é enfeite: item de flex não encolhe
-   abaixo do próprio conteúdo mínimo, e com o corredor entrando a coluna
-   passava a não caber ao lado do TOC — a `.row` do Infima é `flex-wrap: wrap`
-   e o índice CAÍA para baixo do texto. Medido a 1280, antes de `min-width`.
+   `min-width: 0` is mandatory, not decoration: a flex item doesn't shrink
+   below its own content's minimum, and once the corridor enters, the column
+   stops fitting beside the TOC — Infima's `.row` is `flex-wrap: wrap`, and
+   the index FELL below the text. Measured at 1280, before `min-width` was
+   added.
 
-   `overflow-x: clip` paga a `.row` que transborda 1/3 à direita. É `clip` e
-   não `hidden` de propósito: `hidden` cria caixa de rolagem e mataria o
-   `position: sticky` do TOC dentro dela. Conferido depois de rolar 1200px —
-   o índice continua grudando em 152, o alvo de §11. A âncora clipa no mesmo
-   lugar e pelo mesmo motivo (`lg:overflow-x-clip`, sobre o `-ml-12` dela).
+   `overflow-x: clip` pays for the `.row` that overflows by 1/3 on the
+   right. `clip`, not `hidden`, on purpose: `hidden` creates a scroll box and
+   would kill the TOC's `position: sticky` inside it. Checked after scrolling
+   1200px — the index keeps sticking at 152. The anchor clips at the same
+   spot for the same reason.
 
-   TUDO ESCOPADO A 997: abaixo do limiar não há sidebar, não há corredor a
-   abrir e não há quarto reservado — a `.row` alargada ali só produzia estouro
-   horizontal, medido em 45px a 390 e 247px a 996 antes do escopo.
-
-   A REFERÊNCIA DA CLI FICAVA DE FORA, e a lacuna FECHOU na #118. A `.row`
-   dela não tinha `.col` — o filho era o CSS Module do `ApiDocItem` —, então nenhum
-   destes seletores a alcançava, e dar-lhe o corredor encolheria uma prosa que
-   tinha alvo medido próprio. O componente saiu, a página passou a montar a
-   mesma `.row > .col` de qualquer página de doc, e o corredor a alcança sem
-   uma linha de exceção. Ver `chrome.md` §1.7 e `referencia.md` §8.
+   EVERYTHING IS SCOPED TO 997: below the threshold there's no sidebar, no
+   corridor to open, and no reserved quarter — the widened `.row` there only
+   produced horizontal overflow, measured 45px at 390 and 247px at 996 before
+   the scope was added.
    ----------------------------------------------------------------------------- */
 
 @media (min-width: 997px) {
@@ -207,10 +178,10 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
   }
 }
 
-/* A partir de 1280 o TOC volta a ocupar o quarto que é dele, e a `.row`
-   devolve a margem negativa do Infima. O valor não é lido de `--ifm-*` — o
-   adaptador é de mão única —, é o token que ALIMENTA `--ifm-spacing-horizontal`
-   em `tokens.css`, que é o mesmo número por construção. */
+/* From 1280 the TOC reclaims its own quarter, and `.row` returns Infima's
+   negative margin. The value isn't read from `--ifm-*` — the bridge is
+   one-way — it's the token that FEEDS `--ifm-spacing-horizontal` in
+   tokens.css, the same number by construction. */
 @media (min-width: 1280px) {
   html.docs-doc-page main > .container > .row:has(> .col:not(.col--3)) {
     margin-right: calc(var(--pd-space-4) * -1);
@@ -218,79 +189,74 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
 }
 
 /* -----------------------------------------------------------------------------
-   O CARTÃO MORREU, E A CAIXA INVISÍVEL FICOU
+   THE CARD IS GONE, AND THE INVISIBLE BOX STAYS
 
-   `.theme-doc-markdown` deixa de ser superfície. Nem fundo, nem anel, nem
-   preenchimento, nem raio, nem sombra — a página fica plana, e `grep` por
-   `.theme-doc-markdown` como superfície não acha nada.
+   `.theme-doc-markdown` stops being a surface. No fill, no ring, no
+   padding, no radius, no shadow — the page is flat.
 
-   O que sobrevive do cartão é o `max-width`, e ele MUDA DE DONO: sobe do corpo
-   para a coluna. Medido em 3.10.2, o `DocItem/Layout` aplica `docItemCol`
-   (`max-width: 75% !important`, hasheada) sempre que `hide_table_of_contents`
-   NÃO está no front matter — inclusive em página sem heading, que não tem TOC
-   para mostrar mas também não foi mandada esconder. SÃO TRÊS configurações:
+   What survives from the card is the `max-width`, and it CHANGES OWNER: it
+   moves from the body up to the column. `DocItem/Layout` applies
+   `docItemCol` (`max-width: 75% !important`, hashed) whenever
+   `hide_table_of_contents` is absent from the front matter — including a
+   page with no heading, which has no TOC to show but also wasn't told to
+   hide it. THREE configurations follow:
 
-   A. **Com TOC** (`toc.length > 0`, não escondido) — `.col--3` existe como
-      irmão, e `docItemCol` também se aplica. Mas quem decide a largura aqui
-      não é o `!important`: é o `flex: 1 0` da coluna NUA, que cresce para
-      preencher o que sobra depois do TOC fixo — 816, hoje, contra o teto de
-      840 do `!important`. O teto fica acima do que o flex entrega e não
-      belisca nada.
-   B. **Sem heading, não escondida** — `docItemCol` se aplica do mesmo jeito
-      que em A (a condição é só `!hidden`), mas não há `.col--3` para dividir a
-      `.row` com ela. A coluna cresce sozinha até o teto, e o teto AQUI BATE:
-      840 — 75% de `--pd-container-width` —, e não há como descer disso sem
-      `!important` de volta — o que este projeto não escreve. É a única das
-      três configurações que o CSS não alcança.
-   C. **Escondida no front matter** (`hide_table_of_contents: true`) —
-      `docItemCol` não se aplica, e sem ela não há teto nenhum de upstream. A
-      coluna iria a 100% da `.row` se nada aqui dissesse o contrário.
+   A. **With TOC** (has headings, not hidden) — `.col--3` exists as a
+      sibling, and `docItemCol` applies too. But what decides the width here
+      isn't the `!important`: it's the bare column's `flex: 1 0`, which
+      grows to fill what's left after the fixed-width TOC — today, less than
+      the `!important` ceiling, which sits above what flex delivers and
+      touches nothing.
+   B. **No heading, not hidden** — `docItemCol` applies the same way as in
+      A, but there's no `.col--3` to divide the row with. The column grows
+      alone up to the ceiling, and the ceiling HITS here: 75% of
+      `--pd-container-width`, with no way under it short of another
+      `!important`, which this project doesn't write. It's the one of the
+      three configurations CSS alone can't reach.
+   C. **Hidden in front matter** (`hide_table_of_contents: true`) —
+      `docItemCol` doesn't apply, and without it there's no ceiling at all
+      from upstream. The column would run to 100% of `.row` if nothing here
+      said otherwise.
 
-   ANTES da #96, o alvo das três era o MESMO número — 864, 75% dos 1152 de
-   então — e a caixa invisível existia para PREVENIR a configuração C de
-   alargar. A #96 inverte a decisão que produzia isso — ver `chrome.md`
-   §1.5 — e o `max-width` que sobrevive do cartão muda de papel: de "trava C
-   no mesmo pixel de A" para "trava só A", com `:has()` decidindo qual das
-   duas está na tela. B fica de fora dos dois lados, pelo motivo escrito
-   acima: não é escolha, é o `!important` que ninguém vence. (Os números de A
-   e B também mudaram por conta própria, depois: 816/840 em vez de 848/864,
-   quando `--pd-container-width` caiu de 1152 para 1120 — ver `tokens.css`.)
+   The surviving `max-width` changes role: from "hold C at the same pixel as
+   A" to "hold only A," with `:has()` deciding which of the two is on
+   screen. B stays outside both — not a choice, the `!important` nobody
+   beats.
 
-   A MEDIDA DA PROSA sai de dois seletores estáveis — um elemento e uma classe do
-   Infima — no lugar da lista de onze elementos que crescia a cada componente
-   novo do catálogo. Com a lista morre a superfície que produziu o defeito do
-   `<header>`: não há mais lista da qual um elemento possa escapar.
+   THE PROSE MEASURE now comes from two stable selectors — an element and an
+   Infima class — instead of a list of eleven elements that grew with every
+   new catalog component. With the list gone, so is the surface that let one
+   element escape it.
 
-   E O BREAKOUT CONTINUA MORTO. Código e tabela medem o `<article>` inteiro,
-   nunca uma lista de filhos — só que agora o `<article>` já não é um número
-   fixo, é o que a configuração da página decide.
+   AND THE BREAKOUT STAYS DEAD. Code and tables measure the whole
+   `<article>`, never a list of children — only now `<article>` isn't a
+   fixed number, it's whatever the page's configuration decides.
 
-   O `.pagination-nav` entra pelo mesmo motivo que o `<article>`: ele é IRMÃO
-   dele, não filho, e sem a segunda linha a paginação mediria a coluna inteira
-   enquanto o texto acima dela mede a prosa.
+   `.pagination-nav` is included for the same reason as `<article>`: it's a
+   SIBLING, not a child, and without the second line the pagination would
+   measure the whole column while the text above it measures the prose.
 
-   O ancestral `main > .container > .row > .col` está aqui de propósito, e não
-   por gosto de especificidade: a Referência da API tem layout próprio, com o
-   `<article>` dela dentro de um `.row` cujo filho NÃO é `.col`. Sem o escopo, a
-   paginação daquela página encolheria para a prosa e sairia do prumo com a
-   coluna de texto que ela fecha.
+   The `main > .container > .row > .col` ancestor chain is deliberate, not
+   specificity habit: the API reference has its own layout, with its
+   `<article>` inside a `.row` whose child is NOT `.col`. Without the scope,
+   that page's pagination would shrink to the prose and fall out of line
+   with the text column it closes.
    ----------------------------------------------------------------------------- */
 
-/* A largura NARROW só se aplica com o TOC de fato VISÍVEL — `:has(> .col--3)`
-   sozinho não basta, porque `:has()` enxerga a PRESENÇA no DOM, não o
-   `display`, e o TOC continua no DOM entre 997 e 1279 mesmo escondido (ver
-   §9 e a regra de `.col--3` acima). O padrão sem media query é LARGO —
-   `--pd-container-width` para a coluna. O `<article>` é seletor à parte, e a
-   NARROW dele não é `--pd-doc-width`: é `--pd-prose-width`, 720 — a âncora
-   mede 720,81 com o TOC presente, o mesmo número de antes da #96. O que a
-   #96 muda não é o número da prosa com TOC; é ela deixar de ser o único
-   número que existe. Sem TOC visível, a prosa acompanha a coluna inteira —
-   `--pd-container-width` — e é aí que ela cresce. */
-/* `margin-inline: 0 auto` — ancorado à esquerda, e a mudança é de MECANISMO,
-   não de métrica. Enquanto o `auto` valia dos dois lados, a distância até a
-   sidebar era o resto de uma divisão: metade da sobra da coluna, que a 1512
-   dava 47,6 e entre 997 e 1408 dava zero. Com o corredor declarado em §1.7 a
-   sobra tem dono — ela vai inteira para o lado do índice, como na âncora. */
+/* The NARROW width only applies with the TOC actually VISIBLE —
+   `:has(> .col--3)` alone isn't enough, because `:has()` sees DOM presence,
+   not `display`, and the TOC stays in the DOM between 997 and 1279 even
+   hidden (see §9 and the `.col--3` rule above). The no-media-query default
+   is WIDE — `--pd-container-width` for the column. `<article>`'s narrow
+   value isn't `--pd-doc-width`: it's `--pd-prose-width`, 720 — the anchor
+   measures 720.81 with the TOC present. Without a visible TOC, the prose
+   follows the whole column — `--pd-container-width` — and grows there. */
+/* `margin-inline: 0 auto` — anchored left, and the change is one of
+   MECHANISM, not metric. While `auto` applied on both sides, the distance
+   to the sidebar was a division remainder: half the column's leftover,
+   which was 47.6 at 1512 and zero between 997 and 1408. With the corridor
+   declared in §1.7 the remainder has an owner — it goes whole to the index
+   side, as on the anchor. */
 html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
   max-width: var(--pd-container-width);
   margin-inline: 0 auto;
@@ -315,21 +281,18 @@ html.docs-doc-page .theme-doc-markdown > :last-child {
 }
 
 /* -----------------------------------------------------------------------------
-   O ritmo vertical — assimétrico, e é a regra que uma reprodução ingênua erraria
+   Vertical rhythm — asymmetric, and the rule a naive port would get wrong
 
-   48 antes de um cabeçalho, 16 depois, com `h2` e `h3` abrindo IDÊNTICO. O
-   Infima escala o ar de cima com o tamanho do título (`h2` a 2 × leading, `h3`
-   a 1,5), o que é o gesto intuitivo e o errado: o que separa uma seção da
-   anterior não tem relação com o corpo do título dela.
+   48 before a heading, 16 after, with h2 and h3 opening IDENTICAL. Infima
+   scales the air above with the title's size (h2 at 2× line-height, h3 at
+   1.5×), which is the intuitive move and the wrong one: what separates a
+   section from the one before has no relation to its own title's body size.
 
-   É esta regra que resgata `--pd-space-12`. Ele tinha DOIS consumidores — o
-   preenchimento do cartão e a metade dele no estreito —, e os dois morrem com o
-   cartão. Sem esta regra o degrau ficaria órfão, que é o defeito do Infima que
-   este projeto nomeou.
+   This rule is what gives --pd-space-12 back a consumer: without it, the
+   step would be orphaned, the Infima defect this project names.
 
-   Especificidade: (0,2,2) contra a (0,1,1) do Infima. Vence sem `!important`, e
-   sem reescrever `--ifm-*-vertical-rhythm-*` fora do adaptador — que abriria uma
-   sexta exceção com escopo contra a lista fechada do ADR 1.
+   Specificity: (0,2,2) against Infima's (0,1,1). Wins with no `!important`,
+   and with no rewrite of `--ifm-*-vertical-rhythm-*` outside the bridge.
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
@@ -338,23 +301,22 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
 }
 
 /* -----------------------------------------------------------------------------
-   O `h1`/`h2` do `<article>` ignoravam a escala de tipo — defeito medido, sem
-   ticket que o cobrisse antes da #96.
+   `<article>`'s h1/h2 ignored the type scale — a measured defect.
 
-   `tokens.css` escreve `--ifm-h1-font-size`/`--ifm-h2-font-size` no `:root`, e
-   o Infima RELÊ as duas direto no elemento: `.markdown h1:first-child` e
-   `.markdown > h2` redeclaram a MESMA custom property sobre o próprio título,
-   e herança perde para declaração direta no mesmo elemento — independente de
-   quão específico for o seletor do `:root`. Medido: 48px/32px na tela em vez
-   dos 36px/24px que `tokens.css` já declarava. A escala do projeto estava
-   certa; só não alcançava o elemento.
+   tokens.css writes `--ifm-h1-font-size`/`--ifm-h2-font-size` on `:root`,
+   and Infima RE-READS both directly on the element: `.markdown h1:first-child`
+   and `.markdown > h2` redeclare the same custom property on the title
+   itself, and a direct declaration on the same element beats inheritance —
+   no matter how specific the `:root` selector is. Measured: 48px/32px on
+   screen instead of the 36px/24px tokens.css already declared. The
+   project's scale was correct; it just didn't reach the element.
 
-   A resposta NÃO é reescrever `--ifm-h1-font-size` aqui — isso seria escrever
-   fora do adaptador, a sexta exceção com escopo contra a lista fechada do
-   ADR 1. É mais simples do que isso: `font-size` é propriedade normal, não
-   variável, e uma declaração direta nela vence a que o Infima computa a
-   partir da custom property, no MESMO seletor, carregado depois. Zero
-   `--ifm-*` tocado fora de `tokens.css`. */
+   The fix is NOT rewriting `--ifm-h1-font-size` here — that would write
+   outside the bridge. It's simpler: `font-size` is a plain property, not a
+   variable, and a direct declaration on it beats what Infima computes from
+   the custom property, on the SAME selector, loaded after. Zero `--ifm-*`
+   touched outside tokens.css.
+   ----------------------------------------------------------------------------- */
 .markdown h1:first-child {
   font-size: var(--pd-type-3xl);
 }
@@ -370,27 +332,29 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
 }
 
 /* -----------------------------------------------------------------------------
-   O subtítulo — a linha que toda página do site ganha
+   The subtitle — the line every page on the site gets
 
-   Ele nasce do `description` do front matter e é injetado pelo override da chave
-   `h1` no registro de `@theme/MDXComponents` (degrau 3). O CSS aqui não sabe
-   disso: ele vê um parágrafo com a nossa classe, logo abaixo do título.
+   It's born from the front matter's `description` and injected by an
+   override on the `h1` key in the MDX components registry. The CSS here
+   doesn't know that: it sees a paragraph with this project's class, right
+   below the title.
 
-   `--pd-subtitle-indent` e não a margem do título: as margens de irmãos
-   adjacentes COLAPSAM para a maior das duas, então o ar de baixo do `h1` — que é
-   maior — venceria e o recuo medido nunca apareceria. Zerar o do `h1` é o que
-   deixa o do subtítulo mandar.
+   `--pd-subtitle-indent`, not the title's margin: adjacent siblings'
+   margins COLLAPSE to the larger of the two, so the h1's air below — which
+   is larger — would win and the measured indent would never appear.
+   Zeroing the h1's margin is what lets the subtitle's margin win.
 
-   Peso e cor não são declarados, e isso é fiel: na âncora o subtítulo herda o
-   bloco de prosa. O que ele declara é o corpo, que é o único que foi medido.
+   Weight and color aren't declared, and that's faithful: on the anchor the
+   subtitle inherits the prose block. What it declares is the body size, the
+   only one that was measured.
 
-   A LINHA DO TÍTULO entrou entre os dois quando o par "Copiar página" chegou:
-   o `h1` deixou de ser irmão adjacente do subtítulo e passou a ser filho de
-   `.title-row`, que é quem tem o subtítulo por irmão agora. O mecanismo do
-   recuo não mudou — quem colapsa continua sendo margem de irmãos —, mudou de
-   quem é a margem que precisa sair da frente. As DUAS regras ficam: a antiga
-   ainda vale para qualquer página cujo `h1` não esteja na linha, e nenhuma
-   delas cobra a outra.
+   THE TITLE LINE sits between the two when the "Copy page" control is
+   present: the h1 stops being the subtitle's adjacent sibling and becomes a
+   child of `.title-row`, which now has the subtitle as its sibling instead.
+   The indent's mechanism didn't change — sibling-margin collapse still does
+   the work — only which margin needs to get out of the way changed. Both
+   rules stay: the older one still applies to any page whose h1 isn't in the
+   row, and neither charges the other.
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page h1:has(+ .subtitle),
@@ -398,15 +362,16 @@ html.docs-doc-page .title-row:has(+ .subtitle) > h1 {
   margin-bottom: 0;
 }
 
-/* A LINHA DO TÍTULO — o `h1` e o par segmentado, um ao lado do outro.
+/* THE TITLE LINE — the h1 and the paired control, side by side.
 
-   `align-items: center` alinha os dois pelo meio, que é o que a âncora faz
-   (medido: `h1` em y=184 com 40 de altura, botão em y=187 com 34 — os dois
-   centrados em 204). `margin-inline-start: auto` no par é o que o empurra
-   para a direita sem que o `h1` precise crescer.
+   `align-items: center` aligns the two by their middle, which matches the
+   anchor (measured: h1 at y=184 with height 40, button at y=187 with 34 —
+   both centered at 204). `margin-inline-start: auto` on the pair pushes it
+   right without the h1 needing to grow.
 
-   `flex-wrap: wrap` é a saída para o título longo: em vez de espremer o botão
-   contra a última palavra, ele desce inteiro para a linha de baixo. */
+   `flex-wrap: wrap` is the escape for a long title: instead of squeezing
+   the button against the last word, the whole control drops to the line
+   below. */
 html.docs-doc-page .title-row {
   display: flex;
   flex-wrap: wrap;
@@ -421,104 +386,103 @@ html.docs-doc-page .title-row > [data-pd-component='copy-page'] {
 html.docs-doc-page .subtitle {
   margin-top: var(--pd-subtitle-indent);
   font-size: var(--pd-type-lg);
-  /* A entrelinha é DECLARADA, e sem ela o subtítulo herdava a da prosa (1,75)
-     sobre 18px = 31,5px, contra os 28 de `chrome.md` §12 — alvo `exato`. É a
-     única das três medidas do subtítulo que a herança não entregava: peso e cor
-     continuam não declarados, e isso segue fiel à âncora. */
+  /* Line-height is DECLARED: without it the subtitle would inherit the
+     prose's (1.75) over 18px = 31.5px, against a 28px `exact` target. It's
+     the only one of the subtitle's three measures inheritance didn't
+     deliver — weight and color stay undeclared, faithful to the anchor. */
   line-height: var(--pd-subtitle-line-height);
 }
 
 /* -----------------------------------------------------------------------------
-   2. Navbar — DUAS LINHAS, e a segunda sangra de ponta a ponta
+   2. Navbar — TWO LINES, and the second bleeds edge to edge
 
-   A marca e o cluster da direita ficam na linha 1; as três tabs caem numa faixa
-   de largura total abaixo dela. Total: `--pd-sticky-top`.
+   The brand and the right-side cluster sit on line 1; the three tabs fall
+   into a full-width strip below it. Total height: --pd-sticky-top.
 
-   ISTO ERA A PERDA 4, e ela estava errada. `chrome.md` §8, `swizzle.md` §4 e o
-   ADR 2 diziam que a faixa *"exigiria reestruturar `Navbar/*`"*. Não exige: ela
-   sai de degrau 0 (dois tokens do Infima), degrau 1 (as quatro regras abaixo) e
-   degrau 2 (um item de config). `Navbar/Layout` e `Navbar/Content` continuam
-   `unsafe`, e continuam INTOCADOS — o portão 7 passa com a faixa montada.
+   The strip doesn't need `Navbar/*` restructured: it's built from rung 0
+   (two Infima tokens), rung 1 (the four rules below), and rung 2 (one
+   config item). `Navbar/Layout` and `Navbar/Content` stay untouched.
 
-   Quatro peças, e nenhuma é decorativa:
+   Four pieces, none decorative:
 
-   1. **A altura do topo**, em `tokens.css`. `.navbar` tem `height` fixo e não
-      `min-height`; sem o token novo a segunda linha TRANSBORDA e pinta sobre o
-      conteúdo da página. O preenchimento vertical vai a zero junto, senão as
-      duas linhas ficam dentro de uma caixa de conteúdo mais curta que o `<nav>`
-      e desalinham da faixa pintada.
-   2. **A quebra**, aqui: `.navbar__items` passa a envolver, e um espaçador de
-      base 100% e altura 0 abre a linha. O espaçador é OPÇÃO PÚBLICA — um item
-      `{type: 'html'}` entre a marca e as tabs. Escolhido em vez de dar
-      `flex-basis: 100%` à marca porque não acopla a faixa à existência de uma
-      marca.
-   3. **A altura determinada da linha 1**, por `min-height` na marca e
-      `align-self: flex-start` no cluster da direita. Sem ela a linha 1 encolhe
-      para a altura natural da marca e a faixa pintada não casa com as tabs.
-   4. **O sangramento**, por parada dura de `linear-gradient` no próprio `.navbar`.
-      O `<nav>` já mede a viewport inteira, e SÓ O FUNDO precisa sangrar — o
-      fundo não é das tabs. Zero DOM novo, zero pseudo-elemento.
+   1. **The top's height**, in tokens.css. `.navbar` has a fixed `height`,
+      not `min-height`; without the new token the second line OVERFLOWS and
+      paints over the page content. Vertical padding goes to zero with it,
+      or the two lines sit inside a content box shorter than the `<nav>` and
+      misalign from the painted strip.
+   2. **The wrap**, here: `.navbar__items` wraps, and a spacer with 100%
+      basis and zero height opens the line. The spacer is a PUBLIC config
+      option — an `{type: 'html'}` item between the brand and the tabs —
+      chosen over giving the brand `flex-basis: 100%` because that would
+      couple the strip to a brand existing at all.
+   3. **Line 1's determined height**, from `min-height` on the brand and
+      `align-self: flex-start` on the right cluster. Without it line 1
+      shrinks to the brand's natural height and the painted strip stops
+      matching the tabs.
+   4. **The bleed**, a hard-stop `linear-gradient` on `.navbar` itself. The
+      `<nav>` already spans the full viewport, and only the BACKGROUND needs
+      to bleed — the tabs don't. Zero new DOM, zero pseudo-element.
 
-   O escopo `@media (min-width: 997px)` é OBRIGATÓRIO, e é a armadilha mais cara
-   desta faixa: abaixo do limiar o navbar volta a uma linha, as tabs vão para
-   dentro do hambúrguer, e `.navbar-sidebar__brand` e `.navbar-sidebar__items`
-   leem o mesmo `--ifm-navbar-height`. Sem o escopo, o cabeçalho do drawer infla
-   no estreito.
+   The `@media (min-width: 997px)` scope is MANDATORY, and it's this area's
+   most expensive trap: below the threshold the navbar returns to one line,
+   the tabs move into the hamburger menu, and `.navbar-sidebar__brand` and
+   `.navbar-sidebar__items` read the SAME `--ifm-navbar-height`. Without the
+   scope, the narrow drawer's header inflates.
 
-   TRÊS PERDAS NOMEADAS, e a primeira é a que dói:
+   THREE NAMED LOSSES, and the first is the one that hurts:
 
-   · **a ordem de foco passa a divergir da leitura visual.** O `Tab` desce para a
-     faixa e volta a subir, porque o DOM tem dois blocos (esquerda inteira,
-     depois direita inteira) enquanto a faixa distribui a esquerda em duas
-     linhas. **Não é contornável nesta rota**, e é o único ponto do projeto onde
-     a conta do `unsafe` voltaria à mesa. Ver `docs/design/foco.md`;
-   · **a largura útil da faixa é a de `.navbar__items`, não a da viewport.** O
-     fundo sangra; o conteúdo não;
-   · **são 48px de chrome vertical em toda página.**
+   · **focus order stops matching the visual reading order.** `Tab` drops
+     into the strip and back up, because the DOM has two blocks (the whole
+     left side, then the whole right) while the strip splits the left side
+     into two lines. **Not reachable on this route**, and it's the one place
+     in the project where the `unsafe` swizzle budget would come back on the
+     table. See ADR 4;
+   · **the strip's usable width is `.navbar__items`'s, not the viewport's.**
+     The background bleeds; the content doesn't;
+   · **48px of vertical chrome on every page.**
 
-   À direita a ordem declarada continua: Buscar · PT · GitHub. A alternância de
-   tema fecha a linha e não é declarável — o `Navbar/Content` a renderiza depois
-   dos itens da direita.
+   On the right, the declared order stays: Search · language · GitHub. The
+   theme toggle closes the line and isn't declarable — `Navbar/Content`
+   renders it after the right-side items.
 
-   O slot de busca custa zero pixel enquanto estiver vazio: o próprio upstream
-   esconde o contêiner com `:empty`. Remover a busca não deixa buraco.
+   The search slot costs zero pixels while empty: upstream itself hides the
+   container with `:empty`. Removing search leaves no hole.
 
-   GitHub entra como **palavra**, não como glifo, e é decisão de orçamento: não
-   há marca de terceiro no manifesto. A marca do site é palavra pelo mesmo
-   motivo, e por um mais forte — ver abaixo.
+   GitHub enters as a WORD, not a glyph — a budget decision: there's no
+   third-party mark in this project's icon set. The site's own brand is a
+   word for the same reason, and a stronger one — see below.
    ----------------------------------------------------------------------------- */
 
-/* O ESPAÇADOR DA FAIXA no painel do estreito — o mesmo defeito, medido.
-   O `HtmlNavbarItem` renderiza o item com `menu__list-item` quando é móvel, e
-   a classe traz um degrau de margem: mede zero de altura e ainda assim abre 4px
-   de espaço fantasma entre a marca e a primeira tab, dentro da lista do drawer.
+/* THE STRIP'S SPACER in the narrow panel — the same defect, measured.
+   `HtmlNavbarItem` renders the item with `menu__list-item` on mobile, and
+   that class carries a margin step: it measures zero height and still opens
+   4px of phantom space between the brand and the first tab, inside the
+   drawer's list.
 
-   A faixa não existe abaixo do limiar; o espaçador dela tampouco. O seletor se
-   escopa sozinho — `menu__list-item` só é aplicada na forma móvel. */
+   The strip doesn't exist below the threshold; neither does its spacer. The
+   selector scopes itself — `menu__list-item` only applies in the mobile
+   form. */
 .menu__list-item.tab-strip-break {
   display: none;
 }
 
-/* A MARCA — só a palavra, e monocromática.
+/* THE BRAND — the word alone, monochrome.
 
-   Ela voltou para o caminho NATIVO: `navbar.title` sem `navbar.logo` faz o
-   upstream renderizar `<b class="navbar__title">` dentro do `.navbar__brand`.
-   Não há mais glifo, não há mais componente de tema próprio para desenhá-lo, e
-   não há mais `.navbar__brand:empty` — o link não é mais vazio, porque a marca
-   passa pela config.
+   It's back on the NATIVE path: `navbar.title` with no `navbar.logo` makes
+   upstream render `<b class="navbar__title">` inside `.navbar__brand`. No
+   glyph, no theme component to draw one, no more `.navbar__brand:empty` —
+   the link isn't empty anymore, because the brand comes through config.
 
-   O argumento é o da figura da landing, com força maior: a marca aparece em
-   TODA página e a landing em uma. Tingir uma palavra de acento no canto
-   superior esquerdo é o enfeite que a régua recusa, então ela fica em
-   `--pd-text-strong` — a MESMA tinta que a palavra já tinha. O que saiu foi o
-   glifo, que era a única coisa aqui a consumir `--pd-accent`.
+   The word appears on EVERY page; tinting a word with the accent in the top
+   corner is the kind of flourish this project refuses, so it stays
+   `--pd-text-strong` — the SAME ink the word already had. What left was the
+   glyph, the only thing here consuming `--pd-accent`.
 
-   Medido no artefato, nos dois modos: `250,242,249` no escuro e `15,10,15` no
-   claro, os dois iguais a `--pd-text-strong` resolvido e diferentes do acento.
+   Measured in both modes: `250,242,249` dark and `15,10,15` light — both
+   equal to `--pd-text-strong` resolved, and different from the accent.
 
-   Duas classes do Infima, degrau 1: `.navbar__brand` posiciona, `.navbar__title`
-   carrega a tipografia. As declarações são as mesmas que a marca tinha — o que
-   saiu foi o glifo, não a forma da palavra. */
+   Two Infima classes, rung 1: `.navbar__brand` positions, `.navbar__title`
+   carries the typography. */
 .navbar__brand {
   display: flex;
   align-items: center;
@@ -532,113 +496,98 @@ html.docs-doc-page .subtitle {
   letter-spacing: var(--pd-tracking-tight);
 }
 
-/* A ABA DO NAVBAR NA ESCALA DE UI, e a razão de ela precisar de declaração é a
-   OUTRA metade da armadilha do Infima.
+/* THE NAVBAR TAB ON THE UI SCALE, and the reason it needs a declaration is
+   the OTHER half of the Infima trap.
 
-   O `.theme-doc-breadcrumbs` mais abaixo neste arquivo tem o caso clássico: o
-   Infima CRAVA `font-size` dentro do elemento e vence a herança. Aqui é o
-   inverso — ele **não declara nada**, e o link herda os 16px do `<html>`.
-   Medido: `.navbar__item.navbar__link` saía em `16px` contra o alvo de `14px`
-   de `tokens.md` §13, `Δ +2`.
+   `.theme-doc-breadcrumbs`, further below, is the classic case: Infima
+   CRAVES `font-size` inside the element and beats inheritance. Here it's
+   the reverse — it declares NOTHING, and the link inherits 16px from
+   `<html>`. Measured: `.navbar__item.navbar__link` rendered at `16px`
+   against a 14px target, Δ +2.
 
-   Ausência de declaração no upstream é tão invisível quanto declaração errada,
-   e o modo de falhar é pior: não há nada para achar com `grep`. Foi o
-   comparador de paridade que apontou.
+   Missing upstream declaration is as invisible as a wrong one, and fails
+   worse: there's nothing to find with `grep`.
 
-   `.navbar__link` alcança as três tabs, os itens do dropdown de locale e o
-   mesmo link dentro da gaveta do estreito — que é onde ele deve chegar: a
-   escala de UI é uma só, e a tabela de alvo mede a densidade do chrome, não uma
-   instância dele. */
+   `.navbar__link` reaches the three tabs, the locale dropdown items, and
+   the same link inside the narrow drawer — which is where it should reach:
+   UI density is one scale, and the target table measures the chrome's
+   density, not one instance of it. */
 .navbar__link {
   font-size: var(--pd-type-sm);
 }
 
-/* O HAIRLINE — o rodapé do navbar inteiro, nas duas formas (uma linha no
-   estreito, duas de 997 para cima). Substitui a faixa cinza: onde havia
-   parada dura de gradiente separando uma superfície levantada da página, fica
-   só o fio — a linha de tabs passa a ler TRANSPARENTE sobre o fundo da
-   própria página, sem segunda superfície debaixo dela. */
+/* THE HAIRLINE — the whole navbar's bottom edge, in both forms (one line
+   narrow, two from 997 up). Replaces the gray band: where a hard-stop
+   gradient used to separate a raised surface from the page, only the
+   hairline is left — the tab-strip line now reads TRANSPARENT against the
+   page's own background, with no second surface underneath it. */
 .navbar {
   border-bottom: var(--pd-border-width) solid var(--pd-border-subtle);
 }
 
-/* A FAIXA — três das quatro peças que sobram depois da #96. A primeira mora
-   em `tokens.css`, porque é token, e o espaçador é item de config em
-   `docusaurus.config.js`. O SANGRAMENTO DE FUNDO SAIU: a faixa não pinta mais
-   nada atrás de si — ela lê o fundo da página, como a #96 pede — e o hairline
-   acima já faz o trabalho de separação que o gradiente fazia.
+/* THE STRIP — three of the four pieces left after this rework. The first
+   lives in tokens.css, because it's a token, and the spacer is a config
+   item in the Docusaurus config. The BACKGROUND BLEED IS GONE: the strip no
+   longer paints anything behind itself — it reads the page's own
+   background — and the hairline above already does the separating work the
+   gradient used to do.
 
-   São TRÊS PEÇAS e CINCO REGRAS agora: a quebra são três — envolver, abrir a
-   linha e impedir que as duas linhas se estiquem para dividir a altura —, a
-   altura determinada são duas, uma por cluster. */
+   THREE PIECES, FIVE RULES now: the wrap is three — wrapping, opening the
+   line, and stopping the two lines from stretching to divide the height —
+   the determined height is two, one per cluster. */
 @media (min-width: 997px) {
-  /* O CONTAINER DO NAVBAR passa a ser o MESMO grupo que centraliza sidebar +
-     conteúdo + TOC — mesmo `max-width`, mesmo `margin-inline: auto`. Sem
-     isso a marca fica alinhada ao VIEWPORT enquanto o cabeçalho de grupo da
-     sidebar se move com o congelamento, e os dois se desencontram a partir
-     da primeira largura em que o grupo centraliza. O preenchimento
-     horizontal do `.navbar` (herdado, intocado) é o que põe a marca na mesma
-     vertical da sidebar — ver `chrome.css` §3 —, e essa conta só volta a
-     fechar se os DOIS lados tiverem o mesmo inset esquerdo.
-
-     CORREÇÃO MEDIDA: a frase acima dizia "na mesma vertical do PREENCHIMENTO
-     da sidebar", e isso não se sustenta em nenhuma largura sozinha — o alvo
-     troca de lado no congelamento. A 1512, `brand.left` 52 casa com a BORDA da
-     caixa da sidebar (52), enquanto o TEXTO do item cai em 76, 24px à direita.
-     A 1280 e 1100 é o inverso: o texto do item casa (24 = 24) e a caixa não
-     (0 contra 24). O que este bloco entrega é o inset esquerdo comum entre
-     navbar e caixa da sidebar acima do congelamento — que é o que a linha da
-     fileira do topo, logo abaixo, consome. Corrigir a vertical do TEXTO é
-     outro ticket, e mexeria no recuo do item, não aqui. */
-  /* `position: relative` entrou na #98 — é o container que a busca centraliza
-     contra (`SearchBar/estilos.module.css`), via `position: absolute` no
-     próprio gatilho. Sem isto o navegador subiria a busca de containing block
-     até achar um ancestral posicionado — provavelmente o `.navbar` (sticky), e
-     aí ela centralizaria no VIEWPORT, não na coluna que este bloco acabou de
-     assentar. */
+  /* THE NAVBAR CONTAINER becomes the SAME group that centers sidebar +
+     content + TOC — same `max-width`, same `margin-inline: auto`. Without
+     this the brand aligns to the VIEWPORT while the sidebar's own header
+     moves with the freeze, and the two drift apart from the first width
+     where the group centers. The navbar's own horizontal padding (inherited,
+     untouched) is what puts the brand on the sidebar's vertical — see §3 —
+     and that only closes if both sides carry the same left inset. */
+  /* `position: relative` is what the search control centers against
+     (`SearchBar`, via `position: absolute` on its own trigger). Without
+     this, the browser would climb the containing-block chain to the
+     nearest positioned ancestor — likely `.navbar` (sticky) — and search
+     would center on the VIEWPORT, not the column this block just settled. */
   .navbar__inner {
     position: relative;
     max-width: var(--pd-freeze);
     margin-inline: auto;
   }
 
-  /* As duas colunas do `.navbar__inner` param de se centrar contra as DUAS
-     linhas — a da esquerda porque ela é quem tem duas, a da direita porque ela
-     mora na linha 1. */
+  /* The two columns of `.navbar__inner` stop centering against BOTH lines —
+     the left one because it's the one with two, the right one because it
+     lives on line 1. */
   .navbar__inner {
     align-items: flex-start;
   }
 
-  /* A LINHA DA FILEIRA DO TOPO — a segunda linha da navbar, e ela não é
-     variação da primeira.
+  /* THE TOP ROW LINE — the navbar's second line, and it isn't a variation of
+     the first.
 
-     A âncora desenha DUAS: a de baixo sangra de ponta a ponta da viewport (é a
-     que o `.navbar` já pinta, §2) e esta para exatamente onde a marca começa e
-     onde o último ícone termina. Medido na âncora a 1440: a linha vai de 48 a
-     1392, `logo.left` é 48 e o `right` do alternador de tema é 1392 — Δ 0 nas
-     DUAS bordas, confirmado por varredura de pixel do screenshot, não só por
-     `getBoundingClientRect`.
+     The anchor draws TWO: the bottom one bleeds edge to edge of the
+     viewport (the one `.navbar` already paints, §2) and this one stops
+     exactly where the brand starts and where the last icon ends. Measured
+     on the anchor at 1440: the line runs from 48 to 1392, `logo.left` is 48
+     and the theme toggle's `right` is 1392 — Δ 0 on both edges.
 
-     O `::before` mora no `.navbar__inner` porque essa caixa JÁ É a identidade
-     que a âncora pede, e isso é medido aqui: a 1512 o inner vai de 52 a 1460, o
-     `.navbar__brand` começa em 52 e o alternador termina em 1460. Δ 0 dos dois
-     lados, a 1512, 1280 e 1100. Não entra geometria nova — a altura é
-     `--pd-navbar-height`, que `tokens.css` já descreve como "a LINHA 1 do topo,
-     não o topo inteiro".
+     `::before` lives on `.navbar__inner` because that box IS already the
+     identity the anchor calls for, measured here too: at 1512 the inner box
+     runs from 52 to 1460, `.navbar__brand` starts at 52 and the toggle ends
+     at 1460. No new geometry: the height is `--pd-navbar-height`.
 
-     É `::before` ABSOLUTO, e não `border-block-end` na fileira, porque a
-     fileira 1 não é um elemento: ela são dois — `.navbar__brand` e
-     `.navbar__items--right` — separados pelo vão do meio, e uma borda em cada
-     um daria dois segmentos com buraco entre eles.
+     It's an ABSOLUTE `::before`, not a `border-block-end` on the row,
+     because row 1 isn't one element: it's two — `.navbar__brand` and
+     `.navbar__items--right` — separated by the middle gap, and a border on
+     each would leave a gap between the two segments.
 
-     ACRESCENTA, não move. Mover o hairline do `.navbar` para cá foi testado em
-     página viva: a linha de baixo encurta 52px de cada lado a 1512 e deixa de
-     sangrar — que é justamente o que a âncora faz questão de manter.
+     ADDS, doesn't move. Moving the `.navbar` hairline here was tested live:
+     the bottom line shortens 52px on each side at 1512 and stops bleeding —
+     exactly what the anchor is careful to keep.
 
-     O escopo de 997 é obrigatório, por duas razões medidas: abaixo do limiar a
-     navbar tem UMA fileira e a linha não teria o que separar; e o
-     `.navbar__inner` volta a `position: static`, o que subiria o containing
-     block até o `.navbar` e desmancharia o recuo. */
+     The 997 scope is mandatory for two measured reasons: below the
+     threshold the navbar has ONE row and the line has nothing to separate;
+     and `.navbar__inner` returns to `position: static`, which would climb
+     the containing-block chain to `.navbar` and undo the inset. */
   .navbar__inner::before {
     content: '';
     position: absolute;
@@ -649,9 +598,9 @@ html.docs-doc-page .subtitle {
     pointer-events: none;
   }
 
-  /* A quebra. `align-content: flex-start` é o que impede as duas linhas de se
-     esticarem para dividir a altura do `<nav>` entre elas: sem ele a linha 1
-     rouba metade da folga e a faixa deixa de casar com as tabs. */
+  /* The wrap. `align-content: flex-start` is what stops the two lines from
+     stretching to divide the `<nav>`'s height between them: without it line
+     1 steals half the slack and the strip stops matching the tabs. */
   .navbar__items:not(.navbar__items--right) {
     flex-wrap: wrap;
     align-content: flex-start;
@@ -663,8 +612,8 @@ html.docs-doc-page .subtitle {
     padding: 0;
   }
 
-  /* A linha 1, determinada. `.navbar__brand` é classe do Infima — degrau 1, e
-     não acoplamento a nome nosso. */
+  /* Line 1, determined. `.navbar__brand` is an Infima class, rung 1, not
+     coupling to a name of this project's own. */
   .navbar__items > .navbar__brand {
     min-height: var(--pd-navbar-height);
   }
@@ -674,22 +623,21 @@ html.docs-doc-page .subtitle {
     height: var(--pd-navbar-height);
   }
 
-  /* As tabs preenchem a faixa em vez de flutuar nela. Sem a altura declarada o
-     item mede o texto e o realce de estado ficaria com a forma da palavra em
-     vez da forma da faixa.
+  /* The tabs fill the strip instead of floating in it. Without the declared
+     height, an item measures its own text and its active highlight would
+     take the word's shape instead of the strip's.
 
-     O SUBLINHADO NA ABA ATIVA espelha `ul.tabs` em `componentes.css`:
-     transparente em repouso, acento quando ativa, margem negativa para
-     sobrepor o hairline em vez de somar a ele.
+     THE ACTIVE TAB'S UNDERLINE mirrors `ul.tabs` in components.css:
+     transparent at rest, accent when active, negative margin to overlap the
+     hairline instead of adding to it.
 
-     AS DUAS CLASSES ESTÃO NO MESMO ELEMENTO, e é por isso que o seletor abaixo
-     é composto e não `:has()`. O `DefaultNavbarItem` do theme-classic 3.10.2
-     passa `activeClassName='navbar__link--active'` para o MESMO `<a>` que já
-     recebe `navbar__item navbar__link` — o item de navbar não é um `<li>` com
-     link dentro, é o próprio link. Um `:has(> .navbar__link--active)` pede
-     descendente direto, nenhum item tem um, e a regra casava 0 de 4 em todas
-     as rotas: a aba ativa ficou sem o sublinhado de acento que `chrome.md` §3
-     publica, em 104 páginas do build. */
+     BOTH CLASSES SIT ON THE SAME ELEMENT, which is why the selector below
+     is compound and not `:has()`. theme-classic's `DefaultNavbarItem`
+     passes `activeClassName='navbar__link--active'` to the SAME `<a>` that
+     already carries `navbar__item navbar__link` — the navbar item isn't a
+     `<li>` wrapping a link, it IS the link. A `:has(> .navbar__link--active)`
+     selector expects a direct-child descendant that doesn't exist, and
+     matched zero of four active tabs across the build. */
   .navbar__items:not(.navbar__items--right) > .navbar__item:not(.tab-strip-break) {
     display: flex;
     align-items: center;
@@ -707,47 +655,38 @@ html.docs-doc-page .subtitle {
 /* -----------------------------------------------------------------------------
    3. Sidebar
 
-   `--pd-sidebar-width`, separador mudo no topo, ícone em tudo abaixo dele, a
-   rampa de recuo da âncora e a única seta do site. A issue #97 reescreveu três
-   eixos contra a âncora; a #114 reescreveu a REGRA que os governava, e o ADR 10
-   carrega o porquê de cada linha. **Nada disto custa swizzle**: o `className` é
-   contrato público do schema de item de sidebar, e o resto sai de
-   `ThemeClassNames`.
+   --pd-sidebar-width, a mute separator at the top, an icon on everything
+   below it, the anchor's indent ramp, and the site's one caret. **None of
+   this costs a swizzle**: the className is the sidebar item schema's public
+   contract, and the rest comes from ThemeClassNames.
 
-   O NÍVEL DE TOPO É SEPARADOR, e ele fica inerte sem uma linha de CSS para
-   isso. `collapsible: false` mais ausência de `link` em `sidebars-*.js` fazem
-   `useCategoryHrefWithSSRFallback` devolver `undefined` **nos dois lados** — SSR
-   e navegador —, e o `theme-classic` emite um `<a class="menu__link">` sem
-   `href`, sem caret e sem `CollapseButton`. `pointer-events: none` seria remédio
-   para uma doença que a configuração já não produz. O que o CSS daqui paga é só
-   a APARÊNCIA: o negrito que agrupa, e o realce de linha que o separador não
-   pode receber por não ser destino.
+   THE TOP LEVEL IS A SEPARATOR, and it's inert without a line of CSS for
+   that. `collapsible: false` plus no `link` in the sidebars config makes
+   `useCategoryHrefWithSSRFallback` return `undefined` on BOTH sides — SSR
+   and browser — and theme-classic emits a `<a class="menu__link">` with no
+   `href`, no caret, and no CollapseButton. What the CSS here pays for is
+   only the APPEARANCE: the bold that groups it, and the row highlight the
+   separator can't receive since it isn't a destination.
 
-   O ÍCONE continua `mask-image` + `currentColor` — o segundo renderizador, e a
-   única rota zero-swizzle: não existe ponto `safe` para injetar componente React
-   num item de sidebar. O que a #114 mudou é a REGRA de onde ele mora: **nenhum
-   no separador; em tudo abaixo dele, folha ou grupo, em qualquer nível**. É a
-   terceira redação, e a primeira agnóstica de profundidade — o teste é *"isto é
-   o separador de topo?"*, e ele tem resposta em qualquer árvore. As duas
-   anteriores (`toda categoria de topo, nenhuma folha`, depois `toda folha,
-   nenhum cabeçalho de grupo`) mudavam de resultado com o nível, e foi isso — não
-   o teto — que travou o nível 3 por duas issues.
+   THE ICON is still `mask-image` + `currentColor` — the only zero-swizzle
+   route, since no `safe` point exists to inject a React component into a
+   sidebar item. The rule for where it lives: **none on the top separator;
+   on everything below it, leaf or group, at any level** — the test is *is
+   this the top separator?*, which has an answer at any depth.
 
-   Como a máscara é pintada com `currentColor`, o estado ativo continua pintando
-   o ícone junto com o texto, de graça, e continua sem segundo desenho para o
-   modo escuro.
+   Since the mask paints with `currentColor`, the active state colors the
+   icon along with the text for free, with no second drawing for dark mode.
    ----------------------------------------------------------------------------- */
 
-/* DUAS formas de DOM para o mesmo ícone, e as duas passaram a ser necessárias na
-   #114. A folha é um `<a class="menu__link">` direto dentro do `<li>`; o nó
-   colapsável embrulha o link num `<div class="menu__list-item-collapsible">`
-   junto com o `<button class="menu__caret">` irmão. Enquanto a regra excluía
-   todo cabeçalho de grupo, um seletor bastava — o segundo é o preço de a
-   redação nova marcar o grupo abaixo do separador.
+/* TWO DOM shapes for the same icon. A leaf is a `<a class="menu__link">`
+   directly inside its `<li>`; a collapsible node wraps the link in a
+   `<div class="menu__list-item-collapsible">` alongside a sibling
+   `<button class="menu__caret">`.
 
-   O separador não aparece em nenhum dos dois, e não por seletor: ele não recebe
-   `className` nenhum em `sidebars-*.js`. Quem decide é a árvore, não o CSS, e é
-   isso que faz a regra valer em qualquer profundidade sem crescer aqui. */
+   The separator appears in neither, and not by selector: it receives no
+   `className` at all in the sidebars config. The tree decides, not the CSS
+   — which is what makes the rule hold at any depth with nothing added
+   here. */
 .sidebar-icon > .menu__link::before,
 .sidebar-icon > .menu__list-item-collapsible > .menu__link::before {
   content: '';
@@ -759,28 +698,20 @@ html.docs-doc-page .subtitle {
   mask: var(--pd-sidebar-icon) center / contain no-repeat;
 }
 
-/* Os trinta e um pares seção→ícone, e eles se leem em dois blocos porque valem
-   por duas regras diferentes.
+/* The thirty-one section-to-icon pairs, read as two blocks because they
+   answer to two different rules.
 
-   **As dez primeiras são de SEÇÃO**, inalteradas desde a #97: a folha herda a
-   família do ramo que a contém, e uma fileira de irmãs mostra o mesmo glifo.
+   **The first ten are SECTION icons**: a leaf inherits the family of the
+   branch that contains it, and a row of siblings shows the same glyph.
 
-   **As vinte e uma seguintes são de PÁGINA**, e chegaram na #118. No ramo do
-   `overpower` cada página tem o seu, e nenhuma repete o da que a contém — a
-   fileira de quatro comandos idênticos foi o que pediu a mudança. Elas estão na
-   ordem da ÁRVORE, não na alfabética: é assim que se confere, lendo ao lado da
-   sidebar, que duas vizinhas não caíram no mesmo desenho.
+   **The following twenty-one are PAGE icons**: each page in that branch has
+   its own, and none repeats the one its parent uses.
 
-   `--bibliotecas` SAIU. Era a família que o nó do produto e as duas folhas de
-   abertura dele repetiam, e as três ganharam a sua. Regra CSS sem declarante em
-   `sidebars-*.js` é o que `npm run icones` reprova, nos dois sentidos.
+   They're in TREE order, not alphabetical: that's what lets a reviewer
+   confirm, reading down the sidebar, that no two neighbors share a design.
 
-   **O alcance é o que o orçamento paga**, e o número está no manifesto: o site
-   inteiro pediria 55 chaves, e os 61 arquivos oferecem 42 depois de tirar os 19
-   de sistema. As 21 daqui cabem; as outras três árvores seguem por seção.
-
-   Nenhum arquivo novo em `static/icons/`: todas reaproveitam desenhos que o
-   manifesto já carregava, e o teto de 64 não se move. */
+   No new file in `static/icons/`: every one reuses a drawing the icon
+   manifest already carried. */
 .sidebar-icon--visao-geral        { --pd-sidebar-icon: url('/icons/layers.svg'); }
 .sidebar-icon--conteudo-teorico   { --pd-sidebar-icon: url('/icons/code-xml.svg'); }
 .sidebar-icon--conteudo-pratico   { --pd-sidebar-icon: url('/icons/workflow.svg'); }
@@ -789,7 +720,7 @@ html.docs-doc-page .subtitle {
 .sidebar-icon--skills             { --pd-sidebar-icon: url('/icons/bot.svg'); }
 .sidebar-icon--servidores-mcp     { --pd-sidebar-icon: url('/icons/server.svg'); }
 
-/* O ramo do `overpower` — uma por página, na ordem da árvore. */
+/* The `overpower` branch — one icon per page, in tree order. */
 .sidebar-icon--overpower              { --pd-sidebar-icon: url('/icons/zap.svg'); }
 .sidebar-icon--instalacao             { --pd-sidebar-icon: url('/icons/download.svg'); }
 .sidebar-icon--conceitos              { --pd-sidebar-icon: url('/icons/shapes.svg'); }
@@ -810,9 +741,8 @@ html.docs-doc-page .subtitle {
 .sidebar-icon--solucao-de-problemas   { --pd-sidebar-icon: url('/icons/refresh-cw.svg'); }
 .sidebar-icon--changelog              { --pd-sidebar-icon: url('/icons/clock.svg'); }
 
-/* `contribuir/` nasceu na #133 da fusão de `desenvolvimento/` com `publicacao/`,
-   e herda os desenhos dos dois: a chave inglesa que era do primeiro passa ao nó,
-   e o foguete do segundo fica com o `release`. */
+/* `contribuir/` merges two former branches, and inherits an icon from each:
+   the wrench from the first, the rocket from the second's release page. */
 .sidebar-icon--contribuir             { --pd-sidebar-icon: url('/icons/users.svg'); }
 .sidebar-icon--arquitetura            { --pd-sidebar-icon: url('/icons/wrench.svg'); }
 .sidebar-icon--mapa-de-modulos        { --pd-sidebar-icon: url('/icons/file-text.svg'); }
@@ -824,42 +754,29 @@ html.docs-doc-page .subtitle {
 .sidebar-icon--release                { --pd-sidebar-icon: url('/icons/rocket.svg'); }
 .sidebar-icon--release-ready          { --pd-sidebar-icon: url('/icons/upload.svg'); }
 
-/* Tipografia e raio — um corpo só, para tudo que é destino, em todo nível. A
-   âncora usa peso normal com entrelinha maior, e reserva toda marcação de ativo
-   para a pílula (abaixo) e o falso-negrito. O separador é a única exceção, e ela
-   tem regra própria logo adiante: ele não é destino, e o negrito dele é o que
-   agrupa.
+/* Typography and radius — one body, for every destination, at every level.
+   The anchor uses normal weight with a taller line-height, and reserves all
+   active marking for the pill (below) and the optical bold. The separator
+   is the only exception, with its own rule right after: it isn't a
+   destination, and its bold is what groups instead.
 
-   `line-height: calc(24 / 14)` é 24px a 14px de fonte — o alvo publicado em
-   docs/design/tokens.md §13, escrito como razão em vez de decimal cravado
-   porque `24 ÷ 14` não fecha em dízima finita: um decimal de quatro casas
-   (o padrão deste arquivo, `1.7143`) mede 24,0002px no navegador. Deixar o
-   `calc()` fazer a divisão em ponto flutuante duplo é mais preciso que
-   qualquer decimal escrito à mão, e nomeia a derivação: 24 é o alvo, 14 é
-   `--pd-type-sm`.
+   `line-height: calc(24 / 14)` is 24px at 14px font size — written as a
+   ratio instead of a hardcoded decimal because `24 ÷ 14` doesn't terminate:
+   a four-decimal value (this file's usual precision) measures 24.0002px in
+   the browser. Letting `calc()` do the division in double-precision float
+   is more accurate than any hand-written decimal, and it names the
+   derivation: 24 is the target, 14 is `--pd-type-sm`.
 
-   A JUSTIFICATIVA ENCOLHEU, e a forma fica. Este comentário dizia que o
-   `calc()` era necessário porque *"o alvo é `exato` e o comparador não
-   arredonda"* — e essa parte caiu: a tolerância daquela linha virou `±1`, que é
-   o que a doutrina de tolerância de chrome.md §11 sempre mandou para medida que
-   atravessa subpixel. Nem `calc()` nem decimal reprovariam hoje. O `calc()` fica
-   por ser mais preciso e por nomear a derivação, não mais por caber num alvo
-   que era impossível de fechar. Não é `--pd-leading-code` (1,7143): as duas entrelinhas
-   nascem de medições independentes que bateram perto uma da outra, e nomear a
-   daqui a partir de "código" seria o acoplamento falso que a escada de
-   leading já evita ao declarar `--pd-leading-h4` em nome próprio apesar de
-   repetir o número de `--pd-leading-ui`.
+   `border-radius` drops Infima's hardcoded mixin value and becomes the
+   published target — `--pd-radius-md` lands exactly 12px because the
+   project's base is 16.
 
-   `border-radius` some do mixin do Infima (0,25rem cravado) e vira o alvo
-   publicado — `--pd-radius-md` bate 12px exato porque a base do projeto é 16.
-
-   `color` sai daqui e mora na regra seguinte, com `:not(.menu__link--active)`
-   — medido, não suposto: um seletor de duas classes (`.theme-doc-sidebar-menu
-   .menu__link`) tem a MESMA especificidade que `.menu__link.menu__link--active`
-   do Infima, e no empate quem carrega por último no cascade vence. Sem a
-   exclusão, o texto e o ícone do item ativo ficavam presos em
-   `--pd-text-muted` — o próprio bug que "texto e ícone do ativo herdam o
-   acento de graça" (a nota original desta seção) afirmava já estar resolvido. */
+   `color` moves to the next rule, with `:not(.menu__link--active)` —
+   measured, not assumed: a two-class selector
+   (`.theme-doc-sidebar-menu .menu__link`) carries the SAME specificity as
+   Infima's `.menu__link.menu__link--active`, and on a tie the rule loaded
+   last in the cascade wins. Without the exclusion, the active item's text
+   and icon stayed stuck in `--pd-text-muted`. */
 .theme-doc-sidebar-menu .menu__link {
   font-size: var(--pd-type-sm);
   font-weight: var(--pd-weight-body);
@@ -871,24 +788,25 @@ html.docs-doc-page .subtitle {
   color: var(--pd-text-muted);
 }
 
-/* O SEPARADOR — o rótulo em negrito que agrupa, e o único item da sidebar que
-   não é destino. Duas declarações e nada mais: a inércia sai da árvore, não
-   daqui (ver o cabeçalho da seção).
+/* THE SEPARATOR — the bold label that groups, and the sidebar's only item
+   that isn't a destination. Two declarations and nothing else: the
+   inertness comes from the tree, not from here (see the section header).
 
-   O peso é `--pd-weight-heading`, e é peso de verdade, não o falso-negrito de
-   `--pd-optical-bold`. Os dois resolvem problemas diferentes: o falso-negrito
-   existe onde o peso MUDA — o item ativo troca de peso a cada navegação, e
-   trocar `font-weight` reflui o texto e faz a linha pular de largura na hora em
-   que o leitor clica. O separador nasce e morre no mesmo peso; não há reflow a
-   evitar, e uma sombra de 0,4px seria uma aproximação onde cabe o desenho certo.
+   The weight is `--pd-weight-heading`, real weight, not the optical bold of
+   `--pd-optical-bold`. The two solve different problems: optical bold
+   exists where weight CHANGES — the active item swaps weight on every
+   navigation, and swapping font-weight reflows the text and makes the line
+   jump width at the moment the reader clicks. The separator is born and
+   stays at the same weight; there's no reflow to avoid, and a 0.4px shadow
+   would be an approximation where the real design already fits.
 
-   A cor sobe para `--pd-text-strong`: o separador é a única linha da sidebar que
-   não pode ser lida como link apagado, e a diferença de peso sozinha não paga
-   isso contra `--pd-text-muted`.
+   Color steps up to `--pd-text-strong`: the separator is the only sidebar
+   row that must not read as a dimmed link, and the weight difference alone
+   doesn't buy that against `--pd-text-muted`.
 
-   Quatro classes contra as três da regra de cor acima — `:not()` conta a
-   especificidade do argumento, então aquela regra é (0,3,0) e esta precisa
-   passar dela sem depender da ordem do arquivo. */
+   Four classes against the color rule's three — `:not()` counts the
+   specificity of its argument, so that rule is (0,3,0) and this one needs
+   to beat it without depending on file order. */
 .theme-doc-sidebar-menu
   .theme-doc-sidebar-item-category-level-1
   > .menu__list-item-collapsible
@@ -898,30 +816,33 @@ html.docs-doc-page .subtitle {
   text-shadow: none;
 }
 
-/* O REALCE NÃO PINTA O SEPARADOR, e são DOIS realces a apagar, não um. Ambos
-   foram lidos no HTML gerado, não deduzidos:
+/* THE HIGHLIGHT DOESN'T PAINT THE SEPARATOR, and there are TWO highlights to
+   suppress, not one. Both read from generated HTML, not deduced:
 
-   1. O HOVER DO WRAPPER. O Infima realça `.menu__list-item-collapsible` sob o
-      ponteiro, e o wrapper existe no separador tanto quanto no nó colapsável —
-      o `theme-classic` embrulha os dois com a mesma classe. Sem isto, a linha
-      que não navega acende e promete um clique que não acontece.
+   1. THE WRAPPER'S HOVER. Infima highlights `.menu__list-item-collapsible`
+      under the pointer, and the wrapper exists on the separator exactly as
+      much as on a collapsible node — theme-classic wraps both in the same
+      class. Without this, the row that doesn't navigate lights up and
+      promises a click that goes nowhere.
 
-   2. A PÍLULA DO ATIVO, e esta é a que surpreende. O `theme-classic` põe
-      `menu__link--active` no rótulo do separador sempre que a página aberta
-      está dentro do grupo — é marca de *o ramo contém a página*, e no separador
-      ela é permanente, porque o separador nunca colapsa. E a exclusão que o
-      Infima usa para não pintar rótulo de categoria,
-      `.menu__link--active:not(.menu__link--sublist)`, NÃO alcança o separador:
-      `menu__link--sublist` só é emitida quando `collapsible` é verdadeiro, e a
-      nossa é falsa. O resultado sem esta regra são duas pílulas empilhadas — a
-      do separador e a da folha de abertura logo abaixo dele.
+   2. THE ACTIVE PILL, and this one surprises. theme-classic puts
+      `menu__link--active` on the separator's own label whenever the open
+      page sits anywhere inside that group — it marks *the branch contains
+      the page*, and on the separator it's permanent, since the separator
+      never collapses. And the exclusion Infima uses to keep a category
+      label unpainted, `.menu__link--active:not(.menu__link--sublist)`,
+      doesn't reach the separator: `menu__link--sublist` is only emitted
+      when `collapsible` is true, and this project's separator sets it to
+      false. Without this rule, two pills stack — the separator's and the
+      opening leaf's just below it.
 
-   O `text-shadow: none` da regra anterior fecha o terceiro caso pela mesma
-   causa: o falso-negrito do item ativo chegaria por cima de um rótulo que já
-   nasce em `--pd-weight-heading`.
+   The `text-shadow: none` in the rule above closes the third case by the
+   same cause: the active item's optical bold would land on a label already
+   born at `--pd-weight-heading`.
 
-   Nada disto é `pointer-events: none`: o rótulo continua selecionável e continua
-   alcançável pelo leitor de tela como o texto que é. O que sai é a tinta. */
+   None of this is `pointer-events: none`: the label stays selectable and
+   stays reachable by a screen reader as the text it is. What leaves is the
+   paint. */
 .theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible,
 .theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible:hover,
 .theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link,
@@ -929,31 +850,34 @@ html.docs-doc-page .subtitle {
   background: none;
 }
 
-/* A LINHA INTEIRA É UM BOTÃO SÓ — e é isso que cola a seta no rótulo.
+/* THE WHOLE ROW IS ONE BUTTON — and that's what pins the caret to the label.
 
-   O Infima dá `flex: 1` ao `.menu__link` dentro do wrapper. O link cresce até a
-   borda da sidebar e empurra o `<button class="menu__caret">` irmão para a
-   direita; a seta acaba a 200px do texto que ela governa. Na âncora não há dois
-   elementos: a linha inteira é um `<button>` só, com o chevron logo depois do
-   rótulo.
+   Infima gives `flex: 1` to `.menu__link` inside the wrapper. The link
+   grows to the sidebar's edge and pushes the sibling
+   `<button class="menu__caret">` to the right; the caret ends up 200px from
+   the text it governs. On the anchor there are no two elements: the whole
+   row is a single `<button>`, with the chevron right after the label.
 
-   A resposta é migrar o realce de linha do link para o WRAPPER e tirar o `flex`
-   do link. O link passa a medir o próprio texto, a seta encosta nele, e a
-   pílula continua ocupando a linha inteira porque quem a desenha agora é o
-   elemento que já ocupava a linha inteira. É a mesma pílula, noutro dono.
+   The fix moves the row highlight from the link to the WRAPPER and drops
+   `flex` from the link. The link measures only its own text, the caret sits
+   next to it, and the pill still covers the whole row because the element
+   that draws it now is the one that already spanned it.
 
-   `:not(...-level-1)` exclui o separador — ele é embrulhado pela mesma classe e
-   não pode ganhar realce, por não ser destino (ADR 10, consequência 2).
+   `:not(...-level-1)` excludes the separator — it's wrapped by the same
+   class and can't receive the highlight, since it isn't a destination (ADR
+   10, consequence 2).
 
-   SOBRE O NÍVEL APARECER EM CINCO BLOCOS DESTA SEÇÃO, e a alternativa recusada:
-   um `className: 'sidebar-separador'` em `sidebars-*.js` colapsaria as
-   ocorrências num seletor só, pelo mesmo degrau 1 que o ícone já usa. Recusado:
-   o `className` é escrito à mão, e um separador novo que esqueça de carregá-lo
-   nasce com pílula, com hover e com falso-negrito — errado, e em silêncio.
-   `theme-doc-sidebar-item-category-level-1` sai do `ThemeClassNames` e **é** a
-   definição estrutural de separador neste sistema; ela está certa em toda árvore
-   sem que ninguém precise lembrar de nada. A repetição do seletor é o preço de
-   não ter uma segunda fonte de verdade para *o que é o topo*. */
+   The level appears across five blocks in this section, and the rejected
+   alternative: a `className: 'sidebar-separador'` in the sidebars config
+   would collapse the occurrences into one selector, the same rung the icon
+   already uses. Rejected: the className is written by hand, and a new
+   separator that forgets to carry it is born with a pill, a hover, and an
+   optical bold — wrong, and silent.
+   `theme-doc-sidebar-item-category-level-1` comes from ThemeClassNames and
+   IS this system's structural definition of a separator; it's correct at
+   any depth in the tree with nothing to remember. Repeating the selector is
+   the price of not having a second source of truth for *what counts as the
+   top*. */
 .theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
   > .menu__list-item-collapsible {
   border-radius: var(--pd-radius-md);
@@ -967,84 +891,86 @@ html.docs-doc-page .subtitle {
   padding-right: 0;
 }
 
-/* A pílula do ativo, quando quem está ativo é o nó colapsável. O Infima cobre o
-   caso da FOLHA sozinho (`--ifm-menu-color-background-active` em
-   `.menu__link--active`), e no wrapper ele só pinta o realce de HOVER.
+/* The active pill, when what's active is the collapsible node. Infima
+   covers the LEAF case on its own (`--ifm-menu-color-background-active` on
+   `.menu__link--active`), and on the wrapper it only paints HOVER.
 
-   O `theme-classic` calcula DOIS sinais diferentes: `isActive` (recursivo —
-   verdadeiro se *qualquer* descendente é a página ativa) e `isCurrentPage`
-   (exato — verdadeiro só se *este link* é a página). O primeiro vira a classe
-   `menu__link--active` em TODO ancestral do item ativo; o segundo vira
-   `.menu__list-item-collapsible--active` só no próprio wrapper da página.
+   theme-classic computes TWO different signals: `isActive` (recursive —
+   true if ANY descendant is the active page) and `isCurrentPage` (exact —
+   true only if THIS link is the page). The first becomes the
+   `menu__link--active` class on EVERY ancestor of the active item; the
+   second becomes `.menu__list-item-collapsible--active` only on the page's
+   own wrapper.
 
-   Antes desta regra usava `:has(> .menu__link--active)` — o seletor recursivo
-   — e era o que pintava o fundo do pai quando só a folha estava ativa. A
-   correção é consumir o sinal exato que o Docusaurus já emite — a classe
-   `--active` do wrapper — sem inventar seletor novo. */
+   This rule consumes the exact signal Docusaurus already emits — the
+   wrapper's `--active` class — instead of the recursive one, which would
+   paint the parent's background even when only a leaf below it is
+   active. */
 .theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
   > .menu__list-item-collapsible.menu__list-item-collapsible--active {
   background: var(--ifm-menu-color-background-active);
 }
 
-/* A SETA — o manifesto para de mentir aqui.
+/* THE CARET.
 
-   `src/icons/manifest.js` afirma que `chevron-right` serve o *"caret de
-   categoria de sidebar"* desde que o manifesto existe, e até a #114 nenhuma
-   regra deste repositório implementava isso: o desenho era o SVG embutido do
-   Infima (`--ifm-menu-link-sublist-icon`, um `data:` URI de 16px com
-   `fill: rgba(0,0,0,0.5)`), pintado no modo escuro por um `filter: invert(100%)
-   sepia(94%) saturate(17%)…` de sete etapas. Máscara com `currentColor` troca as
-   sete etapas por uma declaração.
+   The icon manifest has claimed since it existed that `chevron-right`
+   serves the sidebar category caret, and no rule in this repository
+   implemented that until now: the shape was Infima's own embedded SVG
+   (`--ifm-menu-link-sublist-icon`, a 16px `data:` URI with
+   `fill: rgba(0,0,0,0.5)`), inverted for dark mode by a seven-step
+   `filter`. A `currentColor` mask replaces the seven steps with one
+   declaration.
 
-   CORREÇÃO, medida ao tornar a seta mais sutil: a redação anterior seguia
-   daqui dizendo que a máscara fazia a seta seguir a cor do rótulo "de graça",
-   inclusive o acento do item ativo. Medido: falso nos dois estados. O
-   `<button class="menu__caret">` é IRMÃO do `<a class="menu__link">` dentro do
-   wrapper, não filho — `color` não herda entre irmãos, e o `currentColor` da
-   máscara nunca puxou do rótulo. Sem declaração própria, ele herdava o texto de
-   corpo ambiente (`--pd-text-body`), que nos dois modos resolve MAIS
-   contrastado que o rótulo apagado (`--pd-text-muted`) — o oposto de discreto,
-   e o oposto do que `docs.devin.ai` faz.
+   Measured while making the caret more subtle: `color` doesn't inherit
+   between siblings — the `<button class="menu__caret">` is a SIBLING of
+   `<a class="menu__link">` inside the wrapper, not a child — so
+   `currentColor` in the mask never pulled from the label. Without its own
+   declaration, it inherited the ambient body text color, which resolves
+   MORE contrasted than the dimmed label in both modes — the opposite of
+   discreet.
 
-   A GEOMETRIA É 1:1 COM O ARQUIVO, e vale escrever porque parece coincidência e
-   não é. O alvo medido na âncora é *traço 2, 8px de largura*; o
-   `chevron-right.svg` vendorizado é um lucide de `viewBox="0 0 24 24"` com
-   `stroke-width="2"` e `d="m9 18 6-6-6-6"` — o traço cobre de x=8 a x=16, que são
-   exatamente **8 unidades de largura com traço 2**. Renderizar a máscara a
-   `mask-size: 24px` entrega os dois números do alvo sem escalar nada: o desenho
-   sai no tamanho em que foi desenhado.
+   THE GEOMETRY IS 1:1 WITH THE FILE, and it's worth writing down because it
+   reads like coincidence and isn't. The anchor's measured target is
+   *stroke 2, 8px width*; the vendored `chevron-right.svg` is a Lucide icon
+   with `viewBox="0 0 24 24"`, `stroke-width="2"`, `d="m9 18 6-6-6-6"` — the
+   stroke covers x=8 to x=16, exactly **8 units of width at stroke 2**.
+   Rendering the mask at `mask-size: 24px` delivers both target numbers with
+   nothing scaled: the drawing comes out at the size it was drawn.
 
-   A CAIXA é 16px e não 8, e a folga é deliberada. `rotate: 90deg` gira o
-   elemento, não a máscara: numa caixa de 8×16 a seta aberta ocuparia 14px de
-   largura dentro de 8px de espaço reservado e transbordaria 3px para cada lado.
-   Quadrada e maior que o desenho nos dois eixos, a caixa segura o giro sem
-   reservar espaço a mais na linha — os 16px são `--pd-space-4`, a mesma caixa do
-   ícone de família do outro lado do rótulo.
+   THE BOX is 16px, not 8, and the slack is deliberate. `rotate: 90deg`
+   rotates the element, not the mask: in an 8×16 box the open arrow would
+   occupy 14px of width inside 8px of reserved space and overflow 3px on
+   each side. Square and larger than the drawing on both axes, the box
+   absorbs the turn without reserving extra room in the row — the 16px is
+   `--pd-space-4`, the same box as the family icon on the label's other
+   side.
 
-   O GAP É 12px do rótulo, e o `padding-left` do botão paga 8: o desenho de 8px
-   nasce centrado na caixa de 16, então 4px de folga já vêm de dentro. 8 + 4 = 12.
+   THE GAP is 12px from the label, and the button's `padding-left` pays 8:
+   the 8px drawing is born centered in the 16px box, so 4px of slack already
+   comes from inside. 8 + 4 = 12.
 
-   `rotate` e não `transform`: o Infima escreve `transform: rotate(180deg)` no
-   estado base e `rotateZ(90deg)` no colapsado, girando um glifo que apontava
-   para cima. Nosso desenho já aponta para a direita — o estado fechado é
-   rotação ZERO, e o aberto é 90deg. Zerar o `transform` do Infima e usar a
-   propriedade independente deixa os dois estados legíveis pelo valor, e não pela
-   soma de duas rotações herdadas. */
+   `rotate`, not `transform`: Infima writes `transform: rotate(180deg)` at
+   rest and `rotateZ(90deg)` collapsed, turning a glyph that pointed up.
+   This project's drawing already points right — closed is rotation ZERO,
+   open is 90deg. Zeroing Infima's `transform` and using the independent
+   property keeps both states legible by their own value, instead of the sum
+   of two inherited rotations. */
 .theme-doc-sidebar-menu .menu__caret {
   padding-block: 0;
   padding-inline: var(--pd-space-2) 0;
   color: var(--pd-text-faint);
 }
 
-/* A CONVERGÊNCIA — quando o ramo está aberto, o `.menu__link` irmão vira
-   `--ifm-menu-color-active` (o acento), e a seta precisa da mesma cor para
-   não sobrar cinza ao lado de um rótulo colorido. Não há herança direta entre
-   irmãos — `:has()` pergunta se há um link ativo em qualquer profundidade.
+/* THE CONVERGENCE — when the branch is open, the sibling `.menu__link`
+   becomes `--ifm-menu-color-active` (the accent), and the caret needs the
+   same color so it doesn't sit gray beside a colored label. There's no
+   direct inheritance between siblings — `:has()` asks whether an active
+   link exists at any depth.
 
-   A seta e a pílula têm propósitos diferentes: a seta sinaliza *ramo aberto*
-   (qualquer descendente ativo), por isso continua recursiva; a pílula agora
-   sinaliza *página exata* (só a categoria própria ativa), e usa o sinal exato
-   que o Docusaurus emite. Mesmo padrão CSS `:has()`, escopos diferentes. */
+   The caret and the pill serve different purposes: the caret signals
+   *branch open* (any descendant active), so it stays recursive; the pill
+   now signals *exact page* (only the category itself active), and uses the
+   exact signal Docusaurus emits. Same `:has()` pattern, different scope. */
 .theme-doc-sidebar-menu
   .menu__list-item-collapsible:has(> .menu__link--active)
   > .menu__caret {
@@ -1063,75 +989,59 @@ html.docs-doc-page .subtitle {
   transition: rotate var(--pd-move-flip);
 }
 
-/* Fechado é o estado SEM rotação — o desenho já aponta para a direita. */
+/* Closed is the state WITHOUT rotation — the drawing already points right. */
 .theme-doc-sidebar-menu .menu__list-item--collapsed .menu__caret::before {
   transform: none;
   rotate: none;
 }
 
-/* SEM TRILHO VERTICAL ligando os filhos ao pai. A âncora não desenha um, este
-   projeto nunca desenhou, e a nota fica escrita porque a lista aninhada é o
-   lugar óbvio para alguém acrescentar um `border-left` achando que completa o
-   desenho. O que separa um ramo do vizinho é o recuo e o negrito do separador.
+/* NO VERTICAL RAIL connects children to their parent. The anchor doesn't
+   draw one, this project never has, and the note stays because a nested
+   list is the obvious place to add a `border-left` thinking it completes
+   the design. What separates one branch from its neighbor is the indent
+   and the separator's bold.
 
-   A LISTA ANINHADA perde o `padding-left` do Infima: o recuo é inteiro no link
-   (issue #97). Até ali o degrau vinha metade da lista e metade do próprio link;
-   a âncora não faz essa divisão, e copiar o resultado sem copiar a decisão
-   produz recuo que parece certo e se desfaz no segundo nível.
+   THE NESTED LIST loses Infima's `padding-left`: the indent lives entirely
+   on the link. Copying the anchor's result without copying that decision
+   produces an indent that looks right and breaks on the second level.
 
-   Escopado a `.theme-doc-sidebar-menu`: `.menu__list .menu__list` sozinho
-   também casa a gaveta do dropdown de locale na navbar móvel — `Collapsible`
-   aninha um `<ul class="menu__list">` dentro do `<ul class="menu__list">` da
-   gaveta inteira, a mesma forma da sidebar. Sem o escopo, este zero vazaria
-   pro recuo do dropdown, que não pediu nada disto.
+   Scoped to `.theme-doc-sidebar-menu`: `.menu__list .menu__list` alone also
+   matches the locale dropdown's nested list in the mobile navbar —
+   `Collapsible` nests a `<ul class="menu__list">` inside another, the same
+   shape as the sidebar. Without the scope, this zero would leak into the
+   dropdown's indent, which asked for none of this.
 
-   Um seletor só, não dois: `.theme-doc-sidebar-menu` é a MESMA tag que carrega
-   `.menu__list` na raiz da árvore — não um ancestral dela —, então qualquer
-   `.menu__list` aninhado já é descendente de `.theme-doc-sidebar-menu` sozinho.
-   Encadear um segundo `.menu__list` no seletor exigiria um ancestral ACIMA da
-   raiz com as duas classes, que não existe, e zeraria a busca inteira. */
+   One selector, not two: `.theme-doc-sidebar-menu` is the SAME element that
+   carries `.menu__list` at the tree's root — not an ancestor of it — so any
+   nested `.menu__list` is already its descendant on its own. */
 .theme-doc-sidebar-menu .menu__list {
   padding-left: 0;
 }
 
-/* A RAMPA DE RECUO É 16 · 16 · 28 · 40, e ela é medida, não derivada.
+/* THE INDENT RAMP IS 16 · 16 · 28 · 40, and it's measured, not derived.
 
-   O que havia antes era +16px por nível — 16 · 32 · 48. A #97 o escolheu para
-   preservar *"o mesmo total que a soma antiga já dava"*, e essa soma era o
-   default do Infima: o `16px` publicado como alvo `exato` é o BASE, e ele bate
-   com a âncora, mas o PASSO por nível nunca teve sonda de paridade nenhuma.
-   Medido no `docs.devin.ai` e no `docs.windsurf.com`, o `padding-left` inline
-   por nível é 16 · 16 · 28 · 40 · 52: separador e primeiro nível ENCOSTADOS, e
-   +12px por degrau daí em diante (ADR 10 §f).
+   Measured on two other documentation sites: inline `padding-left` per
+   level runs 16 · 16 · 28 · 40 · 52 — separator and first level FLUSH, then
+   +12px per step from there (ADR 10 §f).
 
-   Consequência que vale declarar: em `Jornadas` e `Procedimentos` as folhas
-   descem de 32px para 16px e ficam **alinhadas** com o separador. Quem separa um
-   ramo do outro passa a ser o negrito do separador mais o ícone da folha — e é
-   assim na âncora.
+   Worth stating: leaves in a two-level branch drop from 32px to 16px and
+   land FLUSH with the separator. What separates one branch from its
+   neighbor becomes the separator's bold plus the leaf's icon — the same
+   reading as the anchor.
 
-   Os níveis 3 e 4 escrevem linha. O 1 e o 2 já medem 16px sem regra:
-   `--ifm-menu-link-padding-horizontal` é `--pd-space-4`, e o Infima o aplica a
-   todo `.menu__link`. Uma regra que redeclara o valor herdado é uma segunda
-   fonte para o mesmo número.
+   Levels 1 and 2 already measure 16px with no rule:
+   `--ifm-menu-link-padding-horizontal` is `--pd-space-4`, and Infima applies
+   it to every `.menu__link`. Levels 3 and 4 need their own line.
 
-   **O quarto degrau entrou com o `overpower`, e a ausência dele era defeito de
-   fato.** O teto de profundidade era 3, então o nível 4 não existia e a rampa
-   parava onde a árvore parava. Com o teto em 4 (ADR 10 §g) ele passou a existir,
-   e sem esta regra as 13 folhas de nível 4 caem nos 16px base do Infima — o
-   mesmo recuo do nível 1. A fixture `aninhamento-de-sidebar-maximo` prova
-   exatamente estes 40px, e uma fixture que provasse um número que o CSS não
-   escreve seria afirmação não conferida.
+   Neither 28 nor 40 is a space-scale stop — the scale runs by 4 up to 24
+   and jumps to 32. `calc(var(--pd-space-1) * 7)` and `* 10` compose from the
+   scale's one literal instead of opening two new stops for one consumer
+   each.
 
-   Nem 28 nem 40 são parada da escala de espaço — ela vai de 4 em 4 até 24 e
-   salta para 32. `calc(var(--pd-space-1) * 7)` e `* 10` compõem do único literal
-   da escala em vez de abrir duas paradas novas para um consumidor cada; as
-   sondas `sidebar.item.recuo.n3` e `.n4` em `scripts/paridade.mjs` são quem
-   conferem o resultado contra os alvos publicados.
-
-   Os DOIS seletores por nível existem porque o nó abaixo do separador pode ser
-   folha ou grupo, e as duas formas de DOM põem o link em lugares diferentes. O
-   par é a mesma regra vista das duas formas, e ele é o que faz a rampa continuar
-   valendo se um nível ganhar ou perder filhos. */
+   The two selectors per level exist because the node below the separator
+   can be a leaf or a group, and the two DOM shapes put the link in
+   different places. The pair is the same rule seen from both shapes, and
+   it's what keeps the ramp correct however a level's children change. */
 .theme-doc-sidebar-item-link-level-3 > .menu__link,
 .theme-doc-sidebar-item-category-level-3 > .menu__list-item-collapsible > .menu__link {
   padding-left: calc(var(--pd-space-1) * 7);
@@ -1142,64 +1052,45 @@ html.docs-doc-page .subtitle {
   padding-left: calc(var(--pd-space-1) * 10);
 }
 
-/* Falso-negrito no item ativo. Trocar o peso reflui o texto e faz o item pular
-   de largura no instante em que o leitor navega. */
+/* Optical bold on the active item. Swapping weight reflows the text and
+   makes the item jump width the instant the reader navigates. */
 .theme-doc-sidebar-menu .menu__link--active {
   text-shadow: var(--pd-optical-bold);
 }
 
-/* A PÍLULA DO ATIVO não ganha regra de FUNDO própria na FOLHA — ela já sai
-   correta da composição acima. `--ifm-menu-color-background-active` já era
-   `--pd-surface-wash` (o acento a 12%) antes da #97; o que faltava era só o
-   raio, que herdava 0,25rem cravado do mixin do Infima e agora sai da regra
-   de tipografia — mesmo seletor, `.menu__link`, ativo ou não. A âncora não usa
-   barra lateral, borda nem sombra no item ativo, e este projeto nunca desenhou
-   nenhuma das três aqui: não há o que remover. O nó COLAPSÁVEL precisou de
-   regra, e ela está acima, junto da migração do realce.
+/* THE VERTICAL DIVIDER — a leak from the native theme, not a request.
+   `DocRoot/Layout/Sidebar` (hashed) declares `border-right: 1px solid
+   var(--ifm-toc-border-color)`. The hashed class isn't touched — no need:
+   `ThemeClassNames.docs.docSidebarContainer` already sits on the SAME
+   element, rung 1.
 
-   O TEXTO E O ÍCONE precisaram, sim, de uma exclusão: `--ifm-menu-color-active`
-   já é `--pd-accent`, e o ícone é `currentColor`, mas a regra de tipografia
-   acima cravava `color` em TODO `.menu__link` com a mesma especificidade da
-   regra `--active` do Infima — no empate, o cascade decidia, e decidia errado.
-   O `:not(.menu__link--active)` na regra de cor é o que devolve o acento ao
-   item ativo; sem ele, texto e ícone do ativo ficavam presos em
-   `--pd-text-muted`. */
+   MEASURED, not assumed: `.theme-doc-sidebar-container` alone (0,1,0) does
+   NOT win — `DocRoot/Layout/Sidebar`'s module is a separate chunk that
+   loads later, the same load-order tie the back-to-top button section
+   documents below. The answer is the same: add the element's TYPE.
+   `aside.theme-doc-sidebar-container` reaches (0,1,1) — it takes the
+   selector out of load order instead of depending on it.
 
-/* O DIVISOR VERTICAL — vazamento do substrato nativo, e não pedido nenhum.
-   `DocRoot/Layout/Sidebar` (hasheada) declara `border-right: 1px solid
-   var(--ifm-toc-border-color)`. Não se toca a classe hasheada — não é
-   preciso: `ThemeClassNames.docs.docSidebarContainer` já está no MESMO
-   elemento, degrau 1.
-
-   MEDIDO, não suposto: `.theme-doc-sidebar-container` sozinha (0,1,0) NÃO
-   vence — o módulo do `DocRoot/Layout/Sidebar` é chunk separado e carrega
-   depois, o mesmo empate de ordem de carga que a seção do botão de voltar ao
-   topo já documentou para `.theme-back-to-top-button`. A resposta é a
-   mesma: somar o TIPO do elemento. O elemento é `<aside>`, e
-   `aside.theme-doc-sidebar-container` vai a (0,1,1) — tira o seletor da
-   ordem de carga em vez de depender dela.
-
-   Não se zera `--ifm-toc-border-color` no adaptador: a mesma variável também
-   pinta a borda do botão de recolher a sidebar
-   (`DocSidebar/Desktop/CollapseButton`), que não é vazamento — é contorno de
-   controle, e apagar os dois juntos seria remover peça que ninguém pediu que
-   saísse. */
+   `--ifm-toc-border-color` isn't zeroed in the bridge: the same variable
+   also paints the sidebar's own collapse-button border, which isn't a leak
+   — it's a control's outline, and zeroing both together would remove a
+   piece nobody asked to lose. */
 aside.theme-doc-sidebar-container {
   border-right: none;
 }
 
-/* O ELEMENTO QUE DE FATO ROLA não é `.theme-doc-sidebar-container` — é o
-   `<nav class="menu thin-scrollbar">` dentro dele, medido em 3.10.2:
-   `DocSidebar/Desktop/Content` monta a lista nesse `<nav>`, e
-   `theme-doc-sidebar-menu` (`ThemeClassNames.docs.docSidebarMenu`) é o
-   `<ul>` FILHO dele, estático, do tamanho do conteúdo — não a caixa com
-   `overflow`. `.thin-scrollbar` é classe do Infima, degrau 0, e é ela quem
-   carrega o scroll; escopada ao container estável para não vazar para outro
-   `.thin-scrollbar` do site (código, TOC do estreito). */
+/* THE ELEMENT THAT ACTUALLY SCROLLS isn't `.theme-doc-sidebar-container` —
+   it's the `<nav class="menu thin-scrollbar">` inside it:
+   `DocSidebar/Desktop/Content` mounts the list on that `<nav>`, and
+   `theme-doc-sidebar-menu` is the static `<ul>` CHILD of it, sized to its
+   content — not the box with `overflow`. `.thin-scrollbar` is an Infima
+   class, rung 0, and it's what carries the scroll; scoped to the stable
+   container so it doesn't leak into another `.thin-scrollbar` on the site
+   (code, the narrow TOC). */
 
-/* O DESVANECIMENTO DE TOPO — puro CSS, `mask-image` em vez de nó novo. A
-   máscara é relativa à CAIXA, não ao conteúdo que rola dentro dela — é por
-   isso que funciona em qualquer posição de scroll, sem JS a escutar evento. */
+/* THE TOP FADE — pure CSS, `mask-image` instead of a new node. The mask is
+   relative to the BOX, not the content scrolling inside it — which is why
+   it works at any scroll position, with no JS listening for an event. */
 .theme-doc-sidebar-container .thin-scrollbar {
   mask-image: linear-gradient(
     to bottom,
@@ -1208,30 +1099,30 @@ aside.theme-doc-sidebar-container {
   );
 }
 
-/* A BARRA DE ROLAGEM — invisível em repouso, tingida no hover, com goteira
-   estável. `scrollbar-gutter: stable` reserva o espaço da barra SEMPRE, para
-   que o texto da sidebar não pule de largura quando ela aparece — o mesmo
-   defeito de salto que o falso-negrito do item ativo evita duas regras acima,
-   e a mesma resposta.
+/* THE SCROLLBAR — invisible at rest, tinted on hover, with a stable gutter.
+   `scrollbar-gutter: stable` reserves the scrollbar's space ALWAYS, so the
+   sidebar text doesn't jump width when it appears — the same jump defect
+   the optical bold avoids two rules above, and the same answer.
 
-   Duas propriedades por padrão de navegador — Firefox lê `scrollbar-color`,
-   WebKit lê os pseudo-elementos `::-webkit-scrollbar-*` que o `.thin-scrollbar`
-   do Infima já declara — e as duas citam os MESMOS tokens, para não haver uma
-   segunda paleta de barra de rolagem no projeto. */
-/* A LARGURA DA BARRA É NOSSA, e antes ela era do Infima com uma condição
-   embutida. `.thin-scrollbar` declara `scrollbar-width: thin` DENTRO de
-   `@media (pointer: fine)` — quem chega sem apontador fino (toque, ou um
-   ambiente que não reporte o pointer) cai no `auto` do navegador, que é a
-   barra larga. Medido nesta máquina, no mesmo Chromium: **15px sem a
-   condição, 10 com ela**. Declarar aqui tira a espessura da barra da
-   dependência de um media query que não é nosso.
+   Two properties for two browser families — Firefox reads
+   `scrollbar-color`, WebKit reads the `::-webkit-scrollbar-*`
+   pseudo-elements `.thin-scrollbar` already declares — and both cite the
+   SAME tokens, so there's no second scrollbar palette in the project. */
+/* THE SCROLLBAR'S WIDTH is this project's own, and it used to be Infima's
+   with a built-in condition. `.thin-scrollbar` declares
+   `scrollbar-width: thin` INSIDE `@media (pointer: fine)` — anyone arriving
+   without a fine pointer (touch, or an environment that doesn't report the
+   pointer type) falls back to the browser's `auto`, the wide bar. Measured
+   on this machine, same Chromium: **15px without the condition, 10 with
+   it**. Declaring it here takes the bar's width out of a media query this
+   project doesn't own.
 
-   O RESPIRO DA LISTA vem da âncora, e ele é o que impede o texto de encostar
-   na barra: lá o item termina 32px antes da borda do painel (`pr-8`, com a
-   barra desenhada por dentro desse corredor). Aqui a goteira é do navegador e
-   soma por fora do preenchimento — medido: com `padding-right: 32` a lista
-   terminava a 42 da borda, não a 32. A subtração é o que faz o número fechar
-   no da âncora em vez de o ultrapassar por uma largura que não escolhemos. */
+   THE LIST'S BREATHING ROOM comes from the anchor: measured there, the item
+   ends 32px before the panel's edge, with the bar drawn inside that
+   corridor. Here the gutter comes from the browser and adds on top of the
+   padding — measured: with `padding-right: 32` the list ended 42 from the
+   edge, not 32. The subtraction is what closes the number on the anchor's
+   instead of overshooting it by a width this project didn't choose. */
 .theme-doc-sidebar-container .thin-scrollbar {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
@@ -1254,9 +1145,7 @@ aside.theme-doc-sidebar-container {
 /* -----------------------------------------------------------------------------
    4. TOC
 
-   A largura é `--pd-toc-width`, explícita — não é mais fração de grid. A
-   #96 corrigiu a premissa que travava em 288: ver `chrome.css` §1 e
-   `chrome.md` §1.2.
+   The width is --pd-toc-width, explicit — no longer a grid fraction.
    ----------------------------------------------------------------------------- */
 
 .theme-doc-toc-desktop {
@@ -1264,72 +1153,72 @@ aside.theme-doc-sidebar-container {
   line-height: var(--pd-leading-ui);
 }
 
-/* O OFFSET DE STICKY, e ele é reescrito porque o do upstream não conhece a
-   linha em que o conteúdo abre.
+/* THE STICKY OFFSET is rewritten because upstream's doesn't know the line
+   where content opens.
 
-   `TOC/styles.module.css` do `theme-classic` declara `top: calc(var(
-   --ifm-navbar-height) + 1rem)`. Com o adaptador escrevendo 112 em
-   `--ifm-navbar-height`, isso dá 128 — medido, e é o que `npm run paridade`
-   acusava contra o alvo de 152 do §11. Os 16 do upstream são a respiração
-   dele; a nossa é `--pd-space-10`, a mesma que o `<main>` já dá ao `<article>`
-   (§1, acima). Alinhar os dois é o que a linha `TOC grudado em` cobra: o
-   índice não sobe acima do texto que ele indexa.
+   theme-classic's `TOC` module declares `top: calc(var(--ifm-navbar-height)
+   + 1rem)`. With the bridge writing 112 into `--ifm-navbar-height`, that's
+   128 — measured, against a 152 target. The upstream 16 is its own
+   breathing room; this project's is `--pd-space-10`, the same one `<main>`
+   already gives `<article>` (§1, above). Aligning the two is what keeps the
+   index from rising above the text it indexes.
 
-   O `max-height` vem junto, e não é enfeite. O do upstream é `calc(100vh -
-   (var(--ifm-navbar-height) + 2rem))` = `100vh − 144`; com o topo em 152 a
-   caixa passaria a viewport em 8px e o fim da lista ficaria fora de alcance
-   numa janela curta. A conta aqui é a mesma do painel da referência gerada
-   (o trilho da referência, que saiu na #118): o topo do conteúdo, mais a mesma
-   respiração embaixo. `--pd-viewport-height` é `100dvh` — o token que o
-   projeto já usa para não medir contra a barra de endereço do telefone.
+   `max-height` comes with it, and isn't decoration. Upstream's is
+   `calc(100vh - (var(--ifm-navbar-height) + 2rem))` = `100vh − 144`; with
+   the top at 152 the box would overshoot the viewport by 8px and the list's
+   end would fall out of reach in a short window. The math here matches the
+   generated reference panel's own: content top, plus the same breathing
+   room below. `--pd-viewport-height` is `100dvh` — the token this project
+   already uses to avoid measuring against a phone's address bar.
 
-   ESPECIFICIDADE, e ela custou uma medição. A regra do upstream é
-   `.tableOfContents`, hasheada, UMA classe (0,1,0) — a mesma desta, e empate
-   de especificidade se resolve por ordem de cascata. Medido no bundle:
-   `.theme-doc-toc-desktop` sai no byte 49513 e `.tableOfContents_*` no 87027,
-   ou seja o CSS Module do tema entra DEPOIS e ganha o empate. É por isso que
-   as duas declarações abaixo moram num seletor de dois degraus
-   (`html.docs-doc-page`, 0,2,1) em vez do seletor nu: subir um degrau vence
-   sem `!important`, que este projeto não escreve em lugar nenhum. É o mesmo
-   recurso que o resto deste arquivo já usa para alcançar o grid do Infima. */
+   SPECIFICITY, and it cost a measurement. Upstream's rule is
+   `.tableOfContents`, hashed, ONE class (0,1,0) — the same weight as this
+   one — and a specificity tie resolves by cascade order. Measured in the
+   bundle: `.theme-doc-toc-desktop` loads before `.tableOfContents_*`, so the
+   theme's CSS Module loads AFTER and wins the tie. That's why the two
+   declarations below live in a two-rung selector (`html.docs-doc-page`,
+   0,2,1) instead of the bare one: climbing one rung wins with no
+   `!important`, the same technique the rest of this file already uses to
+   reach Infima's grid. */
 html.docs-doc-page .theme-doc-toc-desktop {
   top: var(--pd-content-top);
   max-height: calc(var(--pd-viewport-height) - var(--pd-content-top) - var(--pd-space-10));
 
-  /* O ROLADOR DESCE PARA A LISTA. O upstream põe `overflow-y: auto` nesta
-     caixa; com o título entrando como pseudo-elemento DELA, o título rolaria
-     junto e sumiria em TOC longo — e na âncora ele fica fora da área que rola.
-     `flex` em coluna resolve sem aritmética nenhuma: a caixa mantém o
-     `max-height` de cima, o título ocupa o que precisa, e a lista fica com o
-     resto. Sem `min-height: 0` no filho o item flex se recusa a encolher
-     abaixo do conteúdo e a barra nunca aparece. */
+  /* THE SCROLLER MOVES DOWN TO THE LIST. Upstream puts `overflow-y: auto` on
+     this box; with the title entering as ITS pseudo-element, the title
+     would scroll along and disappear on a long TOC — on the anchor it stays
+     outside the scrolling area. `flex` in a column resolves it with no
+     arithmetic: the box keeps the `max-height` above, the title takes what
+     it needs, and the list gets the rest. Without `min-height: 0` on the
+     child, the flex item refuses to shrink below its content and the
+     scrollbar never appears. */
   display: flex;
   flex-direction: column;
   overflow: visible;
 }
 
-/* O TÍTULO DO ÍNDICE — "Nesta página", e ele é DUAS peças de CSS porque não
-   pode ser React.
+/* THE INDEX TITLE — "On this page," and it's TWO pieces of CSS because it
+   can't be React.
 
-   `TOC`, `TOCItems` e `DocItem/TOC/Desktop` são todos `unsafe` no catálogo
-   congelado, e `swizzle.md` §2 lê `unsafe` como proibido; `chrome.md` §10 já
-   registrava isso como a perda 3, *"TOC com anatomia nova"*, e dizia que
-   estilo seguia alcançável. Isto é o estilo alcançando. O mecanismo é o mesmo
-   do ícone da sidebar — `mask` + `currentColor` sobre um pseudo-elemento —,
-   adotado lá pelo mesmo motivo: não há ponto de swizzle `safe` onde injetar
-   React.
+   `TOC`, `TOCItems`, and `DocItem/TOC/Desktop` are all outside this
+   project's swizzle budget, so this is the style reaching where React
+   can't. The mechanism is the same as the sidebar icon's — `mask` +
+   `currentColor` on a pseudo-element — for the same reason: there's no
+   `safe` swizzle point to inject a component there.
 
-   Tudo o que a âncora mede aqui já era token deste projeto, sem exceção: a cor
-   é `--pd-text-body` nos DOIS modos (medido `#404246` no claro e `#cfd1d5` no
-   escuro, que é exatamente o que o token resolve), o corpo é `--pd-type-sm`, o
-   peso é `--pd-weight-ui` e o vão do ícone é `--pd-space-2`. Zero valor novo.
+   Everything the anchor measures here was already a token in this project,
+   with no exception: the color is `--pd-text-body` in BOTH modes (measured
+   `#404246` light and `#cfd1d5` dark, exactly what the token resolves to),
+   the body is `--pd-type-sm`, the weight is `--pd-weight-ui`, and the icon
+   gap is `--pd-space-2`. Zero new value.
 
-   O RECUO É UMA COINCIDÊNCIA QUE FECHA, e vale escrever: o texto do item de
-   TOC começa a `2 × --ifm-toc-padding-horizontal` da borda da caixa — 12 do
-   `padding-left` do `<ul>` mais 12 do `margin` do `<li>`, os dois do Infima. E
-   ícone (`--pd-space-4`) mais vão (`--pd-space-2`) dão o mesmo número. Por
-   isso o título alinha com o texto dos itens E o ícone encosta na borda da
-   caixa, como na âncora, sem que nenhum dos dois precise ceder. */
+   THE INDENT IS A COINCIDENCE THAT CLOSES, and it's worth writing down: a
+   TOC item's text starts at `2 × --ifm-toc-padding-horizontal` from the
+   box's edge — 12 from the `<ul>`'s `padding-left` plus 12 from the
+   `<li>`'s `margin`, both Infima's. And icon (`--pd-space-4`) plus gap
+   (`--pd-space-2`) give the same number. That's why the title aligns with
+   the items' text AND the icon touches the box's edge, as on the anchor,
+   with neither side needing to give. */
 html.docs-doc-page .theme-doc-toc-desktop::before {
   content: 'Nesta página';
   display: block;
@@ -1341,24 +1230,24 @@ html.docs-doc-page .theme-doc-toc-desktop::before {
   line-height: var(--pd-leading-ui);
 }
 
-/* O EN. `content` não passa pelo i18n do Docusaurus — não há `<Translate>` a
-   chamar de dentro do CSS. `html[lang]` é o que o próprio framework escreve na
-   raiz, e é a única junta disponível sem swizzle. Não há portão que confira
-   tradução de string de UI, então esta linha é a régua: some daqui, some do
-   site. */
+/* THE ENGLISH VARIANT. `content` doesn't go through Docusaurus's i18n — no
+   `<Translate>` to call from inside CSS. `html[lang]` is what the framework
+   itself writes on the root, and it's the only hook available with no
+   swizzle. Nothing checks a UI string's translation by machine, so this
+   line is the rule: it drifts here, it drifts on the site. */
 html[lang='en'].docs-doc-page .theme-doc-toc-desktop::before {
   content: 'On this page';
 }
 
-/* O ÍCONE. Caixa própria, absoluta contra a caixa da TOC — que é `sticky`, e
-   portanto containing block. Ela não rola mais (o rolador desceu para a
-   lista), então o ícone fica parado junto com o título.
+/* THE ICON. Its own box, absolute against the TOC's box — which is
+   `sticky`, and therefore the containing block. It no longer scrolls (the
+   scroller moved to the list), so the icon stays put with the title.
 
-   `block-size` é a altura da LINHA do título, não a do ícone: com
-   `mask ... center`, isso centra o glifo na primeira linha sem que ninguém
-   precise calcular meio pixel. `--pd-space-4` é o tamanho de ícone de chrome
-   que `icones.md` §1 já fixa, e é o mesmo do ícone da sidebar — dois glifos de
-   chrome em tamanhos diferentes na mesma tela leriam como defeito. */
+   `block-size` is the title LINE's height, not the icon's: with
+   `mask ... center`, that centers the glyph on the first line with no
+   pixel math needed. `--pd-space-4` is the chrome icon size used
+   elsewhere, and it's the same size as the sidebar icon — two chrome
+   glyphs at different sizes on the same screen would read as a defect. */
 html.docs-doc-page .theme-doc-toc-desktop::after {
   content: '';
   position: absolute;
@@ -1370,69 +1259,65 @@ html.docs-doc-page .theme-doc-toc-desktop::after {
   mask: url('/icons/list.svg') center / var(--pd-space-4) no-repeat;
 }
 
-/* A LISTA DO TOC NA ESCALA DE UI, e o `font-size` do slot não bastava.
+/* THE TOC LIST ON THE UI SCALE, and the slot's `font-size` wasn't enough.
 
-   `.theme-doc-toc-desktop` já declara `--pd-type-sm` (14px) acima, e a herança
-   morre uma geração adiante: o Infima crava `.table-of-contents { font-size:
-   0.8rem }` no `<ul>` que é filho dele, e `0.8 × 16 = 12,8`. Medido, o item de
-   TOC saía em `12,8px` contra o alvo de `14px` de `tokens.md` §13, `Δ −1,2`,
-   enquanto o slot em volta media 14 certinho — o pior tipo de falso verde, o
-   mesmo padrão que já custou os títulos de doc na #96.
+   `.theme-doc-toc-desktop` already declares `--pd-type-sm` (14px) above,
+   and inheritance dies one generation further in: Infima craves
+   `.table-of-contents { font-size: 0.8rem }` on the `<ul>` child, and
+   `0.8 × 16 = 12.8`. Measured, the TOC item rendered at `12.8px` against a
+   14px target — Δ −1.2 — while the slot around it measured 14 exactly: the
+   worse kind of false green, the same pattern that already cost the doc
+   titles above.
 
-   O seletor é escopado ao TOC de desktop de propósito: `.table-of-contents` é
-   classe do Infima e o `TOCInline` do upstream a usa em outro contexto, que
-   este projeto não renderiza hoje e não deve reger de longe. */
+   The selector scopes to the desktop TOC on purpose: `.table-of-contents`
+   is an Infima class, and upstream's inline TOC variant uses it in a
+   different context this project doesn't render today. */
 html.docs-doc-page .theme-doc-toc-desktop .table-of-contents {
   font-size: var(--pd-type-sm);
 
-  /* A LISTA VIROU O ROLADOR, e as três declarações são consequência disso: a
-     caixa em volta cedeu o `overflow` para o título ficar fora do que rola
-     (ver o bloco acima), `min-height: 0` destrava o encolhimento do item flex,
-     e `scrollbar-width` repõe o afinamento que vinha da classe
-     `.thin-scrollbar` — ela mora na caixa, não aqui, e o tratamento completo
-     de barra deste arquivo é escopado à sidebar de propósito. */
+  /* THE LIST BECAME THE SCROLLER, and the three declarations follow from
+     that: the box around it handed `overflow` to the title (see above),
+     `min-height: 0` unlocks the flex item's shrink, and `scrollbar-width`
+     restores the thinning that used to come from `.thin-scrollbar` — that
+     class lives on the sidebar's box, not here, and this file's full
+     scrollbar treatment is scoped to the sidebar on purpose. */
   overflow-y: auto;
   min-height: 0;
   scrollbar-width: thin;
 }
 
-/* A BORDA ESQUERDA — mesmo vazamento do divisor da sidebar, mesma resposta.
-   `.table-of-contents__left-border` é classe do Infima em `TOCItems`, degrau
-   0, e é o próprio nome da classe que confessa o que ela faz. */
+/* THE LEFT BORDER — the same theme leak as the sidebar divider, the same
+   answer. `.table-of-contents__left-border` is an Infima class in
+   `TOCItems`, rung 0, and its own name confesses what it does. */
 .table-of-contents__left-border {
   border-left: none;
 }
 
-/* O LIMIAR PRÓPRIO DO TOC — 1280, o ponto em que a âncora o esconde. Escondido
-   por padrão, revelado só a partir dele: assim o literal do gate é UM número
-   (1280), não dois — não existe `max-width: 1279px` em lugar nenhum do
-   arquivo, só este `min-width`.
+/* THE TOC'S OWN THRESHOLD — 1280, the point where the anchor hides it.
+   Hidden by default, revealed only from there: the gate's literal is ONE
+   number (1280), not two — there's no `max-width: 1279px` anywhere in this
+   file, only this `min-width`.
 
-   `.col--3` continua no DOM entre 997 e 1279 — `DocItemTOCDesktop` é montado
-   sempre que `windowSize` do React é `'desktop'`, que cobre TUDO acima de
-   996/997, não só acima de 1280 (ver a nota sobre o `!important` de
-   `docItemCol` acima, mesma família de acoplamento). Por isso a largura da
-   prosa em §1 verifica `:has()` E este limiar juntos: TOC no DOM sem estar
-   visível não deve estreitar o texto.
+   `.col--3` stays in the DOM between 997 and 1279 — `DocItemTOCDesktop`
+   mounts whenever React's `windowSize` is `'desktop'`, which covers
+   everything above 996/997, not just above 1280. That's why the prose
+   width in §1 checks `:has()` AND this threshold together: a TOC in the DOM
+   without being visible shouldn't narrow the text.
 
-   A SIDEBAR NÃO GANHOU limiar próprio, e a explicação é medida, não
-   preguiça: o toggle de hambúrguer só MONTA o `<aside>` de gaveta quando o
-   MESMO `windowSize` do React está em `'mobile'` — `shouldRender = !disabled
-   && windowSize === 'mobile'`, em
-   `@docusaurus/theme-common/lib/contexts/navbarMobileSidebar.js`. Esse
-   estado lê um limiar de 996, HARDCODED, e o próprio comentário-fonte diz
-   *"this value is also hardcoded in Infima... Updating this JS value alone
-   is not enough"* — não é ponto de swizzle, é lógica de contexto React sem
-   opção pública. Esconder a sidebar embutida antes de 1024 sem mover ESSE
-   limiar junto criaria uma faixa morta entre 997 e 1023 — sidebar
-   invisível, gaveta que não monta, sem rota nenhuma até o menu. A #96 não
-   compra essa perda: ver `chrome.md` §10, perda nova.
+   THE SIDEBAR DOESN'T GET ITS OWN THRESHOLD, and the reason is measured,
+   not oversight: the hamburger toggle only MOUNTS the drawer `<aside>` when
+   that SAME React `windowSize` is `'mobile'` —
+   `shouldRender = !disabled && windowSize === 'mobile'`, inside
+   `@docusaurus/theme-common`. That state reads a HARDCODED 996 threshold —
+   not a swizzle point, React context logic with no public option. Hiding
+   the embedded sidebar before 1024 without moving that same threshold would
+   create a dead band between 997 and 1023 — sidebar invisible, drawer not
+   yet mounted, no route to the menu at all.
 
-   O QUE SE ESCONDE é `.col--3`, o SLOT inteiro — não
-   `.theme-doc-toc-desktop`, que é filho dele. Esconder só o filho deixaria o
-   slot vazio ainda reservando `--pd-toc-width` no `flex`, e a prosa não
-   ganharia o espaço de volta — o mesmo cuidado do `:has()` acima, agora do
-   lado do CSS que decide o `display`. */
+   What hides is `.col--3`, the whole SLOT — not `.theme-doc-toc-desktop`,
+   its child. Hiding only the child would leave the slot reserving
+   `--pd-toc-width` in the flex layout, and the prose wouldn't get the space
+   back. */
 html.docs-doc-page main > .container > .row > .col--3 {
   display: none;
 }
@@ -1444,34 +1329,36 @@ html.docs-doc-page main > .container > .row > .col--3 {
 }
 
 /* -----------------------------------------------------------------------------
-   5. A eyebrow — o breadcrumb POR SUBTRAÇÃO
+   5. The eyebrow — a breadcrumb BY SUBTRACTION
 
-   Escondendo o item de home, o item ativo e o separador que sobra, resta
-   exatamente o nome da categoria — e ele já está no lugar onde a eyebrow da
-   âncora fica, acima do título. Tudo classe do Infima, degrau 1, zero swizzle e
-   zero nó novo no DOM.
+   Hiding the home item, the active item, and the separator that's left over
+   leaves exactly the category name — already sitting where the anchor's
+   eyebrow sits, above the title. All Infima classes, rung 1, zero swizzle,
+   zero new DOM node.
 
-   O `BreadcrumbsStructuredData` continua emitido intacto: ele é um `<script
-   type="application/ld+json">` irmão do `<nav>`, e nada aqui o alcança. O que
-   sai é pixel, não dado — o JSON-LD segue com a trilha inteira.
+   `BreadcrumbsStructuredData` still emits intact: it's a
+   `<script type="application/ld+json">` sibling of the `<nav>`, untouched
+   by anything here. What leaves is pixels, not data — the JSON-LD keeps the
+   whole trail.
 
-   A METADE REAL DA PERDA 2 FICA DE PÉ, e vale escrita porque a subtração é
-   fácil de confundir com alcance: não dá para pôr eyebrow em página SEM
-   categoria, não dá para alterar a ordem, e não dá para inserir texto novo.
-   O que a subtração alcança é o caso comum, não o mecanismo.
+   THE REAL HALF OF THE LOSS STAYS, and it's worth writing because
+   subtraction is easy to mistake for full reach: there's no eyebrow on a
+   page with no category, no way to reorder it, and no way to insert new
+   text. Subtraction reaches the common case, not the mechanism.
 
-   O separador escondido é o do último item VISÍVEL, e não todos: `:nth-last-
-   child(2)` é o vizinho do ativo. Numa trilha de três níveis os separadores
-   entre categorias sobrevivem, que é o que se quer — o teto de profundidade é
-   2 hoje, e a regra não quebra no dia em que ele subir.
+   The hidden separator is the last VISIBLE item's, not all of them:
+   `:nth-last-child(2)` is the active item's neighbor. In a three-level
+   trail the separators between categories survive, which is the point —
+   today's depth ceiling is two, and the rule doesn't break the day it
+   rises.
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page .theme-doc-breadcrumbs {
   font-size: var(--pd-type-sm);
 }
 
-/* O item de home — o `<li>` do ícone de casa. Ele é o primeiro sempre que a
-   rota de landing existe, e ela existe: `src/pages/index.js`. */
+/* The home item — the house-icon `<li>`. It's always first when the landing
+   route exists, and it does. */
 html.docs-doc-page .breadcrumbs__item:first-child,
 html.docs-doc-page .breadcrumbs__item--active {
   display: none;
@@ -1481,17 +1368,16 @@ html.docs-doc-page .breadcrumbs__item:nth-last-child(2)::after {
   display: none;
 }
 
-/* O que resta deixa de ler como pastilha e passa a ler como eyebrow: sem
-   preenchimento, sem realce de fundo, corpo maior, peso forte, na cor de
-   acento — a leitura da âncora, `chrome.md` §12.
+/* What's left stops reading as a pill and reads as an eyebrow instead: no
+   padding, no fill highlight, larger body, strong weight, in the accent
+   color — the anchor's own reading.
 
-   `font-size` É NECESSÁRIO aqui, e não redundante com `.theme-doc-breadcrumbs`
-   duas regras acima: o Infima declara `.breadcrumbs__link { font-size: calc(1rem
-   * var(--ifm-breadcrumb-size-multiplier)) }` DIRETO no link, e essa
-   declaração bate na frente da herança do `<nav>` — mesma família de defeito
-   do `h1`/`h2`, ver acima. Medido: sem esta linha o link renderiza 12,8px
-   (`--breadcrumb-size-multiplier` em 0,8 de fábrica) contra os 14 que
-   `chrome.md` §12 pede. */
+   `font-size` IS NECESSARY here, not redundant with `.theme-doc-breadcrumbs`
+   two rules up: Infima declares `.breadcrumbs__link { font-size: calc(1rem
+   * var(--ifm-breadcrumb-size-multiplier)) }` DIRECTLY on the link, and
+   that declaration beats the `<nav>`'s inherited value — the same family of
+   defect as h1/h2, above. Measured: without this line the link renders at
+   12.8px against a 14px target. */
 html.docs-doc-page .breadcrumbs__link {
   padding: 0;
   background: none;
@@ -1501,25 +1387,24 @@ html.docs-doc-page .breadcrumbs__link {
 }
 
 /* -----------------------------------------------------------------------------
-   A paginação — plana
+   Pagination — flat
 
-   Sem borda, sem fundo, sem preenchimento e sem nenhuma classe responsiva: os
-   dois cartões de paginação eram a última superfície levantada do corpo da
-   página, e o cartão que os justificava morreu.
+   No border, no fill, no padding, no responsive class: the two pagination
+   cards were the body's last raised surface, and the card that justified
+   them is gone.
 
-   PERDA NOMEADA, e ela é mais funda do que a spec do ticket supunha. A decisão
-   era *"rótulo anterior/próximo só em `aria-label`"* — mover a palavra do texto
-   para o atributo. Isso não é alcançável: `PaginatorNavLink`, `DocPaginator` e
-   `DocItem/Paginator` são os TRÊS `Unsafe` nas duas ações no artefato congelado
-   do portão 7, e não há opção pública, classe nem variável que acrescente
-   atributo a um nó.
+   NAMED LOSS, and it runs deeper than it first looks. The goal was moving
+   the previous/next word out of the visible text and into `aria-label`
+   alone — that's not reachable: `PaginatorNavLink`, `DocPaginator`, and
+   `DocItem/Paginator` are all outside this project's swizzle budget, with
+   no public option, class, or variable that adds an attribute to a node.
 
-   O que sobra, e vale medido em vez de suposto: o nome acessível do link é o
-   TÍTULO da página vizinha, que é descritivo por si; a direção continua no `«` e
-   no `»` que o Infima desenha por pseudo-elemento e que o navegador expõe na
-   árvore de acessibilidade; e a região tem `aria-label` do `DocPaginator`. O
-   critério de propósito de link continua satisfeito — o que se perde é a palavra
-   redundante, não a orientação.
+   What's left, measured rather than assumed: the link's accessible name is
+   the neighboring page's TITLE, which is descriptive on its own; direction
+   stays in the `«` and `»` Infima draws as a pseudo-element and the browser
+   exposes in the accessibility tree; and the region carries its own
+   `aria-label`. The link-purpose criterion stays satisfied — what's lost is
+   the redundant word, not the orientation.
    ----------------------------------------------------------------------------- */
 
 html.docs-doc-page .pagination-nav__link {
@@ -1540,51 +1425,46 @@ html.docs-doc-page .pagination-nav__label {
 /* -----------------------------------------------------------------------------
    6. Footer
 
-   **Uma linha.** Links à esquerda, copyright à direita, fio de ponta a ponta,
-   sem preenchimento próprio, sem ícone, sem coluna, sem elevação — e sem uma
-   única linha no ledger de swizzle. As oito peças de `Footer` são `safe` nas
-   duas ações e nenhuma é exercida.
+   **One line.** Links on the left, copyright on the right, an edge-to-edge
+   hairline, no padding of its own, no icon, no column, no elevation.
 
-   Três divergências obrigatórias contra o Infima, e nenhuma é gosto:
+   Three deliberate divergences from Infima, none of them taste:
 
-   · **preenchimento** — o Infima pinta o rodapé com `--ifm-color-emphasis-100`,
-     que seria um TERCEIRO nível de superfície contra os dois do sistema;
-   · **peso do título de coluna** — 700, que não existe na escala de três pesos
-     (a porta fica fechada na spec: `links` é lista plana e o schema recusa
-     misturar);
-   · **entrelinha de link** — 2, contra a entrelinha de UI.
+   · **fill** — Infima paints the footer with `--ifm-color-emphasis-100`,
+     which would be a THIRD surface level against this system's two;
+   · **column-title weight** — 700, which doesn't exist in the three-weight
+     scale;
+   · **link line-height** — 2, against the UI line-height.
 
-   Sem sombra, e é decisão: a escada de elevação é para superfície que sobe. O
-   footer não sobe — ele **é** a página. A separação é o fio.
+   No shadow, and it's deliberate: the elevation ladder is for a surface
+   that rises. The footer doesn't rise — it **is** the page. The separation
+   is the hairline.
    ----------------------------------------------------------------------------- */
 
 .footer {
   border-top: var(--pd-border-width) solid var(--pd-border-subtle);
-  /* O horizontal é declarado aqui, e não deixado para a variável do Infima que o
-     adaptador alimenta. Motivo: no estreito o Infima **zera** essa variável
-     dentro do próprio `.footer`, que é mais perto do elemento que o `:root` do
-     adaptador — e reescrevê-la aqui abriria uma SEXTA exceção com escopo, contra
-     a lista fechada de cinco do ADR 1. Declarar a propriedade em vez da variável
-     mantém a regra de mão única intacta: o projeto nunca lê nem escreve
-     `--ifm-*` fora do adaptador. */
+  /* Horizontal is declared here, not left to the Infima variable the bridge
+     feeds. Reason: on narrow screens Infima **zeroes** that variable inside
+     `.footer` itself, closer to the element than the bridge's `:root` —
+     rewriting it here would open a sixth scoped exception against the
+     bridge's closed list. Declaring the property instead of the variable
+     keeps the one-way rule intact: the project never reads or writes
+     `--ifm-*` outside the bridge. */
   padding-inline: var(--pd-gutter);
   padding-bottom: var(--pd-space-16);
   font-size: var(--pd-type-sm);
 }
 
-/* O `.container` do footer perde o preenchimento e ele sobe para o `<footer>`.
-   Sem isso a compensação de alinhamento erra por 16px: a coluna de conteúdo fica
-   rente à borda do container, e o texto do rodapé começaria 16 depois dela.
+/* The footer's `.container` loses its padding, and it moves up to
+   `<footer>`. Without this the alignment compensation misses by 16px: the
+   content column sits flush with the container's edge, and the footer text
+   would start 16 past it.
 
-   O ALINHAMENTO COM A COLUNA DE DOC mudou de mecanismo na #96, não de meta.
-   `<Footer/>` continua irmão do `main-wrapper` — ver a nota abaixo —, mas
-   agora o `.container` da doc não centra mais em `100% − sidebar`: centra num
-   grupo com `margin-inline: auto` próprio, cujo inset esquerdo VARIA com a
-   viewport. Dar ao `.container` do footer o MESMO quadro — mesmo
-   `max-width`, mesmo `margin-inline: auto` — faz os dois insets esquerdos
-   coincidirem SEMPRE, não só numa largura medida; o que falta depois disso é
-   só a largura da sidebar mais o gutter, que é exatamente o texto de conteúdo
-   entra depois dela. */
+   Giving the footer's `.container` the SAME frame as the doc column — same
+   `max-width`, same `margin-inline: auto` — makes both left insets
+   coincide at every width, instead of only at one measured width; what's
+   left after that is just the sidebar width plus the gutter, which is
+   exactly where the content text begins. */
 .footer .container {
   display: flex;
   align-items: center;
@@ -1592,53 +1472,35 @@ html.docs-doc-page .pagination-nav__label {
   padding-inline: 0;
 }
 
-/* O ALINHAMENTO ESTAVA ERRADO POR UM GUTTER, E A PROMESSA ERA MAIS FORTE QUE O
-   RESULTADO — S3-8.
+/* TWO CAUSES kept the footer misaligned by one gutter, fixed here:
 
-   O texto acima dizia que os dois insets esquerdos *"coincidem SEMPRE, não só
-   numa largura medida"*. Medido em sete larguras, o rodapé fica à DIREITA da
-   prosa abaixo do congelamento e à ESQUERDA dela acima, e o sinal cruza o zero
-   em 1440 por coincidência aritmética:
+   1. **The wrong term.** What separates the sidebar from the PROSE isn't
+      the gutter (32) — it's half the invisible box's slack,
+      `(--pd-doc-width − --pd-prose-width) / 2` = 48. `<article>` centers
+      inside the doc column (§2).
+   2. **`<footer>` pays a side padding the doc group doesn't.**
+      `padding-inline: var(--pd-gutter)` on `<footer>` pushes the container
+      32 inward at every width below 1472, while the sidebar sits flush at
+      0. Above the freeze, the container's `margin-inline: auto` outgrows
+      those 32 and the defect disappears on its own.
 
-     largura | prosa | rodapé |   Δ
-        997  |  288  |  352   | +64
-       1300  |  288  |  352   | +64
-       1360  |  312  |  352   | +40
-       1408  |  336  |  352   | +16
-       1440  |  352  |  352   |   0
-       1512  |  388  |  372   | −16
-       1920  |  592  |  576   | −16
+   The left axis moves to the container; the right axis STAYS on
+   `<footer>`: that's what keeps the copyright off the edge, and the
+   edge-to-edge hairline stays on `<footer>`, outside any padding.
 
-   DUAS causas, e as duas são consertadas aqui:
+   WHICH EDGE IS THE TARGET: the prose. It's the only one the reader sees —
+   the doc column is an invisible box by construction (§2), and aligning
+   with it would mean aligning with an edge that isn't on screen.
 
-   1. **O termo estava errado.** O que separa a sidebar da PROSA não é o gutter
-      (32) — é a metade da folga da caixa invisível, `(--pd-doc-width −
-      --pd-prose-width) / 2` = 48. O `<article>` é centralizado dentro da coluna
-      de doc (§2), e o rodapé compensava com o número de antes da #96.
-   2. **O `<footer>` paga um preenchimento lateral que o grupo de doc não paga.**
-      `padding-inline: var(--pd-gutter)` no `<footer>` empurra o container 32
-      para dentro em toda largura abaixo de 1472, enquanto a sidebar cola em 0.
-      Acima do congelamento o `margin-inline: auto` do container ultrapassa os 32
-      e o defeito some sozinho — que é por que ele nunca apareceu na largura de
-      referência.
-
-   O eixo esquerdo passa para o container, e o direito FICA no `<footer>`: é ele
-   que impede o copyright de encostar na borda, e o fio de ponta a ponta continua
-   no `<footer>`, fora de qualquer preenchimento.
-
-   QUAL BORDA É O ALVO: a prosa. É a única que o leitor vê — a coluna de doc é
-   caixa invisível por construção (§2), e alinhar com ela seria alinhar com uma
-   borda que não existe na tela.
-
-   O QUE NÃO FECHA, e fica escrito: entre 997 e o congelamento a coluna
-   encolhe, a folga de centralização da prosa vai de 48 a 0, e nenhum
-   preenchimento CONSTANTE acompanha um alvo que varia. Medido depois deste
-   conserto: **zero de 1408 para cima**, +24 a 1360, +48 a 997 — e **zero de
-   novo abaixo de 997**, onde não há sidebar nem coluna e os dois voltam a
-   partir da mesma borda. A faixa que não fecha é a de uma media query só.
-   Reproduzir a cadeia inteira num `calc()` acoplaria o rodapé ao container, ao
-   TOC e ao limiar do TOC — três acoplamentos para um regime em que a página já
-   não está na proporção que a spec publica. */
+   WHAT DOESN'T CLOSE, on record: between 997 and the freeze the column
+   shrinks, the prose's centering slack runs from 48 to 0, and no CONSTANT
+   padding tracks a target that varies. Measured after this fix: zero from
+   1408 up, +24 at 1360, +48 at 997, and zero again below 997, where there's
+   no sidebar or column and both sides start from the same edge again.
+   Reproducing the whole chain in one `calc()` would couple the footer to
+   the container, the TOC, and the TOC threshold — three couplings for a
+   regime where the page is no longer at the proportion any spec
+   publishes. */
 @media (min-width: 997px) {
   html.docs-doc-page .footer {
     padding-inline: 0;
@@ -1652,8 +1514,8 @@ html.docs-doc-page .pagination-nav__label {
   }
 }
 
-/* O `Footer/Layout` cola `text--center` nos dois filhos. Numa linha
-   `space-between` isso não tem leitura. */
+/* `Footer/Layout` puts `text--center` on both children. In a `space-between`
+   row that reads as nothing. */
 .footer .text--center {
   text-align: start;
 }
@@ -1667,11 +1529,12 @@ html.docs-doc-page .pagination-nav__label {
   font-weight: var(--pd-weight-ui);
 }
 
-/* O ícone de link externo sai, e o motivo não é estética: `Icon/ExternalLink`
-   não está no `getSwizzleConfig` (logo é `unsafe`) e vem de um sprite injetado.
-   Ele ficaria com o desenho do Docusaurus, de outra família, em dois dos três
-   links. E não há perda de acessibilidade — nenhum link do footer leva `target`,
-   então o rótulo dele ("abre em nova aba") seria uma afirmação falsa. */
+/* The external-link icon leaves, and the reason isn't aesthetic:
+   `Icon/ExternalLink` is outside this project's swizzle budget and comes
+   from an injected sprite — it would carry the Docusaurus glyph, a
+   different family, on two of the three links. No accessibility loss
+   either: no footer link carries `target`, so its "opens in a new tab"
+   label would be a false claim. */
 .footer__link-item > svg {
   display: none;
 }
@@ -1680,38 +1543,28 @@ html.docs-doc-page .pagination-nav__label {
   color: var(--pd-text-muted);
 }
 
-/* `docs-doc-page` vem do `DocRoot`, então a regra de alinhamento acima vale
-   para as TRÊS instâncias de sidebar — é a mesma classe nas três.
-
-   PERDA NOMEADA, e sobrevive à #96 sem mudar: com a sidebar recolhida pelo
-   leitor (o botão de esconder, não a gaveta do estreito), `Main` troca para
-   `docMainContainerEnhanced` e ocupa a largura toda — mas o padding do
-   footer continua supondo a sidebar visível. O estado mora em classe de CSS
-   Module hasheada; alcançá-la por `html:has(…)` é o mesmo custo que já se
-   recusou ao desistir da proporção 56/44 em `chrome.md` §1.2. */
-
 /* -----------------------------------------------------------------------------
-   7. Tela estreita
+   7. Narrow screen
 
-   Abaixo de 997px — o mesmo limiar em que a sidebar vira gaveta, em que a faixa
-   de tabs some e em que o gutter volta a 16.
+   Below 997px — the same threshold where the sidebar turns into a drawer,
+   the tab strip disappears, and the gutter returns to 16.
 
-   Três dos quatro comportamentos se resolvem por construção, e a única peça de
-   navegação que custa declaração é a que SAI:
+   Three of the four behaviors resolve by construction; the only navigation
+   piece that costs a declaration is the one that LEAVES:
 
-   · **o cartão não está mais lá para encolher.** A história inteira dele no
-     estreito era uma declaração de meio preenchimento, e ela morre junto com a
-     superfície que a consumia;
-   · o **breakout já resolveu para zero** — não há mais lista de escape em lugar
-     nenhum, nem no largo;
-   · o **gutter de 16 se preserva sozinho**, porque o token só dobra a partir de
-     997. A faixa de tabs some sozinha pelo mesmo mecanismo, do outro lado do
-     mesmo limiar;
-   · **o TOC móvel sai.** É o único lugar onde o critério *"mais perto da
-     âncora"* REMOVE uma peça de navegação, e por isso ele é uma declaração e
-     não uma omissão: se um dia doer, é uma linha que se apaga. O leitor no
-     estreito troca o índice colapsado pela rolagem, e o que ele ganha é a
-     página começando no conteúdo.
+   · **the card isn't there to shrink anymore.** Its whole narrow-screen
+     story was a half-padding declaration, and it dies with the surface
+     that consumed it;
+   · the **breakout already resolved to zero** — there's no escape list
+     anywhere, even on the wide layout;
+   · the **16px gutter preserves itself**, because the token only doubles
+     from 997. The tab strip disappears on its own through the same
+     threshold, on the other side;
+   · **the mobile TOC leaves.** It's the one place where *closer to the
+     anchor* REMOVES a navigation piece rather than omitting one, and that's
+     why it's a declaration and not an oversight: if it ever hurts, it's one
+     line to undo. The reader on narrow screens trades the collapsed index
+     for scrolling, and gains a page that starts at the content.
    ----------------------------------------------------------------------------- */
 
 @media (max-width: 996px) {
@@ -1719,38 +1572,33 @@ html.docs-doc-page .pagination-nav__label {
     display: none;
   }
 
-  /* O `.col` RECUPERA o preenchimento, e a razão é que a regra (b) da cadeia só
-     vale onde a cadeia existe.
+  /* `.col` RECOVERS its padding, because rule (b) in the chain above only
+     holds where the chain exists.
 
-     Ela zera o preenchimento de coluna porque, no largo, os dois lados são
-     cobrados por dentro da largura pretendida e sem isso a coluna não fecha em
-     `--pd-doc-width` (816, hoje). Abaixo do limiar não há essa largura a
-     fechar, nem cadeia — e a compensação vira defeito: a margem negativa da
-     `.row` cancela o preenchimento do `.container`, e sem preenchimento em
-     nenhum outro lugar (o `<main>` não tem mais preenchimento horizontal
-     próprio desde a #96 — ver §1) o texto encosta na borda da viewport.
-
-     Medido a 390 antes desta regra: `x=0` no eyebrow, no título e em cada
-     parágrafo. É o gutter do estreito que precisa aparecer aqui, e ele aparece
-     pelo token — nunca pelo valor que o Infima por acaso também usa. */
+     It zeroes column padding on the wide layout because both sides are then
+     charged from inside the intended width, and without it the column
+     wouldn't close at `--pd-doc-width`. Below the threshold there's no such
+     width to close, and no chain — and the compensation becomes a defect:
+     `.row`'s negative margin cancels `.container`'s padding, and with no
+     padding anywhere else the text touches the viewport's edge. */
   html.docs-doc-page main > .container > .row > .col {
     padding-inline: var(--pd-gutter);
   }
 
-  /* A linha **quebra e não empilha**, revertendo deliberadamente o Infima. Ele
-     transforma cada link em `display: block`, o que faz uma linha virar cinco —
-     e "uma linha" é a decisão inteira do rodapé. Os rótulos com separador cabem
-     numa linha em 375px e quebram para duas em 320px. */
+  /* The row WRAPS instead of stacking, deliberately reverting Infima. It
+     turns every link into `display: block`, which turns one line into
+     five — and "one line" is the footer's whole point. The labels with
+     separators fit one line at 375px and wrap to two at 320px. */
   .footer .container {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--pd-space-6);
   }
 
-  /* `inline-flex` e não `inline`: a caixa continua participando da linha e
-     quebrando com ela, e ganha altura própria — que é o que faz o piso de alvo
-     de toque do contrato de entrada alcançar o link do rodapé, onde `inline`
-     ignoraria `min-height` em silêncio. */
+  /* `inline-flex`, not `inline`: the box keeps participating in the line
+     and wrapping with it, and gains its own height — which is what lets the
+     entry-state contract's touch-target floor reach the footer link, where
+     `inline` would silently ignore `min-height`. */
   .footer__link-item {
     display: inline-flex;
     align-items: center;
@@ -1763,18 +1611,18 @@ html.docs-doc-page .pagination-nav__label {
 }
 
 /* -----------------------------------------------------------------------------
-   O chrome flutuante — as duas superfícies que o adaptador NÃO alcança
+   Floating chrome — the two surfaces the bridge doesn't reach
 
-   `.dropdown__menu` (o seletor de idioma) e `.navbar-sidebar` (o menu do
-   estreito) leem `--ifm-global-shadow-md`, e nada mais: o Infima não declara
-   `border` nem `--ifm-*-border-color` para nenhuma das duas. Elas carregavam o
-   anel `0 0 0 1px` de dentro da sombra, e o perderam quando ele saiu da
-   composição.
+   `.dropdown__menu` (the locale picker) and `.navbar-sidebar` (the narrow
+   menu) read `--ifm-global-shadow-md`, and nothing else: Infima declares no
+   `border` or `--ifm-*-border-color` for either. They carried the
+   `0 0 0 1px` ring inside their shadow, and lost it when the ring left the
+   shadow composition.
 
-   É aqui que a frase *"o adaptador alcança o fio inteiro"* encontra o limite
-   dela, e por isso o limite está escrito em vez de suposto: onde o Infima não
-   tem variável de borda, o fio custa uma regra. Uma linha por superfície contra
-   a sombra inteira redeclarada — que é a conta que decidiu a troca.
+   This is where "the bridge reaches the whole hairline" meets its limit,
+   and the limit is written rather than assumed: where Infima has no border
+   variable, the hairline costs a rule. One line per surface against
+   redeclaring the entire shadow — the trade that decided the swap.
    ----------------------------------------------------------------------------- */
 
 .dropdown__menu,
@@ -1783,27 +1631,26 @@ html.docs-doc-page .pagination-nav__label {
 }
 
 /* -----------------------------------------------------------------------------
-   O botão de voltar ao topo — a terceira superfície flutuante, e ela recupera
-   a sombra que a saída da profundidade do CONTEÚDO levou junto
+   The back-to-top button — the third floating surface, and it recovers the
+   shadow that leaving CONTENT's depth took with it
 
-   `--ifm-global-shadow-lw` passou a valer `none` porque a profundidade sai do
-   conteúdo. O leitor que essa mudança tinha em mente é `CodeBlock/Container`;
-   medido no fonte da 3.10.2, quem mais a lê neste site é `BackToTopButton` — um
-   botão `position: fixed` de 3rem sobre `--ifm-color-emphasis-200`, que é o fio
-   translúcido. Sem sombra ele fica quase invisível sobre a página.
+   `--ifm-global-shadow-lw` became `none` because depth left content. The
+   consumer that had in mind is `CodeBlock/Container`; measured in Infima's
+   source, the other reader on this site is `BackToTopButton` — a
+   `position: fixed` button over `--ifm-color-emphasis-200`, the translucent
+   hairline. Without a shadow it's nearly invisible against the page.
 
-   Ele é chrome flutuante pela mesma definição que põe o dropdown e a gaveta
-   aqui, então recebe o mesmo papel. O gancho é `ThemeClassNames` e não classe
-   hasheada, então isto não abre exceção nenhuma no adaptador.
+   It's floating chrome by the same definition that puts the dropdown and
+   the drawer here, so it gets the same role. The hook is `ThemeClassNames`,
+   not a hashed class, so this opens no exception in the bridge.
 
-   `button.theme-back-to-top-button` e não `.theme-back-to-top-button`: o
-   upstream pinta a sombra numa classe de CSS Module, que é (0,1,0) — o mesmo
-   peso da classe estável. Empate resolvido por ORDEM DE CARGA, e o módulo do
-   theme-classic carrega depois: a forma nua perde, em silêncio e sem sintoma.
-   Somar o tipo do elemento leva o seletor a (0,1,1) e o tira da ordem. É o
-   mesmo mecanismo que `div.theme-code-block` usa em `componentes.css`, e a
-   primeira redação desta regra caiu exatamente na armadilha que aquele
-   comentário descreve.
+   `button.theme-back-to-top-button`, not `.theme-back-to-top-button`:
+   upstream paints the shadow on a CSS Module class, which is (0,1,0) — the
+   same weight as the stable class. The tie resolves by LOAD ORDER, and the
+   theme-classic module loads later: the bare form loses, silently. Adding
+   the element's type brings the selector to (0,1,1) and takes it out of
+   load order. The same mechanism `div.theme-code-block` uses in
+   components.css.
    ----------------------------------------------------------------------------- */
 
 button.theme-back-to-top-button {
