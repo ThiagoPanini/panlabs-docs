@@ -1,29 +1,10 @@
 /**
- * `pd-ai-era` — o `.md` por rota, o `llms.txt` e o `llms-full.txt`.
- *
- * Zero swizzle, zero dependência, zero serviço. O plugin lê a mesma porta que a
- * busca (`allContentLoaded`) e escreve três formatos no `outDir`.
- *
- * **Os permalinks saem de `allContentLoaded`, e não de `postBuild({routesPaths})`.**
- * Dois motivos verificados no fonte do 3.10.2, não deduzidos:
- *
- *   1. `routesPaths[0]` é **sempre `/404.html`** — a lista carrega rota que não
- *      é página, e filtrá-la exigiria saber de cor quais são;
- *   2. a API tem TODO de depreciação para a v4, escrito no próprio tipo.
- *
- * **`applyTrailingSlash` não é importado.** Ele existe e é exportado de
- * `@docusaurus/utils-common`, mas não tem página de documentação oficial nem
- * semver documentada — importá-lo é amarrar o build a um contrato que ninguém
- * prometeu. E sob `trailingSlash: false` (ADR 7) ele seria no-op: o permalink
- * já vem sem barra, então `permalink + '.md'` é concatenação pura, sem uma
- * transformação no caminho.
- *
- * **Perda aceita e nomeada:** em `docusaurus start` as rotas `.md` não existem.
- * O servidor de desenvolvimento é uma SPA, então elas devolvem 200 com o shell
- * do site — não 404. É recurso de build, e quem o verifica é o portão 6 rota 2,
- * contra o host real. `npm run build && npm run serve` mostra o mesmo.
- *
- * Procedência: docs/design/informacao.md §9.
+ * `pd-ai-era`: emits a per-route `.md`, `llms.txt`, and `llms-full.txt`.
+ * Permalinks come from `allContentLoaded`, not `postBuild({routesPaths})`:
+ * `routesPaths[0]` is always `/404.html`, and the API carries a v4
+ * deprecation TODO in its own type. `applyTrailingSlash` is not imported:
+ * it has no official doc page or documented semver, so importing it would
+ * bind the build to an unpromised contract.
  */
 
 import fs from 'node:fs/promises';
@@ -32,51 +13,40 @@ import path from 'node:path';
 import {pagesFrom, tabLabels} from '../pages';
 
 /**
- * O separador de documento do `llms-full.txt`, na forma do Neon.
+ * Document separator for `llms-full.txt`.
  *
- * Das três referências que publicam o artefato, é a única inequívoca para
- * máquina: o separador carrega a URL de origem, então o parser não precisa
- * inferir onde um documento termina nem de onde ele veio.
+ * Carries the source URL so the parser doesn't need to infer where one
+ * document ends or where it came from.
  */
 const separator = (url) => `--- [Document source](${url}) ---`;
 
 /**
- * O corpo com o subtítulo emitido como citação abaixo do `h1`.
+ * Emits the subtitle as a blockquote right below the `h1`.
  *
- * O corpo servido é o MDX **sem front matter**, e o subtítulo mora no
- * `description` — então o `.md` sairia sem ele, enquanto a tela o pinta logo
- * abaixo do título (`@theme/MDXComponents`, o override de `h1`) e o `llms.txt`
- * o carrega em cada linha de listagem. Perder a informação só no formato lido
- * por máquina é o avesso do que os três artefatos existem para fazer.
+ * The served body is MDX without front matter, so the subtitle (which
+ * lives in `description`) would otherwise be missing only from the `.md`,
+ * while the screen and `llms.txt` both show it.
  *
- * A forma é a do export do Devin, a única das três referências medidas que
- * resolve o caso: citação imediatamente abaixo do `h1`, na mesma posição em que
- * a tela a mostra. Adotar é herdar uma convenção que já circula entre parsers.
+ * The anchor is the `h1`: without it, the two blockquotes (index pointer
+ * and subtitle) would merge into one, silently.
  *
- * **A âncora é o `h1`, e a falta dele estoura.** Uma citação no topo do
- * arquivo já significa outra coisa aqui — é o ponteiro de volta ao índice. Sem
- * `h1` para separá-los, os dois blocos se fundiriam num só e o subtítulo viraria
- * segunda linha do ponteiro, calado.
+ * The search is for the FIRST non-blank line, not the first line that
+ * matches `# `: a shell comment (`# comment`) inside a fenced code block
+ * could match first, inserting the subtitle mid-code with no error.
+ * `pagesFrom` already strips front matter and the top `import`, so the
+ * first non-blank line is reliably the author's `h1`.
  *
- * **A busca é na PRIMEIRA linha com texto, e não pela primeira que casa.** A
- * diferença aparece no dia em que uma página abrir com bloco cercado:
- * `# comentário` de shell casaria a mesma marca, e a citação entraria no meio do
- * código — sem erro, sem aviso, e visível só para quem abrisse o `.md`. Como
- * `pagesFrom` já tirou o front matter e o `import` do topo, a primeira linha com
- * texto é o `h1` do autor em todas as 73 páginas, e exigir isso troca a
- * inserção errada por uma mensagem.
- *
- * O `llms-full.txt` NÃO passa por aqui: lá a descrição já entra como
- * `> Summary:` acima do separador de documento, que é a forma do Neon. Duas
- * cópias do mesmo campo no mesmo documento seriam ruído para o parser.
+ * `llms-full.txt` does not use this: the description already appears
+ * there as `> Summary:` above the document separator, so adding it here
+ * too would duplicate the field.
  *
  * @param {{body: string, description: string, permalink: string}} page
  */
 function withSubtitle({body, description, permalink}) {
-  // A carga também é conferida, e não só a âncora. O override de `h1` já
-  // estoura sem `description` — mas ele é swizzle, e swizzle sai. Se saísse, o
-  // `.md` passaria a emitir uma citação vazia: um `>` solto, sem erro e sem
-  // aviso, que é o modo de falhar que esta função existe para não ter.
+  // The payload is checked too, not just the anchor. The `h1` override
+  // already throws without `description`, but it's a swizzle, and this
+  // repo carries no swizzle; if it were removed, the `.md` would emit a
+  // bare `>` silently instead of erroring.
   if (!description?.trim()) {
     throw new Error(
       `Página sem \`description\`: ${permalink}\n` +
@@ -124,6 +94,10 @@ export default function aiEraPlugin(context, options) {
       pages = pagesFrom({allContent, siteDir: context.siteDir, tabs: options.tabs});
     },
 
+    // All three outputs (per-route `.md`, `llms.txt`, `llms-full.txt`) exist
+    // only after a build: the dev server is a SPA and returns 200 with the
+    // site shell for these paths, not 404. Verify with `build && serve`
+    // against a real host.
     async postBuild({outDir}) {
       const write = async (relative, text) => {
         const destination = path.join(outDir, relative);
@@ -131,15 +105,11 @@ export default function aiEraPlugin(context, options) {
         await fs.writeFile(destination, text, 'utf8');
       };
 
-      // --- o `.md` por rota ---------------------------------------------------
+      // --- per-route .md ---
       //
-      // Escritos no `outDir`, nunca em `static/`. O que se commita é artefato
-      // que muda por DECISÃO; um `.md` que muda toda vez que a prosa muda seria
-      // dezenas de arquivos de ruído em todo diff de conteúdo.
-      //
-      // O ponteiro de volta ao índice é o que transforma arquivos soltos em
-      // grafo navegável: quem chega num `.md` por link direto descobre que
-      // existe uma lista, e a máquina que o lê acha o resto do site.
+      // Written to `outDir`, never `static/`: what's committed changes by
+      // decision, and an `.md` that changes every time the prose changes
+      // would be dozens of noise files in every content diff.
       await Promise.all(
         pages.map((page) =>
           write(
@@ -149,12 +119,12 @@ export default function aiEraPlugin(context, options) {
         ),
       );
 
-      // --- llms.txt -----------------------------------------------------------
+      // --- llms.txt ---
       //
-      // `## Optional` NÃO é usada. Ela tem significado especial na spec do
-      // llms.txt — *pode ser pulada se o contexto for curto* — e nenhuma das
-      // três referências medidas a usa. Marcar uma seção inteira como
-      // descartável é uma decisão sobre o conteúdo que este site não tomou.
+      // `## Optional` is never used: it has special meaning in the llms.txt
+      // spec (it may be skipped when context is short), so adding it marks
+      // a whole section as discardable, a content decision this site
+      // hasn't made.
       const labels = tabLabels(siteConfig.themeConfig, options.tabs);
       const sections = options.tabs.map((tab, i) => {
         const lines = pages
@@ -173,7 +143,7 @@ export default function aiEraPlugin(context, options) {
 
       await write('llms.txt', [...opening, '', sections.join('\n\n'), ''].join('\n'));
 
-      // --- llms-full.txt ------------------------------------------------------
+      // --- llms-full.txt ---
       await write(
         'llms-full.txt',
         [
@@ -196,23 +166,20 @@ export default function aiEraPlugin(context, options) {
 }
 
 /**
- * O preâmbulo global — o mesmo nos dois artefatos.
+ * The global preamble, the same in both artifacts.
  *
- * Ele existe para dizer à máquina o que ela tem em mãos antes do primeiro
- * documento: quantas páginas, por qual eixo estão divididas, e o que dentro
- * delas é ficção. A última linha não é modéstia: sem ela, um assistente responde
- * sobre as ferramentas do `panlabs` como se todas existissem.
+ * It tells the machine what it has before the first document: how many
+ * pages, which axis they're split by, and what inside them is fiction.
+ * The last line isn't modesty: without it, an assistant would answer
+ * about `panlabs`'s tools as if they all existed.
  *
- * **Ela deixou de dizer *nada existe* e passou a nomear a exceção**, porque o
- * acervo virou misto: o `overpower` é real, MIT, publicado no PyPI, e uma linha
- * que o declarasse fictício mandaria a máquina desmentir uma ferramenta que
- * existe. A regra é a mesma de antes lida com um item a menos — o que não é
- * nomeado aqui não existe —, e o custo de mantê-la é uma linha por ferramenta
- * real que entrar.
+ * The rule is: what isn't named here doesn't exist. `overpower` is the
+ * one named exception (real, MIT, published on PyPI); every other real
+ * tool added later costs one more line here.
  *
- * **Ele sai em pt-BR, e é a mesma regra do resto do site.** O acervo é
- * locale único desde o #158: não há tradução a projetar, e o preâmbulo lê o
- * mesmo título, descrição e rótulo de seção que o leitor humano vê.
+ * It ships in pt-BR: the site is single-locale, so there's no
+ * translation to design for, and the preamble reads the same title,
+ * description, and section labels the human reader sees.
  */
 function preamble({pages, tabs, labels, locale}) {
   const count = tabs

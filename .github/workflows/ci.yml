@@ -1,27 +1,21 @@
 name: CI
 
-# A única validação é a que a documentação do Docusaurus já manda rodar:
-# `npm run build`. `onBrokenLinks: 'throw'` faz o link quebrado reprovar
-# aqui, e só aqui — `docusaurus start` devolve 200 com o shell da SPA para
-# qualquer rota.
+# `npm run build` is the only validation. `onBrokenLinks: 'throw'` catches a
+# broken link only here: `docusaurus start` returns 200 with the SPA shell
+# for any route. `prebuild` regenerates the reference first, exercising the
+# contract validator and the command-line model for free.
 #
-# O `prebuild` regenera a referência a partir do par de contratos de
-# assinatura antes do build (`package.json`), e o gerador importa o
-# validador do par e o modelo de linha de comando — o build exercita os
-# dois de graça, sem passo dedicado.
-#
-# Nenhuma dependência npm nova entra por esta porta: tudo aqui é `actions/*`
-# e `npm ci` sobre o `package-lock.json` versionado.
+# No new npm dependency enters through this workflow: only `actions/*` and
+# `npm ci` against the committed `package-lock.json`.
 
-# O gatilho é `push`, e SÓ `push`. `pull_request` saiu porque duplicava toda
-# run: um check run cola no SHA, não no evento, então o mesmo commit reportava
-# `Portões e build` duas vezes e a run do push já satisfazia o required check do
-# PR.
+# Trigger is `push` only. Adding `pull_request` double-reports: a check run
+# binds to the SHA, not the event, so the same commit reports twice.
 #
-# O gatilho NÃO se estreita para `feature/**`. Uma branch fora da convenção
-# passaria a não ter CI, o required check nunca reportaria, e o PR travaria para
-# sempre em *"Expected — waiting for status to be reported"*. Runner de repo
-# público é grátis; a convenção `feature/` é de prosa, não de máquina.
+# The trigger doesn't narrow to `feature/**` either: a branch outside that
+# convention would run no CI, its required check would never report, and its
+# PR would stall forever on "waiting for status to be reported". A public
+# repo's runner is free; the `feature/` convention is prose, not something a
+# machine enforces.
 on:
   push:
     branches-ignore:
@@ -31,18 +25,19 @@ on:
 permissions:
   contents: read
 
-# Em modo autônomo o agente empurra várias vezes seguidas, e sem isto cada push
-# paga a bateria inteira. Cancela só SHA mais velho do MESMO ref, então a run do
-# HEAD do PR sempre completa e o required check nunca some.
+# An autonomous agent pushes several times in a row; without this, every
+# push pays the full run. Only cancels an older SHA on the SAME ref, so the
+# PR's HEAD run always completes and the required check never disappears.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # O id do job é o contrato do ruleset da `main` — é esta string que
-  # `required_status_checks.contexts` exige. Ele NÃO tem linha `name:`, e isso é
-  # deliberado: sem ela o GitHub reporta o id como nome do check, e não sobra
-  # string de exibição que alguém possa editar quebrando o ruleset em silêncio.
+  # The job id is the contract with `main`'s ruleset:
+  # `required_status_checks.contexts` requires this exact string. It has no
+  # `name:` line on purpose, so GitHub reports the id itself as the check
+  # name, leaving no display string someone could edit to silently break the
+  # ruleset.
   gate:
     runs-on: ubuntu-latest
     steps:

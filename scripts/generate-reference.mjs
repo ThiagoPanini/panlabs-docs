@@ -1,37 +1,10 @@
 /**
- * O gerador da referência — lê o contrato de assinatura, valida, e escreve as
- * quatro páginas `.mdx` mais o **fragmento** de sidebar que
- * `sidebars-ferramentas.js` importa.
+ * Reads the signature contract, validates it, and writes four `.mdx` pages
+ * plus the sidebar fragment `sidebars-ferramentas.js` imports.
  *
- * **O nome não é `gerar-api`.** O contrato deixou de falar HTTP na ADR 8 e
- * deixou de falar biblioteca na ADR 9; hoje ele descreve **superfície de
- * comando**. `gerar-referencia` não mentiu em nenhuma das três, e é por isso que
- * ele não troca de nome a cada troca de sujeito.
- *
- * **Fragmento, não árvore.** O gerador anterior emitia a sidebar inteira da
- * instância dele. Aqui a instância é `ferramentas`, a sidebar dela é escrita à
- * mão, e o ramo gerado mora dentro da categoria `Comandos`, no nível 4, que é o
- * teto. Emitir a árvore inteira daria ao gerador a posse de vinte e duas folhas
- * autorais que ele não conhece — a categoria `Comandos` inclusive, cujo rótulo e
- * cuja folha de abertura são nossos.
- *
- * **Fora do build, saída commitada.** Ele não entra no `docusaurus.config.js`:
- * roda à mão (`npm run generate:reference`), e o portão 5 regenera e reprova em
- * `git diff --exit-code`. Um gerador determinístico rodado duas vezes sobre o
- * mesmo contrato produz bytes idênticos; se não produzir, o contrato mudou sem o
- * gerador rodar, ou alguém editou a saída à mão.
- *
- * **Zero snippet escrito à mão, e desde a #133 zero snippet congelado.** A raiz
- * percorre o `fluxo` dos membros e emite linhas estáticas; a página de um comando
- * não recebe texto nenhum, e sim o MODELO, e quem compõe a linha é `line.mjs`,
- * dos dois lados. Nenhuma das quatro entradas tem snippet próprio, e a
- * `assinatura` também deixou de ser escrita — é a mesma disciplina de
- * zero-segunda-fonte que motivou o gerador inteiro.
- *
- * Uso: node scripts/generate-reference.mjs
- *
- * Procedência: docs/adr/0009-referencia-de-cli-gerada-de-contrato-de-superficie-de-comando.md ·
- * docs/design/referencia.md.
+ * Not wired into `docusaurus.config.js`: runs by hand
+ * (`npm run generate:reference`) or automatically before every build, via
+ * `prebuild`.
  */
 
 import fs from 'node:fs';
@@ -39,45 +12,39 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import {readContract, validate} from './lib/signature.mjs';
-// O modelo de linha vem do MESMO arquivo que o painel lê, e é o que faz a
-// assinatura emitida aqui e a linha montada lá não poderem divergir: são a mesma
-// função sobre o mesmo campo. Ver o cabeçalho de `line.mjs`.
+// The line model comes from the SAME file the panel reads, which is what
+// keeps the signature emitted here and the line built there from
+// diverging: same function, same field. See `line.mjs`'s header.
 import {shellQuote, signatureOf} from '../src/theme/MDXComponents/line.mjs';
 
 const CONTRACT_PATH = 'contracts/overpower.json';
 
 const DESTINATION = 'content/ferramentas/bibliotecas/overpower/comandos';
 
-/** O prefixo de id de documento. */
 const PREFIX = 'bibliotecas/overpower/comandos';
 
 const FRAGMENT = 'sidebars-referencia.js';
 
 /**
- * A tag do painel, emitida no corpo de toda página gerada.
+ * The panel tag, emitted in the body of every generated page.
  *
- * Ela é literal e sem atributo de propósito: serializar o painel como prop
- * dentro do MDX seria uma segunda cópia do `api_exemplos` que o front matter já
- * carrega, e o portão 5 não veria as duas divergirem — ele regenera e diffa a
- * saída contra ela mesma. O componente lê o front matter pela mesma porta que a
- * página, `useDoc()`.
+ * It's literal, with no purpose attribute: serializing the panel as a prop
+ * inside the MDX would be a second copy of the `api_exemplos` the front
+ * matter already carries, and regenerating from the contract wouldn't
+ * catch the two drifting apart. The component reads the front matter
+ * through the same door as the page, `useDoc()`.
  */
 const PANEL = '<CommandPanel />';
 
 /**
- * A chave de ícone de uma folha gerada — e ela passou a ser POR ENTRADA.
+ * A generated leaf's icon key, given by the contract per entry, in
+ * `entry.icon`.
  *
- * A história tem três degraus. Enquanto o ramo gerado morava espalhado entre as
- * folhas autorais de uma biblioteca, ele herdava `--bibliotecas`, a família do
- * separador. Com o ADR 9 §d) ganhou categoria própria e passou a `--comandos`, a
- * família da seção — e as quatro páginas viraram uma fileira de quatro linhas
- * com o mesmo glifo, que é exatamente o que a #118 veio desfazer.
- *
- * Hoje **o contrato carrega a chave**, em `entry.icon`. Ela não é dedutível
- * do `id`: `sidebar-icon--install` colidiria com a página autoral `Instalação`
- * do mesmo ramo, e é por isso que o campo é dado e não convenção. O gerador
- * confere que ela existe — uma entrada sem chave sairia com `undefined` no
- * `className`, e o portão 5 diffaria a saída contra ela mesma sem ver nada.
+ * Not derivable from `id`: `sidebar-icon--install` would collide with the
+ * authored `Instalação` page in the same branch, so the field is data, not
+ * convention. The generator checks it exists; an entry with no key would
+ * come out with `undefined` in `className`, with nothing downstream to
+ * notice.
  */
 const iconKey = (entry) => {
   if (typeof entry.icon !== 'string' || entry.icon === '') {
@@ -89,41 +56,33 @@ const iconKey = (entry) => {
 };
 
 /**
- * O que cada espécie emite — a tabela que existe no lugar do `if (especie ===)`.
+ * What each entry kind emits: a table that stands in for
+ * `if (kind === ...)`. A kind declares its shape here and falls through
+ * the same paths as every other kind.
  *
- * O gerador do ADR 8 roteava por três comparações de string espalhadas em dois
- * arquivos-função. A tabela troca ramo por DADO: a espécie se declara aqui e cai
- * nos mesmos caminhos, e foi isso que fez a fatia expand caber sem duplicar
- * renderizador. É também o que faz a fatia **contract** ser uma deleção de dado
- * em vez de uma cirurgia de fluxo — as três espécies de biblioteca saíram com o
- * contrato mockado que as pedia, e nenhum caminho de emissão precisou mudar.
+ * Fields:
  *
- * Os campos:
+ *   · `members`: the children-table's label key, or `null`. Having
+ *     members means being a root; the root walks `flow` in its snippet, a
+ *     member emits its own chain, marked.
+ *   · `fields`: the `<ParamField>` section's label key, or `null`.
+ *   · `returnValue`: the `<ResponseField>` section's label key, and
+ *     whether it appears ALWAYS (with the `noReturn` phrase when the entry
+ *     has none) or only when there's something to say.
+ *   · `errors`: whether the kind has an error table.
+ *   · `dialect`: who composes the panel snippet, and in what language.
  *
- *   · `membros` — a chave de rótulo da tabela de filhos, ou `null`. **Ter
- *     membros é ser raiz**: é a mesma pergunta, e a perna de hierarquia que o
- *     ADR 9 §a) manda `aplicacao` guardar. A raiz percorre `fluxo` no snippet;
- *     o membro emite a própria cadeia, com marcador.
- *   · `campos` — a chave de rótulo da seção de `<ParamField>`, ou `null`.
- *   · `retorno` — a chave de rótulo da seção de `<ResponseField>`, e se ela sai
- *     **sempre** (com a frase de `semRetorno` quando a entrada não tem retorno)
- *     ou só quando há o que dizer.
- *   · `erros` — se a espécie tem tabela de erros.
- *   · `dialeto` — quem compõe o snippet do painel, e em que linguagem.
+ * The table is closed against `ESPECIES`, and `npm test` ties the two: a
+ * kind added to the validator's list with no shape here throws a
+ * `TypeError` mid-emission instead of failing with a named refusal.
  *
- * **A tabela é fechada contra `ESPECIES`**, e o `npm test` amarra as duas: uma
- * espécie que entrasse na lista do validador sem forma aqui não daria recusa
- * nomeada, daria `TypeError` no meio da emissão.
- *
- * `ParamField` lê aqui como **opção** e `ResponseField` como **código de
- * saída**. Nenhum dos dois muda, e é a leitura que muda (ADR 9 §c): eles nunca
- * foram específicos de protocolo nem de linguagem, que é por que sobreviveram à
- * morte do `VerbBadge` e à do contrato de biblioteca.
+ * `ParamField` reads here as an OPTION and `ResponseField` as an EXIT
+ * CODE. Neither is protocol- or language-specific.
  */
 export const SHAPE = {
-  // A raiz da CLI: as opções globais e a tabela dos códigos de saída que valem
-  // para todos os comandos. Ela SEMPRE traz a tabela, porque é o único lugar
-  // onde ela mora.
+  // The CLI root: global options and the exit-code table shared by every
+  // command. It ALWAYS carries the table, since it's the only place it
+  // lives.
   application: {
     members: 'commands',
     fields: 'globalOptions',
@@ -131,9 +90,9 @@ export const SHAPE = {
     errors: true,
     dialect: 'cli',
   },
-  // O comando traz código de saída só quando tem um que a raiz não cobre.
-  // Repetir os quatro da aplicação em cada página seria a segunda fonte que o
-  // gerador inteiro existe para não ter.
+  // A command carries exit codes only when it has one the root doesn't
+  // cover. Repeating the root's codes on every page would be the second
+  // source of truth this generator exists to avoid.
   command: {
     members: null,
     fields: 'options',
@@ -148,24 +107,21 @@ export const SHAPE = {
 // ---------------------------------------------------------------------------
 
 /**
- * O parâmetro é editável?
+ * Is the parameter editable?
  *
- * **Escalar com exemplo, e nada além.** É o porte direto da regra anterior — lá
- * caminho e consulta eram editáveis e o corpo era estático. Um `dict` ou uma
- * lista dentro de um `<input type="text">` obrigaria o painel a parsear texto de
- * volta para estrutura, que é um interpretador dentro de um site estático.
+ * Scalar with an example, nothing more. A `dict` or a list inside a text
+ * input would force the panel to parse text back into structure, an
+ * interpreter inside a static site.
  */
 const editable = (parameter) =>
   typeof parameter.example === 'string' || typeof parameter.example === 'number';
 
 /**
- * O que o parâmetro vale dentro da linha: código cru vence, e o resto vira
- * literal do shell.
+ * What the parameter is worth inside the line: raw code wins, everything
+ * else becomes a shell literal.
  *
- * **A terceira perna saiu com o marcador.** Até a versão 1 do contrato havia um
- * ramo `comPlaceholder` que trocava o valor por `{{nome}}` para o cliente
- * substituir. Quem monta a linha editável agora é `line.mjs`, e as únicas
- * linhas que este arquivo ainda compõe são as da raiz, que são estáticas.
+ * `line.mjs` composes the editable line; the only lines this file still
+ * composes are the root's, which are static.
  */
 function valueFor(parameter) {
   if (parameter.codeExample !== undefined) {
@@ -178,26 +134,25 @@ const hasExample = (parameter) =>
   parameter.example !== undefined || parameter.codeExample !== undefined;
 
 /**
- * Um valor JSON escrito como palavra de uma linha de shell.
+ * A JSON value written as one word of a shell line.
  *
- * **O escape vem de `line.mjs`, e não de uma cópia daqui.** As duas linhas que
- * este projeto emite — a de exemplo da raiz, composta no build, e a editada no
- * painel, composta no cliente — precisam escapar igual, e um leitor que copia as
- * duas espera o mesmo texto. Duas cópias da regra divergiriam sem que nenhum
- * portão visse: o 5 regenera e diffa a saída contra ela mesma.
+ * The escaping comes from `line.mjs`, not a copy here: the two lines this
+ * project emits (the root's example, composed at build time, and the
+ * panel's edited one, composed client-side) need to escape the same way,
+ * or a reader copying both gets different text.
  *
- * O que sobra aqui é a única diferença real: número não leva aspas.
+ * What's left here is the one real difference: a number takes no quotes.
  */
 const commandLiteral = (value) =>
   typeof value === 'string' ? shellQuote(value) : String(value);
 
 /**
- * A linha de uso de um comando — `overpower install --from "…"`.
+ * A command's usage line, e.g. `overpower install --from "…"`.
  *
- * **A flag booleana não recebe valor.** `--json true` não é linha que alguém
- * digita; a opção verdadeira entra nua e a falsa não entra. O nome vem inteiro
- * do contrato, traços e tudo, porque é ele que o leitor copia e é ele que o
- * painel usa como chave do marcador.
+ * A boolean flag takes no value: `--json true` isn't a line anyone types,
+ * so `true` enters bare and `false` doesn't enter at all. The name comes
+ * whole from the contract, dashes included, since it's both what the
+ * reader copies and the panel's marker key.
  */
 function commandCall(entry) {
   const options = (entry.parameters ?? []).filter(hasExample).flatMap((parameter) => {
@@ -210,37 +165,32 @@ function commandCall(entry) {
 }
 
 /**
- * Quem compõe o snippet do painel, por dialeto.
+ * Who composes the panel snippet, per dialect.
  *
- * **O dialeto é da espécie, não do contrato.** Uma entrada `comando` sempre se
- * usa a partir do shell; não há contrato que troque isso, então não há campo de
- * contrato a inventar para dizê-lo. `bash` é a linguagem que o Prism já carrega
- * (`docusaurus.config.js` § `additionalLanguages`), então o painel a pinta sem
- * dependência nova.
- *
- * **A tabela ficou com uma linha, e a tabela fica.** O `python` saiu com as três
- * espécies de biblioteca; o que ele provava — que a espécie escolhe o dialeto em
- * vez de o contrato declarar um — continua sendo o que dispensa um campo novo no
- * JSON no dia em que a segunda linha voltar.
+ * The dialect belongs to the kind, not the contract: a `command` entry is
+ * always used from a shell, so there's no contract field to invent for it.
+ * `bash` is already registered with Prism
+ * (`docusaurus.config.js`'s `additionalLanguages`), so the panel paints it
+ * with no new dependency.
  */
 const DIALECTS = {
   cli: {
     language: 'bash',
     call: commandCall,
-    // Não há o que importar antes de chamar um comando, e uma linha em branco
-    // no topo do bloco seria enfeite que o leitor copiaria junto.
+    // Nothing to import before calling a command; a blank line at the top
+    // of the block would be decoration the reader would copy along.
     preamble: () => null,
   },
 };
 
 /**
- * As linhas de uso, com o receptor emitido uma vez só, antes de quem o usa.
+ * Usage lines, with the receiver emitted once, before whoever uses it.
  *
- * **O `receptor` continua aqui, e o contrato de CLI não o usa.** Ele é campo do
- * contrato de assinatura, e o validador o confere em duas das doze recusas
- * nomeadas — `referencia-morta` e `ciclo-de-receptor`. Tirá-lo daqui deixaria o
- * validador cobrando um campo que a emissão ignora, que é a divergência entre as
- * duas listas fechadas que o `npm test` existe para não ter.
+ * `receiver` stays here even though the CLI contract doesn't use it: it's
+ * a signature-contract field, and the validator checks it in two of its
+ * named refusals (`referencia-morta`, `ciclo-de-receptor`). Ignoring a
+ * field the validator requires would be exactly the drift `npm test`
+ * exists to catch.
  */
 function emitChain(entry, porId, vistos, lines, dialect) {
   if (vistos.has(entry.id)) {
@@ -254,12 +204,12 @@ function emitChain(entry, porId, vistos, lines, dialect) {
 }
 
 /**
- * As linhas estáticas da raiz — preâmbulo, receptor e a chamada de cada membro.
+ * The root's static lines: preamble, receiver, and each member's call.
  *
- * **Só a raiz passa por aqui.** A página de um comando não tem snippet
- * congelado: ela carrega o modelo, e quem compõe a linha é o painel. A raiz
- * mostra o fluxo dos membros e não a si mesma, porque o que se digita para usar
- * uma CLI é um comando dela — ter membros é ser raiz.
+ * Only the root passes through here. A command's page carries no frozen
+ * snippet; it ships the model, and the panel composes the line. The root
+ * shows its members' flow, not itself, since what you type to use a CLI is
+ * one of its commands, and having members is what makes something a root.
  */
 function snippetFor(entry, {contract, porId}) {
   const shape = SHAPE[entry.kind];
@@ -282,14 +232,12 @@ function snippetFor(entry, {contract, porId}) {
 const attribute = (name, value) => ` ${name}="${String(value).replace(/"/g, '&quot;')}"`;
 
 /**
- * Um rótulo, lido do bloco `rotulos` do contrato — **e nunca com reserva**.
+ * A label, read from the contract's `labels` block, never with a
+ * fallback.
  *
- * É o que torna *"Parâmetros" → "Opções"* uma troca de dado e não de código
- * (ADR 8, e o acidente feliz que o ADR 9 §c) cobra). O acesso passa por aqui em
- * vez de por `rotulos.x` cru porque uma chave ausente saía `## undefined`, e o
- * portão 5 não a pegaria: ele regenera e diffa a saída contra ela mesma, então
- * o `undefined` estaria dos dois lados e o diff sairia limpo. É o mesmo buraco
- * do marcador órfão, e a mesma resposta — parar alto, nomeando a chave.
+ * Reading through here instead of `labels.x` raw matters because a
+ * missing key would otherwise come out as a literal `## undefined` with
+ * nothing to catch it. This throws early instead, naming the key.
  */
 function label(labels, key) {
   const value = labels[key];
@@ -300,20 +248,19 @@ function label(labels, key) {
 }
 
 /**
- * O link para outra entrada.
+ * The link to another entry.
  *
- * **Um campo cujo tipo é outra entrada não aninha — ele linka**, e é isso que
- * dispensou o reset de profundidade que o contrato anterior precisava: não há
- * expansão embutida cujo orçamento de aninhamento dependa de onde ela foi
- * referenciada. O alvo vai em caminho de ARQUIVO (`./x.mdx`), e não em rota: é a
- * forma que o `onBrokenMarkdownLinks: 'throw'` confere no build.
+ * A field whose type is another entry doesn't nest, it LINKS: there's no
+ * inline expansion whose nesting budget depends on where it was
+ * referenced. The target is a FILE path (`./x.mdx`), not a route, the form
+ * `onBrokenMarkdownLinks: 'throw'` checks at build time.
  */
 function entryLink(id, {porId, labels}) {
   const target = porId.get(id);
   return `${label(labels, 'seeAlso')} [\`${target.title}\`](./${target.id}.mdx)`;
 }
 
-/** Um `<ParamField>`/`<ResponseField>`, com a recursão por `<Expandable>`. */
+/** A `<ParamField>`/`<ResponseField>`, recursing through `<Expandable>`. */
 function fieldMdx(field, tag, context, nivel) {
   const {labels} = context;
   const opening =
@@ -323,11 +270,11 @@ function fieldMdx(field, tag, context, nivel) {
 
   const body = [field.description];
 
-  // **A aridade é do modelo, e a página a diz sozinha.** Cinco flags de
-  // `install` acumulam — repetir a flag e separar por vírgula chegam à mesma
-  // tupla — e nenhuma página dizia isso. Escrever a frase à mão em dez lugares
-  // é a deriva que este gerador existe para não ter; escrevê-la aqui faz cada
-  // `<ParamField>` herdá-la do campo que a declara.
+  // Arity is the model's, and the page states it on its own. Five
+  // `install` flags accumulate (repeating the flag or comma-separating
+  // reach the same tuple), and no page said so by hand. Writing the
+  // sentence here means every `<ParamField>` inherits it from the field
+  // that declares it.
   if (field.arity?.multiple) {
     body.push('', label(labels, 'multipleArity'));
   }
@@ -347,7 +294,7 @@ function fieldMdx(field, tag, context, nivel) {
   return [opening, ...body, `</${tag}>`].join('\n');
 }
 
-/** A tabela de erros — `Erro` e `Quando`, nesta ordem. */
+/** The error table: name, then when it happens, in that order. */
 function errorsTable(errors, {labels}) {
   return [
     `| ${label(labels, 'errorColumn')} | ${label(labels, 'whenColumn')} |`,
@@ -357,11 +304,11 @@ function errorsTable(errors, {labels}) {
 }
 
 /**
- * A tabela de membros da raiz — nome, espécie e o resumo da própria entrada.
+ * The root's member table: name, kind, and each entry's own summary.
  *
- * Serve as exportações de um módulo e os comandos de uma aplicação sem saber a
- * diferença: nos dois casos é a raiz apontando para os filhos, e o que muda é o
- * rótulo da seção, que já é dado.
+ * Serves a module's exports and an application's commands without knowing
+ * the difference: both cases are the root pointing at its children, and
+ * only the section label, already data, changes.
  */
 function membersTable(entry, {porId, labels}) {
   return [
@@ -375,25 +322,23 @@ function membersTable(entry, {porId, labels}) {
 }
 
 /**
- * O corpo da página, na ordem fixa que o gerador produz sempre:
+ * The page body, in the fixed order the generator always produces:
  *
- *   1. `# Título`
- *   2. a espécie e o nome qualificado, em prosa — o lugar onde a pílula de verbo
- *      ficava, agora sem verbo para pintar
- *   3. a descrição
- *   4. a tabela de membros — `## Exportações` no módulo, `## Comandos` na
- *      aplicação; ausente em quem não é raiz
- *   5. a seção de `<ParamField>` — `## Parâmetros`, `## Opções globais` ou
- *      `## Opções`; ausente quando não há nenhum
- *   6. a seção de `<ResponseField>` — `## Retorno`, `## Atributos` ou
- *      `## Códigos de saída`, com a árvore de campos ou a frase de "não devolve
- *      valor"
- *   7. `## Erros` — a tabela; ausente quando a entrada não levanta nada
+ *   1. `# Title`
+ *   2. kind and qualified name, in prose
+ *   3. the description
+ *   4. the member table: `## Exports` for a module, `## Commands` for an
+ *      application; absent for anything that isn't a root
+ *   5. the `<ParamField>` section: `## Parameters`, `## Global Options`, or
+ *      `## Options`; absent when there are none
+ *   6. the `<ResponseField>` section: `## Return`, `## Attributes`, or
+ *      `## Exit Codes`, with the field tree or the "returns nothing"
+ *      phrase
+ *   7. `## Errors`: the table; absent when the entry raises nothing
  *
- * **Quem escolhe as seções é `FORMA`, e quem escreve os títulos é o contrato.**
- * A função não nomeia espécie nenhuma: ela lê a forma da espécie e indexa o
- * bloco `rotulos` pela chave que a forma aponta. É por isso que *"Parâmetros" →
- * "Opções"* não toca uma linha daqui.
+ * `SHAPE` chooses the sections, the contract writes the titles. The
+ * function never names a kind: it reads the kind's shape and indexes the
+ * `labels` block by the key the shape points at.
  */
 export function bodyMdx(entry, context) {
   const {labels} = context;
@@ -401,35 +346,30 @@ export function bodyMdx(entry, context) {
   const parts = [
     `# ${entry.title}`,
     '',
-    // A declaração que a cobrança 14 do portão 4 lê. Ela é **obrigatória em toda
-    // página gerada**, e não só nas duas que hoje carregam travessão: o
-    // `api_exemplos` é projeção do contrato, e uma mensagem de recusa que ganhe
-    // travessão amanhã reprovaria uma página que ninguém editou.
+    // Marks every generated page as quoting tool output, mandatory on all
+    // of them, not just the two that carry an em dash today: `api_exemplos`
+    // is a projection of the contract, and a refusal message that grows an
+    // em dash tomorrow would fail a page nobody touched.
     //
-    // **Ela entra DEPOIS do `h1`, e não antes.** O plugin `ai-era` reprova no
-    // build a página que não abre com `# título`, e o front matter gasta sete
-    // linhas — pôr a declaração na nona ainda a deixa dentro das vinte que a
-    // cobrança lê.
+    // It comes AFTER the `h1`, not before: the `ai-era` plugin fails the
+    // build on a page that doesn't open with `# title`.
     //
-    // `{/* */}` e não `<!-- -->`: sob MDX 3 o comentário HTML não compila.
+    // `{/* */}`, not `<!-- -->`: under MDX 3, an HTML comment doesn't
+    // compile.
     '{/* cita-saida-de-ferramenta */}',
     '',
     `**${label(labels, entry.kind)}** · \`${entry.qualified}\``,
     '',
-    // O painel — assinatura, argumentos editáveis e snippet — entra AQUI, e a
-    // posição é a decisão da #118. Ele era um trilho grudado à direita, o que
-    // comutava o layout da página inteira e a deixava com prosa de 577 sem
-    // coluna para o TOC.
+    // The panel (signature, editable arguments, snippet) goes HERE, in
+    // flow, immediately after the line naming the command and before the
+    // prose: the line says how this is called, and the next question for
+    // someone landing on a CLI page is how to type it. Prose between the
+    // two would force scrolling past it to find the copyable line, and
+    // prose explains what the signature already showed, so explaining
+    // after showing is the cheap order.
     //
-    // Em fluxo, ele fica **imediatamente depois da linha que nomeia o
-    // comando** e antes da prosa, e a ordem tem uma razão: a linha diz *como
-    // isto se chama*, e a pergunta seguinte de quem chega numa página de CLI é
-    // *como isto se digita*. Pôr a prosa entre as duas obrigaria a rolar dois
-    // parágrafos para achar a linha copiável. A prosa explica o que a
-    // assinatura já mostrou, e explicar depois de mostrar é a ordem barata.
-    //
-    // A tag não leva prop: quem carrega os dados é o `api_exemplos` do front
-    // matter, lido por `useDoc()`.
+    // The tag carries no prop: `useDoc()` reads the front matter's
+    // `api_exemplos` for it.
     PANEL,
     '',
     entry.description,
@@ -458,16 +398,16 @@ export function bodyMdx(entry, context) {
   return `${parts.join('\n')}\n`;
 }
 
-/** As linhas da seção de retorno — a frase, o link, ou a árvore de campos. */
+/** The return section's lines: a phrase, a link, or a field tree. */
 function returnLines(entry, context) {
   const {labels} = context;
 
   if (!entry.returnValue) {
-    // A raiz é a ÚNICA dona da tabela de códigos de saída: os comandos não a
-    // repetem, e apontam para ela. Uma raiz sem retorno emitiria a seção com a
-    // frase de "não devolve valor" — a página que devia trazer os códigos
-    // dizendo que não há códigos, com o diff limpo. Parar aqui é o mesmo
-    // remédio do rótulo ausente.
+    // The root is the ONLY owner of the exit-code table; commands don't
+    // repeat it, they link to it. A root with no return value would emit
+    // the "returns nothing" phrase, the very page that should carry the
+    // codes saying there are none instead. Stopping here is the same fix
+    // as the missing-label one.
     if (SHAPE[entry.kind].members) {
       throw new Error(
         `${entry.id}: a raiz \`${entry.kind}\` não traz \`retorno\`, e é ela que carrega a tabela para todos os membros.`,
@@ -493,26 +433,23 @@ function returnLines(entry, context) {
 }
 
 /**
- * O front matter — dois campos de conteúdo, mais o comutador do painel.
+ * The front matter: two content fields, plus the panel's switch.
  *
- * **O painel deixou de receber um template e passou a receber o modelo.** Até a
- * versão 1 do contrato o campo carregava `snippet.modelo`, uma linha congelada no
- * build com `{{marcadores}}` que o cliente substituía a cada tecla. Um template
- * congelado não sabe dizer *opcional*: apagar o campo produzia `--skill ""`, que
- * não é linha que a CLI aceite. Agora vai o modelo — aridade, mínimo por contexto
- * e restrições — e quem monta a linha é `line.mjs`, dos dois lados.
+ * The panel receives a model (arity, minimum context, constraints), not a
+ * frozen template: a frozen template can't say "optional", since clearing
+ * the field would produce `--skill ""`, not a line the CLI accepts.
  *
- * **A raiz não é montável, e continua sendo linhas.** O que se digita para usar
- * uma CLI é um comando dela: a página da raiz mostra o fluxo dos membros, que é
- * texto estático, e não tem campo a editar.
+ * The root isn't assemblable, and stays lines: what you type to use a CLI
+ * is one of its commands, so the root's page shows its members' flow,
+ * static text with nothing to edit.
  */
 export function frontMatter(entry, context) {
   const shape = SHAPE[entry.kind];
 
   const panel = {
-    // Derivada, nunca lida do contrato: a `assinatura` escrita à mão era a
-    // segunda fonte de verdade sobre a forma do comando, e ela e `parametros`
-    // já discordavam da ordem das flags sem que nada pudesse notar.
+    // Derived, never read from the contract: a hand-written `signature`
+    // was a second source of truth about a command's shape, and it and
+    // `parameters` could disagree about flag order with nothing to notice.
     signature: signatureOf(entry),
     language: DIALECTS[shape.dialect].language,
   };
@@ -523,11 +460,11 @@ export function frontMatter(entry, context) {
     panel.model = {
       call: entry.call ?? entry.qualified,
       qualified: entry.qualified,
-      // O contexto em que a página abre o painel: o **primeiro** `minimo` do
-      // contrato, e a ordem ali é a decisão. Para `install` ele é `terminal`,
-      // porque `overpower install` nu é linha completa num terminal e é a que a
-      // maioria digita; a linha de pipe continua no modelo, e o leitor a alcança
-      // ligando as flags que ela exige.
+      // The context the page opens the panel in: the contract's FIRST
+      // `minimum`, and that order is the decision. For `install` it's
+      // `terminal`, since a bare `overpower install` is a complete
+      // terminal line and the one most people type; the piped line stays
+      // in the model, reachable by adding the flags it requires.
       context: (entry.minimum ?? [{context: 'always'}])[0].context,
       parameters: (entry.parameters ?? []).map((parameter) => ({
         name: parameter.name,
@@ -556,14 +493,14 @@ export function frontMatter(entry, context) {
 // ---------------------------------------------------------------------------
 
 /**
- * O contexto de emissão — o contrato, indexado por id.
+ * The emission context: the contract, indexed by id.
  *
- * Ele sai de `writeDocs` porque a régua de máquina precisa emitir uma
- * página sem escrever no disco. O par de disco existe e o teste o lê, mas ele
- * também monta pares sintéticos para exercitar o que o contrato publicado de
- * propósito não tem — flag booleana, rótulo ausente, raiz sem tabela de saída —,
- * e um teste que tivesse de chamar o gerador inteiro reescreveria o ramo gerado
- * para conferir uma string.
+ * Split out of `writeDocs` because tests need to emit a page without
+ * writing to disk. The on-disk fixture pair exists and is read by tests,
+ * but they also assemble synthetic pairs to exercise what the published
+ * contract doesn't have on purpose (a boolean flag, a missing label, a
+ * root with no return table), and a test that had to call the whole
+ * generator would rewrite the generated branch just to check a string.
  */
 export function contextFor(contract, contractPath) {
   return {
@@ -574,7 +511,10 @@ export function contextFor(contract, contractPath) {
   };
 }
 
-/** Escreve o diretório inteiro e apaga o `.mdx` que sobrou de um contrato anterior. */
+/**
+ * Writes the whole directory, deleting any `.mdx` left over from a
+ * previous contract.
+ */
 function writeDocs(contract) {
   const context = contextFor(contract, CONTRACT_PATH);
   const destination = DESTINATION;
@@ -590,16 +530,16 @@ function writeDocs(contract) {
     );
   }
 
-  // **A varredura de órfão só alcança `.mdx`**, e o recorte é o que separa as
-  // duas posses agora que elas dividem uma pasta. Com o ADR 9 §d) o ramo gerado
-  // ganhou categoria própria, e a folha autoral que a abre, `Comandos › Índice`,
-  // mora aqui dentro por decisão: ela é a dona da fixture `painel-direito-vazio`,
-  // e o contraste que a fixture prova só existe entre irmãs.
+  // Orphan sweep only reaches `.mdx`: that's the cut that separates the
+  // two ownership domains now that they share a folder. The authored leaf
+  // that opens the branch, `Comandos › Índice`, lives inside this folder
+  // by decision and owns the empty-right-panel fixture, whose contrast
+  // only exists between siblings.
   //
-  // Apagar tudo que não foi escrito nesta rodada era correto enquanto a pasta era
-  // inteiramente do gerador; agora seria o gerador tomando posse de arquivo que
-  // não é dele. A extensão já é o sinal greppável de *gerado, não editar*, e ela
-  // é o mesmo teste que o portão 4 usa para contar as duas posses em separado.
+  // Deleting everything not written this round was correct while the
+  // folder belonged entirely to the generator; now it would mean the
+  // generator claiming a file that isn't its own. The extension is already
+  // the greppable signal of "generated, don't edit".
   for (const orphan of fs.readdirSync(destination)) {
     if (orphan.endsWith('.mdx') && !written.has(orphan)) {
       fs.rmSync(path.join(destination, orphan), {recursive: true});
@@ -608,35 +548,17 @@ function writeDocs(contract) {
   return written.size;
 }
 
-/** O fragmento — uma lista de itens de folha, e nada além. Quem monta a árvore é
- * a sidebar da aba. */
+/** The fragment: a list of leaf items, nothing more. The tab's sidebar builds the tree. */
 function writeFragment(contract) {
   const lines = [
     '// @ts-check',
     '',
     '/**',
-    ' * O ramo gerado de `Ferramentas › Bibliotecas › overpower › Comandos` —',
-    ' * **fragmento**, não árvore.',
+    ' * `Ferramentas › Bibliotecas › overpower › Comandos`, GENERATED by',
+    ' * `scripts/generate-reference.mjs`: a FRAGMENT of leaf items, not a tree.',
+    ' * Edit the contract, not this file.',
     ' *',
-    ' * GERADO por scripts/generate-reference.mjs. Não edite à mão: o portão 5 regenera',
-    ' * e reprova em `git diff --exit-code`.',
-    ' *',
-    ' * Ele é uma LISTA DE ITENS DE FOLHA e nada além. A árvore da aba é escrita à',
-    ' * mão em `sidebars-ferramentas.js`, que importa esta lista e a espalha dentro',
-    ' * da categoria `Comandos` — no nível 4, que é o teto de profundidade desde o',
-    ' * ADR 10 §g). Emitir a árvore inteira daria ao gerador a posse da categoria e',
-    ' * da folha autoral que a abre, `Comandos › Índice`, que ele não conhece.',
-    ' *',
-    ' * Cada item carrega `className: \'sidebar-icon sidebar-icon--<chave>\'`,',
-    ' * e a chave é a da PRÓPRIA ENTRADA, lida de `icon` no contrato. Ela era a',
-    ' * da seção que as hospeda, o que punha o mesmo glifo nas quatro folhas; a',
-    ' * #118 trocou por uma chave por página, no ramo inteiro do produto. A regra',
-    ' * é a de docs/design/icones.md §8 — *nenhum ícone no separador de topo;',
-    ' * ícone em tudo abaixo dele* —, e folha gerada não abre exceção.',
-    ' *',
-    ' * Procedência: docs/design/referencia.md §5 · docs/design/icones.md §8 ·',
-    ' * docs/adr/0009 · docs/adr/0010.',
-    ' *',
+    ' * Each item\'s icon key belongs to its own entry, one per page.',
     ' * @type {import(\'@docusaurus/plugin-content-docs\').SidebarItemConfig[]}',
     ' */',
     'const referencia = [',
@@ -680,14 +602,13 @@ function main() {
 }
 
 /**
- * É este arquivo que está sendo executado, ou ele foi importado?
+ * Is this file being executed, or was it imported?
  *
- * **O link simbólico tem de ser resolvido dos dois lados.** `import.meta.url` já
- * vem com o caminho real; `process.argv[1]`, não. Invocado por um symlink, um
- * `path.resolve` cru compara caminho real com caminho de link, decide que não é
- * o comando, e **sai zero sem gerar nada** — e aí o portão 5 regenera o vazio,
- * diffa a saída antiga contra ela mesma e PASSA. É o mesmo buraco de "diff
- * limpo" que o marcador órfão e o rótulo ausente abrem, pela terceira porta.
+ * The symlink has to be resolved on both sides: `import.meta.url` already
+ * carries the real path, `process.argv[1]` doesn't. Invoked through a
+ * symlink, a raw `path.resolve` compares a real path against a link path,
+ * decides this isn't the command, and exits with nothing generated, in
+ * silence.
  */
 function isTheCommand() {
   if (!process.argv[1]) {
@@ -696,15 +617,15 @@ function isTheCommand() {
   try {
     return fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url));
   } catch {
-    // `argv[1]` que não existe no disco não é este arquivo.
+    // `argv[1]` that doesn't exist on disk isn't this file.
     return false;
   }
 }
 
-// **Só roda quando é o comando, nunca quando é importado.** `npm test` importa
-// `bodyMdx` e `frontMatter` daqui para exercitar as formas que o contrato
-// publicado não tem; sem esta guarda, um `node --test` reescreveria o ramo
-// gerado como efeito colateral de conferir uma string.
+// Only runs when it's the command, never when imported: `npm test` imports
+// `bodyMdx` and `frontMatter` from here to exercise shapes the published
+// contract doesn't have; without this guard, `node --test` would rewrite
+// the generated branch as a side effect of checking a string.
 if (isTheCommand()) {
   main();
 }

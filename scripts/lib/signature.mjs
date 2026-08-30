@@ -1,74 +1,49 @@
 /**
- * O validador do contrato de assinatura — **lista fechada de doze recusas**, e
- * cada uma nomeia o JSON Pointer (RFC 6901) do nó ofensor.
+ * Validator for the signature contract: a closed list of named refusals,
+ * each naming the JSON Pointer (RFC 6901) of the offending node.
  *
- * A disciplina é a do [ADR 5](../../docs/adr/0005-referencia-da-api-gerada-de-contrato.md),
- * e ela sobreviveu inteira à troca de premissa: o que morreu foi OpenAPI, não a
- * régua. O que o ADR 8 registra é a lista NOVA — as recusas de HTTP não têm
- * assunto num contrato que descreve assinatura de função, tipo e módulo.
- *
- * **Zero dependência de parser.** O parser inteiro é `JSON.parse`, e a recusa de
- * YAML é consequência disso, não regra em separado — é o axioma 2 escrito como
- * código.
- *
- * **Recusa alto, nunca em silêncio.** Um validador que ignora o que não entende
- * é um gerador que emite página errada sem ninguém ver.
- *
- * Procedência: docs/adr/0008-referencia-de-biblioteca-gerada-de-contrato-de-assinatura.md ·
- * docs/design/referencia.md §5.
+ * Parsing is `JSON.parse` only, so YAML input fails as a parse error rather
+ * than a dedicated check. The validator always refuses loudly rather than
+ * silently accepting input it doesn't understand.
  */
 
 import fs from 'node:fs';
 
-// A conta de exclusividade é a MESMA que o painel usa. Ver `membersInConflict`.
+// The conflict check here is the same one the line-model panel uses. See
+// `membersInConflict`.
 import {membersInConflict} from '../../src/theme/MDXComponents/line.mjs';
 
-/** O par nome/versão que este validador conhece. Fechado. */
+/** The name/version pair this validator accepts. Closed. */
 export const CONTRACT = 'signature';
 export const VERSION = 2;
 
 /**
- * As espécies de entrada. Fechado.
- *
- * **Duas, e o expand–contract fechou.** `modulo`, `tipo` e `funcao` descreviam
- * superfície de biblioteca (ADR 8) e saíram com o `panlabs-esteira`, o contrato
- * mockado que elas serviam; `aplicacao` e `comando` descrevem superfície de CLI
- * (ADR 9 §a), e é o `overpower` que está no ar. A fatia **expand** ensinou as
- * duas espécies novas à máquina enquanto o sujeito ainda era `Biblioteca C`;
- * esta é a **contract**, e a lista volta ao tamanho que tinha.
- *
- * A lista continua **fechada e validada**, com a mesma recusa nomeada e o mesmo
- * JSON Pointer do nó ofensor — o que o ADR 9 §a) preserva não é o tamanho, é a
- * propriedade.
+ * The kinds a contract entry may declare (ADR 9 §a). Anything outside this
+ * list is refused via `kindNotInList`.
  */
 export const KINDS = ['application', 'command'];
 
 /**
- * O teto de aninhamento, calibrado e não redondo.
+ * The nesting ceiling, calibrated against a real page: `Infraestrutura ›
+ * O output de um módulo`, the deepest hand-written page in this docs set,
+ * nests exactly four levels deep; a fifth would refuse before it renders
+ * illegibly.
  *
- * `Infraestrutura › O output de um módulo` — escrito à mão no acervo, antes
- * deste contrato — tem exatamente quatro; um quinto nível reprova antes de virar
- * página ilegível.
- *
- * **O reset de nível morreu com o `$ref`, e não deixou buraco.** No contrato
- * OpenAPI a contagem reiniciava ao alcançar um schema nomeado, senão o mesmo
- * objeto lia com orçamentos diferentes conforme onde fosse embutido. Aqui um
- * campo cujo tipo é outra entrada **não aninha: ele linka** (o campo `entry`),
- * e profundidade que não existe não precisa de reset.
+ * A field whose type is another entry links rather than nesting (the
+ * `entry` field), so it never accumulates depth and needs no reset.
  */
 export const NESTING_CEILING = 4;
 
-/** O teto de erros documentados por entrada. Uma entrada já está nele. */
 export const ERRORS_CEILING = 4;
 
 /**
- * As dezesseis recusas. Acrescentar uma sem nomeá-la aqui reprova no `npm test`.
+ * The closed list of named refusals.
  *
- * **As quatro últimas são do modelo de linha, e chegaram com a versão 2.** Elas
- * cobrem a classe de defeito que o portão 5 sozinho não pega: ele regenera e
- * diffa, então um modelo internamente incoerente produz uma página byte a byte
- * igual à que o gerador acabou de emitir, com um painel que monta linha que a
- * ferramenta recusa. O diff fica limpo e a página fica errada.
+ * Four of them (exclusive-group-of-one, model-names-nonexistent-flag,
+ * mandatory-exclusive, incoherent-arity) validate the line model's internal
+ * coherence: regenerating a page from the contract doesn't catch this
+ * defect class, since an internally incoherent model can still generate
+ * cleanly, producing a panel that renders a line the tool itself refuses.
  */
 export const REFUSALS = {
   notJson: 'not-json',
@@ -88,14 +63,13 @@ export const REFUSALS = {
   incoherentArity: 'incoherent-arity',
 };
 
-/** Um segmento de JSON Pointer, escapado conforme a RFC 6901. */
+/** A JSON Pointer segment, escaped per RFC 6901. */
 const segment = (key) => String(key).replace(/~/g, '~0').replace(/\//g, '~1');
 
 const pointerFor = (...parts) => parts.map((part) => `/${segment(part)}`).join('');
 
 /**
- * Lê e parseia um contrato. **A recusa de YAML sai daqui**, por consequência de
- * o parser ser `JSON.parse` — e não por uma regra escrita à parte.
+ * Reads and parses a contract file. YAML input fails here as invalid JSON.
  *
  * @param {string} contractPath
  */
@@ -111,8 +85,8 @@ export function readContract(contractPath) {
 }
 
 /**
- * Valida um contrato sozinho. Devolve a lista de recusas, na ordem em que o
- * documento as apresenta — vazia quando ele passa.
+ * Validates a contract on its own. Returns the list of refusals in document
+ * order, empty when it passes.
  *
  * @param {any} contract
  * @returns {{refusal: string, pointer: string, detail: string}[]}
@@ -133,9 +107,10 @@ export function validate(contract) {
 
   const entries = Array.isArray(contract.entries) ? contract.entries : [];
 
-  // O id é varrido ANTES do resto, e não dentro do laço: um id repetido rouba a
-  // identidade do irmão, e todas as referências ao roubado viram `referencia-
-  // morta` — três recusas sobre um defeito só, com a causa em terceiro lugar.
+  // ids are scanned before the rest, not inside the loop below: a duplicated
+  // id would otherwise steal its sibling's identity, and every downstream
+  // reference to it would misreport as `dead-reference` instead of the
+  // actual `duplicate-id` cause.
   const ids = new Map();
   for (const [index, entry] of entries.entries()) {
     if (ids.has(entry?.id)) {
@@ -149,7 +124,7 @@ export function validate(contract) {
     ids.set(entry?.id, index);
   }
 
-  /** Um nó de campo — parâmetro, campo de retorno, ou campo aninhado. */
+  /** A field node: parameter, return field, or nested field. */
   const validateField = (field, pointer, level) => {
     if (level > NESTING_CEILING) {
       refuse(
@@ -182,14 +157,11 @@ export function validate(contract) {
   }
 
   /**
-   * A coerência interna do modelo de linha — as quatro recusas da versão 2.
-   *
-   * **Ela é sobre o modelo consigo mesmo, não sobre a ferramenta.** Nenhuma
-   * varredura de JSON descobre que a exclusividade da CLI é outra; o que ela
-   * descobre é um modelo que não fecha em si — um grupo exclusivo de um membro,
-   * uma restrição apontando para flag que não existe, um mínimo que exige duas
-   * flags que se excluem, um separador em campo que não acumula. Cada um desses
-   * produz painel quebrado com portão 5 verde.
+   * The line model's internal coherence, checked against itself rather than
+   * the CLI: an exclusive group of one member, a constraint that points at
+   * a flag that doesn't exist, a minimum invocation that requires two
+   * mutually exclusive flags, or a separator on a field that doesn't
+   * accumulate.
    */
   function validateLineModel(entry, root) {
     const parameters = entry.parameters ?? [];
@@ -248,15 +220,16 @@ export function validate(contract) {
       const flags = minimum?.flags ?? [];
       flags.forEach((name, j) => checkName(name, `${pointer}${pointerFor('flags', j)}`));
 
-      // O mínimo é uma linha que a ferramenta aceita. Se ele próprio viola uma
-      // restrição, o painel abriria já recusado — e a página estaria ensinando
-      // uma invocação que não roda.
+      // A minimum is a line the tool accepts. If it violates a constraint
+      // itself, the panel would render already refused, teaching an
+      // invocation that doesn't run.
       const present = new Set(flags);
       for (const constraint of constraints) {
-        // A conta de colisão vem de `line.mjs`, e não de uma cópia aqui: o
-        // validador e o painel precisam concordar sobre o que é linha válida, e
-        // duas implementações da mesma partição divergiriam em silêncio — o
-        // validador aprovaria um mínimo que o painel recusa.
+        // The conflict check comes from `line.mjs`, not a copy here: the
+        // validator and the panel must agree on what counts as a valid
+        // line, and two implementations of the same partition would
+        // diverge silently, with the validator approving a minimum the
+        // panel refuses.
         const members = membersInConflict(constraint, present);
         if (members.length >= 2) {
           refuse(
@@ -281,20 +254,15 @@ export function validate(contract) {
       refuse(
         REFUSALS.kindNotInList,
         `${root}/kind`,
-        // A contagem NÃO entra na redação. Ela já mudou uma vez e vai mudar de
-        // novo no ticket do port; uma recusa que dissesse "uma das três" com
-        // cinco na lista mentiria sobre o próprio motivo, e quem a recebe lê o
-        // detalhe justamente por não saber a lista de cor.
+        // The message never hardcodes a count of how many kinds exist: a
+        // refusal that said "one of three" while the list held five would
+        // misstate its own reason, and the reader consults `detail`
+        // precisely because they don't have the list memorized.
         `\`${entry?.kind}\` não está na lista fechada: ${KINDS.join(', ')}`,
       );
       continue;
     }
 
-    // **A recusa inverteu de sinal na versão 2.** Até a 1 o campo era exigido:
-    // o cabeçalho do painel saía dele. Ele era escrito à mão ao lado dos
-    // `parameters`, e nada obrigava os dois a concordarem — estava certo por
-    // sorte. Agora `signatureOf` o deriva do modelo, e carregá-lo no JSON
-    // reabriria a segunda fonte de verdade que derivar existe para fechar.
     if (entry.signature !== undefined) {
       refuse(
         REFUSALS.handwrittenSignature,
@@ -352,8 +320,8 @@ export function validate(contract) {
     validateReference(entry.receiver, `${root}/receiver`);
   }
 
-  // O ciclo de receptor, depois de tudo: uma referência morta já reprovou acima,
-  // e caminhar sobre ela aqui só produziria um segundo erro sobre o mesmo nó.
+  // Receiver-cycle check runs last: a dead reference already refused above,
+  // and walking it here would only produce a second error on the same node.
   if (!refusals.some((r) => r.refusal === REFUSALS.deadReference)) {
     for (const [index, entry] of entries.entries()) {
       const seen = new Set([entry.id]);

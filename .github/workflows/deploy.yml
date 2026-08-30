@@ -1,8 +1,9 @@
 name: Deploy
 
-# Constrói e publica em GitHub Pages.
+# Builds and publishes to GitHub Pages.
 #
-# Nenhuma dependência npm nova entra por esta porta: `actions/*` e `npm ci`.
+# No new npm dependency enters through this workflow: only `actions/*` and
+# `npm ci`.
 
 on:
   push:
@@ -15,7 +16,8 @@ permissions:
   pages: write
   id-token: write
 
-# Uma implantação por vez; a fila não cancela a que está no ar.
+# One deployment at a time: a new push queues, it doesn't cancel the one in
+# flight.
 concurrency:
   group: pages
   cancel-in-progress: false
