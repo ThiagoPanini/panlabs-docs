@@ -5,8 +5,6 @@
 
 /* Both use only name, type, required-ness, default value, and description,
    the same five facts a function argument and a returned field carry.
-   Measured: the anchor's `ParamField` uses only `body=`, never `query`,
-   `path`, or `header`.
 
    One internal component with a kind prop, not two parallel anatomies:
    duplicating the whole anatomy for two props is how sibling components

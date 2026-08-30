@@ -54,10 +54,9 @@
    panel; `overflow-wrap: anywhere` is what stops the command line from
    overflowing the box on a narrow screen.
 
-   The hairline underneath is the anchor's own header chrome, ported without
-   its second padding literal: here it's a single `--pd-space-6`, and the
-   hairline is what separates the line from what comes after it inside the
-   panel. */
+   The hairline underneath is header chrome with a single padding literal,
+   `--pd-space-6`; the hairline is what separates the line from what comes
+   after it inside the panel. */
 .panelHeader {
   margin: 0;
   padding-block-end: var(--pd-space-4);
@@ -135,9 +134,9 @@
 .panelField input[type='text'] {
   flex: 1 1 auto;
   min-width: 0;
-  /* Touch-target floor — the entry-state contract (ADR 4) covers focus and
-     press on its own; the minimum height is the only thing this field needs
-     to declare on its own. */
+  /* Touch-target floor — the entry-state contract covers focus and press on
+     its own; the minimum height is the only thing this field needs to
+     declare. See DECISIONS.md#the-entry-state-contract. */
   min-height: var(--pd-target-min);
   padding-inline: var(--pd-space-3);
   border: var(--pd-border-width) solid var(--pd-border-default);

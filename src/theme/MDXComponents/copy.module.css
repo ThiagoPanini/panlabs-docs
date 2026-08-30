@@ -7,9 +7,9 @@
 
 /* Layer 3: everything here derives from a layer 1 or 2 token. The
    component's two new tokens live in tokens.css — `--pd-copy-height` and
-   `--pd-copy-menu-width` — and both are measured off the anchor, not scale:
-   34 and 277 don't land on `--pd-space-*` or a multiple of it, and deriving
-   by number coincidence is the false derivation this project refuses in
+   `--pd-copy-menu-width` — and both are measured, not scale-derived: 34 and
+   277 don't land on `--pd-space-*` or a multiple of it, and deriving by
+   number coincidence is the false derivation this project refuses in
    writing.
 
    EVERYTHING ELSE WAS ALREADY A TOKEN, and that's not luck: the button text
@@ -40,12 +40,9 @@
   flex: 0 0 auto;
 }
 
-/* The pair only exists from the sidebar's threshold up, and the reason
-   mirrors the anchor's own: there it disappears once the header gets
-   narrower than 520px, via container query. Here the threshold is the
-   project's own (chrome.css §1.6), a single closed value; the behavior
-   matches in spirit, and on narrow screens the page opens on content, the
-   same criterion the mobile TOC uses. */
+/* The pair only exists from the sidebar's threshold up (chrome.css §1.6), a
+   single closed value: on narrow screens the page opens on content, the same
+   criterion the mobile TOC uses. */
 @media (min-width: 997px) {
   .pair {
     display: inline-flex;
@@ -56,9 +53,8 @@
    The two halves
 
    They meet with no doubled border: the left one doesn't draw its right
-   border, and the right one draws all four. That's what the anchor does,
-   measured — `border-width: 1px 0 1px 1px` on the first, `1px` on the
-   second.
+   border, and the right one draws all four — `border-width: 1px 0 1px 1px`
+   on the first, `1px` on the second.
    ----------------------------------------------------------------------------- */
 .copy,
 .more {
@@ -83,7 +79,7 @@
 }
 
 /* Square, and the width comes from the height instead of a second number:
-   the anchor's chevron button measures 34 × 34. */
+   the chevron button measures 34 × 34. */
 .more {
   width: var(--pd-copy-height);
   justify-content: center;

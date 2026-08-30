@@ -1,9 +1,8 @@
 /**
  * `src/icons/manifest.js` is a contract: the names are what matters, the
  * drawings are skin. Drawings live in `static/icons/*.svg` and are
- * interchangeable; names are not. A corporate target with its own
- * iconography replaces the SVG files and keeps the names: no component and
- * no MDX gets rewritten.
+ * interchangeable; names are not. Another iconography replaces the SVG
+ * files and keeps the names: no component and no MDX gets rewritten.
  */
 
 /**
@@ -144,8 +143,8 @@ export const CEILING = 64;
  * per section.
  *
  * No top-level sidebar separator gets an icon; everything below it does,
- * leaf or group, at any depth (ADR 10). The navbar's tabs get no icon
- * either.
+ * leaf or group, at any depth. The navbar's tabs get no icon either.
+ * See DECISIONS.md#a-sidebar-category-is-not-a-destination.
  *
  * None of the `overpower` per-page icons cost a new file: all of them reuse
  * drawings the manifest already carries as authoring vocabulary.

@@ -10,9 +10,8 @@
    title band don't exist because we never write them, and this DOM isn't
    `.alert`.
 
-   Four variants, and the author doesn't pick an icon: the anchor's typed
-   fields take no such prop, and the icon carries the variant's
-   semantics. */
+   Four variants, and the author doesn't pick an icon: the icon carries the
+   variant's semantics. */
 
 import React from 'react';
 import clsx from 'clsx';
@@ -28,7 +27,7 @@ import styles from './catalog.module.css';
  *
  * The variant lands in the DOM twice, on purpose: as a module class, since
  * that's what our CSS paints with (specificity (0,1,0)), and as
- * `data-pd-variant`, since that's what the corporate skin repaints with
+ * `data-pd-variant`, since that's what the skin repaints with
  * (specificity (0,2,0), which wins with no `!important`). Our CSS never reads
  * `data-pd-*`; if it did, the two layers would tie and load order would
  * decide. `info` has no class because it's the neutral variant, and neutral

@@ -78,7 +78,7 @@ const temaPrism = {
  * lands. Since this list is also search's first tiebreaker, ranking the
  * two empty tabs lower is a result decision, not an aesthetic one.
  */
-const ABAS = ['tools', 'default', 'procedures', 'teams'];
+const TABS = ['tools', 'default', 'procedures', 'teams'];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -151,7 +151,7 @@ const config = {
         // The `Jornadas` tab is the docs plugin's `default` instance.
         //
         // The collection lives in `content/`, not `docs/`: `docs/` is this
-        // repository's OWN documentation (agents, ADRs). The public route
+        // repository's OWN documentation, the one agents read. The public route
         // is `/jornadas`.
         docs: {
           path: 'content/jornadas',
@@ -252,12 +252,12 @@ const config = {
     // from two sides, and they read the four instances above through the
     // same hook (`allContentLoaded`).
     //
-    // `ABAS` is declared once and served to both: it's the navbar order,
+    // `TABS` is declared once and served to both: it's the navbar order,
     // which search uses as its first tiebreaker and `llms.txt` uses as
     // section order. An id missing from the instances above breaks the
     // build instead of silently dropping a third of the site.
-    ['./src/plugins/search', {tabs: ABAS}],
-    ['./src/plugins/ai-era', {tabs: ABAS}],
+    ['./src/plugins/search', {tabs: TABS}],
+    ['./src/plugins/ai-era', {tabs: TABS}],
   ],
 
   themeConfig:

@@ -15,11 +15,11 @@ Se algum desses arquivos não existir, **siga em silêncio**. Não sinalize a au
 
 ```
 /
+├── AGENTS.md         ← as regras; o `CLAUDE.md` só aponta para cá
 ├── CONTEXT.md
 ├── DECISIONS.md
-├── docs/
-│   ├── agents/       ← estes arquivos: como um agente trabalha aqui
-│   └── research/     ← só o índice; o material mora em branches `research/*`
+├── README.md
+├── docs/agents/      ← estes arquivos: como um agente trabalha aqui
 ├── content/          ← o acervo publicado, que é o site
 └── src/
 ```

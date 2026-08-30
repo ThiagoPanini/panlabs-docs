@@ -1,44 +1,10 @@
 /**
- * A raiz — uma rota que não é página: ela leva à primeira doc.
+ * The root: a route that is not a page. It jumps to the bare route of the
+ * navbar's first tab.
  *
- * A âncora não tem página de abertura. A raiz dela responde **308** e a porta de
- * entrada mora no host irmão; aqui a raiz vai para a **rota nua da primeira
- * aba**, e a primeira aba é `Ferramentas`.
- *
- * **O destino segue a ordem do navbar, e não uma aba nomeada.** Quando
- * `Ferramentas` passou à frente na faixa, a raiz foi junto: o que se procura
- * mais é o que saiu daqui. A rota nua resolve por `slug: /` na folha de
- * abertura da instância, então trocar qual folha abre a aba não mexe neste
- * arquivo.
- *
- * **Três mecanismos, e cada um cobre o que o outro não alcança:**
- *
- * 1. `<meta http-equiv="refresh">` — atende a entrada direta na URL, e é o único
- *    que funciona **sem JavaScript**. O host é o GitHub Pages, que não emite
- *    redirecionamento de servidor configurável: a divergência contra o 308 da
- *    âncora é de host, não de desenho, e está carimbada como `lacuna por
- *    restrição`.
- * 2. `<Redirect>` do `@docusaurus/router` — atende a navegação **dentro** da SPA,
- *    onde o `<head>` não é reavaliado. É o caminho do clique na marca do navbar,
- *    que aponta para a raiz. Vem do núcleo do gerador: **zero dependência nova**.
- * 3. O `<Link>` visível — atende o caso em que os dois primeiros falham, e paga
- *    por si duas vezes: é ele que faz `onBrokenLinks: 'throw'` conferir a rota no
- *    build, porque `<Redirect to>` não passa por essa verificação.
- *
- * **`<main>` é obrigatório.** Página de doc ganha um pelo layout; página em
- * `src/pages/` só tem se alguém escrever, e sem ele o skip link cai na reserva e
- * o marco de página fica errado.
- *
- * O caminho aparece em duas formas, e não pela mesma razão. **O roteador NÃO
- * tem `basename`** — `<BrowserRouter>` sobe sem ele (`clientEntry.js`), e toda
- * rota registrada já carrega o `baseUrl` embutido no `path`. `<Link>` compensa
- * sozinho, prependendo `baseUrl` por dentro; `<Redirect>` é o `Redirect` cru do
- * `react-router-dom`, sem essa compensação, e por isso recebe `url`, já
- * resolvida por `useBaseUrl` — não `DESTINO` cru. Era esse o bug: `<Redirect
- * to={DESTINO}>` navegava para uma rota sem prefixo, que não batia com nenhuma
- * registrada, caía no catch-all e piscava `NotFound` até o `meta` corrigir. O
- * `meta` também é HTML cru fora do roteador e precisa da mesma resolução — é
- * ela que faz o redirecionamento acertar o `baseUrl` do site.
+ * `<main>` is mandatory. A doc page gets one from the layout; a page under
+ * `src/pages/` only has one if someone writes it, and without it the skip
+ * link falls back to a substitute and the page landmark is wrong.
  */
 
 import React from 'react';
@@ -49,45 +15,51 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 
 /**
- * A ROTA NUA da primeira aba. Ela existe porque a folha de abertura de
- * `sidebars-ferramentas.js` carrega `slug: /` no front matter — `/ferramentas`
- * é página de verdade, não redirecionamento nem 404 (ADR 10 §h).
+ * The BARE ROUTE of the first tab. It resolves because the opening leaf of
+ * `sidebars-ferramentas.js` carries `slug: /` in its front matter, so
+ * `/ferramentas` is a real page, not a redirect and not a 404.
  *
- * **Ela segue a ordem do navbar, e já se mexeu uma vez por isso.** Apontava
- * para `/jornadas` enquanto `Jornadas` abria a faixa; com a reordenação para
- * `Ferramentas` · `Procedimentos` · `Jornadas` · `Times`, seguiu junto. O
- * acoplamento é com a POSIÇÃO, não com a aba: quem trocar a ordem outra vez
- * troca esta linha, e nenhum portão casa as duas — a lacuna fica nomeada aqui.
- *
- * **O acoplamento encolheu antes disso, e vale dizer o que ele era.** Esta
- * constante soletrava `/jornadas/api-owner/indice`: o `link` de uma categoria,
- * copiado à mão de outro arquivo. Com a rota nua, o alvo é a **instância**, não
- * a página: trocar qual folha abre a aba não mexe neste arquivo, porque quem
- * muda de dono é o `slug: /`, que viaja com a folha.
- *
- * O que sobra de acoplamento é o que o portão 6 cobre: ele confere que
- * `/ferramentas`, `/procedimentos`, `/jornadas` e `/times` devolvem 200 no host
- * publicado, e a primeira das quatro é exatamente este destino.
+ * The coupling is with the POSITION in the navbar, not with a named tab:
+ * whoever reorders the tabs changes this line too, and no machine pairs the
+ * two. Which leaf opens the tab stays free to move — the target is the docs
+ * instance, and `slug: /` travels with the leaf.
  */
 const DESTINATION = '/ferramentas';
 
 export default function Root() {
+  // `<Redirect>` takes `url`, never `DESTINATION`. The router runs with no
+  // `basename`, and every registered route already carries `baseUrl` inside
+  // its `path`. `<Link>` prepends `baseUrl` on its own; `<Redirect>` is
+  // `react-router-dom`'s raw component and does not, so an unprefixed path
+  // matches nothing, falls into the catch-all and renders `NotFound`. The
+  // `meta` tag is raw HTML outside the router and needs the same resolution.
   const url = useBaseUrl(DESTINATION);
 
+  // Three mechanisms, each covering what the others cannot reach.
   return (
     <>
       <Head>
+        {/* Direct entry at the URL, and the only one of the three that works
+            with JavaScript off. The host emits no configurable server
+            redirect, so there is no cheaper rung than this. */}
         <meta httpEquiv="refresh" content={`0; url=${url}`} />
-        {/* A raiz não é conteúdo: ela é um salto. Indexá-la competiria com o
-            destino pela mesma consulta. `follow` mantém o destino alcançável. */}
+        {/* The root is a jump, not content: indexing it would compete with
+            the destination for the same query. `follow` keeps the
+            destination reachable. */}
         <meta name="robots" content="noindex, follow" />
       </Head>
 
+      {/* Navigation inside the SPA, where `<head>` is not re-evaluated — the
+          navbar brand points here. It comes from the generator's own core:
+          no new dependency. */}
       <Redirect to={url} />
 
       <Layout title="Documentação" noFooter>
         <main className="container margin-vert--xl">
           <p>Esta página leva à documentação.</p>
+          {/* The case where the two above fail, and it pays for itself twice:
+              it is what makes `onBrokenLinks: 'throw'` check the route at
+              build time, because `<Redirect to>` is not checked. */}
           <Link to={DESTINATION}>Abrir a documentação</Link>
         </main>
       </Layout>

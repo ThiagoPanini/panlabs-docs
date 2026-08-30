@@ -11,8 +11,8 @@
    discovered, and this is its one exception.
 
    Worth writing down: for these two, the skin contract is Infima's own
-   classes and the ARIA Docusaurus already emits. The corporate skin hooks
-   into the SAME classes as this file, so there's no specificity step here
+   classes and the ARIA Docusaurus already emits. The skin hooks into the
+   SAME classes as this file, so there's no specificity step here
    separating our CSS from theirs, unlike the rest of the catalog. Where
    load order would decide, the selector adds the element's TYPE —
    `li.tabs__item` instead of `.tabs__item` — to beat upstream's hashed CSS

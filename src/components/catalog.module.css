@@ -8,8 +8,8 @@
 /* A MODULE, NOT A GLOBAL SHEET, for an architecture reason, not an
    organizational one:
 
-     this project's CSS styles by MODULE CLASS      (0,1,0)
-     the corporate skin repaints by ATTRIBUTE        (0,2,0)
+     this project's CSS styles by MODULE CLASS   (0,1,0)
+     the skin repaints by ATTRIBUTE              (0,2,0)
 
    and it wins with no `!important`. That only holds as long as **no rule in
    this file reads `data-pd-*`** — if it did, the two layers would tie and
@@ -163,10 +163,9 @@
    How `auto-fit` works, in full — the half-explanation is what hides the
    edge case: it calculates how many tracks fit and **collapses the ones
    that would be empty**. With fewer cards than tracks, the ones that exist
-   stretch to fill the row (what the anchor's measurement shows at three
-   cards). With more cards than tracks, the last row keeps whatever's left
-   over and does **not** stretch — the incomplete row the spec says to leave
-   incomplete.
+   stretch to fill the row. With more cards than tracks, the last row keeps
+   whatever's left over and does **not** stretch — the incomplete row the
+   spec says to leave incomplete.
 
    `min(…, 100%)` isn't decoration: without it a container smaller than the
    floor overflows horizontally. It's a function call against a silent
@@ -182,8 +181,8 @@
 }
 
 /* A border, not a surface — measured directly, not derived from a systemic
-   argument: on the anchor the card is 1px of `gray-950/10` in light and
-   `white/10` in dark, with no shadow and no fill. */
+   argument: 1px at 10% ink in light and 10% white in dark, with no shadow
+   and no fill. */
 .card {
   display: flex;
   flex-direction: column;
@@ -215,9 +214,7 @@
 }
 
 /* The hover is the BORDER TURNING BRAND COLOR, and nothing else. Nothing
-   moves and no background is painted: the anchor's measurement shows border
-   alone, and the component's old spec declared border *and* fill — the fill
-   was ours, not theirs.
+   moves and no background is painted: the border alone carries the state.
 
    The whole hover sits under `(hover: hover)`. Without it the state stays
    stuck after a tap, since touch has no pointer to lift back off. */
@@ -485,17 +482,15 @@ a.card:active {
    one of two things, and marking both doubles the chips and halves the
    salience of what matters.
 
-   The required chip is RED, spelled out in words instead of an asterisk,
-   matching the anchor. What used to hold the neutral version was the verb —
-   amber was `PUT` and red was `DELETE` on the same page — and the verb died
-   with the HTTP contract. Without it, the two hues were free, and the
-   measurement decides.
+   The required chip is RED, spelled out in words instead of an asterisk.
+   Nothing else on the page competes for the hue: this catalog carries no
+   HTTP verb, so red means "required" and nothing else.
    ----------------------------------------------------------------------------- */
 
 /* `border-block-END`, not `-start`: the divider sits BETWEEN rows, never
    before the first or after the last — `:last-child` zeroes its own, and
    nothing is left above the first field because there's no `-start` to
-   draw. Measured on the anchor: no fill, no zebra striping. */
+   draw. No fill, no zebra striping. */
 .field {
   position: relative;
   border-block-end: var(--pd-border-width) solid var(--pd-border-subtle);
@@ -514,8 +509,8 @@ a.card:active {
   margin-block: 0;
 }
 
-/* In accent, not `--pd-text-strong` — measured on the anchor: the field
-   name is the only thing on the line painted with the brand color. */
+/* In accent, not `--pd-text-strong`: the field name is the only thing on
+   the line painted with the brand color. */
 .fieldHead > code {
   border: 0;
   padding: 0;
@@ -544,8 +539,7 @@ a.card:active {
     position: absolute;
     top: var(--pd-space-1);
     /* `--pd-space-10` (40) — the same breathing room the content top already
-       uses below the sticky top, not a new literal; matches the gap
-       measured on the anchor. */
+       uses below the sticky top, not a new literal. */
     left: calc(-1 * var(--pd-space-10));
     display: grid;
     place-items: center;
@@ -580,8 +574,8 @@ a.card:active {
 }
 
 /* The neutral marker — type and default. Same shape as the required chip
-   (radius, fill), neutral ink instead of danger: measured on the anchor,
-   which tells the two families apart by color alone. */
+   (radius, fill), neutral ink instead of danger: color alone tells the two
+   families apart. */
 .fieldChip {
   border-radius: var(--pd-radius-xs);
   padding-inline: var(--pd-space-1);
@@ -654,8 +648,8 @@ a.card:active {
    diagram inherits it via `currentColor`. One file serves both modes; never
    one file per mode.
 
-   No checkerboard background: it exists on the anchor to frame an image
-   with transparency, and framing a diagram loses the reason for it.
+   No checkerboard background: it exists to frame an image with
+   transparency, and a diagram isn't one.
 
    THE STAGE IS TINTED, the same defect the code block had: it declared
    `--pd-surface-page`, the exact color of whatever sits behind it. While the

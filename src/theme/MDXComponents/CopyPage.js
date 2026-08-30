@@ -77,10 +77,11 @@ export default function CopyPage({permalink}) {
      day have two headers; a fixed `id` would point them at the same menu. */
   const menuId = useId();
 
-  /* The Markdown route is pure concatenation, made possible by ADR 7
-     (`trailingSlash: false`): the permalink already arrives with no
-     trailing slash. The absolute URL is what goes in the assistant prompt,
-     which needs an address that resolves outside the reader's browser. */
+  /* The Markdown route is pure concatenation, made possible by
+     `trailingSlash: false`: the permalink already arrives with no trailing
+     slash. The absolute URL is what goes in the assistant prompt, which
+     needs an address that resolves outside the reader's browser.
+     See DECISIONS.md#no-trailing-slash. */
   const mdRoute = `${permalink}.md`;
   const mdUrl = `${siteConfig.url}${mdRoute}`;
 

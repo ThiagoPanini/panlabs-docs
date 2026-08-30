@@ -18,8 +18,9 @@ export const CONTRACT = 'signature';
 export const VERSION = 2;
 
 /**
- * The kinds a contract entry may declare (ADR 9 §a). Anything outside this
- * list is refused via `kindNotInList`.
+ * The kinds a contract entry may declare. Anything outside this list is
+ * refused via `kindNotInList`.
+ * See DECISIONS.md#reference-is-generated-from-contract.
  */
 export const KINDS = ['application', 'command'];
 
