@@ -19,7 +19,6 @@ npm run build && npm run serve   # the whole CI is the build
 | [`CONTEXT.md`](CONTEXT.md) | The glossary. Start here. |
 | [`DECISIONS.md`](DECISIONS.md) | Why each locked design decision stands. |
 | [`docs/agents/`](docs/agents/) | How an agent works in this repo — tracker, domain, labels, workflow. |
-| [`docs/research/`](docs/research/) | Index of research. The material lives in `research/*` branches. |
 | `content/` | The `panlabs` collection, the published content — `jornadas/`, `procedimentos/`, `ferramentas/`, `times/`. |
 | `contracts/` | The `overpower` signature contracts. `prebuild` projects them into the generated reference. |
 | `src/css/tokens.css` | **The single source of literal values.** The only file in the repo with a literal. |
