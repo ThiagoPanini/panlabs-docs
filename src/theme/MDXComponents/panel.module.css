@@ -1,54 +1,55 @@
 /* =============================================================================
-   `PainelComando` — o bloco de assinatura, argumentos e snippet, no fluxo.
+   `PainelComando` — the signature, arguments, and snippet block, in flow.
 
-   Camada 3: tudo aqui deriva de token de camada 1 e 2, declarado no escopo do
-   próprio componente, nunca em `:root`. Zero token novo. Ver docs/design/tokens.md §1
-   e docs/design/referencia.md.
-
-   NENHUMA declaração `outline` neste arquivo — o portão 3 reprova outline fora
-   de `src/css/foco.css`, e não precisa de exceção aqui: `:focus-visible` já é
-   universal, e o `<input>` do painel o herda de graça.
-
-   **O que saiu daqui, e o que a saída comprou.** Este arquivo era
-   `src/theme/ApiDocItem/estilos.module.css` e carregava, além do painel, a
-   grade de duas colunas da página inteira: `.grade` em `row` a partir de 997px,
-   `.colunaProsa` travada em 577 e `.colunaPainel` grudada com `max-height` e
-   `overflow-y`. As quatro saíram juntas quando o painel desceu para o fluxo, e
-   com elas a aritmética `577 + 32 + 511 = 1120` que negava a coluna do TOC. A
-   página de comando passa a medir o que qualquer página de doc mede.
+   Layer 3: everything here derives from a layer-1 or layer-2 token, declared
+   in the component's own scope, never on `:root`. Zero new token. See
+   DECISIONS.md#css-in-three-layers-one-source-of-literals.
    ============================================================================= */
 
-/* -----------------------------------------------------------------------------
-   O painel — a única superfície elevada do corpo de qualquer página.
+/* NO `outline` declaration in this file — the rule keeps `outline` to
+   focus.css alone, and no exception is needed here: `:focus-visible` is
+   already universal, and the panel's `<input>` inherits it for free. */
 
-   Ele não é moldura de prosa: é um bloco de dados dentro do texto, e a
-   separação dele do texto é a razão de ele ter aresta. Ver docs/design/chrome.md §2.
+/* **What left here, and what leaving bought.** This file used to be
+   `src/theme/ApiDocItem/estilos.module.css` and carried, besides the panel,
+   the whole page's two-column grid: `.grade` in a `row` from 997px,
+   `.colunaProsa` locked at 577, and `.colunaPainel` stuck with `max-height`
+   and `overflow-y`. All four left together when the panel moved down into
+   flow, and with them the `577 + 32 + 511 = 1120` arithmetic that denied the
+   TOC column. The command page now measures the same as any doc page. */
+
+/* -----------------------------------------------------------------------------
+   The panel — the only elevated surface in any page's body.
+
+   It isn't a prose frame: it's a data block inside the text, and its
+   separation from the text is why it has an edge.
    ----------------------------------------------------------------------------- */
 .panel {
   display: flex;
   flex-direction: column;
   gap: var(--pd-space-6);
-  /* A respiração vertical é a de um bloco de MDX, não a de uma coluna de
-     grade: ele tem prosa em cima e prosa embaixo, e as duas precisam da mesma
-     distância. */
+  /* The vertical breathing room is that of an MDX block, not a grid column:
+     it has prose above and below, and both need the same distance. */
   margin-block: var(--pd-space-8);
   padding: var(--pd-space-6);
-  /* O fio que era o anel `0 0 0 1px` da sombra, agora borda de verdade. */
+  /* The hairline that used to be the shadow's `0 0 0 1px` ring is now a real
+     border. */
   border: var(--pd-border-width) solid var(--pd-border-subtle);
   border-radius: var(--pd-radius);
   background-color: var(--pd-surface-raised);
   box-shadow: var(--pd-shadow-raised);
 }
 
-/* O `CodeBlock` do Infima traz `margin-bottom` própria, pensada para prosa: ele
-   é um bloco entre parágrafos, e reserva a respiração do que vem depois. Dentro
-   do painel não vem nada depois, e a margem virava um vão abaixo da última
-   linha, somando com o `padding` da caixa. O mesmo vale em cima, do lado do
-   primeiro filho, no caso em que o cabeçalho não é emitido.
+/* Infima's `CodeBlock` brings its own `margin-bottom`, meant for prose: it's
+   a block between paragraphs, reserving breathing room for what comes after.
+   Inside the panel nothing comes after, and the margin turned into a gap
+   below the last line, adding to the box's own `padding`. Same on top, on
+   the first child's side, for the case where no header is emitted.
 
-   Escopado ao filho direto de propósito: a prosa DENTRO de um bloco continua
-   com o ritmo dela. É a mesma normalização que `.prosa > :first-child` fazia no
-   layout antigo, e a única coisa daquele arquivo que atravessou a mudança. */
+   Scoped to the direct child on purpose: prose INSIDE a block keeps its own
+   rhythm. It's the same normalization `.prosa > :first-child` used to do in
+   the old layout, and the only thing from that file that survived the
+   change. */
 .panel > :first-child {
   margin-block-start: 0;
 }
@@ -57,13 +58,14 @@
   margin-block-end: 0;
 }
 
-/* O cabeçalho — a ASSINATURA. Uma linha longa que precisa quebrar dentro do
-   painel; `overflow-wrap: anywhere` é o que impede a linha de comando de
-   estourar a caixa numa tela estreita.
+/* The header — the SIGNATURE. A long line that needs to wrap inside the
+   panel; `overflow-wrap: anywhere` is what stops the command line from
+   overflowing the box on a narrow screen.
 
-   O fio embaixo é a chrome de cabeçalho da âncora, portada sem o segundo
-   literal de preenchimento que ela tem: aqui é um `--pd-space-6` só, e o fio é
-   o que separa a linha do que vem depois dentro dele. */
+   The hairline underneath is the anchor's own header chrome, ported without
+   its second padding literal: here it's a single `--pd-space-6`, and the
+   hairline is what separates the line from what comes after it inside the
+   panel. */
 .panelHeader {
   margin: 0;
   padding-block-end: var(--pd-space-4);
@@ -75,16 +77,18 @@
 }
 
 /* -----------------------------------------------------------------------------
-   A fileira de argumentos — uma célula por parâmetro que o comando declara, e
-   não mais só pelos que traziam exemplo escalar. A caixa liga a flag e o campo
-   dá o valor; `<label>`, `<input type="checkbox">` e `<input type="text">`
-   nativos, com zero tecla própria, zero foco programático e zero ARIA a
-   escrever além do `aria-describedby` que aponta o motivo de uma recusa.
+   The argument row — one cell per parameter the command declares, no longer
+   only the ones with a scalar example. The box toggles the flag and the
+   field carries the value; native `<label>`, `<input type="checkbox">`, and
+   `<input type="text">`, with zero custom key handling, zero programmatic
+   focus, and zero ARIA to write beyond the `aria-describedby` that points at
+   a refusal's reason.
 
-   **Em fluxo, os campos cabem lado a lado.** No trilho de 511 eles eram uma
-   pilha porque não havia largura para outra coisa; na coluna da prosa há, e a
-   grade automática usa a que houver sem media query própria — `auto-fit` com um
-   piso em `--pd-field-min` empilha sozinha na tela estreita.
+   **In flow, the fields fit side by side.** On the old 511px rail they
+   stacked because there was no width for anything else; the prose column
+   has it, and the auto grid uses whatever's there with no media query of
+   its own — `auto-fit` with a floor at `--pd-field-min` stacks on its own on
+   a narrow screen.
    ----------------------------------------------------------------------------- */
 .panelParameters {
   display: grid;
@@ -92,35 +96,38 @@
   gap: var(--pd-space-3);
 }
 
-/* **`nowrap`, e ele é correção de fato.** A célula quebrava, e o campo de uma
-   flag de nome longo caía para a linha de baixo enquanto o das vizinhas ficava
-   em cima: numa grade de duas colunas isso produzia fileiras de alturas
-   diferentes e campos desalinhados, sem que nada no conteúdo justificasse.
+/* **`nowrap`, and it's an actual fix.** The cell used to wrap, and the field
+   for a long flag name dropped to the line below while its neighbor's
+   stayed on top: in a two-column grid that produced rows of different
+   heights and misaligned fields, with nothing in the content to justify it.
 
-   O `wrap` existia para a mensagem de recusa, que ocupava a linha inteira da
-   célula com `flex: 1 1 100%`. Ela saiu daqui — é da regra, não da flag —, e
-   com ela some a única coisa que precisava de uma segunda linha. O campo tem
-   `min-width: 0`, então ele encolhe em vez de empurrar. */
+   The `wrap` existed for the refusal message, which took the cell's whole
+   line with `flex: 1 1 100%`. It left this rule — it belongs to the
+   refusal, not the flag — and with it goes the only thing that needed a
+   second line. The field has `min-width: 0`, so it shrinks instead of
+   pushing. */
 .panelField {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   gap: var(--pd-space-2);
-  /* O preenchimento é de TODA célula, e não só da recusada: ele é o que
-     permite pintar o fundo de uma delas sem que ligar uma flag mexa na altura
-     da grade. Um `padding` que aparece junto com a cor seria um pulo de layout
-     a cada clique, que é o defeito que este componente acabou de fechar. */
+  /* The padding belongs to EVERY cell, not only the refused one: it's what
+     lets one cell's background paint without a flag toggle moving the
+     grid's height. A `padding` that appears together with the color would
+     be a layout jump on every click, and that's the defect this component
+     just closed. */
   padding: var(--pd-space-2);
   border-radius: var(--pd-radius-sm);
   font-size: var(--pd-type-xs);
   color: var(--pd-text-muted);
 }
 
-/* A caixa que liga a flag, e o nome dela. **A caixa é `<input type="checkbox">`
-   nativa de propósito**: acrescentar uma flag é ligar e desligar, e esse é o
-   controle que o HTML já tem para isso. O zero 5 de `cinco-zeros.sh` proíbe
-   autor novo de modelo de interação, e trocar a caixa por um botão-alternador
-   próprio seria exatamente isso — com foco, tecla e ARIA a inventar. */
+/* The box that toggles the flag, and its name. **The box is a native
+   `<input type="checkbox">` on purpose**: adding a flag is switching it on
+   or off, and that's the control HTML already has for it. This project's
+   rule against authoring a new interaction model would forbid swapping the
+   box for a custom toggle button — that would mean inventing focus, key
+   handling, and ARIA from scratch. */
 .panelLabel {
   display: flex;
   flex: 0 0 auto;
@@ -136,9 +143,9 @@
 .panelField input[type='text'] {
   flex: 1 1 auto;
   min-width: 0;
-  /* Piso de alvo de toque — o contrato de estado de entrada (ADR 4) cobre foco
-     e press sozinho; a altura mínima é a única coisa que este campo precisa
-     declarar por conta própria. */
+  /* Touch-target floor — the entry-state contract (ADR 4) covers focus and
+     press on its own; the minimum height is the only thing this field needs
+     to declare on its own. */
   min-height: var(--pd-target-min);
   padding-inline: var(--pd-space-3);
   border: var(--pd-border-width) solid var(--pd-border-default);
@@ -149,14 +156,15 @@
   font-size: var(--pd-type-sm);
 }
 
-/* A célula recusada. **Ela apaga, e não some** — uma flag que desaparece quando
-   outra é ligada faz o leitor procurar o que ele acabou de ver. O que ela perde
-   é ênfase, e é isso que liga as três células apagadas à única frase embaixo da
-   grade: o leitor vê o que mudou sem ler nada.
+/* The refused cell. **It fades, and doesn't disappear** — a flag that
+   vanishes when another one is toggled sends the reader looking for what
+   they just saw. What it loses is emphasis, and that's what ties the three
+   faded cells to the single sentence below the grid: the reader sees what
+   changed without reading anything.
 
-   O `cursor` vai no rótulo inteiro, e não só na caixa: a área clicável de um
-   `<label>` é o rótulo, e uma seta normal sobre texto que não responde é a
-   afirmação errada. */
+   The `cursor` goes on the whole label, not only the box: a `<label>`'s
+   clickable area is the label, and a plain arrow over text that doesn't
+   respond is the wrong statement. */
 .panelField[data-refused] {
   background-color: var(--pd-surface-wash);
   color: var(--pd-text-faint);
@@ -166,15 +174,15 @@
   cursor: not-allowed;
 }
 
-/* O campo apaga quando não aceita tecla, e a pele nativa de `:disabled` quase
-   não muda nada no Chrome — o leitor via um campo com aparência de editável que
-   engolia a digitação.
+/* The field fades when it won't accept a keystroke, and native `:disabled`
+   skin barely changes anything in Chrome — the reader saw a field that
+   looked editable and swallowed what they typed.
 
-   **`:disabled` sozinho NÃO é recusa**, e essa distinção custou uma volta: o
-   campo de toda flag desmarcada também é `disabled`, então uma pele de recusa
-   escrita aqui pintava as quatro flags desligadas como se a regra as tivesse
-   fechado. Aqui vai só o apagamento; o que marca a recusa é o `[data-refused]`
-   da célula e a frase única embaixo da grade. */
+   **`:disabled` alone is NOT refusal**, and that distinction cost a
+   detour: every unchecked flag's field is also `disabled`, so a refusal
+   skin written here painted all four inactive flags as if the rule had
+   closed them. This carries only the fade; what marks the actual refusal
+   is the cell's `[data-refused]` and the single sentence below the grid. */
 .panelField input[type='text']:disabled {
   border-color: var(--pd-border-subtle);
   color: var(--pd-text-faint);
@@ -182,21 +190,22 @@
 }
 
 /* -----------------------------------------------------------------------------
-   A recusa — UMA por regra, entre a grade e a linha.
+   The refusal — ONE per rule, between the grid and the line.
 
-   **Ela era uma por flag, e isso era o defeito.** Uma regra de exclusividade
-   recusa todos os outros membros de uma vez, e a mensagem era impressa dentro
-   de cada célula: em `install`, marcar `--mcp` fazia a MESMA frase de 105
-   caracteres aparecer três vezes e empurrava a grade 132px; em `list`, três
-   frases que só diferiam no nome da flag, e 78px. O texto nascia embaixo de
-   três controles que o leitor não tinha tocado, o que é o que o fazia parecer
-   surgido do nada.
+   **It used to be one per flag, and that was the defect.** An exclusivity
+   rule refuses every other member at once, and the message used to print
+   inside each cell: in `install`, checking `--mcp` made the SAME
+   105-character sentence appear three times and pushed the grid down 132px;
+   in `list`, three sentences differing only in the flag's name, and 78px.
+   The text was born under three controls the reader hadn't touched, which
+   is what made it look like it came from nowhere.
 
-   **A caixa é uma citação de terminal, e a pele diz isso.** A frase é a da CLI,
-   byte a byte, e em pt-BR ela chega em inglês — sem moldura, uma frase inglesa
-   solta numa página portuguesa lê como texto de interface mal traduzido. Com
-   fundo, borda e mono, lê como o que é: o que a ferramenta responde. É a mesma
-   doutrina do `cita-saida-de-ferramenta` que o portão 4 já conhece.
+   **The box is a terminal quote, and the skin says so.** The sentence is
+   the CLI's, byte for byte, and it arrives in English inside pt-BR prose —
+   with no frame, a loose English sentence on a Portuguese page reads like
+   badly translated interface text. With a background, a border, and
+   monospace, it reads as what it is: what the tool answered. It's the same
+   tool-output-citation doctrine used elsewhere in this project.
    ----------------------------------------------------------------------------- */
 .panelRefusal {
   margin: 0;

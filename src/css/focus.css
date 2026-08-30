@@ -1,51 +1,51 @@
 /* =============================================================================
-   panlabs-docs — o contrato de estado de entrada
+   panlabs-docs — the entry-state contract
 
-   Foco, press e alvo de toque. As duas metades do mesmo mecanismo — o par
-   `(hover: hover)` / `(pointer: coarse)` — moram juntas de propósito: separá-las
-   poria os dois lados de uma decisão só em arquivos diferentes.
-
-   **Este é o único arquivo do projeto onde a palavra `outline` pode aparecer.**
-   O portão 3 reprova qualquer outra ocorrência em `src/`, e o motivo é
-   específico: este contrato não morre por alguém desenhar um anel ruim. Morre
-   por alguém escrever `outline: none` num botão para "limpar" o visual — a linha
-   de CSS mais comum do mundo, que apaga acessibilidade de teclado sem sintoma
-   visível para quem a escreveu.
-
-   Zero literal, zero swizzle, zero dependência.
-   Ver ADR 4 e docs/design/foco.md.
+   Focus, press, and touch target. The two halves of one mechanism — the
+   (hover: hover) / (pointer: coarse) pair — live together on purpose: split
+   them and the two sides of one decision land in different files.
    ============================================================================= */
 
+/* THIS IS THE ONLY FILE IN THE PROJECT WHERE `outline` CAN APPEAR. The
+   invariant exists for a specific reason: this contract doesn't die from
+   someone drawing a bad ring. It dies from someone writing `outline: none`
+   on a button to "clean up" the look — the most common line of CSS in the
+   world, and it erases keyboard accessibility with no visible symptom for
+   whoever wrote it.
+
+   Zero literal, zero swizzle, zero dependency. */
+
 /* -----------------------------------------------------------------------------
-   1. A regra. Universal.
+   1. The rule. Universal.
 
-   Universal, e não uma lista de focáveis, por causa do MODO DE FALHAR:
+   Universal, not a list of focusables, because of the FAILURE MODE:
 
-   · lista de alvos → elemento novo não ganha anel, e **só quem navega por
-     teclado descobre**;
-   · regra universal → um contêiner ganha anel indevido, e **qualquer um vê, na
-     hora**.
+   · target list → a new element gets no ring, and **only someone navigating
+     by keyboard finds out**;
+   · universal rule → a container gets an unwanted ring, and **anyone sees
+     it, on the spot**.
 
-   Prefira a falha que se enxerga.
+   Prefer the failure that shows itself.
 
-   O mecanismo é `outline` e **não** uma camada da sombra multi-camada.
-   `box-shadow` não se acrescenta — se redeclara inteiro —, então todo elemento
-   elevado teria que repetir as três camadas dele só para pendurar a quarta.
-   `outline` compra quatro coisas de graça: não afeta layout, acompanha
-   `border-radius` nativamente, **não participa da transição da sombra** (é o que
-   torna o anel instantâneo uma consequência da escolha de propriedade em vez de
-   uma regra a lembrar), e é ortogonal ao anel de 1px da elevação — os dois
-   convivem como círculos concêntricos, separados pelo afastamento.
+   The mechanism is `outline`, **not** a layer of the multi-layer shadow.
+   `box-shadow` doesn't add — it redeclares whole — so every elevated element
+   would have to repeat its three layers just to hang a fourth. `outline`
+   buys four things for free: it doesn't affect layout, it follows
+   `border-radius` natively, **it doesn't participate in the shadow's
+   transition** (which is what makes the instant ring a consequence of the
+   property choice instead of a rule to remember), and it's orthogonal to the
+   elevation's 1px ring — the two coexist as concentric circles, separated by
+   the offset.
 
-   O afastamento não é estética: é o que FECHA o contrato. Com ele o anel é
-   pintado inteiramente fora da caixa do elemento, então **ele nunca pousa sobre
-   o preenchimento do próprio elemento** — pousa sempre sobre a superfície que
-   está atrás. Botão de acento com anel de acento seria 1:1 sem isso.
+   The offset isn't aesthetic: it's what CLOSES the contract. With it the
+   ring paints entirely outside the element's own box, so **it never lands on
+   the element's own fill** — it always lands on the surface behind it. An
+   accent button with an accent ring would be 1:1 without this.
 
-   `:focus-visible` sozinho, zero `:focus`. Em campo de texto o navegador casa
-   `:focus-visible` mesmo no clique de mouse, que é a única situação em que
-   `:focus` seria necessário. Acrescentá-lo poria anel em todo botão e link
-   clicado com o mouse — o ruído que leva alguém a escrever `outline: none`.
+   `:focus-visible` alone, zero `:focus`. In a text field the browser matches
+   `:focus-visible` even on a mouse click, the one case where `:focus` would
+   be needed. Adding it would put a ring on every button and link clicked
+   with the mouse — the noise that leads someone to write `outline: none`.
    ----------------------------------------------------------------------------- */
 
 :focus-visible {
@@ -54,25 +54,25 @@
 }
 
 /* -----------------------------------------------------------------------------
-   2. As exceções — lista fechada, e nenhuma é componente operável
+   2. The exceptions — a closed list, and none is an operable component
 
-   O `theme-common` tem um `programmaticFocus` que põe `tabindex="-1"`, foca e
-   remove o atributo. Ele roda **a cada navegação client-side** sobre o
-   `<div role="region">` que envolve o skip link. Pela spec de CSS UI, elemento
-   focado por programa casa `:focus-visible` quando o anterior casava — e quem
-   navega por teclado clica um item de sidebar com Enter, que casava.
+   theme-common has a programmaticFocus that sets tabindex="-1", focuses, and
+   removes the attribute. It runs on EVERY client-side navigation over the
+   <div role="region"> wrapping the skip link. By the CSS UI spec, an element
+   focused programmatically matches :focus-visible when the previous one did
+   — and someone navigating by keyboard clicks a sidebar item with Enter,
+   which matched.
 
-   Esse div tem altura zero (o único filho é `position: fixed`). Sem estas três
-   linhas, o site desenharia **uma linha de acento atravessando o topo da página
-   a cada clique de sidebar**.
+   That div has zero height (its only child is position: fixed). Without
+   these three lines, the site would draw **an accent line crossing the top
+   of the page on every sidebar click**.
 
-   O `tabindex` é removido logo depois de focar, então `[tabindex='-1']` não
-   serve de seletor: a exceção precisa nomear os elementos. O id é constante
-   exportada pelo `theme-common`, não string descoberta.
+   tabindex is removed right after focusing, so [tabindex='-1'] doesn't work
+   as a selector: the exception has to name the elements. The id is a
+   constant exported by theme-common, not a discovered string.
 
-   O `:has()` exige o `<a>` do skip link como filho DIRETO — o invólucro de
-   rolagem de tabela, que também é `[role='region']` com `tabindex`, não é
-   atingido.
+   :has() requires the skip link's <a> as a DIRECT child — the table scroll
+   wrapper, which is also [role='region'] with a tabindex, isn't hit.
    ----------------------------------------------------------------------------- */
 
 main:focus-visible,
@@ -82,18 +82,18 @@ main:focus-visible,
 }
 
 /* -----------------------------------------------------------------------------
-   3. O anel muda de dono onde um ancestral corta
+   3. The ring changes owner where an ancestor clips
 
-   `outline` é cortado por ancestral com `overflow` diferente de `visible`. Nos
-   focáveis do site isso acontece **uma vez**: o `<pre tabindex="0">` preenche a
-   moldura do bloco de código, que corta.
+   outline gets clipped by an ancestor whose overflow isn't visible. Among
+   this site's focusables that happens ONCE: the <pre tabindex="0"> fills the
+   code block's frame, which clips.
 
-   A regra geral, para quem vier depois: onde um focável encostar na borda de um
-   ancestral que corta, o anel muda de dono via `:has()`.
+   The general rule, for whoever comes after: wherever a focusable touches
+   the edge of a clipping ancestor, the ring changes owner via :has().
 
-   Menor aceito, sem regra: um link exatamente na aresta de rolagem da sidebar
-   tem ~2px de anel cortados. O foco rola o elemento para dentro da vista, então
-   o corte é parcial e passageiro.
+   Accepted minor, no rule for it: a link right at the sidebar's scroll edge
+   has ~2px of ring clipped. Focus scrolls the element into view, so the clip
+   is partial and brief.
    ----------------------------------------------------------------------------- */
 
 .theme-code-block pre:focus-visible {
@@ -106,47 +106,51 @@ main:focus-visible,
 }
 
 /* -----------------------------------------------------------------------------
-   4. O `transition: all` do upstream — UM, e não três
+   4. Upstream's `transition: all` — ONE, not three
 
-   `outline` é animável, então um `transition: all` o arrasta junto, e o efeito é
-   pior que um fade: `outline-style` é propriedade discreta e vira aos 50%, o que
-   deixa O ANEL AUSENTE POR METADE DA DURAÇÃO DEPOIS DA TECLA.
+   outline is animatable, so a transition: all drags it along, and the
+   effect is worse than a fade: outline-style is a discrete property and
+   flips at 50%, which leaves THE RING ABSENT FOR HALF THE DURATION AFTER THE
+   KEYSTROKE.
 
-   ERAM TRÊS ELEMENTOS NESTA REGRA, E DOIS NUNCA FORAM DEFEITO. Medido no CSS
-   emitido do build, o arquivo inteiro tem exatamente DUAS declarações
-   `transition: all`:
+   THERE WERE THREE ELEMENTS IN THIS RULE, AND TWO WERE NEVER A DEFECT.
+   Measured in the build's emitted CSS, the whole file has exactly TWO
+   `transition: all` declarations:
 
-     · `.backToTopButton_sjWU` — o botão de voltar ao topo. É este, e só este.
-     · `.copyButtonIcon_*` / `.copyButtonSuccessIcon_*` — os dois `<svg>` DENTRO
-       do botão de copiar, não o botão. Eles são `aria-hidden` e não recebem
-       foco, logo não há anel para o `all` deles arrastar. `.theme-code-block
-       button` também nunca os alcançava: a regra mirava o botão, e o `all` mora
-       nos filhos.
+     · `.backToTopButton_sjWU` — the back-to-top button. This one, and only
+       this one.
+     · `.copyButtonIcon_*` / `.copyButtonSuccessIcon_*` — the two <svg>
+       INSIDE the copy button, not the button itself. They're aria-hidden and
+       don't receive focus, so there's no ring for their all to drag.
+       `.theme-code-block button` never reached them either: the rule
+       targeted the button, and the all lives on the children.
 
-   E `.theme-doc-card-container` NÃO EXISTE neste site — zero ocorrências nos 108
-   HTML publicados. O `DocCard/Layout` que a redação antiga citava não é
-   renderizado por nenhuma rota daqui.
+   And `.theme-doc-card-container` DOESN'T EXIST on this site — zero
+   occurrences across the 108 published HTML pages. The `DocCard/Layout`
+   the old wording cited isn't rendered by any route here.
 
-   O TERCEIRO DEFEITO ERA O SELETOR, e é o mais caro: `.theme-back-to-top-button`
-   nu é (0,1,0), o mesmo peso da classe hasheada `.backToTopButton_sjWU` que
-   carrega o `all`. Empate se resolve por ORDEM DE CARGA, e o módulo do
-   theme-classic carrega depois — medido no bundle: a nossa regra no byte 82514,
-   a do upstream no 87502. A forma nua perdia em silêncio e sem sintoma, então a
-   correção inteira desta seção nunca chegou a rodar.
+   THE THIRD DEFECT WAS THE SELECTOR, and it's the expensive one: bare
+   `.theme-back-to-top-button` is (0,1,0), the same weight as the hashed
+   `.backToTopButton_sjWU` class that carries the `all`. A tie resolves by
+   LOAD ORDER, and the theme-classic module loads later — measured in the
+   bundle: this project's rule at byte 82514, upstream's at byte 87502. The
+   bare form lost silently, with no symptom, so this section's whole fix
+   never ran.
 
-   Somar o tipo do elemento leva o seletor a (0,1,1) e o tira da ordem. É o mesmo
-   mecanismo de `button.theme-back-to-top-button` em `chrome.css` e de
-   `div.theme-code-block` em `componentes.css` — e este arquivo é a terceira vez
-   que a armadilha aparece, agora fechada.
+   Adding the element's type brings the selector to (0,1,1) and takes it out
+   of load order. It's the same mechanism as `button.theme-back-to-top-button`
+   in chrome.css and `div.theme-code-block` in components.css — and this
+   file is the third time the trap shows up, now closed.
 
-   `visibility` ENTRA NA LISTA porque o upstream a transicionava por dentro do
-   `all`, e a base do botão é `opacity: 0` + `visibility: hidden`. Sem ela na
-   lista, a saída deixaria de desaparecer junto com o fade. Trocamos a lista de
-   propriedades, não o comportamento — tirar `outline` dela é o objetivo inteiro.
+   `visibility` ENTERS THE LIST because upstream transitioned it inside
+   `all`, and the button's base state is `opacity: 0` + `visibility: hidden`.
+   Without it in the list, exit would stop disappearing along with the fade.
+   We swap the property list, not the behavior — dropping `outline` from it
+   is the whole point.
 
-   Nota que vale escrita: o Infima encurta a transição sob
-   `prefers-reduced-motion`, então o defeito **desaparecia justamente para quem
-   pediu menos movimento** e persistia para todo mundo.
+   Worth writing down: Infima shortens the transition under
+   `prefers-reduced-motion`, so the defect **disappeared exactly for whoever
+   asked for less motion** and persisted for everyone else.
    ----------------------------------------------------------------------------- */
 
 button.theme-back-to-top-button {
@@ -159,13 +163,14 @@ button.theme-back-to-top-button {
 }
 
 /* -----------------------------------------------------------------------------
-   5. O skip link ganha a forma do sistema
+   5. The skip link gets the system's shape
 
-   Cor e sombra dele já vêm do adaptador. A classe de módulo é manglada e
-   inalcançável; o atributo `href` é estável porque o id é constante exportada.
+   Its color and shadow already come from the adapter. The module class is
+   mangled and unreachable; the href attribute is stable because the id is a
+   constant export.
 
-   O `:focus` do upstream fica: ele controla POSIÇÃO, não indicador, e o link só
-   é alcançável por Tab — `:focus` e `:focus-visible` coincidem nele.
+   Upstream's :focus stays: it controls POSITION, not an indicator, and the
+   link is only reachable by Tab — :focus and :focus-visible coincide on it.
    ----------------------------------------------------------------------------- */
 
 a[href='#__docusaurus_skipToContent_fallback'] {
@@ -173,38 +178,39 @@ a[href='#__docusaurus_skipToContent_fallback'] {
 }
 
 /* -----------------------------------------------------------------------------
-   6. Press — `:active`, e ele NÃO é gated
+   6. Press — `:active`, and it is NOT gated
 
-   **Hover não tem substituto no toque, porque hover não é estado: é prévia.** No
-   toque não existe ponteiro para prever com, então a pergunta "o que entra no
-   lugar" pressupõe uma lacuna que não existe. O que o toque precisa é
-   confirmação de que o dedo chegou, e isso é `:active`.
+   **Hover has no touch substitute, because hover isn't a state: it's a
+   preview.** On touch there's no pointer to preview with, so the question
+   "what takes its place" assumes a gap that doesn't exist. What touch needs
+   is confirmation that the finger arrived, and that's `:active`.
 
-   Obrigatório, e não desejável: o Infima declara
-   `-webkit-tap-highlight-color: transparent` na regra de `html`. **O upstream já
-   apagou o retorno nativo do toque.** Sem esta regra, um tap em item de sidebar,
-   link ou botão não produz reação nenhuma até a página trocar.
+   Mandatory, not desirable: Infima declares
+   `-webkit-tap-highlight-color: transparent` on the html rule. **Upstream
+   has already erased touch's native feedback.** Without this rule, a tap on
+   a sidebar item, link, or button produces no reaction at all until the page
+   changes.
 
-   Press com mouse também merece confirmação, e o highlight nativo foi apagado
-   nos dois — por isso `:active` é o único dos três itens desta seção que não
-   fica sob `(pointer: coarse)`.
+   Mouse press deserves confirmation too, and the native highlight is erased
+   on both — which is why `:active` is the one item in this section that
+   isn't gated behind `(pointer: coarse)`.
 
-   **Instantâneo na entrada, suave na saída, por uma declaração.** A transição de
-   entrada usa o `transition` do estado de destino; a de saída usa o da regra
-   base. `none` e não uma duração zero: duração é vocabulário de motion e não se
-   crava, e aqui não há movimento nenhum a nomear.
+   **Instant on entry, smooth on exit, from one declaration.** The entry
+   transition uses the destination state's `transition`; the exit uses the
+   base rule's. `none`, not a zero duration: duration is motion's vocabulary
+   and isn't hardcoded, and here there's no motion to name.
    ----------------------------------------------------------------------------- */
 
 :is(a, button, summary, [role='tab']):active {
   transition: none;
 }
 
-/* **Os mesmos tokens do hover, superfície por superfície** — e "os mesmos" é
-   literal, não aproximado. O hover de cada uma dessas superfícies é escrito pelo
-   Infima sobre uma variável diferente, e o adaptador já decidiu para onde cada
-   uma aponta; o press repete o destino, nunca um valor novo. Um press com tinta
-   própria seria um terceiro estado se apresentando como confirmação do segundo.
-   Foi conferido no fonte do Infima, uma superfície de cada vez. */
+/* **The same tokens as hover, surface by surface** — and "the same" is
+   literal, not approximate. Each surface's hover is written by Infima over a
+   different variable, and the adapter has already decided where each one
+   points; press repeats the destination, never a new value. A press with its
+   own ink would be a third state presenting itself as confirmation of the
+   second. Checked against Infima's source, one surface at a time. */
 .menu__link:active,
 .menu__caret:active {
   background: var(--pd-border-subtle);
@@ -228,22 +234,22 @@ a[href='#__docusaurus_skipToContent_fallback'] {
 }
 
 /* -----------------------------------------------------------------------------
-   7. `(pointer: coarse)` — o espelho exato do `(hover: hover)`
+   7. `(pointer: coarse)` — the exact mirror of `(hover: hover)`
 
-   Dois recursos do upstream **morrem em silêncio no toque**, e os dois foram
-   verificados no fonte:
+   Two upstream features **die silently on touch**, and both were verified in
+   source:
 
-   · a **âncora de heading** é `opacity: 0` e só volta em `*:hover > .hash-link`.
-     A classe é `:global`, então o conserto custa uma declaração e nenhum
-     swizzle — se fosse hasheada, a âncora no toque seria decisão cara e
-     provavelmente perdida;
-   · o **botão de copiar** só fica visível em foco ou hover, por classe de CSS
-     Module hasheada. A âncora estável é `.theme-code-block`, e `(0,1,1)` vence
-     a classe hasheada `(0,1,0)`.
+   · the **heading anchor** is `opacity: 0` and only returns on
+     `*:hover > .hash-link`. The class is `:global`, so the fix costs one
+     declaration and no swizzle — if it were hashed, fixing touch would be an
+     expensive decision and likely lost;
+   · the **copy button** is only visible on focus or hover, via a hashed CSS
+     Module class. The stable anchor is `.theme-code-block`, and `(0,1,1)`
+     beats the hashed class's `(0,1,0)`.
 
-   No telefone a âncora de heading é a única forma de copiar link de seção, e o
-   botão de copiar é o recurso mais usado de um bloco de código. Os dois somem
-   sem erro, sem aviso e sem sintoma para quem testa no desktop.
+   On a phone the heading anchor is the only way to copy a section link, and
+   the copy button is a code block's most-used feature. Both vanish with no
+   error, no warning, and no symptom for anyone testing on desktop.
    ----------------------------------------------------------------------------- */
 
 @media (pointer: coarse) {
@@ -255,26 +261,26 @@ a[href='#__docusaurus_skipToContent_fallback'] {
     opacity: 1;
   }
 
-  /* A terceira âncora que morreria em silêncio no toque, mesma família das
-     duas acima — a âncora de linha do campo de API (Campo.js, #99). A parte
-     publicada (`data-pd-part="ancora"`) alcança sem custar o hash do CSS
-     Module, pelo mesmo motivo do `.hash-link`: se fosse hasheada, o conserto
-     custaria uma decisão cara. Continua atrás do limiar de 997px de
-     `catalogo.module.css` — abaixo dele o elemento nem monta com posição
-     própria. */
+  /* The third anchor that would die silently on touch, same family as the
+     two above — the API field row's anchor (Campo.js). The published part
+     (`data-pd-part="ancora"`) is reachable without paying the CSS Module's
+     hash, the same reason as `.hash-link`: hashed, the fix would cost an
+     expensive decision. It stays behind catalog.module.css's 997px
+     threshold — below it the element doesn't even mount with its own
+     position. */
   [data-pd-part='ancora'] {
     opacity: 1;
   }
 
-  /* O piso de alvo. **Lista de exceções, não lista de alvos** — mesma forma e
-     mesmo motivo da regra de foco: lista de alvos falha em silêncio, e falha só
-     para quem tem o dedo grande ou a mão trêmula.
+  /* The target floor. **A list of exceptions, not a list of targets** — same
+     shape and same reason as the focus rule: a target list fails silently,
+     and only for whoever has a big finger or an unsteady hand.
 
-     44px é a SC 2.5.5, que é AAA. O piso AA é 24px, e a 24 nada no site mudaria
-     — o item de sidebar do Infima já passa disso. Escolher 24 seria escrever uma
-     regra que não faz nada. 44 muda a densidade da gaveta de sidebar no
-     estreito, e esse é o custo, aceito porque a gaveta rola e é operada com o
-     polegar. */
+     44px is SC 2.5.5, which is AAA. The AA floor is 24px, and 24 would
+     change nothing on this site — Infima's sidebar item already clears
+     that. Choosing 24 would be writing a rule that does nothing. 44 changes
+     the narrow sidebar drawer's density, and that's the cost, accepted
+     because the drawer scrolls and is operated with the thumb. */
   a,
   button,
   summary,
@@ -284,30 +290,35 @@ a[href='#__docusaurus_skipToContent_fallback'] {
     align-content: center;
   }
 
-  /* A ÂNCORA DE HEADING RECEBE O PISO E NÃO O CUMPRE, e o mecanismo é o que este
-     arquivo já cataloga noutro lugar: `.hash-link` é `<a>`, então o seletor
-     acima o alcança e escreve `min-height: 44px` nele — mas ele é `display:
-     inline`, e **elemento `inline` ignora altura mínima em silêncio**. A mesma
-     armadilha que fez o link do rodapé virar `inline-flex` no estreito.
+  /* THE HEADING ANCHOR RECEIVES THE FLOOR AND DOESN'T MEET IT, and the
+     mechanism is one this file already catalogs elsewhere: `.hash-link` is
+     an `<a>`, so the selector above reaches it and writes `min-height: 44px`
+     on it — but it's `display: inline`, and **an `inline` element ignores
+     min-height silently**. The same trap that turned the footer link into
+     `inline-flex` on narrow screens.
 
-     Medido a 1512 com `(pointer: coarse)` emulado por CDP: `.hash-link` sai
-     **22,48 × 29** com `min-height` computado em `44px` e `opacity: 1`. No
-     mesmo cenário, `.menu__link` sobe de 36 para 44 — o piso funciona onde o
-     `display` deixa. A regra não falhou; ela foi engolida.
+     Measured at 1512 with `(pointer: coarse)` emulated via CDP: `.hash-link`
+     comes out **22.48 × 29** with `min-height` computed at `44px` and
+     `opacity: 1`. In the same scenario, `.menu__link` climbs from 36 to 44 —
+     the floor works where `display` allows it. The rule didn't fail; it was
+     swallowed.
 
-     `inline-flex` conserta a altura e **não** a largura: 22,48 continua sob 44,
-     e alargar a caixa de verdade empurraria o glifo para longe do título ou
-     esticaria a linha do heading de 32 para 44, mexendo no ritmo vertical da
-     coluna em toda página. A área de toque cresce por PSEUDO-ELEMENTO, que é o
-     recurso que amplia alvo sem tocar em layout.
+     `inline-flex` fixes the height and **not** the width: 22.48 stays under
+     44, and truly widening the box would either push the glyph away from
+     the title or stretch the heading's line from 32 to 44, disturbing the
+     column's vertical rhythm on every page. The touch area grows via a
+     PSEUDO-ELEMENT, the tool that enlarges a target without touching
+     layout.
 
-     `::after` e não `::before`: o `::before` é do `theme-classic` e carrega o
-     glifo `#` (medido no CSS emitido). Sobrescrevê-lo apagaria o desenho.
+     `::after`, not `::before`: `::before` belongs to `theme-classic` and
+     carries the `#` glyph (measured in the emitted CSS). Overwriting it
+     would erase the drawing.
 
-     O alvo cobre os últimos ~14px do título, e isso é ganho e não colisão: o
-     que ele ativa é o link da própria seção, que é o que quem toca ali quer.
-     No ponteiro fino nada disto existe — lá a âncora é revelada por hover e um
-     alvo invisível de 44px sobre o fim do título roubaria a seleção de texto. */
+     The target covers the title's last ~14px, and that's a gain, not a
+     collision: what it activates is that same section's own link, which is
+     what anyone touching there wants. Under a fine pointer none of this
+     exists — there the anchor is revealed by hover, and an invisible 44px
+     target over the end of the title would steal text selection. */
   .hash-link {
     position: relative;
   }
@@ -322,25 +333,27 @@ a[href='#__docusaurus_skipToContent_fallback'] {
     block-size: var(--pd-target-min);
   }
 
-  /* A exceção, e é a única: link inline na prosa. A própria SC 2.5.8 o isenta, e
-     alargá-lo quebraria o ritmo vertical da coluna de texto.
+  /* The exception, and there's only one: an inline link in prose. SC 2.5.8
+     itself exempts it, and widening it would break the text column's
+     vertical rhythm.
 
-     O ESCOPO É `.markdown`, E NÃO `.theme-doc-markdown`, e a razão mudou de
-     lugar na #118. Eram DUAS prosas: o `DocItem/Content` do upstream escrevia as
-     duas classes juntas (`clsx(ThemeClassNames.docs.docMarkdown, 'markdown')`,
-     medido em 3.10.2), e a página de referência tinha prosa própria, que
-     escrevia só `markdown` porque recusava a outra desde que ela era o cartão.
-     Escopar pela classe de cartão isentava a página de doc e deixava o link da
-     página gerada com 44px de altura, quebrando o ritmo da coluna em tela de
-     toque.
+     THE SCOPE IS `.markdown`, NOT `.theme-doc-markdown`. There used to be
+     TWO proses: upstream's `DocItem/Content` wrote both classes together
+     (`clsx(ThemeClassNames.docs.docMarkdown, 'markdown')`, measured in
+     3.10.2), and the reference page had its own prose, writing only
+     `markdown` because it refused the other one back when it was the card.
+     Scoping by the card class exempted the doc page and left the generated
+     page's link at 44px height, breaking the column's rhythm on a touch
+     screen.
 
-     A prosa própria saiu com o layout de duas colunas, e hoje há UMA: toda
-     página do site passa pelo mesmo `DocItem/Content`, e as duas classes andam
-     sempre juntas. A escolha entre elas deixou de ter consequência, e por isso
-     ela fica onde está — `.markdown` é a classe que de fato significa *prosa*, e
-     é a que continuaria certa se a outra voltasse a divergir. Trocar por
-     `.theme-doc-markdown` seria escolher a classe cujo nome descreve a rota em
-     vez do conteúdo, sem ganhar nada. */
+     The reference page's own prose left with the two-column layout, and
+     today there's ONE: every page on the site goes through the same
+     `DocItem/Content`, and the two classes always travel together. The
+     choice between them stopped having a consequence, and that's why it
+     stays as it is — `.markdown` is the class that actually means *prose*,
+     and it's the one that would stay correct if the other diverged again.
+     Swapping it for `.theme-doc-markdown` would mean choosing the class
+     whose name describes the route instead of the content, for no gain. */
   .markdown :is(p, li, td, th, blockquote) a {
     min-height: 0;
     align-content: normal;
