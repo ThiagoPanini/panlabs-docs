@@ -1,88 +1,43 @@
 // @ts-check
 
-// O ramo gerado de `overpower › Comandos`, emitido por
-// `scripts/generate-reference.mjs`. É o ÚNICO import de um arquivo de sidebar deste
-// projeto, e ele existe para que as duas posses não se misturem — ver o bloco
-// abaixo.
+// The generated `overpower › Comandos` branch, emitted by
+// `scripts/generate-reference.mjs`. The only sidebar-file import in this
+// project, kept separate so the two ownership domains don't mix.
 import referencia from './sidebars-referencia.js';
 
 /**
- * A sidebar da tab `Ferramentas` — instância `ferramentas`.
- *
- * **Quatro famílias, e é a única aba traduzida.** A fronteira do locale é
- * **audiência do artefato**, não infra pública contra corporativa: biblioteca,
- * módulo, skill e servidor MCP nascem na mesma esteira que tudo, mas são
- * **consumidos por outros times**, e é isso que lhes dá leitor de inglês.
- *
- * **O único lugar do site que COLAPSA.** Os quatro nós de topo são separadores
- * mudos (`collapsible: false`, sem `link`), e os únicos nós com seta do site
- * moram todos dentro de `Bibliotecas › overpower` — o nó do produto, no nível 2,
- * e as cinco seções dele, no nível 3. Todos com página de abertura própria e
- * nascendo **fechados**. É por isso que a seta só ganha desenho aqui: ela é o
- * único lugar do sistema onde tem função (ADR 10 §a, §b).
- *
- * **O teto de profundidade é 4, e ele é confinado a este ramo.** O ADR 10 §g)
- * subiu o número e escreveu a condição junto: as 13 folhas de nível 4 estão todas
- * sob `overpower`, e o portão 4 cobra o confinamento em vez de *usado uma vez*.
- * Nenhuma outra aba passa do nível 2.
- *
- * **`collapsed: false` saiu do repositório inteiro.** A chave estava carimbada
- * `herdado` com a fonte *"a âncora mostra a árvore aberta"*, e a medição diz
- * outra coisa: a âncora mostra o **nível 1** aberto — e ele nem colapsa —,
- * enquanto grupo aninhado nasce fechado e abre sozinho no ramo da página atual.
- * Os seis grupos de `overpower` omitem a chave e herdam o default `true` do
- * Docusaurus; o `DocSidebar` abre o ramo da página atual sozinho, sem estado
- * nosso.
- *
- * **As quatro páginas de índice saíram.** `Bibliotecas`, `Módulos Terraform`,
- * `Skills` e `Servidores MCP` eram *a lista do que está logo abaixo*, e a
- * sidebar já é essa lista (ADR 10 §c). Nenhuma delas carregava tipo nem fixture
- * — as quatro que carregavam sobreviveram como folha, e todas elas moram nas
- * outras duas abas.
- *
- * **A regra de ícone é a da ADR 10 §e: nenhum no separador, ícone em tudo
- * abaixo, folha ou grupo, em qualquer nível.** É a terceira redação, e a
- * primeira agnóstica de profundidade; as duas anteriores travaram o nível 3 por
- * duas issues porque o teste mudava de resultado com a profundidade. Com o
- * `overpower` dentro, a régua é exercitada até o nível 4 e não muda de resposta.
- *
- * **A família de ícone é da SEÇÃO, não do separador.** As cinco seções do
- * `overpower` trazem família própria, e o nó do produto e as três folhas de
- * abertura ficam com `--bibliotecas`, que é a do separador que as contém. Nenhum
- * arquivo novo entrou em `static/icons/`: as cinco famílias reaproveitam desenhos
- * que o manifesto já carregava, e o teto de 64 não se move.
- *
- * **O ramo gerado chega por IMPORT, e a árvore continua escrita à mão aqui.** As
- * 4 páginas de `Comandos` saem do contrato de superfície de comando, e o gerador
- * emite um **fragmento** — uma lista de itens de folha — em vez da sidebar
- * inteira da instância. A categoria `Comandos` que as hospeda é escrita aqui,
- * porque o rótulo dela e a folha autoral que a abre são nossos e o gerador não os
- * conhece. `Bibliotecas` fecha em 21 e a aba em 26.
- *
- * **Nenhuma folha desta instância muda de layout, e desde a #118 não há o que
- * comutar.** A instância declarava `docItemComponent: '@theme/ApiDocItem'`, que
- * trocava a moldura das quatro páginas geradas por uma grade de duas colunas sem
- * TOC. O componente saiu, a linha saiu da config, e as vinte e seis folhas — 22
- * autorais e 4 geradas — passam pelo mesmo `@theme/DocItem`.
- *
- * Procedência: docs/design/informacao.md · docs/design/icones.md · docs/adr/0009
- * · docs/adr/0010.
+ * The `Ferramentas` tab sidebar (`tools` instance): the only tree that
+ * collapses. `overpower` nests to depth 4, confined to this branch; every
+ * other top-level node is a mute separator, and nothing else on the site
+ * passes depth 2.
  *
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
  */
 const sidebars = {
   tools: [
     {
+      // Top-level separator: mute label that only groups, `collapsible:
+      // false` and no `link`. Measured against the anchor site's DOM: its
+      // top node is a plain heading, no link, no caret, and the reference
+      // theme's own docs say top-level groups always expand and can't
+      // collapse. Making this level a clickable "destination" was an
+      // unmeasured opinion the render never bore out. The four nodes at
+      // this level all work this way; only `overpower`'s branch, two
+      // levels down, actually collapses.
       type: 'category',
       label: 'Bibliotecas',
       collapsible: false,
       items: [
         {
-          // O NÍVEL 2, e o nó do produto. A folha de abertura dele carrega
-          // `slug: /`, e é o que faz `/ferramentas` responder 200 sem
-          // redirecionamento (ADR 10 §h). Sem `collapsed`, que é `true` por
-          // default: o Docusaurus abre este ramo sozinho quando a página atual
-          // está dentro.
+          // Level 2, the product node. Depth caps at 4 inside `Comandos`
+          // (13 leaves there), confined to this branch. The 288px sidebar
+          // width doesn't force a lower number: another site on the same
+          // reference theme holds five levels in that same width, and the
+          // theme declares no numeric nesting ceiling at all. The opening
+          // leaf carries `slug: /`, which makes `/ferramentas` resolve
+          // without a redirect. No `collapsed`: it's `true` by default, and
+          // Docusaurus opens this branch on its own when the current page
+          // is inside it.
           type: 'category',
           label: 'overpower',
           className: 'sidebar-icon sidebar-icon--overpower',
@@ -91,10 +46,11 @@ const sidebars = {
             {type: 'doc', id: 'bibliotecas/overpower/instalacao', className: 'sidebar-icon sidebar-icon--instalacao'},
             {type: 'doc', id: 'bibliotecas/overpower/conceitos', className: 'sidebar-icon sidebar-icon--conceitos'},
             {
-              // A seção que hospeda o ramo gerado. A folha de abertura dela é
-              // autoral e é a fixture de painel direito vazio: ela passa pela
-              // perna do comutador que delega, e a coluna do painel nem chega a
-              // existir nela — irmã direta das quatro que a pintam.
+              // Hosts the generated branch. Its own opening leaf is
+              // authored and is the empty-right-panel fixture: it takes
+              // the delegating branch of the switch, and the panel column
+              // never gets created for it, a direct sibling of the four
+              // pages that do paint one.
               type: 'category',
               label: 'Comandos',
               className: 'sidebar-icon sidebar-icon--comandos',
@@ -119,23 +75,20 @@ const sidebars = {
               link: {type: 'doc', id: 'bibliotecas/overpower/referencia/indice'},
               items: [
                 {type: 'doc', id: 'bibliotecas/overpower/referencia/codigos-de-saida', className: 'sidebar-icon sidebar-icon--codigos-de-saida'},
-                // A fixture de aninhamento máximo: nível 4, com os 40px de
-                // recuo mais o ícone mais o rótulo mais longo desta
-                // profundidade, tudo dentro dos 288px da coluna.
+                // Max-nesting fixture: depth 4, with the 40px indent plus
+                // icon plus the longest label at this depth, all inside the
+                // column's 288px.
                 {type: 'doc', id: 'bibliotecas/overpower/referencia/solucao-de-problemas', className: 'sidebar-icon sidebar-icon--solucao-de-problemas'},
-                // O changelog é do lado do leitor, e não do de quem publica: ele
-                // responde *o que mudou na versão que eu tenho*, que é pergunta
-                // de quem usa. Ele morava sob `publicacao/` e mudou de casa na
-                // #133, junto com a fusão que criou o `contribuir/`.
+                // The changelog serves the reader, not the publisher: it
+                // answers "what changed in the version I have", a user's
+                // question.
                 {type: 'doc', id: 'bibliotecas/overpower/referencia/changelog', className: 'sidebar-icon sidebar-icon--changelog'},
               ],
             },
             {
-              // **A fronteira entre quem usa e quem contribui é estrutural.**
-              // `desenvolvimento/` e `publicacao/` serviam os dois ao mesmo
-              // leitor, misturadas com as que servem quem instala, e nada na
-              // sidebar dizia qual era qual. A fusão num nó só põe a fronteira
-              // onde o leitor a vê antes de clicar (#133).
+              // The boundary between using and contributing is structural:
+              // one node groups everything a contributor needs, visible
+              // before the reader even clicks.
               type: 'category',
               label: 'Contribuir',
               className: 'sidebar-icon sidebar-icon--contribuir',
@@ -170,8 +123,7 @@ const sidebars = {
       label: 'Skills',
       collapsible: false,
       items: [
-        // A fixture de prosa mínima e código máximo — o tipo `Receita`, relocado
-        // para cá quando a aba própria dele morreu.
+        // Minimal-prose, maximal-code fixture: the `Receita` type.
         {type: 'doc', id: 'skills/scaffold-de-esteira', className: 'sidebar-icon sidebar-icon--skills'},
         {type: 'doc', id: 'skills/rotacao-de-segredo', className: 'sidebar-icon sidebar-icon--skills'},
       ],

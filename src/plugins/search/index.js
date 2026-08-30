@@ -1,59 +1,39 @@
 /**
- * `pd-busca` — o índice local, sem serviço externo.
- *
- * O índice viaja como **dado global**, não como JSON no `outDir`. A alternativa
- * seria `postBuild` gravando um arquivo e o cliente buscando com `fetch()`, e
- * ela tem um modo de falhar invisível: sob `onBrokenLinks` e SPA, uma rota
- * ausente devolve **200 com o shell do site**, então o `fetch().json()` estoura
- * em parse — não em 404. Ninguém liga um parse error a um arquivo que não foi
- * escrito.
- *
- * Dado global também é o que faz a busca funcionar em `docusaurus start`, que
- * nenhum plugin de busca do ecossistema oferece: ele entra no bundle, e o bundle
- * existe no servidor de desenvolvimento.
- *
- * > **Correção de fato, medida nesta implementação.** A resolução do slice
- * > escreveu *`contentLoaded` + `setGlobalData`*. `contentLoaded` recebe o
- * > conteúdo do PRÓPRIO plugin, e este plugin não tem conteúdo nenhum — o que
- * > ele lê são as três instâncias de docs, que só chegam por `allContent`. O
- * > gancho certo é `allContentLoaded`, e ele expõe o mesmo `setGlobalData`
- * > (`server/plugins/actions.js` monta o mesmo objeto de ações para os dois
- * > ganchos). A decisão que a resolução tomou — dado global em vez de arquivo
- * > buscado — vale verbatim; só o nome do gancho estava errado.
- *
- * Zero dependência nova, zero serviço externo. Ver ADR 6.
- *
- * Procedência: docs/design/busca.md.
+ * Local search index, shipped as global client data, not a JSON file
+ * fetched at runtime. That path fails invisibly: under the SPA and
+ * `onBrokenLinks`, a missing route returns 200 with the site shell, so
+ * `fetch().json()` throws on parse, never on a 404. Global data also
+ * works in `docusaurus start`, since it ships inside the bundle, which
+ * exists on the dev server.
  */
 
 import {pagesFrom, tabLabels} from '../pages';
 
 /**
- * Teto de 64 KB serializados, autoenforçado — **teto, não meta**.
+ * 64 KB serialized ceiling, self-enforced: a ceiling, not a target.
  *
- * Ele não acrescenta portão de CI: o próprio build reprova. Um índice que
- * cresce sem limite vira megabyte no bundle principal de toda página do site,
- * e o sintoma é lentidão difusa que ninguém atribui à busca.
+ * No separate CI step checks this, the build itself fails over budget.
+ * An index that grows unchecked turns into a megabyte in the main bundle
+ * of every page on the site, and the symptom is diffuse slowness nobody
+ * traces back to search.
  */
 const CEILING = 64 * 1024;
 
-/** Corpo indexado por página. Bem menos que a página; o suficiente para casar. */
+/** Indexed body per page, deliberately short: enough to match, not a copy. */
 const BODY_LIMIT = 200;
 
-/** Linha cercada — abre e fecha o bloco de código. */
 const FENCE = /^\s*(?:```|~~~)/;
 
-/** `## Título {#ancora}` — nível 2 a 4, com a âncora explícita opcional. */
 const HEADING = /^(#{1,6})\s+(.+?)\s*(?:\{#[^}]*\})?\s*$/;
 
 /**
- * MDX → o texto que a busca casa.
+ * MDX to the text search matches against.
  *
- * Bloco cercado sai inteiro: uma consulta que casasse dentro de um `curl`
- * devolveria a página com um trecho ilegível, e o realce cairia no meio de uma
- * string JSON.
+ * Fenced code blocks are dropped entirely: a query that matched inside a
+ * `curl` example would return a snippet that highlights mid-JSON-string,
+ * unreadable to the reader.
  *
- * @param {string} body o MDX sem front matter e sem `import` do topo
+ * @param {string} body MDX with front matter and the top `import` block removed
  */
 function extract(body) {
   const headings = [];
@@ -70,8 +50,8 @@ function extract(body) {
     }
     const h = HEADING.exec(line);
     if (h) {
-      // O `#` de nível 1 é o título, que já viaja em `t`. Os de 5 e 6 não
-      // existem na árvore — o teto de profundidade da spec é 4.
+      // Level 1 is the title, already captured as `t`. Levels 5 and 6
+      // never occur here, headings in this content are capped at 4.
       if (h[1].length >= 2 && h[1].length <= 4) {
         headings.push(h[2]);
       }
@@ -84,24 +64,24 @@ function extract(body) {
 }
 
 /**
- * Tira a marcação e devolve prosa.
+ * Strips markup, returns prose.
  *
- * Não é um parser: é o suficiente para que o trecho mostrado ao leitor não
- * comece com `<ParamField name=` nem com uma barra de tabela.
+ * Not a parser: just enough that the snippet shown to the reader doesn't
+ * start with `<ParamField name=` or a table's leading pipe.
  *
  * @param {string} text
  */
 function toPlainText(text) {
   return text
-    // O rótulo acessível sai ANTES da tag ser descartada. Ele é a única prosa
-    // que descreve um diagrama, e a linha de baixo levaria a tag inteira junto:
-    // o desenho sairia do índice e ficaria inencontrável, do mesmo jeito que
-    // rótulo de dentro do desenho já é.
+    // The accessible label is pulled out BEFORE the tag is discarded: it's
+    // the only prose that describes a diagram. The line below would strip
+    // the whole tag together with it, making the diagram unfindable in the
+    // index.
     .replace(/<[^>]*\saria-label="([^"]*)"[^>]*>/g, ' $1 ')
-    .replace(/<[^>]*>/g, ' ') // tag JSX do catálogo
-    .replace(/^\s*:::.*$/gm, ' ') // marcador de admonition
-    .replace(/^\s*\|.*$/gm, ' ') // linha de tabela
-    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1') // link e imagem, fica o rótulo
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/^\s*:::.*$/gm, ' ')
+    .replace(/^\s*\|.*$/gm, ' ')
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/[`*_>#]/g, '')
     .replace(/^\s*[-+]\s+/gm, ' ')
     .replace(/\s+/g, ' ')
@@ -118,6 +98,10 @@ export default function searchPlugin(context, options) {
   return {
     name: 'pd-search',
 
+    // `contentLoaded` only sees a plugin's own content, and this plugin has
+    // none: it reads three `docusaurus-plugin-content-docs` instances via
+    // `allContent`. `allContentLoaded` is the hook that receives that, and
+    // it exposes the same `setGlobalData` action.
     async allContentLoaded({allContent, actions}) {
       const {i18n, siteDir} = context;
 
@@ -150,9 +134,10 @@ export default function searchPlugin(context, options) {
         );
       }
 
-      // Os rótulos viajam junto porque quem os traduz é o servidor: eles saem
-      // do navbar, que o core já traduziu quando este gancho roda. Resolvê-los
-      // no cliente exigiria reimplementar a mesma regra num segundo lugar.
+      // Labels travel with the data because the server is what translates
+      // them: they come from the navbar, already localized by the core by
+      // the time this hook runs. Resolving them on the client would mean
+      // reimplementing the same rule a second time.
       actions.setGlobalData({
         records,
         tabs: tabLabels(context.siteConfig.themeConfig, options.tabs),

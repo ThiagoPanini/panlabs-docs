@@ -1,28 +1,27 @@
 // @ts-check
 
 /**
- * panlabs-docs — configuração do Docusaurus.
+ * panlabs-docs, Docusaurus configuration.
  *
- * Regra que atravessa este arquivo: NENHUM valor de cor entra aqui. A paleta de
- * sintaxe chega ao Prism por um shim que só referencia token; a fonte única de
- * valor continua sendo `src/css/tokens.css`.
+ * Rule that spans this file: NO color value enters here. The syntax palette
+ * reaches Prism through a shim that only references tokens; the single
+ * source of value stays `src/css/tokens.css`.
  */
 
 /**
- * Shim do tema Prism.
+ * Prism theme shim.
  *
- * Um tema do `prism-react-renderer` é `{plain, styles: [{types, style}]}`, e o
- * `style` aceita qualquer string CSS — inclusive `var(--pd-code-*)`. É isso que
- * salva a fonte única de valor: a paleta de sintaxe é um papel da camada 2, que
- * bifurca por modo em `tokens.css`, e este objeto só a referencia.
+ * A `prism-react-renderer` theme is `{plain, styles: [{types, style}]}`, and
+ * `style` accepts any CSS string, including `var(--pd-code-*)`. That's what
+ * keeps the single source of value: the syntax palette is a layer-2 role,
+ * forked per mode in `tokens.css`, and this object only references it.
  *
- * Um shim serve os DOIS modos: o Docusaurus cai em `prism.theme` quando
- * `prism.darkTheme` não existe, e os tokens já bifurcaram. Declarar um segundo
- * seria criar um lugar a mais onde o modo diverge.
+ * One shim serves both modes: Docusaurus falls back to `prism.theme` when
+ * `prism.darkTheme` doesn't exist, and the tokens already fork by mode.
  *
- * `plain.backgroundColor` é também o ponto de escrita da exceção 4 do adaptador:
- * `--prism-background-color` é injetada no atributo `style` INLINE por
- * `CodeBlock/Container`, e estilo inline não é alcançável por folha de estilo.
+ * `plain.backgroundColor` is also where the adapter's exception 4 writes:
+ * `CodeBlock/Container` injects `--prism-background-color` as an INLINE
+ * style attribute, and inline style isn't reachable by a stylesheet.
  *
  * @type {import('prism-react-renderer').PrismTheme}
  */
@@ -64,51 +63,62 @@ const temaPrism = {
 };
 
 /**
- * As quatro tabs, na ordem do navbar — a fonte única de ordem dos dois plugins
- * do slice 7. Só os ids: o RÓTULO de cada uma é lido do próprio navbar, mais
- * abaixo neste arquivo, porque é lá que ele já existe e é lá que a tradução do
- * `navbar.json` o alcança.
+ * The four tabs, in navbar order: the single source of order for the
+ * search and ai-era plugins. Ids only, the LABEL of each is read from the
+ * navbar itself, further down this file, since that's where it already
+ * exists and where `navbar.json` translation reaches it.
  *
- * A lista mora aqui, e não dentro de cada plugin, porque a ordem que a busca usa
- * para desempatar e a ordem em que o navbar apresenta as tabs **são a mesma
- * decisão** — e duas cópias dela divergiriam no dia em que uma quarta tab
- * entrasse. Foi o que aconteceu: `Times` chegou, e as duas listas sobem na
- * mesma revisão que reordena as três primeiras.
+ * The list lives here, not inside each plugin, because the order search
+ * uses to break ties and the order the navbar presents tabs in are the
+ * SAME decision; two copies of it would drift the day a tab changes.
  *
- * **`Jornadas` subiu para segunda**, na frente de `Procedimentos`. A ordem lê o
- * que o acervo tem para oferecer: `Ferramentas` e `Jornadas` carregam conteúdo, e
- * `Procedimentos` e `Times` são marcador de lugar até o conteúdo real chegar. Como
- * esta lista é também o primeiro desempate da busca, descer as duas abas vazias é
- * decisão de resultado, e não de estética.
+ * `Jornadas` sits second, ahead of `Procedimentos`: the order reflects what
+ * the collection actually has to offer. `Ferramentas` and `Jornadas` carry
+ * content; `Procedimentos` and `Times` are placeholders until real content
+ * lands. Since this list is also search's first tiebreaker, ranking the
+ * two empty tabs lower is a result decision, not an aesthetic one.
  */
 const ABAS = ['tools', 'default', 'procedures', 'teams'];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  // `panlabs` — minúsculo, sem nome de produto acima dele. O nome resolve a
-  // mesma restrição dura que batizou o produto anterior: `title` e `tagline`
-  // NÃO são traduzíveis no Docusaurus, e um namespace atravessa os dois locales
-  // sem tradução.
+  // `panlabs`, lowercase, with no product name above it: `title` and
+  // `tagline` aren't translatable in Docusaurus, so the site's identity has
+  // to live in a single string that needs no translation.
   title: 'panlabs',
   tagline: 'O acervo de aprendizado de um desenvolvedor',
 
-  // GitHub Pages, do próprio repositório.
+  // GitHub Pages, this repository's own.
   url: 'https://thiagopanini.github.io',
   baseUrl: '/panlabs-docs/',
   organizationName: 'ThiagoPanini',
   projectName: 'panlabs-docs',
 
-  // URLs sem barra final. Ver ADR 7 — os seis consumidores, o preço de host e a
-  // alavanca de emissão dupla, que é acionada se o portão 6 rota 1 reprovar.
-  // `undefined` está descartado: os links sairiam como cada plugin os gerou,
-  // sem normalização, e a saída deixaria de ser determinada pela nossa config.
+  // URLs with no trailing slash. Four reasons, verified in the v3.10.2
+  // source:
+  //
+  //   a) it's the only value that preserves the `.md` convention: appending
+  //      `.md` to the URL the reader is looking at has to be pure string
+  //      concatenation, and a trailing slash would turn it into `/foo/.md`;
+  //   b) it collapses permalink and route into one string, so
+  //      `removeTrailingSlash` is a no-op and the two representations can
+  //      never diverge;
+  //   c) it doesn't threaten the footer's `llms.txt` link: `Link.tsx`
+  //      applies `applyTrailingSlash` to any internal URL with no
+  //      extension guard, so `true` would turn that link into `/llms.txt/`;
+  //   d) files under `static/` are immune either way, copied verbatim by
+  //      `StaticDirectoriesCopyPlugin`.
+  //
+  // `undefined` is off the table: links would come out however each plugin
+  // generated them, unnormalized, and the output would stop being
+  // determined by this config.
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
-  // O terceiro do trio. O default do Docusaurus é `warn`, e âncora quebrada que
-  // só avisa é âncora quebrada que fica. Consequência de contrato:
-  // toda âncora citada por um link é declarada com `{#id}` no próprio heading,
-  // em vez de depender de como o slugger trata acento.
+  // Third of the trio. Docusaurus defaults to `warn`, and a broken anchor
+  // that only warns is a broken anchor that stays. Contract consequence:
+  // every anchor a link cites is declared with `{#id}` on the heading
+  // itself, instead of depending on how the slugger handles accents.
   onBrokenAnchors: 'throw',
   markdown: {
     hooks: {
@@ -116,16 +126,18 @@ const config = {
     },
   },
 
-  // `future.v4` fica DESLIGADO de propósito. Entre os flags que ele acende está
-  // `useCssCascadeLayers`, e o ADR 1 põe `@layer` fora: a arquitetura de
-  // especificidade deste projeto foi medida contra o Infima sem camadas.
-  // Ligar o flag muda a premissa e reabre o ADR.
+  // `future.v4` stays OFF on purpose. One of the flags it turns on is
+  // `useCssCascadeLayers`, and this project keeps `@layer` out: its
+  // specificity architecture is measured against Infima with no cascade
+  // layers. Turning the flag on changes that premise.
 
-  // NÃO É VESTÍGIO DE i18n — é o que fixa o locale em pt-BR. Sem este bloco o
-  // default do próprio Docusaurus é `en` (`DEFAULT_I18N_CONFIG`, medido em
-  // `node_modules/@docusaurus/core/lib/server/configValidation.js`), e o
-  // `htmlLang` do site sairia errado. Um locale só na lista é o jeito padrão
-  // de fixar idioma sem tradução, sem dropdown e sem `i18n/`.
+  // NOT an i18n leftover: this is what pins the locale to pt-BR. Without
+  // this block, Docusaurus's own default is `en` (`DEFAULT_I18N_CONFIG`,
+  // checked in
+  // `node_modules/@docusaurus/core/lib/server/configValidation.js`), and
+  // the site's `htmlLang` would come out wrong. A single-entry locale list
+  // is the standard way to pin a language with no translation, no
+  // dropdown, and no `i18n/` directory.
   i18n: {
     defaultLocale: 'pt-BR',
     locales: ['pt-BR'],
@@ -136,32 +148,35 @@ const config = {
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        // A tab `Jornadas` é a instância `default` do plugin de docs.
+        // The `Jornadas` tab is the docs plugin's `default` instance.
         //
-        // O acervo mora em `content/`, e não em `docs/`, porque `docs/` é a
-        // documentação DESTE repositório — agentes, ADRs, spec de design. A
-        // rota pública é `/jornadas`, e é ela que o portão 6 verifica.
+        // The collection lives in `content/`, not `docs/`: `docs/` is this
+        // repository's OWN documentation (agents, ADRs). The public route
+        // is `/jornadas`.
         docs: {
           path: 'content/jornadas',
           routeBasePath: 'jornadas',
           sidebarPath: './sidebars-jornadas.js',
         },
-        // Sem blog: nada no mapa o pediu, e um plugin ligado sem consumidor é a
-        // mesma classe de defeito que as variáveis inertes do Infima.
+        // No blog: nothing in the map asked for one, and a plugin turned on
+        // with no consumer is the same class of defect as Infima's inert
+        // variables.
         blog: false,
-        // O SVGR inlina o `.drawio.svg` importado de uma página, e as duas
-        // otimizações desligadas aqui existem porque o palco pinta o desenho
-        // casando a camada de ATRIBUTO do draw.io por seletor.
+        // SVGR inlines the `.drawio.svg` imported by a page, and these two
+        // optimizations are off because the stage paints the drawing by
+        // matching draw.io's ATTRIBUTE layer with a selector.
         //
-        // `moveElemsAttrsToGroup` sobe atributo comum para o `<g>` pai, e ele
-        // sobe MAIS num arquivo salvo por editor sem `light-dark()`, porque ali
-        // as cores ficam uniformes. O atributo saía da folha, o seletor deixava
-        // de casar, e o resultado era seta preta invisível no escuro **só** nos
-        // arquivos vindos daquele editor. Medido: 3 grupos hasteados no arquivo
-        // assado, zero no sadio.
+        // `moveElemsAttrsToGroup` hoists a shared attribute up to the
+        // parent `<g>`, and it hoists MORE in a file saved by an editor
+        // with no `light-dark()`, because colors are uniform there. The
+        // attribute would leave the leaf, the selector would stop
+        // matching, and the result was an invisible black arrow in dark
+        // mode, ONLY in files from that editor. Measured: 3 hoisted groups
+        // in the affected file, zero in the clean one.
         //
-        // `convertColors` encurta `#000000` para `#000`, e um seletor de
-        // atributo casa string, não cor. Desligar deixa uma forma só.
+        // `convertColors` shortens `#000000` to `#000`, and an attribute
+        // selector matches a string, not a color. Turning it off keeps one
+        // shape only.
         svgr: {
           svgrConfig: {
             svgoConfig: {
@@ -182,8 +197,8 @@ const config = {
           },
         },
         theme: {
-          // A ordem importa: `tokens.css` é o primeiro item porque as raízes
-          // precisam existir antes de qualquer regra que as consuma.
+          // Order matters: `tokens.css` comes first because the roots must
+          // exist before any rule that consumes them.
           customCss: [
             './src/css/tokens.css',
             './src/css/custom.css',
@@ -196,11 +211,10 @@ const config = {
     ],
   ],
 
-  // As outras três tabs. **Uma instância por tab, um-para-um**, e não uma
-  // instância com várias sidebars: `routeBasePath` é por instância, então
-  // compartilhar jogaria as ferramentas em `/jornadas/ferramentas/…` e a URL
-  // deixaria de ler o eixo — que é a decisão inteira da arquitetura de
-  // informação.
+  // The other three tabs. One instance PER tab, one to one, never one
+  // instance with multiple sidebars: `routeBasePath` is per instance, so
+  // sharing one would nest tools under `/jornadas/ferramentas/…` and the
+  // URL would stop reflecting the navigation axis.
   plugins: [
     [
       '@docusaurus/plugin-content-docs',
@@ -220,15 +234,6 @@ const config = {
         path: 'content/ferramentas',
         routeBasePath: 'ferramentas',
         sidebarPath: './sidebars-ferramentas.js',
-        // **Esta instância declarava `docItemComponent`, e não declara mais.**
-        // O `ApiDocItem` era um componente de tema próprio que comutava o
-        // layout inteiro por página, pelo front matter `api_exemplos`: as 4
-        // páginas geradas de `overpower › Comandos` ganhavam prosa de 577 e um
-        // trilho grudado de 511, e com isso perdiam a coluna do TOC. O trilho
-        // desceu para o fluxo na #118 — virou `<PainelComando />`, um bloco de
-        // MDX que o registro global resolve —, e sem layout a comutar o
-        // componente da rota ficou sendo `@theme/DocItem` chamando
-        // `@theme/DocItem`. As 26 páginas desta instância medem a mesma coisa.
       }),
     ],
     [
@@ -242,14 +247,15 @@ const config = {
       }),
     ],
 
-    // Os dois plugins de caminho do slice 7. Nenhum é dependência npm, nenhum
-    // é serviço externo — eles são a mesma mecânica vista de dois lados, e leem
-    // as quatro instâncias acima pela mesma porta (`allContentLoaded`).
+    // The site's own search and ai-era plugins. Neither is an npm
+    // dependency or an external service: they're the same mechanism seen
+    // from two sides, and they read the four instances above through the
+    // same hook (`allContentLoaded`).
     //
-    // `abas` é declarada UMA vez e servida aos dois: ela é a ordem do navbar,
-    // que a busca usa como primeiro desempate e o `llms.txt` usa como seção. Um
-    // id que não exista entre as instâncias **quebra o build** em vez de sumir
-    // um terço do site em silêncio.
+    // `ABAS` is declared once and served to both: it's the navbar order,
+    // which search uses as its first tiebreaker and `llms.txt` uses as
+    // section order. An id missing from the instances above breaks the
+    // build instead of silently dropping a third of the site.
     ['./src/plugins/search', {tabs: ABAS}],
     ['./src/plugins/ai-era', {tabs: ABAS}],
   ],
@@ -258,46 +264,49 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       colorMode: {
-        // Escuro é canônico — é onde o desenho nasce. Não é mandato sobre o
-        // leitor: `respectPrefersColorScheme` entrega o modo do sistema dele.
+        // Dark is canonical, it's where the design was born. Not a mandate
+        // on the reader: `respectPrefersColorScheme` hands them their
+        // system's mode.
         defaultMode: 'dark',
         respectPrefersColorScheme: true,
         disableSwitch: false,
       },
       navbar: {
-        // **A MARCA É SÓ A PALAVRA**, e ela volta para o caminho nativo.
+        // THE BRAND IS JUST THE WORD, back to Docusaurus's native path.
         //
-        // `title` sem `logo` faz o upstream renderizar `<b class="navbar__title">`
-        // dentro do `.navbar__brand` — tipo puro, sem `<img>`, sem glifo. Some
-        // com isso o componente de tema próprio que existia só para desenhar o
-        // par glifo+palavra, e some a regra `.navbar__brand:empty` que escondia
-        // o link vazio que o upstream renderizava sem `title`.
+        // `title` with no `logo` makes the upstream render a plain
+        // `<b class="navbar__title">` inside `.navbar__brand`: pure type,
+        // no `<img>`, no glyph. Gone with it: the custom theme component
+        // that existed only to draw the glyph-and-word pair, and the
+        // `.navbar__brand:empty` rule that hid the empty link the upstream
+        // renders when `title` is absent.
         //
-        // O argumento é o da figura da landing, com força maior: a marca aparece
-        // em TODA página e a landing em uma. Ela fica **monocromática**, em
-        // `--pd-text-strong` — tingir uma palavra de acento no canto superior
-        // esquerdo é o enfeite que a régua recusa. A tipografia não mudou: o que
-        // saiu foi o glifo, que era a única coisa a consumir `--pd-accent`.
+        // Same argument as the landing page's figure, with more force: the
+        // brand appears on EVERY page, the landing on one. It stays
+        // MONOCHROME, in `--pd-text-strong`: tinting a word with an accent
+        // in the top-left corner is the kind of flourish the house rule
+        // refuses. The typography didn't change; what left was the glyph,
+        // the only thing consuming `--pd-accent`.
         //
-        // `title` é string traduzível e entra em `navbar.json`; `panlabs` fica
-        // IDÊNTICA nos dois locales, que é a razão de o nome ter sido escolhido.
+        // `title` is a translatable string; `panlabs` needs no translation
+        // either way, which is part of why the name was chosen.
         title: 'panlabs',
 
         items: [
-          // O ESPAÇADOR QUE ABRE A FAIXA DE TABS — degrau 2, opção pública, e a
-          // única peça da faixa que não é CSS. Ele tem base 100% e altura 0
-          // (`chrome.css`), então força a quebra de linha dentro de
-          // `.navbar__items` e não ocupa um pixel.
+          // THE SPACER THAT OPENS THE TAB STRIP: the only piece of the
+          // strip that isn't CSS. It has 100% basis and 0 height
+          // (`chrome.css`), so it forces a line break inside
+          // `.navbar__items` without taking up a pixel.
           //
-          // Escolhido em vez de dar `flex-basis: 100%` à marca — que também
-          // funciona, e está medido — porque não acopla a faixa à EXISTÊNCIA de
-          // uma marca. O estilo é replicável como template da casa, e um
-          // transplante que troque a marca por outra coisa não perde a faixa
-          // junto.
+          // Chosen over giving the brand `flex-basis: 100%`, which also
+          // works and is measured, because it doesn't couple the strip to
+          // a brand EXISTING. The style is replicable as a house template,
+          // and swapping the brand for something else doesn't lose the
+          // strip.
           //
-          // `value` NÃO pode ser vazio: o schema reprova o build com
-          // `"navbar.items[N].value" is not allowed to be empty`. Um comentário
-          // HTML satisfaz o schema e não renderiza nada.
+          // `value` can NOT be empty: the schema fails the build with
+          // `"navbar.items[N].value" is not allowed to be empty`. An HTML
+          // comment satisfies the schema and renders nothing.
           {
             type: 'html',
             position: 'left',
@@ -305,8 +314,9 @@ const config = {
             value: '<!--quebra-->',
           },
 
-          // As quatro tabs. Cada uma troca a sidebar inteira, e cada sidebar é
-          // uma instância — o eixo de navegação é a natureza do conteúdo.
+          // The four tabs. Each swaps the whole sidebar, and each sidebar
+          // is its own instance: the navigation axis is the nature of the
+          // content.
           {
             type: 'docSidebar',
             docsPluginId: 'tools',
@@ -335,14 +345,15 @@ const config = {
             label: 'Times',
           },
 
-          // À direita, na ordem declarada: Buscar · GitHub. A alternância
-          // de tema não é declarável — o `Navbar/Content` a renderiza depois
-          // dos itens da direita, e é por isso que ela fecha a linha.
+          // Right side, in declared order: search, GitHub. The theme
+          // toggle isn't declarable: `Navbar/Content` renders it after the
+          // right-side items, which is why it always closes the line.
           //
-          // O slot de busca fica RESERVADO aqui e é preenchido no slice 7.
-          // Enquanto o `SearchBar` do tema for o placeholder vazio, o upstream
-          // esconde o contêiner sozinho (`.navbarSearchContainer:empty`), então
-          // reservar a posição custa zero pixel.
+          // The search slot is RESERVED here and filled by the search
+          // plugin. While the theme's `SearchBar` is the empty placeholder,
+          // the upstream hides the container on its own
+          // (`.navbarSearchContainer:empty`), so reserving the spot costs
+          // zero pixels.
           {type: 'search', position: 'right'},
           {
             href: 'https://github.com/ThiagoPanini/panlabs-docs',
@@ -352,40 +363,36 @@ const config = {
         ],
       },
       footer: {
-        // `style` NÃO é declarado. O default do schema é `'light'`; `'dark'`
-        // cravaria `#303846` literal mais quatro variáveis próprias. Não
-        // configurar é decisão limpa, não omissão.
+        // `style` is NOT declared. The schema defaults to `'light'`;
+        // `'dark'` would hardcode the literal `#303846` plus four more
+        // variables of its own. Not configuring it is a clean decision, not
+        // an omission.
         //
-        // `links` é lista PLANA — nunca `MultiColumn`. Um sitemap no rodapé é
-        // segunda cópia de navegação que o leitor já tem à vista, e coluna
-        // exigiria inventar empresa em torno de um produto fictício.
+        // `links` is a FLAT list, never `MultiColumn`. A sitemap in the
+        // footer is a second copy of navigation the reader already has in
+        // view, and a column would mean inventing a company around a
+        // fictional product.
         //
-        // A regra que escolheu os links: **entra no footer só o que não está em
-        // nenhum outro lugar do site.** `llms.txt` é o quarto, e entra no slice
-        // 7 junto com o artefato.
+        // The rule that chose these links: the footer holds only what
+        // lives nowhere else on the site. `llms.txt` is the fourth, and it
+        // ships alongside the ai-era plugin's other artifacts.
         //
-        // **Eram quatro; são dois**, e os dois que saíram saíram com o produto.
-        // `Status` e `Suporte` apontavam para um host e uma caixa de e-mail do
-        // Trilho, e o acervo não tem nem um nem outro: a empresa **nunca é
-        // nomeada**, então não há domínio de status a citar, e o desenvolvedor
-        // **não tem nome**, então não há para quem escrever. Inventar os dois
-        // seria nomear o empregador por acidente, que é a única coisa que a
-        // narrativa do acervo proíbe por escrito.
+        // The company is NEVER named, and the developer has NO name
+        // either, so there's no status domain to cite and no one to write
+        // to: inventing either would name the employer by accident, the
+        // one thing this collection's narrative forbids in writing.
+        // `llms.txt` is the only artifact on the site with no navigation
+        // entry at all, so without this line it's undiscoverable.
         //
-        // O que sobra passa a satisfazer a regra melhor do que antes: `llms.txt`
-        // é o único artefato do site sem nenhuma entrada de navegação, logo
-        // indescobrível sem esta linha.
+        // `pathname://` is Docusaurus's PUBLIC escape hatch for pointing at
+        // a file that isn't a route. It does three things at once: `<Link>`
+        // uses `<a>` instead of `history.push()`, the link checker doesn't
+        // charge a route that never existed, and `baseUrl` still gets
+        // prepended, which is where the artifact is served from.
         //
-        // `pathname://` é a escotilha PÚBLICA do Docusaurus para apontar a um
-        // arquivo que não é rota (degrau 2 da escada). Ela faz três coisas de
-        // uma vez: o `<Link>` usa `<a>` em vez de `history.push()`, o
-        // verificador de links não cobra uma rota que nunca existiu, e o
-        // baseUrl continua sendo acrescentado — inclusive o do locale, que é
-        // onde o build do EN escreve o artefato dele.
-        //
-        // `target: '_self'`, e é correção de premissa medida: o `<Link>` injeta
-        // `target="_blank"` SOZINHO em tudo que ele lê como externo, e a decisão
-        // do rodapé é que nenhum link abre em nova aba.
+        // `target: '_self'` is a measured premise fix: `<Link>` injects
+        // `target="_blank"` on its own for anything it reads as external,
+        // and this footer's decision is that no link opens a new tab.
         links: [
           {label: 'Changelog', to: '/ferramentas/bibliotecas/overpower/referencia/changelog'},
           {label: 'llms.txt', href: 'pathname:///llms.txt', target: '_self'},
@@ -394,17 +401,12 @@ const config = {
       },
       prism: {
         theme: temaPrism,
-        // Degrau 2 — opção pública. `bash` não está no bundle padrão do
-        // `prism-react-renderer`, e sem o registro o bloco sai sem realce e
-        // ninguém avisa.
-        //
-        // **O consumidor mudou de dono e ficou maior.** Ele era o snippet de
-        // cURL que o gerador da Referência emitia, e o gerador morreu com o
-        // contrato HTTP; agora são as cercas `bash` do próprio acervo — a AWS
-        // CLI é um terço do cenário fixado, e ela aparece na laje da landing e
-        // em folhas de `Procedimentos` e `Ferramentas`. A conferência que
-        // `scripts/lib/openapi.mjs` fazia sobre a lista sai junto com ele; o
-        // que pega o esquecimento hoje é a cerca sem realce à vista.
+        // `bash` isn't in `prism-react-renderer`'s default bundle; without
+        // registering it, a fenced block renders with no highlight and
+        // nothing warns you. It backs the AWS CLI fences across the
+        // landing page, `Procedimentos`, and `Ferramentas`: a missing
+        // highlight in a fence is what catches a forgotten registration
+        // today.
         additionalLanguages: ['bash'],
       },
     }),

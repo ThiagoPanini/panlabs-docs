@@ -1,22 +1,10 @@
 /**
- * A porta única para o conteúdo — o que a busca e os artefatos AI-era leem.
+ * Single entry point both the search plugin and AI-era artifacts read: the
+ * full content tree, in reading order, with each page's MDX body, so the
+ * two consumers can't drift into different orders.
  *
- * Os dois plugins deste slice são a mesma mecânica vista de dois lados: ambos
- * precisam da árvore inteira, na ordem em que o leitor a vê, com o MDX de cada
- * página à mão. Escrever isso duas vezes produziria duas ordens que divergem no
- * dia em que uma tab entrar — então a ordem e a leitura do arquivo moram aqui,
- * e cada plugin consome o resultado.
- *
- * **A fonte é o MDX, não o HTML renderizado.** É o que dispensa `cheerio` e o
- * que faz as 6 páginas geradas da referência entrarem pelo mesmo caminho das
- * 46 autorais: uma página gerada é um `.mdx` em disco como qualquer outra.
- *
- * **A porta é `allContentLoaded`.** `contentLoaded` só enxerga o conteúdo do
- * PRÓPRIO plugin, e estes dois não têm conteúdo nenhum — eles leem o das três
- * instâncias de `plugin-content-docs`. Ver `busca/index.js` para a correção de
- * fato que isso registra.
- *
- * Procedência: docs/design/informacao.md §9.
+ * Reads MDX source, not rendered HTML. Uses `allContentLoaded` because
+ * `contentLoaded` only sees a plugin's own content, and this module has none.
  */
 
 import fs from 'node:fs';
@@ -24,23 +12,22 @@ import path from 'node:path';
 
 const DOCS_PLUGIN = 'docusaurus-plugin-content-docs';
 
-/** O front matter YAML, delimitado por `---` na primeira linha. */
 const FRONT_MATTER = /^---\r?\n[\s\S]*?\r?\n---[ \t]*\r?\n?/;
 
-/** `import` ou `export` numa linha — testado só no TOPO, nunca no corpo. */
+/** `import` or `export` on a line, tested only at the TOP, never in the body. */
 const IMPORT_OR_EXPORT = /^[ \t]*(?:import|export)\s/;
 
 /**
- * Remove o bloco de `import`/`export` do topo, e só o do topo.
+ * Removes only the import/export block at the very top of the file.
  *
- * *Do topo* não é detalhe de redação: dez páginas de `Receitas` têm `import` na
- * primeira coluna DENTRO de bloco cercado, porque é o que uma receita de SDK
- * mostra. Uma varredura global comeria o exemplo e ninguém veria — o `.md`
- * sairia com o código mutilado e o build passaria.
+ * Scoped to the top on purpose: recipe pages have `import` at column 0
+ * inside fenced code blocks, because that's what an SDK snippet shows.
+ * A global scan would eat the example silently, the page would ship with
+ * mutilated code and the build would still pass.
  *
- * Hoje o topo está sempre vazio: nenhum arquivo de `content/` importa nada,
- * porque o catálogo inteiro é registrado em `@theme/MDXComponents`. A remoção é
- * o que mantém a promessa verdadeira quando alguém esquecer.
+ * Content files currently import nothing, the whole component catalog is
+ * registered in `@theme/MDXComponents`. This removal keeps that promise
+ * true even if someone breaks the convention.
  *
  * @param {string} text
  */
@@ -54,14 +41,14 @@ function withoutTopImport(text) {
 }
 
 /**
- * A ordem da sidebar, achatada em profundidade.
+ * Sidebar order, flattened by depth.
  *
- * É o segundo critério de desempate da busca e a ordem de listagem do
- * `llms.txt`. Uma categoria clicável aparece pelo `link`, antes dos filhos —
- * que é onde o leitor a vê.
+ * Used as the search's second tiebreaker and as the listing order in
+ * `llms.txt`. A clickable category appears via its `link`, before its
+ * children, matching where the reader sees it.
  *
  * @param {Record<string, unknown[]>} sidebars
- * @returns {Map<string, number>} id do documento → posição
+ * @returns {Map<string, number>} document id to position
  */
 function sidebarOrder(sidebars) {
   const order = new Map();
@@ -91,17 +78,16 @@ function sidebarOrder(sidebars) {
 }
 
 /**
- * O rótulo de cada aba — lido do NAVBAR, nunca declarado uma segunda vez.
+ * Each tab's label, read from the navbar, never declared a second time.
  *
- * O rótulo da aba é o que o navbar diz que ele é: são a mesma decisão, e as
- * duas superfícies que precisam dele aqui (a seção do `llms.txt` e o
- * agrupamento dos resultados de busca) mostram ao leitor exatamente a palavra
- * que ele acabou de clicar. Declarar o rótulo na opção do plugin criaria uma
- * segunda cópia, e as duas podiam divergir.
+ * Both surfaces that need it here (the `llms.txt` section and the search
+ * result grouping) show the reader the exact word they just clicked.
+ * Declaring the label in the plugin options would create a second copy
+ * that could drift from the navbar.
  *
  * @param {{navbar?: {items?: any[]}}} themeConfig
  * @param {string[]} tabs
- * @returns {string[]} um rótulo por aba, na ordem declarada
+ * @returns {string[]} one label per tab, in declared order
  */
 export function tabLabels(themeConfig, tabs) {
   const items = themeConfig?.navbar?.items ?? [];
@@ -120,12 +106,12 @@ export function tabLabels(themeConfig, tabs) {
 }
 
 /**
- * A árvore inteira, na ordem em que o leitor a vê.
+ * The full tree, in the order the reader sees it.
  *
  * @param {object} args
  * @param {Record<string, Record<string, any>>} args.allContent
  * @param {string} args.siteDir
- * @param {string[]} args.tabs ids das instâncias de docs, na ordem do navbar
+ * @param {string[]} args.tabs docs instance ids, in navbar order
  */
 export function pagesFrom({allContent, siteDir, tabs}) {
   const instances = allContent?.[DOCS_PLUGIN] ?? {};
@@ -134,8 +120,8 @@ export function pagesFrom({allContent, siteDir, tabs}) {
   tabs.forEach((tab, tabIndex) => {
     const content = instances[tab];
     if (!content) {
-      // Aba declarada e ausente é a falha que some sozinha: a busca perderia um
-      // terço do site e o `llms.txt` mentiria, sem uma linha de aviso.
+      // A missing declared tab is a silent failure: search would drop part
+      // of the site and `llms.txt` would lie, with nothing raised to say so.
       throw new Error(
         `A aba "${tab}" não existe em allContent. As instâncias de ${DOCS_PLUGIN} são: ${Object.keys(instances).join(', ')}.`,
       );
@@ -145,9 +131,9 @@ export function pagesFrom({allContent, siteDir, tabs}) {
       const order = sidebarOrder(version.sidebars);
 
       for (const doc of version.docs) {
-        // `draft` já sai de `docs` em produção, e `unlisted` não. Os dois vão
-        // escritos porque o critério é do slice, não do upstream — e porque em
-        // `docusaurus start` o rascunho continua na lista.
+        // `draft` is already excluded from `docs` in production, but
+        // `unlisted` is not. Both are filtered explicitly here because in
+        // `docusaurus start` dev mode, drafts stay in the list.
         if (doc.draft || doc.unlisted) {
           continue;
         }

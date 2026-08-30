@@ -1,47 +1,14 @@
 /**
- * O registro React dos ícones — o primeiro dos dois renderizadores.
- *
- * `resolveIcon('rocket')` devolve um **componente React** vindo do SVGR, que
- * o `preset-classic` já registra por padrão (`@docusaurus/plugin-svgr` é
- * dependência dele). O SVG do Lucide nasce com `stroke="currentColor"` e
- * `fill="none"`, então a tinta vem de graça e `stroke-width` é prop — que é o
- * que torna a compensação óptica por tamanho possível. Com `mask-image` não
- * seria: máscara é estêncil, não se restiliza o interior.
- *
- * O segundo renderizador é a sidebar, e ele é CSS — `mask-image` sobre
- * `::before`, em `src/css/chrome.css`. Não é inconsistência: não existe ponto de
- * swizzle `safe` para injetar componente React num item de sidebar, então a
- * rota de `className` + máscara é a **única** zero-swizzle. Os dois leem os
- * mesmos 60 arquivos.
- *
- * **Nada aqui degrada em silêncio.** Nome desconhecido lança; o Docusaurus
- * prerenderiza toda página no build, então o `throw` *é* falha de build, sem
- * infraestrutura nenhuma. Em `docusaurus start` vira overlay de erro do React,
- * que é o retorno certo em desenvolvimento.
- *
- * ---------------------------------------------------------------------------
- * Por que 60 `import` à mão e não um `require.context`
- *
- * Medido nesta implementação, não deduzido: a regra de SVGR do
- * `plugin-svgr@3.10.2` casa por **issuer**, e o issuer precisa ser um arquivo
- * `.js`/`.jsx`/`.ts`/`.tsx`/`.mdx`. Num `require.context`, o issuer de cada
- * arquivo é o módulo de CONTEXTO — um diretório —, então a regra não casa e o
- * SVG cai na regra de asset. O que volta é uma **data URI**, não um componente,
- * e o sintoma é `Invalid tag: data:image/svg+xml;base64,…` no prerender.
- *
- * Registro estático também é o que a decisão de orçamento pediu: os 61 no
- * bundle principal, que é o preço de `icon="rocket"` funcionar sem import
- * dinâmico. A medição que acompanhava esta linha — *"~20 KB crus e ~6 KB
- * gzip"* — era de quando eram 64, e sai em vez de ser ajustada a olho: número
- * medido que se corrige por estimativa deixa de ser medição.
- *
- * Custo aceito: a lista aparece duas vezes — aqui e no manifesto. A bijeção é
- * conferida nos dois sentidos logo abaixo, e o `--conferir` do vendorizador
- * cobre o terceiro lado (arquivo em `static/icons/` sem entrada).
- * ---------------------------------------------------------------------------
- *
- * Procedência: docs/design/icones.md.
+ * Manual imports, not require.context: measured against plugin-svgr@3.10.2,
+ * whose rule matches by issuer file (.js/.jsx/.ts/.tsx/.mdx). require.context's
+ * issuer is the context module itself (a directory), so the rule misses, the
+ * SVG falls to the asset rule, and you get a data URI instead of a component:
+ * `Invalid tag: data:image/svg+xml;base64,...` at prerender.
  */
+
+// This is the first of two renderers. The sidebar renders icons via CSS
+// mask-image in chrome.css instead, since there is no safe swizzle point for
+// a React component in a sidebar item; both read the same icon files.
 
 import {NAMES} from './manifest';
 
@@ -107,6 +74,9 @@ import Puzzle from '@site/static/icons/puzzle.svg';
 import Bot from '@site/static/icons/bot.svg';
 import Webhook from '@site/static/icons/webhook.svg';
 import Bell from '@site/static/icons/bell.svg';
+
+// The registry is static, not dynamic: every icon here ships in the main
+// bundle so `resolveIcon` can return synchronously, without an import().
 
 /** @type {Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>} */
 const DRAWINGS = {
@@ -174,13 +144,13 @@ const DRAWINGS = {
   'bell': Bell,
 };
 
-// ---------------------------------------------------------------------------
-// A bijeção manifesto ↔ registro, conferida alto no build.
+// The manifest/registry bijection, checked at the top of every build.
 //
-// Arquivo faltando já quebra sozinho, no `import`. O que esta conferência pega é
-// o outro lado — entrada de manifesto sem desenho, e desenho sem entrada —, que
-// é onde a duplicação da lista pode envelhecer em silêncio.
-// ---------------------------------------------------------------------------
+// A missing file already fails on its own `import`. This check catches the
+// other direction: a manifest entry with no drawing, or a drawing with no
+// entry, which the duplicated list (here and in the manifest) could
+// otherwise let drift silently. `vendor-icons.mjs --conferir` covers the
+// third side: a file under static/icons/ with no entry anywhere.
 
 const withoutDrawing = NAMES.filter((name) => !DRAWINGS[name]);
 const withoutEntry = Object.keys(DRAWINGS).filter((name) => !NAMES.includes(name));
@@ -198,11 +168,11 @@ if (withoutDrawing.length > 0 || withoutEntry.length > 0) {
 }
 
 /**
- * Levenshtein, escrito à mão.
+ * Levenshtein distance, hand-written.
  *
- * `leven` é dependência transitiva do `@docusaurus/core`, mas amarrar em
- * dependência transitiva é dívida — e estas oito linhas são mais baratas que o
- * risco.
+ * `leven` is a transitive dependency of `@docusaurus/core`, but pinning to a
+ * transitive dependency is debt: these eight lines are cheaper than that
+ * risk.
  *
  * @param {string} a
  * @param {string} b
@@ -227,7 +197,7 @@ function distance(a, b) {
 
 /**
  * @param {string} name
- * @returns {string | undefined} o vizinho mais próximo, se houver um plausível
+ * @returns {string | undefined} the nearest neighbor, if a plausible one exists
  */
 function nearestNeighbor(name) {
   let best;
@@ -239,13 +209,15 @@ function nearestNeighbor(name) {
       best = candidate;
     }
   }
-  // Acima de um terço do comprimento a sugestão vira ruído — melhor não sugerir
-  // do que mandar alguém para o glifo errado.
+  // Past a third of the length, the suggestion turns into noise: better not
+  // to suggest than to send someone to the wrong glyph.
   return smallest <= Math.max(2, Math.ceil(name.length / 3)) ? best : undefined;
 }
 
 /**
- * Devolve o componente do ícone, ou lança.
+ * Unknown names throw instead of degrading silently: Docusaurus prerenders
+ * every page at build time, so this throw is a build failure, not a runtime
+ * one (in `docusaurus start` it surfaces as a React error overlay).
  *
  * @param {string} name
  * @returns {React.ComponentType<React.SVGProps<SVGSVGElement>>}
