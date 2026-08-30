@@ -51,7 +51,7 @@ function withSubtitle({body, description, permalink}) {
     throw new Error(
       `Página sem \`description\`: ${permalink}\n` +
         'O subtítulo do `.md` servido sai desse campo, e ele é obrigatório em ' +
-        'toda página. Ver docs/design/informacao.md §9.2.',
+        'toda página.',
     );
   }
 
@@ -61,8 +61,7 @@ function withSubtitle({body, description, permalink}) {
     throw new Error(
       `Página que não abre com \`# título\`: ${permalink}\n` +
         'O `.md` servido emite o subtítulo como citação abaixo do `h1`, e a ' +
-        'âncora é a primeira linha com texto do corpo. ' +
-        'Ver docs/design/informacao.md §9.2.',
+        'âncora é a primeira linha com texto do corpo.',
     );
   }
 

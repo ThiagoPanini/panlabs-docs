@@ -9,7 +9,7 @@
  * `Ferramentas` passou à frente na faixa, a raiz foi junto: o que se procura
  * mais é o que saiu daqui. A rota nua resolve por `slug: /` na folha de
  * abertura da instância, então trocar qual folha abre a aba não mexe neste
- * arquivo. Ver a `## Procedência` de docs/design/informacao.md.
+ * arquivo.
  *
  * **Três mecanismos, e cada um cobre o que o outro não alcança:**
  *
@@ -27,7 +27,7 @@
  *
  * **`<main>` é obrigatório.** Página de doc ganha um pelo layout; página em
  * `src/pages/` só tem se alguém escrever, e sem ele o skip link cai na reserva e
- * o marco de página fica errado. Ver docs/design/foco.md §9.
+ * o marco de página fica errado.
  *
  * O caminho aparece em duas formas, e não pela mesma razão. **O roteador NÃO
  * tem `basename`** — `<BrowserRouter>` sobe sem ele (`clientEntry.js`), e toda
@@ -39,8 +39,6 @@
  * registrada, caía no catch-all e piscava `NotFound` até o `meta` corrigir. O
  * `meta` também é HTML cru fora do roteador e precisa da mesma resolução — é
  * ela que faz o redirecionamento acertar o `baseUrl` do site.
- *
- * Procedência: docs/design/informacao.md.
  */
 
 import React from 'react';

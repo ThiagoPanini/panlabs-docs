@@ -24,7 +24,7 @@ A **content** convention, never a layout one: no type owns its own CSS, front ma
 A category of the `Jornadas` tab, and **a role the author put on** — not a topic. A role has a beginning, a middle, and a lesson learned, which is what keeps a jornada from turning into a `Procedimentos` category under another name.
 
 **Sweep**:
-The act of checking the `overpower` documentation published here **against the real tool** — its `--help`, its built-in catalog, its `CHANGELOG.md`. Lives in the `.claude/skills/panlabs-overpower-docs-update/` skill.
+The act of checking the `overpower` documentation published here **against the real tool** — its `--help`, its built-in catalog, its `CHANGELOG.md`.
 
 **Drift**:
 The divergence a sweep finds: a page or contract claiming something about the tool that's stopped being true. **Has no local symptom**, nothing in the build detects it.

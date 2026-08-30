@@ -114,7 +114,7 @@ function Title(props) {
     throw new Error(
       `Página sem \`description\` no front matter: ${metadata.source}\n` +
         'O subtítulo abaixo do título sai desse campo, e ele é obrigatório em ' +
-        'toda página. Ver docs/design/chrome.md.',
+        'toda página.',
     );
   }
 
