@@ -120,8 +120,8 @@ function Title(props) {
 
   /* The TITLE ROW has two pieces, and the `<div>` holding them is the one
      new node this adds. It's `flex`, with the button pushed right by
-     `margin-inline-start: auto`, the same anatomy as the anchor, measured:
-     `h1` and the button as siblings, centered against each other.
+     `margin-inline-start: auto`: `h1` and the button as siblings, centered
+     against each other.
 
      Is the subtitle still a sibling of `h1`? No, it's a sibling of the ROW
      instead. The rule that zeroed `h1`'s bottom margin via

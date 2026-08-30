@@ -15,7 +15,7 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | Rule | What it catches |
 | --- | --- |
 | Color and dimension come from `src/css/tokens.css`, the single source of literals. | A new hex, a loose px, or a bare `cubic-bezier` in component CSS. |
-| Zero em dash in `content/`. | Machine-written prose in the published site. |
+| Zero em dash in `content/` and `contracts/`, except when quoting a tool's own output. | Machine-written prose in the published site. |
 | Content voice is `you` plus imperative, zero first person. | A sentence that slips into first person or passive description. |
 | Content components are a closed catalog of sixteen, registered in `@theme/MDXComponents`. There's no escape hatch. | A content file importing its own component instead of changing the page. |
 

@@ -54,7 +54,7 @@
    ============================================================================= */
 
 :root {
-  /* SKIN — what a corporate rebrand edits. Nothing else.
+  /* SKIN — what a rebrand edits. Nothing else.
      Typed with @property: --pd-brand, --pd-radius.
      These two are the swap block's only literal deliveries — an invalid
      paste falls back to the factory value. The other five carry a reference
@@ -115,7 +115,7 @@
   /* ---------------------------------------------------------------------------
      State hues — layer 1, outside the swap block.
 
-     Free for a corporate rebrand: shift the ANGLE within each family. Blue
+     Free for a rebrand: shift the ANGLE within each family. Blue
      stays blue, green stays green. L, C, and the alpha formulas don't move —
      they're what keeps AA over both surfaces at any angle. Editing here is a
      redesign, not a rebrand.
@@ -228,14 +228,13 @@
      Motion — duration scale and named-easing vocabulary. Layer 1, outside
      the swap block.
 
-     Free for a corporate rebrand: no brand manual specifies duration.
+     Free for a rebrand: no brand manual specifies duration.
 
-     The numbers are measured, not chosen: 75ms is the short-turn band,
-     measured on the anchor's sidebar caret — the only movement under a tenth
-     of a second measured on that site; 200ms is the most applied value in
-     the whole sample; 300ms is the large-change band; 500ms is the
-     large-entrance band; 5s is the only ambient loop measured across any of
-     the seven anchors.
+     The numbers are measured, not chosen: 75ms is the short-turn band, a
+     sidebar caret rotation and the only movement under a tenth of a second
+     in the sample; 200ms is the most applied value in it; 300ms is the
+     large-change band; 500ms is the large-entrance band; 5s is the only
+     ambient loop measured across any of the seven sites surveyed.
 
      `--pd-dur-0` is its own stop, not a scale subdivision: 75 isn't 200
      divided by anything. It exists because the caret rotation is the only
@@ -306,7 +305,7 @@
      derived. The honest provenance is its own origin, anchored to a
      standard: 2px is WCAG SC 2.4.13's perimeter threshold, 44px is SC 2.5.5.
 
-     See ADR 4.
+     See DECISIONS.md#the-entry-state-contract.
      --------------------------------------------------------------------------- */
   --pd-focus-width:  2px;
   --pd-focus-offset: 2px;
@@ -320,13 +319,13 @@
      two both deliver 48. Chrome height has no relation to the space scale,
      and deriving it from a coincidence of numbers is the FALSE derivation
      the entry-state block refuses above. Its honest provenance is the same
-     as the rest of this block: measured on the anchor.
+     as the rest of this block: measured.
      --------------------------------------------------------------------------- */
   --pd-container-width: 1120px;  /* both of Infima's container variables receive this */
   --pd-sidebar-width:    288px;
   --pd-navbar-height:     64px;  /* the top's LINE 1, not the whole top */
   --pd-tabs-height:       48px;
-  --pd-toc-width:        304px;  /* matches the anchor */
+  --pd-toc-width:        304px;  /* measured */
   --pd-prose-width:      720px;
 
   /* The FLOOR of a command-panel editable field — the width below which its
@@ -345,19 +344,19 @@
   --pd-field-min:        280px;
 
   /* The CORRIDOR — the distance between the sidebar's right edge and where
-     the text begins, and it existed by ACCIDENT until now.
+     the text begins.
 
-     Measured on the anchor at 1024 and at 1512, and the number is the same
-     at both: it does NOT center the prose in the column — it anchors the
-     text at this distance and hands the remainder to the index side. */
+     Measured at 1024 and at 1512, and the number is the same at both: the
+     prose is NOT centered in the column — it's anchored at this distance,
+     and the remainder goes whole to the index side. */
   --pd-corridor: 43.2px;
 
   /* The header's PAIRED CONTROL — "Copy page" and the menu beside it.
 
-     Both are measured on the anchor, not derived from the scale: 34 isn't a
-     multiple of 4 by rounding accident, it's the height the anchor draws,
-     and 277 is the width of its menu. Deriving either from --pd-space-*
-     would be a coincidence of numbers, not kinship. */
+     Both are measured, not derived from the scale: 34 isn't a multiple of 4
+     by rounding accident, it's the drawn height, and 277 is the menu's
+     width. Deriving either from --pd-space-* would be a coincidence of
+     numbers, not kinship. */
   --pd-copy-height:      34px;
   --pd-copy-menu-width: 277px;
 
@@ -365,13 +364,13 @@
      measured on this machine's Chromium: 15px with `auto`, 10 with `thin`.
 
      It draws nothing. It exists so the sidebar list's breathing room closes
-     on the anchor's number without anyone re-measuring, and it's the one
-     number in this file another browser could contradict — cited once, in
+     on its number without anyone re-measuring, and it's the one number in
+     this file another browser could contradict — cited once, in
      chrome.css. */
   --pd-scrollbar-thin: 10px;
 
-  /* The DUAL symmetric-margin measurements on the anchor (52px at 1512,
-     256px at 1920) only close together with `sidebar + container = 1408`.
+  /* The DUAL symmetric-margin measurements (52px at 1512, 256px at 1920)
+     only close together with `sidebar + container = 1408`.
      `--pd-freeze` below is that sum, and `--pd-container-width` is set so
      the two add up: 288 + 1120 = 1408.
 
@@ -388,7 +387,7 @@
 
   /* The subtitle's LINE-HEIGHT. It exists because without it the subtitle
      would inherit `--pd-leading-prose` (1.75) over 18px = 31.5px, against a
-     28px target measured `exact` on the anchor.
+     28px target measured `exact`.
 
      LENGTH, not ratio, on purpose: 28/18 is 1.5555…, which resolves to
      27.999… and would read red against an `exact` target forever — the same
@@ -434,7 +433,7 @@
 
   /* The shell's side breathing room, on each side. It doubles from 997px —
      the same threshold where the sidebar appears. The 16/32 pair is
-     inherited from the anchor; the point where it switches is not.
+     measured; the point where it switches is this project's own.
 
      What's left for this token: the `<footer>`'s own padding, its
      `.container`'s inset to the doc column (see chrome.css, footer
@@ -449,8 +448,8 @@
 
      The four widths below are each single-consumer, like this one, and none
      derives from the space scale for the same reason `--pd-tabs-height`
-     doesn't: the anchor's measurement has no relation to that scale, and
-     coinciding by accident is exactly the derivation this file refuses. */
+     doesn't: the measurement has no relation to that scale, and coinciding
+     by accident is exactly the derivation this file refuses. */
   --pd-search-height: 60dvh;
   --pd-search-panel-width:      640px;
   --pd-search-panel-top:        54px;
@@ -467,21 +466,20 @@
   /* ---------------------------------------------------------------------------
      Card grid — layer 1, serving the MDX card-group component.
 
-     The floor for a card-group row, derived from the anchor's THREE-COLUMN
-     collapse threshold: its Columns component collapses at 42rem, with a
-     16px gap. Subtracting the two gaps and dividing by three gives the
-     smallest card the anchor allows in a row of three.
+     The floor for a card-group row, derived from a measured THREE-COLUMN
+     collapse threshold: 42rem, with a 16px gap. Subtracting the two gaps and
+     dividing by three gives the smallest card a row of three allows.
 
      With this floor, the card count alone decides layout: zero media query,
      zero container query, zero column prop.
      --------------------------------------------------------------------------- */
-  --pd-card-collapse: 672px;   /* the collapse threshold measured on the anchor's Columns component */
+  --pd-card-collapse: 672px;   /* the measured three-column collapse threshold */
   --pd-card-min: calc((var(--pd-card-collapse) - 2 * var(--pd-space-4)) / 3);
   --pd-card-grid: repeat(auto-fit, minmax(min(var(--pd-card-min), 100%), 1fr));
 }
 
 /* The gutter doubles at this project's single threshold, which is the
-   literal Infima compiles into its own runtime — not the anchor's 1024px:
+   literal Infima compiles into its own runtime — not the measured 1024px:
    two thresholds fighting on the same axis would cost more than fidelity
    buys.
 
@@ -542,8 +540,8 @@
   --pd-text-inverse: oklch(from var(--pd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
 
   /* border — tint at 7%. One formula, two modes, and it reproduces both
-     values measured on the anchor, even though they come from two different
-     mechanisms there. */
+     measured values, even though they come from two different
+     mechanisms. */
   --pd-border-subtle:  rgb(from var(--pd-text-strong) r g b / 7%);
   --pd-border-default: rgb(from var(--pd-text-strong) r g b / 12%);
   --pd-border-strong:  rgb(from var(--pd-text-strong) r g b / 20%);
@@ -629,8 +627,8 @@
      in any block, and without the counterweight the code reads monochrome.
 
      The cyan is FIXED SKIN — layer 2 here, outside the swap surface, the
-     same precedent as the four --pd-hue-*. A corporate rebrand redesigns
-     this; it doesn't re-skin it.
+     same precedent as the four --pd-hue-*. A rebrand redesigns this; it
+     doesn't re-skin it.
      --------------------------------------------------------------------- */
   --pd-code-fg:        var(--pd-text-body);
   --pd-code-parameter: #7FE4E9;   /* oklch(85.9% 0.095 200) — the cyan, the identifier */
@@ -696,8 +694,8 @@
   --pd-state-danger-edge:  rgb(from var(--pd-state-danger)  r g b / 25%);
 
   /* code — light mode's five chromatic roles sit at the same lightness,
-     L 48%, a property the anchor's own pair lacks and the one that holds the
-     floor at 6.29 over the white chip. The two achromatic roles break from
+     L 48%, which is what holds the contrast floor at 6.29 over the white
+     chip. The two achromatic roles break from
      that on purpose: `operator` steps down so it doesn't compete with the
      identifier, and `comment` steps up to recede. */
   --pd-code-fg:        var(--pd-text-body);
@@ -1149,7 +1147,8 @@
    `--ifm-color-primary` and `--ifm-breadcrumb-item-background-active` — the
    accent and the active-item highlight — neutralizing those would erase the
    active state too. Both keep sticking after a tap, and the entry-state
-   contract's `:active` is what gives them a release there. See ADR 4. */
+   contract's `:active` is what gives them a release there.
+   See DECISIONS.md#the-entry-state-contract. */
 @media (hover: none) {
   :root,
   :root[data-theme] {

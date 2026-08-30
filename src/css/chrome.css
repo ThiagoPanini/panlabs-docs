@@ -39,13 +39,12 @@
    the hashed class, and with no `unsafe` swizzle.
    ----------------------------------------------------------------------------- */
 
-/* The side padding matches the anchor's own wrapper rule: `max-width: 1472`,
-   `margin-inline: auto`, `padding-inline: 32`. What's implemented is just
-   the inner half of that — `max-width: 1408`, exactly `1472 − 2 × 32` — and
-   the two forms deliver the SAME number at every width from 1472 up. They
-   only diverge BELOW 1472: the inner form lets the margin fall to zero and
-   the sidebar touches the viewport edge, while the anchor's form holds at
-   32.
+/* The side padding could be written as an outer wrapper — `max-width: 1472`,
+   `margin-inline: auto`, `padding-inline: 32`. What's implemented is the
+   inner half of that — `max-width: 1408`, exactly `1472 − 2 × 32` — and the
+   two forms deliver the SAME number at every width from 1472 up. They only
+   diverge BELOW 1472: the inner form lets the margin fall to zero and the
+   sidebar touches the viewport edge, while the outer form holds at 32.
 
    The freeze doesn't change value: it's still `sidebar + container`, and
    still what the box delivers INSIDE the padding. */
@@ -129,10 +128,9 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
        left over on `<article>` inside a column wider than the prose.
        Between 997 and 1408 the column shrinks to fit the prose, nothing is
        left to divide, and the measured distance is ZERO: the `h1` starts at
-       the same `x` where the sidebar ends. The corridor is now declared, at
-       the anchor's measured number, and `<article>` stops centering — it
-       anchors left and hands the remainder to the index side, which is what
-       the anchor does.
+       the same `x` where the sidebar ends. The corridor is declared instead,
+       and `<article>` stops centering — it anchors left and hands the
+       remainder to the index side.
 
    (2) THE DEAD 25%. `docItemCol` is `max-width: 75% !important` in a hashed
        CSS Module class, and the `!important` isn't beaten without writing
@@ -248,15 +246,14 @@ html.docs-doc-page main > .container > .row > .col.col--3 {
    not `display`, and the TOC stays in the DOM between 997 and 1279 even
    hidden (see §9 and the `.col--3` rule above). The no-media-query default
    is WIDE — `--pd-container-width` for the column. `<article>`'s narrow
-   value isn't `--pd-doc-width`: it's `--pd-prose-width`, 720 — the anchor
-   measures 720.81 with the TOC present. Without a visible TOC, the prose
+   value isn't `--pd-doc-width`: it's `--pd-prose-width`, 720 — measured at
+   720.81 with the TOC present. Without a visible TOC, the prose
    follows the whole column — `--pd-container-width` — and grows there. */
-/* `margin-inline: 0 auto` — anchored left, and the change is one of
-   MECHANISM, not metric. While `auto` applied on both sides, the distance
-   to the sidebar was a division remainder: half the column's leftover,
-   which was 47.6 at 1512 and zero between 997 and 1408. With the corridor
+/* `margin-inline: 0 auto` — anchored left. With `auto` on both sides the
+   distance to the sidebar would be a division remainder: half the column's
+   leftover, 47.6 at 1512 and zero between 997 and 1408. With the corridor
    declared in §1.7 the remainder has an owner — it goes whole to the index
-   side, as on the anchor. */
+   side. */
 html.docs-doc-page main > .container > .row > .col:not(.col--3) :is(article, .pagination-nav) {
   max-width: var(--pd-container-width);
   margin-inline: 0 auto;
@@ -344,9 +341,8 @@ html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6) {
    is larger — would win and the measured indent would never appear.
    Zeroing the h1's margin is what lets the subtitle's margin win.
 
-   Weight and color aren't declared, and that's faithful: on the anchor the
-   subtitle inherits the prose block. What it declares is the body size, the
-   only one that was measured.
+   Weight and color aren't declared: the subtitle inherits the prose block.
+   What it declares is the body size, the only one that was measured.
 
    THE TITLE LINE sits between the two when the "Copy page" control is
    present: the h1 stops being the subtitle's adjacent sibling and becomes a
@@ -389,7 +385,7 @@ html.docs-doc-page .subtitle {
   /* Line-height is DECLARED: without it the subtitle would inherit the
      prose's (1.75) over 18px = 31.5px, against a 28px `exact` target. It's
      the only one of the subtitle's three measures inheritance didn't
-     deliver — weight and color stay undeclared, faithful to the anchor. */
+     deliver — weight and color stay undeclared. */
   line-height: var(--pd-subtitle-line-height);
 }
 
@@ -436,7 +432,7 @@ html.docs-doc-page .subtitle {
      left side, then the whole right) while the strip splits the left side
      into two lines. **Not reachable on this route**, and it's the one place
      in the project where the `unsafe` swizzle budget would come back on the
-     table. See ADR 4;
+     table. See DECISIONS.md#the-entry-state-contract;
    · **the strip's usable width is `.navbar__items`'s, not the viewport's.**
      The background bleeds; the content doesn't;
    · **48px of vertical chrome on every page.**
@@ -564,16 +560,16 @@ html.docs-doc-page .subtitle {
   /* THE TOP ROW LINE — the navbar's second line, and it isn't a variation of
      the first.
 
-     The anchor draws TWO: the bottom one bleeds edge to edge of the
-     viewport (the one `.navbar` already paints, §2) and this one stops
-     exactly where the brand starts and where the last icon ends. Measured
-     on the anchor at 1440: the line runs from 48 to 1392, `logo.left` is 48
-     and the theme toggle's `right` is 1392 — Δ 0 on both edges.
+     TWO lines: the bottom one bleeds edge to edge of the viewport (the one
+     `.navbar` already paints, §2) and this one stops exactly where the brand
+     starts and where the last icon ends. Measured at 1440: the line runs
+     from 48 to 1392, `logo.left` is 48 and the theme toggle's `right` is
+     1392 — Δ 0 on both edges.
 
-     `::before` lives on `.navbar__inner` because that box IS already the
-     identity the anchor calls for, measured here too: at 1512 the inner box
-     runs from 52 to 1460, `.navbar__brand` starts at 52 and the toggle ends
-     at 1460. No new geometry: the height is `--pd-navbar-height`.
+     `::before` lives on `.navbar__inner` because that box IS already that
+     identity, measured here too: at 1512 the inner box runs from 52 to
+     1460, `.navbar__brand` starts at 52 and the toggle ends at 1460. No new
+     geometry: the height is `--pd-navbar-height`.
 
      It's an ABSOLUTE `::before`, not a `border-block-end` on the row,
      because row 1 isn't one element: it's two — `.navbar__brand` and
@@ -581,8 +577,8 @@ html.docs-doc-page .subtitle {
      each would leave a gap between the two segments.
 
      ADDS, doesn't move. Moving the `.navbar` hairline here was tested live:
-     the bottom line shortens 52px on each side at 1512 and stops bleeding —
-     exactly what the anchor is careful to keep.
+     the bottom line shortens 52px on each side at 1512 and stops bleeding,
+     which is the edge-to-edge reading this line exists to keep.
 
      The 997 scope is mandatory for two measured reasons: below the
      threshold the navbar has ONE row and the line has nothing to separate;
@@ -656,7 +652,7 @@ html.docs-doc-page .subtitle {
    3. Sidebar
 
    --pd-sidebar-width, a mute separator at the top, an icon on everything
-   below it, the anchor's indent ramp, and the site's one caret. **None of
+   below it, a measured indent ramp, and the site's one caret. **None of
    this costs a swizzle**: the className is the sidebar item schema's public
    contract, and the rest comes from ThemeClassNames.
 
@@ -855,8 +851,8 @@ html.docs-doc-page .subtitle {
    Infima gives `flex: 1` to `.menu__link` inside the wrapper. The link
    grows to the sidebar's edge and pushes the sibling
    `<button class="menu__caret">` to the right; the caret ends up 200px from
-   the text it governs. On the anchor there are no two elements: the whole
-   row is a single `<button>`, with the chevron right after the label.
+   the text it governs. The reading it should have is one row: the chevron
+   right after the label, not out at the far edge.
 
    The fix moves the row highlight from the link to the WRAPPER and drops
    `flex` from the link. The link measures only its own text, the caret sits
@@ -864,8 +860,8 @@ html.docs-doc-page .subtitle {
    that draws it now is the one that already spanned it.
 
    `:not(...-level-1)` excludes the separator — it's wrapped by the same
-   class and can't receive the highlight, since it isn't a destination (ADR
-   10, consequence 2).
+   class and can't receive the highlight, since it isn't a destination.
+   See DECISIONS.md#a-sidebar-category-is-not-a-destination.
 
    The level appears across five blocks in this section, and the rejected
    alternative: a `className: 'sidebar-separador'` in the sidebars config
@@ -1002,7 +998,7 @@ html.docs-doc-page .subtitle {
    and the separator's bold.
 
    THE NESTED LIST loses Infima's `padding-left`: the indent lives entirely
-   on the link. Copying the anchor's result without copying that decision
+   on the link. Copying the resulting numbers without copying that decision
    produces an indent that looks right and breaks on the second level.
 
    Scoped to `.theme-doc-sidebar-menu`: `.menu__list .menu__list` alone also
@@ -1022,12 +1018,12 @@ html.docs-doc-page .subtitle {
 
    Measured on two other documentation sites: inline `padding-left` per
    level runs 16 · 16 · 28 · 40 · 52 — separator and first level FLUSH, then
-   +12px per step from there (ADR 10 §f).
+   +12px per step from there.
+   See DECISIONS.md#a-sidebar-category-is-not-a-destination.
 
-   Worth stating: leaves in a two-level branch drop from 32px to 16px and
-   land FLUSH with the separator. What separates one branch from its
-   neighbor becomes the separator's bold plus the leaf's icon — the same
-   reading as the anchor.
+   Leaves in a two-level branch drop from 32px to 16px and land FLUSH with
+   the separator. What separates one branch from its neighbor becomes the
+   separator's bold plus the leaf's icon.
 
    Levels 1 and 2 already measure 16px with no rule:
    `--ifm-menu-link-padding-horizontal` is `--pd-space-4`, and Infima applies
@@ -1117,12 +1113,12 @@ aside.theme-doc-sidebar-container {
    it**. Declaring it here takes the bar's width out of a media query this
    project doesn't own.
 
-   THE LIST'S BREATHING ROOM comes from the anchor: measured there, the item
-   ends 32px before the panel's edge, with the bar drawn inside that
-   corridor. Here the gutter comes from the browser and adds on top of the
-   padding — measured: with `padding-right: 32` the list ended 42 from the
-   edge, not 32. The subtraction is what closes the number on the anchor's
-   instead of overshooting it by a width this project didn't choose. */
+   THE LIST'S BREATHING ROOM is 32px: the item ends 32px before the panel's
+   edge, with the bar drawn inside that corridor. The gutter comes from the
+   browser and adds on top of the padding — measured: with
+   `padding-right: 32` the list ended 42 from the edge, not 32. The
+   subtraction is what closes the number on 32 instead of overshooting it by
+   a width this project didn't choose. */
 .theme-doc-sidebar-container .thin-scrollbar {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
@@ -1186,8 +1182,8 @@ html.docs-doc-page .theme-doc-toc-desktop {
 
   /* THE SCROLLER MOVES DOWN TO THE LIST. Upstream puts `overflow-y: auto` on
      this box; with the title entering as ITS pseudo-element, the title
-     would scroll along and disappear on a long TOC — on the anchor it stays
-     outside the scrolling area. `flex` in a column resolves it with no
+     would scroll along and disappear on a long TOC; it has to stay outside
+     the scrolling area. `flex` in a column resolves it with no
      arithmetic: the box keeps the `max-height` above, the title takes what
      it needs, and the list gets the rest. Without `min-height: 0` on the
      child, the flex item refuses to shrink below its content and the
@@ -1206,8 +1202,8 @@ html.docs-doc-page .theme-doc-toc-desktop {
    `currentColor` on a pseudo-element — for the same reason: there's no
    `safe` swizzle point to inject a component there.
 
-   Everything the anchor measures here was already a token in this project,
-   with no exception: the color is `--pd-text-body` in BOTH modes (measured
+   Everything measured here was already a token in this project, with no
+   exception: the color is `--pd-text-body` in BOTH modes (measured
    `#404246` light and `#cfd1d5` dark, exactly what the token resolves to),
    the body is `--pd-type-sm`, the weight is `--pd-weight-ui`, and the icon
    gap is `--pd-space-2`. Zero new value.
@@ -1217,8 +1213,8 @@ html.docs-doc-page .theme-doc-toc-desktop {
    box's edge — 12 from the `<ul>`'s `padding-left` plus 12 from the
    `<li>`'s `margin`, both Infima's. And icon (`--pd-space-4`) plus gap
    (`--pd-space-2`) give the same number. That's why the title aligns with
-   the items' text AND the icon touches the box's edge, as on the anchor,
-   with neither side needing to give. */
+   the items' text AND the icon touches the box's edge, with neither side
+   needing to give. */
 html.docs-doc-page .theme-doc-toc-desktop::before {
   content: 'Nesta página';
   display: block;
@@ -1293,7 +1289,7 @@ html.docs-doc-page .theme-doc-toc-desktop .table-of-contents {
   border-left: none;
 }
 
-/* THE TOC'S OWN THRESHOLD — 1280, the point where the anchor hides it.
+/* THE TOC'S OWN THRESHOLD — 1280, measured, and not Infima's 997.
    Hidden by default, revealed only from there: the gate's literal is ONE
    number (1280), not two — there's no `max-width: 1279px` anywhere in this
    file, only this `min-width`.
@@ -1332,8 +1328,8 @@ html.docs-doc-page main > .container > .row > .col--3 {
    5. The eyebrow — a breadcrumb BY SUBTRACTION
 
    Hiding the home item, the active item, and the separator that's left over
-   leaves exactly the category name — already sitting where the anchor's
-   eyebrow sits, above the title. All Infima classes, rung 1, zero swizzle,
+   leaves exactly the category name — already sitting where an eyebrow sits,
+   above the title. All Infima classes, rung 1, zero swizzle,
    zero new DOM node.
 
    `BreadcrumbsStructuredData` still emits intact: it's a
@@ -1370,7 +1366,7 @@ html.docs-doc-page .breadcrumbs__item:nth-last-child(2)::after {
 
 /* What's left stops reading as a pill and reads as an eyebrow instead: no
    padding, no fill highlight, larger body, strong weight, in the accent
-   color — the anchor's own reading.
+   color.
 
    `font-size` IS NECESSARY here, not redundant with `.theme-doc-breadcrumbs`
    two rules up: Infima declares `.breadcrumbs__link { font-size: calc(1rem

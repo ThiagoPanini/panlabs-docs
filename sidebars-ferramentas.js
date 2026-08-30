@@ -17,13 +17,12 @@ const sidebars = {
   tools: [
     {
       // Top-level separator: mute label that only groups, `collapsible:
-      // false` and no `link`. Measured against the anchor site's DOM: its
-      // top node is a plain heading, no link, no caret, and the reference
-      // theme's own docs say top-level groups always expand and can't
-      // collapse. Making this level a clickable "destination" was an
-      // unmeasured opinion the render never bore out. The four nodes at
-      // this level all work this way; only `overpower`'s branch, two
-      // levels down, actually collapses.
+      // false` and no `link`. A top node is a plain heading — no link, no
+      // caret — and a clickable "destination" at this level erases the
+      // difference between grouping and going somewhere. The four nodes at
+      // this level all work this way; only `overpower`'s branch, two levels
+      // down, actually collapses.
+      // See DECISIONS.md#a-sidebar-category-is-not-a-destination.
       type: 'category',
       label: 'Bibliotecas',
       collapsible: false,

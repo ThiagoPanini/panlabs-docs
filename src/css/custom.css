@@ -2,7 +2,8 @@
    panlabs-docs — base rules
 
    No literal value lives here. Color, length, duration, and curve live in
-   `tokens.css` and arrive by name. See ADR 1.
+   `tokens.css` and arrive by name.
+   See DECISIONS.md#css-in-three-layers-one-source-of-literals.
    ============================================================================= */
 
 /* And it never reads `--ifm-*`. The one-way adapter writes to those
@@ -11,18 +12,15 @@
 /* -----------------------------------------------------------------------------
    Self-hosted fonts
 
-   Inter and Paper Mono, variable, OFL, served from the project's own domain
-   — the same typography as the anchor. Zero CDN: the target corporate
-   environment has a CSP, and an external request runs into it. Self-hosting
-   costs the same as a CDN (zero npm dependency), so there's no trade to
-   make.
+   Inter and Paper Mono, variable, OFL, served from the project's own domain.
+   Zero CDN: a face that arrives from a third party is a request a strict CSP
+   blocks, and self-hosting costs the same (zero npm dependency), so there's
+   no trade to make.
 
-   TWO FILES, not fifteen. Devin serves 14 faces of Inter, and that count is
-   a per-script subset for global traffic — Cyrillic, Greek, Vietnamese.
-   That's a multi-tenant decision, and the target corporate environment
-   doesn't have that problem: copying the count would mean inheriting a
-   constraint that isn't ours, the same argument already written for the
-   parts contract.
+   TWO FILES, not fifteen. A per-script subset — Cyrillic, Greek, Vietnamese
+   — is a multi-tenant decision, and this site serves one language: shipping
+   the faces nobody renders would be inheriting a constraint that isn't ours,
+   the same argument already written for the parts contract.
 
    The path starts at `/` and still survives a `baseUrl` under a subpath:
    Docusaurus's webpack registers `staticDirectories`'s directories in
@@ -58,9 +56,8 @@
 html {
   scroll-behavior: auto;
 
-  /* Inter's four character variants, ligated globally. Inherited by direct
-     measurement: it's verbatim in the CSS the anchor serves, and it's a
-     good part of why its text doesn't look like default Inter.
+  /* Inter's four character variants, ligated globally: they're a good part
+     of why the text doesn't look like default Inter.
 
      It lives here and not in `tokens.css` because it isn't a value — it's a
      font switch, and the one line of typography that isn't a token. With a
@@ -68,8 +65,7 @@ html {
      only makes sense after the family swap.
 
      Named loss: `cv02`/`cv03`/`cv04` touch lowercase `a`, `g`, and `l`, and
-     nobody has evaluated their effect in pt-BR — the anchor's corpus is
-     English. */
+     nobody has evaluated their effect in pt-BR. */
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
@@ -183,5 +179,5 @@ samp {
    somewhere, the published site has no visible focus at all. The whole
    contract lives in `src/css/focus.css`, together with press and the
    touch-target floor — the two halves of the same mechanism, in the same
-   place. See ADR 4.
+   place. See DECISIONS.md#the-entry-state-contract.
    ----------------------------------------------------------------------------- */

@@ -14,7 +14,7 @@ Uma decisão grande demais para uma sessão vira **mapa** de wayfinding, resolvi
 
 **Uma coisa: `npm run build`.** É o único passo da CI, e é o que o check `gate` reporta.
 
-Não há portão, régua, varredura nem hook de commit — eles existiram, e saíram. O que sobrou de regra de escrita está em prosa no `CLAUDE.md`, sem cobrança automática, e é por isso que precisa estar escrito.
+Não há portão, régua, varredura nem hook de commit — eles existiram, e saíram. O que sobrou de regra de escrita está em prosa no `AGENTS.md` e nas regras em `.claude/rules/`, sem cobrança automática, e é por isso que precisa estar escrito.
 
 O build é o que pega link quebrado: `onBrokenLinks: 'throw'` não roda em `docusaurus start`, que devolve 200 com o shell da SPA para qualquer rota.
 

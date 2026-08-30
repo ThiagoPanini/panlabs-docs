@@ -10,32 +10,29 @@
    pair) and four single-consumer measurements: `--pd-search-panel-width`,
    `--pd-search-panel-top`, `--pd-search-control-width`, and
    `--pd-search-control-height`. NONE of them derive from the space scale —
-   they're the anchor's own measurement, and deriving from a coincidence of
-   number is the false derivation this project refuses in writing.
+   each is measured on its own, and deriving from a coincidence of number is
+   the false derivation this project refuses in writing.
 
-   THE PANEL'S WIDTH no longer cites `--pd-prose-width` by name — that
-   citation doesn't hold up. It was true only while the panel opened at
-   whatever width the reader was reading; the anchor measures a fixed,
-   centered 640px, and 640 isn't 720 — citing `--pd-prose-width` would have
-   turned into a coincidence of numbers, not real kinship.
-   `--pd-search-panel-width` is the new measurement, on its own. */
+   THE PANEL'S WIDTH does not cite `--pd-prose-width`. The panel is a fixed,
+   centered 640px and the prose column is 720px: citing the token would be a
+   coincidence of numbers, not kinship. `--pd-search-panel-width` carries the
+   measurement on its own. */
 
 /* ZERO `outline` DECLARATION in this file. The entry-state contract
    (focus.css) is universal, and the button, the field, and the × all
    inherit `:focus-visible` for free — there's no exception to ask for here. */
 
 /* -----------------------------------------------------------------------------
-   The trigger — a BUTTON, not a field. What changed is the READING, not the
+   The trigger — a BUTTON, not a field. What differs is the READING, not the
    element.
 
-   The anchor, and three of its four references, open a modal; an `<input>`
-   in the navbar that doesn't accept typing is a control that lies about what
-   it does. The button says *this opens something else*, which is what
-   actually happens — that hasn't changed.
+   It opens a modal, and an `<input>` in the navbar that doesn't accept
+   typing is a control that lies about what it does. The button says *this
+   opens something else*, which is what actually happens.
 
-   What changed is only the skin: above 997px it now READS as a field — a
-   ring, a larger radius, a box the anchor's own size, centered on line 1 —
-   without stopping to BE a button. Honesty is about the contract with the
+   Only the skin differs: above 997px it READS as a field — a ring, a larger
+   radius, a box centered on line 1 — without stopping to BE a button.
+   Honesty is about the contract with the
    keyboard and the screen reader, not about pixels; a `<button>` painted to
    look like a field is still announced as "button," still activates on
    Enter/Space, and that's exactly why it can dress as a field without lying
@@ -62,10 +59,10 @@
   transition: color var(--pd-move-state), border-color var(--pd-move-state);
 }
 
-/* The ring changes on hover — the anchor reinforces the same ring, it
-   doesn't paint a background. Under `(hover: hover)` because the
-   entry-state contract (ADR 4) doesn't allow hover outside its guard:
-   without it, touch would stick the state until the finger taps elsewhere. */
+/* The ring changes on hover: it reinforces, it doesn't paint a background.
+   Under `(hover: hover)` because the entry-state contract doesn't allow
+   hover outside its guard — without it, touch would stick the state until
+   the finger taps elsewhere. See DECISIONS.md#the-entry-state-contract. */
 @media (hover: hover) {
   .button:hover {
     color: var(--pd-text-strong);
@@ -337,13 +334,12 @@
   overflow: hidden;
 }
 
-/* The highlight has COLOR — the anchor colors it in accent on top of
-   bolding, and the background stays `none`: two accents on the same pixel
-   only clash if both are BACKGROUND. That's exactly why the active row
-   stopped being `--pd-surface-wash` (see `.option[aria-selected]` above) —
-   its background is neutral now, so the accented `<mark>` never lands on
-   accent. The element stays `<mark>` because it's the one that carries the
-   meaning. */
+/* The highlight has COLOR: accent on top of bolding, and the background
+   stays `none`. Two accents on the same pixel only clash if both are
+   BACKGROUND, which is why the active row isn't `--pd-surface-wash` (see
+   `.option[aria-selected]` above) — its background is neutral, so the
+   accented `<mark>` never lands on accent. The element is `<mark>` because
+   it's the one that carries the meaning. */
 .option mark {
   background: none;
   color: var(--pd-accent);

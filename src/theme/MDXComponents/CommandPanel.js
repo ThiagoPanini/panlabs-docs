@@ -60,7 +60,7 @@ export default function CommandPanel() {
   if (!examples) {
     throw new Error(
       '`<CommandPanel />` numa página sem `api_exemplos` no front matter. ' +
-        'A página de comando é gerada por `npm run gerar:referencia`, e o corpo não se edita à mão.',
+        'A página de comando é gerada por `npm run generate:reference`, e o corpo não se edita à mão.',
     );
   }
 
