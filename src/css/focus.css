@@ -126,8 +126,8 @@ main:focus-visible,
        targeted the button, and the all lives on the children.
 
    And `.theme-doc-card-container` DOESN'T EXIST on this site — zero
-   occurrences across the 108 published HTML pages. The `DocCard/Layout`
-   the old wording cited isn't rendered by any route here.
+   occurrences across the 108 published HTML pages. `DocCard/Layout`, the
+   component that would render it, isn't rendered by any route here.
 
    THE THIRD DEFECT WAS THE SELECTOR, and it's the expensive one: bare
    `.theme-back-to-top-button` is (0,1,0), the same weight as the hashed

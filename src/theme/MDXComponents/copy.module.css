@@ -99,8 +99,8 @@
 
 /* The icon manifest doesn't vendor a `chevron-down` — it has
    `chevron-right`, which already serves Accordion's caret and the sidebar
-   category's. Rotating the same drawing avoids a twenty-first glyph in
-   icons.md's budget for an arrow that only changes axis. */
+   category's. Rotating the same drawing avoids adding a twenty-first glyph
+   to the icon set for an arrow that only changes axis. */
 .more svg {
   transform: rotate(90deg);
 }

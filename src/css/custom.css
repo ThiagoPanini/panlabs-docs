@@ -135,23 +135,15 @@ samp {
    here: what lives in the consuming module is the RULE, not the movement's
    design, and containment stays intact.
 
-   There's ONE, and it's the search modal's entrance. There used to be four:
-   the other three — the showcase island's entrance, the glow's breathing,
-   and the scroll reveal — left with the landing page, since they were only
-   consumed by its CSS Module.
-
-   The breathing didn't go orphaned, it went BROKEN: it read
-   `--pd-glow-trough` and `--pd-glow-crest`, and both left along with layer
-   3's `[data-pd-showcase]` rule. Keeping it would be a `@keyframes`
-   animating toward an undefined `opacity`. The motion tokens that named
-   them — `--pd-move-showcase`, `--pd-move-reveal`, `--pd-move-ambient` —
-   stay declared in `tokens.css`, and the reason sits next to them: motion's
+   There's ONE: the search modal's entrance, `--pd-move-enter`. The motion
+   tokens `--pd-move-showcase`, `--pd-move-reveal`, and `--pd-move-ambient`
+   stay declared in `tokens.css` with no consuming `@keyframes` — motion's
    vocabulary is a closed list, and a keyframe is implementation while a
    token is vocabulary.
 
-   None of them hardcodes a duration or curve: whichever rule consumes them
-   picks that, by movement name. And none animates `filter` or `blur`,
-   which repaint instead of composite. See DECISIONS.md#movement-lives-in-the-token-layer.
+   It doesn't hardcode a duration or curve: the rule that consumes it picks
+   that, by movement name. And it doesn't animate `filter` or `blur`, which
+   repaint instead of composite. See DECISIONS.md#movement-lives-in-the-token-layer.
 
    ---------------------------------------------------------------------------
    TWO CONSUMPTION RULES, and both are build-only findings — their symptom
@@ -185,23 +177,11 @@ samp {
 }
 
 /* -----------------------------------------------------------------------------
-   Focus — moved to another file, and stays there
+   Focus lives in another file
 
-   A first pass wrote a ring floor here, because Infima has ZERO
-   `:focus-visible` in the whole framework and without some rule the
-   published site would have no visible focus at all. The whole contract now
-   lives in `src/css/focus.css`, together with press and the touch-target
-   floor — the two halves of the same mechanism, in the same place. See
-   ADR 4.
-
-   Two fixes came with the move, worth recording:
-
-   · the width used to be `calc(var(--pd-space-1) / 2)`. It came out to 2px
-     and passed any scan, but it was a **false derivation** — ring width has
-     no relation to the space scale. It became a literal declared in
-     `tokens.css`, with its honest provenance written beside it;
-   · the rule was universal and lacked the three exceptions
-     `theme-common`'s `programmaticFocus` requires. Without them, the site
-     drew an accent line crossing the top of the page on every sidebar
-     click.
+   Infima ships ZERO `:focus-visible` in the whole framework; without a rule
+   somewhere, the published site has no visible focus at all. The whole
+   contract lives in `src/css/focus.css`, together with press and the
+   touch-target floor — the two halves of the same mechanism, in the same
+   place. See ADR 4.
    ----------------------------------------------------------------------------- */

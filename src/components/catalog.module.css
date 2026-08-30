@@ -181,12 +181,9 @@
   margin-block: var(--pd-space-6);
 }
 
-/* A border, not a surface — and the justification CHANGED when the card
-   died, for the better. It used to be systemic: *"the doc card is already
-   the screen's one elevated surface"*, and that argument died with the
-   card. The conclusion survives by direct measurement, which is stronger:
-   on the anchor the card is 1px of `gray-950/10` in light and `white/10` in
-   dark, with no shadow and no fill. */
+/* A border, not a surface — measured directly, not derived from a systemic
+   argument: on the anchor the card is 1px of `gray-950/10` in light and
+   `white/10` in dark, with no shadow and no fill. */
 .card {
   display: flex;
   flex-direction: column;
@@ -609,11 +606,9 @@ a.card:active {
   margin-block-start: var(--pd-space-2);
 }
 
-/* `deprecated` stays strikethrough plus faded text, and NO color — the
-   conclusion didn't change, the justification was replaced. It used to be
-   *don't split amber with `PUT`*; today it's that red now belongs to the
-   required chip, and a second meaning over the same hue, on the same line
-   of the same field, is ambiguity. */
+/* `deprecated` stays strikethrough plus faded text, and NO color: red
+   belongs to the required chip, and a second meaning over the same hue, on
+   the same line of the same field, is ambiguity. */
 .fieldDeprecated > .fieldHead > code {
   color: var(--pd-text-muted);
   text-decoration: line-through;

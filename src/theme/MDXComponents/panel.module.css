@@ -10,14 +10,6 @@
    focus.css alone, and no exception is needed here: `:focus-visible` is
    already universal, and the panel's `<input>` inherits it for free. */
 
-/* **What left here, and what leaving bought.** This file used to be
-   `src/theme/ApiDocItem/estilos.module.css` and carried, besides the panel,
-   the whole page's two-column grid: `.grade` in a `row` from 997px,
-   `.colunaProsa` locked at 577, and `.colunaPainel` stuck with `max-height`
-   and `overflow-y`. All four left together when the panel moved down into
-   flow, and with them the `577 + 32 + 511 = 1120` arithmetic that denied the
-   TOC column. The command page now measures the same as any doc page. */
-
 /* -----------------------------------------------------------------------------
    The panel — the only elevated surface in any page's body.
 
