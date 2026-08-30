@@ -1,90 +1,65 @@
 /* =============================================================================
-   panlabs-docs — tokens
+   panlabs-docs — design tokens
 
-   Este é o ÚNICO arquivo do repositório com valor literal. Cor, comprimento,
-   tempo e curva nascem aqui e em nenhum outro lugar; o portão 1 reprova qualquer
-   um dos quatro fora daqui (`npm run portao:1`).
-
-   Três camadas, e o nome diz de que camada é:
-
-     1 — raiz         --pd-<coisa> · --pd-<escala>-<degrau>
-                      o único lugar com literal. Duas regiões: o bloco de troca
-                      delimitado por SKIN … /SKIN (o que o corporativo edita) e a
-                      base (escalas e a forma da rampa).
-     2 — semântica    --pd-<papel>-<qualificador>, papel de LISTA FECHADA de oito:
-                      surface · text · border · accent · shadow · focus · state · code
-                      Só cor. É o ÚNICO ponto do sistema onde os modos divergem.
-     3 — componente   --pd-<componente>-<parte>, declarada no escopo do componente
-                      e nunca em :root.
-
-   Cor sempre desce pela camada 2. Dimensão vem direto da camada 1.
-
-   O Infima fica do outro lado de um adaptador de MÃO ÚNICA (fim do arquivo):
-   o adaptador escreve --ifm-*, e nenhuma regra do projeto lê --ifm-*.
-
-   Procedência das decisões: docs/design/tokens.md.
-   Doutrina de CSS (por que :root[data-theme='light'] e por que @layer está fora):
-   docs/adr/0001-doutrina-de-css.md.
+   The only file with a literal color, length, duration, or curve. Color
+   flows down through the semantic layer; length comes straight from root.
+   The Infima bridge is one-way, at the end of this file: it writes --ifm-*,
+   and nothing here reads it back.
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   @property — as duas raízes registráveis do bloco de troca
+   @property — the swap block's two registrable roots
 
-   Propriedade registrada com valor inválido cai para o initial-value, não para
-   `unset`. Colagem errada degrada para o valor entregue de fábrica em vez de
-   apagar fundos em silêncio.
+   A registered custom property with an invalid value falls back to its
+   initial-value, not to `unset`. A bad paste degrades to the factory value
+   instead of silently erasing whatever the property feeds.
 
-   Registra-se exatamente as linhas do bloco de troca cuja entrega é literal E
-   computacionalmente independente — é o que `initial-value` sabe expressar.
-   As outras cinco entregam referência (`var()`, `oklch(from …)`) ou pilha de
-   fonte, e `initial-value` não aceita nenhuma das duas.
-
-   (As duas contagens acima diziam TRÊS e SETE, contra um bloco de troca de
-   sete linhas com duas registradas. O comentário do bloco SKIN, no `:root`
-   abaixo, sempre disse *"as duas linhas"* e *"as outras cinco"* — eram os
-   números daqui que estavam soltos. Contagem em comentário não tem portão,
-   e é por isso que ela vale a errata em vez da reescrita silenciosa.)
+   Only the two swap-block lines whose value is literal AND computationally
+   independent get registered — that's what `initial-value` can express. The
+   other five carry a reference (`var()`, `oklch(from …)`) or a font stack,
+   and `initial-value` can't express either.
 
    ---------------------------------------------------------------------------
-   A TIPAGEM `<color>` DE --pd-brand É CARGA ESTRUTURAL, NÃO DECORAÇÃO.
+   --pd-brand's `<color>` TYPING IS STRUCTURAL, NOT DECORATIVE.
 
-   E o mecanismo é mais estreito do que a leitura fácil sugere. Medido em
-   Chrome 148, arquivo a arquivo:
+   And the mechanism is narrower than it first reads. Measured in Chrome 148,
+   file by file:
 
-     · SEM o registro e com marca VÁLIDA, a cadeia
-       `brand → on-dark → accent → text-inverse` resolve inteira e byte a byte
-       igual. Custom property não registrada é token stream, e o texto
-       `oklch(from … )` aninhado é CSS legal — a substituição atravessa;
-     · SEM o registro e com marca INVÁLIDA, a cadeia inteira cai de uma vez:
-       marca, as onze paradas da rampa, os dois acentos, TODA superfície e o
-       rótulo do botão primário viram a cor herdada. Sem aviso, sem erro;
-     · COM o registro e com marca inválida, tudo isso cai para o `initial-value`
-       desta linha e o site continua de pé, numa skin de fábrica.
+     · WITHOUT registration and a VALID brand, the chain
+       `brand → on-dark → accent → text-inverse` resolves whole, byte for
+       byte. An unregistered custom property is a token stream, and nested
+       `oklch(from …)` is legal CSS — the substitution goes through;
+     · WITHOUT registration and an INVALID brand, the whole chain drops at
+       once: brand, all eleven ramp stops, both accents, every surface, and
+       the primary button's label fall back to the inherited color. No
+       warning, no error;
+     · WITH registration and an invalid brand, all of that falls to this
+       line's initial-value instead, and the site stays up in a factory skin.
 
-   Ou seja: o que a tipagem compra não é a cadeia funcionar — é ela **não
-   evaporar inteira** na única edição que a superfície de troca convida a fazer.
-   O raio de dano de uma linha errada é o site inteiro, e este registro é o que
-   o contém.
+   What the typing buys isn't the chain working — it's the chain not
+   evaporating whole on the one edit the swap surface invites. A single bad
+   line's blast radius is the entire site, and this registration is what
+   contains it.
 
-   Consequência para quem edita: tirar esta linha não é aliviar tipagem. É
-   trocar uma skin de fábrica por uma página sem cor nenhuma no dia em que
-   alguém colar um valor torto.
+   Consequence for whoever edits this: removing the line doesn't lighten the
+   typing. It trades a factory skin for a page with no color at all, on the
+   day someone pastes a bad value.
    --------------------------------------------------------------------------- */
 
 @property --pd-brand  { syntax: '<color>';  inherits: true; initial-value: #BC461D; }
 @property --pd-radius { syntax: '<length>'; inherits: true; initial-value: 16px; }
 
 /* =============================================================================
-   CAMADA 1 — raiz
+   LAYER 1 — root
    ============================================================================= */
 
 :root {
-  /* SKIN — o que o corporativo edita para re-marcar. Nada além disto.
-     Tipadas com @property: --pd-brand, --pd-radius.
-     São as duas linhas cuja entrega é literal — colagem inválida nelas cai no valor
-     de fábrica. As outras cinco entregam referência ou pilha de fonte, que
-     initial-value não sabe expressar: colagem inválida ali apaga o que a linha
-     alimenta, à vista. */
+  /* SKIN — what a corporate rebrand edits. Nothing else.
+     Typed with @property: --pd-brand, --pd-radius.
+     These two are the swap block's only literal deliveries — an invalid
+     paste falls back to the factory value. The other five carry a reference
+     or a font stack, which initial-value can't express: an invalid paste
+     erases what the line feeds, visibly. */
   --pd-brand:          #BC461D;
   --pd-brand-on-dark:  oklch(from var(--pd-brand) max(l, 0.72) c h);
   --pd-brand-on-light: oklch(from var(--pd-brand) min(l, 0.50) c h);
@@ -94,51 +69,36 @@
   --pd-radius:         16px;
   /* /SKIN */
 
-  /* O `L` do hex da marca é INERTE: as duas travas de acento reescrevem `L` e
-     consomem só `c` e `h` (`max(l, 0.72)` e `min(l, 0.50)`). Dois hexes do
-     mesmo matiz e cromaticidade produzem os dois acentos byte a byte
-     idênticos — só o ÂNGULO do matiz importa.
+  /* The brand hex's `L` is INERT: both accent locks rewrite `L` and consume
+     only `c` and `h` (`max(l, 0.72)` and `min(l, 0.50)`). Two hexes of the
+     same hue and chroma produce byte-identical accents — only the hue ANGLE
+     matters.
 
-     A rampa NÃO lê `--pd-brand` mais. Issue #95: a tinta que ela herdava da
-     marca era mecanismo copiado de onde ele não se aplica — a âncora não
-     pinta superfície com a rampa tingida, pinta com um cinza neutro à parte
-     (ver o bloco `--pd-neutral-*`, abaixo). `--pd-brand-tint` e o pin
-     `c × tint = 0,0120` que o mantinham não têm mais o que travar, e saíram
-     do sistema. Ver docs/design/tokens.md §5. */
+     The gray ramp doesn't read --pd-brand: it's measured neutral gray, kept
+     separate from any brand tint (see the --pd-neutral-* block below). */
 
   /* ---------------------------------------------------------------------------
-     Cinza neutro puro — o chão, fora da rampa
+     Pure neutral gray — the floor, outside the ramp
 
-     A superfície de página, nos dois modos, e a elevada no claro não são
-     parada de rampa nenhuma: são cinza neutro medido direto na âncora
-     (issue #95). A elevada no escuro não tem literal próprio aqui — ela
-     referencia a própria página, porque a âncora eleva cartão por borda, não
-     por fundo (ver o bloco escuro, mais abaixo).
+     Page surface in both modes, and light-mode raised, aren't ramp stops:
+     they're neutral gray, measured directly. Dark-mode raised has no literal
+     of its own — it references the page, because raised elevates by border,
+     not by fill (see the dark block, further below).
      --------------------------------------------------------------------------- */
   --pd-neutral-page-dark:    #141414;
   --pd-neutral-page-light:   #FCFCFC;
   --pd-neutral-raised-light: #FFFFFF;
 
   /* ---------------------------------------------------------------------------
-     A rampa de onze cinzas — medida na âncora, fria, e não deriva de nada
+     The eleven-stop gray ramp — measured directly, and derived from nothing
 
-     Até a issue #95, as onze paradas eram tingidas pelo matiz da marca. Agora
-     valem os hex medidos na âncora, fixos qualquer que seja `--pd-brand`: a
-     FORMA da rampa continua geometria herdada, só que por valor copiado em
-     vez de fórmula reaplicada — trocar a marca não move mais nenhum neutro do
-     sistema.
+     Fixed hex values, the same whatever --pd-brand is: changing the brand no
+     longer moves a single neutral in the system.
 
-     A rampa é declarada INTEIRA, e hoje TRÊS paradas estão sem consumidor: a
-     100, a 200 e a 800. Eram declaradas como "só a 200" aqui, e a contagem
-     nasceu errada no próprio commit que a escreveu — a issue #95, que
-     desacoplou a rampa da marca, é onde `git log -S` põe a perda dos
-     consumidores da 100 e da 800. Nenhuma CI tinha como ver: órfão não quebra
-     build.
-
-     As três ficam pelo mesmo argumento que sustenta a família de `-edge` mais
-     abaixo: uma rampa de onze com buraco no meio é pior de ler do que a parada
-     a mais. Parada é geometria, não consumidor — e o argumento não muda com o
-     número de buracos.
+     The ramp is declared WHOLE, and three stops — 100, 200, 800 — currently
+     have no consumer. No CI can see an orphan custom property; a ramp with a
+     hole in the middle reads worse than the extra stop, and that argument
+     doesn't change with the number of holes.
      --------------------------------------------------------------------------- */
   --pd-gray-50:  #F4F6FA;
   --pd-gray-100: #EFF1F5;
@@ -153,21 +113,20 @@
   --pd-gray-950: #0B0D11;
 
   /* ---------------------------------------------------------------------------
-     Matizes de estado — camada 1, fora do bloco de troca.
+     State hues — layer 1, outside the swap block.
 
-     Livre — skin corporativa (redesenho): move-se o ÂNGULO, dentro da família.
-     Azul continua azul, verde continua verde. Não se movem L, C, nem as fórmulas
-     de alfa — são elas que garantem AA sobre as duas superfícies em qualquer
-     ângulo. Editar aqui é redesenhar, não re-marcar.
+     Free for a corporate rebrand: shift the ANGLE within each family. Blue
+     stays blue, green stays green. L, C, and the alpha formulas don't move —
+     they're what keeps AA over both surfaces at any angle. Editing here is a
+     redesign, not a rebrand.
 
-     São literais porque não há raiz no sistema de onde derivar um verde a partir
-     de uma marca fúcsia.
+     Literal because the system has no root from which to derive a green out
+     of a fuchsia brand.
 
-     Medidos contra a âncora (issue #83): ícone dos callouts `Note`/`Warning`/
-     `Tip`/`Danger` em mintlify.com/docs, convertido de sRGB para o H de OKLCH.
-     `success` (151,3°) e `danger` (26,9°) já batiam com o ângulo anterior a
-     menos de 1,5° — ficaram como estavam. `info` (265,6°) e `warn` (61,9°)
-     divergiam ~20°; os dois passam a ser o ângulo medido.
+     Measured against mintlify.com/docs: the Note/Warning/Tip/Danger callout
+     icons, converted from sRGB to OKLCH's H. success (151.3°) and danger
+     (26.9°) already matched the prior angle within 1.5° and stayed; info
+     (265.6°) and warn (61.9°) diverged ~20° and now use the measured angle.
      --------------------------------------------------------------------------- */
   --pd-hue-info:    266;
   --pd-hue-success: 150;
@@ -175,79 +134,63 @@
   --pd-hue-danger:   27;
 
   /* ---------------------------------------------------------------------------
-     Tipografia — camada 1. Os degraus levam o nome do alvo (text-xs … text-4xl)
-     para a procedência ficar legível no próprio token.
+     Typography — layer 1. Steps are named for their target (text-xs …
+     text-4xl) so provenance stays legible at the token itself.
 
-     NÃO HÁ DEGRAU DE DISPLAY, e a escala termina no `4xl`. Ela já terminou no
-     `4xl` uma vez: o `5xl` saiu quando o título do hero passou a caber numa
-     linha em 60, e a lápide dele dizia que deixá-lo declarado seria variável sem
-     consumidor — o defeito do Infima que este arquivo nomeia para não copiar.
-
-     O `6xl` SAIU AGORA, pela mesma régua e pelo motivo inverso: ele tinha um
-     consumidor no site inteiro — o título do hero da landing, de 997px —, e a
-     landing saiu. Ver docs/design/README.md §5.1 e a issue #94.
-
-     A régua que decide isto está em docs/design/README.md, no fecho da
-     varredura: o que se remove é órfão SEM MOTIVO, não órfão. `--pd-gray-200`
-     fica porque é parada de uma rampa declarada inteira, e rampa com buraco é
-     pior de ler; `--pd-state-danger-edge` fica porque família de quatro não tem
-     buraco no meio. (O exemplo daqui ERA `--pd-toc-width`, e ele deixou de
-     servir: a #96 lhe deu três consumidores — ver o bloco de chrome abaixo.
-     Órfão que ganha consumidor sai da lista.) Um degrau de display não é elo de
-     nada — ele já saltava o `5xl`
-     por não ter o que preencher no meio —, então sem o hero não sobra motivo, e
-     manter o `6xl` repetiria exatamente o defeito que matou o `5xl`.
-
-     Consequência declarada: o degrau de display do projeto foi decidido três
-     vezes, com três respostas — 48, 60, e nenhum.
+     NO DISPLAY STEP: the scale tops out at 4xl. A step declared with no
+     consumer is the Infima defect this project names and refuses to copy —
+     that holds even for a step that once had one.
      --------------------------------------------------------------------------- */
   --pd-type-xs:    12px;
-  --pd-type-sm:    14px;    /* densidade de UI — o número mais unânime da amostra */
-  --pd-type-base:  16px;    /* prosa */
+  --pd-type-sm:    14px;    /* UI density — the most consistent number across the sample */
+  --pd-type-base:  16px;    /* prose */
   --pd-type-lg:    18px;
   --pd-type-xl:    20px;
   --pd-type-2xl:   24px;
-  --pd-type-3xl:   30px;    /* título de página, até 996px */
-  --pd-type-4xl:   36px;    /* título de página, de 997px — o topo da escala */
+  --pd-type-3xl:   30px;    /* page title, up to 996px */
+  --pd-type-4xl:   36px;    /* page title, from 997px — the top of the scale */
 
-  /* Peso — três, nomeados por intenção. Nome de intenção não colide com o
-     `semibold: 500` do Infima, que é a mesma palavra sobre outro número. */
+  /* Weight — three, named by intent. Naming by intent keeps this from
+     colliding with Infima's `semibold: 500`, the same word over a different
+     number. */
   --pd-weight-body:    400;
   --pd-weight-ui:      500;
   --pd-weight-heading: 600;
 
-  /* Entrelinha. h4 repete o valor de ui e mantém nome próprio: mesmo número
-     hoje, intenções diferentes. */
+  /* Line-height. h4 repeats ui's number under its own name: same value
+     today, different intents. */
   --pd-leading-prose: 1.75;
   --pd-leading-ui:    1.5;
   --pd-leading-code:  1.7143;
-  /* Tela de terminal. Ela não é código: é arte de caixa, e o `│` de uma linha
-     precisa encostar no `│` da linha de baixo para o painel ter parede. Com o
-     1.7143 do código a parede vira tracejado e o desenho lê como quebrado. 1.2
-     é o ponto medido em que a parede fecha e a marca em ASCII ainda respira. */
+  /* Terminal screen. It isn't code, it's box art, and a line's `│` needs to
+     meet the `│` below it for the panel to read as a wall. At code's 1.7143
+     the wall turns into a dashed line and the drawing reads as broken. 1.2
+     is the measured point where the wall closes and the ASCII mark still
+     breathes. */
   --pd-leading-screen:  1.2;
   --pd-leading-h1:    1.111;
   --pd-leading-h2:    1.333;
   --pd-leading-h3:    1.4;
   --pd-leading-h4:    1.5;
 
-  /* Letter-spacing — um só. O corpo usa o `normal` do navegador, que é keyword
-     e não valor, então não precisa de token. */
+  /* Letter-spacing — one value. Body text uses the browser's `normal`, which
+     is a keyword and not a value, so it needs no token. */
   --pd-tracking-tight: -0.025em;
 
-  /* Falso-negrito — o realce do item ativo da sidebar, e ele não é enfeite.
-     Trocar `font-weight` reflui o texto e o item PULA de largura no instante em
-     que o leitor navega; meio pixel de sombra engrossa sem mexer na métrica.
-     `currentColor` resolve no elemento, então o realce acompanha o acento sem
-     par declarado e sem segundo valor para o modo claro. */
+  /* Optical bold — the sidebar active item's emphasis, and it isn't
+     decoration. Swapping font-weight reflows the text and the item JUMPS
+     width the instant the reader navigates; half a pixel of shadow thickens
+     it without touching the metric. `currentColor` resolves on the element,
+     so the emphasis follows the accent with no paired declaration and no
+     second value for light mode. */
   --pd-optical-bold: 0 0 0.4px currentColor;
 
   /* ---------------------------------------------------------------------------
-     Espaço — base 4px, escada por calc(). Um literal só.
-     Toda dimensão que o projeto travou é múltiplo de 8; a base fica em 4 para o
-     meio-passo que a densidade de 14px exige em chip, badge e ícone.
+     Space — base 4px, a calc() ladder. One literal.
+     Every dimension this project locks is a multiple of 8; the base sits at
+     4 for the half-step that 14px density needs in a chip, badge, or icon.
      --------------------------------------------------------------------------- */
-  --pd-space-1:  4px;   /* único literal da escala */
+  --pd-space-1:  4px;   /* the scale's only literal */
   --pd-space-2:  calc(var(--pd-space-1) *  2);
   --pd-space-3:  calc(var(--pd-space-1) *  3);
   --pd-space-4:  calc(var(--pd-space-1) *  4);
@@ -259,88 +202,85 @@
   --pd-space-16: calc(var(--pd-space-1) * 16);
 
   /* ---------------------------------------------------------------------------
-     Forma — base 16px (a sétima e última linha do bloco de troca), escada por
-     múltiplo.
-     Um número entra, a escada sai: trocar --pd-radius re-forma o site inteiro
-     sem incoerência possível.
+     Shape — base 16px (the swap block's seventh and last line), a
+     multiplier ladder.
+     One number goes in, the whole ladder comes out: changing --pd-radius
+     reshapes the entire site with no possible inconsistency.
      --------------------------------------------------------------------------- */
-  --pd-radius-lg:   calc(var(--pd-radius) * 1.25);  /* painel da busca */
-  --pd-radius-md:   calc(var(--pd-radius) * 0.75);  /* bloco de código, callout, imagem, frame, controle e linha de resultado da busca */
-  --pd-radius-sm:   calc(var(--pd-radius) * 0.5);   /* botão, campo, aba, chip */
-  --pd-radius-xs:   calc(var(--pd-radius) * 0.25);  /* código inline, badge, pílula de verbo */
-  --pd-radius-full: 999px;                          /* marcador de Step, avatar, pílula */
+  --pd-radius-lg:   calc(var(--pd-radius) * 1.25);  /* search panel */
+  --pd-radius-md:   calc(var(--pd-radius) * 0.75);  /* code block, callout, image, frame, control, search result row */
+  --pd-radius-sm:   calc(var(--pd-radius) * 0.5);   /* button, field, tab, chip */
+  --pd-radius-xs:   calc(var(--pd-radius) * 0.25);  /* inline code, badge, verb pill */
+  --pd-radius-full: 999px;                          /* Step marker, avatar, pill */
 
-  /* O fio. Um só, e agora ele é a separação de TODA superfície levantada — o
-     anel `0 0 0 1px` saiu da composição da sombra e virou borda de verdade.
+  /* The hairline. One, and it's now the separator for every raised surface —
+     the `0 0 0 1px` ring left the shadow composition and became a real
+     border.
 
-     A troca é decisão de ALCANCE, não de estética: o Infima declara
-     `--ifm-*-border-color` em todo componente, então o adaptador pinta o fio
-     inteiro com o vocabulário que já existe. Anel dentro de `box-shadow`
-     obrigaria a sobrescrever a sombra de cada componente para desenhar uma
-     linha. */
+     The swap is a REACH decision, not an aesthetic one: Infima declares
+     `--ifm-*-border-color` on every component, so the bridge paints the
+     hairline everywhere with vocabulary that already exists. A ring inside
+     `box-shadow` would force redeclaring every component's shadow to draw
+     one line. */
   --pd-border-width: 1px;
 
   /* ---------------------------------------------------------------------------
-     Motion — escala de duração e vocabulário de easing. Camada 1, fora do bloco
-     de troca.
+     Motion — duration scale and named-easing vocabulary. Layer 1, outside
+     the swap block.
 
-     Livre — skin corporativa (redesenho): nenhum manual de marca especifica
-     duração. Quem edita aqui está redesenhando, não re-marcando.
+     Free for a corporate rebrand: no brand manual specifies duration.
 
-     Os números são medidos, não escolhidos: 75ms é a banda do giro curto —
-     medida no caret de sidebar da âncora, o único movimento do site que atravessa
-     menos de um décimo de segundo; 200ms é o valor mais aplicado de toda a
-     amostra; 300ms é a banda de mudança grande; 500ms é a banda de entrada
-     grande; 5s é o único loop ambiente medido em qualquer uma das sete.
+     The numbers are measured, not chosen: 75ms is the short-turn band,
+     measured on the anchor's sidebar caret — the only movement under a tenth
+     of a second measured on that site; 200ms is the most applied value in
+     the whole sample; 300ms is the large-change band; 500ms is the
+     large-entrance band; 5s is the only ambient loop measured across any of
+     the seven anchors.
 
-     `--pd-dur-0` entrou na issue #114, e a parada é da âncora, não da escala:
-     75 não é 200 dividido por nada. Ela existe porque a rotação do caret é o
-     único movimento cujo alvo publicado fica abaixo de `--pd-dur-1`, e
-     arredondá-lo para 200ms trocaria uma medição por uma conveniência de
-     vocabulário. Ver docs/adr/0010 — a linha da seta é `herdado`.
+     `--pd-dur-0` is its own stop, not a scale subdivision: 75 isn't 200
+     divided by anything. It exists because the caret rotation is the only
+     measured movement whose published target falls below --pd-dur-1, and
+     rounding it to 200ms would trade a measurement for vocabulary
+     convenience.
      --------------------------------------------------------------------------- */
   --pd-dur-0: 75ms;
   --pd-dur-1: 200ms;
   --pd-dur-2: 300ms;
   --pd-dur-3: 500ms;
-  --pd-dur-ambient: 5s;     /* período do loop; não é parada da escala — ver reduced-motion */
+  --pd-dur-ambient: 5s;     /* loop period, not a scale stop — see reduced-motion */
 
-  /* Duas curvas, nomeadas por intenção. Não há `ease-in`: nada neste site sai da
-     tela, e variável sem consumidor é o defeito do Infima que não se copia. */
-  --pd-ease-settle: cubic-bezier(0, 0, 0.2, 1);   /* responde ao leitor e assenta */
-  --pd-ease-inout:  cubic-bezier(0.4, 0, 0.2, 1); /* tem início e fim na tela */
+  /* Two curves, named by intent. No `ease-in`: nothing on this site exits
+     the screen, and an unconsumed variable is the Infima defect this
+     project doesn't copy. */
+  --pd-ease-settle: cubic-bezier(0, 0, 0.2, 1);   /* responds to the reader and settles */
+  --pd-ease-inout:  cubic-bezier(0.4, 0, 0.2, 1); /* has a start and an end on screen */
 
-  /* Os sete movimentos. Cada um é um token COMPLETO — <duração> <easing> — que
-     compõe da escala em vez de cravar número. É isso que faz reduced-motion
-     alcançar o Infima que não escrevemos: o adaptador escreve
-     --ifm-transition-fast a partir de --pd-dur-1, e a redefinição atravessa.
+  /* The seven movements. Each is a COMPLETE token — <duration> <easing> —
+     composed from the scale instead of a hardcoded number. That's what lets
+     reduced-motion reach the Infima code this project doesn't write: the
+     bridge writes --ifm-transition-fast from --pd-dur-1, and the override
+     passes through.
 
-     Os cinco primeiros terminam sozinhos e ENCURTAM sob reduced-motion.
-     Os dois últimos não terminam sozinhos — `reveal` é dirigido por rolagem,
-     `ambient` é infinito — e são REMOVIDOS, não encurtados; quem os consome
-     acrescenta timeline / `infinite`.
+     The first five end on their own and SHORTEN under reduced motion. The
+     last two don't end on their own — reveal is scroll-driven, ambient is
+     infinite — and are REMOVED rather than shortened; whoever consumes them
+     adds a timeline or `infinite`.
 
-     OS TRÊS ÚLTIMOS ESTÃO SEM CONSUMIDOR desde que a landing saiu (issue #94), e
-     ficam declarados de propósito. O motivo é o que a régua de órfãos pede — e
-     não é o mesmo do `--pd-type-6xl`, que saiu no mesmo movimento. O vocabulário
-     de motion é FECHADO por portão: `scripts/portao-2-motion.sh` reprova toda
-     duração ou curva cravada e manda usar um destes sete nomes. Remover três
-     deixaria o portão apontando para um vocabulário que não cobre `showcase`,
-     `reveal` nem `ambient` — e a próxima faixa que precisasse de um deles
-     escreveria o número cravado que o portão existe para impedir. É uma escala
-     declarada inteira, como a rampa de cinza, e o buraco no meio custa mais do
-     que a parada a mais.
+     showcase, reveal, and ambient currently have no consumer, and stay
+     declared on purpose: the vocabulary is closed, and removing any of the
+     seven would leave the next movement that needs one writing a hardcoded
+     number instead. It's a scale declared whole, like the gray ramp — a hole
+     in the middle costs more than the extra stop.
 
-     `flip` é o sétimo, e ele entrou na issue #114 com um consumidor só: a
-     rotação do caret de categoria de sidebar. Ele não é `state` com outro nome —
-     `state` é 200ms e cobre cor, fundo e sombra, que respondem ao ponteiro;
-     `flip` é o giro de um glifo pequeno em torno do próprio eixo, e a âncora o
-     mede em 75ms. Fundir os dois arredondaria a medição para caber no
-     vocabulário, que é a troca que este arquivo não faz.
+     flip is a small glyph's rotation around its own axis — the sidebar
+     category caret — measured at 75ms. It isn't state under another name:
+     state is 200ms and covers color, background, and shadow, responding to
+     the pointer. Fusing the two would round the measurement to fit the
+     vocabulary, which this file doesn't do.
 
-     A curva de `flip` é `settle`, não `inout`: o giro responde ao clique do
-     leitor e assenta — não tem começo próprio na tela. É a mesma leitura que
-     põe `state` e `enter` em `settle`. */
+     flip's curve is settle, not inout: the turn responds to a click and
+     settles — it has no start of its own on screen. Same reading that puts
+     state and enter under settle. */
   --pd-move-flip:     var(--pd-dur-0) var(--pd-ease-settle);
   --pd-move-state:    var(--pd-dur-1) var(--pd-ease-settle);
   --pd-move-enter:    var(--pd-dur-1) var(--pd-ease-settle);
@@ -349,330 +289,205 @@
   --pd-move-reveal:   var(--pd-dur-3) var(--pd-ease-settle);
   --pd-move-ambient:  var(--pd-dur-ambient) var(--pd-ease-inout);
 
-  /* Habilita <details> a transicionar para height: auto. Mora aqui, junto do
-     vocabulário, e não dentro do componente que a consome. */
+  /* Lets <details> transition to height: auto. Lives here with the
+     vocabulary, not inside the component that consumes it. */
   interpolate-size: allow-keywords;
 
   /* ---------------------------------------------------------------------------
-     Estado de entrada — camada 1, FORA do bloco de troca.
+     Entry-state — layer 1, OUTSIDE the swap block.
 
-     Espessura de anel não é identidade de marca; a cor já é, e ela segue o
-     acento pela camada 2 (`--pd-focus-ring`).
+     Ring thickness isn't brand identity; color is, and it follows the accent
+     through the semantic layer (--pd-focus-ring).
 
-     Estes são o segundo e o terceiro literal do sistema, e não vão disfarçados.
-     `calc(var(--pd-space-1) / 2)` daria 2px e passaria em qualquer varredura —
-     seria derivação FALSA: espessura de anel não tem relação com escala de
-     espaço, e a régua deste projeto existe justamente para impedir número que
-     só parece derivado. A procedência honesta é origem própria com âncora em
-     norma: 2px é o limiar de perímetro da SC 2.4.13, 44px é a SC 2.5.5.
+     These are the system's second and third literals, and they aren't
+     disguised. `calc(var(--pd-space-1) / 2)` would give 2px and pass any
+     scan — a FALSE derivation: ring thickness has no relation to the space
+     scale, and this project's rule exists to catch a number that only looks
+     derived. The honest provenance is its own origin, anchored to a
+     standard: 2px is WCAG SC 2.4.13's perimeter threshold, 44px is SC 2.5.5.
 
-     Contrato completo: docs/design/foco.md e ADR 4.
+     See ADR 4.
      --------------------------------------------------------------------------- */
   --pd-focus-width:  2px;
   --pd-focus-offset: 2px;
   --pd-target-min:   44px;
 
   /* ---------------------------------------------------------------------------
-     Dimensões do chrome — camada 1.
-     A anatomia completa é de docs/design/chrome.md; aqui ficam só os valores
-     que o adaptador precisa escrever, porque ele não pode escrever de lugar
-     nenhum.
+     Chrome dimensions — layer 1. Values the bridge needs to write, because it
+     can't write from anywhere else.
 
-     `--pd-tabs-height` é LITERAL, e não `var(--pd-space-12)`, ainda que os dois
-     entreguem 48. Altura de chrome não tem relação com escala de espaço, e
-     derivar por coincidência de número é a derivação FALSA que o bloco de foco
-     recusa em voz alta trinta linhas acima. A procedência honesta é a mesma dos
-     outros comprimentos deste bloco: medida na âncora.
-
-     `--pd-toc-width` GANHOU consumidor na #96, e o valor mudou de 288 para
-     304. A premissa que travava em 288 — *"a coluna é o quarto restante do
-     grid 75/25 do upstream, alcançar 304 custaria `unsafe` em
-     DocItem/Layout"* — era fato errado, não decisão: o grid de doze morreu
-     nesta issue, substituído por `flex` com largura explícita em
-     `chrome.css` §1, e uma largura explícita não tem 75/25 a quebrar. A
-     correção está em docs/design/chrome.md §1.2, sem apagar o texto
-     original — ver o bloco de errata lá.
+     `--pd-tabs-height` is LITERAL, not `var(--pd-space-12)`, even though the
+     two both deliver 48. Chrome height has no relation to the space scale,
+     and deriving it from a coincidence of numbers is the FALSE derivation
+     the entry-state block refuses above. Its honest provenance is the same
+     as the rest of this block: measured on the anchor.
      --------------------------------------------------------------------------- */
-  --pd-container-width: 1120px;  /* as DUAS variáveis de container do Infima recebem este — era 1152, ver nota abaixo */
+  --pd-container-width: 1120px;  /* both of Infima's container variables receive this */
   --pd-sidebar-width:    288px;
-  --pd-navbar-height:     64px;  /* a LINHA 1 do topo, não o topo inteiro */
+  --pd-navbar-height:     64px;  /* the top's LINE 1, not the whole top */
   --pd-tabs-height:       48px;
-  --pd-toc-width:        304px;  /* bate com a âncora — §11 de chrome.md */
+  --pd-toc-width:        304px;  /* matches the anchor */
   --pd-prose-width:      720px;
 
-  /* O PISO DE UM CAMPO EDITÁVEL do painel de comando — a largura abaixo da
-     qual a grade dele para de pôr dois campos lado a lado e empilha.
+  /* The FLOOR of a command-panel editable field — the width below which its
+     grid stops placing two fields side by side and stacks instead.
 
-     **Ele ocupa o slot que era `--pd-api-prose-width` (577), e a troca conta
-     uma decisão.** Aquele token existia para uma página de referência com
-     prosa mais estreita que a comum, porque a âncora trocava a coluna do TOC
-     por um trilho de amostras — medido em `research/paridade-devin` §10
-     (576,81), citado pela #99. O trilho desceu para o fluxo na #118: a página
-     de comando passou a medir o que qualquer página de doc mede, a prosa
-     voltou para `--pd-prose-width` e o TOC voltou a caber. Sem trilho não há
-     prosa estreita a declarar, e o token ficaria inerte — que é a mesma classe
-     de defeito das variáveis mortas do Infima. O delta contra a âncora está
-     registrado em `scripts/paridade-abertas.txt` e em `referencia.md` §8.
+     280px is `own origin`: it's where `--skill` plus a sample catalog value
+     (`panlabs-python-standards`, 24 monospace characters) stop fitting on
+     one line. Measured on this machine, in Chromium 148.
 
-     280 é `origem própria`: é onde `--skill` mais um valor de exemplo do
-     catálogo (`panlabs-python-standards`, 24 caracteres em mono) deixam de
-     caber na mesma linha. Medido nesta máquina, no Chromium 148.
-
-     **Ele é medida de UM componente e mora em `:root`, e a tensão é real.** A
-     regra das camadas manda camada 3 declarar no escopo do próprio componente;
-     o portão 1 manda todo literal de comprimento morar aqui. As duas não podem
-     valer ao mesmo tempo para um número que só um componente usa, e este bloco
-     já resolveu isso duas vezes antes, do mesmo jeito: `--pd-copy-height` e
-     `--pd-copy-menu-width` são medidas do par segmentado do cabeçalho, e
-     estão logo abaixo. O portão é a régua que reprova, e é ele que decide o
-     empate. */
+     It's a single component's measurement living in `:root`, and the
+     tension is real: layer 3 is supposed to declare in the component's own
+     scope, and layer 1 is supposed to hold every length literal. The two
+     can't both hold for a number only one component uses. `--pd-copy-height`
+     and `--pd-copy-menu-width`, just below, resolve the same tension the
+     same way. */
   --pd-field-min:        280px;
 
-  /* O CORREDOR — a distância entre a borda direita da sidebar e o começo do
-     texto, e até aqui ele existia por ACIDENTE.
+  /* The CORRIDOR — the distance between the sidebar's right edge and where
+     the text begins, and it existed by ACCIDENT until now.
 
-     Medido na âncora a 1024 e a 1512, e o número é o mesmo nas duas: o
-     conteúdo dela abre `pl-[5.7rem]` (91,2) sobre um `-ml-12` (−48), e o
-     líquido é 43,2 em qualquer largura. Ela NÃO centraliza a prosa na coluna
-     — ancora o texto a esta distância e deixa a sobra do lado do índice.
-
-     Aqui a distância era o que sobrasse da centralização do `<article>`
-     dentro da coluna: 47,6 a 1512, perto do número da âncora por coincidência
-     aritmética, e ZERO em toda largura entre 997 e 1408 — que é onde um
-     laptop vive. Ver `chrome.md` §1.7. */
+     Measured on the anchor at 1024 and at 1512, and the number is the same
+     at both: it does NOT center the prose in the column — it anchors the
+     text at this distance and hands the remainder to the index side. */
   --pd-corridor: 43.2px;
 
-  /* O PAR SEGMENTADO do cabeçalho — "Copiar página" e o menu ao lado.
+  /* The header's PAIRED CONTROL — "Copy page" and the menu beside it.
 
-     Os dois são medida da âncora e NÃO da escala: 34 não é múltiplo de 4 por
-     acidente de arredondamento, é a altura que ela desenha, e 277 é a largura
-     do menu dela (276,7 medido, arredondado ao inteiro como toda medida de
-     âncora deste bloco). Derivar qualquer um dos dois de `--pd-space-*` seria
-     coincidência de número, não parentesco. Ver `chrome.md` §6.4. */
+     Both are measured on the anchor, not derived from the scale: 34 isn't a
+     multiple of 4 by rounding accident, it's the height the anchor draws,
+     and 277 is the width of its menu. Deriving either from --pd-space-*
+     would be a coincidence of numbers, not kinship. */
   --pd-copy-height:      34px;
   --pd-copy-menu-width: 277px;
 
-  /* A GOTEIRA DA BARRA FINA — o que `scrollbar-width: thin` reserva, medido
-     no Chromium 148 desta máquina: 15px com `auto`, 10 com `thin`.
+  /* The THIN SCROLLBAR GUTTER — what `scrollbar-width: thin` reserves,
+     measured on this machine's Chromium: 15px with `auto`, 10 with `thin`.
 
-     Ele não desenha nada. Existe para a conta do respiro da lista da sidebar
-     fechar nos 32 da âncora sem que ninguém tenha de medir de novo, e é o
-     único número deste arquivo que outro navegador pode desmentir — por isso
-     é citado uma vez só, em `chrome.css` §4. */
+     It draws nothing. It exists so the sidebar list's breathing room closes
+     on the anchor's number without anyone re-measuring, and it's the one
+     number in this file another browser could contradict — cited once, in
+     chrome.css. */
   --pd-scrollbar-thin: 10px;
 
-  /* `--pd-container-width` MUDOU de 1152 para 1120 na #96, e não por conta
-     própria — é consequência do congelamento abaixo perder o termo do
-     gutter. As DUAS medições de margem simétrica da âncora (§11: 52px a
-     1512, 256px a 1920) só fecham com `sidebar + container = 1408`; com
-     container em 1152 sobravam 32px que nenhuma distribuição de padding
-     resolve — provado por álgebra e conferido depois em navegador. A
-     coluna de conteúdo (`--pd-doc-width`) cai de 848 para 816 como
-     consequência direta; a prosa não muda, porque desde a #96 ela é
-     `--pd-prose-width` fixo com TOC (ver `chrome.md` §1.5), não a coluna
-     inteira.
+  /* The DUAL symmetric-margin measurements on the anchor (52px at 1512,
+     256px at 1920) only close together with `sidebar + container = 1408`.
+     `--pd-freeze` below is that sum, and `--pd-container-width` is set so
+     the two add up: 288 + 1120 = 1408.
 
-     O CONGELAMENTO — a largura a partir da qual o grupo sidebar + conteúdo +
-     TOC para de crescer e passa a centralizar, com a folga indo IGUAL para
-     os dois lados. Até a #96 ele levava um termo de gutter —
-     `sidebar + container + 2 × (gutter − 16)` —, porque o `<main>` precisava
-     do próprio preenchimento horizontal para fechar a distância até a borda
-     da viewport, que ele MESMO era. Com o wrapper centralizando o grupo
-     (`chrome.css` §1), essa distância virou trabalho do `margin-inline: auto`
-     do wrapper, e `<main>` perdeu o preenchimento horizontal que fazia esse
-     papel — ele soma zero agora, só o `padding-top` fica. O termo do gutter
-     sai da fórmula porque o gutter não tem mais nada a completar aqui:
-     `sidebar + container`, e mais nada. */
+     THE FREEZE — the width from which the sidebar + content + TOC group
+     stops growing and centers instead, with the remainder going EQUALLY to
+     both sides. */
   --pd-freeze: calc(var(--pd-sidebar-width) + var(--pd-container-width));
 
-  /* O recuo do subtítulo sob o título. LITERAL pelo mesmo motivo da altura da
-     faixa: é medida de chrome, não parada da escala de espaço, e escrevê-lo como
-     `--pd-space-2` mais meio passo daria o número sem comprar a derivação.
-
-     Na âncora ele sai de um `mt-2` de 8 colapsando contra o `space-y-2.5` do
-     contêiner. O que se copia é o RESULTADO medido, não a aritmética de um
-     framework de utilitários que este projeto não tem. */
+  /* The indent of the subtitle under the title. LITERAL for the same reason
+     as the chrome heights above: it's a chrome measurement, not a space
+     scale stop, and writing it as `--pd-space-2` plus half a step would give
+     the number without buying the derivation. */
   --pd-subtitle-indent:   10px;
 
-  /* A ENTRELINHA do subtítulo. Ela existe porque sem ela o subtítulo herdava
-     `--pd-leading-prose` (1,75) sobre 18px = 31,5px, contra os 28 que
-     `chrome.md` §12 publica com tolerância `exato`.
+  /* The subtitle's LINE-HEIGHT. It exists because without it the subtitle
+     would inherit `--pd-leading-prose` (1.75) over 18px = 31.5px, against a
+     28px target measured `exact` on the anchor.
 
-     COMPRIMENTO e não razão, de propósito: 28/18 é 1,5555…, que resolve para
-     27,999… e nasceria vermelho permanente contra um alvo `exato` — é o mesmo
-     defeito que a entrelinha subpixel do §13 de `tokens.md` já cataloga. Um
-     comprimento entrega o número medido sem resíduo.
+     LENGTH, not ratio, on purpose: 28/18 is 1.5555…, which resolves to
+     27.999… and would read red against an `exact` target forever — the same
+     subpixel defect a ratio produces anywhere else in this file. A length
+     delivers the measured number with no remainder.
 
-     LITERAL pelo mesmo motivo do recuo acima: é medida de chrome, e a escala de
-     espaço não tem parada em 28 — ela pula de 24 (`--pd-space-6`) para 32
-     (`--pd-space-8`). */
+     LITERAL for the same reason as the indent above: it's a chrome
+     measurement, and the space scale has no stop at 28 — it jumps from 24
+     (--pd-space-6) to 32 (--pd-space-8). */
   --pd-subtitle-line-height: 28px;
 
-  /* O TOPO GRUDADO — a altura que o navbar de fato ocupa, e o offset de tudo o
-     que gruda abaixo dele. Uma linha no estreito; duas de 997 para cima.
+  /* The STUCK TOP — the height the navbar actually occupies, and the offset
+     for everything that sticks below it. One line on narrow screens; two
+     from 997px up.
 
-     Ele é o único ponto onde a faixa de tabs vira número, e mora aqui porque
-     tem DOIS consumidores fora do adaptador — o `--ifm-navbar-height`, que
-     propaga para os nove pontos do theme-classic que grudam, e o painel da
-     referência gerada, que gruda por conta própria num CSS Module.
+     It's the only place where the tab strip becomes a number, and it lives
+     here because it has TWO consumers outside the bridge: `--ifm-navbar-height`,
+     which propagates to every point in theme-classic that sticks below the
+     navbar, and the generated reference panel, which sticks on its own in a
+     CSS Module.
 
-     O escopo por media query é OBRIGATÓRIO, e é a armadilha mais cara desta
-     faixa: `.navbar-sidebar__brand` e `.navbar-sidebar__items` leem o mesmo
-     `--ifm-navbar-height`. Sem o escopo, o cabeçalho do drawer do estreito
-     infla para a altura de duas linhas que ali não existem. */
+     Scoping by media query is MANDATORY, and it's the most expensive trap in
+     this area: `.navbar-sidebar__brand` and `.navbar-sidebar__items` read
+     the same `--ifm-navbar-height`. Without the scope, the narrow drawer's
+     header inflates to a two-line height that doesn't exist there. */
   --pd-sticky-top: var(--pd-navbar-height);
 
-  /* O TOPO DO CONTEÚDO — a linha em que o `<article>` abre, e o offset de tudo
-     o que gruda ALINHADO com ele em vez de com a barra.
+  /* The CONTENT TOP — the line where `<article>` opens, and the offset for
+     everything that sticks ALIGNED with it instead of with the top bar.
 
-     Ele não é um número novo: `--pd-sticky-top` mais `--pd-space-10` já era
-     calculado à mão em três lugares — o `padding-top` do `<main>`
-     (`chrome.css` §1), o `max-height` do painel da referência e o comentário
-     que o justifica (*"a mesma respiração que o topo do conteúdo já usa"*).
-     Nomeá-lo é o que faz os três pararem de repetir a soma.
+     It isn't a new number: `--pd-sticky-top` plus `--pd-space-10` was
+     already computed by hand in three places. Naming it is what stops the
+     three from repeating the sum.
 
-     O NÚMERO É ALVO DA ÂNCORA, e ele fecha por duas medições publicadas
-     independentemente: `chrome.md` §11 mede o navbar da âncora em 112, e §12
-     mede o ritmo vertical dela em *"40 do navbar ao cabeçalho"*. 112 + 40 = 152,
-     que é o que §11 e `referencia.md` §8 cobram na linha `grudado em`.
-
-     Medido aqui, a 1512: `article.getBoundingClientRect().top` = 152. */
+     Measured here, at 1512: `article.getBoundingClientRect().top` = 152. */
   --pd-content-top: calc(var(--pd-sticky-top) + var(--pd-space-10));
 
-  /* A coluna de conteúdo. Até a #96 ela era `.col--9` do grid de doze — 1152 ×
-     0,75 = 864 —, e a #96 matou o grid: não há mais 75/25 a manter, só o
-     container inteiro menos o que o TOC leva. A conta muda de forma
-     (container − toc em vez de container × 0,75), e o número se move DUAS
-     vezes na mesma issue: primeiro para 848 (`--pd-toc-width` foi a 304, com
-     container ainda em 1152), depois para 816 (`--pd-container-width` foi a
-     1120 — ver a nota dele, acima).
-
-     Sem cartão, ela continua CAIXA INVISÍVEL na configuração sem TOC: o
-     `max-width` da coluna segura a página no mesmo pixel quando `.col--3`
-     não existe. Ver `chrome.css` §1. */
+  /* The content column: the container's full width minus what the TOC
+     takes. Without a card, it stays an INVISIBLE BOX in the no-TOC
+     configuration: the column's `max-width` holds the page at the same
+     pixel whether or not the TOC exists. */
   --pd-doc-width: calc(var(--pd-container-width) - var(--pd-toc-width));
 
-  /* A MEDIDA DO CÓDIGO morreu aqui, e vale a linha de lápide. A derivação dela
-     era uma frase só — *"o interior do cartão de doc"* —, e o cartão está de
-     saída. Cartão fora, derivação fora: sobraria o número 768 sem raiz, que é a
-     derivação FALSA que este arquivo recusa em voz alta no bloco de foco.
+  /* The shell's side breathing room, on each side. It doubles from 997px —
+     the same threshold where the sidebar appears. The 16/32 pair is
+     inherited from the anchor; the point where it switches is not.
 
-     Os consumidores reais passam a citar `--pd-prose-width`, pelo MESMO
-     argumento que já estava escrito: *a medida que o leitor estava lendo quando
-     apertou a tecla*. O argumento não enfraquece; ele fica verdadeiro, porque
-     hoje ele erra por 96px.
-
-     Eram DOIS na redação original — a largura do modal de busca e a laje de
-     código da landing. A segunda saiu com a página na issue #94; quem cita o
-     token hoje é `chrome.css`, o `SearchBar` e o painel de comando. */
-
-  /* A folga lateral do shell, de cada lado. Ela dobra a partir de 997px — o
-     mesmo limiar em que a sidebar aparece. O par 16/32 é herdado da âncora; o
-     ponto onde ele troca, não.
-
-     O par ANTIGO era 32/64, e ele caiu junto com o cartão: a folga de lá era a
-     do shell em volta de uma superfície levantada, e não há mais superfície
-     levantada. O par novo é o do `mint`.
-
-     ATÉ A #96 este token também fechava o congelamento — `sidebar + container
-     + 2 × (gutter − 16)` — porque o `<main>` completava com ele a distância
-     até a borda da viewport. Essa distância virou trabalho do
-     `margin-inline: auto` do wrapper de `chrome.css` §1, o `<main>` perdeu o
-     preenchimento horizontal, e o congelamento perdeu o termo do gutter — ver
-     `--pd-freeze` acima. O que sobra para este token: o preenchimento
-     próprio do `<footer>`, o recuo do `.container` dele até a coluna de doc
-     (`chrome.css`, alinhamento do rodapé), e o preenchimento do `.col` que
-     volta no estreito. */
+     What's left for this token: the `<footer>`'s own padding, its
+     `.container`'s inset to the doc column (see chrome.css, footer
+     alignment), and the `.col` padding that returns on narrow screens. */
   --pd-gutter: var(--pd-space-4);
 
-  /* A altura máxima do modal de busca — o SEGUNDO token novo do slice 7.
+  /* The search modal's max height. It lives here, not inline in a CSS
+     Module, because the alternative would write `60dvh` in a file that
+     isn't this one — and `dvh` isn't part of this project's scan pattern
+     (`px|rem|em|ms|s`), so the literal would pass through a hole in the
+     scan. Closing the hole here costs one line.
 
-     Ele está aqui, e não inline no CSS Module, porque a alternativa seria
-     escrever `60dvh` num arquivo que não é este. `dvh` não está no padrão do
-     portão 1 — `px|rem|em|ms|s` —, então o literal PASSARIA, e passar por buraco
-     de varredura é a única forma de literal que este projeto não admite: a
-     saída correta seria fechar o buraco, e fechá-lo aqui custa uma linha em vez
-     de uma perna nova de portão.
-
-     **Correção — a nota abaixo sobre a largura morreu na #98.** Ela dizia que a
-     largura não virava token porque era `--pd-prose-width`, citada por nome: o
-     painel abria com a medida que o leitor já estava lendo. A #98 mede a âncora
-     centralizada em `640px` — um número que não coincide com `--pd-prose-width`
-     (720px), então citar por nome pararia de ser "o mesmo número" e viraria
-     derivação falsa. Os quatro tokens abaixo saem daí: nenhum deriva da escala
-     de espaço pelo mesmo motivo que `--pd-tabs-height` não deriva dela — a
-     medida da âncora não tem relação com a escala, e coincidir por acidente é a
-     derivação que este arquivo já recusa por escrito (ver a Forma, acima). Todos
-     de consumidor único, como este. Procedência: docs/design/busca.md §10. */
+     The four widths below are each single-consumer, like this one, and none
+     derives from the space scale for the same reason `--pd-tabs-height`
+     doesn't: the anchor's measurement has no relation to that scale, and
+     coinciding by accident is exactly the derivation this file refuses. */
   --pd-search-height: 60dvh;
   --pd-search-panel-width:      640px;
   --pd-search-panel-top:        54px;
   --pd-search-control-width:   300.75px;
   --pd-search-control-height:  36px;
 
-  /* O TERCEIRO token medido contra a viewport, não o único — a nota acima
-     mentia por omissão assim que este entrou. Mesmo buraco de portão 1, mesma
-     saída: `100vh` cravado num módulo de componente (#99, painel da
-     referência) passaria a varredura calada, porque `vh` também não está no
-     padrão `px|rem|em|ms|s`. `dvh`, e não `vh`, pela mesma razão do token
-     acima: nunca pior, e a diferença só aparece em navegador móvel.
-
-     **O consumidor que o trouxe já não existe, e ele fica.** Era o teto do
-     trilho grudado da página de referência, que desceu para o fluxo na #118;
-     quem o lê hoje é o teto do TOC em `chrome.css`, que tem a mesma conta e
-     chegou depois. Um token com dois pedidos e um consumidor não é token
-     inerte, é token com um consumidor. */
+  /* A third value measured against the viewport, for the same reason as the
+     one above: a `100vh` hardcoded in a component module would also pass
+     the scan silently, since `vh` isn't in the `px|rem|em|ms|s` pattern
+     either. `dvh`, not `vh`, for the same reason: never worse, and the
+     difference only shows on a mobile browser. */
   --pd-viewport-height: 100dvh;
 
   /* ---------------------------------------------------------------------------
-     Grade de cartões — camada 1, e a declaração serve o MDX.
+     Card grid — layer 1, serving the MDX card-group component.
 
-     A frase que justificava a posição era *"UMA declaração serve a landing e o
-     MDX"*, e ela perdeu metade na issue #94: sobra o `card-group` do MDX. Ver a
-     lápide da lista de faixas mais abaixo, e `componentes/card-group.md`.
+     The floor for a card-group row, derived from the anchor's THREE-COLUMN
+     collapse threshold: its Columns component collapses at 42rem, with a
+     16px gap. Subtracting the two gaps and dividing by three gives the
+     smallest card the anchor allows in a row of three.
 
-     O piso de faixa da grade de `card-group`, derivado do limiar da âncora A
-     TRÊS COLUNAS: o `Columns` dela colapsa em 42rem, com gap de 16. Descontados
-     os dois gaps e dividido por três, sai o menor cartão que a âncora admite
-     numa fila de três.
-
-     A CITAÇÃO A `--pd-prose-width` MORREU AQUI, e a lápide vale a linha. Ela
-     valia enquanto a prosa media 672: os dois eram o MESMO `max-w-2xl` do
-     framework de utilitários da âncora, aparecendo duas vezes, e citar o token
-     era honesto. Sob o `mint` a prosa é 720 e o limiar de colapso continua 672
-     — continuar citando faria o piso derivar de um número que deixou de ser o
-     medido, que é a derivação FALSA que este arquivo recusa em voz alta no
-     bloco de foco. O limiar volta a ser o que sempre foi: um literal medido,
-     com nome próprio.
-
-     Com este piso, a contagem de cartões faz o trabalho sozinha — zero media
-     query, zero container query, zero prop de colunas.
-
-     A LISTA DE FAIXAS mora aqui junto, e não só o piso. O motivo tinha dois
-     consumidores — a grade de `card-group` dentro do MDX e a grade da landing
-     —, e "uma declaração serve as duas" só era verdade se a declaração
-     existisse num lugar que as duas citassem por nome. A escada de elevação
-     abriu o precedente: `--pd-shadow-raised` também é valor composto, e pelo
-     mesmo motivo.
-
-     A GRADE DA LANDING SAIU na issue #94, e a lista fica onde está. O argumento
-     que a trouxe para cá perdeu metade, mas o que sobra basta: ela continua
-     sendo valor composto, e valor composto citado por nome é o que impede a
-     próxima grade de recompor a lista à mão. O mesmo vale para
-     `--pd-shadow-raised`, que perdeu um dos dois consumidores no mesmo commit.
+     With this floor, the card count alone decides layout: zero media query,
+     zero container query, zero column prop.
      --------------------------------------------------------------------------- */
-  --pd-card-collapse: 672px;   /* o `max-w-2xl` em que o `Columns` da âncora colapsa */
+  --pd-card-collapse: 672px;   /* the collapse threshold measured on the anchor's Columns component */
   --pd-card-min: calc((var(--pd-card-collapse) - 2 * var(--pd-space-4)) / 3);
   --pd-card-grid: repeat(auto-fit, minmax(min(var(--pd-card-min), 100%), 1fr));
 }
 
-/* O gutter dobra no limiar único do projeto, que é o literal compilado do
-   Infima. Não são os 1024px da âncora: dois limiares brigando no mesmo eixo
-   custam mais do que a fidelidade compra.
+/* The gutter doubles at this project's single threshold, which is the
+   literal Infima compiles into its own runtime — not the anchor's 1024px:
+   two thresholds fighting on the same axis would cost more than fidelity
+   buys.
 
-   A SEGUNDA LINHA DO TOPO nasce no mesmo limiar, e pelo mesmo motivo: um evento
-   visual em vez de dois. A faixa de tabs aparece exatamente quando a sidebar
-   aparece, e some exatamente quando ela vira gaveta. */
+   The SECOND TOP LINE is born at the same threshold, for the same reason: one
+   visual event instead of two. The tab strip appears exactly when the
+   sidebar appears, and disappears exactly when it turns into a drawer. */
 @media (min-width: 997px) {
   :root {
     --pd-gutter: var(--pd-space-8);
@@ -681,98 +496,84 @@
 }
 
 /* =============================================================================
-   CAMADA 2 — semântica. Só cor, e o único ponto do sistema onde o modo diverge.
+   LAYER 2 — semantic. Color only, the system's only place where mode diverges.
 
-   Escuro mora em :root porque o modo canônico é o FALLBACK; claro é override.
-   Consequência: nunca escrevemos um seletor de modo escuro, então a armadilha
-   de especificidade do `[data-theme='dark']` (0,1,0) contra o
-   `html[data-theme='dark']` (0,1,1) do Infima fica fora de alcance por
-   construção, não por disciplina. Ver ADR 1.
+   Dark lives in :root because the canonical mode is the FALLBACK; light is
+   the override. Consequence: this project never writes a dark-mode selector,
+   so the `[data-theme='dark']` (0,1,0) vs. `html[data-theme='dark']` (0,1,1)
+   specificity trap is out of reach by construction, not by discipline. See
+   DECISIONS.md#css-in-three-layers-one-source-of-literals.
 
-   Os dois blocos declaram a MESMA lista de tokens, na mesma ordem: token que
-   aparece num e não no outro é um buraco visível.
+   Both blocks declare the SAME list of tokens, in the same order: a token
+   present in one and missing from the other is a visible hole.
    ============================================================================= */
 
-/* ESCURO — canônico.
-
-   O bloco teve um SEGUNDO seletor, `[data-pd-showcase]`, e ele saiu com a
-   landing (issue #94). A ilha de espetáculo carregava o próprio substrato
-   porque glow é emissão, e emissão só é legível contra escuridão; ela era um
-   seletor a mais neste bloco, e não um bloco novo, e é isso que a fazia inerte
-   na troca de tema. Sem a faixa não há o que manter escuro fora do modo.
-
-   Se ela voltar, o seletor volta AQUI e não num bloco próprio — e
-   `scripts/contraste.mjs` casa este seletor em início de linha, então voltar
-   com ele exige acertar o casamento lá junto. */
+/* DARK — canonical. */
 :root {
   color-scheme: dark;
 
-  /* surface — `scrim` é o véu do `::backdrop` do modal de busca, e ele é o
-     ÚNICO papel semântico novo do slice 7. Ele deriva do extremo escuro da
-     rampa, que é o mesmo nos dois modos; o que bifurca é a opacidade, e ela
-     bifurca por um motivo mecânico: no escuro a página já está perto da 950, e
-     um véu leve não se distinguiria dela. No claro, a mesma opacidade
-     transformaria a página num buraco preto em vez de empurrá-la para trás.
+  /* surface — `scrim` is the search modal's `::backdrop` veil, and it's the
+     only new semantic role in this layer. It derives from the ramp's dark
+     extreme, which is the same in both modes; what forks is opacity, for a
+     mechanical reason: in dark mode the page already sits near 950, and a
+     light veil wouldn't stand out from it. In light mode the same opacity
+     would turn the page into a black hole instead of pushing it back.
 
-     `code` SUBIU para a 900, e a regra passou a ser simétrica: a superfície do
-     código é um passo acima da página nos DOIS modos. Ela era a 950 aqui — o
-     mesmo valor de `page`, dois nomes para uma cor —, e isso só se sustentava
-     com o cartão no meio, que dava ao bloco um fundo contra o qual se destacar.
-     Sem o cartão, o bloco de código tinha a cor exata da página no modo
-     canônico: é literalmente o defeito do Infima que este projeto nomeou.
+     `code` moved UP to 900, and the rule is now symmetric: the code surface
+     is one step above the page in BOTH modes. It used to sit at 950 here —
+     the same value as `page`, two names for one color.
 
-     Dissenso registrado: a 900 é o degrau imediatamente acima na rampa, e é a
-     única derivação honesta disponível — NÃO é uma medida. O berço que morreu
-     era anatomia medida da âncora. */
+     Dissent on record: 900 is the ramp's next step up, the only honest
+     derivation available — it is NOT a measurement. */
   --pd-surface-page:   var(--pd-neutral-page-dark);
   --pd-surface-raised: var(--pd-surface-page);
   --pd-surface-code:   var(--pd-gray-900);
   --pd-surface-wash:   rgb(from var(--pd-accent) r g b / 12%);
   --pd-surface-scrim:  rgb(from var(--pd-gray-950) r g b / 72%);
 
-  /* text — `faint` é a parada 500, o meio matemático da rampa. É a única
-     reprovação deliberada de AA do sistema (3,04:1 aqui) e é PROIBIDA para
-     texto de leitura: serve separador, placeholder e controle desabilitado.
-     Texto secundário legítimo usa `muted`. */
+  /* text — `faint` is stop 500, the ramp's mathematical midpoint. It's the
+     system's only deliberate AA failure (3.04:1 here) and is FORBIDDEN for
+     reading text: it serves separators, placeholders, and disabled
+     controls. Legitimate secondary text uses `muted`. */
   --pd-text-strong:  var(--pd-gray-50);
   --pd-text-body:    var(--pd-gray-300);
   --pd-text-muted:   var(--pd-gray-400);
   --pd-text-faint:   var(--pd-gray-500);
   --pd-text-inverse: oklch(from var(--pd-accent) clamp(0, (0.62 - l) * 1000, 1) 0 h);
 
-  /* border — a tinta a 7%. Uma fórmula, dois modos, e ela reproduz os DOIS
-     valores medidos no alvo, que lá saem de dois mecanismos diferentes. */
+  /* border — tint at 7%. One formula, two modes, and it reproduces both
+     values measured on the anchor, even though they come from two different
+     mechanisms there. */
   --pd-border-subtle:  rgb(from var(--pd-text-strong) r g b / 7%);
   --pd-border-default: rgb(from var(--pd-text-strong) r g b / 12%);
   --pd-border-strong:  rgb(from var(--pd-text-strong) r g b / 20%);
 
   /* accent.
 
-     `contrast` está SEM CONSUMIDOR desde que a landing saiu (issue #94) — o
-     único era o texto do botão primário dela. Fica declarado, e o motivo é o
-     mesmo que mantém `--pd-gray-200`: papel semântico é família declarada
-     inteira. Os dois blocos de modo declaram a MESMA lista, na mesma ordem, e
-     papel que aparece num e não no outro é buraco visível; tirar o par do
-     accent deixaria a camada 2 sem resposta para *que cor vai o texto sobre o
-     accent*, e o próximo botão a nascer escreveria a cor à mão. */
+     `contrast` currently has NO CONSUMER. It stays declared because a
+     semantic role is a family declared whole: both mode blocks declare the
+     SAME list in the SAME order, and a role present in one and missing from
+     the other is a visible hole — dropping the accent pair would leave layer
+     2 with no answer for *what color goes on text over the accent*, and the
+     next button to exist would write the color by hand. */
   --pd-accent:          var(--pd-brand-on-dark);
   --pd-accent-hover:    oklch(from var(--pd-accent) calc(l + 0.06) c h);
   --pd-accent-contrast: var(--pd-text-inverse);
 
-  /* shadow — `lip` não mora aqui: realce é sempre luz, e luz não bifurca.
-     Ver o bloco de valor único mais abaixo.
+  /* shadow — `lip` doesn't live here: highlight is always light, and light
+     doesn't fork by mode. See the single-value block further below.
 
-     Sobrou UM papel. O anel `0 0 0 1px` saiu da composição e virou borda de
-     verdade, então o papel que o pintava deixou de existir — a família `border`
-     logo acima é quem pinta o fio agora.
+     One role is left. The `0 0 0 1px` ring left the shadow composition and
+     became a real border, so the role that painted it no longer exists —
+     the `border` family right above paints the hairline now.
 
-     O ALCANCE, dito com precisão, porque a versão curta engana: onde o Infima
-     declara um `--ifm-*-border-color`, o adaptador pinta o fio de `:root`, sem
-     regra nova. Onde ele NÃO declara, o fio é escrito no componente — uma
-     declaração de uma linha. O que a troca compra é que a alternativa custava
-     mais nos dois casos: anel dentro de `box-shadow` obrigaria a REDECLARAR a
-     sombra inteira de cada componente, porque `box-shadow` não se acrescenta.
-     Uma linha de `border` contra três camadas de sombra repetidas. */
+     The REACH, stated precisely, because the short version misleads: where
+     Infima declares an `--ifm-*-border-color`, the bridge paints the
+     hairline from `:root`, no new rule. Where it doesn't, the hairline is
+     written in the component — a one-line declaration. The alternative cost
+     more in both cases: a ring inside `box-shadow` would force REDECLARING
+     the entire shadow of every component. One border line beats three
+     repeated shadow layers. */
   --pd-shadow-cast: rgb(from var(--pd-gray-950) r g b / 60%);
 
   /* focus */
@@ -789,79 +590,66 @@
   --pd-state-warn-fill:    rgb(from var(--pd-state-warn)    r g b / 18%);
   --pd-state-danger-fill:  rgb(from var(--pd-state-danger)  r g b / 18%);
 
-  /* A aresta do preenchimento — o par do `-fill`, com o alfa mais alto que a
-     medição do callout registrou. Ela mora aqui e não na camada 3 porque o alfa
-     BIFURCA por modo, e a camada 2 é o único lugar do sistema onde modo diverge:
-     escrito no escopo do componente, o callout passaria a saber em que modo
-     está, que é exatamente o que o catálogo fechou.
+  /* The fill's edge — paired with `-fill`, at the higher alpha the callout
+     measurement recorded. It lives here and not in layer 3 because alpha
+     FORKS by mode, and layer 2 is the system's only place where mode
+     diverges: written in the component's own scope, the callout would start
+     knowing which mode it's in, which is exactly what this catalog closed
+     off.
 
-     A família é declarada inteira, como a de `-fill`. `danger-edge` não tem
-     consumidor — o chip de obrigatório do campo usa preenchimento e texto, não
-     aresta —, e uma família de quatro com um buraco no meio é pior de ler do que
-     a quarta linha.
-
-     A justificativa trocou de dono junto com o vermelho: ela nomeava a pílula de
-     verbo, que morreu com o contrato HTTP. O consumidor de `danger` no catálogo
-     hoje é o chip, e ele usa as mesmas duas linhas de sempre. */
+     The family is declared whole, like `-fill`. `danger-edge` has no
+     consumer — the required-field chip uses fill and text, not edge — and a
+     four-member family with a hole in the middle reads worse than the
+     fourth line. */
   --pd-state-info-edge:    rgb(from var(--pd-state-info)    r g b / 30%);
   --pd-state-success-edge: rgb(from var(--pd-state-success) r g b / 30%);
   --pd-state-warn-edge:    rgb(from var(--pd-state-warn)    r g b / 30%);
   --pd-state-danger-edge:  rgb(from var(--pd-state-danger)  r g b / 30%);
 
-  /* code — o oitavo papel. Existe na camada 2 porque a paleta de sintaxe
-     bifurca por modo, e a camada 2 é o único lugar onde modo diverge.
+  /* code — the eighth role. It lives in layer 2 because the syntax palette
+     forks by mode, and layer 2 is the only place where mode diverges.
 
      ---------------------------------------------------------------------
-     O CYAN MORA NO IDENTIFICADOR, e a paleta é `origem própria (medição)`.
+     THE CYAN LIVES ON THE IDENTIFIER, and the palette is its own,
+     measurement-driven origin.
 
-     A âncora foi medida e NÃO seguida — a primeira vez no mapa. O
-     `"codeblocks":"system"` do Devin resolve para `github-light-default` +
-     `dark-plus`, e o que a medição revela é que a âncora DECLINA de tematizar
-     código: ela entrega o par padrão da plataforma. Herdar isso seria herdar
-     uma ausência, e herdar uma ausência não é herdar. É a posição mais frágil
-     do projeto, e está escrita como tal em docs/design/principios.md §3.
+     The anchor was measured and NOT followed: its code-block theming
+     resolves to the platform's default light/dark pair rather than a
+     custom one. Inheriting that would mean inheriting an absence, and an
+     absence isn't something to inherit.
 
-     As duas razões medidas cortam contra adotá-lo: ele regride os pisos de
-     contraste deste projeto (para 5,87 escuro e 4,55 claro, que encosta em AA)
-     e fica MAIS berrante no claro (croma máx 0,207 contra 0,113).
+     Two measured reasons cut against adopting it anyway: it regresses this
+     project's contrast floors (to 5.87 dark and 4.55 light, brushing AA),
+     and it reads MORE saturated in light mode (max chroma 0.207 against
+     0.113).
 
-     A paleta anterior caiu por doutrina, não por gosto: ela era semeada do
-     Neon, e o Neon não é âncora — os três não-âncora doam mecanismo e nunca
-     valor.
+     `parameter` is the identifier and carries the cyan; `constant` is its
+     neighbor. The other five sit under a chroma ceiling of 0.095, and
+     `string` runs WARM on purpose: it carries the largest share of tokens
+     in any block, and without the counterweight the code reads monochrome.
 
-     `parameter` é o identificador e leva o cyan; `constant` é o vizinho. Os
-     outros cinco ficam sob teto de croma 0,095, e `string` fica QUENTE de
-     propósito: ela leva a maior fatia dos tokens de qualquer bloco, e sem o
-     contrapeso o código vira monocromático.
-
-     O cyan é SKIN FIXA — camada 2 aqui, e fora da superfície de troca, no
-     precedente dos quatro `--pd-hue-*`. O corporativo redesenha; não re-marca.
-
-     Piso conferível por comando, e não só registrado:
-     `node scripts/contraste.mjs --verificar`.
+     The cyan is FIXED SKIN — layer 2 here, outside the swap surface, the
+     same precedent as the four --pd-hue-*. A corporate rebrand redesigns
+     this; it doesn't re-skin it.
      --------------------------------------------------------------------- */
   --pd-code-fg:        var(--pd-text-body);
-  --pd-code-parameter: #7FE4E9;   /* oklch(85.9% 0.095 200) — o cyan, o identificador */
-  --pd-code-constant:  #7FD3E4;   /* oklch(81.9% 0.085 212) — o vizinho */
+  --pd-code-parameter: #7FE4E9;   /* oklch(85.9% 0.095 200) — the cyan, the identifier */
+  --pd-code-constant:  #7FD3E4;   /* oklch(81.9% 0.085 212) — its neighbor */
   --pd-code-keyword:   #95BCE4;   /* oklch(78.1% 0.071 249) */
-  --pd-code-string:    #E9B999;   /* oklch(82.1% 0.070  55) — o contrapeso quente */
+  --pd-code-string:    #E9B999;   /* oklch(82.1% 0.070  55) — the warm counterweight */
   --pd-code-function:  #DDDAAE;   /* oklch(88.0% 0.058 104) */
   --pd-code-operator:  #CBC9CF;   /* oklch(83.9% 0.009 301) */
-  --pd-code-comment:   #B2B0B8;   /* oklch(76.0% 0.012 298) — reto p/ #181A1E (issue #95) */
+  --pd-code-comment:   #B2B0B8;   /* oklch(76.0% 0.012 298) */
 }
 
-/* CLARO — legítimo. */
+/* LIGHT — legitimate. */
 :root[data-theme='light'] {
   color-scheme: light;
 
-  /* surface — a página desce para a parada 100 e a levantada sobe para a 50: se
-     a página ficasse na 50, a levantada teria que ser branco puro para subir, e
-     aí o tint da marca sumiria da maior superfície do modo claro. A pastilha de
-     código toma o extremo do modo, que aqui é branco.
-
-     Aqui a superfície do código JÁ estava acima da página, e é o escuro que veio
-     ao encontro dela. A assimetria — igual à página no escuro, acima dela no
-     claro — era o que o cartão escondia. */
+  /* surface — the page steps down to stop 100 and raised steps up to 50: if
+     the page sat at 50, raised would have to be pure white to sit above it,
+     and the brand tint would vanish from the light mode's largest surface.
+     The code chip takes the mode's extreme, which here is white. */
   --pd-surface-page:   var(--pd-neutral-page-light);
   --pd-surface-raised: var(--pd-neutral-raised-light);
   --pd-surface-code:   oklch(from var(--pd-gray-50) 100% 0 h);
@@ -907,63 +695,48 @@
   --pd-state-warn-edge:    rgb(from var(--pd-state-warn)    r g b / 25%);
   --pd-state-danger-edge:  rgb(from var(--pd-state-danger)  r g b / 25%);
 
-  /* code — os CINCO papéis cromáticos do claro ficam na mesma luminosidade, L
-     48%. É a propriedade que a paleta anterior tinha e o par medido na âncora
-     não tem, e é ela que segura o piso em 6,29 sobre a pastilha branca. Os dois
-     acromáticos saem da faixa de propósito: `operator` desce para não competir
-     com o identificador, e `comment` sobe para recuar. */
+  /* code — light mode's five chromatic roles sit at the same lightness,
+     L 48%, a property the anchor's own pair lacks and the one that holds the
+     floor at 6.29 over the white chip. The two achromatic roles break from
+     that on purpose: `operator` steps down so it doesn't compete with the
+     identifier, and `comment` steps up to recede. */
   --pd-code-fg:        var(--pd-text-body);
-  --pd-code-parameter: #006B70;   /* oklch(48.0% 0.082 200) — o cyan, o identificador */
-  --pd-code-constant:  #1C6589;   /* oklch(48.0% 0.090 235) — o vizinho */
+  --pd-code-parameter: #006B70;   /* oklch(48.0% 0.082 200) — the cyan, the identifier */
+  --pd-code-constant:  #1C6589;   /* oklch(48.0% 0.090 235) — its neighbor */
   --pd-code-keyword:   #475C8B;   /* oklch(47.9% 0.081 265) */
-  --pd-code-string:    #82502B;   /* oklch(48.1% 0.085  56) — o contrapeso quente */
+  --pd-code-string:    #82502B;   /* oklch(48.1% 0.085  56) — the warm counterweight */
   --pd-code-function:  #60612C;   /* oklch(47.9% 0.074 110) */
   --pd-code-operator:  #535157;   /* oklch(43.9% 0.010 301) */
   --pd-code-comment:   #615F66;   /* oklch(49.0% 0.011 299) */
 }
 
 /* -----------------------------------------------------------------------------
-   Camada 2 que NÃO bifurca por modo — fora dos dois blocos, de propósito.
+   Layer 2 that does NOT fork by mode — outside both blocks, on purpose.
 
-   A regra que decide: token que referencia camada 2 bifurca e mora nos dois
-   blocos; token que referencia só camada 1 não bifurca e mora aqui.
+   The rule that decides: a token that references layer 2 forks and lives in
+   both blocks; a token that references only layer 1 doesn't fork and lives
+   here.
 
-   --pd-shadow-lip é o único papel nessa situação. Realce é luz, e luz é o topo
-   da rampa — não "a tinta do modo". Ancorado no topo da rampa, ele some sozinho
-   no claro por IDENTIDADE MATEMÁTICA (o cartão claro É --pd-gray-50, e gray-50 a
-   6% sobre gray-50 é gray-50), e volta a ser visível dentro da ilha escura sem
-   redeclarar nada.
+   --pd-shadow-lip is the only role in that position. Highlight is light, and
+   light is the top of the ramp, not "the mode's tint." Anchored to the
+   ramp's top, it disappears on its own in light mode by mathematical
+   identity (light mode's raised surface IS --pd-gray-50, and gray-50 at 6%
+   over gray-50 is gray-50), and becomes visible again on a dark surface
+   with nothing redeclared.
 
-   A SOMBRA DEIXOU DE SER ESCADA, e os dois que sobraram moram aqui pelo mesmo
-   motivo: a composição é a mesma nos dois modos, e o modo entra por `cast`, que
-   é par declarado. Os comprimentos inline são a única exceção declarada à regra
-   de que a camada 2 é só cor — box-shadow é valor atômico, e separar geometria
-   de cor exigiria seis tokens de comprimento para compor duas sombras.
+   Shadow is no longer a ladder; the two roles left here share the same
+   composition across both modes, with mode entering only through `cast`,
+   which is a shared token. The inline lengths are the only declared
+   exception to layer 2 being color-only: box-shadow is an atomic value, and
+   separating geometry from color would need six length tokens to compose
+   two shadows.
 
-   Eram quatro degraus numerados com o anel embutido. Sobraram DOIS papéis,
-   nomeados por intenção, porque uma escala de dois não é escala e numeração com
-   buraco é pior que nome — e porque o resto do arquivo já nomeia por intenção.
-
-   A defesa não é mais *"é um sistema"*. É **dois papéis medidos que compartilham
-   dois ingredientes** — `lip` e `cast` —, e isso é menos do que o arquivo
-   prometia. Está escrito porque quem abrir sem contexto vai ler over-engineering
-   e merece a resposta curta.
-
-   `--pd-shadow-sunken` MORREU aqui, e a morte vale a linha: ele era o
-   contra-exemplo declarado da elevação — o único lugar do site que afundava —,
-   e afundar era relativo ao cartão. Sem cartão, o contra-exemplo perde contra o
-   quê ser exemplo, e o único consumidor dele era o berço do bloco de código,
-   que morreu no mesmo commit.
-
-   Sobraram DOIS papéis, e nenhum deles é consumido por conteúdo. `float` é o
-   chrome flutuante — dropdown, gaveta, modal de busca, botão de voltar ao topo.
-   `raised` NÃO flutua: o consumidor dele é o painel da Referência da API, que é
-   superfície levantada. Eram DOIS — o segundo era o botão primário da landing,
-   e saiu com a página na issue #94. O token fica porque continua consumido, e é
-   essa a diferença entre ele e `--pd-type-6xl`, que saiu na mesma remoção.
-   A profundidade saiu do CONTEÚDO, não do site — a #50 mediu zero componente de
-   conteúdo com sombra em seis páginas da âncora, e o único portador de sombra
-   medido lá é um chip de 24px no hover de heading.
+   `float` is floating chrome — dropdown, drawer, search modal, back-to-top
+   button. `raised` does NOT float: its consumer is the generated API
+   reference panel, a raised surface. Depth left CONTENT, not the site: a
+   sweep of six anchor pages found zero content component with a shadow —
+   the only shadow-bearing thing measured there is a 24px heading hover
+   chip.
    ----------------------------------------------------------------------------- */
 
 :root {
@@ -976,38 +749,27 @@
 }
 
 /* =============================================================================
-   CAMADA 3 — VAZIA, e a ausência tem endereço.
+   LAYER 3 — EMPTY, and the absence has an address.
 
-   Havia aqui uma regra `[data-pd-showcase]` com os cinco tokens de brilho da
-   ilha de espetáculo: os dois gradientes (`--pd-glow` e `--pd-glow-2`), a caixa
-   quadrada da luz (`--pd-glow-size`) e o par de amplitude da respiração
-   (`--pd-glow-trough` e `--pd-glow-crest`). Ela era SEPARADA de propósito:
-   entrar no bloco escuro acima poria --pd-glow em :root, e o glow vazaria para
-   o site inteiro. A confinação não era regra que alguém precisava lembrar — era
-   fato de escopo.
-
-   Saiu inteira com a landing, na issue #94. A camada 3 é declarada no escopo do
-   próprio componente e nunca em :root, e hoje nenhum componente do projeto
-   declara token próprio: a única ilha que havia era esta.
-
-   Este cabeçalho fica porque a camada é uma das três, e a regra de referência
-   do §1 de docs/design/tokens.md se lê pelas três. Camada sem membro é
-   diferente de camada que não existe.
+   Layer 3 is declared in a component's own scope and never in :root, and
+   today no component in this project declares a token of its own. This
+   header stays because the layer is one of the three, and an empty layer
+   differs from a layer that doesn't exist.
    ============================================================================= */
 
 /* =============================================================================
-   Reduced-motion — propriedade da CAMADA DE TOKEN, não dos componentes.
+   Reduced-motion — a TOKEN-LAYER property, not the components'.
 
-   Nenhum componente escreve `@media (prefers-reduced-motion)` próprio, para
-   sempre. Ver ADR 3.
+   No component writes its own `@media (prefers-reduced-motion)`, ever. See
+   DECISIONS.md#movement-lives-in-the-token-layer.
 
-   1ms e não 0s: transição de duração zero é onde o `useCollapsible` do
-   theme-common, que anima altura em JS, trava — `transitionend` precisa
-   continuar disparando.
+   1ms, not 0s: a zero-duration transition is where theme-common's
+   height-animating collapse logic stalls — `transitionend` needs to keep
+   firing.
 
-   Como o adaptador escreve --ifm-transition-fast a partir de --pd-dur-1, o
-   Infima e o theme-classic ficam parados junto, sem martelo
-   `* { animation: none !important }` e sem um único !important.
+   Because the bridge writes --ifm-transition-fast from --pd-dur-1, Infima
+   and theme-classic stay in step with no `* { animation: none !important }`
+   sledgehammer and no `!important` at all.
    ============================================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1018,66 +780,53 @@
     --pd-dur-3: 1ms;
   }
 
-  /* Os dois que NÃO terminam sozinhos seriam removidos aqui, não encurtados — e
-     hoje não há nenhum dos dois no site.
-
-     Havia uma regra `[data-pd-showcase] [data-pd-part='glow'] { animation:
-     none; }`, e ela saiu com a landing (issue #94). A respiração do glow saía
-     por aqui porque encurtá-la para 1ms produziria estroboscópio, que é o oposto
-     exato do que `reduce` pede. Era a única regra de ELEMENTO do arquivo fora do
-     adaptador, e existia porque `animation: none` não tem como ser entregue por
-     token: o nome do `@keyframes` precisa aparecer LITERALMENTE numa declaração
-     `animation` para sobreviver ao minificador (ver a nota em `custom.css`).
-
-     O reveal nunca apareceu aqui, e por outro motivo: a regra dele morava dentro
-     de `@media (prefers-reduced-motion: no-preference)`, no CSS Module da
-     própria página, e simplesmente não entrava. Ver ADR 3 — a errata dele
-     registra que os dois exemplos vivos da regra (d) saíram juntos.
-
-     Se um loop ambiente voltar, ele volta por aqui, com `data-pd-part` como
-     gancho: é contrato publicado do projeto, e o par de seletores dá (0,2,0)
-     contra a (0,1,0) da classe do módulo — vence sem `!important` e sem depender
-     de ordem de carga. */
+  /* The two movements that don't end on their own would be removed here, not
+     shortened — and neither exists on the site today. If an ambient loop
+     returns, it comes back through here, keyed on a `data-pd-part`
+     attribute: shortening a loop to 1ms would produce a strobe, the exact
+     opposite of what `reduce` asks for. */
 }
 
 /* =============================================================================
-   O ADAPTADOR — mão única
+   THE BRIDGE — one-way
 
-   O sistema nunca lê --ifm-*. Só escreve.
+   The system never reads --ifm-*. Only writes.
 
-   Seletor `:root, :root[data-theme]`: (0,2,0) quando o atributo existe, o que
-   vence o `html[data-theme='dark']` (0,1,1) do Infima. O script inline do
-   Docusaurus escreve data-theme antes da primeira pintura, então o seletor com
-   atributo é o que vale sempre; o `:root` solto fecha o buraco de JavaScript
-   desligado, onde o site degrada para o Infima cru — feio, mas legível.
+   Selector `:root, :root[data-theme]`: (0,2,0) once the attribute exists,
+   which beats Infima's `html[data-theme='dark']` (0,1,1). Docusaurus's
+   inline script writes `data-theme` before first paint, so the
+   attribute-qualified selector is what applies in practice; the bare
+   `:root` closes the gap for JavaScript disabled, where the site degrades
+   to raw Infima — ugly, but legible.
 
-   O adaptador NÃO bifurca por modo. Ele lê camada 2, que já bifurcou.
+   The bridge does NOT fork by mode. It reads layer 2, which already forked.
 
-   Este é o maior bloco do arquivo e é encanamento inerte: uma atribuição por
-   variável do Infima que o chrome de fato renderiza. Aceito porque é o único
-   bloco puramente mecânico do sistema, e é exatamente o bloco que se pula na
-   leitura.
+   This is the file's largest block and it's inert plumbing: one assignment
+   per Infima variable the chrome actually renders. Accepted because it's
+   the system's only purely mechanical block, and exactly the block a reader
+   skips.
 
-   Cada linha aqui foi conferida contra a lista de --ifm-* efetivamente
-   consumidas por `var()` no Infima e no theme-classic. Variável declarada e
-   nunca consumida NÃO entra: o adaptador não pode conter linha morta que
-   sugira funcionar.
+   Every line here was checked against the list of --ifm-* actually consumed
+   by `var()` inside Infima and theme-classic. A declared-but-never-consumed
+   variable doesn't enter: the bridge can't carry a dead line that suggests
+   it works.
    ============================================================================= */
 
 :root,
 :root[data-theme] {
-  /* --- terceiro namespace: nem --ifm-*, nem --pd-*. O adaptador escreve nele
-         como escreve nos --ifm-*. DocRoot/Layout/Main soma
-         --ifm-container-width + --doc-sidebar-width, então os dois se propagam
-         juntos de graça. -------------------------------------------------- */
+  /* --- a third namespace: neither --ifm-*, nor --pd-*. The bridge writes it
+         the same way it writes --ifm-*. DocRoot/Layout/Main sums
+         --ifm-container-width + --doc-sidebar-width, so the two propagate
+         together for free. -------------------------------------------- */
   --doc-sidebar-width: var(--pd-sidebar-width);
 
-  /* --- container: AS DUAS. O Infima troca para -xl acima de 1440px, e fixar só
-         a primeira faz o cartão alargar sozinho em tela larga. ------------- */
+  /* --- container: BOTH variables. Infima switches to -xl above 1440px, and
+         fixing only the first would let the card widen on its own on a wide
+         screen. ------------------------------------------------------- */
   --ifm-container-width:    var(--pd-container-width);
   --ifm-container-width-xl: var(--pd-container-width);
 
-  /* --- preenchimento e tinta ---------------------------------------------- */
+  /* --- fill and ink ---------------------------------------------------- */
   --ifm-background-color:         var(--pd-surface-page);
   --ifm-background-surface-color: var(--pd-surface-raised);
   --ifm-hover-overlay:            var(--pd-border-subtle);
@@ -1091,33 +840,31 @@
   --ifm-color-black:              var(--pd-gray-950);
   --ifm-color-white:              var(--pd-gray-50);
 
-  /* --- marca e estados.
-         Exceção 4 do adaptador: das seis shades por cor semântica, só as VIVAS
-         são atribuídas — base, -dark, -darker, -contrast-background e
-         -contrast-foreground. As quatro restantes (-light, -lighter, -lightest,
-         -darkest) foram resolvidas em build time pelo color-mod() e não têm
-         consumidor: atribuí-las seria linha morta sugerindo funcionar.
-         Nosso acento tem um degrau de hover, não uma família de shades, então
-         -dark e -darker recebem o mesmo token — e isso é o desenho, não
-         descuido. -------------------------------------------------------- */
+  /* --- brand and states.
+         Bridge exception: of the six shades per semantic color, only the
+         LIVE ones are assigned — base, -dark, -darker, -contrast-background
+         and -contrast-foreground. The other four (-light, -lighter,
+         -lightest, -darkest) are resolved at Infima's build time by
+         color-mod() and have no consumer: assigning them would be a dead
+         line suggesting it works. This project's accent has one hover step,
+         not a shade family, so -dark and -darker share a token — that's the
+         design, not an oversight. -------------------------------------- */
   --ifm-color-primary:                     var(--pd-accent);
   --ifm-color-primary-dark:                var(--pd-accent-hover);
   --ifm-color-primary-darker:              var(--pd-accent-hover);
   --ifm-color-primary-contrast-background: var(--pd-surface-wash);
   --ifm-color-primary-contrast-foreground: var(--pd-text-strong);
 
-  /* As shades de `secondary` apontam para o papel `border` e não para o papel
-     `text`: `--ifm-color-secondary-dark` é lido por `--ifm-alert-border-color`
-     dentro de `.alert--secondary`, e a tinta do corpo ali desenharia um anel de
-     contraste máximo em volta da caixa.
+  /* `secondary`'s shades point at the `border` role, not `text`:
+     `--ifm-color-secondary-dark` is read by `--ifm-alert-border-color`
+     inside `.alert--secondary`, and body ink there would draw a
+     maximum-contrast ring around the box.
 
-     Correção de premissa, do slice do catálogo: a redação original dizia que
-     `secondary` é *"o que a admonition `note` consome"*. Deixou de ser. O
-     callout tem DOM próprio desde que `Admonition/Types` passou a apontar para
-     ele, e `note` é a variante AZUL — quem é neutro é `info`. As shades ficam
-     porque o Infima as lê em `.alert--secondary`, `.badge--secondary` e
-     `.button--secondary`, e a regra do adaptador é sobre o que o framework
-     consome, não sobre o que a nossa página hoje renderiza. */
+     The callout has its own DOM and isn't a `.alert`; `secondary` is what
+     the framework itself still consumes — `.alert--secondary`,
+     `.badge--secondary`, `.button--secondary` — so these shades stay: the
+     bridge's rule is about what the framework consumes, not what this site
+     renders today. */
   --ifm-color-secondary:                     var(--pd-border-strong);
   --ifm-color-secondary-dark:                var(--pd-border-strong);
   --ifm-color-secondary-darker:              var(--pd-border-strong);
@@ -1148,12 +895,13 @@
   --ifm-color-danger-contrast-background: var(--pd-state-danger-fill);
   --ifm-color-danger-contrast-foreground: var(--pd-text-body);
 
-  /* --- escala de ênfase. O Infima a inverte no bloco dark; nós não podemos,
-         porque o adaptador é cego ao modo. A rota correta é apontar cada degrau
-         para um papel da camada 2, que já bifurcou. A escala tem dez degraus
-         consumidos e o nosso texto tem quatro paradas, então alguns degraus
-         repetem — repetir é honesto, inventar parada não seria.
-         (o degrau 600 não é consumido por ninguém e por isso não é atribuído) */
+  /* --- emphasis scale. Infima inverts it in its own dark block; this
+         project can't, because the bridge is blind to mode. The correct
+         route is pointing each step at a layer-2 role, which already
+         forked. Infima's scale has ten consumed steps and this project's
+         text has four stops, so some steps repeat — repeating is honest;
+         inventing a stop would not be.
+         (step 600 has no consumer, and so isn't assigned) ---------------- */
   --ifm-color-emphasis-0:    var(--pd-surface-page);
   --ifm-color-emphasis-100:  var(--pd-surface-raised);
   --ifm-color-emphasis-200:  var(--pd-border-subtle);
@@ -1165,7 +913,7 @@
   --ifm-color-emphasis-900:  var(--pd-text-body);
   --ifm-color-emphasis-1000: var(--pd-text-strong);
 
-  /* --- tipografia --------------------------------------------------------- */
+  /* --- typography ---------------------------------------------------------- */
   --ifm-font-family-base:      var(--pd-font-body);
   --ifm-font-family-monospace: var(--pd-font-mono);
   --ifm-heading-font-family:   var(--pd-font-heading);
@@ -1185,7 +933,7 @@
   --ifm-h5-font-size: var(--pd-type-base);
   --ifm-h6-font-size: var(--pd-type-sm);
 
-  /* --- espaço ------------------------------------------------------------- */
+  /* --- space ----------------------------------------------------------- */
   --ifm-global-spacing:          var(--pd-space-4);
   --ifm-spacing-horizontal:      var(--pd-space-4);
   --ifm-spacing-vertical:        var(--pd-space-4);
@@ -1198,7 +946,7 @@
   --ifm-list-paragraph-margin:   var(--pd-space-2);
   --ifm-hr-margin-vertical:      var(--pd-space-6);
 
-  /* --- forma -------------------------------------------------------------- */
+  /* --- shape ------------------------------------------------------------- */
   --ifm-global-radius:            var(--pd-radius-sm);
   --ifm-button-border-radius:     var(--pd-radius-sm);
   --ifm-badge-border-radius:      var(--pd-radius-xs);
@@ -1210,33 +958,19 @@
   --ifm-pagination-border-radius: var(--pd-radius-sm);
   --ifm-pagination-nav-border-radius: var(--pd-radius-md);
 
-  /* --- elevação. Preenche a lacuna que o Infima tem por desenho: ele não
-         redefine sombra no escuro, e as dele somem sobre fundo escuro.
+  /* --- elevation. Fills a gap Infima leaves by design: it doesn't redefine
+         shadow for dark mode, and its own shadows disappear against a dark
+         background.
 
-         A PROFUNDIDADE SAI DO CONTEÚDO, e é medição: a #50 achou zero
-         componente de conteúdo com sombra em seis páginas da âncora — `shadow-md`
-         e maiores existem no CSS dela e nunca são usados. Então `lw` e a sombra
-         de alerta valem `none`, e sobra sombra só onde algo de fato flutua.
+         DEPTH LEFT CONTENT — a sweep of six anchor pages found zero content
+         component with a shadow; `shadow-md` and larger exist in its CSS
+         and are never applied there. So `lw` and the alert shadow are
+         `none`, and shadow survives only where something actually floats.
 
-         Quem lê `lw` de verdade, medido no fonte da 3.10.2 — e o ticket errava:
-         ele nomeava `.card` do Infima, que ESTE site não renderiza (o nosso
-         cartão é classe de CSS Module, e `.card` nua não a alcança). Os leitores
-         vivos são `CodeBlock/Container`, que é conteúdo, e `BackToTopButton`,
-         que é chrome flutuante. A conclusão não muda para o bloco de código; o
-         botão recupera a sombra por classe estável em `chrome.css`.
-
-         `--ifm-alert-shadow` fica em `none` pela mesma regra, e ela é a linha
-         que o Infima lê em `.alert` — o nosso callout tem DOM próprio e não é um
-         `.alert`. O adaptador escreve o que o FRAMEWORK consome, não o que a
-         nossa página hoje renderiza.
-
-         `md` e `tl` recebem o MESMO token, e isso não é duplicação nossa: o
-         Infima tem três nomes para o que aqui tem dois papéis, e o adaptador
-         existe para traduzir. O precedente está neste arquivo —
-         --ifm-container-width e -xl recebem os dois o mesmo token.
-         Verificado no Infima: `md` é lida por `.dropdown__menu` e
-         `.navbar-sidebar`, que são chrome flutuante; `tl` só por `.shadow--tl`,
-         que ninguém usa. ---------------------------------------------------- */
+         `md` and `tl` receive the SAME token, and that isn't duplication:
+         Infima has three names for what this project treats as two roles,
+         and the bridge exists to translate — the same precedent sits above,
+         where --ifm-container-width and -xl both receive one token. --------- */
   --ifm-global-shadow-lw: none;
   --ifm-global-shadow-md: var(--pd-shadow-float);
   --ifm-global-shadow-tl: var(--pd-shadow-float);
@@ -1244,14 +978,15 @@
   --ifm-blockquote-shadow: none;
   --ifm-navbar-shadow:     none;
 
-  /* --- link --------------------------------------------------------------- */
+  /* --- link -------------------------------------------------------------- */
   --ifm-link-color:            var(--pd-accent);
   --ifm-link-hover-color:      var(--pd-accent-hover);
   --ifm-link-decoration:       none;
   --ifm-link-hover-decoration: underline;
 
-  /* --- código. --ifm-pre-background é sobrescrita dentro do bloco de código
-         por --prism-background-color; ver a exceção 3 no fim do arquivo. ---- */
+  /* --- code. --ifm-pre-background is overridden inside the code block by
+         --prism-background-color; see the exception at the end of this
+         file. ------------------------------------------------------------ */
   --ifm-code-background:  var(--pd-surface-code);
   --ifm-pre-background:   var(--pd-surface-code);
   --ifm-pre-color:        var(--pd-code-fg);
@@ -1260,7 +995,7 @@
   --ifm-code-padding-horizontal: var(--pd-space-1);
   --ifm-code-padding-vertical:   var(--pd-space-1);
 
-  /* --- régua, citação e tabela ------------------------------------------- */
+  /* --- rule, quote, and table ---------------------------------------------- */
   --ifm-hr-background-color:      var(--pd-border-default);
   --ifm-hr-margin-vertical:       var(--pd-space-12);
   --ifm-blockquote-color:         var(--pd-text-body);
@@ -1277,11 +1012,11 @@
   --ifm-table-head-font-weight:   var(--pd-weight-ui);
   --ifm-table-cell-padding:       var(--pd-space-3);
 
-  /* --- navbar ------------------------------------------------------------- */
-  /* O TOPO INTEIRO, não a linha 1: são os nove pontos do theme-classic que
-     grudam abaixo do navbar — o `top` do TOC, o do próprio `<nav>`, o
-     `scroll-margin` das âncoras — e todos se realinham de graça quando a
-     segunda linha entra. Ver `--pd-sticky-top`. */
+  /* --- navbar -------------------------------------------------------------- */
+  /* THE WHOLE TOP, not just line 1: nine points in theme-classic stick below
+     the navbar — the TOC's `top`, the `<nav>`'s own, anchor `scroll-margin`
+     — and all of them realign for free when the second line enters. See
+     --pd-sticky-top. */
   --ifm-navbar-height:                 var(--pd-sticky-top);
   --ifm-navbar-background-color:       var(--pd-surface-page);
   --ifm-navbar-link-color:             var(--pd-text-muted);
@@ -1299,28 +1034,24 @@
   --ifm-menu-color-active:            var(--pd-accent);
   --ifm-menu-color-background-active: var(--pd-surface-wash);
   --ifm-menu-color-background-hover:  var(--pd-border-subtle);
-  /* 16 e não 12: somado ao preenchimento de 8 que o `DocSidebar/Desktop` põe na
-     lista, o item da sidebar começa em 24 — que é exatamente o preenchimento
-     horizontal do navbar. A marca e o primeiro ícone de seção ficam na mesma
-     vertical, e o alinhamento deixa de depender de coincidência. */
+  /* 16, not 12: added to the 8px padding `DocSidebar/Desktop` puts on the
+     list, the sidebar item starts at 24 — exactly the navbar's horizontal
+     padding. The brand and the first section icon land on the same
+     vertical, and the alignment stops depending on coincidence. */
   --ifm-menu-link-padding-horizontal: var(--pd-space-4);
-  /* Issue #97: altura de item alvo é 36px, e a entrelinha (24px, ver
-     chrome.css) já ocupa a maior parte disso — sobra 12px para os dois
-     paddings verticais, 6 cada. `--pd-space-1` é o único literal da escada, e
-     a razão dela ser 4 (não 8) já é o meio-passo que a densidade de 14px pede
-     em chip, badge e ícone — mas nenhum consumidor até aqui multiplicava por
-     um fator fracionário. Este é o primeiro: `1,5×` de `--pd-space-1` chega
-     nos 6px sem literal novo, reaproveitando a base fina que já existe, por
-     uma técnica nova que a escada ainda não tinha precisado. */
+  /* Target item height is 36px, and the line-height (24px, see chrome.css)
+     already takes most of that — 12px is left for the two vertical
+     paddings, 6 each. `1.5×` of `--pd-space-1` reaches 6px with no new
+     literal, reusing the fine base that already exists. */
   --ifm-menu-link-padding-vertical:   calc(var(--pd-space-1) * 1.5);
 
-  /* --- TOC ---------------------------------------------------------------- */
+  /* --- TOC ------------------------------------------------------------------ */
   --ifm-toc-border-color:      var(--pd-border-subtle);
   --ifm-toc-link-color:        var(--pd-text-muted);
   --ifm-toc-padding-horizontal: var(--pd-space-3);
   --ifm-toc-padding-vertical:   var(--pd-space-2);
 
-  /* --- breadcrumb e paginação -------------------------------------------- */
+  /* --- breadcrumb and pagination -------------------------------------------- */
   --ifm-breadcrumb-color-active:           var(--pd-accent);
   --ifm-breadcrumb-item-background-active: var(--pd-surface-wash);
   --ifm-breadcrumb-padding-horizontal:     var(--pd-space-2);
@@ -1330,7 +1061,7 @@
   --ifm-pagination-item-active-background: var(--pd-surface-wash);
   --ifm-pagination-nav-color-hover:        var(--pd-accent);
 
-  /* --- cartão, dropdown, abas, badge -------------------------------------- */
+  /* --- card, dropdown, tabs, badge -------------------------------------------- */
   --ifm-card-background-color:        var(--pd-surface-raised);
   --ifm-card-horizontal-spacing:      var(--pd-space-6);
   --ifm-card-vertical-spacing:        var(--pd-space-6);
@@ -1345,78 +1076,80 @@
   --ifm-badge-border-color:           var(--pd-border-default);
   --ifm-badge-color:                  var(--pd-text-strong);
 
-  /* --- footer ------------------------------------------------------------- */
+  /* --- footer -------------------------------------------------------------- */
   --ifm-footer-background-color: var(--pd-surface-page);
   --ifm-footer-color:            var(--pd-text-muted);
   --ifm-footer-link-color:       var(--pd-text-muted);
   --ifm-footer-link-hover-color: var(--pd-accent);
   --ifm-footer-title-color:      var(--pd-text-strong);
-  /* O horizontal é o gutter do shell, e o `.container` do footer perde o
-     preenchimento dele em `chrome.css` — sem isso o conteúdo do rodapé erra por
-     16px contra a borda do cartão. O vertical é o ar de cima; o de baixo é
-     maior e mora na regra do footer. */
+  /* Horizontal is the shell's gutter; the footer's `.container` loses its
+     own padding in chrome.css, otherwise the footer content misses the
+     card's edge by 16px. Vertical here is the top air; the bottom is
+     larger, and lives in the footer's own rule. */
   --ifm-footer-padding-horizontal: var(--pd-gutter);
   --ifm-footer-padding-vertical:   var(--pd-space-10);
 
-  /* --- barra de rolagem --------------------------------------------------- */
+  /* --- scrollbar ---------------------------------------------------------- */
   --ifm-scrollbar-track-background-color:      var(--pd-surface-page);
   --ifm-scrollbar-thumb-background-color:      var(--pd-border-strong);
   --ifm-scrollbar-thumb-hover-background-color: var(--pd-text-faint);
 
-  /* --- motion. É por aqui que reduced-motion alcança o framework que não
-         escrevemos. --ifm-transition-slow NÃO entra: o Infima a declara e
-         ninguém a consome — atribuí-la seria linha morta. ------------------- */
+  /* --- motion. This is how reduced-motion reaches the framework code this
+         project doesn't write. --ifm-transition-slow does NOT enter: Infima
+         declares it and nothing consumes it — assigning it would be a dead
+         line. ------------------------------------------------------------- */
   --ifm-transition-fast:            var(--pd-dur-1);
   --ifm-transition-timing-default:  var(--pd-ease-settle);
   --ifm-button-transition-duration: var(--pd-dur-1);
 }
 
-/* O título de página cresce no mesmo instante em que a sidebar aparece — um
-   evento visual em vez de dois. 997px é o literal compilado do Infima; o projeto
-   inteiro tem um limiar só. O par 30/36 é herdado; o ponto onde ele troca, não.
-   Perda nomeada: entre 640 e 996px o título fica em 30px onde o alvo dá 36. */
+/* The page title grows at the same instant the sidebar appears — one visual
+   event instead of two. 997px is the literal Infima compiles into its own
+   runtime; the whole project has a single threshold. The 30/36 pair is
+   inherited; the point where it switches is not. */
 @media (min-width: 997px) {
   :root,
   :root[data-theme] {
     --ifm-h1-font-size: var(--pd-type-4xl);
 
-    /* O preenchimento vertical do navbar vai a ZERO no dia em que ele carrega
-       duas linhas, e é peça da faixa, não afinação. Com ele, as duas linhas
-       ficam dentro de uma caixa de conteúdo mais curta que o `<nav>` e
-       desalinham da faixa PINTADA, que é desenhada contra a borda do elemento.
-       Zerado, quem manda na altura são as duas linhas.
+    /* The navbar's vertical padding goes to ZERO the day it carries two
+       lines — it's part of the strip, not a tweak. With it, the two lines
+       sit inside a content box shorter than the `<nav>` and misalign from
+       the strip that's PAINTED against the element's border. Zeroed, the
+       two lines alone decide the height.
 
-       Abaixo de 997 ele não é tocado: lá o navbar tem uma linha só, e o mesmo
-       token preenche o cabeçalho do drawer.
+       Untouched below 997: there the navbar has one line, and the same
+       token fills the drawer's header.
 
-       O par de seletores repete o do adaptador de propósito — `:root` sozinho
-       é (0,1,0) e PERDE para o `:root[data-theme]` (0,2,0) que escreveu o
-       valor de base. É a armadilha de especificidade do ADR 1, reencontrada em
-       campo ao montar a faixa. */
+       The selector pair repeats the bridge's on purpose — `:root` alone is
+       (0,1,0) and LOSES to the `:root[data-theme]` (0,2,0) that wrote the
+       base value. */
     --ifm-navbar-padding-vertical: 0;
   }
 }
 
-/* Hover — a outra metade do mecanismo de `(pointer: coarse)`, e ela atravessa
-   pelo adaptador exatamente como o reduced-motion.
+/* Hover — the other half of the `(pointer: coarse)` mechanism, crossing
+   through the bridge exactly like reduced-motion does.
 
-   A regra do projeto é que hover inteiro vive sob `@media (hover: hover)`.
-   Medido nesta implementação: o Infima tem **zero** ocorrência de
-   `(hover: hover)` em todo o framework, e o theme-classic tem uma. Ou seja, o
-   hover que NÓS não escrevemos gruda depois do tap — o fundo do item de sidebar
-   e a cor do link de navbar ficam marcados até o dedo tocar noutro lugar.
+   This project's rule is that every hover lives under
+   `@media (hover: hover)`. Measured in this implementation: Infima has
+   **zero** occurrences of `(hover: hover)` in the whole framework, and
+   theme-classic has one. In other words, hover this project didn't write
+   sticks after a tap — the sidebar item's fill and the navbar link's color
+   stay marked until the finger touches elsewhere.
 
-   Brigar seletor a seletor com o framework custaria uma lista de alvos, que é
-   exatamente a forma que o contrato de foco recusou. Neutralizar os tokens de
-   hover dele alcança de uma vez tudo que TEM token, sem um único `!important`. O
-   fundo do item ATIVO vem de outra variável e não é tocado.
+   Fighting the framework selector by selector would cost a target list,
+   exactly the shape the entry-state contract refuses. Neutralizing its
+   hover tokens reaches everything WITH a token at once, with zero
+   `!important`. The ACTIVE item's fill comes from a different variable and
+   isn't touched.
 
-   Perda nomeada, e ela é o limite do mecanismo: o hover do link de TOC e o do
-   breadcrumb não são alcançáveis por aqui. O Infima os escreve contra
-   `--ifm-color-primary` e `--ifm-breadcrumb-item-background-active`, que são o
-   acento e o realce do item ativo — neutralizá-los apagaria o estado ativo
-   junto. Os dois continuam grudando depois do tap, e o `:active` do contrato de
-   entrada é o que dá retorno neles. Ver `docs/design/foco.md` §8.3. */
+   Named loss, and it's the mechanism's limit: TOC link hover and breadcrumb
+   hover aren't reachable from here. Infima writes them against
+   `--ifm-color-primary` and `--ifm-breadcrumb-item-background-active` — the
+   accent and the active-item highlight — neutralizing those would erase the
+   active state too. Both keep sticking after a tap, and the entry-state
+   contract's `:active` is what gives them a release there. See ADR 4. */
 @media (hover: none) {
   :root,
   :root[data-theme] {
@@ -1428,76 +1161,49 @@
 }
 
 /* =============================================================================
-   ADAPTADOR — as exceções com escopo
+   BRIDGE — the scoped exceptions
 
-   TRÊS pontos do Docusaurus não são alcançáveis de :root. A lista é FECHADA, e
-   os números que sobram são 2, 3 e 4 — ver a lápide da 1, logo abaixo.
-
-   Eram cinco, depois quatro. A do `--docusaurus-tag-list-border` saiu porque não tinha
-   superfície viva: nenhuma página deste site declara `tags:`, e o front matter
-   da âncora — `title`, `description`, `icon`, `sidebarTitle`, `hidden`,
-   `noindex`, `searchable`, `deprecated`, `groups` — não tem o campo. O valor
-   de uma lista fechada é ser conferível membro a membro, e linha
-   permanentemente infalsificável é o oposto disso.
-
-   Dissenso registrado: a exceção custava uma linha e defendia contra um
-   descuido; o modo de falhar que a saída dela abre é o SILENCIOSO que a spec
-   combate em toda parte. Se a arquitetura de informação criar tag um dia, ela
-   volta no mesmo commit, por uma linha.
+   THREE points in Docusaurus aren't reachable from :root. The list is
+   CLOSED, and the numbers left are 2, 3, and 4 — see the note on 1, just
+   below.
    ============================================================================= */
 
-/* --- Exceção 1 — --ifm-alert-background-color-highlight — REMOVIDA ------------
-   Ela pintava as seis variantes de `.alert--*`, e `.alert` NÃO TEM SUPERFÍCIE
-   neste site: `src/theme/Admonition/Types.js` mapeia `note`, `info`, `tip` e
-   `warning` direto para o nosso `Callout`, que tem DOM próprio, e o `Admonition`
-   raiz cai em `info` — isto é, no mesmo `Callout` — para qualquer tipo ausente.
-   Não sobra caminho que renderize um `.alert`.
+/* --- Exception 1 — --ifm-alert-background-color-highlight — REMOVED ------------
+   It painted the six `.alert--*` variants, and `.alert` HAS NO SURFACE on
+   this site: the admonition mapping sends `note`, `info`, `tip`, and
+   `warning` straight to this project's own `Callout`, which has its own
+   DOM, and any other type falls back to that same `Callout`. No path
+   renders a `.alert`.
 
-   Medido no build, e não deduzido: `alert--` aparece em ZERO dos 108 HTML
-   publicados, e `class="… alert …"` também em zero.
+   Measured in the build, not deduced: `alert--` appears in ZERO published
+   HTML pages, and so does `class="… alert …"`.
 
-   Sai pelo MESMO precedente que já matou a 5ª (a do
-   `--docusaurus-tag-list-border`): o valor de uma lista fechada é ser conferível
-   membro a membro, e linha permanentemente infalsificável é o oposto disso —
-   ninguém consegue mostrar que ela funciona, porque não há página onde ela
-   apareça. Aqui é ainda mais fechado que lá: a de tag dependia de o front matter
-   nunca ganhar `tags:`, e esta depende de um mapa de swizzle que é nosso.
+   THE NUMBERING ISN'T PATCHED. The exception numbers that remain stay 2, 3,
+   and 4; 1 stays vacant. */
 
-   Dissenso registrado, e é o mesmo: a exceção custava seis linhas e defendia
-   contra o dia em que alguém desfizesse o mapa da admonition. Esse dia teria de
-   passar por `Types.js`, que é arquivo versionado com o motivo escrito dentro.
+/* --- Exception 2 — the three --docusaurus-details-* ------------------------------
+   Declared inside a CSS Module class (`.details`, in theme-common and
+   theme-classic), never in :root. An element selector (0,0,1) would lose to
+   the hashed class (0,1,0); `details[class]` is (0,1,1) and wins without
+   depending on the hash, which changes every build.
 
-   A NUMERAÇÃO NÃO É REMENDADA. `tokens.md` §7 cita a *exceção 3* pelo número, e
-   é o mesmo precedente que congela a numeração dos portões (ADR 5). O 1 fica
-   vago; as que ficam continuam 2, 3 e 4. */
-
-/* --- Exceção 2 — os três --docusaurus-details-* ------------------------------
-   Declaradas dentro de classe de CSS Module (`.details` em theme-common e em
-   theme-classic), nunca em :root. Um seletor de elemento (0,0,1) perderia para
-   a classe hasheada (0,1,0); `details[class]` é (0,1,1) e vence sem depender do
-   hash, que muda a cada build.
-
-   A curva `ease` do upstream fica fora do alcance de qualquer variável — o
-   valor dele é `transform var(--ifm-transition-fast) ease`. Aqui trocamos o
-   valor inteiro pelo movimento nomeado, então a curva também passa a ser nossa. */
+   The upstream `ease` curve is out of any variable's reach — its value is
+   `transform var(--ifm-transition-fast) ease`. Since the whole value is
+   replaced with the named movement here, the curve becomes this project's
+   own too. */
 details[class] {
   --docusaurus-details-decoration-color: var(--pd-border-strong);
   --docusaurus-details-summary-arrow-size: var(--pd-space-2);
   --docusaurus-details-transition: transform var(--pd-move-expand);
 }
 
-/* --- Exceção 3 — --prism-background-color ------------------------------------
-   Ela não vem de CSS nenhum: `CodeBlock/Container` a injeta no atributo `style`
-   INLINE, a partir de `themeConfig.prism.theme.plain`, via
-   `getPrismCssVariables`. Nenhum seletor de folha de estilo vence estilo inline.
+/* --- Exception 3 — --prism-background-color ------------------------------------
+   It doesn't come from any stylesheet: `CodeBlock/Container` injects it as
+   an INLINE `style` attribute, computed from the prism theme config. No
+   stylesheet selector beats an inline style. The write point is the prism
+   theme shim in the Docusaurus config, which only references a token and
+   never carries a hex value. */
 
-   Correção registrada: a arquitetura previa alcançá-la "por seletor na classe
-   do bloco de código". Não é alcançável assim — medido no fonte da 3.10.2. O
-   ponto de escrita é o shim de `themeConfig.prism.theme` em
-   `docusaurus.config.js`, que só referencia token e não carrega um único hex.
-   Escrever aqui uma regra `.theme-code-block { --prism-background-color: … }`
-   seria exatamente a linha morta que sugere funcionar. */
-
-/* --- Exceção 4 — as shades de cor semântica ---------------------------------
-   Não é seletor, é regra de conteúdo do adaptador: só as shades VIVAS são
-   atribuídas. Escrita no bloco do adaptador, acima. */
+/* --- Exception 4 — the semantic-color shades ---------------------------------
+   Not a selector, a content rule of the bridge: only the LIVE shades are
+   assigned. Written in the bridge block, above. */
