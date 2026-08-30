@@ -1,56 +1,50 @@
 /**
- * O registro global do catálogo — **degrau 3** do ADR 2.
- *
- * Cabeçalho de versão obrigatório, porque o gerador do Docusaurus remove o
- * cabeçalho de licença ao ejetar e sem anotação não há contra o que diffar:
- *
- *   ejetado de @docusaurus/theme-classic@3.10.2
- *
- * É **registro, não swizzle**: o arquivo é um objeto, e o que se faz com ele é
- * espalhar o original e acrescentar chaves. Zero linha de lógica upstream
- * copiada — o próprio `getSwizzleConfig` diz *"meant to be ejected"*.
- *
- * O que o upgrade cobra: chave nova ou removida vira **erro de build**, não bug
- * de runtime.
- *
- * ---------------------------------------------------------------------------
- * Por que TUDO é global e nada se importa
- *
- * Nenhum arquivo de conteúdo escreve um `import`. A medição das referências
- * achou zero imports de snippet nos alvos: autor não importa. Catálogo que exige
- * import é catálogo que vira `export const` inline no arquivo — foram dezenas
- * delas nos dois sites medidos.
- *
- * **Custo aceito, registrado:** `MDXComponents` é importado por `MDXContent`,
- * que envolve todo conteúdo MDX, então este objeto entra no bundle de toda
- * página com MDX, sem tree-shaking. Se um dia doer, separar os três de
- * referência — `ParamField`, `ResponseField` e `Expandable` —
- * é mecânico e não muda a sintaxe dos outros.
- *
- * **Armadilha fechada:** não se anota este arquivo com
- * `import type {MDXComponentsObject} from '@theme/MDXComponents'`. O alias
- * resolveria para o próprio arquivo e criaria referência circular. Importa-se o
- * VALOR de `@theme-original/`.
- *
- * ---------------------------------------------------------------------------
- * DUAS CHAVES DE ELEMENTO, e a diferença entre elas vale nomeada
- *
- * `table` **substitui** o elemento por um componente nosso. `h1` **envolve** o
- * do upstream e acrescenta um irmão — o subtítulo. É a primeira vez que este
- * registro redefine elemento de HTML para acrescentar nó em vez de trocar
- * anatomia, e é a superfície nova que o ledger de swizzle registra.
- *
- * ---------------------------------------------------------------------------
- * Quem NÃO está aqui, e por quê
- *
- * · `callout` — é a admonition nativa. A sintaxe é `:::note`, e quem a alcança é
- *   `src/theme/Admonition/Types.js`, o outro registro de degrau 3.
- * · `code-block` — é a cerca de Markdown. O upstream já registra `pre` e `code`;
- *   o que falta é CSS sobre `.theme-code-block` (degrau 1) mais
- *   `themeConfig.prism` (degrau 2).
- *
- * Procedência: docs/design/componentes/README.md · docs/design/swizzle.md.
+ * The catalog's global registry, rung 3 of the swizzle ladder.
  */
+
+/* Mandatory version header, since the Docusaurus generator strips the
+   license header on eject and there's nothing to diff against without it:
+
+     ejected from @docusaurus/theme-classic@3.10.2 */
+
+/* It's registration, not swizzle: the file is an object, and what happens
+   to it is spreading the original and adding keys. No upstream logic line
+   copied; `getSwizzleConfig` itself says it's meant to be ejected.
+
+   What the upgrade costs: a new or removed key becomes a build error,
+   never a runtime bug. */
+
+/* Why everything is global and nothing gets imported: no content file
+   writes an `import`. Reference measurement found zero snippet imports
+   across the targets: authors don't import. A catalog that requires
+   import is a catalog that turns into an inline `export const` in the
+   file, over and over.
+
+   Accepted cost, on the record: `MDXComponents` is imported by
+   `MDXContent`, which wraps all MDX content, so this object ships in the
+   bundle of every MDX page, with no tree-shaking. If that ever hurts,
+   splitting off the three reference components (`ParamField`,
+   `ResponseField`, `Expandable`) is mechanical and doesn't change the
+   others' syntax.
+
+   Closed trap: this file isn't annotated with
+   `import type {MDXComponentsObject} from '@theme/MDXComponents'`. The
+   alias would resolve to this very file and create a circular reference.
+   The VALUE is imported from `@theme-original/` instead. */
+
+/* TWO ELEMENT KEYS, and the difference between them is worth naming:
+   `table` replaces the element with one of ours. `h1` wraps upstream's and
+   adds a sibling, the subtitle. It's the first time this registry
+   redefines an HTML element to add a node instead of swapping anatomy. */
+
+/* Who's NOT here, and why:
+
+   · `callout`: it's the native admonition. The syntax is `:::note`,
+     reached through `src/theme/Admonition/Types.js`, the other rung-3
+     registry.
+   · `code-block`: it's the Markdown fence. Upstream already registers
+     `pre` and `code`; what's missing is CSS over `.theme-code-block`
+     (rung 1) plus `themeConfig.prism` (rung 2). */
 
 import React from 'react';
 import MDXComponents from '@theme-original/MDXComponents';
@@ -73,53 +67,42 @@ import CopyPage from './CopyPage';
 import CommandPanel from './CommandPanel';
 
 /**
- * O SUBTÍTULO — a linha que toda página do site ganha abaixo do título.
+ * The SUBTITLE, the line every page on the site gets below its title.
  *
- * Ele sai do `description` do front matter, e a fonte é **uma só**: o mesmo
- * campo que já alimenta o `<meta name="description">`, o `llms.txt` e o índice
- * de busca. Um componente aqui obrigaria o autor a digitar a mesma frase duas
- * vezes e criaria a possibilidade de o subtítulo e o `<meta>` divergirem.
+ * It comes from the front matter's `description`, and there's a single
+ * source: the same field that already feeds `<meta name="description">`,
+ * `llms.txt`, and the search index. A component here would force the author
+ * to type the same sentence twice and open the door to the subtitle and the
+ * `<meta>` drifting apart.
  *
- * **Por que ele cabe no degrau 3.** A alternativa era injetar nó no corpo da
- * página, que é a perda 1 do ledger e exige `DocItem/Layout` ou
- * `DocItem/Content` — os dois `unsafe`, os dois proibidos. Ancorar no `<h1>`
- * pelo registro alcança, e a condição que isso exige está conferida: **61 de 61
- * páginas escrevem o próprio `# Título`**, e nenhuma escreve dois. A conferência
- * deixou de ser varredura de mão: a cobrança 10 do portão 4 percorre `content/`
- * e a árvore de tradução e reprova a primeira página sem `description`.
+ * Why it fits at rung 3: the alternative was injecting a node into the
+ * page body, which needs `DocItem/Layout` or `DocItem/Content`, both
+ * `unsafe`, both off-limits. Anchoring on the `<h1>` through the registry
+ * reaches it instead, and the condition that requires is checked: every page
+ * writes its own `# Title`, and none writes two.
  *
- * **Superfície nova no mesmo degrau.** É a primeira vez que este registro
- * REDEFINE um elemento de HTML em vez de acrescentar componente. Não é degrau
- * novo — continua sendo objeto espalhado com chave a mais —, mas é uso novo, e
- * vai nomeado no ledger.
+ * Why it lives HERE and not in its own file: `src/components/` is the
+ * CATALOG, each member reachable from MDX by its own tag and authored by
+ * hand. The subtitle is none of that: it's chrome, has no catalog entry, and
+ * the author never writes it themselves.
  *
- * **Por que ele mora AQUI e não num arquivo próprio**, e não é pelo portão: o
- * portão 7 varre `src/theme/`, então um `src/components/Titulo.js` passaria
- * igual. O motivo é que `src/components/` é o CATÁLOGO — dezesseis componentes
- * contados, cada um com documento de nove seções e cada um alcançável do MDX
- * por tag. O subtítulo não é nenhuma das três coisas: ele é chrome, não tem
- * documento de catálogo, e o autor nunca o escreve. Pô-lo lá adicionaria um
- * décimo sétimo arquivo a uma pasta cuja contagem é afirmação da spec.
+ * It's required, and its absence BREAKS THE BUILD. Same doctrine as an
+ * unknown icon name or a repeated `CodeGroup` label: fail loud, never
+ * degrade silently.
  *
- * **Ele é obrigatório, e a ausência QUEBRA O BUILD.** Mesma doutrina de nome de
- * ícone inexistente e de rótulo repetido em `CodeGroup`: falha alto, nunca
- * degradação silenciosa. Na âncora ele é condicional — presente em 5 de 8
- * páginas medidas; aqui não.
+ * The order at the top of the page becomes `h1` → subtitle → body. The
+ * subtitle is injected here, so it's born right below the title with no MDX
+ * edits needed.
  *
- * **A ordem no topo da página** passa a ser `h1` → subtítulo → corpo. O
- * subtítulo é injetado aqui, então ele nasce logo abaixo do título sem
- * ninguém mexer no MDX.
+ * The term `lead` stays dead and doesn't come back. The name is subtitle: a
+ * term that already misled once doesn't get recycled with a new meaning.
  *
- * O termo `lead` fica morto e não volta. O nome é **subtítulo**: um termo que já
- * enganou uma vez não se recicla com significado novo.
- *
- * `useDoc` é API pública de `@docusaurus/plugin-content-docs/client`, já
- * consumida também pelo `CommandPanel`. Ele estoura fora de um `DocProvider`, e isso é
- * propriedade e não descuido: todo MDX deste site é documentação, e o dia em que
- * um `.mdx` nascer fora de `content/` é o dia de decidir o que o subtítulo dele
- * é — não o dia de descobrir que a página saiu sem um.
- *
- * Procedência: docs/design/chrome.md · docs/design/swizzle.md.
+ * `useDoc` is public API from `@docusaurus/plugin-content-docs/client`,
+ * already consumed by `CommandPanel` too. It throws outside a `DocProvider`,
+ * and that's a feature, not an oversight: all MDX on this site is
+ * documentation, and the day an `.mdx` is born outside `content/` is the day
+ * to decide what its subtitle is, not the day to discover the page shipped
+ * without one.
  */
 const H1Original = MDXComponents.h1;
 
@@ -135,21 +118,21 @@ function Title(props) {
     );
   }
 
-  /* A LINHA DO TÍTULO passa a ter duas peças, e o `<div>` que as segura é o
-     único nó novo desta mudança. Ele é `flex`, e o botão vai para a direita
-     por `margin-inline-start: auto` — a mesma anatomia da âncora, medida:
-     `h1` e o par segmentado como irmãos, centrados um pelo outro.
+  /* The TITLE ROW has two pieces, and the `<div>` holding them is the one
+     new node this adds. It's `flex`, with the button pushed right by
+     `margin-inline-start: auto`, the same anatomy as the anchor, measured:
+     `h1` and the button as siblings, centered against each other.
 
-     O SUBTÍTULO CONTINUA IRMÃO DO `h1`? Não, e a diferença é conferível: ele
-     agora é irmão da LINHA. A regra que zerava a margem de baixo do `h1` por
-     `:has(+ .subtitle)` mudou de alvo junto, em `chrome.css` §6 — margens de
-     irmãos adjacentes colapsam para a maior das duas, e o recuo medido do
-     subtítulo só aparece se o ar de baixo do título não vencer.
+     Is the subtitle still a sibling of `h1`? No, it's a sibling of the ROW
+     instead. The rule that zeroed `h1`'s bottom margin via
+     `:has(+ .subtitle)` moved target along with it: adjacent sibling
+     margins collapse to the larger of the two, and the subtitle's measured
+     indent only shows if the title's bottom air doesn't win.
 
-     `.markdown h1:first-child` não se abala: ele é DESCENDENTE de `.markdown`
-     e primeiro filho do pai, e continua sendo as duas coisas dentro da linha —
-     é o seletor que carrega a escala de tipo do `h1`, e perdê-lo devolveria o
-     defeito que a #96 consertou. */
+     `.markdown h1:first-child` isn't shaken: it's still a DESCENDANT of
+     `.markdown` and its parent's first child inside the row, and that
+     selector is what carries `h1`'s type scale; losing it would bring back
+     the type-scale defect this selector fixes. */
   return (
     <>
       <div className="title-row">
@@ -164,32 +147,31 @@ function Title(props) {
 export default {
   ...MDXComponents,
 
-  // A segunda chave de ELEMENTO deste registro, e a que muda mais a tela: o
-  // subtítulo nasce colado no título, dentro do mesmo `<header>` que o remark
-  // do Docusaurus embrulha em volta do h1 do MDX.
+  // The second ELEMENT key in this registry, and the one that changes the
+  // screen the most: the subtitle is born glued to the title, inside the
+  // same `<header>` Docusaurus's remark wraps around the MDX h1.
   h1: Title,
 
-  // A outra chave de elemento. Toda tabela de Markdown nasce dentro da região
-  // rolável — o autor não escolhe, e é isso que faz a correção de
-  // acessibilidade alcançar a tabela que ninguém lembrou de embrulhar.
+  // The other element key. Every Markdown table is born inside the
+  // scrollable region; the author doesn't choose, and that's what makes the
+  // accessibility fix reach the table nobody remembered to wrap.
   table: Table,
 
-  // Consumidos do Docusaurus como estão, e globais para que `.md` os alcance sem
-  // import. Zero swizzle: a anatomia que falta sai de CSS.
+  // Consumed from Docusaurus as-is, global so `.md` reaches them with no
+  // import. Zero swizzle: the missing anatomy is CSS-only.
   Tabs,
   TabItem,
 
-  // Os doze componentes de CATÁLOGO com tag própria — treze chaves, porque
-  // `steps` tem duas. Os outros quatro do catálogo de dezesseis não têm tag:
-  // `callout` é `:::`, `code-block` é a cerca, `tabs` vem do Docusaurus acima, e
-  // `table` é a chave de elemento acima.
+  // The catalog components with their own MDX tag. `steps` accounts for two
+  // keys (`Step` and `Steps`). The rest of the catalog has no tag: `callout`
+  // is `:::`, `code-block` is the fence, `tabs` comes from Docusaurus above,
+  // and `table` is the element key above.
   //
-  // A décima quarta chave, `CommandPanel`, NÃO é do catálogo — ela é chrome de
-  // uma rota, e a nota ao lado dela diz por quê. O catálogo continua fechado em
-  // dezesseis.
+  // `CommandPanel` is NOT part of the catalog: it's a route's chrome, and
+  // the note beside it explains why.
   //
-  // Inicial maiúscula não é estilo: em MDX v3 a tag minúscula é elemento HTML, e
-  // um `<card>` sairia como tag desconhecida.
+  // Capitalized, not for style: in MDX v3 a lowercase tag is an HTML
+  // element, and a `<card>` would come out as an unknown tag.
   Accordion,
   AccordionGroup,
   Card,
@@ -198,12 +180,12 @@ export default {
   Expandable,
   Frame,
   Icon,
-  // A única chave do registro que NENHUM autor escreve, e por isso ela é a
-  // única fora do catálogo de componentes: quem emite `<CommandPanel />` é
-  // `scripts/generate-reference.mjs`, no corpo das 4 páginas de comando, e o
-  // portão 5 regenera e diffa. Ele entra pela mesma porta que os outros — o
-  // registro é global, e um bloco de fluxo não precisa de componente de rota
-  // para existir. Ver o cabeçalho dele e ADR 2.
+  // The one key in this registry no author writes, which is also why it's
+  // the one key outside the component catalog: the only thing that emits
+  // `<CommandPanel />` is `scripts/generate-reference.mjs`, in the body of
+  // command pages. It enters through the same door as everything else,
+  // since the registry is global and a flow block needs no route component
+  // to exist.
   CommandPanel,
   ParamField,
   ResponseField,

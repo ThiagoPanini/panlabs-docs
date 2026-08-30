@@ -1,30 +1,27 @@
 /**
- * `code-group` — o mesmo trecho em várias linguagens.
- *
- * Ele **compõe** o `<Tabs>` do Docusaurus; não swizzla nada. O `Tabs` é
- * `unsafe` e não precisamos dele ejetado: a anatomia que falta sai só de CSS, e
- * o `role="tablist"`, o `aria-selected` e o `tabindex` roving já vêm prontos.
- *
- * O autor escreve cercas de código com `title=`, como escreveria fora do grupo.
- * Este componente lê o título de cada cerca, monta as abas, e **remove o título
- * do bloco** — mantê-lo desenharia a mesma palavra duas vezes, na aba e na
- * moldura.
- *
- * `groupId` faz a escolha seguir o leitor entre páginas e `queryString` a põe na
- * URL — o delta de outra referência chegando sem componente novo e sem uma
- * linha de JavaScript nossa. **Os dois são opcionais e nascem desligados**, e
- * isso é decisão, não descuido: as abas de um grupo de código nem sempre são
- * linguagens. Um grupo cujas abas são `Node`, `Python` e `Resposta` gravaria
- * `Resposta` na escolha compartilhada, e o defeito apareceria noutra página,
- * como a aba errada selecionada. Quem sincroniza é quem sabe que as abas são
- * comparáveis: o autor.
- *
- * Nota de leitura do MDX: uma cerca dentro de JSX chega como `<pre>` cujo único
- * filho é o `<code>`, e é no `<code>` que moram `className` e `metastring`. O
- * `MDXComponents/Pre` do upstream é um passa-adiante, então a forma é estável.
- *
- * Procedência: docs/design/componentes/code-group.md · tabs.md.
+ * `code-group`, the same snippet in several languages.
  */
+
+/* Composes Docusaurus's `<Tabs>`; nothing swizzled. `Tabs` is `unsafe`, and
+   ejecting it isn't needed: the missing anatomy is CSS-only, and
+   `role="tablist"`, `aria-selected`, and roving `tabindex` already come
+   free.
+
+   The author writes code fences with `title=`, same as outside a group.
+   This component reads each fence's title, builds the tabs, and strips the
+   title from the block (keeping it would draw the same word twice, in the
+   tab and in the frame).
+
+   `groupId` and `queryString` default off. Not an oversight: a code group's
+   tabs aren't always languages. A group with `Node`, `Python`, and
+   `Response` tabs would record `Response` into the shared choice,
+   surfacing as the wrong tab selected on another page. Only the author
+   knows the tabs are comparable, so syncing is opt-in.
+
+   MDX reading note: a fence inside JSX arrives as a `<pre>` whose only
+   child is the `<code>`, and `className`/`metastring` live on that
+   `<code>`. Upstream's `MDXComponents/Pre` is a pass-through, so the shape
+   is stable. */
 
 import React from 'react';
 import Tabs from '@theme/Tabs';
@@ -36,9 +33,9 @@ const TITLE = /title="([^"]*)"/;
 const LANGUAGE = /language-([\w-]+)/;
 
 /**
- * Uma cerca dentro de JSX chega como `<pre>` cujo único filho é o `<code>`, e é
- * no `<code>` que moram `className` e `metastring`. Esta função é o único lugar
- * do projeto que conhece essa forma.
+ * A fence inside JSX arrives as a `<pre>` whose only child is the `<code>`,
+ * and `className`/`metastring` live there. This function is the only place
+ * in the project that knows this shape.
  *
  * @param {React.ReactElement} fence
  * @returns {{className?: string, metastring?: string, children?: unknown}}
@@ -48,8 +45,9 @@ function fenceContent(fence) {
 }
 
 /**
- * O rótulo da aba: o título da cerca; na falta dele, a linguagem; na falta das
- * duas, a posição. Nunca vazio — aba sem nome é aba que não se clica de novo.
+ * The tab's label: the fence title, falling back to the language, falling
+ * back to position. Never empty, since an unnamed tab can't be clicked back
+ * to.
  *
  * @param {{className?: string, metastring?: string}} props
  * @param {number} index
@@ -67,9 +65,9 @@ export default function CodeGroup({groupId, queryString, children}) {
   const fences = React.Children.toArray(children).filter(React.isValidElement);
   const labels = fences.map((fence, i) => labelFor(fenceContent(fence), i));
 
-  // Rótulo repetido é o valor da aba repetido, e o `Tabs` resolve isso
-  // selecionando a primeira — o autor clica na segunda e a primeira acende.
-  // Falha alto, como nome de ícone inexistente e verbo fora da escada.
+  // A repeated label is a repeated tab value, and `Tabs` resolves that by
+  // selecting the first one: the author clicks the second tab and the first
+  // lights up. Fail loud here, same as an unknown icon name.
   const repeated = labels.find((r, i) => labels.indexOf(r) !== i);
   if (repeated) {
     throw new Error(

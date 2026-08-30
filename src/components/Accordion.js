@@ -1,24 +1,20 @@
 /**
- * `accordion` e `accordion-group`.
- *
- * `<details>` e `<summary>` nativos. **Zero `keydown` escrito aqui**: que tecla
- * abre, o que recebe foco na abertura, o que o leitor de tela anuncia e onde vai
- * `aria-expanded` são responsabilidade do navegador, e o navegador é a
- * especificação. Um `<div onClick>` seria pixel a pixel idêntico para quem não
- * usa teclado — é esse modo de falhar invisível que a regra existe para fechar.
- *
- * Três coisas caem de graça e ninguém precisa construir: âncora de URL abre o
- * `<details>` ancestral sozinha, busca na página alcança o conteúdo, e o
- * atributo `name` daria exclusividade — que **não** usamos, porque em
- * documentação o leitor compara itens e fechar o que ele abriu é hostil.
- *
- * O caret é `mask-image` em `summary::after`, não um segundo `<svg>`: com dois
- * SVG irmãos dentro do mesmo `<summary>`, o seletor por tipo de elemento deixa
- * de alcançar o ícone do autor, e o contrato de partes teria que crescer para
- * compensar uma escolha de implementação.
- *
- * Procedência: docs/design/componentes/accordion.md · accordion-group.md.
+ * `accordion` and `accordion-group`: native `<details>` and `<summary>`.
  */
+
+/* Zero handwritten `keydown`: which key opens it, what receives focus, what
+   the screen reader announces, and where `aria-expanded` goes are the
+   browser's job. A `<div onClick>` would be pixel-identical for a mouse user
+   while failing silently for keyboard users.
+
+   Three things come free: a URL anchor opens the ancestor `<details>` on its
+   own, in-page search reaches the content, and the `name` attribute would
+   give mutual exclusivity, deliberately unused (a reader comparing items
+   shouldn't have the one they opened closed for them).
+
+   The caret is `mask-image` on `summary::after`, not a second `<svg>`: two
+   sibling SVGs inside the same `<summary>` break the element-type
+   selector's reach to the author's icon. */
 
 import React from 'react';
 import Icon from './Icon';
@@ -37,8 +33,8 @@ export default function Accordion({title, description, icon, defaultOpen, childr
     <details
       className={styles.accordion}
       data-pd-component="accordion"
-      // Não controlado: quem guarda o estado é o elemento. `undefined` remove o
-      // atributo, e é o `[open]` do DOM que o CSS e a skin leem.
+      // Uncontrolled: the element owns the state. `undefined` removes the
+      // attribute, and the DOM's `[open]` is what CSS and the skin read.
       open={defaultOpen ? true : undefined}>
       <summary className={styles.accordionSummary}>
         {icon ? <Icon name={icon} size="sm" /> : null}

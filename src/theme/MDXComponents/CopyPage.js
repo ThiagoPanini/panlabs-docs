@@ -1,67 +1,54 @@
 /**
- * O par segmentado do cabeçalho — copiar a página, e o menu do resto.
- *
- * Ele é a SEGUNDA peça que o override de `h1` injeta, e nasce pelo mesmo
- * motivo que o subtítulo: `DocItem/Layout` e `DocItem/Content` são `unsafe`
- * (perda 1 do ledger), e ancorar no `<h1>` alcança o cabeçalho sem encostar
- * neles. Ver `chrome.md` §6.4.
- *
- * ---------------------------------------------------------------------------
- * A FONTE É O `.md` QUE JÁ EXISTE, e isto é o que torna o botão barato
- *
- * O plugin `src/plugins/ai-era/` publica toda rota também como Markdown, em
- * `permalink + '.md'` (ver `informacao.md` §9.1). O botão não serializa nada,
- * não lê o DOM e não tem uma segunda ideia do que a página é: ele BUSCA o
- * arquivo que o site já serve. Uma fonte só, como no subtítulo — e o dia em
- * que o `.md` mudar de forma, o que o leitor copia muda junto, sem ninguém
- * lembrar deste arquivo.
- *
- * **Perda herdada, e ela é a mesma do §9.1:** em `docusaurus start` a rota
- * `.md` não existe e devolve 200 com o shell da SPA. Sem guarda, o leitor
- * copiaria HTML achando que copiou Markdown — o pior modo de falhar que uma
- * ação de copiar tem, porque o erro só aparece do outro lado, colado. A guarda
- * é olhar o corpo: documento HTML no lugar do Markdown vira estado de erro,
- * visível no próprio botão.
- *
- * ---------------------------------------------------------------------------
- * O RÓTULO NÃO MUDA DE LARGURA quando o estado muda
- *
- * "Copiar página" e "Copiado" têm larguras diferentes, e trocar o texto faria o
- * par inteiro pular no instante do clique — o mesmo defeito que o falso-negrito
- * do item de sidebar evita em `chrome.css` §4, e que `scrollbar-gutter: stable`
- * evita ao lado. A resposta é a mesma da âncora, medida no artefato dela: os
- * dois rótulos empilhados na MESMA célula de grade, o que não está em cena
- * segurando a largura com `visibility: hidden`. A caixa mede o mais largo dos
- * dois e nunca se mexe.
- *
- * ---------------------------------------------------------------------------
- * O MENU É `popover` NATIVO, e o zero 5 é quem escolheu
- *
- * A primeira escrita deste arquivo autorava modelo de interação: `onKeyDown`
- * para `Escape`, `onKeyDown` para as setas, `onBlur` para fechar ao sair. O
- * quinto zero reprovou na hora — *"um único autor de modelo de interação no
- * projeto inteiro"*, e o único é o `SearchBar`. A régua dele é estreita e
- * deliberada (`addEventListener|onKeyDown|onKeyUp|onKeyPress`), e o que ela
- * protege está no axioma 6: quem escreve tecla obriga a spec a descrever
- * tecla, foco e ARIA em prosa.
- *
- * O zero não foi afrouxado — o menu é que desceu para o substrato. `popover`
- * dá `Escape`, dá o fechar-ao-clicar-fora e dá a devolução do foco ao gatilho,
- * as três de graça e as três do navegador. É o mesmo movimento que o
- * `SearchBar` fez com `<dialog>` e `showModal()`, e o comentário de lá vale
- * verbatim aqui: *escrevê-lo seria escrever de novo o que o navegador já faz*.
- *
- * **O que a troca custou, e vai escrito:** o padrão `menu` do WAI-ARIA quer
- * `ArrowDown`/`ArrowUp` entre os itens, e isso é tecla — não há como tê-lo sem
- * reabrir o zero. Sem as setas, `role="menu"` seria ARIA mentindo sobre o
- * modelo, então o menu não o usa: os quatro itens são links e botões comuns,
- * numa ordem de tabulação comum, que é o que `Tab` já percorre. O leitor de
- * teclado alcança os quatro; ele os alcança com a tecla errada para um menu, e
- * com a certa para um grupo de controles — que é o que isto passou a ser.
- *
- * ---------------------------------------------------------------------------
- * Procedência: docs/design/chrome.md §6.4 · docs/design/informacao.md §9.
+ * The header's segmented pair: copy the page, and the menu for the rest.
  */
+
+/* It's the SECOND piece the `h1` override injects, born for the same
+   reason as the subtitle: `DocItem/Layout` and `DocItem/Content` are
+   `unsafe`, and anchoring on the `<h1>` reaches the header without
+   touching them. */
+
+/* THE SOURCE IS THE `.md` THAT ALREADY EXISTS, and that's what makes the
+   button cheap. The `src/plugins/ai-era/` plugin publishes every route as
+   Markdown too, at `permalink + '.md'`. The button doesn't serialize
+   anything, doesn't read the DOM, and has no second idea of what the page
+   is: it FETCHES the file the site already serves. A single source, like
+   the subtitle: the day the `.md` shape changes, what the reader copies
+   changes with it, with nobody needing to remember this file.
+
+   In `docusaurus start` the `.md` route doesn't exist and returns 200
+   with the SPA shell. With no guard, the reader would copy HTML thinking
+   they copied Markdown, the worst way this kind of action can fail,
+   since the error only shows up on the other end, already pasted. The
+   guard looks at the body: an HTML document where Markdown belongs
+   becomes an error state, visible on the button itself. */
+
+/* THE LABEL DOESN'T CHANGE WIDTH when the state changes: "Copy page" and
+   "Copied" have different widths, and swapping the text would make the
+   whole pair jump the instant it's clicked. The fix: both labels stacked
+   in the SAME grid cell, the one not on screen holding the width with
+   `visibility: hidden`. The box measures the wider of the two and never
+   moves. */
+
+/* THE MENU IS A NATIVE `popover`.
+
+   This file writes no interaction model: `Escape`, arrow keys, and
+   close-on-blur are the browser's job, not `onKeyDown`/`onBlur` handlers.
+   `SearchBar` is the project's one deliberate exception, and its rule is
+   narrow for a reason: whoever writes key handling obligates the spec to
+   describe key, focus, and ARIA in prose.
+
+   `popover` delivers `Escape`, click-outside-to-close, and focus return
+   to the trigger, all three for free, all three the browser's. It's the
+   same move `SearchBar` makes with `<dialog>` and `showModal()`: writing
+   it would mean re-writing what the browser already does.
+
+   What that trade cost, on the record: the WAI-ARIA `menu` pattern wants
+   `ArrowDown`/`ArrowUp` between items, and that's key handling; there's
+   no having it without writing one. Without the arrows, `role="menu"`
+   would be ARIA lying about the model, so the menu doesn't use it: the
+   four items are plain links and buttons, in a plain tab order, which is
+   what `Tab` already walks. A keyboard user reaches all four, with the
+   right key for a group of controls, which is what this became. */
 
 import React, {useCallback, useEffect, useId, useRef, useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -69,12 +56,13 @@ import Icon from '@site/src/components/Icon';
 
 import styles from './copy.module.css';
 
-/* Quanto tempo o botão fica dizendo "Copiado" antes de voltar ao rótulo. Não é
-   animação — é o único tempo deste arquivo, e ele não passa pelo vocabulário de
-   motion porque não há transição a nomear: é um `setTimeout` de estado. */
+/* How long the button keeps showing its "copied" notice before reverting.
+   Not animation: it's this file's only duration, and it doesn't go through
+   the motion vocabulary since there's no transition to name, just a
+   state `setTimeout`. */
 const NOTICE_DURATION = 2000;
 
-/** O corpo veio como página, não como Markdown — é o caso do §9.1. */
+/** The body came back as the page, not as Markdown. */
 function looksLikeHtml(text) {
   return /^\s*<(!doctype|html)\b/i.test(text);
 }
@@ -85,14 +73,14 @@ export default function CopyPage({permalink}) {
   const [open, setOpen] = useState(false);
   const menu = useRef(null);
   const timer = useRef(null);
-  /* `useId` porque `popovertarget` casa por `id`, e a página pode um dia ter
-     dois cabeçalhos — um `id` fixo os faria apontar para o mesmo menu. */
+  /* `useId` because `popovertarget` matches by `id`, and the page could one
+     day have two headers; a fixed `id` would point them at the same menu. */
   const menuId = useId();
 
-  /* A rota do Markdown é concatenação pura, e é o [ADR 7](trailingSlash: false)
-     que a torna possível — o permalink já vem sem barra final. A absoluta é a
-     que vai no prompt do assistente: ele precisa de um endereço que resolva
-     fora do navegador do leitor. */
+  /* The Markdown route is pure concatenation, made possible by ADR 7
+     (`trailingSlash: false`): the permalink already arrives with no
+     trailing slash. The absolute URL is what goes in the assistant prompt,
+     which needs an address that resolves outside the reader's browser. */
   const mdRoute = `${permalink}.md`;
   const mdUrl = `${siteConfig.url}${mdRoute}`;
 
@@ -118,9 +106,10 @@ export default function CopyPage({permalink}) {
     }
   }, [notify, mdRoute]);
 
-  /* Os três rótulos são texto simples e não elemento, porque os dois que
-     estão fora de cena também precisam ser TEXTO: eles seguram a largura da
-     caixa, e um nó React fora de cena mediria diferente de um em cena. */
+  /* The three labels are plain strings, not elements, since the two that
+     stay off-screen still need to be TEXT: they hold the box's width, and
+     an off-screen React node would measure differently from an on-screen
+     one. */
   const labels = {
     idle: 'Copiar página',
     copied: 'Copiado',
@@ -171,9 +160,9 @@ export default function CopyPage({permalink}) {
         data-pd-state={state}
         onClick={copy}>
         <Icon name={state === 'copied' ? 'check' : 'copy'} size="sm" />
-        {/* Os três rótulos empilhados: o que está em cena e os que só seguram a
-            largura. `aria-hidden` nos ocultos para o leitor de tela não ler os
-            três em sequência. */}
+        {/* The three labels stacked: the one on screen and the two that only
+            hold the width. `aria-hidden` on the hidden ones keeps the screen
+            reader from reading all three in sequence. */}
         <span className={styles.labels}>
           {Object.entries(labels).map(([which, text]) => (
             <span
@@ -187,10 +176,10 @@ export default function CopyPage({permalink}) {
         </span>
       </button>
 
-      {/* `popovertarget` é a ligação inteira: o navegador abre, fecha no
-          `Escape`, fecha no clique fora e devolve o foco ao gatilho. O
-          `aria-expanded` acompanha pelo evento `toggle`, que é o próprio
-          navegador contando o que fez. */}
+      {/* `popovertarget` is the whole wiring: the browser opens it, closes
+          it on `Escape`, closes it on an outside click, and returns focus to
+          the trigger. `aria-expanded` tracks the `toggle` event, the browser
+          itself reporting what it did. */}
       <button
         type="button"
         className={styles.more}
