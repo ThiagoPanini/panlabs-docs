@@ -1,53 +1,47 @@
 /**
- * `SearchBar` — **degrau 5** do ADR 2, o primeiro `--eject` do projeto.
- *
- *   ejetado de @docusaurus/theme-classic@3.10.2
- *
- * Cabeçalho de versão obrigatório: o gerador do Docusaurus remove o cabeçalho de
- * licença ao ejetar, e sem anotação não há contra o que diffar no upgrade.
- *
- * **Zero linha de upstream copiada, e isso é fato e não disciplina.** O
- * `SearchBar` do `theme-classic` é `export {default} from '@docusaurus/Noop'` —
- * uma linha, que devolve `null`. O tema clássico não tem busca; ele tem o
- * ponto de extensão. É por isso que o degrau 5 aqui não carrega a dívida que o
- * degrau 5 costuma carregar: não há implementação upstream para reconciliar.
- *
- * > **Desvio de `--typescript` — o desvio 2, e hoje o único do repositório.** O
- * > desvio 1 saiu com `NavbarItem/ComponentTypes.js`, que era idêntico ao
- * > upstream nas nove chaves; a numeração não é remendada. O ADR 2 diz
- * > *sempre*, e a regra existe para o que a flag protege — **assinatura de
- * > props**. Medido no 3.10.2: os dois consumidores (`Navbar/Content` e
- * > `NavbarItem/SearchNavbarItem`) montam `<SearchBar />`, sem uma prop. E o
- * > repositório não tem `typescript` instalado: o que compila `.tsx` aqui é o
- * > `@babel/preset-typescript` do `@docusaurus/babel`, que **apaga** os tipos
- * > sem conferir nenhum. A flag entregaria a forma da garantia sem a garantia,
- * > e cobraria uma dependência de toolchain contra o axioma 2.
- * >
- * > O que fica no lugar dela: este arquivo tem superfície de props **zero**,
- * > então a mudança que a flag pegaria não existe. O que pode mudar é o nome do
- * > componente no upstream — e isso quem pega é o portão 7, diffando o
- * > `swizzle --list` congelado.
- *
- * ---------------------------------------------------------------------------
- * O que este arquivo NÃO escreve
- *
- * Armadilha de foco, camada superior sobre todo `z-index` da página,
- * `::backdrop`, `Escape` e restauração do foco ao elemento que abriu o modal.
- * Tudo isso vem de `<dialog>` + `showModal()`, do navegador. **Não há uma linha
- * de gestão de foco aqui**, e é o motivo de o modal ser um `<dialog>` em vez de
- * uma `<div>` com `position: fixed`.
- *
- * Este é o **único JS de interação que o projeto autora**, e ele mora no
- * chrome. O catálogo de conteúdo continua em zero — ver o *substrato nativo*
- * em `docs/agents/domain.md`.
- *
- * A escada de pontuação, a normalização e o cálculo do realce **não moram
- * aqui**: são lógica pura, vivem em `./ladder.mjs` e são cobradas por
- * `scripts/busca.test.mjs`. O que sobra neste arquivo é JSX mais os ganchos do
- * `<dialog>` — que é a parte que só um navegador sabe conferir.
- *
- * Procedência: docs/design/busca.md · ADR 6.
+ * `SearchBar`, rung 5 of the swizzle ladder, the project's first `--eject`.
  */
+
+/* Mandatory version header: the Docusaurus generator strips the license
+   header on eject, and there's nothing to diff against on upgrade
+   without it:
+
+     ejected from @docusaurus/theme-classic@3.10.2 */
+
+/* Zero line of upstream copied, and that's a fact, not discipline: the
+   `theme-classic` `SearchBar` is `export {default} from '@docusaurus/Noop'`,
+   one line, returning `null`. The classic theme has no search; it has the
+   extension point. That's why rung 5 here doesn't carry the debt rung 5
+   usually does: there's no upstream implementation to reconcile against. */
+
+/* On the `--typescript` flag: the rule exists for what the flag protects,
+   prop signatures. Measured against 3.10.2: both consumers
+   (`Navbar/Content` and `NavbarItem/SearchNavbarItem`) mount
+   `<SearchBar />` with no prop, and this repository doesn't have
+   `typescript` installed; what compiles `.tsx` here is
+   `@babel/preset-typescript` via `@docusaurus/babel`, which strips types
+   without checking any. The flag would deliver the shape of the guarantee
+   without the guarantee, for the cost of a toolchain dependency.
+
+   What stands in for it: this file has a zero prop surface, so the change
+   the flag would catch doesn't exist. What can change is the component's
+   name upstream. */
+
+/* What this file does NOT write: a focus trap, a top layer above every
+   `z-index` on the page, `::backdrop`, `Escape`, and returning focus to
+   whatever opened the modal. All of that comes from `<dialog>` +
+   `showModal()`, the browser's. There's not one line of focus management
+   here, and that's why the modal is a `<dialog>` instead of a `<div>` with
+   `position: fixed`.
+
+   This is the one interaction script the project authors, and it lives in
+   chrome; the content catalog stays at zero (see "native substrate" in
+   `CONTEXT.md`).
+
+   The scoring ladder, normalization, and highlight calculation don't live
+   here: they're pure logic, living in `./ladder.mjs`. What's left in this
+   file is JSX plus the `<dialog>` hooks, the part only a browser knows how
+   to verify. */
 
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useHistory} from '@docusaurus/router';
@@ -74,30 +68,30 @@ export default function SearchBar() {
   const [active, setActive] = useState(0);
   const [mac, setMac] = useState(false);
 
-  // O índice normalizado, uma vez na montagem e não a cada tecla. `undefined`
-  // quando o plugin não está na config — ver o `return null` lá embaixo.
+  // The normalized index, once at mount, not per keystroke. `undefined`
+  // when the plugin isn't in the config; see the `return null` below.
   const index = useMemo(() => data && normalizeIndex(data.records), [data]);
 
   const results = useMemo(() => (index ? score(index, query) : []), [index, query]);
 
   const open = useCallback(() => {
     dialog.current?.showModal();
-    // Não é gestão de foco: é pôr o cursor no único campo do modal. A armadilha,
-    // a camada e a restauração continuam sendo do `<dialog>`.
+    // Not focus management: it's placing the cursor in the modal's one
+    // field. The trap, the layer, and the restoration are still `<dialog>`'s.
     input.current?.select();
   }, []);
 
   const close = useCallback(() => dialog.current?.close(), []);
 
-  // O glifo da tecla só é decidido DEPOIS da montagem, e é de propósito: o
-  // servidor não sabe em que plataforma a página vai abrir, e renderizar `⌘`
-  // no HTML produziria divergência de hidratação. `Ctrl` é o estado inicial
-  // porque é o da maioria; no Mac ele troca no primeiro quadro.
+  // The key glyph is decided only AFTER mount, on purpose: the server
+  // doesn't know what platform the page will open on, and rendering `⌘` in
+  // the HTML would produce a hydration mismatch. `Ctrl` is the initial
+  // state since it's the majority's; on Mac it swaps on the first frame.
   useEffect(() => setMac(/mac|iphone|ipad/i.test(navigator.userAgent)), []);
 
-  // `⌘K` / `Ctrl K` e NADA MAIS. `/` foi recusado: ele exige uma guarda de
-  // *"estou dentro de um campo?"*, e o modo de falhar dessa guarda é invisível —
-  // o leitor digita uma barra num formulário e o modal abre por cima.
+  // `⌘K` / `Ctrl K` and NOTHING ELSE. `/` is refused: it needs an "am I
+  // inside a field?" guard, and that guard's failure mode is invisible; the
+  // reader types a slash in a form and the modal opens on top.
   useEffect(() => {
     if (!index) {
       return undefined;
@@ -116,9 +110,9 @@ export default function SearchBar() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [index, open, close]);
 
-  // Sem teto de resultados, a lista rola — e a opção ativa precisa estar à
-  // vista. Rolagem não é foco: o foco nunca sai do campo, que é o que
-  // `aria-activedescendant` compra.
+  // No result cap, so the list scrolls, and the active option needs to stay
+  // in view. Scrolling isn't focus: focus never leaves the field, which is
+  // what `aria-activedescendant` buys.
   useEffect(() => {
     document.getElementById(optionId(active))?.scrollIntoView({block: 'nearest'});
   }, [active]);
@@ -145,14 +139,16 @@ export default function SearchBar() {
       event.preventDefault();
       choose(active);
     }
-    // `Escape` NÃO aparece aqui. O `<dialog>` o trata, fecha e devolve o foco
-    // ao botão. Escrevê-lo seria escrever de novo o que o navegador já faz.
+    // `Escape` does NOT appear here. `<dialog>` handles it, closes, and
+    // returns focus to the button: writing it would mean re-writing what
+    // the browser already does.
   };
 
-  // **Quando a busca não existe, o navbar não muda.** Tirar o plugin da config
-  // faz `usePluginData` devolver `undefined`; o componente devolve `null`, e o
-  // `Navbar/Search` do upstream esconde o contêiner vazio pelo próprio
-  // `:empty`. Sem botão, sem atalho, sem modal — e o navbar reflui sozinho.
+  // When search doesn't exist, the navbar doesn't change: removing the
+  // plugin from the config makes `usePluginData` return `undefined`; the
+  // component returns `null`, and upstream's `Navbar/Search` hides the
+  // empty container via its own `:empty`. No button, no shortcut, no modal,
+  // and the navbar reflows on its own.
   if (!index) {
     return null;
   }
@@ -174,13 +170,12 @@ export default function SearchBar() {
       </button>
 
       <dialog ref={dialog} className={styles.modal} data-pd-component="search" onClose={() => setActive(0)}>
-        {/* ARIA por CITAÇÃO do padrão `Combobox With List Autocomplete` do
-            WAI-ARIA APG, e não por invenção. É o único lugar do projeto onde a
-            spec descreve ARIA em prosa, e ela aponta para um padrão publicado:
-            `role="combobox"` no próprio campo (ARIA 1.2, não o invólucro do
-            1.0), `aria-controls` para a listbox, `aria-autocomplete="list"`, e
-            `aria-activedescendant` — que é o que mantém o FOCO no campo
-            enquanto a seleção anda pela lista. */}
+        {/* ARIA by CITATION of the WAI-ARIA APG's `Combobox With List
+            Autocomplete` pattern, not invented: `role="combobox"` on the
+            field itself (ARIA 1.2, not the 1.0 wrapper), `aria-controls`
+            for the listbox, `aria-autocomplete="list"`, and
+            `aria-activedescendant`, which is what keeps FOCUS in the field
+            while selection moves through the list. */}
         <div className={styles.field} data-pd-part="field">
           <Icon name="search" size="sm" />
           <input
@@ -236,9 +231,8 @@ export default function SearchBar() {
           {query.trim() === '' ? '' : `${results.length} resultados`}
         </p>
 
-        {/* As teclas são CARACTERES SOLTOS desde a #98 — nem ícone, nem
-            elemento de teclado. Três setas desenhadas custariam três slots e
-            estourariam o teto de 64 do manifesto — e `↑` já é a seta. */}
+        {/* The keys are PLAIN CHARACTERS, not icons or keyboard elements:
+            `↑` is already the arrow. */}
         <footer className={styles.footer}>
           <span>↑↓ navegar</span>
           <span>↵ abrir</span>
@@ -250,16 +244,14 @@ export default function SearchBar() {
 }
 
 /**
- * O realce — peso e, desde a #98, tinta de acento.
- *
- * A linha ativa deixou de ser `--pd-surface-wash` (ver `styles.module.css`,
- * `.option[aria-selected]`), então o `<mark>` pode colorir sem cair acento
- * sobre acento no mesmo pixel. O elemento continua sendo `<mark>` porque é
- * ele que carrega o significado; o que o CSS troca agora é a tinta e o peso.
- *
- * Quem sabe ONDE cortar é `ladder.mjs`, que devolve faixas já mapeadas para o
- * texto original. Aqui só se monta o JSX.
+ * The highlight: weight plus accent ink.
  */
+
+/* The element stays `<mark>` because it's what carries the meaning; what
+   the CSS swaps is the ink and the weight.
+
+   What knows WHERE to cut is `ladder.mjs`, which returns ranges already
+   mapped to the original text. Only the JSX gets assembled here. */
 function highlight(text, terms) {
   const ranges = highlightRanges(text, terms);
   if (ranges.length === 0) {

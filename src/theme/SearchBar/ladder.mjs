@@ -1,38 +1,36 @@
 /**
- * A escada de pontuação e a normalização — a lógica pura da busca.
- *
- * Ela mora fora do componente por dois motivos, e o segundo é o que decidiu:
- *
- *   1. o `SearchBar` fica sendo o que ele é — JSX mais os ganchos de `<dialog>`;
- *   2. **é o único algoritmo não trivial do projeto inteiro**, e sem separá-lo
- *      não há como cobrá-lo por máquina. O resto do repositório é conferido por
- *      varredura porque o resto do repositório é CSS e conteúdo; ordenação de
- *      resultado não é varrível, e afirmar *"determinística"* em prosa é
- *      exatamente a classe de afirmação que este projeto recusa.
- *
- * A régua está em `scripts/busca.test.mjs`, no `node --test` do próprio runtime.
- * **Zero dependência nova** — é o mesmo critério que escolheu `<dialog>` e
- * `<details>` em vez de biblioteca.
- *
- * `.mjs` e não `.js`: `package.json` não declara `type`, então só a extensão
- * explícita faz o Node ler o arquivo como módulo. O webpack lê os dois.
- *
- * Procedência: docs/design/busca.md.
+ * The scoring ladder and normalization: the search's pure logic.
  */
 
+/* It lives outside the component for two reasons, and the second is the
+   one that decided it: the `SearchBar` stays what it is, JSX plus the
+   `<dialog>` hooks; and it's the one non-trivial algorithm in the whole
+   project, and separating it is what makes it machine-checkable. The rest
+   of the repository is checked by sweep because the rest of the
+   repository is CSS and content; result ordering isn't sweepable, and
+   asserting "deterministic" in prose is exactly the kind of claim this
+   project refuses.
+
+   Zero new dependency, the same criterion that chose `<dialog>` and
+   `<details>` over a library.
+
+   `.mjs`, not `.js`: `package.json` doesn't declare `type`, so only the
+   explicit extension makes Node read the file as a module. Webpack reads
+   both. */
+
 /**
- * A escada — **potências de dois, e isso é a decisão**.
+ * The ladder: powers of two, and that's the decision.
  *
- * Cada degrau vale mais do que a soma de todos abaixo dele (32 > 16+8+4+2+1),
- * então a ordem é lexicográfica de verdade: casar no título nunca perde para
- * casar em três campos fracos ao mesmo tempo. Uma escala linear inverteria isso
- * em algum ponto, e ninguém conseguiria explicar em qual.
+ * Each rung is worth more than the sum of every rung below it
+ * (32 > 16+8+4+2+1), so the order is truly lexicographic: matching the
+ * title never loses to matching three weak fields at once. A linear scale
+ * would invert that somewhere, and nobody could explain exactly where.
  *
- * `prefixo` é casamento no começo de **palavra**, em qualquer ponto do campo — e
- * não no começo do campo. `webhook` casa no degrau alto tanto em `Webhooks`
- * quanto em `Sobre webhooks`, porque nos dois o leitor digitou o começo de uma
- * palavra que está lá. O degrau abaixo é o que sobra: o termo aparece no MEIO de
- * uma palavra, que é casamento verdadeiro e mais fraco.
+ * `prefix` is a match at the start of a WORD, anywhere in the field, not
+ * just the start of the field. `webhook` matches on the high rung in both
+ * `Webhooks` and `About webhooks`, since in both the reader typed the start
+ * of a word that's there. The rung below is what's left over: the term
+ * appears in the MIDDLE of a word, a real but weaker match.
  */
 export const LADDER = [
   {weight: 64, field: 't', prefix: true},
@@ -45,12 +43,12 @@ export const LADDER = [
 ];
 
 /**
- * Minúsculas e `normalize('NFD')` sem diacrítico.
+ * Lowercase and `normalize('NFD')` with no diacritic.
  *
- * São as poucas linhas que cobrem o erro mais comum do leitor brasileiro:
- * *conciliacao* acha `Conciliação`, *idempotencia* acha `Idempotência`. Ela roda
- * nos **dois lados** — no índice, uma vez, e na consulta, a cada tecla.
- * Normalizar só um lado é não normalizar.
+ * These few lines cover the most common accent-typing gap for readers who
+ * skip diacritics: *conciliacao* finds `Conciliação`, *idempotencia* finds
+ * `Idempotência`. It runs on BOTH sides, once on the index and on every
+ * keystroke on the query. Normalizing only one side is not normalizing.
  *
  * @param {string} text
  */
@@ -61,14 +59,14 @@ export function normalize(text) {
     .replace(/\p{Diacritic}/gu, '');
 }
 
-/** A consulta vira termos: normalizada, partida em espaço, sem vazio. */
+/** The query becomes terms: normalized, split on space, no empties. */
 export const termsFrom = (query) => normalize(query).split(/\s+/).filter(Boolean);
 
-/** Casamento por prefixo de palavra: começo do campo, ou logo depois de um espaço. */
+/** Word-prefix match: start of the field, or right after a space. */
 const startsWithWord = (text, term) => text.startsWith(term) || text.includes(` ${term}`);
 
 /**
- * O índice normalizado — uma vez, na montagem, não a cada tecla.
+ * The normalized index, once at mount, not per keystroke.
  *
  * @param {{u: string, t: string, d?: string, s?: string[], b?: string, x: number, f?: number}[]} records
  */
@@ -84,17 +82,17 @@ export function normalizeIndex(records) {
 }
 
 /**
- * Os resultados, ordenados.
+ * The results, ordered.
  *
- * **Todo termo precisa casar em algum degrau.** Um termo que não casa derruba o
- * registro inteiro — senão uma consulta de duas palavras devolveria tudo o que
- * casa com a mais comum das duas, que é o oposto de refinar.
+ * Every term must match some rung: a term that doesn't drops the whole
+ * record, otherwise a two-word query would return everything matching the
+ * more common of the two, the opposite of refining.
  *
- * **Sem teto de resultados.** Truncar em dez seria esconder acerto sem dizer que
- * escondeu, e falha silenciosa é o que este projeto recusa em toda parte.
+ * No result cap: truncating at ten would hide a match without saying it
+ * hid one, and silent failure is what this project refuses everywhere.
  *
- * Desempate: pontos, depois a aba, depois a ordem da sidebar — que é a ordem em
- * que `src/plugins/pages.js` já entregou o índice.
+ * Tiebreak: points, then tab, then sidebar order, the order
+ * `src/plugins/pages.js` already delivered the index in.
  *
  * @param {ReturnType<typeof normalizeIndex>} index
  * @param {string} query
@@ -123,7 +121,7 @@ export function score(index, query) {
 }
 
 /**
- * O trecho mostrado: a descrição, ou o corpo quando é ele quem casou.
+ * The excerpt shown: the description, or the body when that's what matched.
  *
  * @param {{d?: string, b?: string}} record
  * @param {string[]} terms
@@ -135,20 +133,20 @@ export function excerpt(record, terms) {
 }
 
 /**
- * As faixas a realçar, em índices do texto **original**.
+ * The ranges to highlight, in indices of the ORIGINAL text.
  *
- * A varredura é sobre o texto normalizado e as faixas voltam mapeadas para o
- * original, porque `normalize('NFD')` decompõe acento em dois pontos de código:
- * cortar pelo índice normalizado devolveria letra sem acento na tela, e o realce
- * apagaria o til de `informação` na frente do leitor.
+ * The scan runs on normalized text, and the ranges come back mapped to the
+ * original, since `normalize('NFD')` decomposes an accent into two code
+ * points: cutting by the normalized index would put an unaccented letter
+ * on screen, erasing the tilde of `informação` in front of the reader.
  *
- * Quando a conta de deslocamento não fecha — um caractere cuja normalização por
- * pedaço difere da do todo —, a função devolve lista vazia. Perde-se ênfase,
- * nunca uma letra.
+ * When the offset count doesn't add up, a character whose piece-by-piece
+ * normalization differs from the whole's, the function returns an empty
+ * list. Emphasis is lost, never a letter.
  *
  * @param {string} text
  * @param {string[]} terms
- * @returns {[number, number][]} pares `[de, ate)` sem sobreposição, em ordem
+ * @returns {[number, number][]} non-overlapping `[from, to)` pairs, in order
  */
 export function highlightRanges(text, terms) {
   if (terms.length === 0 || !text) {
@@ -156,9 +154,9 @@ export function highlightRanges(text, terms) {
   }
   const target = normalize(text);
 
-  // Um mapa `índice normalizado → índice original`. `origem` acumula o
-  // comprimento em UNIDADES DE CÓDIGO e não a posição do laço: iterar uma
-  // string por `for…of` anda por ponto de código, e um par substituto mede dois.
+  // A `normalized index → original index` map. `origin` accumulates length
+  // in CODE UNITS, not loop position: iterating a string with `for…of`
+  // walks by code point, and a surrogate pair measures as two.
   const offset = [];
   let origin = 0;
   for (const char of text) {

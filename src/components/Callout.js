@@ -1,21 +1,18 @@
 /**
- * `callout` — o corpo da **admonition nativa**.
- *
- * Este componente não é registrado em `MDXComponents`: quem o alcança é
- * `src/theme/Admonition/Types.js`, o registro de degrau 3 que troca o mapa
- * `tipo → componente` do Docusaurus. O `Admonition` raiz — que é `unsafe` —
- * continua intocado e despacha por tipo para dentro do mapa; a partir daí o DOM
- * é inteiramente nosso, **sem uma linha de upstream copiada**.
- *
- * Consequência de anatomia: a barra lateral de 5px e a faixa de título
- * MAIÚSCULA do Infima não existem porque não as escrevemos. O `.alert` também
- * não — este DOM não é um `.alert`.
- *
- * Quatro variantes, e o autor não escolhe ícone: os tipados da âncora não
- * aceitam prop nenhuma, e o ícone é o que carrega a semântica da variante.
- *
- * Procedência: docs/design/componentes/callout.md.
+ * `callout`, the body of the native admonition.
  */
+
+/* Not registered in `MDXComponents`: it's reached through
+   `src/theme/Admonition/Types.js`, the registry that swaps Docusaurus's
+   `type → component` map. The root `Admonition` (which is `unsafe`) stays
+   untouched and dispatches by type into the map; from there the DOM is
+   ours, with no upstream line copied. Infima's 5px side bar and uppercase
+   title band don't exist because we never write them, and this DOM isn't
+   `.alert`.
+
+   Four variants, and the author doesn't pick an icon: the anchor's typed
+   fields take no such prop, and the icon carries the variant's
+   semantics. */
 
 import React from 'react';
 import clsx from 'clsx';
@@ -23,23 +20,19 @@ import Icon from './Icon';
 import styles from './catalog.module.css';
 
 /**
- * O glifo por variante — fixo, do papel `sistema` do manifesto.
+ * One glyph per variant, fixed. `info` is the neutral variant, `note` is
+ * blue, the inversion is deliberate.
  *
- * `info` é a variante NEUTRA e `note` é a azul. A inversão é deliberada e é o
- * que faz o sistema ler como a âncora; ver `componentes/callout.md`.
- */
-/**
- * Um mapa por variante, e não dois mapas com as mesmas chaves: duas tabelas
- * paralelas é como uma variante ganha glifo e não ganha classe.
+ * One map per variant, not two maps with the same keys, since two parallel
+ * tables are how a variant ends up with a glyph and no class.
  *
- * A variante entra no DOM duas vezes, e é de propósito. Como classe de módulo,
- * porque é assim que o nosso CSS pinta — especificidade (0,1,0). Como
- * `data-pd-variant`, porque é assim que a skin corporativa repinta — (0,2,0),
- * que vence sem um único `!important`. Nosso CSS nunca lê `data-pd-*`: se lesse,
- * as duas camadas empatariam e a ordem de carga passaria a decidir.
- *
- * `info` não tem classe porque ela é a variante NEUTRA, e neutro é o default
- * declarado no próprio `.callout`.
+ * The variant lands in the DOM twice, on purpose: as a module class, since
+ * that's what our CSS paints with (specificity (0,1,0)), and as
+ * `data-pd-variant`, since that's what the corporate skin repaints with
+ * (specificity (0,2,0), which wins with no `!important`). Our CSS never reads
+ * `data-pd-*`; if it did, the two layers would tie and load order would
+ * decide. `info` has no class because it's the neutral variant, and neutral
+ * is the default `.callout` already declares.
  */
 const VARIANTES = {
   note: {glifo: 'pencil-line', classe: styles.calloutNote, tamanho: 'sm'},
@@ -48,12 +41,10 @@ const VARIANTES = {
   warning: {glifo: 'triangle-alert', classe: styles.calloutWarning, tamanho: 'md'},
 };
 
-/* Sem prop `id`. Ela existiu como repasse para o atributo do `<div>` e saiu por
-   não ter consumidor: ZERO call sites em `content/`. Um callout não é destino
-   de link neste site — os âncoras de navegação são os headings, que o
-   Docusaurus já ancora sozinho —, e um `id` que ninguém escreve rendia
-   `id={undefined}` em toda instância. Volta com o call site junto no dia em que
-   um callout precisar de endereço próprio. */
+/* No `id` prop: a callout isn't a link target on this site (navigation
+   anchors are headings, which Docusaurus already anchors on its own). Add it
+   back together with the call site the day a callout needs its own
+   address. */
 export default function Callout({variant, title, children}) {
   const {glifo, classe, tamanho} = VARIANTES[variant] ?? VARIANTES.info;
   return (
@@ -62,10 +53,10 @@ export default function Callout({variant, title, children}) {
       data-pd-component="callout"
       data-pd-variant={variant}>
       <Icon name={glifo} size={tamanho} />
-      {/* Sem `data-pd-part` no corpo: ele é o único `<div>` filho, e o irmão é
-          um `<svg>` — a skin alcança por `> div`. O título, não: ele é um `<p>`
-          entre os `<p>` que o autor escreve, e nenhum seletor de tipo o separa
-          deles. */}
+      {/* No `data-pd-part` on the body: it's the only `<div>` child, sibling
+          to an `<svg>`, so the skin reaches it through `> div`. The title
+          needs one, since it's a `<p>` among the `<p>`s the author writes,
+          and no type selector separates it from them. */}
       <div className={styles.calloutContent}>
         {title ? (
           <p className={styles.calloutTitle} data-pd-part="title">

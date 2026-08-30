@@ -1,17 +1,15 @@
 /**
- * `update` — a entrada de changelog.
- *
- * O changelog é o **único** canal de comunicação de versão da API neste site: o
- * conteúdo não é versionado, a API é — por cabeçalho. Esta é a anatomia dessa
- * comunicação.
- *
- * Um `<section>` com `<header>`, e o header é o que evita atributo de parte:
- * dois `<div>` irmãos precisariam de nome, um `<header>` alcança por tipo. A
- * etiqueta também não ganha atributo — é o único elemento dentro do `<header>`,
- * e a skin a alcança por `header > span`. **Zero partes publicadas.**
- *
- * Procedência: docs/design/componentes/update.md.
+ * `update`, a changelog entry.
  */
+
+/* The changelog is the only channel this site uses to communicate API
+   versioning: content isn't versioned, the API is, per header.
+
+   A `<section>` with a `<header>`, and the header is what avoids a part
+   attribute: two sibling `<div>`s would need a name, a `<header>` is
+   reached by type. The tag gets no attribute either, since it's the
+   header's only element and the skin reaches it through `header > span`.
+   Zero published parts. */
 
 import React from 'react';
 import styles from './catalog.module.css';

@@ -1,28 +1,26 @@
 /**
- * `table` — Markdown puro, mais o invólucro de rolagem.
- *
- * O autor escreve uma tabela de Markdown e não escreve tag nenhuma: este
- * componente entra pela chave `table` de `MDXComponents`, então **toda** tabela
- * do site nasce embrulhada.
- *
- * Ele é o **único lugar do catálogo onde ARIA aparece**, e aparece porque o HTML
- * não tem elemento para isto: sem `role="region"` mais `tabindex`, um leitor de
- * teclado não consegue rolar uma tabela larga. Região sem nome acessível é
- * defeito, então o rótulo é obrigatório.
- *
- * Ele também corrige um defeito do Infima que ninguém tinha nomeado: o
- * framework declara `table { display: block; overflow: auto }`. Isso resolve o
- * transbordo e cobra caro — `display: block` **tira a semântica de tabela** da
- * árvore de acessibilidade, e o contêiner que rola não é focável. O invólucro
- * devolve as duas coisas: a rolagem sai do `<table>` e vai para uma região
- * nomeada e alcançável por Tab, e o `<table>` volta a ser `display: table`.
- *
- * A exceção de foco que este `[role="region"]` poderia disparar já está fechada:
- * o `:has()` de `foco.css` §2 exige o link de pular conteúdo como filho direto,
- * e aqui o filho é um `<table>`.
- *
- * Procedência: docs/design/componentes/table.md.
+ * `table`, plain Markdown plus a scroll wrapper.
  */
+
+/* The author writes a Markdown table and no tag at all: this component is
+   reached through the `table` key of `MDXComponents`, so every table on
+   the site is wrapped.
+
+   It's the only place in the catalog where ARIA appears, because HTML has
+   no element for this: without `role="region"` plus `tabindex`, a keyboard
+   user can't scroll a wide table. A region with no accessible name is a
+   defect, so the label is required.
+
+   It also fixes an unnamed Infima defect: the framework declares
+   `table { display: block; overflow: auto }`. That solves overflow and
+   costs dearly, since `display: block` strips table semantics from the
+   accessibility tree, and the scrolling container isn't focusable. The
+   wrapper restores both: scrolling moves off the `<table>` into a named,
+   Tab-reachable region, and the `<table>` goes back to `display: table`.
+
+   The focus exception this `[role="region"]` could trigger is already
+   closed: `focus.css`'s `:has()` requires the skip-content link as a
+   direct child, and here the child is a `<table>`. */
 
 import React from 'react';
 import styles from './catalog.module.css';

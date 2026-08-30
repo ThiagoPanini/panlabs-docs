@@ -1,21 +1,18 @@
 /**
- * `expandable` — a mesma primitiva do `accordion`, sem a moldura.
- *
- * Ele existe para o aninhamento de campo de API: um objeto que tem
- * propriedades, dentro de um `param-field` ou de um `response-field`. A moldura
- * do accordion ali criaria cartão dentro de cartão a cada nível, e o teto de
- * aninhamento é quatro.
- *
- * **Nível 1 nasce aberto, nível 2 em diante fechado.** A escolha sobrevive a um
- * conflito de medição não adjudicado sobre `Ctrl+F` em `<details>` fechado: ela
- * funciona sob qualquer das duas leituras. Quem decide é o autor, por
- * `defaultOpen`, porque é ele que sabe em que nível está.
- *
- * Zero atributo de parte: `<summary>` alcança por tipo, e o corpo é o único
- * `<div>` filho de `<details>`.
- *
- * Procedência: docs/design/componentes/expandable.md.
+ * `expandable`, the same primitive as `accordion`, without the frame.
  */
+
+/* It exists for API field nesting: an object with properties, inside a
+   `param-field` or `response-field`. The accordion's frame there would
+   stack card inside card at every level, and the nesting cap is four.
+
+   Level 1 opens by default, level 2 and deeper start closed. The choice
+   holds under either reading of an unresolved question about `Ctrl+F`
+   inside a closed `<details>`. The author decides per instance, via
+   `defaultOpen`, since only they know which level they're at.
+
+   No part attribute: `<summary>` is reached by type, and the body is the
+   only `<div>` child of `<details>`. */
 
 import React from 'react';
 import styles from './catalog.module.css';

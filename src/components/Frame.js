@@ -1,32 +1,24 @@
 /**
- * `frame` — a moldura de **diagrama**, não de screenshot.
- *
- * A decisão de conteúdo vem antes da de anatomia, e ela não depende mais de o
- * produto ser fictício: sem CDN o asset binário entra no repositório, captura de
- * UI de terceiro apodrece sozinha, e **raster não herda `currentColor`**. Os três
- * cortam contra mídia binária de qualquer origem. O que a moldura enquadra é
- * fluxo, ciclo de vida, modelo de dados.
- *
- * Isso encolhe o componente: o fundo quadriculado da âncora existe para
- * enquadrar imagem com transparência, e sem screenshot ele perde a razão de ser.
- * Sobra o palco tingido — sem legenda: o alvo não renderiza `figcaption`, e
- * `research/paridade-devin` §11 mede isso contra o mesmo `mint` do Devin que
- * pediu o palco tingido.
- *
- * E cria a segunda das **duas** exceções do catálogo à regra de que nenhum
- * componente conhece modo de cor: o palco declara `color`, e o diagrama de
- * origem própria que vive nele usa `currentColor` — **um arquivo para os dois
- * modos**, nunca um asset por modo. Esse é o caso que entra como SVG INLINE,
- * porque `<img src="x.svg">` não herda `currentColor`.
- *
- * Diagrama de procedência externa entra pelo outro lado: o draw.io não emite
- * `currentColor`, emite `light-dark()`, que resolve contra o `color-scheme`
- * herdado do documento hospedeiro e atravessa a fronteira do `<img>`. Mesmo
- * invariante de um arquivo para os dois modos, outro mecanismo. A delimitação
- * das duas rotas está em frame.md § Light e dark.
- *
- * Procedência: docs/design/componentes/frame.md.
+ * `frame`, a diagram frame, not a screenshot frame.
  */
+
+/* No CDN means a binary asset lands in the repository, a third-party UI
+   capture rots on its own, and raster doesn't inherit `currentColor`. All
+   three cut against binary media of any origin; what the frame holds is
+   flow, lifecycle, data model. That shrinks the component down to a tinted
+   stage, with no caption support.
+
+   This is the second of the catalog's two exceptions to the rule that no
+   component knows color mode: the stage declares `color`, and an in-house
+   diagram living inside it uses `currentColor`, one file for both modes,
+   never one asset per mode. That case ships as an inline SVG, since
+   `<img src="x.svg">` doesn't inherit `currentColor`.
+
+   An externally-sourced diagram takes the other route: draw.io doesn't
+   emit `currentColor`, it emits `light-dark()`, which resolves against the
+   `color-scheme` inherited from the host document and crosses the `<img>`
+   boundary. Same one-file-for-both-modes invariant, different
+   mechanism. */
 
 import React from 'react';
 import styles from './catalog.module.css';

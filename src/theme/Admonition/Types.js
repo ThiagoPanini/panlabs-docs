@@ -1,48 +1,42 @@
 /**
- * O mapa `tipo → componente` da admonition — **degrau 3** do ADR 2.
- *
- * Cabeçalho de versão obrigatório, porque o gerador do Docusaurus remove o
- * cabeçalho de licença ao ejetar e sem anotação não há contra o que diffar:
- *
- *   ejetado de @docusaurus/theme-classic@3.10.2
- *
- * ---------------------------------------------------------------------------
- * Por que aqui e não em `Admonition/Layout`
- *
- * `Admonition/Layout` seria **degrau 5** — `--eject` de componente `safe`, com
- * reconciliação manual a cada upgrade e correção de a11y do upstream que não
- * chega e nada avisa. Não precisa: este arquivo é um **objeto**, e nada obriga
- * as entradas dele a apontarem para `@theme/AdmonitionLayout`. Elas apontam
- * direto para o nosso `Callout`, e a partir daí o DOM inteiro é nosso **sem
- * copiar uma linha de upstream**.
- *
- * O `Admonition` raiz continua `unsafe` e continua **intocado**: ele despacha
- * por tipo para dentro deste mapa, e é só disso que precisamos.
- *
- * ---------------------------------------------------------------------------
- * Por que quatro chaves e não nove
- *
- * O upstream registra cinco tipos mais quatro apelidos legados. Aqui ficam
- * `note`, `info`, `tip` e `warning`, e cada ausência tem motivo:
- *
- * · `danger` tem uso ZERO nas 1.740 páginas medidas;
- * · `caution` está deprecado no próprio código do Docusaurus (`TODO remove
- *   before v4`);
- * · `check` foi fundido no `tip` — a medição mostrou os dois **pixel a pixel
- *   idênticos** em dois sistemas diferentes, e manter dois nomes para o mesmo
- *   desenho é dívida de vocabulário;
- * · `secondary`, `important` e `success` são apelidos legados que o upstream
- *   mantém com rótulo cravado e não traduzido.
- *
- * O que acontece com um tipo ausente é conhecido e aceito: o `Admonition` raiz
- * avisa no console e cai em `info`. Não há tela quebrada.
- *
- * **Restaurar um tipo é uma linha aqui.** `admonitions.keywords` é opção pública
- * (degrau 2), declarada por instância de plugin de conteúdo. O mecanismo fica
- * documentado e não exercido.
- *
- * Procedência: docs/design/componentes/callout.md · docs/design/swizzle.md.
+ * The admonition's `type → component` map, rung 3 of the swizzle ladder.
  */
+
+/* Mandatory version header, since the Docusaurus generator strips the
+   license header on eject and there's nothing to diff against without it:
+
+     ejected from @docusaurus/theme-classic@3.10.2 */
+
+/* Why here, not in `Admonition/Layout`: that would be rung 5, `--eject` of
+   a `safe` component, with manual reconciliation on every upgrade and
+   upstream a11y fixes that never arrive with no warning. Not needed: this
+   file is an object, and nothing forces its entries to point at
+   `@theme/AdmonitionLayout`. They point straight at our `Callout`, and
+   from there the whole DOM is ours, with no upstream line copied.
+
+   The root `Admonition` stays `unsafe` and stays untouched: it dispatches
+   by type into this map, and that's all we need from it. */
+
+/* Why four keys, not nine: upstream registers five types plus four legacy
+   aliases. Here it's `note`, `info`, `tip`, and `warning`, and each
+   absence has a reason:
+
+   · `danger` measured at zero usage;
+   · `caution` is deprecated in Docusaurus's own code (`TODO remove before
+     v4`);
+   · `check` was merged into `tip`: measurement showed the two
+     pixel-for-pixel identical across two different systems, and keeping
+     two names for the same drawing is vocabulary debt;
+   · `secondary`, `important`, and `success` are legacy aliases upstream
+     keeps with a fixed, untranslated label.
+
+   What happens with a missing type is known and accepted: the root
+   `Admonition` warns in the console and falls back to `info`. No broken
+   screen.
+
+   Restoring a type is one line here. `admonitions.keywords` is a public
+   option, declared per content-plugin instance. The mechanism stays
+   documented and unexercised. */
 
 import React from 'react';
 import Callout from '@site/src/components/Callout';
