@@ -1,33 +1,28 @@
 /**
  * `pd-sidebar-icons`: resolves every `icon('<slug>')` a sidebar file calls
  * against the installed `lucide-static` package, and emits one CSS rule per
- * slug that a sidebar item's mask (`chrome.css`) reads by class name.
- *
- * Runs INSIDE the build, deliberately, unlike `generate-reference.mjs` — see
+ * slug that a sidebar item's mask (`chrome.css`) reads by class name. Runs
+ * INSIDE the build, deliberately, unlike `generate-reference.mjs` — see
  * DECISIONS.md#reference-is-generated-from-contract for why the two differ.
+ * A Docusaurus plugin, not a `prestart`/`prebuild` script, so the stylesheet
+ * `getClientModules` hands to webpack can be rewritten while `npm start` is
+ * already running.
  *
- * A Docusaurus plugin, not a `prestart`/`prebuild` script, so the generated
- * stylesheet `getClientModules` hands to webpack can be rewritten while
- * `npm start` is already running: a script run once before start couldn't
- * reach a class added after the server was up.
- *
- * NOT wired through `getPathsToWatch`, unlike every other watched path in
- * this project. Measured against @docusaurus/core@3.10.2
- * (`lib/commands/start/utils.js`): each plugin's watched paths get their own
- * chokidar instance, and `reloadPlugin` — called per plugin, per matched
- * file — carries the package's own TODO acknowledging a race when two
- * plugins reload from the same event, with no queue between them. Each of
- * the four sidebar files with a `plugin-content-docs` instance is already
- * watched by that instance; adding this plugin's name to the same path
- * reproduced the race on the first edit tried — the docs instance's own
- * reload lost, the sidebar item's class silently reverting to its pre-edit
- * value with no error and no second event to retry on. Below, this plugin
- * watches the sidebar files itself instead — `fs.watch` on their directory,
- * filtered by name so an editor's atomic rename-based save doesn't orphan
- * the watch the way it would watching the file path directly — and writes
- * straight to the generated stylesheet, a file no other plugin touches.
- * Webpack's own watcher, independent of Docusaurus's content-reload
- * machinery, picks up that write on its own.
+ * Reload does NOT go through `getPathsToWatch`, unlike every other watched
+ * path in this project. Measured against @docusaurus/core@3.10.2
+ * (`lib/commands/start/utils.js`): each plugin's watched paths get their
+ * own chokidar instance, and `reloadPlugin` — called per plugin, per
+ * matched file — carries the package's own TODO acknowledging a race when
+ * two plugins reload from the same event, with no queue between them. Each
+ * sidebar file with a `plugin-content-docs` instance is already watched by
+ * that instance; adding this plugin to the same path reproduced the race
+ * on the first edit tried, the docs instance's own reload silently losing.
+ * Below, this plugin watches the sidebars itself instead — `fs.watch` on
+ * their directory, filtered by name so an editor's atomic rename-based
+ * save doesn't orphan the watch the way it would watching the file path
+ * directly — and writes straight to the generated stylesheet, a file no
+ * other plugin touches; webpack's own watcher, independent of Docusaurus's
+ * content-reload machinery, picks up that write on its own.
  */
 
 import fs from 'node:fs/promises';
