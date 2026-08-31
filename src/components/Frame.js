@@ -26,7 +26,7 @@
    arithmetic, not by impression. Measured on the specimen
    (`content/_diagrama-grande.drawio.svg`, 62 cells, 21 AWS shapes): the
    drawing is 1904 x 953 and the stage gives it 699, so it renders at 36.7%
-   and its 49 twelve-pixel labels land at 4.4px.
+   and its 27 twelve-pixel labels land at 4.4px.
 
    What this file gains is a `<button>`, a `<dialog>`, and the
    `data-pd-part` hooks that address them. What it does NOT gain is one line
