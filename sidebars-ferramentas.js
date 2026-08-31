@@ -4,6 +4,7 @@
 // `scripts/generate-reference.mjs`. The only sidebar-file import in this
 // project, kept separate so the two ownership domains don't mix.
 import referencia from './sidebars-referencia.js';
+import {icon} from './sidebars-icons.js';
 
 /**
  * The `Ferramentas` tab sidebar (`tools` instance): the only tree that
@@ -39,11 +40,11 @@ const sidebars = {
           // is inside it.
           type: 'category',
           label: 'overpower',
-          className: 'sidebar-icon sidebar-icon--overpower',
+          ...icon('zap'),
           link: {type: 'doc', id: 'bibliotecas/overpower/visao-geral'},
           items: [
-            {type: 'doc', id: 'bibliotecas/overpower/instalacao', className: 'sidebar-icon sidebar-icon--instalacao'},
-            {type: 'doc', id: 'bibliotecas/overpower/conceitos', className: 'sidebar-icon sidebar-icon--conceitos'},
+            {type: 'doc', id: 'bibliotecas/overpower/instalacao', ...icon('download')},
+            {type: 'doc', id: 'bibliotecas/overpower/conceitos', ...icon('shapes')},
             {
               // Hosts the generated branch. Its own opening leaf is
               // authored and is the empty-right-panel fixture: it takes
@@ -52,36 +53,36 @@ const sidebars = {
               // pages that do paint one.
               type: 'category',
               label: 'Comandos',
-              className: 'sidebar-icon sidebar-icon--comandos',
+              ...icon('terminal'),
               link: {type: 'doc', id: 'bibliotecas/overpower/comandos/indice'},
               items: [...referencia],
             },
             {
               type: 'category',
               label: 'Alvos',
-              className: 'sidebar-icon sidebar-icon--alvos',
+              ...icon('globe'),
               link: {type: 'doc', id: 'bibliotecas/overpower/alvos/indice'},
               items: [
-                {type: 'doc', id: 'bibliotecas/overpower/alvos/servidores-mcp', className: 'sidebar-icon sidebar-icon--alvo-mcp'},
-                {type: 'doc', id: 'bibliotecas/overpower/alvos/from', className: 'sidebar-icon sidebar-icon--alvo-from'},
-                {type: 'doc', id: 'bibliotecas/overpower/alvos/bundle-federado', className: 'sidebar-icon sidebar-icon--alvo-bundle'},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/servidores-mcp', ...icon('webhook')},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/from', ...icon('folder')},
+                {type: 'doc', id: 'bibliotecas/overpower/alvos/bundle-federado', ...icon('package')},
               ],
             },
             {
               type: 'category',
               label: 'Referência',
-              className: 'sidebar-icon sidebar-icon--referencia',
+              ...icon('book-open'),
               link: {type: 'doc', id: 'bibliotecas/overpower/referencia/indice'},
               items: [
-                {type: 'doc', id: 'bibliotecas/overpower/referencia/codigos-de-saida', className: 'sidebar-icon sidebar-icon--codigos-de-saida'},
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/codigos-de-saida', ...icon('circle-alert')},
                 // Max-nesting fixture: depth 4, with the 40px indent plus
                 // icon plus the longest label at this depth, all inside the
                 // column's 288px.
-                {type: 'doc', id: 'bibliotecas/overpower/referencia/solucao-de-problemas', className: 'sidebar-icon sidebar-icon--solucao-de-problemas'},
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/solucao-de-problemas', ...icon('refresh-cw')},
                 // The changelog serves the reader, not the publisher: it
                 // answers "what changed in the version I have", a user's
                 // question.
-                {type: 'doc', id: 'bibliotecas/overpower/referencia/changelog', className: 'sidebar-icon sidebar-icon--changelog'},
+                {type: 'doc', id: 'bibliotecas/overpower/referencia/changelog', ...icon('clock')},
               ],
             },
             {
@@ -90,18 +91,18 @@ const sidebars = {
               // before the reader even clicks.
               type: 'category',
               label: 'Contribuir',
-              className: 'sidebar-icon sidebar-icon--contribuir',
+              ...icon('users'),
               link: {type: 'doc', id: 'bibliotecas/overpower/contribuir/indice'},
               items: [
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/arquitetura', className: 'sidebar-icon sidebar-icon--arquitetura'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/mapa-de-modulos', className: 'sidebar-icon sidebar-icon--mapa-de-modulos'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/hooks', className: 'sidebar-icon sidebar-icon--hooks'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/testes', className: 'sidebar-icon sidebar-icon--testes'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/telas', className: 'sidebar-icon sidebar-icon--telas'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/curadoria', className: 'sidebar-icon sidebar-icon--curadoria'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/criterios-de-catalogo', className: 'sidebar-icon sidebar-icon--criterios-de-catalogo'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release', className: 'sidebar-icon sidebar-icon--release'},
-                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release-ready', className: 'sidebar-icon sidebar-icon--release-ready'},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/arquitetura', ...icon('wrench')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/mapa-de-modulos', ...icon('file-text')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/hooks', ...icon('bell')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/testes', ...icon('repeat')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/telas', ...icon('play')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/curadoria', ...icon('filter')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/criterios-de-catalogo', ...icon('sparkles')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release', ...icon('rocket')},
+                {type: 'doc', id: 'bibliotecas/overpower/contribuir/release-ready', ...icon('upload')},
               ],
             },
           ],
@@ -113,8 +114,8 @@ const sidebars = {
       label: 'Módulos Terraform',
       collapsible: false,
       items: [
-        {type: 'doc', id: 'modulos-terraform/modulo-de-bucket', className: 'sidebar-icon sidebar-icon--modulos-terraform'},
-        {type: 'doc', id: 'modulos-terraform/modulo-de-papel-iam', className: 'sidebar-icon sidebar-icon--modulos-terraform'},
+        {type: 'doc', id: 'modulos-terraform/modulo-de-bucket', ...icon('puzzle')},
+        {type: 'doc', id: 'modulos-terraform/modulo-de-papel-iam', ...icon('puzzle')},
       ],
     },
     {
@@ -123,8 +124,8 @@ const sidebars = {
       collapsible: false,
       items: [
         // Minimal-prose, maximal-code fixture: the `Receita` type.
-        {type: 'doc', id: 'skills/scaffold-de-esteira', className: 'sidebar-icon sidebar-icon--skills'},
-        {type: 'doc', id: 'skills/rotacao-de-segredo', className: 'sidebar-icon sidebar-icon--skills'},
+        {type: 'doc', id: 'skills/scaffold-de-esteira', ...icon('bot')},
+        {type: 'doc', id: 'skills/rotacao-de-segredo', ...icon('bot')},
       ],
     },
     {
@@ -132,7 +133,7 @@ const sidebars = {
       label: 'Servidores MCP',
       collapsible: false,
       items: [
-        {type: 'doc', id: 'servidores-mcp/servidor-de-catalogo-mcp', className: 'sidebar-icon sidebar-icon--servidores-mcp'},
+        {type: 'doc', id: 'servidores-mcp/servidor-de-catalogo-mcp', ...icon('server')},
       ],
     },
   ],

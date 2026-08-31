@@ -694,62 +694,6 @@ html.docs-doc-page .subtitle {
   mask: var(--pd-sidebar-icon) center / contain no-repeat;
 }
 
-/* The thirty-one section-to-icon pairs, read as two blocks because they
-   answer to two different rules.
-
-   **The first ten are SECTION icons**: a leaf inherits the family of the
-   branch that contains it, and a row of siblings shows the same glyph.
-
-   **The following twenty-one are PAGE icons**: each page in that branch has
-   its own, and none repeats the one its parent uses.
-
-   They're in TREE order, not alphabetical: that's what lets a reviewer
-   confirm, reading down the sidebar, that no two neighbors share a design.
-
-   No new file in `static/icons/`: every one reuses a drawing the icon
-   manifest already carried. */
-.sidebar-icon--visao-geral        { --pd-sidebar-icon: url('/icons/layers.svg'); }
-.sidebar-icon--conteudo-teorico   { --pd-sidebar-icon: url('/icons/code-xml.svg'); }
-.sidebar-icon--conteudo-pratico   { --pd-sidebar-icon: url('/icons/workflow.svg'); }
-.sidebar-icon--work-in-progress   { --pd-sidebar-icon: url('/icons/activity.svg'); }
-.sidebar-icon--modulos-terraform  { --pd-sidebar-icon: url('/icons/puzzle.svg'); }
-.sidebar-icon--skills             { --pd-sidebar-icon: url('/icons/bot.svg'); }
-.sidebar-icon--servidores-mcp     { --pd-sidebar-icon: url('/icons/server.svg'); }
-
-/* The `overpower` branch — one icon per page, in tree order. */
-.sidebar-icon--overpower              { --pd-sidebar-icon: url('/icons/zap.svg'); }
-.sidebar-icon--instalacao             { --pd-sidebar-icon: url('/icons/download.svg'); }
-.sidebar-icon--conceitos              { --pd-sidebar-icon: url('/icons/shapes.svg'); }
-
-.sidebar-icon--comandos               { --pd-sidebar-icon: url('/icons/terminal.svg'); }
-.sidebar-icon--comando-raiz           { --pd-sidebar-icon: url('/icons/circle-help.svg'); }
-.sidebar-icon--comando-list           { --pd-sidebar-icon: url('/icons/database.svg'); }
-.sidebar-icon--comando-install        { --pd-sidebar-icon: url('/icons/plus.svg'); }
-.sidebar-icon--comando-doctor         { --pd-sidebar-icon: url('/icons/gauge.svg'); }
-
-.sidebar-icon--alvos                  { --pd-sidebar-icon: url('/icons/globe.svg'); }
-.sidebar-icon--alvo-mcp               { --pd-sidebar-icon: url('/icons/webhook.svg'); }
-.sidebar-icon--alvo-from              { --pd-sidebar-icon: url('/icons/folder.svg'); }
-.sidebar-icon--alvo-bundle            { --pd-sidebar-icon: url('/icons/package.svg'); }
-
-.sidebar-icon--referencia             { --pd-sidebar-icon: url('/icons/book-open.svg'); }
-.sidebar-icon--codigos-de-saida       { --pd-sidebar-icon: url('/icons/circle-alert.svg'); }
-.sidebar-icon--solucao-de-problemas   { --pd-sidebar-icon: url('/icons/refresh-cw.svg'); }
-.sidebar-icon--changelog              { --pd-sidebar-icon: url('/icons/clock.svg'); }
-
-/* `contribuir/` merges two former branches, and inherits an icon from each:
-   the wrench from the first, the rocket from the second's release page. */
-.sidebar-icon--contribuir             { --pd-sidebar-icon: url('/icons/users.svg'); }
-.sidebar-icon--arquitetura            { --pd-sidebar-icon: url('/icons/wrench.svg'); }
-.sidebar-icon--mapa-de-modulos        { --pd-sidebar-icon: url('/icons/file-text.svg'); }
-.sidebar-icon--hooks                  { --pd-sidebar-icon: url('/icons/bell.svg'); }
-.sidebar-icon--testes                 { --pd-sidebar-icon: url('/icons/repeat.svg'); }
-.sidebar-icon--telas                  { --pd-sidebar-icon: url('/icons/play.svg'); }
-.sidebar-icon--curadoria              { --pd-sidebar-icon: url('/icons/filter.svg'); }
-.sidebar-icon--criterios-de-catalogo  { --pd-sidebar-icon: url('/icons/sparkles.svg'); }
-.sidebar-icon--release                { --pd-sidebar-icon: url('/icons/rocket.svg'); }
-.sidebar-icon--release-ready          { --pd-sidebar-icon: url('/icons/upload.svg'); }
-
 /* Typography and radius — one body, for every destination, at every level.
    The anchor uses normal weight with a taller line-height, and reserves all
    active marking for the pill (below) and the optical bold. The separator

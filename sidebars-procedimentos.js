@@ -1,5 +1,7 @@
 // @ts-check
 
+import {icon} from './sidebars-icons.js';
+
 /**
  * Sidebar for the `Procedimentos` tab, `procedimentos` instance: a single
  * leaf standing in until real procedures exist, so nothing invented sits
@@ -12,7 +14,7 @@ const sidebars = {
   procedures: [
     // The instance's only leaf. It carries `slug: /`, which is what makes
     // `/procedimentos` respond 200 with no redirect.
-    {type: 'doc', id: 'work-in-progress', className: 'sidebar-icon sidebar-icon--work-in-progress'},
+    {type: 'doc', id: 'work-in-progress', ...icon('activity')},
   ],
 };
 

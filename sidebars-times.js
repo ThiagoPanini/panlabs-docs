@@ -1,5 +1,7 @@
 // @ts-check
 
+import {icon} from './sidebars-icons.js';
+
 /**
  * Sidebar for the `Times` tab, `times` instance: a single leaf standing in
  * until a real team writes its own docs, so no invented team names sit
@@ -12,7 +14,7 @@ const sidebars = {
   teams: [
     // The instance's only leaf. It carries `slug: /`, which is what makes
     // `/times` respond 200 with no redirect.
-    {type: 'doc', id: 'work-in-progress', className: 'sidebar-icon sidebar-icon--work-in-progress'},
+    {type: 'doc', id: 'work-in-progress', ...icon('activity')},
   ],
 };
 

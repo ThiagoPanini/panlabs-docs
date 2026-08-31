@@ -1,5 +1,7 @@
 // @ts-check
 
+import {icon} from './sidebars-icons.js';
+
 /**
  * Sidebar for the `Jornadas` tab, `default` instance: one journey, three
  * sections. Real content doesn't exist yet, so this tree is a placeholder
@@ -29,29 +31,29 @@ const sidebars = {
         {
           type: 'category',
           label: 'Visão Geral',
-          className: 'sidebar-icon sidebar-icon--visao-geral',
+          ...icon('layers'),
           items: [
             // Opening leaf of the instance. It carries `slug: /`, which
             // makes `/jornadas` resolve to a real page instead of a 404.
-            {type: 'doc', id: 'api-owner/visao-geral/resumo-das-trilhas', className: 'sidebar-icon sidebar-icon--visao-geral'},
+            {type: 'doc', id: 'api-owner/visao-geral/resumo-das-trilhas', ...icon('layers')},
             // Silent locale fallback fixture: `/en/jornadas/api-owner/visao-geral/links-e-referencias` serves pt-BR text.
-            {type: 'doc', id: 'api-owner/visao-geral/links-e-referencias', className: 'sidebar-icon sidebar-icon--visao-geral'},
+            {type: 'doc', id: 'api-owner/visao-geral/links-e-referencias', ...icon('layers')},
           ],
         },
         {
           type: 'category',
           label: 'Conteúdo Teórico',
-          className: 'sidebar-icon sidebar-icon--conteudo-teorico',
+          ...icon('code-xml'),
           items: [
-            {type: 'doc', id: 'api-owner/conteudo-teorico/work-in-progress', className: 'sidebar-icon sidebar-icon--conteudo-teorico'},
+            {type: 'doc', id: 'api-owner/conteudo-teorico/work-in-progress', ...icon('code-xml')},
           ],
         },
         {
           type: 'category',
           label: 'Conteúdo Prático',
-          className: 'sidebar-icon sidebar-icon--conteudo-pratico',
+          ...icon('workflow'),
           items: [
-            {type: 'doc', id: 'api-owner/conteudo-pratico/work-in-progress', className: 'sidebar-icon sidebar-icon--conteudo-pratico'},
+            {type: 'doc', id: 'api-owner/conteudo-pratico/work-in-progress', ...icon('workflow')},
           ],
         },
       ],

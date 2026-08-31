@@ -247,6 +247,11 @@ const config = {
       }),
     ],
 
+    // Resolves every sidebar icon's Lucide slug and emits the stylesheet
+    // that masks it in. Bare string, no options: it reads the sidebar
+    // files listed in its own module, not the instances above.
+    './src/plugins/sidebar-icons',
+
     // The site's own search and ai-era plugins. Neither is an npm
     // dependency or an external service: they're the same mechanism seen
     // from two sides, and they read the four instances above through the
