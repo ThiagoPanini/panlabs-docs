@@ -26,10 +26,13 @@
 
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
-/** The parts `Frame.js` publishes. Every selector this file uses is here. */
+/* The parts `Frame.js` publishes. Every selector this file uses is here.
+
+   There is no `expand` entry, and its absence is the point: the corner
+   button lives INSIDE the stage, so a click on it already matches `STAGE`.
+   A second branch for it would be a branch nothing can exercise. */
 const FRAME = '[data-pd-component="frame"]';
 const STAGE = '[data-pd-part="stage"]';
-const EXPAND = '[data-pd-part="expand"]';
 const LIGHTBOX = '[data-pd-part="lightbox"]';
 const LIGHTBOX_STAGE = '[data-pd-part="lightbox-stage"]';
 
@@ -153,6 +156,12 @@ function hold(scope, target, viewport) {
  * ceiling — fires no transition at all, and a loop waiting for that event
  * would never end.
  *
+ * It also stops on a frame that measured what the frame before it did,
+ * which is the net under the equality: it ends the loop whatever the
+ * drawing settles on, including a width that never rounds to the goal.
+ * A loop with only one exit and no ceiling is a loop that can spin until
+ * the dialog closes.
+ *
  * @param {HTMLDialogElement} dialog
  * @param {number} next the requested `k`
  * @param {{x: number, y: number}} focus in client coordinates
@@ -180,14 +189,17 @@ function zoom(dialog, next, focus, direct) {
 
   cancelAnimationFrame(scope.frame);
   const goal = Math.round(scope.natural.width * after);
-  if (Math.round(hold(scope, target, viewport)) === goal || direct) {
+  let previous = hold(scope, target, viewport);
+  if (Math.round(previous) === goal || direct) {
     return;
   }
 
   const step = () => {
-    if (Math.round(hold(scope, target, viewport)) === goal) {
+    const width = hold(scope, target, viewport);
+    if (Math.round(width) === goal || width === previous) {
       return;
     }
+    previous = width;
     scope.frame = requestAnimationFrame(step);
   };
   scope.frame = requestAnimationFrame(step);
@@ -357,9 +369,8 @@ if (ExecutionEnvironment.canUseDOM) {
       return;
     }
     const stage = event.target.closest(`${FRAME} ${STAGE}`);
-    const expand = event.target.closest(`${FRAME} ${EXPAND}`);
-    if (stage || expand) {
-      openLightbox((stage ?? expand).closest(FRAME));
+    if (stage) {
+      openLightbox(stage.closest(FRAME));
     }
   });
 

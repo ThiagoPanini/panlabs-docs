@@ -733,19 +733,22 @@ a.card:active {
    skin's attribute layer. What addresses the parts is the client module.
    ----------------------------------------------------------------------------- */
 
-/* The corner control, ALWAYS VISIBLE, never revealed on hover: a control
+/* ONE ANATOMY FOR ALL FIVE BUTTONS, and it's the search trigger's: a
+   hairline that reinforces on hover, no background change. Declared once
+   rather than per placement, for the reason this file's header gives about
+   the untranslated callout — two copies of the same anatomy is how they
+   drift apart. What the placements below add is where each one sits and
+   how big; nothing about how it's painted.
+
+   The corner control is ALWAYS VISIBLE, never revealed on hover: a control
    that appears on hover has no touch equivalent, and `focus.css` catalogs
-   three upstream features that died exactly that way. Same skin as the
-   search trigger — a hairline that reinforces on hover, no background
-   change. */
-.frameExpand {
-  position: absolute;
-  inset-block-start: var(--pd-space-2);
-  inset-inline-end: var(--pd-space-2);
+   three upstream features that died exactly that way. */
+.frameExpand,
+.lightboxControl,
+.lightboxClose {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--pd-space-1);
   border: var(--pd-border-width) solid var(--pd-border-default);
   border-radius: var(--pd-radius-sm);
   background: var(--pd-surface-page);
@@ -756,8 +759,25 @@ a.card:active {
     border-color var(--pd-move-state);
 }
 
+.frameExpand {
+  position: absolute;
+  inset-block-start: var(--pd-space-2);
+  inset-inline-end: var(--pd-space-2);
+  padding: var(--pd-space-1);
+}
+
+/* PRESS REPEATS HOVER'S DESTINATION, and it is NOT gated behind
+   `(hover: hover)` — the entry-state contract's reading: hover previews a
+   state and active confirms it, so a finger, which has no preview, still
+   gets the confirmation. Infima has already erased the native tap
+   highlight, so without this a tap on any of the five reacts to nothing. */
+:is(.frameExpand, .lightboxControl, .lightboxClose):active {
+  color: var(--pd-text-strong);
+  border-color: var(--pd-border-strong);
+}
+
 @media (hover: hover) {
-  .frameExpand:hover {
+  :is(.frameExpand, .lightboxControl, .lightboxClose):hover {
     color: var(--pd-text-strong);
     border-color: var(--pd-border-strong);
   }
@@ -868,23 +888,15 @@ a.card:active {
   gap: var(--pd-space-2);
 }
 
+/* `font: inherit` before `font-size`, in that order: the shorthand resets
+   the family a `<button>` inherits from the user agent, and the longhand
+   then sets the one size this row wants. */
 .lightboxControl,
 .lightboxClose {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   min-inline-size: var(--pd-space-8);
   padding: var(--pd-space-1) var(--pd-space-2);
-  border: var(--pd-border-width) solid var(--pd-border-default);
-  border-radius: var(--pd-radius-sm);
-  background: var(--pd-surface-page);
-  color: var(--pd-text-muted);
   font: inherit;
   font-size: var(--pd-type-sm);
-  cursor: pointer;
-  transition:
-    color var(--pd-move-state),
-    border-color var(--pd-move-state);
 }
 
 /* Closing sits at the far end of the row, away from the three that change
@@ -892,14 +904,6 @@ a.card:active {
    the search trigger's label and its shortcut. */
 .lightboxClose {
   margin-inline-start: auto;
-}
-
-@media (hover: hover) {
-  .lightboxControl:hover,
-  .lightboxClose:hover {
-    color: var(--pd-text-strong);
-    border-color: var(--pd-border-strong);
-  }
 }
 
 /* -----------------------------------------------------------------------------
