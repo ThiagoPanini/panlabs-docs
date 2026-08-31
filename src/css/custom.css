@@ -131,11 +131,15 @@ samp {
    here: what lives in the consuming module is the RULE, not the movement's
    design, and containment stays intact.
 
-   There's ONE: the search modal's entrance, `--pd-move-enter`. The motion
-   tokens `--pd-move-showcase`, `--pd-move-reveal`, and `--pd-move-ambient`
-   stay declared in `tokens.css` with no consuming `@keyframes` — motion's
-   vocabulary is a closed list, and a keyframe is implementation while a
-   token is vocabulary.
+   There are TWO, and they're the same entrance under `--pd-move-enter`:
+   the search modal's and the diagram lightbox's. They stay separate rather
+   than sharing one name because a CSS Module reaches a global keyframe by
+   LITERAL NAME — the coupling would be a string, invisible to both files,
+   and either component's redesign would silently move the other's. The
+   motion tokens `--pd-move-showcase`, `--pd-move-reveal`, and
+   `--pd-move-ambient` stay declared in `tokens.css` with no consuming
+   `@keyframes` — motion's vocabulary is a closed list, and a keyframe is
+   implementation while a token is vocabulary.
 
    It doesn't hardcode a duration or curve: the rule that consumes it picks
    that, by movement name. And it doesn't animate `filter` or `blur`, which
@@ -167,6 +171,14 @@ samp {
    A `@keyframes` referenced via `global(…)` is the form this project
    already knows survives the minifier whole. */
 @keyframes pd-search-open {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The diagram lightbox's entrance — `--pd-move-enter`, same design and same
+   two traps as the one above. */
+@keyframes pd-lightbox-open {
   from {
     opacity: 0;
   }

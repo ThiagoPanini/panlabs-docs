@@ -163,8 +163,9 @@
   background: var(--pd-surface-scrim);
 }
 
-/* Entry uses `--pd-move-enter`, whose ONLY consumer in the project is this
-   modal. `allow-discrete` is what makes EXIT run across `display`, which
+/* Entry uses `--pd-move-enter`, the token this project spends on a modal
+   surface arriving — this one and the diagram lightbox, the only two.
+   `allow-discrete` is what makes EXIT run across `display`, which
    `<dialog>` toggles: without it the panel would vanish all at once. */
 .modal,
 .modal::backdrop {

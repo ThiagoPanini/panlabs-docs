@@ -57,7 +57,7 @@ The prefix on everything this repo's design system names — `--pd-*` in variabl
 The block that assigns `--ifm-*` from `var(--pd-*)`. One-way: the system **never reads** an Infima variable, only writes. It's the boundary that keeps Docusaurus a consumer of the system instead of its foundation.
 
 **Parts contract**:
-The attributes the skin hooks into to repaint a component through CSS — `data-pd-component`, `data-pd-variant`, and `data-pd-part`. Can't be a CSS Module class, because the name gets hashed at build time. **State never becomes an attribute**.
+The attributes the skin hooks into to repaint a component through CSS — `data-pd-component`, `data-pd-variant`, and `data-pd-part`. Can't be a CSS Module class, because the name gets hashed at build time. That reason has a second consumer: a file compiled separately from the component, such as a client module, can't name a hashed class either, so the parts contract is also how behavior addresses markup. **State never becomes an attribute**, whichever side is reading.
 
 ### The frame
 
@@ -78,4 +78,4 @@ The sidebar's **top** node, and it isn't a page: bold label, no link, no arrow, 
 _Avoid_: top-level category, group
 
 **Native substrate**:
-The rule that no catalog component implements its own interactive behavior. Either the browser element delivers (`<details>`, `<a>`, `<table>`), or Docusaurus delivers (`Tabs`). Zero `keydown` written in the project.
+The rule that no catalog component implements its own interactive behavior. Either the browser element delivers (`<details>`, `<a>`, `<table>`, `<button>`, `<dialog>`), or Docusaurus delivers (`Tabs`). A catalog component may **declare** a native element and the part that addresses it — `Frame` declares the diagram lightbox's button and dialog — as long as the listeners live somewhere else: the lightbox's are in `src/clientModules/lightbox.js`, reached through the `clientModules` config key, and the component stays free of `onClick`, `useState`, `useEffect`, and `addEventListener`. One file in the whole project writes `keydown`, the search modal, and it isn't a catalog component. The lightbox writes none: Escape is `<dialog>`'s, Enter and Space are `<button>`'s.

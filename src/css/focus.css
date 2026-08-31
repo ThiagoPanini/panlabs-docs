@@ -333,6 +333,26 @@ a[href='#__docusaurus_skipToContent_fallback'] {
     block-size: var(--pd-target-min);
   }
 
+  /* THE FRAME'S FIVE BUTTONS TAKE THE FLOOR ON ONE AXIS AND STOP — the
+     `.hash-link` trap from the other side. They're `inline-flex`, so
+     `min-height` is not swallowed and they do reach 44 tall; what stays
+     where their padding put it is the width, measured at 26px for the
+     corner control and 32px for the three that move the zoom.
+
+     They take the floor on the inline axis DIRECTLY, with no pseudo-element,
+     because neither placement is in prose: the corner control is absolutely
+     positioned inside its own stage, and the other four sit in a row across
+     a full-screen panel. Widening them disturbs no column's rhythm, which
+     is the only thing that forced the heading anchor into a pseudo-element.
+
+     The hook is the parts contract, for the reason this file already gives
+     at `[data-pd-part='ancora']`: the alternative is a hashed CSS Module
+     class, and a fix that can't name its target is a fix that doesn't
+     exist. */
+  [data-pd-component='frame'] button {
+    min-inline-size: var(--pd-target-min);
+  }
+
   /* The exception, and there's only one: an inline link in prose. SC 2.5.8
      itself exempts it, and widening it would break the text column's
      vertical rhythm.

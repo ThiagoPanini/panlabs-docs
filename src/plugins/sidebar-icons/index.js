@@ -95,6 +95,7 @@ const HARDCODED_ICONS = [
   'pencil-line', 'info', 'lightbulb', 'triangle-alert', // Callout.js: one glyph per variant
   'check', 'copy', 'chevron-right', 'file-text', 'external-link', // CopyPage.js
   'search', 'x', // SearchBar/index.js
+  'maximize', // Frame.js: the corner control that opens the diagram lightbox
 ];
 
 /** `icon="…"`, on any content component — Card, Steps, Accordion, or one not yet written. */

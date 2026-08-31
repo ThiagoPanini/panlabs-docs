@@ -265,6 +265,22 @@ const config = {
     ['./src/plugins/ai-era', {tabs: TABS}],
   ],
 
+  // The diagram lightbox's behavior, and the only entry this key will ever
+  // want to keep short.
+  //
+  // It's here, and not in React, because React has no rung that reaches:
+  // `Root`, `Layout`, and `DocItem/Layout` are all absent from
+  // `@docusaurus/theme-classic`'s swizzle ledger, so each falls through to
+  // the `unsafe` default, and the budget for those is fixed at zero.
+  // `clientModules` is a public configuration key — rung 2 of the same
+  // ladder — and it spends nothing. See
+  // DECISIONS.md#the-diagram-lightbox.
+  //
+  // The module is inert until a reader clicks a diagram: it registers one
+  // delegated listener on `document` and nothing else, which is also what
+  // makes it indifferent to client-side navigation.
+  clientModules: ['./src/clientModules/lightbox.js'],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
