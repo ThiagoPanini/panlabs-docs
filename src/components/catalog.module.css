@@ -389,7 +389,7 @@ a.card:active {
 .expandableSummary::before {
   content: '';
   flex: none;
-  mask: url('/icons/chevron-right.svg') center / contain no-repeat;
+  mask: var(--pd-chrome-icon-chevron-right) center / contain no-repeat;
 }
 
 /* No transition: the target swaps glyph (▶ closed → ▼ open) instead of

@@ -25,10 +25,9 @@ npm run build && npm run serve   # the whole CI is the build
 | `src/css/custom.css` | Base rules. Zero literals, and never reads `--ifm-*`. |
 | `src/css/chrome.css` | The doc page shell — proportions, navbar, sidebar, TOC, footer, narrow width. |
 | `src/css/focus.css` | The entry-state contract. **The only file where `outline` can appear.** |
-| `src/icons/manifest.js` | **The icon contract** — names are contract, drawings are skin. |
 | `src/theme/` | The project's own theme components, registry, and swizzles. |
-| `src/plugins/` | The three local plugins: search, the AI-era artifacts, and sidebar icons (reads the installed `lucide-static`). |
-| `static/icons/` | The 60 vendored Lucide drawings (ISC). Swappable. |
+| `src/plugins/` | The three local plugins: search, the AI-era artifacts, and icons — reads the installed `lucide-static` to emit the sidebar's CSS masks and the generated `src/icons/registry.js` MDX registry. |
+| `static/icons/` | Only `LICENSE.txt`, copied from the installed `lucide-static` on every build. |
 | `scripts/` | The reference generator. |
 
 ## Locked constraints

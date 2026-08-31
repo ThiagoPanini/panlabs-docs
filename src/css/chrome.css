@@ -853,9 +853,9 @@ html.docs-doc-page .subtitle {
 
 /* THE CARET.
 
-   The icon manifest has claimed since it existed that `chevron-right`
-   serves the sidebar category caret, and no rule in this repository
-   implemented that until now: the shape was Infima's own embedded SVG
+   `chevron-right` serves the sidebar category caret, and no rule in this
+   repository implemented that until now: the shape was Infima's own
+   embedded SVG
    (`--ifm-menu-link-sublist-icon`, a 16px `data:` URI with
    `fill: rgba(0,0,0,0.5)`), inverted for dark mode by a seven-step
    `filter`. A `currentColor` mask replaces the seven steps with one
@@ -923,7 +923,7 @@ html.docs-doc-page .subtitle {
   background: none;
   background-color: currentColor;
   filter: none;
-  mask: url('/icons/chevron-right.svg') center / var(--pd-space-6) var(--pd-space-6) no-repeat;
+  mask: var(--pd-chrome-icon-chevron-right) center / var(--pd-space-6) var(--pd-space-6) no-repeat;
   transform: none;
   rotate: 90deg;
   transition: rotate var(--pd-move-flip);
@@ -1196,7 +1196,7 @@ html.docs-doc-page .theme-doc-toc-desktop::after {
   inline-size: var(--pd-space-4);
   block-size: calc(var(--pd-type-sm) * var(--pd-leading-ui));
   background-color: var(--pd-text-body);
-  mask: url('/icons/list.svg') center / var(--pd-space-4) no-repeat;
+  mask: var(--pd-chrome-icon-list) center / var(--pd-space-4) no-repeat;
 }
 
 /* THE TOC LIST ON THE UI SCALE, and the slot's `font-size` wasn't enough.
