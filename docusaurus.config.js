@@ -265,8 +265,7 @@ const config = {
     ['./src/plugins/ai-era', {tabs: TABS}],
   ],
 
-  // The diagram lightbox's behavior, and the only entry this key will ever
-  // want to keep short.
+  // The diagram lightbox's behavior, and the only thing this key carries.
   //
   // It's here, and not in React, because React has no rung that reaches:
   // `Root`, `Layout`, and `DocItem/Layout` are all absent from

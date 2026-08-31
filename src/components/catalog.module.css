@@ -724,10 +724,10 @@ a.card:active {
    of a window.
 
    `overflow` is the pan. A drawing sized past its container inside an
-   `overflow: auto` box already scrolls with the wheel, with a trackpad,
-   with a finger, and with the keyboard once the box is focused — which is
-   why nothing here reimplements panning, and why the client module only
-   adds the one gesture the substrate lacks, dragging.
+   `overflow: auto` box already scrolls with the wheel, with a trackpad, and
+   with a finger — which is why nothing here reimplements panning, and why
+   the client module adds only the one gesture the substrate lacks, dragging
+   with a pointer.
 
    `data-pd-part` never appears in this file, so nothing here ties with the
    skin's attribute layer. What addresses the parts is the client module.
