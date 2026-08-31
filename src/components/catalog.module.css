@@ -735,8 +735,8 @@ a.card:active {
 
 /* ONE ANATOMY FOR ALL FIVE BUTTONS, and it's the search trigger's: a
    hairline that reinforces on hover, no background change. Declared once
-   rather than per placement, for the reason this file's header gives about
-   the untranslated callout — two copies of the same anatomy is how they
+   rather than per placement, for the reason the callout section above
+   gives about `untranslated` — two copies of the same anatomy is how they
    drift apart. What the placements below add is where each one sits and
    how big; nothing about how it's painted.
 
