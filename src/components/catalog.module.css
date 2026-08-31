@@ -675,6 +675,10 @@ a.card:active {
   background-color: var(--pd-surface-raised);
   color: var(--pd-text-body);
   overflow: hidden;
+  /* The whole stage opens, not just the corner button: the drawing is what
+     the reader is aiming at, and `zoom-in` is the one cursor that says so
+     without a caption. */
+  cursor: zoom-in;
 }
 
 /* The target's dot grid: a repeated `radial-gradient` instead of an SVG
@@ -700,6 +704,206 @@ a.card:active {
   max-inline-size: 100%;
   block-size: auto;
   border-radius: var(--pd-radius-md);
+}
+
+/* -----------------------------------------------------------------------------
+   frame, enlarged — the lightbox
+
+   The stage is where a big diagram goes to die: measured on the specimen,
+   1904px of drawing inside a 699px stage renders at 36.7%, and a 12px
+   label lands at 4.4px. This is the way out, and it's the SECOND `<dialog>`
+   in the project, built from the same material as the first: the search
+   modal's hairline, radius, float, and scrim, plus its `[open]` display
+   trap, all repeated here on purpose rather than reinvented.
+
+   THE PANEL KEEPS A GUTTER OF BACKDROP ON EVERY SIDE instead of running
+   edge to edge, and that gutter is load-bearing: `showModal()` dispatches a
+   click on the backdrop to the dialog element itself, so it's the only
+   surface where "click outside to close" costs no code. Edge to edge, that
+   surface would have zero area. What it costs is one gutter of width, out
+   of a window.
+
+   `overflow` is the pan. A drawing sized past its container inside an
+   `overflow: auto` box already scrolls with the wheel, with a trackpad, and
+   with a finger — which is why nothing here reimplements panning, and why
+   the client module adds only the one gesture the substrate lacks, dragging
+   with a pointer.
+
+   `data-pd-part` never appears in this file, so nothing here ties with the
+   skin's attribute layer. What addresses the parts is the client module.
+   ----------------------------------------------------------------------------- */
+
+/* ONE ANATOMY FOR ALL FIVE BUTTONS, and it's the search trigger's: a
+   hairline that reinforces on hover, no background change. Declared once
+   rather than per placement, for the reason the callout section above
+   gives about `untranslated` — two copies of the same anatomy is how they
+   drift apart. What the placements below add is where each one sits and
+   how big; nothing about how it's painted.
+
+   The corner control is ALWAYS VISIBLE, never revealed on hover: a control
+   that appears on hover has no touch equivalent, and `focus.css` catalogs
+   three upstream features that died exactly that way. */
+.frameExpand,
+.lightboxControl,
+.lightboxClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-sm);
+  background: var(--pd-surface-page);
+  color: var(--pd-text-muted);
+  cursor: pointer;
+  transition:
+    color var(--pd-move-state),
+    border-color var(--pd-move-state);
+}
+
+.frameExpand {
+  position: absolute;
+  inset-block-start: var(--pd-space-2);
+  inset-inline-end: var(--pd-space-2);
+  padding: var(--pd-space-1);
+}
+
+/* PRESS REPEATS HOVER'S DESTINATION, and it is NOT gated behind
+   `(hover: hover)` — the entry-state contract's reading: hover previews a
+   state and active confirms it, so a finger, which has no preview, still
+   gets the confirmation. Infima has already erased the native tap
+   highlight, so without this a tap on any of the five reacts to nothing. */
+:is(.frameExpand, .lightboxControl, .lightboxClose):active {
+  color: var(--pd-text-strong);
+  border-color: var(--pd-border-strong);
+}
+
+@media (hover: hover) {
+  :is(.frameExpand, .lightboxControl, .lightboxClose):hover {
+    color: var(--pd-text-strong);
+    border-color: var(--pd-border-strong);
+  }
+}
+
+/* `inset` plus `auto` sizing, not a width computed against the viewport:
+   with all four offsets set and no margin, the box fills what's left, and
+   the two user-agent maximums (`calc(100% - 6px - 2em)` on a modal dialog)
+   have to be cleared for it to reach them.
+
+   NO `display` here — see the `[open]` block below. */
+.lightbox {
+  inset: var(--pd-gutter);
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  padding: var(--pd-space-4);
+  border: var(--pd-border-width) solid var(--pd-border-subtle);
+  border-radius: var(--pd-radius-lg);
+  background: var(--pd-surface-raised);
+  /* The stage's ink, repeated: the diagram inside inherits `currentColor`
+     from here exactly as it does from the page's stage, and the two have to
+     agree or the enlarged copy is a different drawing. */
+  color: var(--pd-text-body);
+  box-shadow: var(--pd-shadow-float);
+}
+
+.lightbox::backdrop {
+  background: var(--pd-surface-scrim);
+}
+
+/* Entry and exit, the search modal's mechanism verbatim: `allow-discrete`
+   is what makes EXIT run across `display`, which `<dialog>` toggles. */
+.lightbox,
+.lightbox::backdrop {
+  opacity: 0;
+  transition:
+    opacity var(--pd-move-enter),
+    display var(--pd-move-enter) allow-discrete,
+    overlay var(--pd-move-enter) allow-discrete;
+}
+
+/* ENTRY is `@keyframes`, not `@starting-style`: the minifier discards the
+   whole `@starting-style` block, and the published page opens with no
+   transition while `docusaurus start` animates. `global(…)` with no colon,
+   because a CSS Module mangles a `@keyframes` name even when it doesn't
+   define it. Both traps are written up in `src/css/custom.css`, next to the
+   keyframe itself. */
+.lightbox[open],
+.lightbox[open]::backdrop {
+  opacity: 1;
+  animation: global(pd-lightbox-open) var(--pd-move-enter) both;
+}
+
+/* The `display` lives HERE, under `[open]`, and the reason is the defect
+   the search modal measured: an author-level `display` on the dialog beats
+   the user-agent's `dialog:not([open]) { display: none }`, since an author
+   sheet always beats a UA sheet — and a closed `<dialog>` that stays in
+   layout is a full-screen dead click zone over every page carrying a
+   diagram, plus invisible Tab stops inside it.
+
+   `minmax(0, 1fr)`, not `1fr`: a grid row's automatic minimum is its
+   content, so the drawing at full size would push the row past the panel
+   instead of scrolling inside it. */
+.lightbox[open] {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--pd-space-3);
+}
+
+/* No dot grid in here, and no tint step: the enlarged stage is a working
+   surface, not a showcase. What the page's stage draws to say *a diagram
+   lives here* has nothing left to say once the diagram is the window. */
+.lightboxStage {
+  overflow: auto;
+  display: grid;
+  /* `safe`, not bare `center`: a centered grid track wider than its
+     container overflows on BOTH sides, and the start side is unreachable by
+     scrolling. `safe` falls back to `start` exactly when that would
+     happen. */
+  align-content: safe center;
+  justify-content: safe center;
+  min-block-size: 0;
+}
+
+/* The size is written by the client module, per frame; the movement is
+   named here, which is the whole division of labour between the two. */
+.lightboxStage > svg {
+  cursor: grab;
+  transition:
+    inline-size var(--pd-move-state),
+    block-size var(--pd-move-state);
+}
+
+.lightboxStage > svg:active {
+  cursor: grabbing;
+}
+
+/* `stretch`, not `center`: the four controls are sized by different things —
+   three by a line of text, the fourth by a 16px glyph — and centring them
+   leaves the `×` measurably shorter than its neighbours (26 against 35).
+   Stretching hands every button the row's height, whichever one sets it. */
+.lightboxControls {
+  display: flex;
+  align-items: stretch;
+  gap: var(--pd-space-2);
+}
+
+/* `font: inherit` before `font-size`, in that order: the shorthand resets
+   the family a `<button>` inherits from the user agent, and the longhand
+   then sets the one size this row wants. */
+.lightboxControl,
+.lightboxClose {
+  min-inline-size: var(--pd-space-8);
+  padding: var(--pd-space-1) var(--pd-space-2);
+  font: inherit;
+  font-size: var(--pd-type-sm);
+}
+
+/* Closing sits at the far end of the row, away from the three that change
+   the view — the same separation `margin-inline-start: auto` draws between
+   the search trigger's label and its shortcut. */
+.lightboxClose {
+  margin-inline-start: auto;
 }
 
 /* -----------------------------------------------------------------------------
