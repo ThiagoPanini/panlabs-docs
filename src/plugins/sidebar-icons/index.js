@@ -376,6 +376,10 @@ export default function sidebarIconsPlugin(context) {
     const registrySlugs = new Set([...contentSlugs, ...HARDCODED_ICONS]);
     assertKnown(registrySlugs, known, catalog, 'registro de ícones do MDX');
     const registry = await registryModuleFor(registrySlugs, siteDir);
+    // `src/icons/` holds nothing else tracked now that this file is
+    // gitignored: a fresh checkout has no such directory at all, unlike a
+    // long-lived local clone where it lingers from before.
+    await fs.mkdir(path.dirname(registryPath), {recursive: true});
     await fs.writeFile(registryPath, registry, 'utf8');
 
     // Copied verbatim, never hand-maintained: the ISC notice has to match
