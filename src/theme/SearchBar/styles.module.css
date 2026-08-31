@@ -368,9 +368,9 @@
    The footer — key captions as PLAIN CHARACTERS, never an icon or a
    keyboard-key element.
 
-   Three drawn arrows would cost three icon-manifest slots and blow past the
-   64-icon ceiling. `↑`, `↓`, `↵`, and `esc` are already glyphs of the font —
-   the `<kbd>` pill that used to wrap them is gone, and there's no leftover
+   Three drawn arrows aren't needed: `↑`, `↓`, `↵`, and `esc` are already
+   glyphs of the font — the `<kbd>` pill that used to wrap them is gone, and
+   there's no leftover
    box CSS for them: they're plain text of the `<span>` itself, inheriting
    `color`/`font-size` from here.
    ----------------------------------------------------------------------------- */

@@ -853,9 +853,9 @@ html.docs-doc-page .subtitle {
 
 /* THE CARET.
 
-   The icon manifest has claimed since it existed that `chevron-right`
-   serves the sidebar category caret, and no rule in this repository
-   implemented that until now: the shape was Infima's own embedded SVG
+   `chevron-right` serves the sidebar category caret, and no rule in this
+   repository implemented that until now: the shape was Infima's own
+   embedded SVG
    (`--ifm-menu-link-sublist-icon`, a 16px `data:` URI with
    `fill: rgba(0,0,0,0.5)`), inverted for dark mode by a seven-step
    `filter`. A `currentColor` mask replaces the seven steps with one
