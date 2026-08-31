@@ -11,6 +11,9 @@ node_modules/
 .docusaurus/
 .cache-loader/
 
+# gerado por src/plugins/sidebar-icons a cada build/start, nunca à mão
+/src/icons/registry.js
+
 # ambiente
 .env
 .env.local

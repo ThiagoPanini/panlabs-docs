@@ -79,6 +79,3 @@ _Avoid_: top-level category, group
 
 **Native substrate**:
 The rule that no catalog component implements its own interactive behavior. Either the browser element delivers (`<details>`, `<a>`, `<table>`), or Docusaurus delivers (`Tabs`). Zero `keydown` written in the project.
-
-**Icon manifest**:
-The single registry of names and roles, in `src/icons/manifest.js`, which is **contract**; the drawings are skin and get swapped whole while keeping the names. A nonexistent name breaks the build, with a nearest-neighbor suggestion — never a placeholder, never silent degradation.
