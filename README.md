@@ -27,9 +27,9 @@ npm run build && npm run serve   # the whole CI is the build
 | `src/css/focus.css` | The entry-state contract. **The only file where `outline` can appear.** |
 | `src/icons/manifest.js` | **The icon contract** — names are contract, drawings are skin. |
 | `src/theme/` | The project's own theme components, registry, and swizzles. |
-| `src/plugins/` | The two path plugins: search and the AI-era artifacts. Neither is an npm dependency. |
+| `src/plugins/` | The three local plugins: search, the AI-era artifacts, and sidebar icons (reads the installed `lucide-static`). |
 | `static/icons/` | The 60 vendored Lucide drawings (ISC). Swappable. |
-| `scripts/` | The reference generator and the icon vendorizer. |
+| `scripts/` | The reference generator. |
 
 ## Locked constraints
 

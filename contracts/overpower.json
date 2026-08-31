@@ -25,7 +25,7 @@
   "entries": [
     {
       "id": "overpower",
-      "icon": "comando-raiz",
+      "icon": "circle-help",
       "kind": "application",
       "title": "overpower",
       "qualified": "overpower",
@@ -89,7 +89,7 @@
     },
     {
       "id": "list",
-      "icon": "comando-list",
+      "icon": "database",
       "kind": "command",
       "title": "overpower list",
       "qualified": "overpower list",
@@ -179,7 +179,7 @@
     },
     {
       "id": "install",
-      "icon": "comando-install",
+      "icon": "plus",
       "kind": "command",
       "title": "overpower install",
       "qualified": "overpower install",
@@ -351,7 +351,7 @@
     },
     {
       "id": "doctor",
-      "icon": "comando-doctor",
+      "icon": "gauge",
       "kind": "command",
       "title": "overpower doctor",
       "qualified": "overpower doctor",

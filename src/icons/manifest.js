@@ -132,80 +132,10 @@ export const NAMES = ICONS.map((i) => i.name);
 export const CEILING = 64;
 
 /**
- * The section-to-icon pairs. The key becomes `sidebar-icon--<key>` in the
- * sidebar's `className`.
- *
- * Every sidebar tree keys the icon to a section, except `overpower`: there,
- * the key is per PAGE, and no two pages share one. That branch is the only
- * one four levels deep, and the only one where a run of identical section
- * icons would read as monotonous; the icon budget has slack (61 of 64 files
- * used) to afford giving every page its own icon. The other three trees stay
- * per section.
- *
- * No top-level sidebar separator gets an icon; everything below it does,
- * leaf or group, at any depth. The navbar's tabs get no icon either.
- * See DECISIONS.md#a-sidebar-category-is-not-a-destination.
- *
- * None of the `overpower` per-page icons cost a new file: all of them reuse
- * drawings the manifest already carries as authoring vocabulary.
- */
-export const SECTION_ICON_PAIRS = {
-  // The section-level pairs: these trees still have every leaf inherit the
-  // icon of the branch that contains it.
-  //
-  // `work-in-progress` is shared by `Procedimentos` and `Times` on purpose:
-  // both are the same empty-tab placeholder, and two glyphs for one sentence
-  // would be distinction without difference.
-  'visao-geral': 'layers',
-  'conteudo-teorico': 'code-xml',
-  'conteudo-pratico': 'workflow',
-  'work-in-progress': 'activity',
-  'modulos-terraform': 'puzzle',
-  skills: 'bot',
-  'servidores-mcp': 'server',
-
-  // The `overpower` pairs, one per PAGE, none repeated.
-  //
-  // Order follows the tree, not the alphabet: it reads next to the sidebar,
-  // which is how you confirm two neighboring pages didn't get the same
-  // glyph.
-  overpower: 'zap',
-  instalacao: 'download',
-  conceitos: 'shapes',
-
-  comandos: 'terminal',
-  'comando-raiz': 'circle-help',
-  'comando-list': 'database',
-  'comando-install': 'plus',
-  'comando-doctor': 'gauge',
-
-  alvos: 'globe',
-  'alvo-mcp': 'webhook',
-  'alvo-from': 'folder',
-  'alvo-bundle': 'package',
-
-  referencia: 'book-open',
-  'codigos-de-saida': 'circle-alert',
-  'solucao-de-problemas': 'refresh-cw',
-  changelog: 'clock',
-
-  contribuir: 'users',
-  arquitetura: 'wrench',
-  'mapa-de-modulos': 'file-text',
-  hooks: 'bell',
-  testes: 'repeat',
-  telas: 'play',
-  curadoria: 'filter',
-  'criterios-de-catalogo': 'sparkles',
-  release: 'rocket',
-  'release-ready': 'upload',
-};
-
-/**
  * The Lucide version these drawings were copied from.
  *
- * Lucide renames glyphs between versions (`code-xml` used to be `code-2`).
- * Names in this manifest are checked against this version at copy time, by
- * `scripts/vendor-icons.mjs`.
+ * Lucide renames glyphs between versions (`code-xml` used to be `code-2`),
+ * which is why a rename shows up as a `lucide:` field on the entry instead
+ * of a rewritten `name`.
  */
 export const LUCIDE_VERSION = '1.30.0';

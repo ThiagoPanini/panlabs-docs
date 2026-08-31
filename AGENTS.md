@@ -28,7 +28,7 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | `src/css/tokens.css` | The only file with a literal color, length, duration, or curve. |
 | `src/icons/manifest.js` | The icon contract. |
 | `src/theme/` | Theme components, registry, swizzles. |
-| `scripts/` | The reference generator and the icon vendorizer. |
+| `scripts/` | The reference generator. |
 
 ## What not to do
 
