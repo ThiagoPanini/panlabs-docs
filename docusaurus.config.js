@@ -252,6 +252,15 @@ const config = {
     // files listed in its own module, not the instances above.
     './src/plugins/sidebar-icons',
 
+    // Selects which tab of a multi-tab `.drawio.svg` an import renders,
+    // through the `?aba=<slug>` query. Bare string, no options: it reads
+    // `content/` for the imports that name a tab, and nothing else.
+    //
+    // Under `start` it renders what changed and watches for the next save;
+    // under `build` it only verifies, since the generated drawings are
+    // committed and the one CI step must run without a browser.
+    './src/plugins/diagram-tabs',
+
     // The site's own search and ai-era plugins. Neither is an npm
     // dependency or an external service: they're the same mechanism seen
     // from two sides, and they read the four instances above through the

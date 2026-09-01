@@ -34,3 +34,18 @@ Check by hand: `grep -rn '—' content/ contracts/`.
 ## Broken link
 
 `onBrokenLinks: 'throw'` only fires on `npm run build`. `docusaurus start` returns 200 with the SPA shell for any route, it will never warn you.
+
+## Which tab of a diagram a page renders
+
+A `.drawio.svg` draws one tab, whichever was open when the editor saved. To render a specific one, name it in the import:
+
+```mdx
+import Visao from './arquitetura.drawio.svg?aba=visao-geral';
+import Rede from './arquitetura.drawio.svg?aba=rede';
+```
+
+The slug is the tab's own name, lowercased, without accents. A wrong slug fails the build naming the tabs the file actually has.
+
+An import without `?aba=` still resolves to the master, so a single-tab diagram needs no query and gets no generated file.
+
+Each tab named this way generates a committed sibling, `arquitetura.<slug>.svg`. Don't edit one, and don't open one in the diagram editor: draw in the tab, in the master. The dev server rewrites the sibling on save, and `npm run build` refuses a sibling older than the tab it came from.
