@@ -115,3 +115,20 @@
 - Animating the drawing's size without holding the focal point per frame — a size transition animates the scroll container's own extent, so a scroll position written once is clamped against a range that hasn't grown yet, and the point the reader aimed at drifts for the whole duration.
 - Opening only on a corner button, or only on a click — the click is what a reader tries first and the button is what a keyboard can reach; each alone leaves one of the two out.
 - Moving the drawing into the dialog instead of cloning it — the node belongs to a React tree, and the page's own copy would be gone the moment anything threw in between.
+
+## A Diagram Tab Is Selected in the Import
+
+**Rule.** Let one multi-tab `.drawio.svg` answer to several imports, each naming its tab through a `?aba=<slug>` query, and resolve that query to a generated sibling `.svg` — one drawing per tab an MDX file actually asks for, committed to the repository. Render those drawings with the draw.io the editor extension already ships on disk, driven over the debugging protocol with no driver dependency, and hold one browser open across saves. Render under the dev server only; let the build verify instead, comparing a hash stamped into each generated file against the tab it came from. Keep the diagram component free of any of it. Leave an import with no query resolving to the master, exactly as before. Watch each directory holding a master plainly, never recursively.
+
+**Why it binds.** The format cannot render two tabs: the file carries one `viewBox` and one drawing while its `content` attribute names every tab, so the drawing is whichever tab was open at save time. Nothing downstream can recover the others — SVGO strips that attribute, measured as zero occurrences of `mxfile` in the built chunk — which puts tab selection before webpack and rules out a component prop. Only draw.io can turn a tab back into a drawing, and the copy inside the editor extension is the same engine that drew the file in the first place: re-rendering this project's own diagrams through it reproduces them element for element, `light-dark()` included, which is what carries both color modes in one file. That engine cannot be a build dependency, because the single CI step must run anywhere, so the drawings are committed and the build only checks them. Holding the browser open is what keeps the authoring loop intact: booting costs 3.3 s and a warm render costs a median of 281 ms. The watch is plain because a recursive one goes deaf at the first rename-based save and never recovers, measured over six saves alternating both styles.
+
+**Refused, and why.**
+- A tab prop on the diagram component — by the time it renders, SVGR has handed React one drawing and SVGO has dropped the other tabs.
+- Selecting the tab in the browser — the source never arrives there, and the vendor's viewer would have to come over a CDN this project does not use.
+- One file saved per tab, by hand — every copy carries the whole source, so there is no master, and editing a tab in the wrong copy leaves another one's picture stale with nothing to catch it.
+- Importing the generated sibling directly, with no query — costs no webpack hook, and makes the markdown name a file no author wrote.
+- A generated registry keyed by slug, the way icons resolve — an icon is a kilobyte and a diagram is over a hundred, so either every diagram ships on every page or a static page grows a loading state.
+- Rendering at import time through a loader — puts a browser in the one CI step.
+- The vendor's hosted export endpoint — the same engine sits on disk, and a network call in the authoring loop fails the day the network does.
+- Vendoring draw.io into the repository — 102 MB, against a project that just deleted its vendorizer.
+- Generating every tab of every master — leaves files in the tree that nothing imports.

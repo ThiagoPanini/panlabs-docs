@@ -27,7 +27,7 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | `contracts/` | Signature contracts the reference generates from. |
 | `src/css/tokens.css` | The only file with a literal color, length, duration, or curve. |
 | `src/theme/` | Theme components, registry, swizzles. |
-| `scripts/` | The reference generator. |
+| `scripts/` | The reference generator, and the draw.io tab splitter the diagram plugin renders from. |
 
 ## What not to do
 
