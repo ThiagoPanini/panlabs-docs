@@ -18,6 +18,7 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | Zero em dash in `content/` and `contracts/`, except when quoting a tool's own output. | Machine-written prose in the published site. |
 | Content voice is `you` plus imperative, zero first person. | A sentence that slips into first person or passive description. |
 | Content components are a closed catalog of sixteen, registered in `@theme/MDXComponents`. There's no escape hatch. | A content file importing its own component instead of changing the page. |
+| The props in `.design-sync/config.json` are transcribed by hand, since the repo ships no `.d.ts` for the extractor to read. | A prop renamed in `src/components/` while the design system published to claude.ai/design still advertises the old one. |
 
 ## Where things live
 
@@ -28,6 +29,7 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | `src/css/tokens.css` | The only file with a literal color, length, duration, or curve. |
 | `src/theme/` | Theme components, registry, swizzles. |
 | `scripts/` | The reference generator, and the draw.io tab splitter the diagram plugin renders from. |
+| `.design-sync/` | The inputs that publish the component catalog to claude.ai/design: the library build the site itself never needs, the preview compositions, and the notes. Read its `NOTES.md` before touching it. |
 
 ## What not to do
 
