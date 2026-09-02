@@ -10,6 +10,8 @@ paths:
 
 Nothing here is enforced by machine. One more page breaks no build, and no sweep checks the counts below, they describe today's tree, and go stale quietly.
 
+**Two of these sections reach `src/pages/`, and the rest don't.** Voice and Em dash apply to any published prose, routes included. Prohibition by location, The depth ceiling, and the diagram sections are about the collection's tree and the components that live in it: a route under `src/pages/` has no tab, no sidebar and no depth.
+
 ## Prohibition by location
 
 `<Steps>` is `Procedimentos`'s backbone and doesn't enter `Jornadas`, without that split the reader can't tell why the page isn't in the other tab. `<CardGroup>` doesn't enter a jornada index, because a grid has no order and the trait that justifies the type is ordering by time.

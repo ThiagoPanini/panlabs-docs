@@ -15,6 +15,37 @@
    project, and are reached from here by `global(name)` with no colon. The
    reason is in that file's header: a module mangles the name it DEFINES, and
    the minifier then drops the orphan.
+
+   ---------------------------------------------------------------------------
+   WHAT THIS FILE WRITES THAT ISN'T A TOKEN, declared once, here, so the list
+   is reviewable in one place instead of being discovered a rule at a time.
+
+   `tokens.css` claims a closed set: colour, length, duration, curve. Nothing
+   below is one of those, and every one of them is either an OPERAND of a
+   declared derivation or a property of the photograph. Ranked by how much
+   they'd hurt to be wrong:
+
+   1. **The photograph's grading and framing** — `filter: grayscale() contrast()
+      brightness()` and `object-position`. They belong to this image, not to
+      the system: a different photograph would want different ones, and a
+      skin swap must not move them.
+   2. **The wire grid's opacity**, and the glow's two breath stops. Texture
+      strength, not colour.
+   3. **Gradient geometry** — every stop position and every alpha in the two
+      veils and the glow. `rgb(from var(--pd-surface-page) r g b / 20%)` is
+      the derivation rule's own relative syntax over a layer-2 token, and the
+      percentage is its operand; `tokens.css` writes `--pd-surface-wash` the
+      same way. A four-stop gradient cannot exist without four stops, and
+      naming each one would produce eight single-consumer tokens whose names
+      say less than the gradient already does.
+   4. **The view timeline's range**, `entry 6% entry 74%`. Percentages of a
+      scroll, which is neither a length nor a duration.
+   5. **Multipliers inside `calc()`** — 1.4 and 2.2 on the type scale, 1.6 on
+      the space scale, 1.2 on the prose width, 2 on the tracking. The
+      derivation rule names `calc()` as an operation, and `tokens.css` derives
+      its own radius ladder exactly this way.
+
+   Everything else on this page is `var(--pd-*)`.
    ----------------------------------------------------------------------------- */
 
 .landing {
@@ -80,11 +111,9 @@
    paint above the fold on the site's front door. As an element it is also
    the only thing here the preload scanner can find in the markup.
 
-   The three filter values are two of this page's declared tolerated
-   literals: none of them is a colour, a length, a duration or a curve, which
-   is the closed list `tokens.css` claims. They grade the photograph down to
-   where the ink over it keeps its contrast, and they belong to the
-   photograph, not to the system. */
+   The grading and the framing are item 1 of the list at the top of this
+   file: they grade the photograph down to where the ink over it keeps its
+   contrast, and they move with the photograph, never with the skin. */
 .heroPhoto {
   position: absolute;
   inset: 0;
@@ -141,8 +170,16 @@
    `data-pd-part` is not decoration here. `tokens.css` turns this animation
    OFF under reduced motion, and a stylesheet compiled separately from this
    module can't name a class this module hashes — the attribute is the only
-   address that survives the build. */
+   address that survives the build.
+
+   The two stops are declared here rather than in the keyframe, so that
+   `custom.css` keeps the zero literals its row in the README promises: the
+   keyframe carries the SHAPE of a breath, this rule says how far it goes,
+   the same split the duration and the curve already have. */
 .heroGlow {
+  --pd-glow-rest: 0.55;
+  --pd-glow-peak: 1;
+
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -157,8 +194,7 @@
 /* THE WIRE GRID — six columns of the hero's own width, drawn with one
    gradient and no DOM.
 
-   The opacity is this page's third tolerated literal, for the same reason as
-   the photo's filter: it is neither colour nor length, and it grades a
+   The opacity is item 2 of the list at the top of this file: it grades a
    texture rather than naming a value the skin should be able to move. */
 .heroGrid {
   position: absolute;
@@ -175,15 +211,14 @@
   background-size: calc(100% / 6) 100%;
 }
 
+/* Composes `.bandInner` rather than repeating it: the hero reads the same
+   centred column every other band does, and `position: relative` is what
+   lifts it above the five absolute layers. */
 .heroContent {
   position: relative;
-  inline-size: 100%;
-  max-inline-size: var(--pd-container-width);
-  margin-inline: auto;
-  padding-block: calc(var(--pd-space-16) * 1.6) var(--pd-space-12);
-  padding-inline: var(--pd-gutter);
   display: grid;
   gap: var(--pd-space-6);
+  padding-block: calc(var(--pd-space-16) * 1.6) var(--pd-space-12);
 }
 
 /* THE SHOWCASE — the hero's four children entering in cascade, once, at load.

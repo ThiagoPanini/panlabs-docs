@@ -32,7 +32,7 @@ import Icon from '@site/src/components/Icon';
 /* Co-located, not `static/`: as a module the file gets a content hash, and
    the dev server reloads the browser when it changes. A file under `static/`
    gets neither — the server re-reads it from disk and never says so. */
-import fotoDoHero from './hero-panlabs.jpg';
+import heroPhotoSrc from './hero-panlabs.jpg';
 
 import styles from './index.module.css';
 
@@ -53,7 +53,7 @@ import styles from './index.module.css';
  * in the source: `HtmlClassNameProvider` reads the class from context and
  * appends to it, one layer per provider.
  */
-const CLASSE_DA_ROTA = 'pd-landing';
+const ROUTE_CLASS = 'pd-landing';
 
 /**
  * The four tabs, in the navbar's order, each described by the TYPE of record
@@ -67,30 +67,30 @@ const CLASSE_DA_ROTA = 'pd-landing';
  * that are still empty define their type instead. The difference is
  * deliberate, and it's the closest this page gets to warning the reader.
  */
-const REGISTROS = [
+const RECORD_TYPES = [
   {
-    titulo: 'Ferramentas',
-    icone: 'terminal',
-    rota: '/ferramentas',
-    corpo: 'O que eu uso no dia, por que escolhi e onde me atrapalhou.',
+    title: 'Ferramentas',
+    icon: 'terminal',
+    route: '/ferramentas',
+    body: 'O que eu uso no dia, por que escolhi e onde me atrapalhou.',
   },
   {
-    titulo: 'Jornadas',
-    icone: 'book-open',
-    rota: '/jornadas',
-    corpo: 'Um papel que eu vesti do começo ao fim, e a lição que ficou dele.',
+    title: 'Jornadas',
+    icon: 'book-open',
+    route: '/jornadas',
+    body: 'Um papel que eu vesti do começo ao fim, e a lição que ficou dele.',
   },
   {
-    titulo: 'Procedimentos',
-    icone: 'list-checks',
-    rota: '/procedimentos',
-    corpo: 'O passo a passo de uma tarefa que se repete, na ordem em que funciona.',
+    title: 'Procedimentos',
+    icon: 'list-checks',
+    route: '/procedimentos',
+    body: 'O passo a passo de uma tarefa que se repete, na ordem em que funciona.',
   },
   {
-    titulo: 'Times',
-    icone: 'users',
-    rota: '/times',
-    corpo: 'Como um time se organiza por dentro, e por onde alguém de fora entra.',
+    title: 'Times',
+    icon: 'users',
+    route: '/times',
+    body: 'Como um time se organiza por dentro, e por onde alguém de fora entra.',
   },
 ];
 
@@ -101,27 +101,27 @@ const REGISTROS = [
  * the author's hands. The collection is mixed by definition, so the claim
  * names its own exception now instead of being false about four pages.
  */
-const PRINCIPIOS = [
+const PRINCIPLES = [
   {
-    titulo: 'Memória fora da cabeça',
-    corpo:
+    title: 'Memória fora da cabeça',
+    body:
       'O que eu resolvo hoje eu esqueço depois. Escrever enquanto o assunto está fresco é o que faz voltar rápido.',
   },
   {
-    titulo: 'O que passou pela minha mão',
-    corpo:
+    title: 'O que passou pela minha mão',
+    body:
       'Nenhuma página aqui é resenha de terceiro. O que está escrito eu usei, quebrei ou entreguei, e digo em que papel. O que ainda não passou por mim está aberto como work in progress.',
   },
   {
-    titulo: 'Aberto porque pode servir',
-    corpo:
+    title: 'Aberto porque pode servir',
+    body:
       'Escrevo para o meu eu de amanhã. Se ajudar quem está no mesmo caminho, melhor ainda: por isso é público.',
   },
 ];
 
 export default function Landing() {
   return (
-    <HtmlClassNameProvider className={CLASSE_DA_ROTA}>
+    <HtmlClassNameProvider className={ROUTE_CLASS}>
       <Layout description="O acervo de aprendizado de um desenvolvedor: as ferramentas que passam pela minha mão, os papéis que eu vesti e o que ficou de cada um.">
         <main className={styles.landing}>
           <section className={styles.hero}>
@@ -131,7 +131,7 @@ export default function Landing() {
                 to a reader who can't see it. */}
             <img
               className={styles.heroPhoto}
-              src={fotoDoHero}
+              src={heroPhotoSrc}
               alt=""
               fetchPriority="high"
             />
@@ -142,7 +142,7 @@ export default function Landing() {
 
             {/* Four children, and the count is load-bearing: the cascade's
                 stagger is `:nth-child()` in the module. */}
-            <div className={styles.heroContent}>
+            <div className={clsx(styles.bandInner, styles.heroContent)}>
               <p className={styles.pill}>
                 panlabs-docs · caderno de trabalho aberto, em pt-BR
               </p>
@@ -182,10 +182,10 @@ export default function Landing() {
 
           <section id="sobre" className={styles.principles}>
             <div className={clsx(styles.bandInner, styles.principlesInner)}>
-              {PRINCIPIOS.map(({titulo, corpo}) => (
-                <article className={styles.principle} key={titulo}>
-                  <h2 className={styles.principleTitle}>{titulo}</h2>
-                  <p className={styles.principleBody}>{corpo}</p>
+              {PRINCIPLES.map(({title, body}) => (
+                <article className={styles.principle} key={title}>
+                  <h2 className={styles.principleTitle}>{title}</h2>
+                  <p className={styles.principleBody}>{body}</p>
                 </article>
               ))}
             </div>
@@ -204,9 +204,9 @@ export default function Landing() {
                 <p className={styles.bandNote}>quatro tipos de registro</p>
               </div>
               <CardGroup>
-                {REGISTROS.map(({titulo, icone, rota, corpo}) => (
-                  <Card key={titulo} title={titulo} icon={icone} href={rota}>
-                    <p>{corpo}</p>
+                {RECORD_TYPES.map(({title, icon, route, body}) => (
+                  <Card key={title} title={title} icon={icon} href={route}>
+                    <p>{body}</p>
                   </Card>
                 ))}
               </CardGroup>

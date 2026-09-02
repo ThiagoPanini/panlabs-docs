@@ -433,9 +433,10 @@ const config = {
         theme: temaPrism,
         // `bash` isn't in `prism-react-renderer`'s default bundle; without
         // registering it, a fenced block renders with no highlight and
-        // nothing warns you. Measured: 23 pages open a `bash` fence, every
-        // one of them under `Ferramentas`. A missing highlight in a fence is
-        // what catches a forgotten registration today.
+        // nothing warns you. Every `bash` fence on the site sits under
+        // `Ferramentas`, and a missing highlight in one is what catches a
+        // forgotten registration today. No count here on purpose: it would go
+        // stale the next time a page opens a fence.
         additionalLanguages: ['bash'],
       },
     }),

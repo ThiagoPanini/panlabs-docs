@@ -680,9 +680,17 @@ html.docs-doc-page .subtitle {
    component wrapped, none ejected, and `Navbar/*` untouched.
 
    `html.pd-landing` is (0,1,1) and beats the `:root` (0,1,0) that wrote both
-   values, in this file's media query and in `tokens.css`'s. The class is
-   written by the route itself, through `<Head>` — the navbar lives outside
-   `<Layout>`'s wrapper, so `wrapperClassName` couldn't reach it.
+   values, in this file's media query and in `tokens.css`'s.
+
+   The class arrives through `HtmlClassNameProvider`, and the obvious way of
+   writing it is the trap. `<Layout wrapperClassName>` can't reach the navbar,
+   which lives outside that wrapper; and `<Head><html className=…/></Head>`
+   compiles, ships, and DOES NOTHING — measured in the built site, `<html>`
+   came back carrying only the classes the pages plugin writes, the strip
+   stayed over the photograph, and nothing failed. Helmet replaces `class`
+   rather than merging it, and the plugin's own provider writes last. Upstream
+   ships the provider for exactly this and says so in its source. The route's
+   own file carries the full note.
 
    The `@media (min-width: 997px)` scope is MANDATORY here for the same
    reason it is above: below the threshold there is no strip to remove, the

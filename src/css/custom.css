@@ -225,18 +225,20 @@ samp {
    `opacity` alone. The layer under it is a radial gradient, which repaints
    on any other property.
 
-   The two stops are bare numbers for the same reason the two entrances above
-   write `opacity: 0`: an opacity stop is neither colour, length, duration
-   nor curve, which is the closed list `tokens.css` claims. A keyframe with
-   no stop of its own wouldn't be a keyframe. */
+   The two stops come from the CONSUMER, through custom properties, for the
+   same reason the duration and the curve do: this file keeps zero literals,
+   and how far a breath travels is the consuming rule's decision, not the
+   keyframe's. Substitution inside a `@keyframes` resolves against the
+   ANIMATED ELEMENT, so the values are read off `.heroGlow` — which is also
+   why this works where a keyframe NAME inside a custom property doesn't. */
 @keyframes pd-glow-breathe {
   0%,
   100% {
-    opacity: 0.55;
+    opacity: var(--pd-glow-rest);
   }
 
   50% {
-    opacity: 1;
+    opacity: var(--pd-glow-peak);
   }
 }
 
