@@ -7,11 +7,12 @@ A reference documentation project built with Docusaurus. The content is a develo
 ### The collection
 
 **panlabs**:
-The collection the documentation is — a developer's learning record inside a company that's never named, and the site's `title`. It's **mixed**: mocked content and real content coexist, and the mocked kind gets replaced as real things show up.
+The collection the documentation is — a developer's learning record inside a company that's never named, and the site's `title`. It's **mixed**: mocked content and real content coexist, and the mocked kind gets replaced as real things show up. The developer has no name anywhere on the site and, since the landing, does have a face on it: the root's hero is their photograph. **The company is the thing that's never named**, and that's the constraint that actually binds.
 _Avoid_: Trilho (the earlier fictional domain, dead)
 
 **House voice**:
-`you` plus imperative, across the whole site, with **zero first person**. The collection is personal in what it chooses to document, not in its grammar.
+`you` plus imperative, with **zero first person**, everywhere the site documents something. The collection is personal in what it chooses to document, not in its grammar.
+**One exception, and it's the root.** The landing is the only page that talks *about* the collection instead of documenting inside it, and a page about a personal collection written in the third person doesn't survive being read out loud. The exception is scoped to `src/pages/`; nothing under `content/` inherits it.
 
 **Tab**:
 One of the four top-level navigation axes — `Ferramentas`, `Jornadas`, `Procedimentos`, `Times`, in this order. Each is an instance of `plugin-content-docs`, one to one, because `routeBasePath` and versioning are per instance.
@@ -35,7 +36,8 @@ What a sweep concludes, and the negative counts as much as the positive: `swept`
 ### The visual system
 
 **Anchor**:
-**Mintlify**, in the `mint` theme, with **Devin** as its one reference — the system panlabs-docs inherits by default. It dictates the look; where the project departs from it, that's a platform constraint, not a choice.
+**Mintlify**, in the `mint` theme, with **Devin** as its one reference — the system panlabs-docs inherits by default. It dictates the look **inside the documentation**, and there a departure from it is a platform constraint, never a choice.
+**It doesn't reach the root.** The anchor has no landing to copy, so there's nothing to depart from: the landing is a departure by choice, and the only one on the site. Naming it an exception to an otherwise absolute sentence was refused — an exception written on the most visible page of the site is where a rule dies quietly.
 _Avoid_: inspiration, reference
 
 **Skin**:

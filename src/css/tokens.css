@@ -778,11 +778,34 @@
     --pd-dur-3: 1ms;
   }
 
-  /* The two movements that don't end on their own would be removed here, not
-     shortened — and neither exists on the site today. If an ambient loop
-     returns, it comes back through here, keyed on a `data-pd-part`
-     attribute: shortening a loop to 1ms would produce a strobe, the exact
-     opposite of what `reduce` asks for. */
+  /* THE TWO MOVEMENTS THAT DON'T END ON THEIR OWN, removed here instead of
+     shortened. This is the slot this block reserved in writing, and the
+     landing is what came to fill it.
+
+     · the hero's glow BREATHES on a loop. Collapsing `--pd-dur-ambient` with
+       the four above would turn a 5s breath into a 1ms strobe, the exact
+       opposite of what `reduce` asks for — which is why that token is the
+       one duration this block leaves alone;
+     · the landing's revealed sections are driven by a VIEW TIMELINE, so they
+       have no duration to collapse at all: `--pd-move-reveal` sets the shape
+       of the curve, and the scroll sets the clock. Shortening does nothing;
+       only removing does.
+
+     `data-pd-part`, not a class, and that's forced: both rules live in a
+     module that hashes every class it declares, and this file is compiled
+     separately and couldn't name the hash. The parts contract is the only
+     address that crosses that boundary.
+
+     `:root` in front, and it isn't decoration either. `[data-pd-part='…']`
+     alone is (0,1,0) and TIES with the module's own `.reveal` — the same
+     (0,1,0) — which would hand the decision to sheet order, and the module
+     is emitted after this file. One more step of specificity settles it
+     without an `!important`. See the same trap on
+     `--ifm-navbar-padding-vertical`, below. */
+  :root [data-pd-part='hero-glow'],
+  :root [data-pd-part='reveal'] {
+    animation: none;
+  }
 }
 
 /* =============================================================================

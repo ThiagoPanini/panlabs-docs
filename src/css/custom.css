@@ -131,15 +131,23 @@ samp {
    here: what lives in the consuming module is the RULE, not the movement's
    design, and containment stays intact.
 
-   There are TWO, and they're the same entrance under `--pd-move-enter`:
-   the search modal's and the diagram lightbox's. They stay separate rather
-   than sharing one name because a CSS Module reaches a global keyframe by
-   LITERAL NAME — the coupling would be a string, invisible to both files,
-   and either component's redesign would silently move the other's. The
-   motion tokens `--pd-move-showcase`, `--pd-move-reveal`, and
-   `--pd-move-ambient` stay declared in `tokens.css` with no consuming
-   `@keyframes` — motion's vocabulary is a closed list, and a keyframe is
-   implementation while a token is vocabulary.
+   There are FIVE, each named after its CONSUMER rather than after the shape
+   it draws. They stay separate rather than sharing a name because a CSS
+   Module reaches a global keyframe by LITERAL NAME — the coupling would be a
+   string, invisible to both files, and either consumer's redesign would
+   silently move the other's.
+
+   TWO are the same entrance under `--pd-move-enter`: the search modal's and
+   the diagram lightbox's.
+
+   THREE belong to the landing, the one route where spectacle is allowed, and
+   each consumes a different one of the three movement tokens that spent a
+   release declared with no consumer at all: `--pd-move-showcase` brings the
+   hero in once at load, `--pd-move-reveal` brings two sections in on scroll,
+   `--pd-move-ambient` breathes the hero's glow and never stops. Showcase and
+   reveal carry the SAME duration and the same curve — what earns each its
+   own name is the KIND of movement it drives, which is why the landing gives
+   no two of them the same class of thing to move.
 
    It doesn't hardcode a duration or curve: the rule that consumes it picks
    that, by movement name. And it doesn't animate `filter` or `blur`, which
@@ -153,8 +161,9 @@ samp {
        bare form gets mangled in the consumer and the minifier drops the
        orphaned keyframe;
      · a `@keyframes` name does NOT travel inside a custom property, which
-       is why the glow's breathing is turned off by a rule in `tokens.css`'s
-       `reduce` block instead of by a token worth `none`.
+       is why the two movements that never end on their own — the glow's
+       breathing and the scroll-driven reveal — are turned off by a rule in
+       `tokens.css`'s `reduce` block instead of by a token worth `none`.
 
    This file keeps the rules, not a worked demonstration.
    ----------------------------------------------------------------------------- */
@@ -181,6 +190,55 @@ samp {
 @keyframes pd-lightbox-open {
   from {
     opacity: 0;
+  }
+}
+
+/* The landing hero's entrance — `--pd-move-showcase`. It runs once, at load,
+   over the hero's four children in cascade; the stagger is the consuming
+   rule's, not this one's.
+
+   The offset is the space scale's, not a number of its own: a movement that
+   travels a distance nothing else on the site uses would be a literal in
+   disguise. */
+@keyframes pd-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--pd-space-6));
+  }
+}
+
+/* The landing's revealed sections — `--pd-move-reveal`. Same shape as the
+   hero's entrance, and it does NOT share the name: this one is driven by a
+   view timeline instead of by the clock, and the day one of the two is
+   retuned the other must not move with it. */
+@keyframes pd-section-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--pd-space-6));
+  }
+}
+
+/* The landing hero's glow — `--pd-move-ambient`, and the only loop on the
+   site. It's the reason `tokens.css` carries a `reduce` rule at all: a loop
+   shortened to 1ms strobes, so it gets removed instead.
+
+   `opacity` alone. The layer under it is a radial gradient, which repaints
+   on any other property.
+
+   The two stops come from the CONSUMER, through custom properties, for the
+   same reason the duration and the curve do: this file keeps zero literals,
+   and how far a breath travels is the consuming rule's decision, not the
+   keyframe's. Substitution inside a `@keyframes` resolves against the
+   ANIMATED ELEMENT, so the values are read off `.heroGlow` — which is also
+   why this works where a keyframe NAME inside a custom property doesn't. */
+@keyframes pd-glow-breathe {
+  0%,
+  100% {
+    opacity: var(--pd-glow-rest);
+  }
+
+  50% {
+    opacity: var(--pd-glow-peak);
   }
 }
 

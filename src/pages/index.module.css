@@ -1,0 +1,458 @@
+/* -----------------------------------------------------------------------------
+   The landing — layer 3, declared in the page's own scope and never on `:root`.
+
+   This is the one route on the site where spectacle is allowed, and the one
+   that consumes the three movement tokens that had no consumer:
+   `--pd-move-showcase` (the hero's entrance, once, on load),
+   `--pd-move-reveal` (two sections, driven by scroll) and
+   `--pd-move-ambient` (the glow's breathing, a loop that never ends).
+
+   Two of the three carry the SAME duration and the same curve. What earns
+   each its own name is the KIND of movement it drives, which is why no two
+   of the rules below animate the same class of thing.
+
+   The three `@keyframes` live in `custom.css`, like every other one in this
+   project, and are reached from here by `global(name)` with no colon. The
+   reason is in that file's header: a module mangles the name it DEFINES, and
+   the minifier then drops the orphan.
+
+   ---------------------------------------------------------------------------
+   WHAT THIS FILE WRITES THAT ISN'T A TOKEN, declared once, here, so the list
+   is reviewable in one place instead of being discovered a rule at a time.
+
+   `tokens.css` claims a closed set: colour, length, duration, curve. Nothing
+   below is one of those, and every one of them is either an OPERAND of a
+   declared derivation or a property of the photograph. Ranked by how much
+   they'd hurt to be wrong:
+
+   1. **The photograph's grading and framing** — `filter: grayscale() contrast()
+      brightness()` and `object-position`. They belong to this image, not to
+      the system: a different photograph would want different ones, and a
+      skin swap must not move them.
+   2. **The wire grid's opacity**, and the glow's two breath stops. Texture
+      strength, not colour.
+   3. **Gradient geometry** — every stop position and every alpha in the two
+      veils and the glow. `rgb(from var(--pd-surface-page) r g b / 20%)` is
+      the derivation rule's own relative syntax over a layer-2 token, and the
+      percentage is its operand; `tokens.css` writes `--pd-surface-wash` the
+      same way. A four-stop gradient cannot exist without four stops, and
+      naming each one would produce eight single-consumer tokens whose names
+      say less than the gradient already does.
+   4. **The view timeline's range**, `entry 6% entry 74%`. Percentages of a
+      scroll, which is neither a length nor a duration.
+   5. **Multipliers inside `calc()`** — 1.4 and 2.2 on the type scale, 1.6 on
+      the space scale, 1.2 on the prose width, 2 on the tracking. The
+      derivation rule names `calc()` as an operation, and `tokens.css` derives
+      its own radius ladder exactly this way.
+
+   Everything else on this page is `var(--pd-*)`.
+   ----------------------------------------------------------------------------- */
+
+.landing {
+  /* THE DISPLAY STEP, and it stops here on purpose.
+
+     `--pd-type-4xl` is the top of the type scale, and the step above it was
+     asked for and refused three times — the answer is still none. A landing
+     that needs a bigger headline than any page title derives one in its own
+     scope instead of reopening the scale for a single route.
+
+     1.4 below the threshold, 2.2 above it: the ratio between the two is what
+     keeps a two-line H1 two lines in both bands. */
+  --pd-type-display: calc(var(--pd-type-4xl) * 1.4);
+}
+
+@media (min-width: 997px) {
+  .landing {
+    --pd-type-display: calc(var(--pd-type-4xl) * 2.2);
+  }
+}
+
+/* Every band on the page reads the same column the chrome already centers:
+   the container's width, and the gutter that doubles at 997. */
+.bandInner {
+  inline-size: 100%;
+  max-inline-size: var(--pd-container-width);
+  margin-inline: auto;
+  padding-inline: var(--pd-gutter);
+}
+
+/* -----------------------------------------------------------------------------
+   The hero — five absolute layers, and the content on top of them
+
+   The layers stack by SOURCE ORDER, with no `z-index` anywhere: positioned
+   siblings already paint in the order they are written, and the content is
+   `position: relative`, so it lands above all five.
+
+   Every veil is made of `--pd-surface-page`, never of black or white. That
+   single choice is what makes one photo file serve both colour modes: in
+   dark the veils darken toward the page, in light they lighten toward it,
+   and the file never changes.
+   ----------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+
+  /* The prototype asked for 700px. A literal that size has no home in this
+     project, and the derivation is better than the number it replaces: one
+     viewport minus the top that sticks over it, which makes the hero exactly
+     the first screen at any height instead of 700px at every height.
+
+     `min-block-size`, so a short viewport grows the box instead of clipping
+     the headline. */
+  min-block-size: calc(var(--pd-viewport-height) - var(--pd-sticky-top));
+}
+
+/* THE PHOTO — an `<img>`, not a `background-image`.
+
+   A background can't be given fetch priority, and this one is the largest
+   paint above the fold on the site's front door. As an element it is also
+   the only thing here the preload scanner can find in the markup.
+
+   The grading and the framing are item 1 of the list at the top of this
+   file: they grade the photograph down to where the ink over it keeps its
+   contrast, and they move with the photograph, never with the skin. */
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+
+  /* Measured in the prototype: keeps the face in the right half, clear of
+     the column the text occupies. */
+  object-position: 56% 32%;
+  filter: grayscale(0.18) contrast(1.04) brightness(0.84);
+}
+
+/* THE VERTICAL VEIL — what turns the photo into a surface at the fold.
+
+   It has to reach a FULL `--pd-surface-page` at 100%: the band below the
+   hero has no photo behind it, and any residue at the seam would read as an
+   edge. */
+.heroVeilY {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(from var(--pd-surface-page) r g b / 20%) 0%,
+    rgb(from var(--pd-surface-page) r g b / 38%) 34%,
+    rgb(from var(--pd-surface-page) r g b / 86%) 74%,
+    var(--pd-surface-page) 100%
+  );
+}
+
+/* THE HORIZONTAL VEIL — darkens the side the text is on and leaves the
+   photograph legible on the other. It comes back up at 100% so the right
+   edge doesn't read as a cut. */
+.heroVeilX {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgb(from var(--pd-surface-page) r g b / 86%) 0%,
+    rgb(from var(--pd-surface-page) r g b / 48%) 42%,
+    rgb(from var(--pd-surface-page) r g b / 6%) 78%,
+    rgb(from var(--pd-surface-page) r g b / 30%) 100%
+  );
+}
+
+/* THE GLOW — the ambient loop's only consumer, and the site's first element
+   that animates forever.
+
+   `--pd-surface-wash` is the accent at 12%, so the breathing reads as the
+   brand warming the corner the headline sits in, not as a light switching on
+   and off. Only `opacity` moves: it composites, and the layer under it is a
+   gradient that would repaint under any other property.
+
+   `data-pd-part` is not decoration here. `tokens.css` turns this animation
+   OFF under reduced motion, and a stylesheet compiled separately from this
+   module can't name a class this module hashes — the attribute is the only
+   address that survives the build.
+
+   The two stops are declared here rather than in the keyframe, so that
+   `custom.css` keeps the zero literals its row in the README promises: the
+   keyframe carries the SHAPE of a breath, this rule says how far it goes,
+   the same split the duration and the curve already have. */
+.heroGlow {
+  --pd-glow-rest: 0.55;
+  --pd-glow-peak: 1;
+
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    64% 58% at 6% 98%,
+    var(--pd-surface-wash),
+    transparent 62%
+  );
+  animation: global(pd-glow-breathe) var(--pd-move-ambient) infinite;
+}
+
+/* THE WIRE GRID — six columns of the hero's own width, drawn with one
+   gradient and no DOM.
+
+   The opacity is item 2 of the list at the top of this file: it grades a
+   texture rather than naming a value the skin should be able to move. */
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+  background-image: linear-gradient(
+    90deg,
+    transparent calc(100% / 6 - var(--pd-border-width)),
+    var(--pd-border-subtle) calc(100% / 6 - var(--pd-border-width)),
+    var(--pd-border-subtle) calc(100% / 6),
+    transparent calc(100% / 6)
+  );
+  background-size: calc(100% / 6) 100%;
+}
+
+/* Composes `.bandInner` rather than repeating it: the hero reads the same
+   centred column every other band does, and `position: relative` is what
+   lifts it above the five absolute layers. */
+.heroContent {
+  position: relative;
+  display: grid;
+  gap: var(--pd-space-6);
+  padding-block: calc(var(--pd-space-16) * 1.6) var(--pd-space-12);
+}
+
+/* THE SHOWCASE — the hero's four children entering in cascade, once, at load.
+
+   It ends on its own, so reduced motion needs no rule of its own here: the
+   token layer collapses `--pd-dur-3` and `--pd-dur-0` to 1ms, which shortens
+   both the movement AND the stagger in one stroke. That is the whole reason
+   the delay is a multiple of a duration token instead of a number.
+
+   The step is a layer-3 token so the three rules below carry an index, not a
+   time: whoever reorders the hero moves the index and nothing else. */
+.heroContent > * {
+  --pd-hero-step: 0;
+
+  animation: global(pd-hero-rise) var(--pd-move-showcase) both;
+  animation-delay: calc(var(--pd-dur-0) * var(--pd-hero-step));
+}
+
+.heroContent > :nth-child(2) { --pd-hero-step: 1; }
+.heroContent > :nth-child(3) { --pd-hero-step: 2; }
+.heroContent > :nth-child(4) { --pd-hero-step: 3; }
+
+/* THE CONTEXT PILL — fixed text, not a badge. It carries no version, no
+   status and no date, which is what keeps the page free of maintenance.
+
+   `min-block-size`, never `block-size`: the sentence wraps to two lines on a
+   narrow screen and has to stay inside the border when it does. */
+.pill {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pd-space-2);
+  min-block-size: calc(var(--pd-target-min) - var(--pd-space-3));
+  margin-block: 0;
+  padding: var(--pd-space-1) var(--pd-space-3);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-full);
+  background: rgb(from var(--pd-surface-page) r g b / 66%);
+  backdrop-filter: blur(var(--pd-space-2));
+  color: var(--pd-text-body);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  letter-spacing: var(--pd-tracking-tight);
+}
+
+/* The headline. The class beats Infima's own `h1` declaration, which is a
+   type selector at (0,0,1) and would otherwise pin the title to
+   `--ifm-h1-font-size` — the page title's size, not a display size. */
+.title {
+  max-inline-size: calc(var(--pd-prose-width) * 1.2);
+  margin-block: 0;
+  font-family: var(--pd-font-heading);
+  font-size: var(--pd-type-display);
+  font-weight: var(--pd-weight-heading);
+  line-height: var(--pd-leading-h1);
+
+  /* Double the UI tracking. At display size the same em value reads loose,
+     and the H1 is the only place on the site that pays for the second step. */
+  letter-spacing: calc(var(--pd-tracking-tight) * 2);
+  color: var(--pd-text-strong);
+}
+
+.lead {
+  max-inline-size: var(--pd-prose-width);
+  margin-block: 0;
+  font-size: var(--pd-type-lg);
+  line-height: var(--pd-leading-prose);
+  color: var(--pd-text-body);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pd-space-3);
+  margin-block-start: var(--pd-space-2);
+}
+
+/* The two calls to action share everything but their fill. Neither writes
+   `outline`: the entry state belongs to `focus.css`, the only file that owns
+   it, and these are the plain `<a>` elements it already reaches. */
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pd-space-2);
+  flex: none;
+  block-size: calc(var(--pd-target-min) + var(--pd-space-2));
+  padding-inline: var(--pd-space-5);
+  border-radius: var(--pd-radius-full);
+  font-size: var(--pd-type-base);
+  font-weight: var(--pd-weight-ui);
+  white-space: nowrap;
+  transition:
+    background-color var(--pd-move-state),
+    border-color var(--pd-move-state),
+    color var(--pd-move-state);
+}
+
+.actionPrimary {
+  background: var(--pd-accent);
+  color: var(--pd-accent-contrast);
+  box-shadow: var(--pd-shadow-raised);
+}
+
+.actionSecondary {
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  background: rgb(from var(--pd-surface-page) r g b / 58%);
+  backdrop-filter: blur(var(--pd-space-2));
+  color: var(--pd-text-strong);
+}
+
+/* Both hovers sit under `(hover: hover)`, like the card's: without it the
+   state sticks after a tap, since touch has no pointer to lift back off. */
+@media (hover: hover) {
+  .action:hover {
+    text-decoration: none;
+  }
+
+  .actionPrimary:hover {
+    background: var(--pd-accent-hover);
+    color: var(--pd-accent-contrast);
+  }
+
+  .actionSecondary:hover {
+    border-color: var(--pd-border-strong);
+    background: var(--pd-surface-raised);
+    color: var(--pd-text-strong);
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   The three principles, and the two revealed bands
+   ----------------------------------------------------------------------------- */
+
+/* The anchor the secondary call to action lands on. Without the scroll
+   margin the sticky top eats the first line of the band it just jumped to. */
+.principles {
+  scroll-margin-block-start: var(--pd-sticky-top);
+  border-block-end: var(--pd-border-width) solid var(--pd-border-subtle);
+}
+
+.principlesInner {
+  display: grid;
+  gap: var(--pd-space-10);
+  padding-block: var(--pd-space-10) var(--pd-space-12);
+  border-block-start: var(--pd-border-width) solid var(--pd-border-default);
+}
+
+@media (min-width: 997px) {
+  .principlesInner {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.principle {
+  display: grid;
+  gap: var(--pd-space-2);
+  align-content: start;
+  padding-block-start: var(--pd-space-8);
+}
+
+.principleTitle {
+  margin-block: 0;
+  font-size: var(--pd-type-lg);
+  font-weight: var(--pd-weight-heading);
+  line-height: var(--pd-leading-h3);
+  color: var(--pd-text-strong);
+}
+
+.principleBody {
+  margin-block: 0;
+  font-size: var(--pd-type-sm);
+  line-height: var(--pd-leading-ui);
+  color: var(--pd-text-muted);
+}
+
+.band {
+  scroll-margin-block-start: var(--pd-sticky-top);
+}
+
+.bandBody {
+  display: grid;
+  gap: var(--pd-space-6);
+  padding-block: var(--pd-space-12);
+}
+
+.bandHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--pd-space-6);
+}
+
+.bandTitle {
+  margin-block: 0;
+  font-size: var(--pd-type-2xl);
+  font-weight: var(--pd-weight-heading);
+  line-height: var(--pd-leading-h2);
+  letter-spacing: var(--pd-tracking-tight);
+  color: var(--pd-text-strong);
+}
+
+.bandNote {
+  flex: none;
+  margin-block: 0;
+  font-size: var(--pd-type-sm);
+  color: var(--pd-text-muted);
+}
+
+/* The callout carries its own vertical rhythm already; the band only pays
+   for the space under it. */
+.bandCallout {
+  padding-block-end: var(--pd-space-12);
+}
+
+/* THE REVEAL — scroll-driven, and the `@supports` guard is not optional.
+
+   `animation-fill-mode: both` holds the FIRST keyframe before the animation
+   starts. Where `view()` doesn't exist there is no timeline to start it, so
+   the section would sit at `opacity: 0` for the life of the page with
+   nothing in the build to catch it. Inside the guard, a browser without the
+   feature never receives the rule and renders the section plainly.
+
+   No `IntersectionObserver` behind it: an old browser is not a constraint on
+   this project, and a fallback nobody exercises is worse than none.
+
+   Reduced motion removes this one instead of shortening it — a scroll-driven
+   animation has no end of its own — and it is removed from `tokens.css`,
+   keyed on `data-pd-part`, for the same reason the glow is. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: global(pd-section-rise) var(--pd-move-reveal) both;
+    animation-timeline: view();
+    animation-range: entry 6% entry 74%;
+  }
+}

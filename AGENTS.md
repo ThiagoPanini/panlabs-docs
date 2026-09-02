@@ -15,8 +15,8 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | Rule | What it catches |
 | --- | --- |
 | Color and dimension come from `src/css/tokens.css`, the single source of literals. | A new hex, a loose px, or a bare `cubic-bezier` in component CSS. |
-| Zero em dash in `content/` and `contracts/`, except when quoting a tool's own output. | Machine-written prose in the published site. |
-| Content voice is `you` plus imperative, zero first person. | A sentence that slips into first person or passive description. |
+| Zero em dash in every published prose: `content/`, `contracts/`, and a route's own copy under `src/pages/`. The exception is quoting a tool's own output. | Machine-written prose in the published site. |
+| Content voice is `you` plus imperative, zero first person. The landing, under `src/pages/`, is the one exception. | A sentence that slips into first person or passive description. |
 | Content components are a closed catalog of sixteen, registered in `@theme/MDXComponents`. There's no escape hatch. | A content file importing its own component instead of changing the page. |
 | The props in `.design-sync/config.json` are transcribed by hand, since the repo ships no `.d.ts` for the extractor to read. | A prop renamed in `src/components/` while the design system published to claude.ai/design still advertises the old one. |
 
