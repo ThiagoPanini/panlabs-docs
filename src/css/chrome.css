@@ -649,6 +649,61 @@ html.docs-doc-page .subtitle {
 }
 
 /* -----------------------------------------------------------------------------
+   2b. THE STRIP DOESN'T EXIST ON THE ROOT
+
+   The landing is the first route on this site whose chrome differs from
+   every other one's, and that's registered as the cost: from here on, "the
+   chrome varies by route" is an available precedent, not an impossibility.
+
+   THE ARGUMENT ISN'T VISUAL. The strip exists to say which of the four tabs
+   the reader is inside. On the root the reader is inside none, so all four
+   are born inactive: 48px of height and a hairline over the photograph,
+   spent to inform nothing, repeating in a poorer form the navigation the
+   cards do mid-page with an icon and a sentence each.
+
+   ONE LEVER, TWO CLEAN-UPS. `--pd-sticky-top` is what the bridge writes
+   `--ifm-navbar-height` from, so putting it back to one line collapses the
+   `<nav>`, the sticky offset and everything that hangs off it in one
+   assignment — nothing here sets a height. What's left is hiding what would
+   otherwise wrap into a second line that no longer has room:
+
+     · the four tabs, and the spacer that opens the line. One selector
+       reaches both: the spacer is an `{type: 'html'}` config item and
+       carries `navbar__item` like a tab does, which is exactly why the rule
+       above has to write `:not(.tab-strip-break)` and this one doesn't;
+     · `.navbar__inner::before`, the inset hairline that separates line 1
+       from the strip. With one line its border lands on the same pixel as
+       `.navbar`'s own bottom edge, and the two would paint a doubled line
+       across the middle of the bar and a single one at the ends.
+
+   RUNG 1, and it stays there: a class hook on `<html>` plus three rules. No
+   component wrapped, none ejected, and `Navbar/*` untouched.
+
+   `html.pd-landing` is (0,1,1) and beats the `:root` (0,1,0) that wrote both
+   values, in this file's media query and in `tokens.css`'s. The class is
+   written by the route itself, through `<Head>` — the navbar lives outside
+   `<Layout>`'s wrapper, so `wrapperClassName` couldn't reach it.
+
+   The `@media (min-width: 997px)` scope is MANDATORY here for the same
+   reason it is above: below the threshold there is no strip to remove, the
+   tabs are already inside the drawer where the reader still needs them, and
+   `.navbar-sidebar__brand` reads the same `--ifm-navbar-height`.
+   ----------------------------------------------------------------------------- */
+@media (min-width: 997px) {
+  html.pd-landing {
+    --pd-sticky-top: var(--pd-navbar-height);
+  }
+
+  html.pd-landing .navbar__items:not(.navbar__items--right) > .navbar__item {
+    display: none;
+  }
+
+  html.pd-landing .navbar__inner::before {
+    content: none;
+  }
+}
+
+/* -----------------------------------------------------------------------------
    3. Sidebar
 
    --pd-sidebar-width, a mute separator at the top, an icon on everything

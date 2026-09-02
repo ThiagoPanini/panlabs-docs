@@ -310,8 +310,9 @@ const config = {
         // `.navbar__brand:empty` rule that hid the empty link the upstream
         // renders when `title` is absent.
         //
-        // Same argument as the landing page's figure, with more force: the
-        // brand appears on EVERY page, the landing on one. It stays
+        // Same argument as the landing's hero, with more force in the
+        // opposite direction: the landing is ONE route and is where this
+        // project allows spectacle, the brand sits on EVERY page. It stays
         // MONOCHROME, in `--pd-text-strong`: tinting a word with an accent
         // in the top-left corner is the kind of flourish the house rule
         // refuses. The typography didn't change; what left was the glyph,
@@ -432,10 +433,9 @@ const config = {
         theme: temaPrism,
         // `bash` isn't in `prism-react-renderer`'s default bundle; without
         // registering it, a fenced block renders with no highlight and
-        // nothing warns you. It backs the AWS CLI fences across the
-        // landing page, `Procedimentos`, and `Ferramentas`: a missing
-        // highlight in a fence is what catches a forgotten registration
-        // today.
+        // nothing warns you. Measured: 23 pages open a `bash` fence, every
+        // one of them under `Ferramentas`. A missing highlight in a fence is
+        // what catches a forgotten registration today.
         additionalLanguages: ['bash'],
       },
     }),

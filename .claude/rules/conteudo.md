@@ -3,6 +3,7 @@ paths:
   - "content/**/*.md"
   - "content/**/*.mdx"
   - "contracts/**/*.json"
+  - "src/pages/**/*.js"
 ---
 
 # Content, what the information architecture asks for
@@ -19,17 +20,23 @@ It's **4**, and it's **confined** to two branches: `content/ferramentas/bibliote
 
 ## Voice
 
-**`you` plus imperative. Zero first person, no exception**, across the whole site. The collection is personal in what it chooses to document, not in its grammar.
+**`you` plus imperative. Zero first person**, everywhere the site documents something. The collection is personal in what it chooses to document, not in its grammar.
+
+**One exception, and it's the root.** The landing talks *about* the collection instead of documenting inside it, and it's written in the first person. Scoped to `src/pages/`; nothing under `content/` inherits it. Rationale in [Context § House voice](../../CONTEXT.md#the-collection).
 
 ## Em dash
 
-**Zero `—` in `content/` and `contracts/`.** The em dash is machine-written text's tell, and this repo's product is a site meant to be looked at. The way out is a comma, a colon, parentheses, or the sentence rewritten, **chosen one at a time**: the em dash is legitimate Portuguese punctuation, and swapping it for one fixed character produces a truncated sentence or doubled punctuation.
+**Zero `—` in published prose.** That means `content/`, `contracts/`, and a route's own copy under `src/pages/`. The em dash is machine-written text's tell, and this repo's product is a site meant to be looked at. The way out is a comma, a colon, parentheses, or the sentence rewritten, **chosen one at a time**: the em dash is legitimate Portuguese punctuation, and swapping it for one fixed character produces a truncated sentence or doubled punctuation.
+
+The rule is scoped by INTENT, and the cost of that is written down: a path list is checkable with one search, an intent is not, and this repo has no automated gate left to lean on. It was widened anyway because the version scoped to `content/` and `contracts/` stopped exactly at the most-looked-at page on the site.
 
 Applies to a co-located diagram's `.drawio.svg` too, where the label shows up twice, once in the rendered `<text>`, once in the XML embedded in the `content` attribute.
 
 **The exception is quoting a tool's own output**: inside a code fence, in a generated page's `api_exemplos:` line, or in a `"message"` value, where the em dash is what the tool printed.
 
-Check by hand: `grep -rn '—' content/ contracts/`.
+It does **not** reach a repo document nobody publishes: `AGENTS.md`, `CONTEXT.md`, `DECISIONS.md`, `docs/agents/` and these rule files are written for a reader who is looking for the em dash, not at it.
+
+Check by hand: `grep -rn '—' content/ contracts/ src/pages/`. In a comment inside `src/pages/` it's fine, and that's the one place the search reports something the rule doesn't forbid.
 
 ## Broken link
 
