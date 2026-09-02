@@ -32,6 +32,28 @@
  * the master it came from — pure Node, no browser. A stale file fails the
  * build with the command that fixes it.
  *
+ * TWO TRIGGERS, AND WHY THE SECOND IS A WEBPACK HOOK. A drawing goes out of
+ * date two ways: the tab was redrawn, or a page started asking for a
+ * different tab. The directory watch below catches the first. It cannot
+ * catch the second, because a markdown edit reaches no watcher here —
+ * `loadContent` runs once, and `plugin-content-docs` reloads only itself.
+ * Measured before the hook existed: swapping `?aba=` on a page with the dev
+ * server up ends in `Module not found: Can't resolve './x.teste.svg'`, and
+ * the only ways out were restarting `start` or re-saving the master to fake
+ * an event.
+ *
+ * The hook cannot go where the query is read. `NormalModuleReplacementPlugin`
+ * reads it in `normalModuleFactory.hooks.beforeResolve`, tapped with `.tap`
+ * — synchronous, while the renderer needs a browser. What `beforeCompile`
+ * gives is the last asynchronous point before `make`: webpack calls it with
+ * `callAsync` and only then creates the compilation, so a drawing written
+ * there is on disk before anything tries to resolve it. Ordering by
+ * construction, not a race. A markdown save reaches it because the file is a
+ * module in the graph, so every save starts a compile. Measured here: 4.4s
+ * and 5.0s for the two directions of a tab swap, each followed by a green
+ * compile with no restart, against 20-111ms for a scan that finds nothing to
+ * do and a ~200ms rebuild.
+ *
  * Reload does NOT go through `getPathsToWatch`, for the reason
  * `src/plugins/sidebar-icons` documents at length: each plugin's watched
  * paths get their own chokidar instance, and `reloadPlugin` carries the
@@ -222,6 +244,55 @@ export default function diagramTabsPlugin(context) {
   }
 
   /**
+   * Renders one at a time. Two callers can ask at once — a master saved
+   * while a compile is starting — and `openRenderer()` twice over would be
+   * two browsers driving the same engine over the same directory. `inFlight`
+   * is kept settled so a failed render never surfaces as an unhandled
+   * rejection; the error still reaches whoever asked.
+   */
+  let inFlight = Promise.resolve();
+
+  function refreshOnce() {
+    const next = inFlight.then(() => refresh());
+    inFlight = next.catch(() => {});
+    return next;
+  }
+
+  /** One directory watch per directory holding a master, added as they appear. */
+  const watched = new Set();
+  let pending;
+
+  const onChange = (filename) => {
+    // Filtered by suffix so an ordinary markdown save next door costs
+    // nothing, and debounced because a single save arrives as more than
+    // one event.
+    if (!filename || !filename.endsWith(MASTER_SUFFIX)) {
+      return;
+    }
+    clearTimeout(pending);
+    pending = setTimeout(() => {
+      refreshOnce()
+        .then(report)
+        .catch((error) => console.error(`pd-diagram-tabs: ${error.message}`));
+    }, DEBOUNCE_MS);
+  };
+
+  const report = ({rendered, orphans, dirs}) => {
+    for (const file of rendered) {
+      console.log(`pd-diagram-tabs: ${file} atualizado.`);
+    }
+    for (const file of orphans) {
+      console.log(`pd-diagram-tabs: ${file} removido, ninguém importa mais essa aba.`);
+    }
+    for (const dir of dirs) {
+      if (!watched.has(dir)) {
+        watched.add(dir);
+        watchFs(dir, (_event, filename) => onChange(filename));
+      }
+    }
+  };
+
+  /**
    * The same check without a browser: what `build` runs, and the reason the
    * generated drawings are committed rather than produced in CI.
    */
@@ -269,46 +340,44 @@ export default function diagramTabsPlugin(context) {
         return;
       }
 
-      /** One directory watch per directory holding a master, added as they appear. */
-      const watched = new Set();
-      let pending;
-
-      const onChange = (filename) => {
-        // Filtered by suffix so an ordinary markdown save next door costs
-        // nothing, and debounced because a single save arrives as more than
-        // one event.
-        if (!filename || !filename.endsWith(MASTER_SUFFIX)) {
-          return;
-        }
-        clearTimeout(pending);
-        pending = setTimeout(() => {
-          refresh()
-            .then(report)
-            .catch((error) => console.error(`pd-diagram-tabs: ${error.message}`));
-        }, DEBOUNCE_MS);
-      };
-
-      const report = ({rendered, orphans, dirs}) => {
-        for (const file of rendered) {
-          console.log(`pd-diagram-tabs: ${file} atualizado.`);
-        }
-        for (const file of orphans) {
-          console.log(`pd-diagram-tabs: ${file} removido, ninguém importa mais essa aba.`);
-        }
-        for (const dir of dirs) {
-          if (!watched.has(dir)) {
-            watched.add(dir);
-            watchFs(dir, (_event, filename) => onChange(filename));
-          }
-        }
-      };
-
-      report(await refresh());
+      report(await refreshOnce());
     },
 
     configureWebpack() {
       return {
         plugins: [
+          // The second trigger, for the reason the header gives: a markdown
+          // save changes which tabs are wanted, and nothing else here would
+          // notice. It runs before `make`, so the drawing exists by the time
+          // the rewrite below is resolved.
+          //
+          // A refusal is LOGGED, never thrown, and that is not politeness.
+          // Measured: rejecting here kills the dev server, not just the
+          // compile — webpack's `Watching._done` re-arms the file watchers
+          // out of the compilation it never got, so after one bad slug no
+          // later save reaches anything and only a restart brings it back.
+          // Printing instead lets the compile fail on its own terms, with
+          // `Module not found` under a line naming the page and the tabs the
+          // file really has, and the next save still compiles.
+          {
+            apply(compiler) {
+              compiler.hooks.beforeCompile.tapPromise('pd-diagram-tabs', async () => {
+                // `build` compiles twice, client and server, with
+                // `NODE_ENV=production`, and must stay browser-free: there
+                // `verify()` in `loadContent` is the whole story. A missing
+                // engine degrades the same way it does at boot.
+                if (process.env.NODE_ENV !== 'development' || engineComplaint()) {
+                  return;
+                }
+                try {
+                  report(await refreshOnce());
+                } catch (error) {
+                  console.error(`pd-diagram-tabs: ${error.message}`);
+                }
+              });
+            },
+          },
+
           // The query names a tab; the drawing for it is a real file on
           // disk. Rewriting the request before resolution is what lets the
           // markdown name the master, which is the file the author actually
