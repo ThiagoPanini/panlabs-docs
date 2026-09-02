@@ -48,4 +48,4 @@ The slug is the tab's own name, lowercased, without accents. A wrong slug fails 
 
 An import without `?aba=` still resolves to the master, so a single-tab diagram needs no query and gets no generated file.
 
-Each tab named this way generates a committed sibling, `arquitetura.<slug>.svg`. Don't edit one, and don't open one in the diagram editor: draw in the tab, in the master. The dev server rewrites the sibling on save, and `npm run build` refuses a sibling older than the tab it came from.
+Each tab named this way generates a committed sibling, `arquitetura.<slug>.svg`. Don't edit one, and don't open one in the diagram editor: draw in the tab, in the master. The dev server rewrites the sibling when you save the master, and writes a missing one when you change which tab an import asks for, with no restart either way. `npm run build` refuses a sibling older than the tab it came from, and never renders.
