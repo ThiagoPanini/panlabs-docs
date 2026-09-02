@@ -34,3 +34,10 @@ Thumbs.db
 # agentes
 .claude/settings.local.json
 .claude/worktrees/
+
+# design-sync: staged converter, regenerated bundle, machine state
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules

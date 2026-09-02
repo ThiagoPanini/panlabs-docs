@@ -1,0 +1,95 @@
+{
+  "projectId": "85bdb14b-9d45-4a05-a5e4-6be31488c959",
+  "shape": "package",
+  "pkg": "panlabs-docs",
+  "globalName": "PanlabsDocs",
+  "buildCmd": "node .design-sync/build-dist.mjs",
+  "srcDir": "src",
+  "cssEntry": ".design-sync/.cache/dist/index.css",
+  "docsDir": ".design-sync/docs",
+  "readmeHeader": ".design-sync/conventions.md",
+  "guidelinesGlob": [],
+  "componentSrcMap": {
+    "Accordion": "src/components/Accordion.js",
+    "AccordionGroup": "src/components/Accordion.js",
+    "Callout": "src/components/Callout.js",
+    "Card": "src/components/Card.js",
+    "CardGroup": "src/components/Card.js",
+    "Expandable": "src/components/Expandable.js",
+    "Frame": "src/components/Frame.js",
+    "Icon": "src/components/Icon.js",
+    "ParamField": "src/components/Field.js",
+    "ResponseField": "src/components/Field.js",
+    "Step": "src/components/Steps.js",
+    "Steps": "src/components/Steps.js",
+    "Table": "src/components/Table.js",
+    "Update": "src/components/Update.js",
+    "ThemeRoot": null
+  },
+  "dtsPropsFor": {
+    "Accordion": "  /** Rótulo do cabeçalho. Sempre visível, aberto ou fechado. */\n  title: string;\n  /** Segunda linha do cabeçalho, para qualificar o título. */\n  description?: string;\n  /** Slug do ícone, à esquerda do título. Ver `Icon`. */\n  icon?: string;\n  /** Nasce aberto. Sem isso, fechado. */\n  defaultOpen?: boolean;\n  children?: React.ReactNode;",
+    "AccordionGroup": "  /** Uma sequência de `Accordion`, coladas numa pilha só. */\n  children?: React.ReactNode;",
+    "Callout": "  /** `info` é o neutro e o padrão. A inversão com `note` é deliberada. */\n  variant?: 'note' | 'info' | 'tip' | 'warning';\n  /** Primeira linha, em destaque. Sem ela o corpo começa direto. */\n  title?: string;\n  children?: React.ReactNode;",
+    "Card": "  /** Rótulo do cartão. */\n  title: string;\n  /** Slug do ícone, acima do título. Ver `Icon`. */\n  icon?: string;\n  /** Com `href` o cartão inteiro vira o link; sem ele, é uma superfície. */\n  href?: string;\n  children?: React.ReactNode;",
+    "CardGroup": "  /** Uma grade de `Card`. A contagem de cartões define as colunas — não há prop de coluna, media query nem container query. */\n  children?: React.ReactNode;",
+    "Expandable": "  /** O texto do `<summary>`, a linha que abre e fecha. */\n  title: string;\n  /** Nível 1 abre por padrão; nível 2 e abaixo nascem fechados. */\n  defaultOpen?: boolean;\n  children?: React.ReactNode;",
+    "Frame": "  /** O palco tingido. Guarda fluxo, ciclo de vida, modelo de dado — nunca captura de tela. */\n  children?: React.ReactNode;",
+    "Icon": "  /** Slug do Lucide. O registro é gerado a partir do que o conteúdo usa, e um nome fora dele quebra a build. */\n  name:\n    | 'book-open'\n    | 'check'\n    | 'chevron-right'\n    | 'copy'\n    | 'download'\n    | 'external-link'\n    | 'file-text'\n    | 'info'\n    | 'lightbulb'\n    | 'maximize'\n    | 'pencil-line'\n    | 'search'\n    | 'terminal'\n    | 'triangle-alert'\n    | 'x';\n  /** Cada tamanho traz sua própria compensação óptica de `strokeWidth`. */\n  size?: 'sm' | 'md' | 'lg';",
+    "ParamField": "  /** Nome do parâmetro. Vira o id da âncora. */\n  name: string;\n  /** O tipo, como o leitor o escreveria. */\n  type: string;\n  /** Só o obrigatório é marcado; a ausência é o sinal de opcional. */\n  required?: boolean;\n  /** Risca o nome e apaga o texto. Sem cor: vermelho é do chip de obrigatório. */\n  deprecated?: boolean;\n  /** Valor padrão, num chip ao lado do tipo. */\n  default?: string;\n  children?: React.ReactNode;",
+    "ResponseField": "  /** Nome do campo da resposta. Vira o id da âncora. */\n  name: string;\n  /** O tipo, como o leitor o escreveria. */\n  type: string;\n  /** Só o obrigatório é marcado; a ausência é o sinal de opcional. */\n  required?: boolean;\n  /** Risca o nome e apaga o texto. Sem cor: vermelho é do chip de obrigatório. */\n  deprecated?: boolean;\n  /** Valor padrão, num chip ao lado do tipo. */\n  default?: string;\n  children?: React.ReactNode;",
+    "Step": "  /** Título do passo, acima do corpo. */\n  title?: string;\n  /** Um ícone SUBSTITUI o número — não senta ao lado dele. */\n  icon?: string;\n  children?: React.ReactNode;",
+    "Steps": "  /** Uma sequência de `Step`. A numeração é do `<ol>`, nunca do JavaScript. */\n  children?: React.ReactNode;",
+    "Table": "  /** As linhas da tabela: `<thead>` e `<tbody>`. O componente é o `<table>` mais a região rolável que o torna alcançável pelo teclado. */\n  children?: React.ReactNode;\n  /** Todo o resto desce para o `<table>`. */\n  [prop: string]: unknown;",
+    "Update": "  /** A versão, ou a data. É o cabeçalho do registro. */\n  label: string;\n  /** Etiqueta ao lado do rótulo, para qualificar a entrada. */\n  tag?: string;\n  children?: React.ReactNode;"
+  },
+  "provider": {
+    "component": "ThemeRoot",
+    "props": {
+      "mode": "dark"
+    }
+  },
+  "overrides": {
+    "Accordion": {
+      "cardMode": "column"
+    },
+    "AccordionGroup": {
+      "cardMode": "column"
+    },
+    "Callout": {
+      "cardMode": "column"
+    },
+    "Card": {
+      "cardMode": "column"
+    },
+    "CardGroup": {
+      "cardMode": "column"
+    },
+    "Expandable": {
+      "cardMode": "column"
+    },
+    "Frame": {
+      "cardMode": "column"
+    },
+    "Icon": {
+      "cardMode": "column"
+    },
+    "ParamField": {
+      "cardMode": "column"
+    },
+    "ResponseField": {
+      "cardMode": "column"
+    },
+    "Step": {
+      "cardMode": "column"
+    },
+    "Steps": {
+      "cardMode": "column"
+    },
+    "Table": {
+      "cardMode": "column"
+    },
+    "Update": {
+      "cardMode": "column"
+    }
+  }
+}
