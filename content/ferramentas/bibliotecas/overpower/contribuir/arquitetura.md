@@ -3,7 +3,7 @@ title: Arquitetura
 description: O fluxo de uma invocação pelos módulos, e duas raízes irmãs de conteúdo com invariantes opostas.
 ---
 
-import Fluxo from './fluxo-de-uma-invocacao.drawio.svg';
+import Fluxo from './fluxo-de-uma-invocacao.drawio.svg?aba=fluxo-de-uma-invocacao';
 
 # Arquitetura
 
