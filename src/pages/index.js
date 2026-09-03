@@ -72,25 +72,25 @@ const RECORD_TYPES = [
     title: 'Ferramentas',
     icon: 'terminal',
     route: '/ferramentas',
-    body: 'O que eu uso no dia, por que escolhi e onde me atrapalhou.',
+    body: 'O que eu desenvolvi e o que eu utilizo no dia a dia.',
   },
   {
     title: 'Jornadas',
     icon: 'book-open',
     route: '/jornadas',
-    body: 'Um papel que eu vesti do começo ao fim, e a lição que ficou dele.',
+    body: 'Aprendizados corporativos, como trilhas de API Owner e Security Champion.',
   },
   {
     title: 'Procedimentos',
     icon: 'list-checks',
     route: '/procedimentos',
-    body: 'O passo a passo de uma tarefa que se repete, na ordem em que funciona.',
+    body: 'Tutoriais de configuração de ferramentas, pipelines ou procedimentos corporativos.',
   },
   {
     title: 'Times',
     icon: 'users',
     route: '/times',
-    body: 'Como um time se organiza por dentro, e por onde alguém de fora entra.',
+    body: 'Times onde eu atuou ou atuei ao longo da minha trajetória corporativa no Itaú.',
   },
 ];
 
@@ -103,19 +103,19 @@ const RECORD_TYPES = [
  */
 const PRINCIPLES = [
   {
-    title: 'Memória fora da cabeça',
+    title: 'Documentar é aprender',
     body:
-      'O que eu resolvo hoje eu esqueço depois. Escrever enquanto o assunto está fresco é o que faz voltar rápido.',
+      'Aqui eu registro vivências e descobertas importantes do universo Itaú capazes de facilitar meu próprio trabalho como especialista no mundo de tecnologia.',
   },
   {
-    title: 'O que passou pela minha mão',
+    title: 'Soluções e experiências próprias',
     body:
-      'Nenhuma página aqui é resenha de terceiro. O que está escrito eu usei, quebrei ou entreguei, e digo em que papel. O que ainda não passou por mim está aberto como work in progress.',
+      'Atuando como um grande defensor do aprendizado contínuo, registro aqui as soluções que desenvolvo e costumo entregar para o time, como libs e módulos.',
   },
   {
-    title: 'Aberto porque pode servir',
+    title: 'Nada aqui é oficial',
     body:
-      'Escrevo para o meu eu de amanhã. Se ajudar quem está no mesmo caminho, melhor ainda: por isso é público.',
+      'Nenhuma documentação aqui é suportada por times robustos. Tudo o que está aqui tem um propósito primário de servir como referência pessoal e, de maneira secundária, para outros.',
   },
 ];
 
@@ -144,16 +144,17 @@ export default function Landing() {
                 stagger is `:nth-child()` in the module. */}
             <div className={clsx(styles.bandInner, styles.heroContent)}>
               <p className={styles.pill}>
-                panlabs-docs · caderno de trabalho aberto, em pt-BR
+                panlabs-docs · uma documentação pessoal
               </p>
               <h1 className={styles.title}>
-                Documentar é<br />
-                como eu aprendo.
+                O aprendizado de um<br />
+                especialista no Itaú.
               </h1>
               <p className={styles.lead}>
-                Aqui eu registro as ferramentas que passam pela minha mão e os
-                papéis que eu vesti, com o contexto, a decisão e o que eu faria
-                diferente.
+                Esse é um espaço individual criado para documentar jornadas,
+                ferramentas que eu desenvolvo, tutoriais que eu escrevo e
+                experiências que eu vivencio. O objetivo é me ajudar (e, eventualmente, ajudar outros)
+                a registrar itens fundamentais para o meu dia a dia de trabalho no Itaú.
               </p>
               <div className={styles.actions}>
                 {/* `<Link>`, because it's the one call to action that leaves
@@ -163,7 +164,7 @@ export default function Landing() {
                 <Link
                   className={clsx(styles.action, styles.actionPrimary)}
                   to="/ferramentas">
-                  <span>Começar pelas ferramentas</span>
+                  <span>Ferramentas que eu criei</span>
                   <Icon name="chevron-right" size="sm" />
                 </Link>
                 {/* A plain `<a>`, because the target is an id on this same
@@ -172,8 +173,8 @@ export default function Landing() {
                     all the same. */}
                 <a
                   className={clsx(styles.action, styles.actionSecondary)}
-                  href="#sobre">
-                  <span>Por que este acervo existe</span>
+                  href="/jornadas">
+                  <span>Times que eu participo</span>
                   <Icon name="info" size="sm" />
                 </a>
               </div>
@@ -201,7 +202,6 @@ export default function Landing() {
             <div className={clsx(styles.bandInner, styles.bandBody)}>
               <div className={styles.bandHead}>
                 <h2 className={styles.bandTitle}>O que vive aqui</h2>
-                <p className={styles.bandNote}>quatro tipos de registro</p>
               </div>
               <CardGroup>
                 {RECORD_TYPES.map(({title, icon, route, body}) => (
@@ -219,9 +219,11 @@ export default function Landing() {
             <div className={clsx(styles.bandInner, styles.bandCallout)}>
               <Callout variant="info" title="O que este acervo não é">
                 <p>
-                  Não é documentação oficial de nenhum produto, nem notícia, nem
-                  tutorial definitivo. É registro individual: parcial por
-                  natureza e corrigido quando eu aprendo melhor.
+                  Não é um espaço oficial com documentações oficiais que servem
+                  outras pessoas ou áreas. Tudo o que está aqui foi colocado para
+                  servir meus propósitos individuais como um especialista em tecnolgia
+                  no Itaú como uma forma de facilitar meu dia a dia de atuação. Não apoie
+                  decisões estratégicas e críticas e itens que estejam aqui documentados.
                 </p>
               </Callout>
             </div>
