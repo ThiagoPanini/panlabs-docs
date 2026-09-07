@@ -99,9 +99,9 @@ export default function searchPlugin(context, options) {
     name: 'pd-search',
 
     // `contentLoaded` only sees a plugin's own content, and this plugin has
-    // none: it reads three `docusaurus-plugin-content-docs` instances via
-    // `allContent`. `allContentLoaded` is the hook that receives that, and
-    // it exposes the same `setGlobalData` action.
+    // none: it reads four `docusaurus-plugin-content-docs` instances plus
+    // the blog via `allContent`. `allContentLoaded` is the hook that
+    // receives that, and it exposes the same `setGlobalData` action.
     async allContentLoaded({allContent, actions}) {
       const {i18n, siteDir} = context;
 
