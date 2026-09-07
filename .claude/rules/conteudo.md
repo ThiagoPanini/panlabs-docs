@@ -24,11 +24,33 @@ It's **4**, and it's **confined** to two branches: `content/ferramentas/bibliote
 
 **`you` plus imperative. Zero first person**, everywhere the site documents something. The collection is personal in what it chooses to document, not in its grammar.
 
-**One exception, and it's the root.** The landing talks *about* the collection instead of documenting inside it, and it's written in the first person. Scoped to `src/pages/`; nothing under `content/` inherits it. Rationale in [Context § House voice](../../CONTEXT.md#the-collection).
+**Two exceptions.** The landing talks *about* the collection instead of documenting inside it, and it's written in the first person. Scoped to `src/pages/`. Every article under `content/blog/` is signed and dated rather than documentation, and the house voice doesn't reach it either: an article's voice is the author's choice, first person, third person, or a mix, decided article by article. Neither scope leaks into the other, and nothing else under `content/` inherits either exception. Rationale in [Context § House voice](../../CONTEXT.md#the-collection).
+
+## The blog's article contract
+
+One folder per article, under `content/blog/`: `<slug>/index.md`, images co-located. The URL is the slug with no date in the path.
+
+The body never opens with `# título`. The title lives in front matter and the page draws the `h1` from it, same as a docs page. This isn't a style choice: the site's `h1` registration (`src/theme/MDXComponents/index.js`) calls `useDoc()`, which throws outside a docs `DocProvider`, a context a blog article doesn't have. `processBlogPosts` in `docusaurus.config.js` fails the build naming the file and the line when this happens.
+
+Front matter:
+
+```yaml
+title: Título do artigo
+description: O subtítulo, obrigatório, o mesmo campo que alimenta meta, busca e llms.txt.
+date: 2026-09-06
+tags: [tutoriais, claude-code, skills]
+authors: thiago
+image: ./capa.png   # opcional, co-locado
+slug: outro-slug    # opcional
+```
+
+`description`, `date`, and `authors` are required, and their absence fails the build naming the file. `tags` carries exactly one type, from the closed set `novidades`, `tutoriais`, `notas`, plus any number of subject tags, both from `content/blog/tags.yml`. A tag outside that file fails the build through `onInlineTags: 'throw'`; two type tags, or none, fails through `processBlogPosts`.
+
+Rationale in [Decisions § The Blog Is a Tab, Not a Docs Instance](../../DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance).
 
 ## Em dash
 
-**Zero `—` in published prose.** That means `content/`, `contracts/`, and a route's own copy under `src/pages/`. The em dash is machine-written text's tell, and this repo's product is a site meant to be looked at. The way out is a comma, a colon, parentheses, or the sentence rewritten, **chosen one at a time**: the em dash is legitimate Portuguese punctuation, and swapping it for one fixed character produces a truncated sentence or doubled punctuation.
+**Zero `—` in published prose.** That means `content/`, `contracts/`, and a route's own copy under `src/pages/`. `content/blog/` is inside that scope too: the voice exception above frees an article's grammar, not its punctuation. The em dash is machine-written text's tell, and this repo's product is a site meant to be looked at. The way out is a comma, a colon, parentheses, or the sentence rewritten, **chosen one at a time**: the em dash is legitimate Portuguese punctuation, and swapping it for one fixed character produces a truncated sentence or doubled punctuation.
 
 The rule is scoped by INTENT, and the cost of that is written down: a path list is checkable with one search, an intent is not, and this repo has no automated gate left to lean on. It was widened anyway because the version scoped to `content/` and `contracts/` stopped exactly at the most-looked-at page on the site.
 

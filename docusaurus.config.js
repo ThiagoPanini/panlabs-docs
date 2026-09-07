@@ -8,6 +8,15 @@
  * source of value stays `src/css/tokens.css`.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+/* Only the blog's `# title in the body` rule needs this: `siteDir` resolves
+   a `metadata.source` (an `@site/…` path) back to a file on disk. Nothing
+   else in this config reads the filesystem. */
+const siteDir = path.dirname(fileURLToPath(import.meta.url));
+
 /**
  * Prism theme shim.
  *
@@ -79,6 +88,113 @@ const temaPrism = {
  * two empty tabs lower is a result decision, not an aesthetic one.
  */
 const TABS = ['tools', 'default', 'procedures', 'teams'];
+
+/** Read by both the blog index's meta and the feed. See `blog` below. */
+const BLOG_DESCRIPTION =
+  'Artigos assinados e datados sobre tecnologia, publicados por conta própria.';
+
+/**
+ * The blog's article contract, checked once per post at load time and
+ * failed loud: a subtitle, exactly one type tag, an author, a date, and no
+ * `# ` line in the body. See DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance.
+ *
+ * The type is one of these three, carried as an ordinary tag rather than a
+ * dedicated front matter field: `onInlineTags: 'throw'`, set on the `blog`
+ * key below, already closes the tag catalog, so a type is one membership
+ * check away from being enforced by the same mechanism as every other tag.
+ *
+ * This list and `content/blog/tags.yml`'s three top entries are the SAME
+ * three names, kept in two places on purpose: this file has no YAML
+ * parser to read the catalog with, and adding one is a new dependency for
+ * a three-word list. Renaming a type is a two-file edit; a name added here
+ * with no matching entry in `tags.yml` fails through `onInlineTags`
+ * instead, on the very next article that uses it.
+ */
+const ARTICLE_TYPES = ['novidades', 'tutoriais', 'notas'];
+
+/**
+ * Scans a fenced-code-aware line for a leading `# `, on the RAW file, not
+ * `blogPost.content`.
+ *
+ * `content` is the wrong input: `@docusaurus/utils`'s `removeContentTitle`
+ * runs unconditionally on every blog post and deletes a leading `# Title`
+ * from `content` before this hook ever sees it, meant to backfill
+ * `metadata.title` when front matter has none. This project always
+ * supplies `title` in front matter, so that deletion only hides the exact
+ * violation this rule exists to catch. Reading the file straight off disk
+ * sidesteps that stage entirely.
+ */
+function findLeadingHeadingLine(rawBody) {
+  const lines = rawBody.split('\n');
+  let insideFence = false;
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    if (/^\s*`{3,}/.test(line)) {
+      insideFence = !insideFence;
+      continue;
+    }
+    if (!insideFence && /^#\s/.test(line.trimStart())) {
+      return i + 1;
+    }
+  }
+  return null;
+}
+
+/** Strips the front matter block a blog post's source starts with. */
+function readBodyWithoutFrontMatter(absolutePath) {
+  const raw = fs.readFileSync(absolutePath, 'utf-8');
+  return raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
+}
+
+/**
+ * One post, checked against the contract above. Throws with the source
+ * path and the exact rule broken, since a build failure that doesn't name
+ * the file sends the author hunting through every article in the blog.
+ */
+function validateBlogPost(blogPost) {
+  const {source, frontMatter} = blogPost.metadata;
+
+  if (!frontMatter.description) {
+    throw new Error(
+      `${source}: falta a description no front matter. Ela é o subtítulo do artigo, e alimenta a meta, a busca e o llms.txt.`,
+    );
+  }
+
+  if (frontMatter.date === undefined) {
+    throw new Error(`${source}: falta a date no front matter.`);
+  }
+
+  if (frontMatter.authors === undefined) {
+    throw new Error(`${source}: falta authors no front matter.`);
+  }
+
+  const tags = Array.isArray(frontMatter.tags)
+    ? frontMatter.tags
+    : frontMatter.tags
+      ? [frontMatter.tags]
+      : [];
+  const typeTags = tags.filter((tag) => ARTICLE_TYPES.includes(tag));
+  if (typeTags.length !== 1) {
+    throw new Error(
+      `${source}: precisa de exatamente uma tag de tipo entre ${ARTICLE_TYPES.join(', ')}; encontrei ${typeTags.length} (${typeTags.join(', ') || 'nenhuma'}).`,
+    );
+  }
+
+  const absolutePath = path.join(siteDir, source.replace(/^@site[/\\]/, ''));
+  const body = readBodyWithoutFrontMatter(absolutePath);
+  const headingLine = findLeadingHeadingLine(body);
+  if (headingLine !== null) {
+    throw new Error(
+      `${source}:${headingLine}: o corpo não pode abrir com "# título". O título vem do front matter (\`title\`), e a página do blog desenha o \`h1\` a partir dele, exatamente como uma página de documentação.`,
+    );
+  }
+}
+
+/** @type {import('@docusaurus/plugin-content-blog').Options['processBlogPosts']} */
+async function processBlogPosts({blogPosts}) {
+  blogPosts.forEach(validateBlogPost);
+  return blogPosts;
+}
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -158,10 +274,45 @@ const config = {
           routeBasePath: 'jornadas',
           sidebarPath: './sidebars-jornadas.js',
         },
-        // No blog: nothing in the map asked for one, and a plugin turned on
-        // with no consumer is the same class of defect as Infima's inert
-        // variables.
-        blog: false,
+        // The fifth tab, and the one instance of this plugin that isn't
+        // `plugin-content-docs`: DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance
+        // is why it doesn't get a sidebar, an archive, or an author page.
+        //
+        // `tags.yml` and `authors.yml`, both left at their default
+        // filenames, live at `content/blog/tags.yml` and
+        // `content/blog/authors.yml`. `onInlineTags: 'throw'` is what turns
+        // that tags file into a closed catalog: a tag an article uses but
+        // the file doesn't list fails the build instead of minting a page
+        // for a typo.
+        /** @type {import('@docusaurus/plugin-content-blog').Options} */
+        blog: {
+          path: 'content/blog',
+          routeBasePath: 'blog',
+          blogSidebarCount: 0,
+          archiveBasePath: null,
+          blogTitle: 'Blog',
+          // One string, read by both the index page's meta and the feed:
+          // the two are the same sentence by definition, and a single
+          // source keeps them from drifting apart the day one gets edited.
+          blogDescription: BLOG_DESCRIPTION,
+          postsPerPage: 10,
+          showReadingTime: true,
+          onInlineTags: 'throw',
+          // The index summary is `description`, never the truncate marker:
+          // an article missing the marker isn't missing anything.
+          onUntruncatedBlogPosts: 'ignore',
+          processBlogPosts,
+          feedOptions: {
+            type: ['rss', 'atom'],
+            // The plugin's own XSLT, so the feed opens readable in a
+            // browser with no CDN involved, the same constraint that keeps
+            // the diagram lightbox off a vendor's viewer.
+            xslt: true,
+            copyright: '© 2026 panlabs',
+            title: 'Blog do panlabs',
+            description: BLOG_DESCRIPTION,
+          },
+        },
         // SVGR inlines the `.drawio.svg` imported by a page, and these two
         // optimizations are off because the stage paints the drawing by
         // matching draw.io's ATTRIBUTE layer with a selector.
@@ -344,9 +495,9 @@ const config = {
             value: '<!--quebra-->',
           },
 
-          // The four tabs. Each swaps the whole sidebar, and each sidebar
-          // is its own instance: the navigation axis is the nature of the
-          // content.
+          // The four docs tabs. Each swaps the whole sidebar, and each
+          // sidebar is its own instance: the navigation axis is the nature
+          // of the content.
           {
             type: 'docSidebar',
             docsPluginId: 'tools',
@@ -373,6 +524,23 @@ const config = {
             sidebarId: 'teams',
             position: 'left',
             label: 'Times',
+          },
+
+          // The fifth, last, and the one tab with no sidebar to swap: a
+          // plain link, not `docSidebar`, because the blog isn't a
+          // `plugin-content-docs` instance.
+          // DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance. No CSS
+          // rides along with it: `chrome.css`'s tab-strip rule already
+          // styles any `.navbar__item` in this list, keyed off position,
+          // not off `docSidebar`.
+          {
+            to: '/blog',
+            position: 'left',
+            label: 'Blog',
+            // Marks the item active under `/blog`, `/blog/<slug>`, and
+            // every tag route, not just an exact `/blog` match, which is
+            // what a plain `to` would give it.
+            activeBasePath: '/blog',
           },
 
           // Right side, in declared order: search, GitHub. The theme

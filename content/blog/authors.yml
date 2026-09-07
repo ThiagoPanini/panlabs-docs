@@ -1,0 +1,15 @@
+# Um autor só, sem página própria (`page: false`): DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance
+# recusa página de autor. `image_url` vira `imageURL` na leitura do plugin, e
+# ganha o baseUrl do site automaticamente; o arquivo é a mesma foto do hero
+# da landing, copiada sem redimensionar para `static/img/`: este repositório
+# não tem um redimensionador de imagem instalado, e adicionar um só para
+# encolher uma foto de assinatura seria a dependência nova que o ticket
+# recusa. O CSS do tema já limita o tamanho de exibição do avatar; o que
+# falta é o peso do arquivo, e isso fica para quando houver ferramenta.
+
+thiago:
+  name: Thiago Panini
+  title: Desenvolvedor e mantenedor deste acervo
+  url: https://github.com/ThiagoPanini
+  image_url: /img/thiago-panini.jpg
+  page: false

@@ -19,9 +19,9 @@ npm run build && npm run serve   # the whole CI is the build
 | [`CONTEXT.md`](CONTEXT.md) | The glossary. Start here. |
 | [`DECISIONS.md`](DECISIONS.md) | Why each locked design decision stands. |
 | [`docs/agents/`](docs/agents/) | How an agent works in this repo — tracker, domain, labels, workflow. |
-| `content/` | The `panlabs` collection, the published content — `jornadas/`, `procedimentos/`, `ferramentas/`, `times/`. |
+| `content/` | The `panlabs` collection, the published content — `jornadas/`, `procedimentos/`, `ferramentas/`, `times/`, `blog/`. The last isn't a docs instance; see [`DECISIONS.md`](DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance). |
 | `contracts/` | The `overpower` signature contracts. `prebuild` projects them into the generated reference. |
-| `src/pages/` | The routes this project writes itself, outside the four tabs. Today that's the landing at `/`, and it carries published prose: the em dash rule and the voice rule both reach it. |
+| `src/pages/` | The routes this project writes itself, outside the five tabs. Today that's the landing at `/`, and it carries published prose: the em dash rule and the voice rule both reach it. |
 | `src/css/tokens.css` | **The single source of literal values.** The only file in the repo with a literal. |
 | `src/css/custom.css` | Base rules. Zero literals, and never reads `--ifm-*`. |
 | `src/css/chrome.css` | The doc page shell — proportions, navbar, sidebar, TOC, footer, narrow width. |

@@ -56,16 +56,18 @@ import styles from './index.module.css';
 const ROUTE_CLASS = 'pd-landing';
 
 /**
- * The four tabs, in the navbar's order, each described by the TYPE of record
- * it holds and never by how much of it there is.
+ * The five tabs, in the navbar's order, each described by the TYPE of
+ * record it holds and never by how much of it there is.
  *
- * That distinction is what lets all four appear with the same weight while
- * two of them are still work in progress: a type is true the day the tab is
+ * That distinction is what lets all five appear with the same weight while
+ * some of them are still work in progress: a type is true the day the tab is
  * created, a volume goes stale on the next page published.
  *
- * The two tabs that already hold pages speak in the first person, the two
- * that are still empty define their type instead. The difference is
- * deliberate, and it's the closest this page gets to warning the reader.
+ * The tabs that already hold pages speak in the first person, the ones
+ * still empty define their type instead. The difference is deliberate, and
+ * it's the closest this page gets to warning the reader. The Blog isn't one
+ * of the four docs tabs above it, but the landing describes it the same
+ * way: DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance.
  */
 const RECORD_TYPES = [
   {
@@ -91,6 +93,12 @@ const RECORD_TYPES = [
     icon: 'users',
     route: '/times',
     body: 'Times onde eu atuou ou atuei ao longo da minha trajetória corporativa no Itaú.',
+  },
+  {
+    title: 'Blog',
+    icon: 'newspaper',
+    route: '/blog',
+    body: 'Artigos que eu escrevo sobre novidades, tutoriais e notas do meu dia a dia.',
   },
 ];
 

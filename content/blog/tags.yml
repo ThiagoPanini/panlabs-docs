@@ -1,0 +1,27 @@
+# O catálogo fechado do blog. `onInlineTags: 'throw'`, em docusaurus.config.js,
+# faz uma tag que não está aqui falhar o build nomeando o arquivo. Acrescentar
+# um assunto é uma linha; os três tipos não se mexem sem uma nova decisão.
+#
+# Os três primeiros são o TIPO do artigo: cada artigo carrega exatamente um,
+# conferido em `processBlogPosts` (docusaurus.config.js). Os demais são
+# assunto, em qualquer quantidade. Ver DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance.
+
+novidades:
+  label: Novidades
+  description: Uma versão nova, um lançamento ou uma mudança recente que vale registrar.
+
+tutoriais:
+  label: Tutoriais
+  description: Um passo a passo real, com etapas e demonstração.
+
+notas:
+  label: Notas
+  description: Uma reflexão curta sobre um tema do dia a dia.
+
+overpower:
+  label: overpower
+  description: O CLI que instala skill, MCP e receita a partir de um catálogo declarado.
+
+panlabs-docs:
+  label: panlabs-docs
+  description: Este próprio acervo, sua estrutura e as decisões por trás dela.
