@@ -10,7 +10,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import {pagesFrom, tabLabels} from '../pages';
+import {BLOG_TAB, pagesFrom, tabLabels} from '../pages';
 
 /**
  * Document separator for `llms-full.txt`.
@@ -28,21 +28,27 @@ const separator = (url) => `--- [Document source](${url}) ---`;
  * while the screen and `llms.txt` both show it.
  *
  * The anchor is the `h1`: without it, the two blockquotes (index pointer
- * and subtitle) would merge into one, silently.
+ * and subtitle) would merge into one, silently. A docs page's `h1` is
+ * already in `body` — `pagesFrom` strips only front matter and the top
+ * `import`, so the author's own `# título` line survives. A blog article's
+ * never is: the contract forbids `# ` in the body
+ * (DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance), the same way the
+ * page component draws the `h1` from front matter instead of the body, so
+ * this synthesizes that missing line from `title` rather than searching
+ * for one that the contract guarantees isn't there.
  *
- * The search is for the FIRST non-blank line, not the first line that
- * matches `# `: a shell comment (`# comment`) inside a fenced code block
- * could match first, inserting the subtitle mid-code with no error.
- * `pagesFrom` already strips front matter and the top `import`, so the
- * first non-blank line is reliably the author's `h1`.
+ * The search for a docs page's `h1` is for the FIRST non-blank line, not
+ * the first line that matches `# `: a shell comment (`# comment`) inside a
+ * fenced code block could match first, inserting the subtitle mid-code
+ * with no error.
  *
  * `llms-full.txt` does not use this: the description already appears
  * there as `> Summary:` above the document separator, so adding it here
  * too would duplicate the field.
  *
- * @param {{body: string, description: string, permalink: string}} page
+ * @param {{body: string, description: string, permalink: string, title: string, tab: string}} page
  */
-function withSubtitle({body, description, permalink}) {
+function withSubtitle({body, description, permalink, title, tab}) {
   // The payload is checked too, not just the anchor. The `h1` override
   // already throws without `description`, but it's a swizzle, and this
   // repo carries no swizzle; if it were removed, the `.md` would emit a
@@ -53,6 +59,10 @@ function withSubtitle({body, description, permalink}) {
         'O subtítulo do `.md` servido sai desse campo, e ele é obrigatório em ' +
         'toda página.',
     );
+  }
+
+  if (tab === BLOG_TAB) {
+    return [`# ${title}`, '', `> ${description}`, '', body.trim()].join('\n');
   }
 
   const lines = body.split('\n');
@@ -174,7 +184,10 @@ export default function aiEraPlugin(context, options) {
  *
  * The rule is: what isn't named here doesn't exist. `overpower` is the
  * one named exception (real, MIT, published on PyPI); every other real
- * tool added later costs one more line here.
+ * tool added later costs one more line here. The Blog is a second, wider
+ * exception: every article in it is real, not a named title added one at
+ * a time, which is why it gets its own line instead of joining the
+ * `overpower` sentence.
  *
  * It ships in pt-BR: the site is single-locale, so there's no
  * translation to design for, and the preamble reads the same title,
@@ -190,5 +203,7 @@ function preamble({pages, tabs, labels, locale}) {
     `Toda página deste site também é servida como Markdown: acrescente \`.md\` à URL dela.`,
     '',
     `O \`panlabs\` é **ficção**, e esta documentação é conteúdo de demonstração de um projeto de estrutura e customização visual em Docusaurus. O acervo é **misto**: o \`overpower\` é uma ferramenta real, MIT, publicada no PyPI, e a documentação dele descreve a ferramenta de verdade. Todo o resto — os módulos, as skills e os servidores MCP descritos — não existe, e a empresa em que eles teriam sido escritos nunca é nomeada.`,
+    '',
+    `Os artigos do Blog são a exceção mais ampla: são texto real do autor, escrito e publicado por ele, e não ficção de demonstração como o restante do acervo.`,
   ].join('\n');
 }

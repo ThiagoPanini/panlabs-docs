@@ -11,6 +11,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const DOCS_PLUGIN = 'docusaurus-plugin-content-docs';
+const BLOG_PLUGIN = 'docusaurus-plugin-content-blog';
+
+/**
+ * The blog's id in `TABS`, hardcoded rather than derived: the blog is a
+ * named exception (DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance), the
+ * one tab that isn't a `plugin-content-docs` instance, not a second kind of
+ * docs instance a config value could generalize away. Exported so the
+ * ai-era plugin can recognize a blog page without re-declaring the string.
+ */
+export const BLOG_TAB = 'blog';
 
 const FRONT_MATTER = /^---\r?\n[\s\S]*?\r?\n---[ \t]*\r?\n?/;
 
@@ -38,6 +48,24 @@ function withoutTopImport(text) {
     i += 1;
   }
   return lines.slice(i).join('\n');
+}
+
+/**
+ * Resolves an `@site/...`-aliased source path to a file on disk and reads
+ * its body, front matter and top import/export block stripped.
+ *
+ * Shared by the docs and blog branches of `pagesFrom`: `doc.source` and
+ * `post.metadata.source` are both `aliasedSitePath`, the same Docusaurus
+ * convention regardless of which content plugin produced them.
+ *
+ * @param {string} source `@site/...`-aliased path
+ * @param {string} siteDir
+ * @returns {{filePath: string, body: string}}
+ */
+function readPageBody(source, siteDir) {
+  const filePath = path.join(siteDir, source.replace(/^@site[/\\]/, ''));
+  const raw = fs.readFileSync(filePath, 'utf8');
+  return {filePath, body: withoutTopImport(raw.replace(FRONT_MATTER, ''))};
 }
 
 /**
@@ -85,6 +113,11 @@ function sidebarOrder(sidebars) {
  * Declaring the label in the plugin options would create a second copy
  * that could drift from the navbar.
  *
+ * Every tab but the blog is a `docSidebar` item, matched by
+ * `docsPluginId`. The blog is a plain link (`{to: '/blog', ...}`), not a
+ * `docSidebar` item, because it isn't a `plugin-content-docs` instance —
+ * matched by `to` instead.
+ *
  * @param {{navbar?: {items?: any[]}}} themeConfig
  * @param {string[]} tabs
  * @returns {string[]} one label per tab, in declared order
@@ -92,17 +125,63 @@ function sidebarOrder(sidebars) {
 export function tabLabels(themeConfig, tabs) {
   const items = themeConfig?.navbar?.items ?? [];
   return tabs.map((tab) => {
-    const item = items.find(
-      (candidate) =>
-        candidate.type === 'docSidebar' && (candidate.docsPluginId ?? 'default') === tab,
-    );
+    const item =
+      tab === BLOG_TAB
+        ? items.find((candidate) => candidate.to === '/blog')
+        : items.find(
+            (candidate) =>
+              candidate.type === 'docSidebar' && (candidate.docsPluginId ?? 'default') === tab,
+          );
     if (!item) {
       throw new Error(
-        `A aba "${tab}" não tem item \`docSidebar\` no navbar. O rótulo da aba é o do navbar — sem ele não há o que escrever.`,
+        `A aba "${tab}" não tem item de navbar correspondente. O rótulo da aba é o do navbar — sem ele não há o que escrever.`,
       );
     }
     return item.label;
   });
+}
+
+/**
+ * The blog's own branch of `pagesFrom`, read from `docusaurus-plugin-content-blog`
+ * instead of `DOCS_PLUGIN`: a blog post has no `loadedVersions`, no
+ * sidebar, and therefore no `sidebarOrder` to derive a position from.
+ *
+ * `content.blogPosts` arrives already sorted by date descending — that's
+ * `generateBlogPosts`'s own default, not something read from a sidebar —
+ * so `order` here is just the position in that array. `draft` needs no
+ * filter: the blog plugin already drops a draft post before it ever
+ * reaches `blogPosts` (unlike a docs draft, which only production build
+ * excludes). `unlisted` does, same reason as docs: it still ships in dev.
+ *
+ * @param {object} args
+ * @param {Record<string, Record<string, any>>} args.allContent
+ * @param {string} args.siteDir
+ * @param {number} args.tabIndex
+ */
+function blogPagesFrom({allContent, siteDir, tabIndex}) {
+  const content = allContent?.[BLOG_PLUGIN]?.default;
+  if (!content) {
+    // Same silent-failure guard as the docs branch: a `blog` id left in
+    // `TABS` with the plugin itself missing from the config would
+    // otherwise drop every article from search and `llms.txt` with
+    // nothing raised to say so.
+    throw new Error(
+      `A aba "${BLOG_TAB}" não existe em allContent. A instância "default" de ${BLOG_PLUGIN} não foi encontrada.`,
+    );
+  }
+
+  return content.blogPosts
+    .filter((post) => !post.metadata.unlisted)
+    .map((post, order) => ({
+      tab: BLOG_TAB,
+      tabIndex,
+      order,
+      id: post.id,
+      title: post.metadata.title,
+      description: post.metadata.description,
+      permalink: post.metadata.permalink,
+      ...readPageBody(post.metadata.source, siteDir),
+    }));
 }
 
 /**
@@ -111,13 +190,19 @@ export function tabLabels(themeConfig, tabs) {
  * @param {object} args
  * @param {Record<string, Record<string, any>>} args.allContent
  * @param {string} args.siteDir
- * @param {string[]} args.tabs docs instance ids, in navbar order
+ * @param {string[]} args.tabs tab ids, in navbar order — every one a docs
+ *   instance except `BLOG_TAB`, read through `blogPagesFrom` instead
  */
 export function pagesFrom({allContent, siteDir, tabs}) {
   const instances = allContent?.[DOCS_PLUGIN] ?? {};
   const pages = [];
 
   tabs.forEach((tab, tabIndex) => {
+    if (tab === BLOG_TAB) {
+      pages.push(...blogPagesFrom({allContent, siteDir, tabIndex}));
+      return;
+    }
+
     const content = instances[tab];
     if (!content) {
       // A missing declared tab is a silent failure: search would drop part
@@ -138,9 +223,6 @@ export function pagesFrom({allContent, siteDir, tabs}) {
           continue;
         }
 
-        const filePath = path.join(siteDir, doc.source.replace(/^@site[/\\]/, ''));
-        const raw = fs.readFileSync(filePath, 'utf8');
-
         pages.push({
           tab,
           tabIndex,
@@ -149,8 +231,7 @@ export function pagesFrom({allContent, siteDir, tabs}) {
           title: doc.title,
           description: doc.description,
           permalink: doc.permalink,
-          filePath,
-          body: withoutTopImport(raw.replace(FRONT_MATTER, '')),
+          ...readPageBody(doc.source, siteDir),
         });
       }
     }

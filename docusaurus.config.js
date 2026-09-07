@@ -72,7 +72,7 @@ const temaPrism = {
 };
 
 /**
- * The four tabs, in navbar order: the single source of order for the
+ * The five tabs, in navbar order: the single source of order for the
  * search and ai-era plugins. Ids only, the LABEL of each is read from the
  * navbar itself, further down this file, since that's where it already
  * exists and where `navbar.json` translation reaches it.
@@ -86,8 +86,13 @@ const temaPrism = {
  * content; `Procedimentos` and `Times` are placeholders until real content
  * lands. Since this list is also search's first tiebreaker, ranking the
  * two empty tabs lower is a result decision, not an aesthetic one.
+ *
+ * `blog` is last, always: it's the fifth tab and the one id that isn't a
+ * `plugin-content-docs` instance (DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance),
+ * so `src/plugins/pages.js` reads it from a different plugin entirely, and
+ * docs keeps winning every search tie against it by construction.
  */
-const TABS = ['tools', 'default', 'procedures', 'teams'];
+const TABS = ['tools', 'default', 'procedures', 'teams', 'blog'];
 
 /** Read by both the blog index's meta and the feed. See `blog` below. */
 const BLOG_DESCRIPTION =
