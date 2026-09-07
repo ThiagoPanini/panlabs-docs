@@ -103,6 +103,13 @@ const HARDCODED_ICONS = [
   // icon surviving on what an unrelated page happens to write is exactly the
   // invisible coupling this list exists to close.
   'terminal', 'book-open', 'list-checks', 'users', 'newspaper',
+  // src/blog/*: the blog's own page components, outside `content/**` for the
+  // same reason as the five above. `rss` is the index's feed link;
+  // `chevron-left` is the two paginators' (list and article) "previous"
+  // arrow, both built from scratch since `PaginatorNavLink` is unsafe —
+  // their "next" arrow reuses `chevron-right`, already listed above for
+  // `CopyPage.js`.
+  'rss', 'chevron-left',
 ];
 
 /** `icon="…"`, on any content component — Card, Steps, Accordion, or one not yet written. */

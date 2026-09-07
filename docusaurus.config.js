@@ -302,6 +302,15 @@ const config = {
           // an article missing the marker isn't missing anything.
           onUntruncatedBlogPosts: 'ignore',
           processBlogPosts,
+          // The four page components, all in this repository — every
+          // `@theme/Blog*` default is `unsafe` in the swizzle ledger, and
+          // this project's budget for `unsafe` is zero. See
+          // DECISIONS.md#the-swizzle-ladder-and-a-zero-unsafe-budget and
+          // `src/blog/`'s own files for what each one imports instead.
+          blogListComponent: '@site/src/blog/BlogListPage',
+          blogPostComponent: '@site/src/blog/BlogPostPage',
+          blogTagsListComponent: '@site/src/blog/BlogTagsListPage',
+          blogTagsPostsComponent: '@site/src/blog/BlogTagsPostsPage',
           feedOptions: {
             type: ['rss', 'atom'],
             // The plugin's own XSLT, so the feed opens readable in a

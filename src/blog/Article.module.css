@@ -1,0 +1,364 @@
+/* =============================================================================
+   panlabs-docs — the article page
+
+   Layer 3 only, same rule as `PostList.module.css`: every value here is
+   `var(--pd-*)` or derived from one. No `outline` — focus.css owns it
+   universally, and every focusable element below (`CopyPage`, the tag
+   chips, the signature, the TOC links, the paginator) already gets it for
+   free with no rule written here.
+   ============================================================================= */
+
+.page {
+  padding-block: var(--pd-space-10) var(--pd-space-16);
+}
+
+/* The shell is prose PLUS the TOC rail plus the gap between them — wide
+   enough that at 1280px+ both sit side by side with room to spare, and
+   still just a centered column below that, where the rail is hidden. */
+.articleShell {
+  max-inline-size: calc(var(--pd-prose-width) + var(--pd-gutter) + var(--pd-toc-width));
+  margin-inline: auto;
+  padding-inline: var(--pd-gutter);
+}
+
+/* -----------------------------------------------------------------------------
+   Head — title, subtitle, meta, signature. Capped to PROSE width and
+   centered, not the shell's: at 1280px+ the shell is wider than prose (it
+   has the TOC rail's share too), and the head has no rail beside it to
+   fill that space with.
+   ----------------------------------------------------------------------------- */
+
+.headStack {
+  max-inline-size: var(--pd-prose-width);
+  margin-inline: auto;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pd-space-2);
+}
+
+/* `chrome.css` reaches `[data-pd-component='copy-page']` the same way for
+   a doc page; that rule is scoped to `html.docs-doc-page` and doesn't
+   reach here, so the article repeats the one declaration it needs. */
+.titleRow > [data-pd-component='copy-page'] {
+  margin-inline-start: auto;
+}
+
+.titleRow:has(+ .subtitle) > .title {
+  margin-block-end: 0;
+}
+
+.title {
+  margin-block: 0;
+  font-size: var(--pd-type-3xl);
+  font-weight: var(--pd-weight-heading);
+  line-height: var(--pd-leading-h1);
+  letter-spacing: var(--pd-tracking-tight);
+  color: var(--pd-text-strong);
+}
+
+@media (min-width: 997px) {
+  .title {
+    font-size: var(--pd-type-4xl);
+  }
+}
+
+.subtitle {
+  margin-block: var(--pd-subtitle-indent) 0;
+  font-size: var(--pd-type-lg);
+  line-height: var(--pd-subtitle-line-height);
+  color: var(--pd-text-body);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pd-space-2);
+  margin-block-start: var(--pd-space-4);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-sm);
+}
+
+.meta > span:not(:last-child)::after {
+  content: '·';
+  margin-inline-start: var(--pd-space-2);
+}
+
+.tagChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pd-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tagChip {
+  display: inline-block;
+  padding: var(--pd-space-1) var(--pd-space-3);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-sm);
+  color: var(--pd-text-body);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  transition: border-color var(--pd-move-state), color var(--pd-move-state);
+}
+
+@media (hover: hover) {
+  .tagChip:hover {
+    border-color: var(--pd-accent);
+    color: var(--pd-accent);
+    text-decoration: none;
+  }
+}
+
+.tagChip:active {
+  border-color: var(--pd-accent);
+  color: var(--pd-accent);
+}
+
+.authors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pd-space-4);
+  margin-block-start: var(--pd-space-4);
+  padding-block-start: var(--pd-space-4);
+  border-block-start: var(--pd-border-width) solid var(--pd-border-subtle);
+}
+
+.signature {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pd-space-2);
+  color: var(--pd-text-strong);
+}
+
+@media (hover: hover) {
+  .signature:hover {
+    text-decoration: none;
+  }
+
+  .signature:hover .signatureName {
+    text-decoration: underline;
+  }
+}
+
+.signaturePhoto {
+  inline-size: var(--pd-space-8);
+  block-size: var(--pd-space-8);
+  border-radius: var(--pd-radius-full);
+  object-fit: cover;
+}
+
+.signatureName {
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
+}
+
+/* -----------------------------------------------------------------------------
+   The prose/TOC grid
+   ----------------------------------------------------------------------------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--pd-space-8) var(--pd-gutter);
+  margin-block-start: var(--pd-space-8);
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: minmax(0, var(--pd-prose-width)) var(--pd-toc-width);
+  }
+}
+
+.prose {
+  max-inline-size: var(--pd-prose-width);
+  margin-inline: auto;
+}
+
+@media (min-width: 1280px) {
+  .prose {
+    margin-inline: 0;
+  }
+}
+
+.prose > :first-child {
+  margin-block-start: 0;
+}
+
+.prose > :last-child {
+  margin-block-end: 0;
+}
+
+/* The asymmetric heading rhythm `chrome.css` gives a doc page
+   (`html.docs-doc-page .markdown > :is(h2, h3, h4, h5, h6)`) doesn't reach
+   here either — same fix, this class's own scope instead of that one's. */
+.prose > :is(h2, h3, h4, h5, h6) {
+  margin-block-start: var(--pd-space-12);
+  margin-block-end: var(--pd-space-4);
+}
+
+/* -----------------------------------------------------------------------------
+   TOC rail — the sticky desktop column, shown from 1280px up, the same
+   width the mobile `<details>` below hands off to. `:global(.thin-
+   scrollbar)` and `:global(.table-of-contents)` are `@theme/TOC`'s own
+   STABLE Infima classes, not its hashed CSS Module ones — the same anchor
+   `chrome.css` reaches the doc TOC through, just without that file's
+   `html.docs-doc-page` rung, since this page carries no such class. Two
+   ancestor classes (0,2,0) beat the theme's own single-class module rule
+   (0,1,0) with no `!important` and no dependency on load order.
+   ----------------------------------------------------------------------------- */
+
+.tocRail {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .tocRail {
+    display: block;
+  }
+
+  .tocRail :global(.thin-scrollbar) {
+    position: sticky;
+    inset-block-start: var(--pd-content-top);
+    max-block-size: calc(var(--pd-viewport-height) - var(--pd-content-top) - var(--pd-space-10));
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The rail's own title, "Nesta página" — the same words and the same
+     `--pd-chrome-icon-list` mask `chrome.css` draws for a doc page's TOC.
+     That custom property is written at `:root`, not under
+     `html.docs-doc-page`, so it's already reachable here with no swizzle. */
+  .tocRail :global(.thin-scrollbar)::before {
+    content: 'Nesta página';
+    display: block;
+    flex: none;
+    padding-inline-start: calc(var(--pd-space-4) + var(--pd-space-2));
+    color: var(--pd-text-body);
+    font-size: var(--pd-type-sm);
+    font-weight: var(--pd-weight-ui);
+    line-height: var(--pd-leading-ui);
+  }
+
+  .tocRail :global(.thin-scrollbar)::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: var(--pd-space-4);
+    block-size: calc(var(--pd-type-sm) * var(--pd-leading-ui));
+    background-color: var(--pd-text-body);
+    mask: var(--pd-chrome-icon-list) center / var(--pd-space-4) no-repeat;
+  }
+
+  .tocRail :global(.table-of-contents) {
+    font-size: var(--pd-type-sm);
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   TOC disclosure — the mobile/tablet stand-in for the rail above, hidden
+   the instant the rail takes over. Native `<details>`/`<summary>`, the
+   same disclosure `Accordion.js`/`catalog.module.css` already use for
+   content components: zero handwritten `keydown`, `aria-expanded` or
+   focus management, all of it the browser's. The caret is the same
+   `mask-image` technique on `summary::after`, reusing
+   `--pd-chrome-icon-chevron-right` — already written at `:root`
+   unconditionally by `sidebar-icons`'s `CHROME_ICONS`, so no new icon
+   registration was needed for it.
+   ----------------------------------------------------------------------------- */
+
+.tocMobile {
+  max-inline-size: var(--pd-prose-width);
+  margin-block-start: var(--pd-space-6);
+  margin-inline: auto;
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-md);
+}
+
+@media (min-width: 1280px) {
+  .tocMobile {
+    display: none;
+  }
+}
+
+.tocMobileSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--pd-space-2);
+  padding: var(--pd-space-3) var(--pd-space-4);
+  color: var(--pd-text-strong);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-ui);
+  cursor: pointer;
+  /* Kills the native triangle — the keyword for Firefox, the pseudo-element
+     for WebKit, same pair `catalog.module.css` uses. */
+  list-style: none;
+}
+
+.tocMobileSummary::-webkit-details-marker {
+  display: none;
+}
+
+.tocMobileSummary::after {
+  content: '';
+  flex: none;
+  margin-inline-start: auto;
+  inline-size: var(--pd-space-4);
+  block-size: var(--pd-space-4);
+  background-color: var(--pd-text-muted);
+  mask: var(--pd-chrome-icon-chevron-right) center / contain no-repeat;
+}
+
+.tocMobile[open] > .tocMobileSummary::after {
+  rotate: 90deg;
+}
+
+.tocMobile :global(.table-of-contents) {
+  padding: 0 var(--pd-space-4) var(--pd-space-4);
+  font-size: var(--pd-type-sm);
+}
+
+/* `@theme/TOC`'s OWN bundled stylesheet — not this project's, no rung of
+   the swizzle ladder involved — carries `@media (max-width: 996px)
+   { .tableOfContents { display: none } }`, written for the desktop-only
+   `DocItem/TOC/Desktop` slot it was designed for. Reused here at any
+   width the `<details>` opens at (this component's own breakpoint is
+   1280px, not 996px), that rule would hide the very content the reader
+   just asked to reveal — measured: `open` set, `block-size` correct, and
+   the list still invisible, until this override. Same technique as the
+   rail above: an ancestor plus the theme's stable global class beats its
+   own hashed one, (0,2,0) against (0,1,0), no `!important`. */
+.tocMobile :global(.thin-scrollbar) {
+  display: block;
+}
+
+/* No `::details-content` reveal transition, unlike `Accordion`'s: the
+   native toggle it degrades to when a browser lacks the pseudo is already
+   correct with zero CSS, and `catalog.module.css` already calls that
+   degrade acceptable — the reveal is just instant here, always, not only
+   where the pseudo is missing. */
+
+/* -----------------------------------------------------------------------------
+   Foot — the paginator (from `PostList.module.css`, shared) and the tag
+   chips, repeated: DECISIONS.md's article spec asks for tags again here,
+   for whoever scrolled all the way down without going back up to the meta
+   line. Same prose-width cap as the head.
+   ----------------------------------------------------------------------------- */
+
+.footStack {
+  max-inline-size: var(--pd-prose-width);
+  margin-inline: auto;
+}
+
+.footer {
+  margin-block-start: var(--pd-space-8);
+}
