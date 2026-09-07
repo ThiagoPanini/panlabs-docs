@@ -16,7 +16,7 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | --- | --- |
 | Color and dimension come from `src/css/tokens.css`, the single source of literals. | A new hex, a loose px, or a bare `cubic-bezier` in component CSS. |
 | Zero em dash in every published prose: `content/`, `contracts/`, and a route's own copy under `src/pages/`. The exception is quoting a tool's own output. | Machine-written prose in the published site. |
-| Content voice is `you` plus imperative, zero first person. The landing, under `src/pages/`, is the one exception. | A sentence that slips into first person or passive description. |
+| Content voice is `you` plus imperative, zero first person. The landing, under `src/pages/`, and every article under `content/blog/`, are the exceptions: the landing talks about the collection, the blog is signed and dated. | A sentence that slips into first person or passive description outside those two. |
 | Content components are a closed catalog of sixteen, registered in `@theme/MDXComponents`. There's no escape hatch. | A content file importing its own component instead of changing the page. |
 | The props in `.design-sync/config.json` are transcribed by hand, since the repo ships no `.d.ts` for the extractor to read. | A prop renamed in `src/components/` while the design system published to claude.ai/design still advertises the old one. |
 
@@ -25,6 +25,7 @@ No gate, no lint rule, no commit hook checks these. Hold them by reading.
 | Path | Role |
 | --- | --- |
 | `content/` | The published site. |
+| `content/blog/` | The Blog, the one part of `content/` that isn't a docs instance: `tags.yml` and `authors.yml` are the closed catalogs, `<slug>/index.md` is one article. See DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance. |
 | `contracts/` | Signature contracts the reference generates from. |
 | `src/css/tokens.css` | The only file with a literal color, length, duration, or curve. |
 | `src/theme/` | Theme components, registry, swizzles. |

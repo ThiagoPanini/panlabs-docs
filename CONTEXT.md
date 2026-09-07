@@ -7,19 +7,23 @@ A reference documentation project built with Docusaurus. The content is a develo
 ### The collection
 
 **panlabs**:
-The collection the documentation is — a developer's learning record inside a company that's never named, and the site's `title`. It's **mixed**: mocked content and real content coexist, and the mocked kind gets replaced as real things show up. The developer has no name anywhere on the site and, since the landing, does have a face on it: the root's hero is their photograph. **The company is the thing that's never named**, and that's the constraint that actually binds.
+The collection the documentation is — a developer's learning record inside a company that's never named, and the site's `title`. It's **mixed**: mocked content and real content coexist, and the mocked kind gets replaced as real things show up. Since the landing, the developer has a face on the site: the root's hero is their photograph. Since the Blog, the developer has a name too, but only where they sign: every article's byline. Nowhere else on the site does a name appear. **The company is the thing that's never named**, and that's the constraint that actually binds.
 _Avoid_: Trilho (the earlier fictional domain, dead)
 
 **House voice**:
 `you` plus imperative, with **zero first person**, everywhere the site documents something. The collection is personal in what it chooses to document, not in its grammar.
-**One exception, and it's the root.** The landing is the only page that talks *about* the collection instead of documenting inside it, and a page about a personal collection written in the third person doesn't survive being read out loud. The exception is scoped to `src/pages/`; nothing under `content/` inherits it.
+**Two exceptions, for two different reasons.** The landing is the only page that talks *about* the collection instead of documenting inside it, and a page about a personal collection written in the third person doesn't survive being read out loud; that exception is scoped to `src/pages/`. The Blog doesn't document at all, an [Artigo](#the-collection) is signed and dated, and the rule that keeps documentation impersonal has no article to bind; that exception is scoped to `content/blog/`, and inside it the author may write in first person, third person, or a mix, article by article. Neither exception reaches the other's scope, and nothing else under `content/` inherits either.
 
 **Tab**:
-One of the four top-level navigation axes — `Ferramentas`, `Jornadas`, `Procedimentos`, `Times`, in this order. Each is an instance of `plugin-content-docs`, one to one, because `routeBasePath` and versioning are per instance.
+One of the five top-level navigation axes — `Ferramentas`, `Jornadas`, `Procedimentos`, `Times`, `Blog`, in this order. The first four are each an instance of `plugin-content-docs`, one to one, because `routeBasePath` and versioning are per instance. **The Blog is the named exception**: `plugin-content-blog`, not `plugin-content-docs`, with no sidebar, no versioning, and a navbar link instead of a `docSidebar` item. It sits last because it's the newest axis and the one furthest from documentation.
 _Avoid_: section, area
 
 **Page type**:
 A **content** convention, never a layout one: no type owns its own CSS, front matter, or component. Each has a template, and the template can require, limit, or forbid a component.
+
+**Artigo**:
+A text under the `Blog`, dated and signed, in opposition to a **page**, which documents. A page's `h1` is a topic; an artigo's `h1` is a moment, and that's the axis that decides which tab a text belongs to: a text that would go stale the day its own byline date does is an artigo, never a page. Carries exactly one type tag (`novidades`, `tutoriais`, `notas`) and any number of subject tags, all from the closed catalog in `content/blog/tags.yml`.
+_Avoid_: post, publicação
 
 **Jornada**:
 A category of the `Jornadas` tab, and **a role the author put on** — not a topic. A role has a beginning, a middle, and a lesson learned, which is what keeps a jornada from turning into a `Procedimentos` category under another name.

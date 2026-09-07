@@ -97,12 +97,12 @@ const HARDCODED_ICONS = [
   'search', 'x', // SearchBar/index.js
   'maximize', // Frame.js: the corner control that opens the diagram lightbox
   // pages/index.js: one per card on the landing. `scanContent` walks
-  // `content/**` and never walks `src/pages/`, so all four are listed even
+  // `content/**` and never walks `src/pages/`, so all five are listed even
   // though `terminal` and `book-open` also arrive from the collection today
   // — arriving is not the same as being guaranteed to arrive, and a route's
   // icon surviving on what an unrelated page happens to write is exactly the
   // invisible coupling this list exists to close.
-  'terminal', 'book-open', 'list-checks', 'users',
+  'terminal', 'book-open', 'list-checks', 'users', 'newspaper',
 ];
 
 /** `icon="…"`, on any content component — Card, Steps, Accordion, or one not yet written. */
