@@ -1,0 +1,386 @@
+/* =============================================================================
+   panlabs-docs — the blog's list renderer
+
+   Shared by the index and a single tag's page (`PostList.js`), plus the all-
+   tags page and the paginator — every class a blog list route needs that
+   isn't the article's own (that one's in `Article.module.css`).
+
+   Layer 3 only: every color, length, duration and curve here is `var(--pd-*)`
+   or derived from one with `calc()`/relative syntax, the same rule
+   `src/pages/index.module.css` follows. No `outline`: the entry-state
+   contract is universal, in `focus.css`.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Page shell — the column every one of the three list routes centers in.
+   No Infima `.container`/`.row`/`.col`: those are the docs grid, and
+   `chrome.css`'s overrides of it are scoped to `html.docs-doc-page`, which
+   these routes never carry. A route-local column, like the landing's
+   `.bandInner`, is what stays reachable with no swizzle.
+   ----------------------------------------------------------------------------- */
+
+.page {
+  max-inline-size: var(--pd-container-width);
+  margin-inline: auto;
+  padding-inline: var(--pd-gutter);
+  padding-block: var(--pd-space-10) var(--pd-space-16);
+}
+
+/* -----------------------------------------------------------------------------
+   Header — title, an optional description, and the index's feed link
+   ----------------------------------------------------------------------------- */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--pd-space-6);
+  margin-block-end: var(--pd-space-10);
+  padding-block-end: var(--pd-space-6);
+  border-block-end: var(--pd-border-width) solid var(--pd-border-default);
+}
+
+/* Same title scale as a doc page's `h1` (`chrome.css` §"a measured defect"),
+   declared here directly since this `h1` is never a descendant of
+   `.markdown` — it's the route's own, not the article body's. */
+.title {
+  margin-block: 0;
+  font-size: var(--pd-type-3xl);
+  font-weight: var(--pd-weight-heading);
+  line-height: var(--pd-leading-h1);
+  letter-spacing: var(--pd-tracking-tight);
+  color: var(--pd-text-strong);
+}
+
+@media (min-width: 997px) {
+  .title {
+    font-size: var(--pd-type-4xl);
+  }
+}
+
+.description {
+  max-inline-size: var(--pd-prose-width);
+  margin-block: var(--pd-space-2) 0;
+  font-size: var(--pd-type-lg);
+  line-height: var(--pd-leading-prose);
+  color: var(--pd-text-body);
+}
+
+.feedLink {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--pd-space-2);
+  min-block-size: var(--pd-target-min);
+  padding-inline: var(--pd-space-4);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-full);
+  color: var(--pd-text-body);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
+  transition: border-color var(--pd-move-state), color var(--pd-move-state);
+}
+
+@media (hover: hover) {
+  .feedLink:hover {
+    border-color: var(--pd-accent);
+    color: var(--pd-accent);
+    text-decoration: none;
+  }
+}
+
+.feedLink:active {
+  border-color: var(--pd-accent);
+  color: var(--pd-accent);
+}
+
+/* -----------------------------------------------------------------------------
+   The chronological list — a plain `<ul>`, hairline-separated rows
+   ----------------------------------------------------------------------------- */
+
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list > li {
+  border-block-end: var(--pd-border-width) solid var(--pd-border-subtle);
+}
+
+.list > li:first-child {
+  border-block-start: var(--pd-border-width) solid var(--pd-border-subtle);
+}
+
+/* -----------------------------------------------------------------------------
+   One post — featured (a card) or a row. Same anatomy, `.postFeatured`
+   overrides the geometry.
+
+   `position: relative` is what lets `.postLink::after` stretch: the click
+   target covers the whole card while the link's accessible NAME stays just
+   the title — the whole point of not wrapping everything in one `<a>`.
+   ----------------------------------------------------------------------------- */
+
+.post {
+  position: relative;
+  display: grid;
+  gap: var(--pd-space-4);
+}
+
+.postRow {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  padding-block: var(--pd-space-6);
+}
+
+.postFeatured {
+  gap: var(--pd-space-6);
+  padding: var(--pd-space-6);
+  margin-block-end: var(--pd-space-10);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius);
+}
+
+@media (min-width: 768px) {
+  .postFeatured {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+  }
+}
+
+/* A POST WITH NO COVER has one grid child, not two — `PostSummary` only
+   renders `.postCover` when `assets.image`/`frontMatter.image` exists.
+   Both `.postRow` and `.postFeatured` declare two columns (at their own
+   breakpoint), and a lone item auto-places into the FIRST one, `auto`-sized
+   to its content instead of the row's full width. `:only-child` is what
+   makes "no cover" read as a deliberate one-column layout instead of a
+   text block stranded in a narrow first column — this is the reason a
+   missing cover doesn't look broken. */
+.post > .postBody:only-child {
+  grid-column: 1 / -1;
+}
+
+/* Hover and press repaint the SAME border, the card's only ink — the same
+   rule `catalog.module.css`'s `.card` already follows. Gated behind
+   `(hover: hover)` so the state doesn't stick after a tap. */
+@media (hover: hover) {
+  .postFeatured:has(.postLink:hover) {
+    border-color: var(--pd-accent);
+  }
+}
+
+.postFeatured:has(.postLink:active) {
+  border-color: var(--pd-accent);
+}
+
+/* The three measures below are `calc(var(--pd-space-1) * n)`, not a bare
+   `rem`: `tokens.css` derives its own space scale off `--pd-space-1` the
+   same way (`--pd-space-4: calc(var(--pd-space-1) * 4)`), and none of these
+   three lands on an existing named stop, so this is that same derivation
+   continued one level further instead of a new literal. */
+.postCover {
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: calc(var(--pd-space-1) * 48);
+  object-fit: cover;
+  border-radius: var(--pd-radius-md);
+}
+
+.postRow > .postCover {
+  inline-size: calc(var(--pd-space-1) * 36);
+  block-size: calc(var(--pd-space-1) * 24);
+  min-block-size: 0;
+}
+
+.postBody {
+  display: grid;
+  align-content: start;
+  gap: var(--pd-space-2);
+  min-inline-size: 0;
+}
+
+.postType {
+  color: var(--pd-accent);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  text-transform: uppercase;
+  letter-spacing: var(--pd-tracking-tight);
+}
+
+.postTitle {
+  margin-block: 0;
+  line-height: var(--pd-leading-h3);
+}
+
+.postFeatured .postTitle {
+  font-size: var(--pd-type-2xl);
+}
+
+.postRow .postTitle {
+  font-size: var(--pd-type-lg);
+}
+
+.postLink {
+  color: var(--pd-text-strong);
+  font-weight: var(--pd-weight-heading);
+}
+
+@media (hover: hover) {
+  .postLink:hover {
+    text-decoration: none;
+  }
+}
+
+.postLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.postDescription {
+  margin-block: 0;
+  color: var(--pd-text-body);
+  font-size: var(--pd-type-sm);
+  line-height: var(--pd-leading-prose);
+
+  /* The row variant caps at two lines: with a fixed-height thumbnail beside
+     it, a long description would push the row taller than its cover and
+     break the list's rhythm. The featured card has no such neighbor and
+     stays uncapped. */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.postRow .postDescription {
+  -webkit-line-clamp: 2;
+}
+
+.postMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pd-space-2);
+  margin-block: 0;
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-xs);
+}
+
+.postMeta > span:not(:last-child)::after {
+  content: '·';
+  margin-inline-start: var(--pd-space-2);
+}
+
+/* -----------------------------------------------------------------------------
+   The all-tags page
+   ----------------------------------------------------------------------------- */
+
+.tagIndex {
+  display: grid;
+  gap: var(--pd-space-3);
+  grid-template-columns: var(--pd-card-grid);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tagIndexLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pd-space-3);
+  padding: var(--pd-space-4) var(--pd-space-5);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius);
+  color: var(--pd-text-strong);
+  font-weight: var(--pd-weight-ui);
+  transition: border-color var(--pd-move-state);
+}
+
+@media (hover: hover) {
+  .tagIndexLink:hover {
+    border-color: var(--pd-accent);
+    text-decoration: none;
+  }
+}
+
+.tagIndexLink:active {
+  border-color: var(--pd-accent);
+}
+
+.tagIndexCount {
+  flex: none;
+  min-inline-size: var(--pd-space-6);
+  padding-inline: var(--pd-space-2);
+  border-radius: var(--pd-radius-full);
+  background-color: var(--pd-border-subtle);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------------------
+   Paginator — shared by the list pages (page to page) and the article
+   (post to post, `Article.module.css`'s `.footer` composes it in). Flat,
+   like `chrome.css`'s doc paginator: no border, no fill, no padding.
+   ----------------------------------------------------------------------------- */
+
+.paginator {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--pd-space-6);
+  margin-block-start: var(--pd-space-10);
+  padding-block-start: var(--pd-space-6);
+  border-block-start: var(--pd-border-width) solid var(--pd-border-default);
+}
+
+.paginatorSlot {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.paginatorLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pd-space-2);
+  color: var(--pd-text-strong);
+}
+
+.paginatorLinkNext {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  inline-size: 100%;
+  text-align: end;
+}
+
+.paginatorText {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.paginatorSublabel {
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-xs);
+}
+
+.paginatorLabel {
+  overflow: hidden;
+  font-size: var(--pd-type-base);
+  font-weight: var(--pd-weight-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .paginatorLink:hover {
+    color: var(--pd-accent);
+    text-decoration: none;
+  }
+}
+
+.paginatorLink:active {
+  color: var(--pd-accent);
+}
