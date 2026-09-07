@@ -18,6 +18,10 @@ notas:
   label: Notas
   description: Uma reflexão curta sobre um tema do dia a dia.
 
+claude-code:
+  label: Claude Code
+  description: O agente de linha de comando em que estas sessões rodam.
+
 overpower:
   label: overpower
   description: O CLI que instala skill, MCP e receita a partir de um catálogo declarado.
@@ -25,3 +29,7 @@ overpower:
 panlabs-docs:
   label: panlabs-docs
   description: Este próprio acervo, sua estrutura e as decisões por trás dela.
+
+skills:
+  label: Skills
+  description: Instruções empacotadas por tarefa, que um agente segue quando são invocadas.
