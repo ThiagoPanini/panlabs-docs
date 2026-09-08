@@ -1,0 +1,68 @@
+/* =============================================================================
+   panlabs-docs — the generated plate
+
+   The ink only. The BOX belongs to whoever places it: the index's cards size
+   their slot in `PostList.module.css`, the article page sizes its own in
+   `Article.module.css`, and both pass that class in through `Plate`'s
+   `className`. One file owns the drawing, three callers own the geometry.
+
+   Layer 3 only, same rule as every other module here: `var(--pd-*)` or
+   derived from one with `calc()`/relative syntax. No `[data-theme]` rule
+   either — both colors the plate paints with (`--pd-surface-wash`,
+   `--pd-border-subtle`) are already relative-syntax roles that resolve in
+   each mode from `tokens.css`, so light mode needs nothing written here.
+   ============================================================================= */
+
+.plate {
+  /* Layer 3, in the component's own scope: the inset scales with the plate,
+     and the two callers that need a bigger one set it on their own class.
+     Not at `:root` — nothing outside a plate has an opinion about it. */
+  --pd-plate-inset: var(--pd-space-3);
+
+  position: relative;
+  overflow: hidden;
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-md);
+  background-color: var(--pd-surface-raised);
+
+  /* Two layers over that fill: a hairline stripe for texture, then the
+     accent wash falling across the diagonal. The stripe's period is
+     `--pd-space-2` and its width is the same hairline the borders use, so
+     the pattern is on the same grid as everything else on the page.
+
+     The wash ends at `transparent`, not at a second alpha of the accent:
+     one token and a keyword say "fades out" with no literal percentage,
+     and the result is the gradient the prototype drew. */
+  background-image:
+    repeating-linear-gradient(
+      115deg,
+      var(--pd-border-subtle) 0 var(--pd-border-width),
+      transparent var(--pd-border-width) var(--pd-space-2)
+    ),
+    linear-gradient(160deg, var(--pd-surface-wash), transparent);
+}
+
+.plateWord,
+.plateCaption {
+  position: absolute;
+  inset-inline: var(--pd-plate-inset);
+  overflow: hidden;
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-screen);
+  letter-spacing: var(--pd-tracking-wide);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.plateWord {
+  inset-block-start: var(--pd-plate-inset);
+  color: var(--pd-accent);
+  text-transform: uppercase;
+}
+
+.plateCaption {
+  inset-block-end: var(--pd-plate-inset);
+  color: var(--pd-text-faint);
+}

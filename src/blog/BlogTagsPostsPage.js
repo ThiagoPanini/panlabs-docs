@@ -3,6 +3,12 @@
  * renderer the index uses, with a header that names the tag instead of the
  * blog — DECISIONS.md's article-pages ticket asks for exactly this reuse
  * instead of a second list built from scratch.
+ *
+ * The description line is the TAG'S OWN, straight out of `content/blog/
+ * tags.yml`. It used to print the article count, which the mono eyebrow
+ * above it now says on its own — two lines saying `3 artigos` in a row was
+ * the whole header. The catalog already writes a sentence per tag and it
+ * only ever reached the page's `<meta>`; this is where it reads.
  */
 
 import React from 'react';
@@ -11,12 +17,9 @@ import {HtmlClassNameProvider, PageMetadata, ThemeClassNames} from '@docusaurus/
 import Layout from '@theme/Layout';
 
 import PostList, {ListHeader} from './PostList';
+import {formatArticleCount} from './format';
 
 import styles from './PostList.module.css';
-
-function articleCount(count) {
-  return count === 1 ? '1 artigo' : `${count} artigos`;
-}
 
 export default function BlogTagsPostsPage({tag, items, listMetadata}) {
   const {label, count, description} = tag;
@@ -28,7 +31,13 @@ export default function BlogTagsPostsPage({tag, items, listMetadata}) {
       <Layout>
         <main className={styles.page}>
           <PostList
-            header={<ListHeader title={label} description={articleCount(count)} />}
+            header={
+              <ListHeader
+                eyebrow={formatArticleCount(count)}
+                title={label}
+                description={description}
+              />
+            }
             items={items}
             metadata={listMetadata}
           />

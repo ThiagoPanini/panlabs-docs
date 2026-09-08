@@ -3,12 +3,18 @@
 
    Shared by the index and a single tag's page (`PostList.js`), plus the all-
    tags page and the paginator — every class a blog list route needs that
-   isn't the article's own (that one's in `Article.module.css`).
+   isn't the article's own (`Article.module.css`), the tag chip's
+   (`TagChips.module.css`) or the generated plate's (`Plate.module.css`).
 
    Layer 3 only: every color, length, duration and curve here is `var(--pd-*)`
    or derived from one with `calc()`/relative syntax, the same rule
    `src/pages/index.module.css` follows. No `outline`: the entry-state
    contract is universal, in `focus.css`.
+
+   ONE BREAKPOINT, 997px, and it's the repo's own — the same one `.title`
+   below and `Article.module.css` already turn on. Both card variants
+   collapse to a single column under it: the featured card stacks, the row
+   puts its plate on top and drops its date rail into the flow.
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
@@ -27,7 +33,8 @@
 }
 
 /* -----------------------------------------------------------------------------
-   Header — title, an optional description, and the index's feed link
+   Header — a mono eyebrow, the title, an optional description, and the
+   index's feed link
    ----------------------------------------------------------------------------- */
 
 .header {
@@ -39,6 +46,20 @@
   margin-block-end: var(--pd-space-10);
   padding-block-end: var(--pd-space-6);
   border-block-end: var(--pd-border-width) solid var(--pd-border-default);
+}
+
+/* The one line on a listing page that says how big the collection is. It
+   counts articles and stops there — see `formatArticleCount` for why the
+   prototype's "DESDE SET 2026" half isn't computable from what a listing
+   page is handed. */
+.eyebrow {
+  margin-block: 0 var(--pd-space-3);
+  color: var(--pd-text-faint);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  letter-spacing: var(--pd-tracking-wide);
+  text-transform: uppercase;
 }
 
 /* Same title scale as a doc page's `h1` (`chrome.css` §"a measured defect"),
@@ -67,31 +88,37 @@
   color: var(--pd-text-body);
 }
 
+/* The feed used to be a 44px bordered pill, and at the top of a page where
+   nothing competes with it that made the feed the heaviest object on the
+   index. The border and the fill are gone; the 44px stays, as the HIT AREA
+   — `--pd-target-min` is about the finger, not about the ink, and dropping
+   it to the height of 12px mono would have been the accessibility cost of a
+   visual fix. `flex-end` inside that box lands the text on the header's
+   baseline, where the bottom border already is. */
 .feedLink {
   display: inline-flex;
   flex: none;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--pd-space-2);
   min-block-size: var(--pd-target-min);
-  padding-inline: var(--pd-space-4);
-  border: var(--pd-border-width) solid var(--pd-border-default);
-  border-radius: var(--pd-radius-full);
-  color: var(--pd-text-body);
-  font-size: var(--pd-type-sm);
+  padding-block-end: var(--pd-space-1);
+  color: var(--pd-text-faint);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
   font-weight: var(--pd-weight-ui);
-  transition: border-color var(--pd-move-state), color var(--pd-move-state);
+  letter-spacing: var(--pd-tracking-wide);
+  text-transform: uppercase;
+  transition: color var(--pd-move-state);
 }
 
 @media (hover: hover) {
   .feedLink:hover {
-    border-color: var(--pd-accent);
     color: var(--pd-accent);
     text-decoration: none;
   }
 }
 
 .feedLink:active {
-  border-color: var(--pd-accent);
   color: var(--pd-accent);
 }
 
@@ -101,7 +128,7 @@
 
 .list {
   display: grid;
-  margin: 0;
+  margin: var(--pd-space-6) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -118,6 +145,13 @@
    One post — featured (a card) or a row. Same anatomy, `.postFeatured`
    overrides the geometry.
 
+   NEITHER VARIANT DRAWS A BOX ANY MORE. The featured card used to be a
+   bordered, padded rectangle, and with no cover inside it that border was
+   the entire difference between "featured" and "not" — 24px of title
+   against 18px. The media slot carries that weight now, so the border, the
+   padding and the radius are gone and hover repaints the MEDIA's edge
+   instead of the card's.
+
    `position: relative` is what lets `.postLink::after` stretch: the click
    target covers the whole card while the link's accessible NAME stays just
    the title — the whole point of not wrapping everything in one `<a>`.
@@ -130,68 +164,94 @@
 }
 
 .postRow {
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  padding-block: var(--pd-space-6);
+  padding-block: var(--pd-space-5);
 }
 
 .postFeatured {
   gap: var(--pd-space-6);
-  padding: var(--pd-space-6);
-  margin-block-end: var(--pd-space-10);
-  border: var(--pd-border-width) solid var(--pd-border-default);
-  border-radius: var(--pd-radius);
+  margin-block-end: var(--pd-space-5);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 997px) {
   .postFeatured {
+    /* The prototype's 28px gap: the scale has no 28 stop, so it's the 24
+       stop plus the 4 the whole ladder is derived from. */
+    gap: calc(var(--pd-space-6) + var(--pd-space-1));
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     align-items: center;
   }
-}
 
-/* A POST WITH NO COVER has one grid child, not two — `PostSummary` only
-   renders `.postCover` when `assets.image`/`frontMatter.image` exists.
-   Both `.postRow` and `.postFeatured` declare two columns (at their own
-   breakpoint), and a lone item auto-places into the FIRST one, `auto`-sized
-   to its content instead of the row's full width. `:only-child` is what
-   makes "no cover" read as a deliberate one-column layout instead of a
-   text block stranded in a narrow first column — this is the reason a
-   missing cover doesn't look broken. */
-.post > .postBody:only-child {
-  grid-column: 1 / -1;
-}
-
-/* Hover and press repaint the SAME border, the card's only ink — the same
-   rule `catalog.module.css`'s `.card` already follows. Gated behind
-   `(hover: hover)` so the state doesn't stick after a tap. */
-@media (hover: hover) {
-  .postFeatured:has(.postLink:hover) {
-    border-color: var(--pd-accent);
+  .postRow {
+    gap: var(--pd-space-6);
+    grid-template-columns: calc(var(--pd-space-1) * 36) minmax(0, 1fr) auto;
   }
 }
 
-.postFeatured:has(.postLink:active) {
+/* Hover and press repaint the media's edge, the card's only remaining ink,
+   plus the title — the same accent-on-border language `catalog.module.css`'s
+   `.card` already speaks. Three classes deep (0,3,0) so it beats
+   `Plate.module.css`'s own `.plate` border (0,1,0) whatever order the two
+   modules land in. Gated behind `(hover: hover)` so the state doesn't stick
+   after a tap. */
+@media (hover: hover) {
+  .post:has(.postLink:hover) .postCover {
+    border-color: var(--pd-accent);
+  }
+
+  .postLink:hover {
+    color: var(--pd-accent);
+    text-decoration: none;
+  }
+}
+
+.post:has(.postLink:active) .postCover {
   border-color: var(--pd-accent);
 }
 
-/* The three measures below are `calc(var(--pd-space-1) * n)`, not a bare
+.postLink:active {
+  color: var(--pd-accent);
+}
+
+/* THE MEDIA SLOT IS NEVER EMPTY — a real cover or the generated plate, same
+   box either way (`PostSummary.js`). That's what makes the list's rhythm a
+   property of the layout instead of a property of which articles happen to
+   have art.
+
+   The featured slot is declared as a RATIO, not a height. Its column is
+   fluid (`minmax(0, 5fr)` of the page's 1056px inner width, measured at
+   ~430px), so the prototype's flat `height: 228px` would have drawn 1.88:1
+   there and something else again at every other width, while calling itself
+   16:9. The ratio is the thing that was actually meant, and declaring it
+   introduces no literal at all.
+
+   The row's two measures below are `calc(var(--pd-space-1) * n)`, not a bare
    `rem`: `tokens.css` derives its own space scale off `--pd-space-1` the
-   same way (`--pd-space-4: calc(var(--pd-space-1) * 4)`), and none of these
-   three lands on an existing named stop, so this is that same derivation
-   continued one level further instead of a new literal. */
+   same way (`--pd-space-4: calc(var(--pd-space-1) * 4)`), and neither lands
+   on an existing named stop, so this is that same derivation continued one
+   level further instead of a new literal. */
 .postCover {
   inline-size: 100%;
-  block-size: 100%;
-  min-block-size: calc(var(--pd-space-1) * 48);
   object-fit: cover;
   border-radius: var(--pd-radius-md);
 }
 
+.postFeatured > .postCover {
+  aspect-ratio: 16 / 9;
+}
+
+/* Under 997px the plate spans the row's full width at its own height, which
+   keeps it a banner instead of the square a fixed ratio would grow into on
+   a phone. From 997px it goes back to the 144x96 thumbnail of column one. */
 .postRow > .postCover {
-  inline-size: calc(var(--pd-space-1) * 36);
   block-size: calc(var(--pd-space-1) * 24);
-  min-block-size: 0;
+}
+
+@media (min-width: 997px) {
+  .postRow > .postCover {
+    inline-size: calc(var(--pd-space-1) * 36);
+  }
 }
 
 .postBody {
@@ -201,17 +261,59 @@
   min-inline-size: 0;
 }
 
-.postType {
+.postFeatured .postBody {
+  gap: var(--pd-space-3);
+}
+
+/* THE ACCENT ROW IS AUTHORED LAST AND PULLED TO THE TOP. `PostSummary.js`
+   explains why in full: the stretched `::after` below covers everything
+   painted before it, this project writes no `z-index` anywhere, and a chip
+   authored above the title would stop being clickable. */
+.postAccent {
+  order: -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pd-space-2);
+}
+
+.postChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--pd-space-6);
+  padding-inline: var(--pd-space-2);
+  border-radius: var(--pd-radius-sm);
+  background-color: var(--pd-surface-wash);
   color: var(--pd-accent);
+  font-family: var(--pd-font-mono);
   font-size: var(--pd-type-xs);
   font-weight: var(--pd-weight-ui);
+  letter-spacing: var(--pd-tracking-wide);
   text-transform: uppercase;
-  letter-spacing: var(--pd-tracking-tight);
+  transition: background-color var(--pd-move-state);
+}
+
+@media (hover: hover) {
+  .postChip:hover {
+    background-color: var(--pd-border-strong);
+    text-decoration: none;
+  }
+}
+
+.postRecent {
+  color: var(--pd-text-faint);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  letter-spacing: var(--pd-tracking-wide);
+  text-transform: uppercase;
 }
 
 .postTitle {
   margin-block: 0;
   line-height: var(--pd-leading-h3);
+  letter-spacing: var(--pd-tracking-tight);
 }
 
 .postFeatured .postTitle {
@@ -225,12 +327,7 @@
 .postLink {
   color: var(--pd-text-strong);
   font-weight: var(--pd-weight-heading);
-}
-
-@media (hover: hover) {
-  .postLink:hover {
-    text-decoration: none;
-  }
+  transition: color var(--pd-move-state);
 }
 
 .postLink::after {
@@ -248,7 +345,7 @@
   /* The row variant caps at two lines: with a fixed-height thumbnail beside
      it, a long description would push the row taller than its cover and
      break the list's rhythm. The featured card has no such neighbor and
-     stays uncapped. */
+     gets one more. */
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -259,18 +356,128 @@
   -webkit-line-clamp: 2;
 }
 
-.postMeta {
+/* -----------------------------------------------------------------------------
+   The featured card's byline — the one place on a listing page a name
+   appears. The blog is the only signed content on this site, and the index
+   was the one page that didn't say so.
+   ----------------------------------------------------------------------------- */
+
+.postByline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pd-space-3);
+  margin-block: 0;
+}
+
+.postAuthor {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pd-space-2);
+  color: var(--pd-text-body);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
+}
+
+/* Initials, not a photograph: `authors.yml`'s portrait is 1800x1200 and
+   144 KB against a 26px circle, and shrinking it needs an image pipeline
+   this project doesn't have and won't add for one avatar. 26px is the 24
+   stop plus the hairline on each side, so the circle and the tag chip
+   beside it stand the same height. */
+.postMonogram {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: calc(var(--pd-space-6) + 2 * var(--pd-border-width));
+  block-size: calc(var(--pd-space-6) + 2 * var(--pd-border-width));
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-full);
+  background-color: var(--pd-surface-wash);
+  color: var(--pd-accent);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+}
+
+.postDates {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--pd-space-2);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-xs);
+}
+
+.postDates > span:not(:last-child)::after {
+  content: '·';
+  margin-inline-start: var(--pd-space-2);
+}
+
+/* -----------------------------------------------------------------------------
+   The row's date rail — mono, and the short form of both data, because here
+   they're a COLUMN the eye scans down, not a sentence (`format.js`).
+   ----------------------------------------------------------------------------- */
+
+.postRail {
   display: flex;
   flex-wrap: wrap;
   gap: var(--pd-space-2);
   margin-block: 0;
   color: var(--pd-text-muted);
+  font-family: var(--pd-font-mono);
   font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  letter-spacing: var(--pd-tracking-wide);
 }
 
-.postMeta > span:not(:last-child)::after {
+.postRail > span:not(:last-child)::after {
   content: '·';
   margin-inline-start: var(--pd-space-2);
+}
+
+@media (min-width: 997px) {
+  .postRail {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    line-height: var(--pd-leading-code);
+    white-space: nowrap;
+  }
+
+  .postRail > span:not(:last-child)::after {
+    content: none;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   The closing row — the path to the tag index, and the end marker
+   ----------------------------------------------------------------------------- */
+
+.listFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pd-space-6);
+  margin-block-start: var(--pd-space-6);
+}
+
+.listFooterLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pd-space-2);
+  min-block-size: var(--pd-target-min);
+  color: var(--pd-accent);
+  font-size: var(--pd-type-sm);
+  font-weight: var(--pd-weight-ui);
+}
+
+.listFooterEnd {
+  color: var(--pd-text-muted);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  letter-spacing: var(--pd-tracking-wide);
+  text-transform: uppercase;
 }
 
 /* -----------------------------------------------------------------------------
@@ -324,7 +531,7 @@
 
 /* -----------------------------------------------------------------------------
    Paginator — shared by the list pages (page to page) and the article
-   (post to post, `Article.module.css`'s `.footer` composes it in). Flat,
+   (post to post, `Article.module.css`'s `.footStack` composes it in). Flat,
    like `chrome.css`'s doc paginator: no border, no fill, no padding.
    ----------------------------------------------------------------------------- */
 

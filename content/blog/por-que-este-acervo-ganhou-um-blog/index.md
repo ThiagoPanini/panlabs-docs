@@ -2,7 +2,7 @@
 title: Por que este acervo ganhou um blog
 description: A lacuna que as quatro abas de documentação não cobriam, e a decisão que abriu a quinta.
 date: 2026-09-07
-tags: [notas, panlabs-docs]
+tags: [software, panlabs-docs]
 authors: thiago
 ---
 
@@ -24,9 +24,9 @@ O Blog entrou como a quinta aba, por último na faixa, e não como mais uma
 instância de documentação: é o plugin oficial de blog, que já vinha junto do
 preset instalado, então nenhuma dependência nova entrou no projeto. Cada
 artigo mora numa pasta própria, com o título só no front matter, nunca como
-`# título` no corpo. Cada um carrega exatamente um tipo, entre `novidades`,
-`tutoriais` e `notas`, mais as tags de assunto que fizerem sentido, todas de
-um catálogo fechado.
+`# título` no corpo. Cada um carrega pelo menos uma tag de assunto, de um
+catálogo fechado, e a primeira delas é a que aparece em destaque na
+listagem.
 
 A regra de voz da documentação, "você mais imperativo, zero primeira
 pessoa", não alcança o blog. Aqui a voz é minha, artigo a artigo, e este

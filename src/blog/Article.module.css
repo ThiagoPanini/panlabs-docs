@@ -3,34 +3,105 @@
 
    Layer 3 only, same rule as `PostList.module.css`: every value here is
    `var(--pd-*)` or derived from one. No `outline` — focus.css owns it
-   universally, and every focusable element below (`CopyPage`, the tag
-   chips, the signature, the TOC links, the paginator) already gets it for
-   free with no rule written here.
+   universally, and every focusable element below (`CopyPage`, the
+   breadcrumb, the signature, the TOC links, the paginator) already gets it
+   for free with no rule written here.
+
+   The tag chip is NOT here any more: three pages draw the same one, so it
+   moved to its own module (`TagChips.module.css`) rather than staying one
+   page's style borrowed by two others.
    ============================================================================= */
 
 .page {
   padding-block: var(--pd-space-10) var(--pd-space-16);
 }
 
-/* The shell is prose PLUS the TOC rail plus the gap between them — wide
-   enough that at 1280px+ both sit side by side with room to spare, and
-   still just a centered column below that, where the rail is hidden. */
+/* The shell is prose PLUS the TOC rail plus the gap between them, PLUS the
+   gutter it pads itself with on each side — that last term is the fix for a
+   defect this file used to carry silently. `padding-inline` eats from the
+   inside, so a max-width of exactly `prose + gap + rail` leaves a content
+   box two gutters short of it, and `.grid`'s first track (`minmax(0, 720px)`)
+   absorbed the whole shortfall: measured at 1440px, the prose column came
+   out 656px against the 720px the head above it was drawn at. Adding the
+   padding back into the max-width makes the CONTENT box the size the grid
+   was designed for. Below 1280px the rail is hidden and this is just a
+   centered column, same as before. */
 .articleShell {
-  max-inline-size: calc(var(--pd-prose-width) + var(--pd-gutter) + var(--pd-toc-width));
+  max-inline-size: calc(
+    var(--pd-prose-width) + var(--pd-toc-width) + 3 * var(--pd-gutter)
+  );
   margin-inline: auto;
   padding-inline: var(--pd-gutter);
 }
 
 /* -----------------------------------------------------------------------------
-   Head — title, subtitle, meta, signature. Capped to PROSE width and
-   centered, not the shell's: at 1280px+ the shell is wider than prose (it
-   has the TOC rail's share too), and the head has no rail beside it to
-   fill that space with.
+   Head — trail, title, subtitle, meta, signature, banner. Capped to PROSE
+   width and centered, not the shell's: at 1280px+ the shell is wider than
+   prose (it has the TOC rail's share too), and the head has no rail beside
+   it to fill that space with.
    ----------------------------------------------------------------------------- */
 
 .headStack {
   max-inline-size: var(--pd-prose-width);
   margin-inline: auto;
+}
+
+/* From 1280px the shell is wider than prose, because the TOC rail has a
+   share of it. `.prose` already drops its auto margins at this width to sit
+   flush against the grid's first track; the head has to do the same or it
+   floats centered over a left-aligned body. Invisible while the head was
+   only text with a ragged right edge, and impossible to miss the moment it
+   grew a filled banner. */
+@media (min-width: 1280px) {
+  .headStack,
+  .footStack {
+    margin-inline: 0;
+  }
+}
+
+/* The trail — `BLOG / <first tag>`. The leaf is the article's FIRST tag,
+   the same one the index draws as a chip, and this page's accent slot.
+   No type selector inside it: `.breadcrumb a` would be (0,1,1) and would
+   quietly outrank `.breadcrumbLeaf` at (0,1,0), so every segment carries
+   its own class instead. */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pd-space-2);
+  margin-block-end: var(--pd-space-6);
+  color: var(--pd-text-faint);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  letter-spacing: var(--pd-tracking-wide);
+  text-transform: uppercase;
+}
+
+.breadcrumbRoot {
+  color: inherit;
+  transition: color var(--pd-move-state);
+}
+
+.breadcrumbSlash {
+  color: var(--pd-text-muted);
+}
+
+.breadcrumbLeaf {
+  color: var(--pd-accent);
+  transition: color var(--pd-move-state);
+}
+
+@media (hover: hover) {
+  .breadcrumbRoot:hover {
+    color: var(--pd-accent);
+    text-decoration: none;
+  }
+
+  .breadcrumbLeaf:hover {
+    color: var(--pd-accent-hover);
+    text-decoration: none;
+  }
 }
 
 .titleRow {
@@ -73,67 +144,48 @@
   color: var(--pd-text-body);
 }
 
+/* The meta line — signature at one end, stamp at the other, and the rule
+   that closes the head. The tag chips used to sit here too; `2b` moved them
+   to the footer, which is also the only place they stop competing with the
+   byline for the same row.
+
+   `margin-inline-start: auto` on the stamp is what pushes it to the far end
+   with no second container: one row, two clusters, and any number of
+   authors between them wrapping naturally. */
 .meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--pd-space-2);
-  margin-block-start: var(--pd-space-4);
-  color: var(--pd-text-muted);
-  font-size: var(--pd-type-sm);
+  gap: var(--pd-space-4);
+  margin-block-start: var(--pd-space-5);
+  padding-block-end: var(--pd-space-6);
+  border-block-end: var(--pd-border-width) solid var(--pd-border-default);
 }
 
-.meta > span:not(:last-child)::after {
-  content: '·';
-  margin-inline-start: var(--pd-space-2);
-}
-
-.tagChips {
-  display: flex;
+/* Mono, and the SHORT form of both data: on this line the date and the
+   reading time are a stamp, not a sentence — `format.js` states the rule
+   and the row rail in `PostList.module.css` is the other side of it. */
+.metaStamp {
+  display: inline-flex;
   flex-wrap: wrap;
   gap: var(--pd-space-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tagChip {
-  display: inline-block;
-  padding: var(--pd-space-1) var(--pd-space-3);
-  border: var(--pd-border-width) solid var(--pd-border-default);
-  border-radius: var(--pd-radius-sm);
-  color: var(--pd-text-body);
+  margin-inline-start: auto;
+  color: var(--pd-text-muted);
+  font-family: var(--pd-font-mono);
   font-size: var(--pd-type-xs);
   font-weight: var(--pd-weight-ui);
-  transition: border-color var(--pd-move-state), color var(--pd-move-state);
+  letter-spacing: var(--pd-tracking-wide);
 }
 
-@media (hover: hover) {
-  .tagChip:hover {
-    border-color: var(--pd-accent);
-    color: var(--pd-accent);
-    text-decoration: none;
-  }
-}
-
-.tagChip:active {
-  border-color: var(--pd-accent);
-  color: var(--pd-accent);
-}
-
-.authors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--pd-space-4);
-  margin-block-start: var(--pd-space-4);
-  padding-block-start: var(--pd-space-4);
-  border-block-start: var(--pd-border-width) solid var(--pd-border-subtle);
+.metaStamp > span:not(:last-child)::after {
+  content: '·';
+  margin-inline-start: var(--pd-space-2);
 }
 
 .signature {
   display: inline-flex;
   align-items: center;
-  gap: var(--pd-space-2);
+  gap: var(--pd-space-3);
   color: var(--pd-text-strong);
 }
 
@@ -147,16 +199,58 @@
   }
 }
 
+/* The real photograph here, unlike the index's monogram: at 32px the reader
+   has already committed to the page, and this is the one place on the site
+   a face belongs outside the landing. */
 .signaturePhoto {
+  flex: none;
   inline-size: var(--pd-space-8);
   block-size: var(--pd-space-8);
   border-radius: var(--pd-radius-full);
   object-fit: cover;
 }
 
+.signatureText {
+  display: grid;
+  gap: var(--pd-space-1);
+}
+
 .signatureName {
   font-size: var(--pd-type-sm);
   font-weight: var(--pd-weight-ui);
+  line-height: var(--pd-leading-screen);
+}
+
+/* The author's own title, from `authors.yml`. It was already in the data and
+   drawn nowhere; the byline is where it says something. */
+.signatureRole {
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-body);
+  line-height: var(--pd-leading-screen);
+}
+
+/* -----------------------------------------------------------------------------
+   The banner — this page's media slot, never empty: the real `image:` when
+   the front matter declares one, the generated plate when it doesn't
+   (`Plate.js`). Declared as a RATIO rather than the prototype's flat 180px,
+   which is exactly 4:1 at the 720px prose width it was drawn against, and
+   which scales down instead of eating a phone screen.
+   ----------------------------------------------------------------------------- */
+
+.banner {
+  inline-size: 100%;
+  aspect-ratio: 4 / 1;
+  margin-block-start: var(--pd-space-6);
+  object-fit: cover;
+  border-radius: var(--pd-radius-md);
+}
+
+/* A wider inset than a card's plate gets, because this one is four times the
+   size. `Plate.module.css` declares the property; this is its caller
+   overriding it, layer 3 in the caller's own scope. */
+.banner[data-pd-component='blog-plate'] {
+  --pd-plate-inset: var(--pd-space-5);
 }
 
 /* -----------------------------------------------------------------------------
@@ -348,10 +442,15 @@
    where the pseudo is missing. */
 
 /* -----------------------------------------------------------------------------
-   Foot — the paginator (from `PostList.module.css`, shared) and the tag
-   chips, repeated: DECISIONS.md's article spec asks for tags again here,
-   for whoever scrolled all the way down without going back up to the meta
-   line. Same prose-width cap as the head.
+   Foot — the tags, then the paginator (from `PostList.module.css`, shared).
+   That order is `2b`'s: the tags belong to the article just read, the
+   paginator points away from it.
+
+   The tags are ALL of them here, the accent one included, unlike a card —
+   DECISIONS.md's article spec asks for tags again at the end, for whoever
+   scrolled down without going back up, and by this point the breadcrumb
+   that accented the first one is a full screen away. Same prose-width cap
+   as the head.
    ----------------------------------------------------------------------------- */
 
 .footStack {
@@ -360,5 +459,21 @@
 }
 
 .footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pd-space-2);
   margin-block-start: var(--pd-space-8);
+  padding-block-start: var(--pd-space-6);
+  border-block-start: var(--pd-border-width) solid var(--pd-border-default);
+}
+
+.footerLabel {
+  margin-inline-end: var(--pd-space-1);
+  color: var(--pd-text-faint);
+  font-family: var(--pd-font-mono);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  letter-spacing: var(--pd-tracking-wide);
+  text-transform: uppercase;
 }

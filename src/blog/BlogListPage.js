@@ -18,6 +18,7 @@ import {useBlogListPageStructuredData} from '@docusaurus/plugin-content-blog/cli
 import Layout from '@theme/Layout';
 
 import PostList, {FeedLink, ListHeader} from './PostList';
+import {formatArticleCount} from './format';
 
 import styles from './PostList.module.css';
 
@@ -34,7 +35,7 @@ function StructuredData(props) {
 
 export default function BlogListPage(props) {
   const {metadata, items} = props;
-  const {blogTitle, blogDescription} = metadata;
+  const {blogTitle, blogDescription, totalCount} = metadata;
 
   return (
     <HtmlClassNameProvider
@@ -45,7 +46,12 @@ export default function BlogListPage(props) {
         <main className={styles.page}>
           <PostList
             header={
-              <ListHeader title={blogTitle} description={blogDescription} action={<FeedLink />} />
+              <ListHeader
+                eyebrow={formatArticleCount(totalCount)}
+                title={blogTitle}
+                description={blogDescription}
+                action={<FeedLink />}
+              />
             }
             items={items}
             metadata={metadata}

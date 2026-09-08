@@ -22,7 +22,7 @@ _Avoid_: section, area
 A **content** convention, never a layout one: no type owns its own CSS, front matter, or component. Each has a template, and the template can require, limit, or forbid a component.
 
 **Artigo**:
-A text under the `Blog`, dated and signed, in opposition to a **page**, which documents. A page's `h1` is a topic; an artigo's `h1` is a moment, and that's the axis that decides which tab a text belongs to: a text that would go stale the day its own byline date does is an artigo, never a page. Carries exactly one type tag (`novidades`, `tutoriais`, `notas`) and any number of subject tags, all from the closed catalog in `content/blog/tags.yml`.
+A text under the `Blog`, dated and signed, in opposition to a **page**, which documents. A page's `h1` is a topic; an artigo's `h1` is a moment, and that's the axis that decides which tab a text belongs to: a text that would go stale the day its own byline date does is an artigo, never a page. Carries at least one tag, always a subject and never a format, from the closed catalog in `content/blog/tags.yml`; the first one in the front matter is what the index and the article page draw in the accent slot.
 _Avoid_: post, publicação
 
 **Jornada**:

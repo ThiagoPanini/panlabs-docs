@@ -1,21 +1,28 @@
 /**
  * `blogPostComponent`: one article. `@theme/BlogPostPage`, `BlogPostItem`
- * and every component under it are `unsafe`, so the header, the meta line,
- * the signature, and the footer are all written here from scratch — the
- * only theme pieces reused are the ones the handoff cleared: `@theme/Layout`,
- * `@theme/TOC`, `@theme/MDXContent`, and this repository's own `CopyPage`
- * (not a theme component — it's this project's file, just parked under
- * `src/theme/` alongside the swizzles it was born to reach).
+ * and every component under it are `unsafe`, so the breadcrumb, the header,
+ * the meta line, the signature, and the footer are all written here from
+ * scratch — the only theme pieces reused are the ones the handoff cleared:
+ * `@theme/Layout`, `@theme/TOC`, `@theme/MDXContent`, and this repository's
+ * own `CopyPage` (not a theme component — it's this project's file, just
+ * parked under `src/theme/` alongside the swizzles it was born to reach).
  *
  * THE `markdown` ID isn't conditional on `isBlogPostPage` the way upstream's
  * is: this component only ever renders the standalone post page, never a
  * truncated list preview, so the RSS feed's anchor (`blogPostContainerID`,
  * consumed by `feed.js` after the build) can be written unconditionally.
+ *
+ * THE FIRST TAG IS THE ACCENT, here as the breadcrumb's second segment and
+ * again as the media banner's word. Unlike a card, this page repeats it on
+ * purpose: the two sit far enough apart that the banner reads as a label
+ * for what's below it rather than as an echo. The footer then lists EVERY
+ * tag, the accent included, for whoever scrolled all the way down.
  */
 
 import React from 'react';
 import clsx from 'clsx';
 import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
 import {HtmlClassNameProvider, PageMetadata, ThemeClassNames} from '@docusaurus/theme-common';
 import {BlogPostProvider, useBlogPostStructuredData} from '@docusaurus/plugin-content-blog/client';
 import {blogPostContainerID} from '@docusaurus/utils-common';
@@ -25,9 +32,10 @@ import TOC from '@theme/TOC';
 
 import CopyPage from '@site/src/theme/MDXComponents/CopyPage';
 
+import Plate from './Plate';
 import TagChips from './TagChips';
 import Paginator from './Paginator';
-import {formatDate, formatReadingTime} from './format';
+import {formatDateShort, formatReadingTimeShort} from './format';
 
 import styles from './Article.module.css';
 
@@ -42,12 +50,15 @@ function StructuredData() {
 }
 
 function Signature({author, imageUrl}) {
-  const {name, url} = author;
+  const {name, title, url} = author;
   const photo = imageUrl ?? author.imageURL;
   const body = (
     <>
       {photo && <img className={styles.signaturePhoto} src={photo} alt="" />}
-      {name && <span className={styles.signatureName}>{name}</span>}
+      <span className={styles.signatureText}>
+        {name && <span className={styles.signatureName}>{name}</span>}
+        {title && <span className={styles.signatureRole}>{title}</span>}
+      </span>
     </>
   );
   // No author page exists on this site (DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance
@@ -84,7 +95,10 @@ export default function BlogPostPage({content}) {
     title_meta: titleMeta,
   } = frontMatter;
 
+  // One value, two jobs since this ticket: it still feeds `og:image`, and
+  // it now decides whether the banner below is a photograph or a plate.
   const image = assets.image ?? frontMatter.image;
+  const [accent] = tags;
   const showToc = !hideToc && toc.length > 0;
 
   return (
@@ -103,23 +117,33 @@ export default function BlogPostPage({content}) {
                   title reads at the same width as the body under it, never
                   stretched under where the TOC rail sits. */}
               <div className={styles.headStack}>
+                <nav className={styles.breadcrumb} aria-label="Trilha">
+                  <Link className={styles.breadcrumbRoot} to="/blog">
+                    Blog
+                  </Link>
+                  {accent && (
+                    <>
+                      <span className={styles.breadcrumbSlash} aria-hidden="true">
+                        /
+                      </span>
+                      <Link className={styles.breadcrumbLeaf} to={accent.permalink}>
+                        {accent.label}
+                      </Link>
+                    </>
+                  )}
+                </nav>
+
                 <div className={styles.titleRow}>
                   <h1 className={styles.title}>{title}</h1>
                   <CopyPage permalink={permalink} />
                 </div>
                 <p className={styles.subtitle}>{description}</p>
 
-                {/* `<div>`, not `<p>`: `TagChips` renders a `<ul>`, and a
-                    `<p>` can't legally contain block content — the browser
-                    would close it early and the DOM wouldn't match this
-                    markup. */}
+                {/* Signature and stamp on one line, the stamp pushed to the
+                    far end. The tag chips used to sit here too; `2b` moved
+                    them to the footer, which is also the only place they
+                    aren't competing with the byline for the same row. */}
                 <div className={styles.meta}>
-                  <span>{formatDate(date)}</span>
-                  {readingTime !== undefined && <span>{formatReadingTime(readingTime)}</span>}
-                  <TagChips tags={tags} />
-                </div>
-
-                <div className={styles.authors}>
                   {authors.map((author, i) => (
                     <Signature
                       key={author.name ?? author.imageURL ?? i}
@@ -127,7 +151,23 @@ export default function BlogPostPage({content}) {
                       imageUrl={assets.authorsImageUrls[i]}
                     />
                   ))}
+                  <span className={styles.metaStamp}>
+                    <span>{formatDateShort(date)}</span>
+                    {readingTime !== undefined && (
+                      <span>{formatReadingTimeShort(readingTime)}</span>
+                    )}
+                  </span>
                 </div>
+
+                {image ? (
+                  <img className={styles.banner} src={image} alt="" />
+                ) : (
+                  <Plate
+                    className={styles.banner}
+                    word={accent?.label}
+                    caption={permalink}
+                  />
+                )}
               </div>
 
               {/* Below 1280px the rail (further down) is `display: none` —
@@ -159,6 +199,11 @@ export default function BlogPostPage({content}) {
               </div>
 
               <div className={styles.footStack}>
+                <footer className={styles.footer}>
+                  <span className={styles.footerLabel}>Tags</span>
+                  <TagChips tags={tags} />
+                </footer>
+
                 {(prevItem || nextItem) && (
                   <Paginator
                     ariaLabel="Navegação entre artigos"
@@ -178,10 +223,6 @@ export default function BlogPostPage({content}) {
                     }
                   />
                 )}
-
-                <footer className={styles.footer}>
-                  <TagChips tags={tags} />
-                </footer>
               </div>
             </article>
           </main>
