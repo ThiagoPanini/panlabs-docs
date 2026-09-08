@@ -2,7 +2,7 @@
 title: A versão 0.31.0 do overpower troca clone por endereço
 description: O que muda quando uma receita de servidor MCP passa a declarar a fonte do próprio código, em vez de instalar a partir de um clone.
 date: 2026-09-07
-tags: [novidades, overpower]
+tags: [ai, overpower]
 authors: thiago
 ---
 

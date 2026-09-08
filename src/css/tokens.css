@@ -173,9 +173,19 @@
   --pd-leading-h3:    1.4;
   --pd-leading-h4:    1.5;
 
-  /* Letter-spacing — one value. Body text uses the browser's `normal`, which
-     is a keyword and not a value, so it needs no token. */
+  /* Letter-spacing — two values, one per direction. Body text uses the
+     browser's `normal`, which is a keyword and not a value, so it needs no
+     token.
+
+     `wide` is the blog's mono eyebrow and its label caps (`N ARTIGOS`, the
+     plate's word, `FIM DA COLEÇÃO`): uppercase mono at the 12px floor of
+     the type scale reads as a solid block without it, and the tracking is
+     what turns density into legibility at that size. It is NOT derivable
+     from `tight` — the opposite sign is a different intent, not a
+     multiple, and writing it as `calc(var(--pd-tracking-tight) * -4)` would
+     read as a bug to whoever met it next. */
   --pd-tracking-tight: -0.025em;
+  --pd-tracking-wide:   0.1em;
 
   /* Optical bold — the sidebar active item's emphasis, and it isn't
      decoration. Swapping font-weight reflows the text and the item JUMPS

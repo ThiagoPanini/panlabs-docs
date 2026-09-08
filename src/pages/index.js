@@ -98,7 +98,7 @@ const RECORD_TYPES = [
     title: 'Blog',
     icon: 'newspaper',
     route: '/blog',
-    body: 'Artigos que eu escrevo sobre novidades, tutoriais e notas do meu dia a dia.',
+    body: 'Artigos assinados e datados sobre o que eu construo e o que eu aprendo fazendo.',
   },
 ];
 

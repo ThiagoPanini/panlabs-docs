@@ -2,7 +2,7 @@
 title: O modelo de desenvolvimento com IA das skills do Matt Pocock
 description: Como um conjunto de vinte e cinco skills transforma conversa em issue, issue em ticket e ticket em pull request, demonstrado no repositório deste site.
 date: 2026-09-07
-tags: [tutoriais, claude-code, skills, panlabs-docs]
+tags: [ai, claude-code, skills, panlabs-docs]
 authors: thiago
 ---
 

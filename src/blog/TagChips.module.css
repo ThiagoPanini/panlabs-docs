@@ -1,0 +1,56 @@
+/* =============================================================================
+   panlabs-docs — the tag chip
+
+   Its own module because three call sites draw the same chip: the index
+   card, the tag page's cards, and the article's footer. Kept in
+   `Article.module.css` it would have been one page's style borrowed by
+   another; kept here it's a component's own.
+
+   `position: relative` on the chip is load-bearing inside a card, not
+   decoration. `PostSummary`'s title link stretches a `::after` over the
+   whole card, and this project writes no `z-index` anywhere — a chip
+   authored after that title needs to be POSITIONED to paint above the
+   overlay and stay clickable. Outside a card the declaration costs nothing.
+
+   Layer 3 only: `var(--pd-*)` or derived. No `outline` — `focus.css` owns
+   the entry state universally.
+   ============================================================================= */
+
+.tagChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pd-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tagChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* 26px tall, the prototype's chip: the 24px scale stop plus the hairline
+     it draws on each side. Deriving it from the border keeps the two in
+     step if the hairline ever changes. */
+  min-block-size: calc(var(--pd-space-6) + 2 * var(--pd-border-width));
+  padding-inline: var(--pd-space-3);
+  border: var(--pd-border-width) solid var(--pd-border-default);
+  border-radius: var(--pd-radius-sm);
+  color: var(--pd-text-muted);
+  font-size: var(--pd-type-xs);
+  font-weight: var(--pd-weight-ui);
+  transition: border-color var(--pd-move-state), color var(--pd-move-state);
+}
+
+@media (hover: hover) {
+  .tagChip:hover {
+    border-color: var(--pd-accent);
+    color: var(--pd-accent);
+    text-decoration: none;
+  }
+}
+
+.tagChip:active {
+  border-color: var(--pd-accent);
+  color: var(--pd-accent);
+}

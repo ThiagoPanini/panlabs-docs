@@ -100,22 +100,18 @@ const BLOG_DESCRIPTION =
 
 /**
  * The blog's article contract, checked once per post at load time and
- * failed loud: a subtitle, exactly one type tag, an author, a date, and no
+ * failed loud: a subtitle, at least one tag, an author, a date, and no
  * `# ` line in the body. See DECISIONS.md#the-blog-is-a-tab-not-a-docs-instance.
  *
- * The type is one of these three, carried as an ordinary tag rather than a
- * dedicated front matter field: `onInlineTags: 'throw'`, set on the `blog`
- * key below, already closes the tag catalog, so a type is one membership
- * check away from being enforced by the same mechanism as every other tag.
- *
- * This list and `content/blog/tags.yml`'s three top entries are the SAME
- * three names, kept in two places on purpose: this file has no YAML
- * parser to read the catalog with, and adding one is a new dependency for
- * a three-word list. Renaming a type is a two-file edit; a name added here
- * with no matching entry in `tags.yml` fails through `onInlineTags`
- * instead, on the very next article that uses it.
+ * NO LIST OF TAG NAMES LIVES HERE ANY MORE. The contract used to demand
+ * exactly one tag from a closed set of three types, which forced this file
+ * to keep a second copy of names `content/blog/tags.yml` already held. With
+ * the axis reduced to subject alone, membership is entirely
+ * `onInlineTags: 'throw'`'s job (set on the `blog` key below), and the only
+ * thing left for this hook to guarantee is that an article carries at least
+ * one tag: the FIRST one is what the index and the article page draw in the
+ * accent slot, so an article with none would render that slot empty.
  */
-const ARTICLE_TYPES = ['novidades', 'tutoriais', 'notas'];
 
 /**
  * Scans a fenced-code-aware line for a leading `# `, on the RAW file, not
@@ -178,10 +174,9 @@ function validateBlogPost(blogPost) {
     : frontMatter.tags
       ? [frontMatter.tags]
       : [];
-  const typeTags = tags.filter((tag) => ARTICLE_TYPES.includes(tag));
-  if (typeTags.length !== 1) {
+  if (tags.length === 0) {
     throw new Error(
-      `${source}: precisa de exatamente uma tag de tipo entre ${ARTICLE_TYPES.join(', ')}; encontrei ${typeTags.length} (${typeTags.join(', ') || 'nenhuma'}).`,
+      `${source}: precisa de pelo menos uma tag, do catálogo em content/blog/tags.yml. A primeira do array é a que vai para o chip do cartão em destaque, para a placa da linha e para o breadcrumb do artigo.`,
     );
   }
 
